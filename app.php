@@ -35,7 +35,6 @@ $client->setApplicationName("Google Compute Engine PHP Starter Application");
 $client->setClientId('YOUR_CLIENT_ID');
 $client->setClientSecret('YOUR_CLIENT_SECRET');
 $client->setRedirectUri('YOUR_REDIRECT_URI');
-$client->setDeveloperKey('YOUR_DEVELOPER_KEY');
 $computeService = new Google_ComputeService($client);
 
 /**
@@ -46,7 +45,7 @@ $project = 'YOUR_GOOGLE_COMPUTE_ENGINE_PROJECT';
 /**
  * Constants for sample request parameters.
  */
-define('API_VERSION', 'v1beta13');
+define('API_VERSION', 'v1beta14');
 define('BASE_URL', 'https://www.googleapis.com/compute/'.
   API_VERSION . '/projects/');
 define('GOOGLE_PROJECT', 'google');
@@ -54,12 +53,13 @@ define('DEFAULT_PROJECT', $project);
 define('DEFAULT_NAME', 'new-node');
 define('DEFAULT_NAME_WITH_METADATA', 'new-node-with-metadata');
 define('DEFAULT_MACHINE_TYPE', BASE_URL . DEFAULT_PROJECT .
-  '/machineTypes/n1-standard-1');
-define('DEFAULT_ZONE', BASE_URL . DEFAULT_PROJECT . '/zones/us-central1-a');
+  '/global/machineTypes/n1-standard-1');
+define('DEFAULT_ZONE_NAME', 'us-central1-a');
+define('DEFAULT_ZONE', BASE_URL . DEFAULT_PROJECT . '/zones/' . DEFAULT_ZONE_NAME);
 define('DEFAULT_IMAGE', BASE_URL . GOOGLE_PROJECT .
-  '/images/ubuntu-12-04-v20120912');
+  '/global/images/gcel-12-04-v20130104');
 define('DEFAULT_NETWORK', BASE_URL . DEFAULT_PROJECT .
-  '/networks/default');
+  '/global/networks/default');
 
 /**
  * Generates the markup for a specific Google Compute Engine API request.
@@ -119,7 +119,8 @@ if ($client->getAccessToken()) {
    * Google Compute Engine API request to retrieve the list of instances in your
    * Google Compute Engine project.
    */
-  $instances = $computeService->instances->listInstances(DEFAULT_PROJECT);
+  $instances = $computeService->instances->listInstances(DEFAULT_PROJECT,
+    DEFAULT_ZONE_NAME);
   $instancesListMarkup = generateMarkup('List Instances', $instances);
 
   /**
@@ -164,7 +165,7 @@ if ($client->getAccessToken()) {
    */
   $name = DEFAULT_NAME;
   $machineType = DEFAULT_MACHINE_TYPE;
-  $zone = DEFAULT_ZONE;
+  $zone = DEFAULT_ZONE_NAME;
   $image = DEFAULT_IMAGE;
 
   $googleNetworkInterfaceObj = new Google_NetworkInterface();
@@ -174,12 +175,11 @@ if ($client->getAccessToken()) {
   $new_instance = new Google_Instance();
   $new_instance->setName($name);
   $new_instance->setImage($image);
-  $new_instance->setZone($zone);
   $new_instance->setMachineType($machineType);
   $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
 
   $insertInstance = $computeService->instances->insert(DEFAULT_PROJECT,
-    $new_instance);
+    $zone, $new_instance);
   $insertInstanceMarkup = generateMarkup('Insert Instance', $insertInstance);
 
   /**
@@ -188,7 +188,7 @@ if ($client->getAccessToken()) {
    */
   $name = DEFAULT_NAME_WITH_METADATA;
   $machineType = DEFAULT_MACHINE_TYPE;
-  $zone = DEFAULT_ZONE;
+  $zone = DEFAULT_ZONE_NAME;
   $image = DEFAULT_IMAGE;
 
   $googleNetworkInterfaceObj = new Google_NetworkInterface();
@@ -205,13 +205,12 @@ if ($client->getAccessToken()) {
   $new_instance = new Google_Instance();
   $new_instance->setName($name);
   $new_instance->setImage($image);
-  $new_instance->setZone($zone);
   $new_instance->setMachineType($machineType);
   $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
   $new_instance->setMetadata($metadata);
 
   $insertInstanceWithMetadata = $computeService->instances->insert(
-    DEFAULT_PROJECT, $new_instance);
+    DEFAULT_PROJECT, $zone, $new_instance);
   $insertInstanceWithMetadataMarkup = generateMarkup(
     'Insert Instance With Metadata', $insertInstanceWithMetadata);
 
@@ -219,7 +218,8 @@ if ($client->getAccessToken()) {
    * Google Compute Engine API request to get an instance matching the outlined
    * parameters from your Google Compute Engine project.
    */
-  $getInstance = $computeService->instances->get(DEFAULT_PROJECT, DEFAULT_NAME);
+  $getInstance = $computeService->instances->get(DEFAULT_PROJECT,
+    DEFAULT_ZONE_NAME, DEFAULT_NAME);
   $getInstanceMarkup = generateMarkup('Get Instance', $getInstance);
 
   /**
@@ -227,7 +227,7 @@ if ($client->getAccessToken()) {
    * parameters from your Google Compute Engine project.
    */
   $getInstanceWithMetadata = $computeService->instances->get(DEFAULT_PROJECT,
-    DEFAULT_NAME_WITH_METADATA);
+    DEFAULT_ZONE_NAME, DEFAULT_NAME_WITH_METADATA);
   $getInstanceWithMetadataMarkup = generateMarkup('Get Instance With Metadata',
     $getInstanceWithMetadata);
 
@@ -235,7 +235,8 @@ if ($client->getAccessToken()) {
    * Google Compute Engine API request to delete an instance matching the
    * outlined parameters from your Google Compute Engine project.
    */
-  $deleteInstance = $computeService->instances->delete(DEFAULT_PROJECT, DEFAULT_NAME);
+  $deleteInstance = $computeService->instances->delete(DEFAULT_PROJECT,
+    DEFAULT_ZONE_NAME, DEFAULT_NAME);
   $deleteInstanceMarkup = generateMarkup('Delete Instance', $deleteInstance);
 
   /**
@@ -243,16 +244,16 @@ if ($client->getAccessToken()) {
    * outlined parameters from your Google Compute Engine project.
    */
   $deleteInstanceWithMetadata = $computeService->instances->delete(DEFAULT_PROJECT,
-    DEFAULT_NAME_WITH_METADATA);
+    DEFAULT_ZONE_NAME, DEFAULT_NAME_WITH_METADATA);
   $deleteInstanceWithMetadataMarkup = generateMarkup(
     'Delete Instance With Metadata', $deleteInstanceWithMetadata);
 
   /**
-   * Google Compute Engine API request to retrieve the list of all operations
-   * associated with your Google Compute Engine project.
+   * Google Compute Engine API request to retrieve the list of all global
+   * operations associated with your Google Compute Engine project.
    */
-  $operations = $computeService->operations->listOperations(DEFAULT_PROJECT);
-  $operationsListMarkup = generateMarkup('List Operations', $operations);
+  $globalOperations = $computeService->globalOperations->listGlobalOperations(DEFAULT_PROJECT);
+  $operationsListMarkup = generateMarkup('List Global Operations', $globalOperations);
 
   // The access token may have been updated lazily.
   $_SESSION['access_token'] = $client->getAccessToken();
@@ -323,7 +324,7 @@ if ($client->getAccessToken()) {
       <?php endif ?>
 
       <?php if(isset($operationsListMarkup)): ?>
-        <div id="listOperations"><?php print $operationsListMarkup ?></div>
+        <div id="listGlobalOperations"><?php print $operationsListMarkup ?></div>
       <?php endif ?>
 
       <?php

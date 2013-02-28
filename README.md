@@ -12,6 +12,7 @@ the sample application.
 - PHP Curl extension [http://www.php.net/manual/en/intro.curl.php]
 - PHP JSON extension [http://php.net/manual/en/book.json.php]
 - The google-api-php-client library checked out locally
+  [https://code.google.com/p/google-api-php-client/] 
 
 ## Setup Authentication
 NOTE: This README assumes that you have enabled access to the Google Compute
@@ -26,18 +27,18 @@ generated any client IDs, or "Create another client ID..." if you have
 - Select "Web Application" as the "Application type"
 - Click "Create client ID"
 - Click "Edit settings..." for your new client ID
-- Under the redirect URI, enter the location of your JavaScript application
+- Under the redirect URI, enter the location of your application
 - Click "Update"
+- Click on "Overview" in the left column and note the Project ID
 
-2) Update app.php with the redirect uri, consumer key, secret, and developer
-key obtained in step 1.
+2) Update app.php with the redirect uri, consumer key, secret, and Project ID
+obtained in step 1.
 - Update 'YOUR_CLIENT_ID' with your oauth2 client id.
 - Update 'YOUR_CLIENT_SECRET' with your oauth2 client secret.
 - Update 'YOUR_REDIRECT_URI' with the fully qualified
 redirect URI.
-- Update 'YOUR_DEVELOPER_KEY' with your developer key.
-This is listed under "Simple API Access" at the very bottom of the page,
-in the Google API Console.
+- Update 'YOUR_GOOGLE_COMPUTE_ENGINE_PROJECT' with your Project ID from the 
+API Console.
 
 ## Running the Sample Application
 3) Load app.php on your web server, and visit the appropriate website in
