@@ -26,7 +26,7 @@ require_once 'google-api-php-client/src/contrib/Google_StorageService.php';
 session_start();
 
 /**
- * Visit https://code.google.com/apis/console to generate your
+ * Visit https://console.developers.google.com to generate your
  * oauth2_client_id, oauth2_client_secret, and to register your
  * oauth2_redirect_uri.
  */
@@ -42,7 +42,7 @@ $storageService = new Google_StorageService($client);
 /**
  * Constants for sample request parameters.
  */
-define('API_VERSION', 'v1beta1');
+define('API_VERSION', 'v1');
 define('DEFAULT_PROJECT', 'YOUR_DEFAULT_PROJECT_NAME');
 define('DEFAULT_BUCKET', 'YOUR_DEFAULT_BUCKET_NAME');
 define('DEFAULT_OBJECT', 'YOUR_DEFAULT_OBJECT_NAME');
