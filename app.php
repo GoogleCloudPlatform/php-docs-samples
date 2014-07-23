@@ -16,7 +16,7 @@
  */
 
 /**
- * Follow the instructions on https://code.google/com/p/google-api-php-client
+ * Follow the instructions on https://github.com/google/google-api-php-client
  * to download, extract and include the Google APIs client library for PHP into
  * your project.
  */
