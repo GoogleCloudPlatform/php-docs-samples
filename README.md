@@ -18,19 +18,21 @@ NOTE: This README assumes that you have enabled access to the Google Cloud
 Engine API via the Google API Console page.
 
 1) Visit https://console.developers.google.com to register your
-application.
+application and generate an API key.
 - Click  **APIs & Auth** in the left column, and then click **Credentials**.
 - Click **Create new client ID** to create a new client ID.
 - In the **Create Client ID** window, choose **Web application**.
 - In the **Redirect URIs** box, specify the URL for your PHP page, e.g., http://localhost/app.php.
 - Click **Create Client ID"**.
+- In the **Public API access** section of the **Credentials** page, click **Create new Key**.
+- In the **Create a new Key** window, choose **Browser key**.
 
 2) Update app.php with the redirect uri, consumer key, secret, and developer
 key obtained in step 1.
 - Update `YOUR_CLIENT_ID` with your oauth2 client id.
 - Update `YOUR_CLIENT_SECRET` with your oauth2 client secret.
 - Update `YOUR_REDIRECT_URI` with the fully qualified redirect URI, e.g., http://localhost/app.php.
-- Update `YOUR_DEVELOPER_KEY` with your developer key.
+- Update `YOUR_API_KEY` with your API key.
 - Update `YOUR_PROJECT_DEFAULT_ID` with your project ID, which
 can be found by visiting https://console.developers.google.com and selecting a project.
 
