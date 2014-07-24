@@ -43,7 +43,7 @@ $storageService = new Google_StorageService($client);
  * Constants for sample request parameters.
  */
 define('API_VERSION', 'v1');
-define('DEFAULT_PROJECT', 'YOUR_DEFAULT_PROJECT_NAME');
+define('DEFAULT_PROJECT', 'YOUR_DEFAULT_PROJECT_ID');
 define('DEFAULT_BUCKET', 'YOUR_DEFAULT_BUCKET_NAME');
 define('DEFAULT_OBJECT', 'YOUR_DEFAULT_OBJECT_NAME');
 
