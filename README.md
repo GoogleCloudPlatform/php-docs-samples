@@ -23,7 +23,7 @@ application and generate an API key.
 - Click **Create new client ID** to create a new client ID.
 - In the **Create Client ID** window, choose **Web application**.
 - In the **Redirect URIs** box, specify the URL for your PHP page, e.g., http://localhost/app.php.
-- Click **Create Client ID"**.
+- Click **Create Client ID**.
 - In the **Public API access** section of the **Credentials** page, click **Create new Key**.
 - In the **Create a new Key** window, choose **Browser key**.
 
