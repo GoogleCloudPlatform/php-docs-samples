@@ -35,7 +35,7 @@ $client->setApplicationName("Google Cloud Storage PHP Starter Application");
 $client->setClientId('YOUR_CLIENT_ID');
 $client->setClientSecret('YOUR_CLIENT_SECRET');
 $client->setRedirectUri('YOUR_REDIRECT_URI');
-$client->setDeveloperKey('YOUR_DEVELOPER_KEY');
+$client->setDeveloperKey('YOUR_API_KEY');
 $client->setScopes('https://www.googleapis.com/auth/devstorage.full_control');
 $storageService = new Google_StorageService($client);
 
