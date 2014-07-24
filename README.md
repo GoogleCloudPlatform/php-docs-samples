@@ -31,7 +31,7 @@ key obtained in step 1.
 - Update `YOUR_CLIENT_SECRET` with your oauth2 client secret.
 - Update `YOUR_REDIRECT_URI` with the fully qualified redirect URI, e.g., http://localhost/app.php.
 - Update `YOUR_DEVELOPER_KEY` with your developer key.
-- Update `YOUR_PROJECT_ID` with your project ID, which
+- Update `YOUR_PROJECT_DEFAULT_ID` with your project ID, which
 can be found by visiting https://console.developers.google.com and selecting a project.
 
 3) Update app.php with remaining default settings. Search and replace all
