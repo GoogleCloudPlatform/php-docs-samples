@@ -42,3 +42,6 @@ strings starting with 'YOUR_DEFAULT_' with their associated values.
 ## Running the Sample Application
 4) Load app.php on your web server, and visit the appropriate website in
 your web browser.
+
+## More Information
+See [https://developers.google.com/storage/docs/json_api/v1/json-api-php-samples](https://developers.google.com/storage/docs/json_api/v1/json-api-php-samples)
