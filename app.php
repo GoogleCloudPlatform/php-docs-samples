@@ -20,8 +20,7 @@
  * to download, extract and include the Google APIs client library for PHP into
  * your project.
  */
-require_once 'google-api-php-client/src/Google_Client.php';
-require_once 'google-api-php-client/src/contrib/Google_StorageService.php';
+require_once 'google-api-php-client/autoload.php';
 
 session_start();
 
