@@ -36,7 +36,7 @@ $client->setClientSecret('YOUR_CLIENT_SECRET');
 $client->setRedirectUri('YOUR_REDIRECT_URI');
 $client->setDeveloperKey('YOUR_API_KEY');
 $client->setScopes('https://www.googleapis.com/auth/devstorage.full_control');
-$storageService = new Google_StorageService($client);
+$storageService = new Google_Service_Storage($client);
 
 /**
  * Constants for sample request parameters.
