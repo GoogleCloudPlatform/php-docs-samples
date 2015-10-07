@@ -1,0 +1,5 @@
+{
+  "require": {
+    "google/apiclient": "1.1.5"
+  }
+}
