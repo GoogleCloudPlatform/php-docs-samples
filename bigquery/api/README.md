@@ -28,10 +28,10 @@ This simple command-line application demonstrates how to invoke Google BigQuery 
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../LICENSE)
+* See [LICENSE](../../LICENSE)
 
 
