@@ -25,6 +25,6 @@ before_install:
   - tar -xzf credentials.tar.gz
 
 script:
-  - cd bigquery
+  - cd bigquery/api
   - composer install
   - phpunit test.php
