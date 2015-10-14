@@ -3,6 +3,4 @@
 *.iml
 composer.phar
 vendor/
-credentials.tar.gz
-credentials.tar
-cloud-samples-tests-php-808469e61d8a.json
+credentials.*

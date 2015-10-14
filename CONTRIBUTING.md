@@ -32,4 +32,5 @@ accept your pull requests.
    (https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the
    recommended coding standards for this organization.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
+   Set up [Travis](./TRAVIS.md) to run the unit tests on your fork.
 1. Submit a pull request.
