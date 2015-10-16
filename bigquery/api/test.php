@@ -16,8 +16,20 @@
  */
 class MainTest extends PHPUnit_Framework_TestCase
 {
+    protected static $hasCredentials;
+
+    public static function setUpBeforeClass()
+    {
+        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+        self::$hasCredentials = $path && file_exists($path) &&
+            filesize($path) > 0;
+    }
+
     public function test()
     {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
         // Invoke main.php.
         global $argc, $argv;
         $argv[1] = getenv('GOOGLE_CLOUD_PROJECT');
