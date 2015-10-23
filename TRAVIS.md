@@ -16,7 +16,7 @@ of this repo:
     new forked repo.
 7.  Go back to the [Travis](https://travis-ci.org/) home page, click on your
     repo, then click on `Settings`.
-8.  Under Environment Variables, set GOOGLE_CLOUD_PROJECT to the project id
+8.  Under Environment Variables, set GOOGLE_PROJECT_ID to the project id
     for the project you created or chose in step 2.
 9.  Base-64 encode the json file you downloaded in step 5.  On unix machines,
     this can be done with a command like
