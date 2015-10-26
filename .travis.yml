@@ -29,4 +29,5 @@ before_install:
 script:
   - cd bigquery/api
   - composer install
-  - phpunit test.php
+  - phpunit mainTest.php
+  - phpunit utilTest.php

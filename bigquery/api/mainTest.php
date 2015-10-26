@@ -32,7 +32,7 @@ class MainTest extends PHPUnit_Framework_TestCase
         }
         // Invoke main.php.
         global $argc, $argv;
-        $argv[1] = getenv('GOOGLE_CLOUD_PROJECT');
+        $argv[1] = getenv('GOOGLE_PROJECT_ID');
         $argc = 2;
         // Capture stdout.
         ob_start();
