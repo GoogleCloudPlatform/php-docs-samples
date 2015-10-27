@@ -124,7 +124,7 @@ function asyncQuery(
 
     return $bigquery->jobs->insert($projectId, $job);
 }
-// [END sync_query]
+// [END async_query]
 
 /**
  * Wait until a job completes.
