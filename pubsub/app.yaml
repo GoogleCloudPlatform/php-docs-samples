@@ -1,0 +1,11 @@
+runtime: php55
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /js
+  static_dir: web/js
+- url: /receive_message.*
+  script: web/index.php
+- url: /.*
+  script: web/index.php
