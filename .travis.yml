@@ -27,7 +27,14 @@ before_install:
   - php dump_credentials.php
 
 script:
+  # run bigquery tests
   - cd bigquery/api
   - composer install
   - phpunit mainTest.php
   - phpunit utilTest.php
+  - cd ../..
+  # run pubsub tests
+  - cd pubsub
+  - composer install
+  - phpunit test
+  - cd ..

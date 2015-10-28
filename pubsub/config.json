@@ -1,0 +1,6 @@
+{
+  "pubsub-token": "{A_UNIQUE_TOKEN}",
+  "project": "{YOUR_PROJECT_ID}",
+  "topic": "topic-pubsub-api-sample-php",
+  "subscription": "subscription-pubsub-api-sample-php"
+}
