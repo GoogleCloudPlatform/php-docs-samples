@@ -29,7 +29,8 @@ TODO(tmatsuo): Better implementation for devserver.
 
 ## Prerequisites
 
-- Install Python-2.7, pip-6.0.0 or higher and App Engine Python SDK.
+- Install [`composer`](https://getcomposer.org)
+- Install the App Engine Python SDK.
   We recommend you install
   [Cloud SDK](https://developers.google.com/cloud/sdk/) rather than
   just installing App Engine SDK.
