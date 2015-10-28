@@ -19,10 +19,14 @@
 namespace GoogleCloudPlatform\DocsSamples\Pubsub;
 
 /**
-*
-*/
+ * Utility class for making calls to the PubSub API. Functions have been written
+ * specifically for the PubSub sample application.
+ */
 class PubsubHelper
 {
+    /**
+     * Creates the PubSub topic for the supplied $projetId if it doesn't exist
+     */
     public function setupTopic($projectId, $topicName, \Google_Service_Pubsub $pubsub)
     {
         $service = $pubsub->projects_topics;
@@ -45,15 +49,18 @@ class PubsubHelper
         return true;
     }
 
+    /**
+     * Subscribes this app to the PubSub topic if the topic has no subscribers
+     */
     public function setupSubscription($projectId, $topicName, $subscriptionName, $token, \Google_Service_Pubsub $pubsub)
     {
         $fullSubscriptionName = sprintf('projects/%s/subscriptions/%s', $projectId, $subscriptionName);
 
         try {
-            // NOTE: if the version changes, the subscriber will
-            // continue to be the older version, so you'll need to
-            // delete the subscriber in Google Developer Console in
-            // order for PubSub to push to newer versions
+            // NOTE: if the version changes, the subscription will
+            // continue to point to the older version, so you'll need to
+            // delete the subscription in Google Developer Console in
+            // order for Cloud PubSub to push to newer versions
             return $pubsub->projects_subscriptions->get($fullSubscriptionName);
         } catch (\Google_Service_Exception $e) {
             if ($e->getCode() != 404) {
@@ -72,6 +79,11 @@ class PubsubHelper
         return $pubsub->projects_subscriptions->create($fullSubscriptionName, $subscription);
     }
 
+    /**
+     * Returns the Push endpoint for this application to use in the Cloud PubSub
+     * subscription. The endpoint is created from the AppEngine Version ID and
+     * the pubsub token.
+     */
     public function getEndpoint($projectId, $token)
     {
         $versionSubdomain = '';

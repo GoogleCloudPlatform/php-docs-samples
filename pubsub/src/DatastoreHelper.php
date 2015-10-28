@@ -19,10 +19,15 @@
 namespace GoogleCloudPlatform\DocsSamples\Pubsub;
 
 /**
-*
-*/
+ * Utility class for making calls to datastore. Functions have been written
+ * specifically for the PubSub sample application.
+ */
 class DatastoreHelper
 {
+    /**
+     * Creates a query object for pulling the last $limit number of
+     * "PubSubMessage" items
+     */
     public function createQuery($limit = 20)
     {
         $request = new \Google_Service_Datastore_RunQueryRequest();
@@ -46,6 +51,9 @@ class DatastoreHelper
         return $request;
     }
 
+    /**
+     * Creates the request to store a PubSubMessage item in datastore
+     */
     public function createMessageRequest(\Google_Service_Datastore_Key $id, $message)
     {
         $entity = $this->createEntity($id, $message);
@@ -58,6 +66,10 @@ class DatastoreHelper
         return $req;
     }
 
+    /**
+     * Creates the basic entity for PubSubMessage, with properties "created"
+     * and "message"
+     */
     public function createEntity(\Google_Service_Datastore_Key $key, $message)
     {
         $entity = new \Google_Service_Datastore_Entity();
@@ -76,6 +88,9 @@ class DatastoreHelper
         return $entity;
     }
 
+    /**
+     * Fetches a unique key from Datastore for a PubSub message
+     */
     public function createUniqueKeyRequest()
     {
         // retrieve a unique ID from datastore
