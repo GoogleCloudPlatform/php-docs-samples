@@ -31,3 +31,9 @@ script:
   - composer install
   - phpunit mainTest.php
   - phpunit utilTest.php
+  - cd ../..
+  # run datastore tests
+  - cd datastore
+  - composer install
+  - phpunit test
+  - cd ..
