@@ -43,3 +43,8 @@ script:
   - composer install
   - phpunit test
   - cd ..
+  # run storage tests
+  - cd storage/api
+  - composer install
+  - phpunit listBucketsTest.php
+  - cd ../..
