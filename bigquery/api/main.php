@@ -18,38 +18,13 @@
 require_once __DIR__.'/vendor/autoload.php';
 // [START all]
 // [START build_service]
-/**
- * Create an authorized client that we will use to invoke BigQuery.
- *
- * @return Google_Service_Bigquery
- *
- * @throws Exception
- */
-function createAuthorizedClient()
-{
-    $json_credentials_path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-    if (!$json_credentials_path) {
-        throw new Exception('Set the environment variable '.
-            'GOOGLE_APPLICATION_CREDENTIALS to the path to your .json file.');
-    }
-    $contents = file_get_contents($json_credentials_path);
-    $json_array = json_decode($contents, true);
-    $credentials = new Google_Auth_AssertionCredentials(
-        $json_array['client_email'],
-        [Google_Service_Bigquery::BIGQUERY],
-        $json_array['private_key']
-    );
-    $client = new Google_Client();
-    $client->setAssertionCredentials($credentials);
-    if ($client->getAuth()->isAccessTokenExpired()) {
-        $client->getAuth()->refreshTokenWithAssertion();
-    }
-    $service = new Google_Service_Bigquery($client);
+$client = new Google_Client();
+$client->useApplicationDefaultCredentials();
+$client->addScope(Google_Service_Bigquery::BIGQUERY);
 
-    return $service;
-}
+$bigquery = new Google_Service_Bigquery($client);
 // [END build_service]
-$bigquery = createAuthorizedClient();
+
 $projectId = '';
 if ($projectId) {
     // The programmer already set the projectId above.
