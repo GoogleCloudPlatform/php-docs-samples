@@ -1,5 +1,5 @@
 {
-  "require": {
-    "google/apiclient": "1.1.5"
-  }
+    "require": {
+        "google/apiclient": "~2.0@RC"
+    }
 }

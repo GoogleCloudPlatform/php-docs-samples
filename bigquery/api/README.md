@@ -5,26 +5,40 @@
 This simple command-line application demonstrates how to invoke Google BigQuery from PHP.
 
 ## Build and Run
-1.  In the [Google Developers Console](https://console.developers.google.com/),
-    create a new project or choose an existing project.
-2.  In the [Google Developers Console](https://console.developers.google.com/),
-    click **APIs & auth**, then click APIs.  Wait for a list of APIs to
-    appear, then click BigQuery.  If BigQuery is not already enabled,
-    click the Enable API button.
-3.  In the [Google Developers Console](https://console.developers.google.com/),
-    under **APIs & auth**, click Credentials.  Click the button to "Generate
-    a new JSON key."  Set the environment variable
-    `GOOGLE_APPLICATION_CREDENTIALS` to the path of the JSON key that was
-    downloaded.
-3.  Clone this repo with
+1.  **Enable APIs** - [Enable the BigQuery API](https://console.cloud.google.com/flows/enableapi?apiid=bigquery)
+    and create a new project or select an existing project.
+2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click "New Credentials"
+    and select "Service Account Key". Create a new service account, use the JSON key type, and
+    select "Create". Once downloaded, set the environment variable `GOOGLE_APPLICATION_CREDENTIALS`
+    to the path of the JSON key that was downloaded.
+3.  **Clone the repo** and cd into this directory
 
     ```sh
-    git clone https://github.com/GoogleCloudPlatform/php-docs-samples
+    $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
+    $ cd php-docs-samples/bigquery/api
 ```
-4.  cd into the bigquery directory.
-5.  Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-6.  Run `php composer.phar install`.
-7.  Run `php main.php`.
+4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
+    Run `php composer.phar install` (if composer is installed locally) or `composer install`
+    (if composer is installed globally).
+5.  Run `php main.php YOUR_PROJECT_NAME` where YOUR_PROJECT_NAME is the
+    project associated with the credentials from **step 2**.
+
+    ```sh
+    $ php main.php my-project-name
+
+    Query Results:
+    ------------
+    hamlet                        5318
+    kinghenryv                    5104
+    cymbeline                     4875
+    troilusandcressida            4795
+    kinglear                      4784
+    kingrichardiii                4713
+    2kinghenryvi                  4683
+    coriolanus                    4653
+    2kinghenryiv                  4605
+    antonyandcleopatra            4582
+```
 
 ## Contributing changes
 
