@@ -96,7 +96,7 @@ $app->post('/store', function(Request $request) use ($app) {
     $datastore = new Google_Service_Datastore($client);
 
     // generate a unique key to store this item using the APIs
-    $keyRequest = $util->createUniqueKeyRequest($datasetId);
+    $keyRequest = $util->createUniqueKeyRequest();
     $uniqueId = $datastore->datasets->allocateIds($datasetId, $keyRequest);
     $key = $uniqueId->getKeys()[0];
 
