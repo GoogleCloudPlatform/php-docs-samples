@@ -11,7 +11,7 @@ A simple app to make calls to the Datastore API
 
 - Enable the "Google Cloud Datastore API" under "APIs & auth > APIs."
 
-- edit `app.yaml` and change `MY_GCP_PROJECT_ID` to your App Engine project ID
+- edit `app.yaml` and change `YOUR_GCP_PROJECT_ID` to your App Engine project ID
 
 - For local development also follow the instructions below.
 
