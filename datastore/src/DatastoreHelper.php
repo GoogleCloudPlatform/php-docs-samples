@@ -36,23 +36,26 @@ class DatastoreHelper
      */
     public function createSimpleQuery($limit = 20)
     {
-        $request = new \Google_Service_Datastore_RunQueryRequest();
-        $query = new \Google_Service_Datastore_Query();
+        $query = new \Google_Service_Datastore_Query([
+            'order' => [
+                [
+                    'direction' => 'descending',
+                    'property'  => [
+                        'name' => 'created'
+                    ],
+                ],
+            ],
+            'kinds' => [
+                [
+                    'name' => self::KIND
+                ],
+            ],
+            'limit' => $limit,
+        ]);
 
-        $order = new \Google_Service_Datastore_PropertyOrder();
-        $order->setDirection('descending');
-        $property = new \Google_Service_Datastore_PropertyReference();
-        $property->setName('created');
-        $order->setProperty($property);
-        $query->setOrder([$order]);
-
-        $kind = new \Google_Service_Datastore_KindExpression();
-        $kind->setName(self::KIND);
-        $query->setKinds([$kind]);
-
-        $query->setLimit($limit);
-
-        $request->setQuery($query);
+        $request = new \Google_Service_Datastore_RunQueryRequest([
+            'query' => $query
+        ]);
 
         return $request;
     }
@@ -63,11 +66,12 @@ class DatastoreHelper
     public function createCommentRequest(\Google_Service_Datastore_Key $id, $name, $body)
     {
         $entity = $this->createEntity($id, $name, $body);
-        $mutation = new \Google_Service_Datastore_Mutation();
-        $mutation->setUpsert([$entity]);
-        $req = new \Google_Service_Datastore_CommitRequest();
-        $req->setMode('NON_TRANSACTIONAL');
-        $req->setMutation($mutation);
+        $req = new \Google_Service_Datastore_CommitRequest([
+            'mode' => 'NON_TRANSACTIONAL',
+            'mutation' => [
+                'upsert' => [$entity]
+            ]
+        ]);
 
         return $req;
     }
@@ -78,21 +82,20 @@ class DatastoreHelper
      */
     public function createEntity(\Google_Service_Datastore_Key $key, $name, $body)
     {
-        $entity = new \Google_Service_Datastore_Entity();
-        $entity->setKey($key);
-        $nameProp = new \Google_Service_Datastore_Property();
-        $nameProp->setStringValue($name);
-        $bodyProp = new \Google_Service_Datastore_Property();
-        $bodyProp->setStringValue($body);
-        $createdProp = new \Google_Service_Datastore_Property();
-        $createdProp->setDateTimeValue(date('c'));
-        $properties = [
-            'name'    => $nameProp,
-            'body' => $bodyProp,
-            'created' => $createdProp,
-        ];
-
-        $entity->setProperties($properties);
+        $entity = new \Google_Service_Datastore_Entity([
+            'key' => $key,
+            'properties' => [
+                'name' => [
+                    'stringValue' => $name,
+                ],
+                'body' => [
+                    'stringValue' => $body,
+                ],
+                'created' => [
+                    'dateTimeValue' => date('c')
+                ],
+            ]
+        ]);
 
         return $entity;
     }
@@ -103,12 +106,17 @@ class DatastoreHelper
     public function createUniqueKeyRequest()
     {
         // retrieve a unique ID from datastore
-        $path = new \Google_Service_Datastore_KeyPathElement();
-        $path->setKind(self::KIND);
-        $key = new \Google_Service_Datastore_Key();
-        $key->setPath([$path]);
-        $idRequest = new \Google_Service_Datastore_AllocateIdsRequest();
-        $idRequest->setKeys([$key]);
+        $idRequest = new \Google_Service_Datastore_AllocateIdsRequest([
+            'keys' => [
+                [
+                    'path' => [
+                        [
+                            'kind' => self::KIND,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
 
         return $idRequest;
     }
