@@ -16,7 +16,7 @@
  */
 require 'util.php';
 
-class UtilTest extends PHPUnit_Framework_TestCase
+class utilTest extends PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected static $bigquery;
@@ -32,7 +32,7 @@ class UtilTest extends PHPUnit_Framework_TestCase
             self::$bigquery = createAuthorizedClient();
             self::$projectId = getenv('GOOGLE_PROJECT_ID');
             self::$shakespeareQuery =
-                'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words '.
+                'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
                 'FROM [publicdata:samples.shakespeare]';
         }
     }
@@ -119,7 +119,7 @@ class UtilTest extends PHPUnit_Framework_TestCase
     public function testListDatasets()
     {
         $datasets = listDatasets(self::$bigquery, self::$projectId);
-        echo 'Datasets for '.self::$projectId.':';
+        echo 'Datasets for ' . self::$projectId . ':';
         foreach ($datasets as $dataset) {
             echo $dataset;
         }

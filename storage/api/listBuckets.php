@@ -18,7 +18,7 @@
 
 // [START all]
 // composer autoloading
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 // grab the first argument
 if (empty($argv[1])) {
@@ -40,6 +40,7 @@ $storage = new Google_Service_Storage($client);
 $buckets = $storage->buckets->listBuckets($projectId);
 
 foreach ($buckets['items'] as $bucket) {
-  printf("%s\n", $bucket->getName());
+    printf("%s\n", $bucket->getName());
 }
 // [END all]
+

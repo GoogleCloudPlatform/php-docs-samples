@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 // [START all]
 // [START build_service]
 $client = new Google_Client();
@@ -38,7 +38,7 @@ if ($projectId) {
 // [START run_query]
 // Pack a BigQuery request.
 $request = new Google_Service_Bigquery_QueryRequest();
-$request->setQuery('SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words '.
+$request->setQuery('SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
     'FROM [publicdata:samples.shakespeare]');
 $response = $bigquery->jobs->query($projectId, $request);
 $rows = $response->getRows();

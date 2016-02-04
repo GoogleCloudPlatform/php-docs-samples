@@ -25,7 +25,7 @@ class datastoreTest extends WebTestCase
 {
     public function createApplication()
     {
-        $app = require __DIR__.'/../src/app.php';
+        $app = require __DIR__ . '/../src/app.php';
 
         // set some parameters for testing
         $app['session.test'] = true;
@@ -34,8 +34,8 @@ class datastoreTest extends WebTestCase
 
         // this will be set by travis, but may not be set locally
         if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $credentials = __DIR__.'/../../credentials.json';
-            putenv('GOOGLE_APPLICATION_CREDENTIALS='.$credentials);
+            $credentials = __DIR__ . '/../../credentials.json';
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $credentials);
         }
 
         if (!file_exists($credentials) || 0 == filesize($credentials)) {
@@ -62,11 +62,11 @@ class datastoreTest extends WebTestCase
         $client = $this->createClient();
 
         $crawler = $client->request('POST', '/store', [
-	    'name' => 'test-comment',
-	    'body' => 'body of comment'
-	]);
+        'name' => 'test-comment',
+        'body' => 'body of comment'
+    ]);
 
-	$response = $client->getResponse();
+        $response = $client->getResponse();
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals('/', $response->headers->get('location'));
     }

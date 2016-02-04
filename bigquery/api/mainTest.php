@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class MainTest extends PHPUnit_Framework_TestCase
+class mainTest extends PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 

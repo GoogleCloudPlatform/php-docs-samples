@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+branches:
+  only:
+    - master
+
 language: php
 php:
   - 5.5
@@ -25,8 +29,12 @@ env:
 
 before_install:
   - php dump_credentials.php
+  - wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer.phar
 
 script:
+  # run php-cs-fixer
+  - php php-cs-fixer.phar fix --dry-run --diff --level=psr2
+    --fixers=concat_with_spaces,unused_use,trailing_spaces,indentation .
   # run bigquery tests
   - cd bigquery/api
   - composer install

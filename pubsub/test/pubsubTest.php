@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Pubsub\Test;
+namespace Google\Cloud\Samples\pubsub\test;
 
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\Client;
@@ -30,7 +30,7 @@ class pubsubTest extends WebTestCase
     public function createApplication()
     {
         // pull the app and set parameters for testing
-        $app = require __DIR__.'/../src/app.php';
+        $app = require __DIR__ . '/../src/app.php';
 
         $app['session.test'] = true;
         $app['debug'] = true;
@@ -38,8 +38,8 @@ class pubsubTest extends WebTestCase
 
         // this will be set by travis, but may not be set locally
         if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $credentials = __DIR__.'/../../credentials.json';
-            putenv('GOOGLE_APPLICATION_CREDENTIALS='.$credentials);
+            $credentials = __DIR__ . '/../../credentials.json';
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $credentials);
         }
 
         if (!file_exists($credentials) || 0 == filesize($credentials)) {

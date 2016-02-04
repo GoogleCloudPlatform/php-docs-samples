@@ -19,10 +19,10 @@
 use Symfony\Component\Debug\Debug;
 
 // composer autoloading
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // get the silex application
-$app = require_once __DIR__.'/../src/app.php';
+$app = require_once __DIR__ . '/../src/app.php';
 
 // set debugging to true
 $app['debug'] = true;
