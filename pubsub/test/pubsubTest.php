@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Pubsub\Test;
+namespace Google\Cloud\Samples\pubsub\test;
 
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\Client;
-use GuzzleHttp\Client as HttpClient;
 
 // @TODO: use test bootstrap
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -30,7 +29,7 @@ class pubsubTest extends WebTestCase
     public function createApplication()
     {
         // pull the app and set parameters for testing
-        $app = require __DIR__.'/../src/app.php';
+        $app = require __DIR__ . '/../src/app.php';
 
         $app['session.test'] = true;
         $app['debug'] = true;
@@ -38,8 +37,8 @@ class pubsubTest extends WebTestCase
 
         // this will be set by travis, but may not be set locally
         if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $credentials = __DIR__.'/../../credentials.json';
-            putenv('GOOGLE_APPLICATION_CREDENTIALS='.$credentials);
+            $credentials = __DIR__ . '/../../credentials.json';
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $credentials);
         }
 
         if (!file_exists($credentials) || 0 == filesize($credentials)) {
@@ -78,10 +77,6 @@ class pubsubTest extends WebTestCase
             ->expects($this->once())
             ->method('getLogger')
             ->will($this->returnValue($this->getMock('Psr\Log\LoggerInterface')));
-        $apiClient
-            ->expects($this->once())
-            ->method('getHttpClient')
-            ->will($this->returnValue(new HttpClient()));
 
         // create the application
         $app = $this->createApplication();
@@ -110,10 +105,6 @@ class pubsubTest extends WebTestCase
             ->expects($this->once())
             ->method('getLogger')
             ->will($this->returnValue($this->getMock('Psr\Log\LoggerInterface')));
-        $apiClient
-            ->expects($this->once())
-            ->method('getHttpClient')
-            ->will($this->returnValue(new HttpClient()));
 
         // create the application
         $app = $this->createApplication();

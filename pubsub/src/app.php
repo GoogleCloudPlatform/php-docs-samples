@@ -23,11 +23,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Google\Cloud\Samples\Pubsub\DatastoreHelper;
 
 // composer autoloading
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 $app->register(new TwigServiceProvider());
-$app['twig.path'] = [ __DIR__.'/../templates' ];
+$app['twig.path'] = [ __DIR__ . '/../templates' ];
 $app['project_id'] = getenv('GOOGLE_PROJECT_NAME');
 $app['topic'] = getenv('TOPIC_NAME') ?: 'php-pubsub-example';
 
@@ -60,7 +60,7 @@ $app->get('/fetch_messages', function () use ($app) {
     return new JsonResponse($messages);
 });
 
-$app->post('/receive_message', function() use ($app) {
+$app->post('/receive_message', function () use ($app) {
     /** @var Google_Client $client */
     $client = $app['google_client'];
     $projectId = $app['project_id'];
@@ -81,7 +81,7 @@ $app->post('/receive_message', function() use ($app) {
     return new Response();
 });
 
-$app->post('/send_message', function() use ($app) {
+$app->post('/send_message', function () use ($app) {
     // send the pubsub message
     if ($messageText = $app['request']->get('message')) {
         /** @var Google_Client $client */

@@ -46,7 +46,7 @@ $project = 'YOUR_GOOGLE_COMPUTE_ENGINE_PROJECT';
  * Constants for sample request parameters.
  */
 define('API_VERSION', 'v1beta14');
-define('BASE_URL', 'https://www.googleapis.com/compute/'.
+define('BASE_URL', 'https://www.googleapis.com/compute/' .
   API_VERSION . '/projects/');
 define('GOOGLE_PROJECT', 'google');
 define('DEFAULT_PROJECT', $project);
@@ -67,47 +67,48 @@ define('DEFAULT_NETWORK', BASE_URL . DEFAULT_PROJECT .
  * @param string $apiResponse The API response to process.
  * @return string Markup for the specific Google Compute Engine API request.
  */
-function generateMarkup($apiRequestName, $apiResponse) {
-  $apiRequestMarkup = '';
-  $apiRequestMarkup .= "<header><h2>" . $apiRequestName . "</h2></header>";
+function generateMarkup($apiRequestName, $apiResponse)
+{
+    $apiRequestMarkup = '';
+    $apiRequestMarkup .= "<header><h2>" . $apiRequestName . "</h2></header>";
 
-  if ($apiResponse['items'] == '' ) {
-    $apiRequestMarkup .= "<pre>";
-    $apiRequestMarkup .= print_r(json_decode(json_encode($apiResponse), true), true);
-    $apiRequestMarkup .= "</pre>";
-  } else {
-    foreach($apiResponse['items'] as $response) {
-      $apiRequestMarkup .= "<pre>";
-      $apiRequestMarkup .= print_r(json_decode(json_encode($response), true), true);
-      $apiRequestMarkup .= "</pre>";
+    if ($apiResponse['items'] == '') {
+        $apiRequestMarkup .= "<pre>";
+        $apiRequestMarkup .= print_r(json_decode(json_encode($apiResponse), true), true);
+        $apiRequestMarkup .= "</pre>";
+    } else {
+        foreach ($apiResponse['items'] as $response) {
+            $apiRequestMarkup .= "<pre>";
+            $apiRequestMarkup .= print_r(json_decode(json_encode($response), true), true);
+            $apiRequestMarkup .= "</pre>";
+        }
     }
-  }
 
-  return $apiRequestMarkup;
+    return $apiRequestMarkup;
 }
 
 /**
  * Clear access token whenever a logout is requested.
  */
 if (isset($_REQUEST['logout'])) {
-  unset($_SESSION['access_token']);
+    unset($_SESSION['access_token']);
 }
 
 /**
  * Authenticate and set client access token.
  */
 if (isset($_GET['code'])) {
-  $client->authenticate($_GET['code']);
-  $_SESSION['access_token'] = $client->getAccessToken();
-  $redirect = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-  header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
+    $client->authenticate($_GET['code']);
+    $_SESSION['access_token'] = $client->getAccessToken();
+    $redirect = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+    header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
 }
 
 /**
  * Set client access token.
  */
 if (isset($_SESSION['access_token'])) {
-  $client->setAccessToken($_SESSION['access_token']);
+    $client->setAccessToken($_SESSION['access_token']);
 }
 
 /**
@@ -115,27 +116,27 @@ if (isset($_SESSION['access_token'])) {
  * Engine API requests.
  */
 if ($client->getAccessToken()) {
-  /**
+    /**
    * Google Compute Engine API request to retrieve the list of instances in your
    * Google Compute Engine project.
    */
   $instances = $computeService->instances->listInstances(DEFAULT_PROJECT,
     DEFAULT_ZONE_NAME);
-  $instancesListMarkup = generateMarkup('List Instances', $instances);
+    $instancesListMarkup = generateMarkup('List Instances', $instances);
 
   /**
    * Google Compute Engine API request to retrieve the list of all data center
    * locations associated with your Google Compute Engine project.
    */
   $zones = $computeService->zones->listZones(DEFAULT_PROJECT);
-  $zonesListMarkup = generateMarkup('List Zones', $zones);
+    $zonesListMarkup = generateMarkup('List Zones', $zones);
 
   /**
    * Google Compute Engine API request to retrieve the list of all machine types
    * associated associated with your Google Compute Engine project.
    */
   $machineTypes = $computeService->machineTypes->listMachineTypes(DEFAULT_PROJECT);
-  $machineTypesListMarkup = generateMarkup('List Machine Types',
+    $machineTypesListMarkup = generateMarkup('List Machine Types',
     $machineTypes);
 
   /**
@@ -143,75 +144,76 @@ if ($client->getAccessToken()) {
    * associated associated with your Google Compute Engine project.
    */
   $images = $computeService->images->listImages(GOOGLE_PROJECT);
-  $imagesListMarkup = generateMarkup('List Images', $images);
+    $imagesListMarkup = generateMarkup('List Images', $images);
 
   /**
    * Google Compute Engine API request to retrieve the list of all firewalls
    * associated associated with your Google Compute Engine project.
    */
   $firewalls = $computeService->firewalls->listFirewalls(DEFAULT_PROJECT);
-  $firewallsListMarkup = generateMarkup('List Firewalls', $firewalls);
+    $firewallsListMarkup = generateMarkup('List Firewalls', $firewalls);
 
   /**
    * Google Compute Engine API request to retrieve the list of all networks
    * associated associated with your Google Compute Engine project.
    */
   $networks = $computeService->networks->listNetworks(DEFAULT_PROJECT);
-  $networksListMarkup = generateMarkup('List Networks', $networks);;
+    $networksListMarkup = generateMarkup('List Networks', $networks);
+    ;
 
   /**
    * Google Compute Engine API request to insert a new instance into your Google
    * Compute Engine project.
    */
   $name = DEFAULT_NAME;
-  $machineType = DEFAULT_MACHINE_TYPE;
-  $zone = DEFAULT_ZONE_NAME;
-  $image = DEFAULT_IMAGE;
+    $machineType = DEFAULT_MACHINE_TYPE;
+    $zone = DEFAULT_ZONE_NAME;
+    $image = DEFAULT_IMAGE;
 
-  $googleNetworkInterfaceObj = new Google_NetworkInterface();
-  $network = DEFAULT_NETWORK;
-  $googleNetworkInterfaceObj->setNetwork($network);
+    $googleNetworkInterfaceObj = new Google_NetworkInterface();
+    $network = DEFAULT_NETWORK;
+    $googleNetworkInterfaceObj->setNetwork($network);
 
-  $new_instance = new Google_Instance();
-  $new_instance->setName($name);
-  $new_instance->setImage($image);
-  $new_instance->setMachineType($machineType);
-  $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
+    $new_instance = new Google_Instance();
+    $new_instance->setName($name);
+    $new_instance->setImage($image);
+    $new_instance->setMachineType($machineType);
+    $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
 
-  $insertInstance = $computeService->instances->insert(DEFAULT_PROJECT,
+    $insertInstance = $computeService->instances->insert(DEFAULT_PROJECT,
     $zone, $new_instance);
-  $insertInstanceMarkup = generateMarkup('Insert Instance', $insertInstance);
+    $insertInstanceMarkup = generateMarkup('Insert Instance', $insertInstance);
 
   /**
    * Google Compute Engine API request to insert a new instance (with metadata)
    * into your Google Compute Engine project.
    */
   $name = DEFAULT_NAME_WITH_METADATA;
-  $machineType = DEFAULT_MACHINE_TYPE;
-  $zone = DEFAULT_ZONE_NAME;
-  $image = DEFAULT_IMAGE;
+    $machineType = DEFAULT_MACHINE_TYPE;
+    $zone = DEFAULT_ZONE_NAME;
+    $image = DEFAULT_IMAGE;
 
-  $googleNetworkInterfaceObj = new Google_NetworkInterface();
-  $network = DEFAULT_NETWORK;
-  $googleNetworkInterfaceObj->setNetwork($network);
+    $googleNetworkInterfaceObj = new Google_NetworkInterface();
+    $network = DEFAULT_NETWORK;
+    $googleNetworkInterfaceObj->setNetwork($network);
 
-  $metadataItemsObj = new Google_MetadataItems();
-  $metadataItemsObj->setKey('startup-script');
-  $metadataItemsObj->setValue('apt-get install apache2');
+    $metadataItemsObj = new Google_MetadataItems();
+    $metadataItemsObj->setKey('startup-script');
+    $metadataItemsObj->setValue('apt-get install apache2');
 
-  $metadata = new Google_Metadata();
-  $metadata->setItems(array($metadataItemsObj));
+    $metadata = new Google_Metadata();
+    $metadata->setItems(array($metadataItemsObj));
 
-  $new_instance = new Google_Instance();
-  $new_instance->setName($name);
-  $new_instance->setImage($image);
-  $new_instance->setMachineType($machineType);
-  $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
-  $new_instance->setMetadata($metadata);
+    $new_instance = new Google_Instance();
+    $new_instance->setName($name);
+    $new_instance->setImage($image);
+    $new_instance->setMachineType($machineType);
+    $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
+    $new_instance->setMetadata($metadata);
 
-  $insertInstanceWithMetadata = $computeService->instances->insert(
+    $insertInstanceWithMetadata = $computeService->instances->insert(
     DEFAULT_PROJECT, $zone, $new_instance);
-  $insertInstanceWithMetadataMarkup = generateMarkup(
+    $insertInstanceWithMetadataMarkup = generateMarkup(
     'Insert Instance With Metadata', $insertInstanceWithMetadata);
 
   /**
@@ -220,7 +222,7 @@ if ($client->getAccessToken()) {
    */
   $getInstance = $computeService->instances->get(DEFAULT_PROJECT,
     DEFAULT_ZONE_NAME, DEFAULT_NAME);
-  $getInstanceMarkup = generateMarkup('Get Instance', $getInstance);
+    $getInstanceMarkup = generateMarkup('Get Instance', $getInstance);
 
   /**
    * Google Compute Engine API request to get an instance matching the outlined
@@ -228,7 +230,7 @@ if ($client->getAccessToken()) {
    */
   $getInstanceWithMetadata = $computeService->instances->get(DEFAULT_PROJECT,
     DEFAULT_ZONE_NAME, DEFAULT_NAME_WITH_METADATA);
-  $getInstanceWithMetadataMarkup = generateMarkup('Get Instance With Metadata',
+    $getInstanceWithMetadataMarkup = generateMarkup('Get Instance With Metadata',
     $getInstanceWithMetadata);
 
   /**
@@ -237,7 +239,7 @@ if ($client->getAccessToken()) {
    */
   $deleteInstance = $computeService->instances->delete(DEFAULT_PROJECT,
     DEFAULT_ZONE_NAME, DEFAULT_NAME);
-  $deleteInstanceMarkup = generateMarkup('Delete Instance', $deleteInstance);
+    $deleteInstanceMarkup = generateMarkup('Delete Instance', $deleteInstance);
 
   /**
    * Google Compute Engine API request to delete an instance matching the
@@ -245,7 +247,7 @@ if ($client->getAccessToken()) {
    */
   $deleteInstanceWithMetadata = $computeService->instances->delete(DEFAULT_PROJECT,
     DEFAULT_ZONE_NAME, DEFAULT_NAME_WITH_METADATA);
-  $deleteInstanceWithMetadataMarkup = generateMarkup(
+    $deleteInstanceWithMetadataMarkup = generateMarkup(
     'Delete Instance With Metadata', $deleteInstanceWithMetadata);
 
   /**
@@ -253,12 +255,12 @@ if ($client->getAccessToken()) {
    * operations associated with your Google Compute Engine project.
    */
   $globalOperations = $computeService->globalOperations->listGlobalOperations(DEFAULT_PROJECT);
-  $operationsListMarkup = generateMarkup('List Global Operations', $globalOperations);
+    $operationsListMarkup = generateMarkup('List Global Operations', $globalOperations);
 
   // The access token may have been updated lazily.
   $_SESSION['access_token'] = $client->getAccessToken();
 } else {
-  $authUrl = $client->createAuthUrl();
+    $authUrl = $client->createAuthUrl();
 }
 ?>
 <!doctype html>
@@ -269,69 +271,69 @@ if ($client->getAccessToken()) {
   <body>
     <header><h1>Google Compute Engine Sample App</h1></header>
     <div class="main-content">
-      <?php if(isset($instancesListMarkup)): ?>
+      <?php if (isset($instancesListMarkup)): ?>
         <div id="listInstances"><?php print $instancesListMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($zonesListMarkup)): ?>
+      <?php if (isset($zonesListMarkup)): ?>
         <div id="listZones"><?php print $zonesListMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($machineTypesListMarkup)): ?>
+      <?php if (isset($machineTypesListMarkup)): ?>
         <div id="listMachineTypes"><?php print $machineTypesListMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($imagesListMarkup)): ?>
+      <?php if (isset($imagesListMarkup)): ?>
         <div id="listImages"><?php print $imagesListMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($firewallsListMarkup)): ?>
+      <?php if (isset($firewallsListMarkup)): ?>
         <div id="listFirewalls"><?php print $firewallsListMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($networksListMarkup)): ?>
+      <?php if (isset($networksListMarkup)): ?>
         <div id="listNetworks"><?php print $networksListMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($getInstanceWithMetadataMarkup)): ?>
+      <?php if (isset($getInstanceWithMetadataMarkup)): ?>
         <div id="getInstanceWithMetadata">
           <?php print $getInstanceWithMetadataMarkup ?>
         </div>
       <?php endif ?>
 
-      <?php if(isset($getInstanceMarkup)): ?>
+      <?php if (isset($getInstanceMarkup)): ?>
         <div id="getInstance"><?php print $getInstanceMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($deleteInstanceMarkup)): ?>
+      <?php if (isset($deleteInstanceMarkup)): ?>
         <div id="deleteInstance"><?php print $deleteInstanceMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($deleteInstanceWithMetadataMarkup)): ?>
+      <?php if (isset($deleteInstanceWithMetadataMarkup)): ?>
         <div id="deleteInstanceWithMetadata">
           <?php print $deleteInstanceWithMetadataMarkup ?>
         </div>
       <?php endif ?>
 
-      <?php if(isset($insertInstanceMarkup)): ?>
+      <?php if (isset($insertInstanceMarkup)): ?>
         <div id="insertInstance"><?php print $insertInstanceMarkup ?></div>
       <?php endif ?>
 
-      <?php if(isset($insertInstanceWithMetadataMarkup)): ?>
+      <?php if (isset($insertInstanceWithMetadataMarkup)): ?>
         <div id="insertInstanceWithMetadata">
           <?php print $insertInstanceWithMetadataMarkup?>
         </div>
       <?php endif ?>
 
-      <?php if(isset($operationsListMarkup)): ?>
+      <?php if (isset($operationsListMarkup)): ?>
         <div id="listGlobalOperations"><?php print $operationsListMarkup ?></div>
       <?php endif ?>
 
       <?php
-        if(isset($authUrl)) {
-          print "<a class='login' href='$authUrl'>Connect Me!</a>";
+        if (isset($authUrl)) {
+            print "<a class='login' href='$authUrl'>Connect Me!</a>";
         } else {
-          print "<a class='logout' href='?logout'>Logout</a>";
+            print "<a class='logout' href='?logout'>Logout</a>";
         }
       ?>
     </div>

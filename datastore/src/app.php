@@ -20,7 +20,6 @@ use Google\Cloud\Samples\Datastore\DatastoreHelper;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 $app = new Application();
 $app->register(new TwigServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
-$app['twig.path'] = [ __DIR__.'/../templates' ];
+$app['twig.path'] = [ __DIR__ . '/../templates' ];
 
 // create the google api client
 $client = new Google_Client();
@@ -72,7 +71,7 @@ $app->get('/', function () use ($app) {
     ]);
 })->bind('home');
 
-$app->post('/store', function(Request $request) use ($app) {
+$app->post('/store', function (Request $request) use ($app) {
     /** @var Google_Client $client */
     $client = $app['google_client'];
     /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlgen */

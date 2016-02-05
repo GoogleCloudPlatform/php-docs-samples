@@ -1,6 +1,6 @@
 <?php
 
-namespace Google\Cloud\Samples\Pubsub\Test;
+namespace Google\Cloud\Samples\pubsub\test;
 
 use Google\Cloud\Samples\Pubsub\DatastoreHelper;
 
