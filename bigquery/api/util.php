@@ -172,4 +172,3 @@ function listProjects(Google_Service_Bigquery $bigquery)
     return $projects->getProjects() ? $projects->getProjects() : array();
 }
 // [END list_projects]
-

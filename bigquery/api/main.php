@@ -55,4 +55,3 @@ foreach ($rows as $row) {
 }
 // [END print_results]
 // [END all]
-

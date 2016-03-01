@@ -43,4 +43,3 @@ foreach ($buckets['items'] as $bucket) {
     printf("%s\n", $bucket->getName());
 }
 // [END all]
-
