@@ -26,6 +26,7 @@ php:
 env:
   globals:
     - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
+    - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
 
 before_install:
   - php dump_credentials.php
