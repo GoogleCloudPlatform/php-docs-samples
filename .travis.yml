@@ -27,10 +27,12 @@ env:
   globals:
     - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
+    - PATH=${HOME}/gcloud/google-cloud-sdk/bin:${PATH}
 
 before_install:
   - php dump_credentials.php
   - wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer.phar
+  - scripts/install_test_deps.sh
 
 script:
   # run php-cs-fixer
