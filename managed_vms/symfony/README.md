@@ -29,7 +29,7 @@ directory:
 # clone this repo somewhere
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 
-# copy the four files below to the root directory of your Drupal project
+# copy the four files below to the root directory of your Symfony project
 cd /path/to/php-docs-samples/managed_vms/symfony/
 cp ./{app.yaml,php.ini,Dockerfile,nginx-app.conf} /path/to/symfony
 ```
@@ -39,7 +39,7 @@ The four files needed are as follows:
   1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
   1. [`Dockerfile`](Dockerfile) - Container configuration for the PHP runtime
   1. [`php.ini`](php.ini) - Optional ini used to extend the runtime configuration.
-  1. [`nginx-app.conf`](nginx-app.conf) - Nginx web server configuration needed for `Drupal 8`
+  1. [`nginx-app.conf`](nginx-app.conf) - Nginx web server configuration needed for `Symfony`
 
 [1]: https://cloud.google.com/appengine/docs/managed-vms/
 [2]: https://console.cloud.google.com

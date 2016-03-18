@@ -6,4 +6,4 @@ FROM gcr.io/php-mvm-a/php-nginx:latest
 ENV DOCUMENT_ROOT /app/web
 
 # add write permissions to var directory for cache, logs, and session
-RUN chmod -R u+w /app/var
+RUN chmod -R ug+w /app/var

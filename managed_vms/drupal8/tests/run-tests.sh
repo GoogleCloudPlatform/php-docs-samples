@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -o xtrace
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SAMPLE_DIR="${DIR}/.."
@@ -7,7 +8,6 @@ DRUPAL_DIR="${SAMPLE_DIR}/drupal8.test"
 
 VARS=(
     GOOGLE_PROJECT_ID
-    GOOGLE_VERSION_ID
     DRUPAL_ADMIN_USERNAME
     DRUPAL_ADMIN_PASSWORD
     DRUPAL_DATABASE_NAME
@@ -63,11 +63,35 @@ drupal cache:rebuild all
 # Copy configuration files to the drupal project
 cp $SAMPLE_DIR/{app.yaml,php.ini,Dockerfile,nginx-app.conf} $DRUPAL_DIR
 
-# Deploy to gcloud
-gcloud preview app deploy \
-  --no-promote --quiet --stop-previous-version --force \
-  --project=${GOOGLE_PROJECT_ID} \
-  --version=${GOOGLE_VERSION_ID}
+# Deploy to a module other than "default"
+if [ ! -z "${GOOGLE_MODULE}" ]; then
+  echo "module: ${GOOGLE_MODULE}" >> ${DRUPAL_DIR}/app.yaml
+fi
+
+# Set a version ID if none was supplied
+if [ -z "${GOOGLE_VERSION_ID}" ]; then
+    GOOGLE_VERSION_ID=$(date +%s)
+fi
+
+# Deploy to gcloud (try 3 times)
+attempts=0
+until [ $attempts -ge 3 ]
+do
+  gcloud preview app deploy \
+    --no-promote --quiet --stop-previous-version --force --docker-build=remote \
+    --project=${GOOGLE_PROJECT_ID} \
+    --version=${GOOGLE_VERSION_ID} \
+      && break
+  attempts=$[$attempts+1]
+  sleep 1
+done
+
+# Determine the deployed URL
+if [ -z "${GOOGLE_MODULE}" ]; then
+  VERSION_PREFIX=${GOOGLE_VERSION_ID}
+else
+  VERSION_PREFIX=${GOOGLE_VERSION_ID}-dot-${GOOGLE_MODULE}
+fi
 
 # perform the test
-curl -vf https://${GOOGLE_VERSION_ID}-dot-${GOOGLE_PROJECT_ID}.appspot.com
+curl -fs https://${VERSION_PREFIX}-dot-${GOOGLE_PROJECT_ID}.appspot.com > /dev/null
