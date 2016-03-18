@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -o xtrace
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SAMPLE_DIR="${DIR}/.."
@@ -42,28 +43,45 @@ sed -i -e "s/database_name: .*/database_name: ${SYMFONY_DATABASE_NAME}/" $PARAME
 sed -i -e "s/database_user: .*/database_user: ${SYMFONY_DATABASE_USER}/" $PARAMETERS_FILE
 sed -i -e "s/database_password: .*/database_password: ${SYMFONY_DATABASE_PASS}/" $PARAMETERS_FILE
 
-## Perform steps outlined in the README ##
-
-# Copy configuration files to user home directory:
-cp "${SAMPLE_DIR}/app.yaml" "${SYMFONY_DIR}/app.yaml"
-cp "${SAMPLE_DIR}/nginx-app.conf" "${SYMFONY_DIR}/nginx-app.conf"
-cp "${SAMPLE_DIR}/Dockerfile" "${SYMFONY_DIR}/Dockerfile"
-cp "${SAMPLE_DIR}/php.ini" "${SYMFONY_DIR}/php.ini"
-
 cd $SYMFONY_DIR
 
-# remove composer.json - this is causing problems right now
+# Remove composer.json - this is causing problems right now
 rm composer.json
 
-# Deploy to gcloud
+## Perform steps outlined in the README ##
+
+# Copy configuration files to the symfony project
+cp $SAMPLE_DIR/{app.yaml,php.ini,Dockerfile,nginx-app.conf} $SYMFONY_DIR
+
+# Deploy to a module other than "default"
+if [ ! -z "${GOOGLE_MODULE}" ]; then
+  echo "module: ${GOOGLE_MODULE}" >> ${SYMFONY_DIR}/app.yaml
+fi
+
+# Set a version ID if none was supplied
 if [ -z "${GOOGLE_VERSION_ID}" ]; then
     GOOGLE_VERSION_ID=$(date +%s)
 fi
 
-gcloud preview app deploy \
-  --no-promote --quiet --stop-previous-version --force --docker-build=remote \
-  --project=${GOOGLE_PROJECT_ID} \
-  --version=${GOOGLE_VERSION_ID}
+# Deploy to gcloud (try 3 times)
+attempts=0
+until [ $attempts -ge 3 ]
+do
+  gcloud preview app deploy \
+    --no-promote --quiet --stop-previous-version --force --docker-build=remote \
+    --project=${GOOGLE_PROJECT_ID} \
+    --version=${GOOGLE_VERSION_ID} \
+      && break
+  attempts=$[$attempts+1]
+  sleep 1
+done
+
+# Determine the deployed URL
+if [ -z "${GOOGLE_MODULE}" ]; then
+  VERSION_PREFIX=${GOOGLE_VERSION_ID}
+else
+  VERSION_PREFIX=${GOOGLE_VERSION_ID}-dot-${GOOGLE_MODULE}
+fi
 
 # perform the test
-curl -fs https://${GOOGLE_VERSION_ID}-dot-${GOOGLE_PROJECT_ID}.appspot.com > /dev/null
+curl -fs https://${VERSION_PREFIX}-dot-${GOOGLE_PROJECT_ID}.appspot.com > /dev/null
