@@ -67,7 +67,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
                 "sh $target/deploy_wrapper.sh gcloud -q preview app deploy "
                 . "--version $e2e_test_version "
                 . "--project $project_id --no-promote "
-                . "$target/app.yaml",
+                . "$target/app.yaml $target/cron.yaml",
                 $output,
                 $ret
             );
