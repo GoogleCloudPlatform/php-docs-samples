@@ -133,7 +133,7 @@ Use the shell script wrapper for deployment as follows:
 ```
 $ sh deploy_wrapper.sh \
   gcloud preview app deploy \
-    --promote --stop-previous-version app.yaml
+    --promote --stop-previous-version app.yaml cron.yaml
 ```
 
 Then access your site, use the username and the password you created

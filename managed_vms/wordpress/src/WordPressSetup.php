@@ -124,6 +124,7 @@ class WordPressSetup extends Command
         );
         $copyFiles = array(
             'app.yaml' => '/',
+            'cron.yaml' => '/',
             'composer.json' => '/',
             'deploy_wrapper.sh' => '/',
             'Dockerfile' => '/',
