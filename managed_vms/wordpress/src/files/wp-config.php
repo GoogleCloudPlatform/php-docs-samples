@@ -35,6 +35,9 @@ define('ON_MVM', filter_var(getenv('GAE_VM'), FILTER_VALIDATE_BOOLEAN));
 // Cache settings
 define('WP_CACHE', ON_MVM);
 
+// Disable pseudo cron behavior
+define('DISABLE_WP_CRON', true);
+
 $memcached_servers = array(
     'default' => array(
         getenv('MEMCACHE_PORT_11211_TCP_ADDR')
