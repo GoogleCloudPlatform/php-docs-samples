@@ -64,20 +64,19 @@ if [ -z "${GOOGLE_VERSION_ID}" ]; then
 fi
 
 # Deploy to gcloud (try 3 times)
-# "unset -e" temporarily to allow deployments to fail
-unset -e
 attempts=0
 until [ $attempts -ge 3 ]
 do
-  gcloud preview app deploy \
-    --no-promote --quiet --stop-previous-version --force --docker-build=remote \
-    --project=${GOOGLE_PROJECT_ID} \
-    --version=${GOOGLE_VERSION_ID} \
-      && break
+  (
+    gcloud preview app deploy \
+      --no-promote --quiet --stop-previous-version --force --docker-build=remote \
+      --project=${GOOGLE_PROJECT_ID} \
+      --version=${GOOGLE_VERSION_ID} \
+        && break
+  ) || true
   attempts=$[$attempts+1]
   sleep 1
 done
-set -e
 
 # Determine the deployed URL
 if [ -z "${GOOGLE_MODULE}" ]; then
