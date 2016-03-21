@@ -30,9 +30,14 @@ class mainTest extends PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
+
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+
         // Invoke main.php.
         global $argc, $argv;
-        $argv[1] = getenv('GOOGLE_PROJECT_ID');
+        $argv[1] = $projectId;
         $argc = 2;
         // Capture stdout.
         ob_start();

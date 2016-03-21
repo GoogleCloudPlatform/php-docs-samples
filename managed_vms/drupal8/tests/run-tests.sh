@@ -30,10 +30,10 @@ if [ "${PREREQ}" = "false" ]; then
 fi
 
 # Install drupal console
-if [ ! -e ${HOME}/bin/drupal ]; then
+if [ ! -e ${DIR}/drupal ]; then
     curl https://drupalconsole.com/installer -L -o drupal
     chmod +x drupal
-    mv drupal "${HOME}/bin/drupal"
+    mv drupal "${DIR}/drupal"
 fi
 
 # cleanup installation dir
@@ -49,14 +49,14 @@ sed -i -e "s/@@DRUPAL_ADMIN_USERNAME@@/${DRUPAL_ADMIN_USERNAME}/" $INSTALL_FILE
 sed -i -e "s/@@DRUPAL_ADMIN_PASSWORD@@/${DRUPAL_ADMIN_PASSWORD}/" $INSTALL_FILE
 
 # download and install
-drupal init --root=$DIR
-drupal chain --file=$INSTALL_FILE
+${DIR}/drupal init --root=$DIR
+${DIR}/drupal chain --file=$INSTALL_FILE
 
 cd $DRUPAL_DIR
 
 # run some setup commands
-drupal theme:download bootstrap 8.x-3.0-beta2
-drupal cache:rebuild all
+${DIR}/drupal theme:download bootstrap 8.x-3.0-beta2
+${DIR}/drupal cache:rebuild all
 
 ## Perform steps outlined in the README ##
 
@@ -74,6 +74,8 @@ if [ -z "${GOOGLE_VERSION_ID}" ]; then
 fi
 
 # Deploy to gcloud (try 3 times)
+# "unset -e" temporarily to allow deployments to fail
+unset -e
 attempts=0
 until [ $attempts -ge 3 ]
 do
@@ -85,6 +87,7 @@ do
   attempts=$[$attempts+1]
   sleep 1
 done
+set -e
 
 # Determine the deployed URL
 if [ -z "${GOOGLE_MODULE}" ]; then
