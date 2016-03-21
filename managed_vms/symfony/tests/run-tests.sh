@@ -64,6 +64,8 @@ if [ -z "${GOOGLE_VERSION_ID}" ]; then
 fi
 
 # Deploy to gcloud (try 3 times)
+# "unset -e" temporarily to allow deployments to fail
+unset -e
 attempts=0
 until [ $attempts -ge 3 ]
 do
@@ -75,6 +77,7 @@ do
   attempts=$[$attempts+1]
   sleep 1
 done
+set -e
 
 # Determine the deployed URL
 if [ -z "${GOOGLE_MODULE}" ]; then
