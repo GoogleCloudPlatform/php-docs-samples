@@ -77,13 +77,11 @@ fi
 attempts=0
 until [ $attempts -ge 3 ]
 do
-  (
-    gcloud preview app deploy \
-      --no-promote --quiet --stop-previous-version --force --docker-build=remote \
-      --project=${GOOGLE_PROJECT_ID} \
-      --version=${GOOGLE_VERSION_ID} \
-        && break
-  ) || true
+  gcloud preview app deploy \
+    --no-promote --quiet --stop-previous-version --force --docker-build=remote \
+    --project=${GOOGLE_PROJECT_ID} \
+    --version=${GOOGLE_VERSION_ID} \
+      && break
   attempts=$[$attempts+1]
   sleep 1
 done
