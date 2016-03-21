@@ -114,10 +114,10 @@ running):
 
 ```
 $ cd my-wordpress-project
-$ php -S localhost:8000 -t wordpress wp.php
+$ vendor/bin/wp(.bat) server --path=wordpress
 ```
 
-Then access http://localhost:8000/. Follow the installation steps,
+Then access http://localhost:8080/. Follow the installation steps,
 create the admin user and its password. Login to the Dashboard and
 update if any of the plugins have update. I’m assuming that the local
 network is secure here. If you think differently, maybe you can first
@@ -133,7 +133,7 @@ Use the shell script wrapper for deployment as follows:
 ```
 $ sh deploy_wrapper.sh \
   gcloud preview app deploy \
-    --promote --stop-previous-version app.yaml
+    --promote --stop-previous-version app.yaml cron.yaml
 ```
 
 Then access your site, use the username and the password you created
@@ -170,7 +170,14 @@ see the following Batcache stats in the HTML source:
 Because the wp-content directory on the server is read-only, you have
 to do this locally. Run WordPress locally and update plugins/themes in
 the local Dashboard, then deploy, then activate them in the production
-Dashboard.
+Dashboard. You can also use the `wp-cli` utility as follows:
+
+```
+# To update all the plugins
+$ vendor/bin/wp plugin update --all --path=wordpress
+# To update all the themes
+$ vendor/bin/wp theme update --all --path=wordpress
+```
 
 ### Remove plugins/themes
 

@@ -85,11 +85,11 @@ class Project implements ReportInterface
     {
         chdir($this->dir);
         exec(
-            'composer install --no-interaction --no-progress --no-ansi',
+            'composer update --no-interaction --no-progress --no-ansi',
             $output, $ret);
         $this->info = array_merge($this->info, $output);
         if ($ret !== 0) {
-            $this->info[] = 'Failed to run composer install in ' . $dir
+            $this->info[] = 'Failed to run composer update in ' . $dir
                 . '. Please run it by yourself before running WordPress.';
         }
     }

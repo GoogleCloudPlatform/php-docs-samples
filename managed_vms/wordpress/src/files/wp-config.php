@@ -35,6 +35,15 @@ define('ON_MVM', filter_var(getenv('GAE_VM'), FILTER_VALIDATE_BOOLEAN));
 // Cache settings
 define('WP_CACHE', ON_MVM);
 
+// Disable pseudo cron behavior
+define('DISABLE_WP_CRON', true);
+
+if (isset($_SERVER['HTTP_HOST'])) {
+    define('HTTP_HOST', $_SERVER['HTTP_HOST']);
+} else {
+    define('HTTP_HOST', 'localhost');
+}
+
 $memcached_servers = array(
     'default' => array(
         getenv('MEMCACHE_PORT_11211_TCP_ADDR')
@@ -42,11 +51,9 @@ $memcached_servers = array(
     )
 );
 
-// Auto detect the URL fails.
-define('WP_HOME', ON_MVM ? 'https://' . $_SERVER['HTTP_HOST']
-       : 'http://' . $_SERVER['HTTP_HOST']);
-define('WP_SITEURL', ON_MVM ? 'https://' . $_SERVER['HTTP_HOST']
-       : 'http://' . $_SERVER['HTTP_HOST']);
+// Use https on MVMs.
+define('WP_HOME', ON_MVM ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
+define('WP_SITEURL', ON_MVM ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
 
 // Need this for cookies.
 define('FORCE_SSL_ADMIN', ON_MVM);

@@ -124,6 +124,7 @@ class WordPressSetup extends Command
         );
         $copyFiles = array(
             'app.yaml' => '/',
+            'cron.yaml' => '/',
             'composer.json' => '/',
             'deploy_wrapper.sh' => '/',
             'Dockerfile' => '/',
@@ -131,7 +132,6 @@ class WordPressSetup extends Command
             'nginx-app.conf' => '/',
             'php.ini' => '/',
             'wp-config.php' => '/wordpress/',
-            'wp.php' => '/'
         );
         $authKeys = array(
             'auth_key', 'secure_auth_key', 'logged_in_key', 'nonce_key',
