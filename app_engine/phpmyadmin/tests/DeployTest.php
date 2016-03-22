@@ -130,10 +130,11 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public static function deploy($project_id, $e2e_test_version, $target)
     {
-        $command = "appcfg.py -q "
+        $command = "gcloud -q preview app deploy --no-promote "
+            . "--no-stop-previous-version "
             . "--version $e2e_test_version "
-            . "--application $project_id "
-            . "update $target";
+            . "--project $project_id "
+            . "$target/app.yaml";
         for ($i = 0; $i <= 3; $i++) {
             exec($command, $output, $ret);
             foreach ($output as $line) {
