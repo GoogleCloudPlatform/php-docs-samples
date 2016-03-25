@@ -42,9 +42,11 @@ defined('ABSPATH') or die('No direct access!');
 add_filter('upload_dir', 'GCS\Media\filter_upload_dir');
 function filter_upload_dir($values)
 {
-    $basedir = 'gs://' . GOOGLE_CLOUD_STORAGE_BUCKET;
+    $basedir = 'gs://' . GOOGLE_CLOUD_STORAGE_BUCKET
+        . '/' . get_current_blog_id();
     $baseurl = 'https://storage.googleapis.com/'
-        . GOOGLE_CLOUD_STORAGE_BUCKET;
+        . GOOGLE_CLOUD_STORAGE_BUCKET
+        . '/' . get_current_blog_id();
     $values = array(
         'path' => $basedir . $values['subdir'],
         'subdir' => $values['subdir'],
