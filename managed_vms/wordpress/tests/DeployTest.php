@@ -48,12 +48,15 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         }
         $helper = __DIR__ . '/../wordpress-helper.php';
         $target = self::getTargetDir();
-        exec(
-            "php $helper setup -d $target "
+        $command = "php $helper setup -d $target "
             . " -n -p $project_id "
             . "--db_instance=wp --db_name=wp --db_user=wp "
-            . "--db_password=$db_password"
-        );
+            . "--db_password=$db_password";
+        $wp_url = getenv('WP_DOWNLOAD_URL');
+        if ($wp_url !== false) {
+            $command .= " --wordpress_url=$wp_url";
+        }
+        exec($command);
         self::deploy($project_id, $e2e_test_version);
     }
 
