@@ -95,6 +95,13 @@ class WordPressSetup extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Cloud SQL database password',
                 ''
+            )
+            ->addOption(
+                'wordpress_url',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'URL of the WordPress archive',
+                self::LATEST_WP
             );
     }
 
@@ -184,9 +191,9 @@ class WordPressSetup extends Command
         }
         $output->writeln('Creating a new project for: ' . $env);
 
-        $output->writeln('Downloading the latest WordPress...');
-        $project->downloadArchive(
-            'the latest WordPress', self::LATEST_WP);
+        $output->writeln('Downloading the WordPress archive...');
+        $wpUrl = $input->getOption('wordpress_url');
+        $project->downloadArchive('the WordPress archive', $wpUrl);
         if (!$this->report($output, $project)) {
             return self::DEFAULT_ERROR;
         }
