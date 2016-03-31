@@ -57,6 +57,7 @@ cd $DRUPAL_DIR
 # run some setup commands
 ${DIR}/drupal theme:download bootstrap 8.x-3.0-beta2
 ${DIR}/drupal cache:rebuild all
+composer install && rm composer.*
 
 ## Perform steps outlined in the README ##
 
@@ -94,4 +95,4 @@ else
 fi
 
 # perform the test
-curl -fs https://${VERSION_PREFIX}-dot-${GOOGLE_PROJECT_ID}.appspot.com > /dev/null
+curl -fs https://${VERSION_PREFIX}-dot-${GOOGLE_PROJECT_ID}.appspot.com/contact > /dev/null
