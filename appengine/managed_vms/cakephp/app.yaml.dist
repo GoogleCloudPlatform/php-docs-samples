@@ -1,0 +1,11 @@
+runtime: custom
+vm: true
+api_version: 1
+
+env_variables:
+  DEBUG: false
+  DOCUMENT_ROOT: /app/webroot
+  LOG_DEBUG_URL: file:///?levels[]=notice&levels[]=info&levels[]=debug&file=app-cake-debug&path=/var/log/app_engine/
+  LOG_ERROR_URL: file:///?levels[]=warning&levels[]=error&levels[]=critical&level[]=alert&level[]=emergency&file=app-cake-error&path=/var/log/app_engine/
+  DATABASE_URL: mysql://USER:PASSWORD@HOST/DB
+  EMAILTRANSPORT_DEFAULT_URL: smtp://USER:PASSWORD@smtp.sendgrid.net:2525

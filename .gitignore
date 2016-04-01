@@ -4,3 +4,4 @@
 composer.phar
 vendor/
 credentials.*
+app.yaml
