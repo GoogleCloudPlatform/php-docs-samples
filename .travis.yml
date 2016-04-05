@@ -62,5 +62,10 @@ script:
   # run mailgun tests
   - pushd appengine/standard/mailgun
   - composer install
-  - phpunit test/mailgunTest.php
+  - phpunit test
+  - popd
+  # run cloudsql tests
+  - pushd appengine/standard/cloudsql
+  - composer install
+  - phpunit test
   - popd

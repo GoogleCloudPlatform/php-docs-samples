@@ -1,0 +1,18 @@
+runtime: php55
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /createTables.php
+  script: createTables.php
+- url: /.*
+  script: index.php
+
+# [START env]
+env_variables:
+  # Replace project, instance, database, user and password with the values obtained
+  # when configuring your Cloud SQL instance.
+  MYSQL_DSN: mysql:unix_socket=/cloudsql/PROJECT:INSTANCE;dbname=DATABASE
+  MYSQL_USER: root
+  MYSQL_PASSWORD: ''
+# [END env]
