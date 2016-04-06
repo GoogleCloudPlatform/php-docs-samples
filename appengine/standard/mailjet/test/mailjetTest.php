@@ -19,7 +19,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Silex\WebTestCase;
 
-class mailgunTest extends WebTestCase
+class mailjetTest extends WebTestCase
 {
     public function createApplication()
     {
@@ -30,16 +30,16 @@ class mailgunTest extends WebTestCase
         $app['debug'] = true;
         $projectId = getenv('GOOGLE_PROJECT_ID');
 
-        // set your Mailgun domain name and API key
-        $mailgunDomain = getenv('MAILGUN_DOMAIN');
-        $mailgunApiKey = getenv('MAILGUN_APIKEY');
+        // set your Mailjet API key and secret
+        $mailjetApiKey = getenv('MAILJET_APIKEY');
+        $mailjetSecret = getenv('MAILJET_SECRET');
 
-        if (empty($mailgunDomain) || empty($mailgunApiKey)) {
-            $this->markTestSkipped('set the MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
+        if (empty($mailjetApiKey) || empty($mailjetSecret)) {
+            $this->markTestSkipped('set the MAILJET_APIKEY and MAILJET_SECRET environment variables');
         }
 
-        $app['mailgun.domain'] = $mailgunDomain;
-        $app['mailgun.api_key'] = $mailgunApiKey;
+        $app['mailjet.api_key'] = $mailjetApiKey;
+        $app['mailjet.secret'] = $mailjetSecret;
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);
@@ -56,31 +56,17 @@ class mailgunTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
-    public function testSimpleEmail()
+    public function testSendEmail()
     {
         $client = $this->createClient();
 
-        $crawler = $client->request('POST', '/', [
+        $crawler = $client->request('POST', '/send', [
             'recipient' => 'fake@example.com',
-            'submit' => 'simple',
         ]);
 
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Simple email sent', $response->getContent());
-    }
-
-    public function testComplexEmail()
-    {
-        $client = $this->createClient();
-
-        $crawler = $client->request('POST', '/', [
-            'recipient' => 'fake@example.com',
-            'submit' => 'complex',
-        ]);
-
-        $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Complex email sent', $response->getContent());
+        $this->assertContains('"Sent"', $response->getContent());
+        $this->assertContains('"fake@example.com"', $response->getContent());
     }
 }

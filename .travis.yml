@@ -64,6 +64,11 @@ script:
   - composer install
   - phpunit test
   - popd
+  # run mailjet tests
+  - pushd appengine/standard/mailjet
+  - composer install
+  - phpunit test
+  - popd
   # run cloudsql tests
   - pushd appengine/standard/cloudsql
   - composer install

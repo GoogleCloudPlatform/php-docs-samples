@@ -23,8 +23,8 @@ require_once __DIR__ . '/functions.php';
 $app = new Application();
 
 $app->get('/', function () use ($app) {
-    if ($app['mailgun.domain'] == 'YOUR_DOMAIN_NAME') {
-        return 'set your mailgun domain and API key in <code>web/index.php</code>';
+    if ($app['mailgun.domain'] == 'MAILGUN_DOMAIN_NAME') {
+        return 'set your mailgun domain and API key in <code>index.php</code>';
     }
     return <<<EOF
 <!doctype html>

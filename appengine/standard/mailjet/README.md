@@ -1,14 +1,14 @@
-# Mailgun & Google App Engine
+# Mailjet & Google App Engine
 
-This sample application demonstrates how to use [Mailgun with Google App Engine](https://cloud.google.com/appengine/docs/php/mail/).
+This sample application demonstrates how to use [Mailjet with Google App Engine](https://cloud.google.com/appengine/docs/php/mail/).
 
 ## Setup
 
 Before running this sample:
 
-1. You will need a [Mailgun account](http://www.mailgun.com/google).
-2. Update `MAILGUN_DOMAIN` and `MAILGUN_API_KEY` in `index.php` to match your
-   Mailgun credentials. You can use your account's sandbox domain.
+1. You will need a [Mailjet account](http://www.mailjet.com).
+2. Update `MAILJET_API_KEY` and `MAILJET_SECRET` in `index.php` to match your
+   Mailjet credentials.
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ composer install
 you can run locally using PHP's built-in web server:
 
 ```sh
-cd php-docs-samples/appengine/standard/mailgun
+cd php-docs-samples/appengine/standard/mailjet
 php -S localhost:8080
 ```
 
