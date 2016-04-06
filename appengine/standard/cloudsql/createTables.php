@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright 2015 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Install composer dependencies with "composer install"
+// @see http://getcomposer.org for more information.
+require __DIR__ . '/vendor/autoload.php';
+
+$app = require __DIR__ . '/app.php';
+
+/** @var PDO $db */
+$db = $app['database'];
+
+# [START create_tables]
+// create the tables
+$stmt = $db->prepare('CREATE TABLE entries (
+    entryID INT NOT NULL AUTO_INCREMENT,
+    guestName VARCHAR(255),
+    content VARCHAR(255),
+    PRIMARY KEY(entryID)
+)');
+
+$result = $stmt->execute();
+# [END create_tables]
+
+if (false === $result) {
+    printf("Error: %s\n", $stmt->errorInfo()[2]);
+} else {
+    printf('Tables created');
+}
