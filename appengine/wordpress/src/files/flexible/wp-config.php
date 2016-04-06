@@ -29,52 +29,67 @@ stream_wrapper_register(
 // Bucket name for the media upload
 define('GOOGLE_CLOUD_STORAGE_BUCKET', '{{project_id}}.appspot.com');
 
-// true on production.
-define('ON_MVM', filter_var(getenv('GAE_VM'), FILTER_VALIDATE_BOOLEAN));
+// $onGae is true on production.
+$onGae = filter_var(getenv('GAE_VM'), FILTER_VALIDATE_BOOLEAN);
 
 // Cache settings
-define('WP_CACHE', ON_MVM);
+define('WP_CACHE', $onGae);
+$batcache = [
+    'seconds' => 0,
+    'max_age' => 30 * 60, // 30 minutes
+    'debug' => false
+];
+if ($onGae) {
+    $memcached_servers = array(
+        'default' => array(
+            getenv('MEMCACHE_PORT_11211_TCP_ADDR')
+            . ':' . getenv('MEMCACHE_PORT_11211_TCP_PORT')
+        )
+    );
+}
 
 // Disable pseudo cron behavior
 define('DISABLE_WP_CRON', true);
 
+// Determine HTTP or HTTPS, then set WP_SITEURL and WP_HOME
 if (isset($_SERVER['HTTP_HOST'])) {
     define('HTTP_HOST', $_SERVER['HTTP_HOST']);
 } else {
     define('HTTP_HOST', 'localhost');
 }
-
-$memcached_servers = array(
-    'default' => array(
-        getenv('MEMCACHE_PORT_11211_TCP_ADDR')
-        . ':' . getenv('MEMCACHE_PORT_11211_TCP_PORT')
-    )
-);
-
 // Use https on MVMs.
-define('WP_HOME', ON_MVM ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
-define('WP_SITEURL', ON_MVM ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
+define('WP_HOME', $onGae ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
+define('WP_SITEURL', $onGae ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
 
-// Need this for cookies.
-define('FORCE_SSL_ADMIN', ON_MVM);
+// Force SSL for admin pages
+define('FORCE_SSL_ADMIN', $onGae);
 
 // Get HTTPS value from the App Engine specific header.
-$_SERVER['HTTPS'] = ON_MVM ? $_SERVER['HTTP_X_APPENGINE_HTTPS'] : false;
+$_SERVER['HTTPS'] = $onGae ? $_SERVER['HTTP_X_APPENGINE_HTTPS'] : false;
 
 // ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
-define('DB_NAME', '{{db_name}}');
-
-/** MySQL database username */
-define('DB_USER', '{{db_user}}');
-
-/** MySQL database password */
-define('DB_PASSWORD', '{{db_password}}');
-
-/** MySQL hostname */
-define('DB_HOST', ON_MVM
-       ? 'localhost:/cloudsql/{{project_id}}:us-central1:{{db_instance}}'
-       : '127.0.0.1');
+if ($onGae) {
+    /** Production environment */
+    /** The name of the database for WordPress */
+    define('DB_NAME', '{{db_name}}');
+    /** MySQL database username */
+    define('DB_USER', '{{db_user}}');
+    /** MySQL database password */
+    define('DB_PASSWORD', '{{db_password}}');
+    define(
+        'DB_HOST',
+        'localhost:/cloudsql/{{project_id}}:us-central1:{{db_instance}}'
+    );
+} else {
+    /** Local environment */
+    /** The name of the database for WordPress */
+    define('DB_NAME', '{{db_name}}');
+    /** MySQL database username */
+    define('DB_USER', '{{db_user}}');
+    /** MySQL database password */
+    define('DB_PASSWORD', '{{db_password}}');
+    define('DB_HOST', '127.0.0.1');
+}
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -123,7 +138,7 @@ $table_prefix  = 'wp_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', ON_MVM ? false : true);
+define('WP_DEBUG', !$onGae);
 
 /* That's all, stop editing! Happy blogging. */
 

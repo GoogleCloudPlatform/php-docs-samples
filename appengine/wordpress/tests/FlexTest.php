@@ -18,7 +18,7 @@ namespace Google\Cloud\Test;
 
 use GuzzleHttp\Client;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class FlexTest extends \PHPUnit_Framework_TestCase
 {
     private $client;
 
@@ -26,11 +26,16 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     const VERSION_ENV = 'GOOGLE_VERSION_ID';
     const DB_PASSWORD_ENV = 'WP_DB_PASSWORD';
 
+    private static function getVersion()
+    {
+        return "wp-flex-" . getenv(self::VERSION_ENV);
+    }
+
     private static function getTargetDir()
     {
         $tmp = sys_get_temp_dir();
-        $e2e_test_version = getenv(self::VERSION_ENV);
-        return "$tmp/wp-test-$e2e_test_version";
+        $e2e_test_version = self::getVersion();
+        return "$tmp/$e2e_test_version";
     }
     public static function setUpBeforeClass()
     {
@@ -57,17 +62,15 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             $command .= " --wordpress_url=$wp_url";
         }
         exec($command);
-        self::deploy($project_id, $e2e_test_version);
+        self::deploy($project_id, self::getVersion());
     }
 
     public static function deploy($project_id, $e2e_test_version)
     {
         $target = self::getTargetDir();
-        $cwd = getcwd();
-        chdir($target);
         for ($i = 0; $i <= 3; $i++) {
             exec(
-                "sh $target/deploy_wrapper.sh gcloud -q preview app deploy "
+                "gcloud -q preview app deploy "
                 . "--version $e2e_test_version "
                 . "--project $project_id --no-promote "
                 . "$target/app.yaml $target/cron.yaml",
@@ -75,38 +78,44 @@ class DeployTest extends \PHPUnit_Framework_TestCase
                 $ret
             );
             if ($ret === 0) {
-                chdir($cwd);
                 return;
             } else {
                 echo 'Retrying deployment';
             }
         }
-        chdir($cwd);
         self::fail('Deployment failed.');
     }
 
 
     public static function tearDownAfterClass()
     {
-        // TODO: check the return value and maybe retry?
-        exec('gcloud -q preview app modules delete default --version '
-             . getenv(self::VERSION_ENV)
-             . ' --project '
-             . getenv(self::PROJECT_ENV));
+        for ($i = 0; $i <= 3; $i++) {
+            exec('gcloud -q preview app modules delete default --version '
+                 . self::getVersion()
+                 . ' --project '
+                 . getenv(self::PROJECT_ENV),
+                 $output,
+                 $ret
+            );
+            if ($ret === 0) {
+                return;
+            } else {
+                echo 'Retrying to delete the version';
+            }
+        }
     }
 
     public function setUp()
     {
         $url = sprintf('https://%s-dot-%s.appspot.com/',
-                       getenv(self::VERSION_ENV),
+                       self::getVersion(),
                        getenv(self::PROJECT_ENV));
         $this->client = new Client(['base_uri' => $url]);
     }
 
     public function testIndex()
     {
-        // Index serves succesfully with 'Hello World'.
-        // This works because the custom DOCUMENT_ROOT is working.
+        // Access the blog top page
         $resp = $this->client->get('');
         $this->assertEquals('200', $resp->getStatusCode(),
                             'top page status code');
@@ -126,7 +135,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('301', $resp->getStatusCode(),
                             'wp-admin status code');
         $url = sprintf('https://%s-dot-%s.appspot.com/',
-                       getenv(self::VERSION_ENV),
+                       self::getVersion(),
                        getenv(self::PROJECT_ENV));
         $this->assertEquals(
             $url . 'wp-admin/',
