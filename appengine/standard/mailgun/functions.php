@@ -26,7 +26,7 @@ function sendComplexMessage($recipient, $mailgunDomain, $mailgunApiKey, $cc = 'c
     // Instantiate the client.
     $httpClient = new Client();
     $mailgunClient = new Mailgun($mailgunApiKey, $httpClient);
-    $fileAttachment = __DIR__ . '/../attachment.txt';
+    $fileAttachment = __DIR__ . '/attachment.txt';
 
     // Make the call to the client.
     $result = $mailgunClient->sendMessage($mailgunDomain, array(

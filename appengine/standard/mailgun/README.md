@@ -7,7 +7,7 @@ This sample application demonstrates how to use [Mailgun with Google App Engine]
 Before running this sample:
 
 1. You will need a [Mailgun account](http://www.mailgun.com/google).
-2. Update the `MAILGUN_DOMAIN_NAME` and `MAILGUN_API_KEY` constants in `web/index.php`.
+2. Update the `MAILGUN_DOMAIN_NAME` and `MAILGUN_API_KEY` constants in `index.php`.
    You can use your account's sandbox domain.
 
 ## Prerequisites
@@ -24,10 +24,8 @@ composer install
 you can run locally using PHP's built-in web server:
 
 ```sh
-cd php-docs-samples/mail/mailgun
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-export GCP_PROJECT_ID=my-project-id
-php -S localhost:8080 -t web
+cd php-docs-samples/appengine/standard/mailgun
+php -S localhost:8080
 ```
 
 Now you can view the app running at [http://localhost:8080](http://localhost:8080)
@@ -47,5 +45,5 @@ gcloud preview app deploy
 gcloud preview app browse
 ```
 
-The last command will open `https://{YOUR_GCP_PROJECT_ID}.appspot.com/`
+The last command will open `https://{YOUR_PROJECT_ID}.appspot.com/`
 in your browser.
