@@ -16,12 +16,11 @@
  * limitations under the License.
  */
 
-// @TODO: use test bootstrap
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Silex\WebTestCase;
 
-class datastoreTest extends WebTestCase
+class mailgunTest extends WebTestCase
 {
     public function createApplication()
     {
@@ -30,17 +29,19 @@ class datastoreTest extends WebTestCase
         // set some parameters for testing
         $app['session.test'] = true;
         $app['debug'] = true;
-        $app['project_id'] = 'cloud-samples-tests-php';
+        $projectId = getenv('GOOGLE_PROJECT_ID');
 
-        // this will be set by travis, but may not be set locally
-        if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $credentials = __DIR__ . '/../../credentials.json';
-            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $credentials);
+        // set your Mailgun domain name and API key
+        $mailgunDomain = getenv('MAILGUN_DOMAIN');
+        $mailgunApiKey = getenv('MAILGUN_APIKEY');
+
+        if (empty($projectId) || empty($mailgunDomain) || empty($mailgunApiKey)) {
+            $this->markTestSkipped('set the GOOGLE_PROJECT_ID, MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
         }
 
-        if (!file_exists($credentials) || 0 == filesize($credentials)) {
-            $this->markTestSkipped('credentials not found');
-        }
+        $app['project_id'] = $projectId;
+        $app['mailgun.domain'] = $mailgunDomain;
+        $app['mailgun.api_key'] = $mailgunApiKey;
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);
@@ -57,26 +58,31 @@ class datastoreTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
-    public function testStore()
+    public function testSimpleEmail()
     {
         $client = $this->createClient();
 
-        $crawler = $client->request('POST', '/store', [
-            'name' => 'test-comment',
-            'body' => 'body of comment'
+        $crawler = $client->request('POST', '/', [
+            'recipient' => 'fake@example.com',
+            'submit' => 'Send simple email',
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('/', $response->headers->get('location'));
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Mail sent', $response->getContent());
     }
 
-    public function testStoreMissingParameters()
+    public function testComplexEmail()
     {
         $client = $this->createClient();
 
-        $crawler = $client->request('POST', '/store');
+        $crawler = $client->request('POST', '/', [
+            'recipient' => 'fake@example.com',
+            'submit' => 'Send complex email',
+        ]);
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = $client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Mail sent', $response->getContent());
     }
 }

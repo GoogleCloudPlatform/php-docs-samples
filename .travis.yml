@@ -39,23 +39,28 @@ script:
   - php php-cs-fixer.phar fix --dry-run --diff --level=psr2
     --fixers=concat_with_spaces,unused_use,trailing_spaces,indentation .
   # run bigquery tests
-  - cd bigquery/api
+  - pushd bigquery/api
   - composer install
   - phpunit mainTest.php
   - phpunit utilTest.php
-  - cd ../..
+  - popd
   # run datastore tests
-  - cd datastore
+  - pushd datastore
   - composer install
   - phpunit test
-  - cd ..
+  - popd
   # run pubsub tests
-  - cd pubsub
+  - pushd pubsub
   - composer install
   - phpunit test
-  - cd ..
+  - popd
   # run storage tests
-  - cd storage/api
+  - pushd storage/api
   - composer install
   - phpunit listBucketsTest.php
-  - cd ../..
+  - popd
+  # run mailgun tests
+  - pushd appengine/standard/mailgun
+  - composer install
+  - phpunit test/mailgunTest.php
+  - popd
