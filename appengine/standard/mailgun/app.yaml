@@ -4,4 +4,4 @@ api_version: 1
 
 handlers:
 - url: .*
-  script: web/app.php
+  script: index.php

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -24,7 +23,7 @@ class mailgunTest extends WebTestCase
 {
     public function createApplication()
     {
-        $app = require __DIR__ . '/../src/app.php';
+        $app = require __DIR__ . '/../app.php';
 
         // set some parameters for testing
         $app['session.test'] = true;
@@ -35,11 +34,10 @@ class mailgunTest extends WebTestCase
         $mailgunDomain = getenv('MAILGUN_DOMAIN');
         $mailgunApiKey = getenv('MAILGUN_APIKEY');
 
-        if (empty($projectId) || empty($mailgunDomain) || empty($mailgunApiKey)) {
+        if (empty($mailgunDomain) || empty($mailgunApiKey)) {
             $this->markTestSkipped('set the GOOGLE_PROJECT_ID, MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
         }
 
-        $app['project_id'] = $projectId;
         $app['mailgun.domain'] = $mailgunDomain;
         $app['mailgun.api_key'] = $mailgunApiKey;
 
@@ -64,12 +62,12 @@ class mailgunTest extends WebTestCase
 
         $crawler = $client->request('POST', '/', [
             'recipient' => 'fake@example.com',
-            'submit' => 'Send simple email',
+            'submit' => 'simple',
         ]);
 
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Mail sent', $response->getContent());
+        $this->assertEquals('Simple email sent', $response->getContent());
     }
 
     public function testComplexEmail()
@@ -78,11 +76,11 @@ class mailgunTest extends WebTestCase
 
         $crawler = $client->request('POST', '/', [
             'recipient' => 'fake@example.com',
-            'submit' => 'Send complex email',
+            'submit' => 'complex',
         ]);
 
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Mail sent', $response->getContent());
+        $this->assertEquals('Complex email sent', $response->getContent());
     }
 }
