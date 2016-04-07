@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require 'util.php';
+require __DIR__ . '/../util.php';
 
 class utilTest extends PHPUnit_Framework_TestCase
 {

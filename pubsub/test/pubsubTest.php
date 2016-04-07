@@ -15,14 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace Google\Cloud\Samples\pubsub\test;
 
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\Client;
-
-// @TODO: use test bootstrap
-require_once __DIR__ . '/../vendor/autoload.php';
 
 class pubsubTest extends WebTestCase
 {

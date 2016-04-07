@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class mainTest extends PHPUnit_Framework_TestCase
+class listBucketsTest extends PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
@@ -31,21 +31,17 @@ class mainTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('No project ID');
-        }
-
-        // Invoke main.php.
+        // Invoke listBuckets.php, and fake first argument.
         global $argc, $argv;
-        $argv[1] = $projectId;
-        $argc = 2;
+        $argv[1] = getenv('GOOGLE_PROJECT_ID');
+
         // Capture stdout.
         ob_start();
-        include 'main.php';
+        include __DIR__ . '/../listBuckets.php';
         $result = ob_get_contents();
         ob_end_clean();
-        // Make sure it looks like Shakespeare.
-        $this->assertContains('hamlet', $result);
-        $this->assertContains('kinglear', $result);
+
+        // Make sure it looks correct
+        $this->assertContains('cloud-samples-tests-php-bucket', $result);
     }
 }
