@@ -33,7 +33,9 @@ class WordPressSetup extends Command
     const LATEST_BATCACHE =
         'https://downloads.wordpress.org/plugin/batcache.1.4.zip';
     const LATEST_MEMCACHED =
-        'https://downloads.wordpress.org/plugin/memcached.2.0.3.zip';
+        'https://downloads.wordpress.org/plugin/memcached.2.0.4.zip';
+    const LATEST_GAE_WP =
+        'https://downloads.wordpress.org/plugin/google-app-engine.1.6.zip';
 
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
@@ -119,31 +121,57 @@ class WordPressSetup extends Command
         return false;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function addAuthKeys(&$params)
     {
-        $helper = $this->getHelper('question');
-        $configKeys = array(
-            'project_id' => '',
-            'db_instance' => 'wp',
-            'db_name' => 'wp',
-            'db_user' => 'wp',
-            'db_password' => ''
-        );
-        $copyFiles = array(
-            'app.yaml' => '/',
-            'cron.yaml' => '/',
-            'composer.json' => '/',
-            'deploy_wrapper.sh' => '/',
-            'Dockerfile' => '/',
-            'gcs-media.php' => '/wordpress/wp-content/plugins/',
-            'nginx-app.conf' => '/',
-            'php.ini' => '/',
-            'wp-config.php' => '/wordpress/',
-        );
         $authKeys = array(
             'auth_key', 'secure_auth_key', 'logged_in_key', 'nonce_key',
             'auth_salt', 'secure_auth_salt', 'logged_in_salt', 'nonce_salt'
         );
+        foreach ($authKeys as $key) {
+            $value = Utils::createRandomKey();
+            $params[$key] = $value;
+        }
+    }
+
+    protected function askParameters(
+        array $configKeys,
+        array &$params,
+        InputInterface $input,
+        OutputInterface $output,
+        $helper
+    ) {
+        foreach ($configKeys as $key => $default) {
+            $value = $input->getOption($key);
+            if ((!$input->isInteractive()) && empty($value)) {
+                $output->writeln(
+                    '<error>' . $key . ' can not be empty.</error>');
+                return self::DEFAULT_ERROR;
+            }
+            while (empty($value)) {
+                if (empty($default)) {
+                    $note = ' (mandatory input)';
+                } else {
+                    $note = ' (defaults to \'' . $default . '\')';
+                }
+                $q = new Question(
+                    'Please enter ' . $key . $note . ': ', $default);
+                if ($key === 'db_password') {
+                    $q->setHidden(true);
+                    $q->setHiddenFallback(false);
+                }
+                $value = $helper->ask($input, $output, $q);
+                if (empty($value)) {
+                    $output->writeln(
+                        '<error>' . $key . ' can not be empty.</error>');
+                }
+            }
+            $params[$key] = $value;
+        }
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $helper = $this->getHelper('question');
         $dir = $input->getOption('dir');
         if ($dir === self::DEFAULT_DIR) {
             $q = new Question(
@@ -183,12 +211,6 @@ class WordPressSetup extends Command
             $q->setErrorMessage('Environment %s is invalid.');
             $env = $helper->ask($input, $output, $q);
         }
-        if ($env === self::STANDARD_ENV) {
-            $output->writeln(
-                '<error>' . self::STANDARD_ENV
-                . ' is not supported yet.</error>');
-            return self::DEFAULT_ERROR;
-        }
         $output->writeln('Creating a new project for: ' . $env);
 
         $output->writeln('Downloading the WordPress archive...');
@@ -216,39 +238,58 @@ class WordPressSetup extends Command
             return self::DEFAULT_ERROR;
         }
 
-        $params = array();
-        foreach ($configKeys as $key => $default) {
-            $value = $input->getOption($key);
-            if ((!$input->isInteractive()) && empty($value)) {
-                $output->writeln(
-                    '<error>' . $key . ' can not be empty.</error>');
+        $output->writeln('Copying drop-ins...');
+        $dir = $project->getDir();
+        copy(
+            $dir . '/wordpress/wp-content/plugins/batcache/advanced-cache.php',
+            $dir . '/wordpress/wp-content/advanced-cache.php'
+        );
+        copy(
+            $dir . '/wordpress/wp-content/plugins/memcached/object-cache.php',
+            $dir . '/wordpress/wp-content/object-cache.php'
+        );
+
+        $configKeys = array(
+            'project_id' => '',
+            'db_instance' => 'wp',
+            'db_name' => 'wp',
+            'db_user' => 'wp',
+            'db_password' => ''
+        );
+        if ($env === self::STANDARD_ENV) {
+            $copyFiles = array(
+                'app.yaml' => '/',
+                'cron.yaml' => '/',
+                'composer.json' => '/',
+                'php.ini' => '/',
+                'wp-config.php' => '/wordpress/',
+            );
+            $templateDir = __DIR__ . '/files/standard';
+            $output->writeln('Downloading the appengine-wordpress plugin...');
+            $project->downloadArchive(
+                'App Engine WordPress plugin', self::LATEST_GAE_WP,
+                '/wordpress/wp-content/plugins'
+            );
+            if (!$this->report($output, $project)) {
                 return self::DEFAULT_ERROR;
             }
-            while (empty($value)) {
-                if (empty($default)) {
-                    $note = ' (mandatory input)';
-                } else {
-                    $note = ' (defaults to \'' . $default . '\')';
-                }
-                $q = new Question(
-                    'Please enter ' . $key . $note . ': ', $default);
-                if ($key === 'db_password') {
-                    $q->setHidden(true);
-                    $q->setHiddenFallback(false);
-                }
-                $value = $helper->ask($input, $output, $q);
-                if (empty($value)) {
-                    $output->writeln(
-                        '<error>' . $key . ' can not be empty.</error>');
-                }
-            }
-            $params[$key] = $value;
+        } else {
+            $copyFiles = array(
+                'app.yaml' => '/',
+                'cron.yaml' => '/',
+                'composer.json' => '/',
+                'Dockerfile' => '/',
+                'gcs-media.php' => '/wordpress/wp-content/plugins/',
+                'nginx-app.conf' => '/',
+                'php.ini' => '/',
+                'wp-config.php' => '/wordpress/',
+            );
+            $templateDir = __DIR__ . '/files/flexible';
         }
-        foreach ($authKeys as $key) {
-            $value = Utils::createRandomKey();
-            $params[$key] = $value;
-        }
-        $project->copyFiles($copyFiles, $params);
+        $params = array();
+        $this->askParameters($configKeys, $params, $input, $output, $helper);
+        $this->addAuthKeys($params);
+        $project->copyFiles($templateDir, $copyFiles, $params);
         if (!$this->report($output, $project)) {
             return self::DEFAULT_ERROR;
         }

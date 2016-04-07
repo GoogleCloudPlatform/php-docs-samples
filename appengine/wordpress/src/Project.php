@@ -67,9 +67,9 @@ class Project implements ReportInterface
         // TODO error check
     }
 
-    public function copyFiles($files, $params)
+    public function copyFiles($path, $files, $params)
     {
-        $loader = new \Twig_Loader_Filesystem(__DIR__ . '/files');
+        $loader = new \Twig_Loader_Filesystem($path);
         $twig = new \Twig_Environment($loader);
         foreach ($files as $file => $target) {
             $dest = $this->dir . $target . $file;
