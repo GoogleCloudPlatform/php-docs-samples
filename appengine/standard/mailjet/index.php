@@ -21,9 +21,9 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = require __DIR__ . '/app.php';
 
-// set your Mailgun domain name and API key
-$app['mailgun.domain'] = 'MAILGUN_DOMAIN_NAME';;
-$app['mailgun.api_key'] = 'MAILGUN_API_KEY';
+// set your Mailjet API key and secret
+$app['mailjet.api_key'] = 'MAILJET_API_KEY';
+$app['mailjet.secret'] = 'MAILJET_SECRET';
 
 // Run the app!
 // use "gcloud preview app deploy" or run "php -S localhost:8000"

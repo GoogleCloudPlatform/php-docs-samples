@@ -1,13 +1,12 @@
 <?php
 
 use Mailgun\Mailgun;
-use Http\Adapter\Guzzle6\Client;
 
 # [START simple_message]
 function sendSimpleMessage($recipient, $mailgunDomain, $mailgunApiKey)
 {
     // Instantiate the client.
-    $httpClient = new Client();
+    $httpClient = new Http\Adapter\Guzzle6\Client();
     $mailgunClient = new Mailgun($mailgunApiKey, $httpClient);
 
     // Make the call to the client.
@@ -24,7 +23,7 @@ function sendSimpleMessage($recipient, $mailgunDomain, $mailgunApiKey)
 function sendComplexMessage($recipient, $mailgunDomain, $mailgunApiKey, $cc = 'cc@example.com', $bcc = 'bcc@example.com')
 {
     // Instantiate the client.
-    $httpClient = new Client();
+    $httpClient = new Http\Adapter\Guzzle6\Client();
     $mailgunClient = new Mailgun($mailgunApiKey, $httpClient);
     $fileAttachment = __DIR__ . '/attachment.txt';
 
