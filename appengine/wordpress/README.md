@@ -241,7 +241,7 @@ Enjoy your WordPress installation!
 [appengine-standard]: https://cloud.google.com/appengine/docs/about-the-standard-environment
 [appengine-flexible]: https://cloud.google.com/appengine/docs/flexible/
 [sql-settings]: https://console.cloud.google.com/sql/instances
-[memcache-dashboard]: https://pantheon.corp.google.com/appengine/memcache
+[memcache-dashboard]: https://console.cloud.google.com/appengine/memcache
 [composer]: https://getcomposer.org/
 [dev-console]: https://console.cloud.google.com/
 [cloud-sql-api-enable]: https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
