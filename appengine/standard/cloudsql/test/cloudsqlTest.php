@@ -14,10 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// @TODO: use test bootstrap
-require_once __DIR__ . '/../vendor/autoload.php';
-
 use Silex\WebTestCase;
 
 class cloudsqlTest extends WebTestCase

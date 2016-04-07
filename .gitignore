@@ -4,3 +4,5 @@
 composer.phar
 vendor/
 credentials.*
+**/vendor/
+**/build/
