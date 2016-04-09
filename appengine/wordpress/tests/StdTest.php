@@ -55,7 +55,7 @@ class StdTest extends \PHPUnit_Framework_TestCase
         $target = self::getTargetDir();
         $command = "php $helper setup -d $target "
             . " -n -p $project_id --env=s "
-            . "--db_instance=wp-std --db_name=wp --db_user=wp "
+            . "--db_instance=wp-std --db_name=wp --db_user=root "
             . "--db_password=$db_password";
         $wp_url = getenv('WP_DOWNLOAD_URL');
         if ($wp_url !== false) {

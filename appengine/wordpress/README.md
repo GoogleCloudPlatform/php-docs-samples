@@ -51,24 +51,14 @@ name, the database name, and the user name.
 
 ### Create and configure a Cloud SQL 1st generation instance(for standard environment)
 
-You can create a new Cloud SQL First Generation instance with the
-following command:
-
-```
-$ gcloud sql instances create wp
-```
-
-Then change the root password for your instance:
-
-```
-$ gcloud sql instances set-root-password wp \
-  --password YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
-```
-
 Go to the [SQL settings in the Cloud Console][sql-settings] and create
-a database named `wp`. Also create the `wp` database in the local
-mysql server. The local mysql instance is required to run `wp-cli`
-tool for installing/upgrading plugins and themes.
+an instance `wp` and database named `wp`. Go to the Access Control ->
+Users, then change the password for `root@localhost`. You will use
+this password for accessing from App Engine application.
+
+Also create the `wp` database in the local mysql server. The local
+mysql instance is required to run `wp-cli` tool for
+installing/upgrading plugins and themes.
 
 ### Create and configure a Cloud SQL 2nd generation instance(for flexible environment)
 
