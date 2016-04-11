@@ -21,23 +21,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = require __DIR__ . '/app.php';
 
-/** @var PDO $db */
-$db = $app['database'];
-
-# [START create_tables]
-// create the tables
-$stmt = $db->prepare('CREATE TABLE entries (
-    entryID INT NOT NULL AUTO_INCREMENT,
-    guestName VARCHAR(255),
-    content VARCHAR(255),
-    PRIMARY KEY(entryID)
-)');
-
-$result = $stmt->execute();
-# [END create_tables]
-
-if (false === $result) {
-    printf("Error: %s\n", $stmt->errorInfo()[2]);
-} else {
-    printf('Tables created');
-}
+// Run the app!
+// use "gcloud preview app deploy"
+$app['debug'] = true;
+$app->run();
