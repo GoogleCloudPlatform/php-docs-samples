@@ -75,5 +75,5 @@ script:
   - popd
 
 after_script:
-  - composer install
+  - composer require "satooshi/php-coveralls:^1.0"
   - travis_retry php vendor/bin/coveralls -v
