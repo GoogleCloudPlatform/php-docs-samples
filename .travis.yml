@@ -32,7 +32,7 @@ env:
 before_install:
   - php dump_credentials.php
   - wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer.phar
-  - scripts/install_test_deps.sh
+  - testing/install_test_deps.sh
 
 script:
   # run php-cs-fixer
