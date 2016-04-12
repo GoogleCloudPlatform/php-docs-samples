@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 
-# [START get_current_user]
-use google\appengine\api\users\User;
+# [START import]
 use google\appengine\api\users\UserService;
+# [END import]
 use Silex\Application;
 
 // create the Silex application
 $app = new Application();
 
 $app->get('/', function () use ($app) {
+    # [START get_current_user]
     $user = UserService::getCurrentUser();
 
     if (isset($user)) {
@@ -34,7 +35,7 @@ $app->get('/', function () use ($app) {
         return sprintf('<a href="%s">Sign in or register</a>',
             UserService::createLoginUrl('/'));
     }
+    # [END get_current_user]
 });
-# [END get_current_user]
 
 return $app;
