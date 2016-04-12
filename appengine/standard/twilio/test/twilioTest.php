@@ -64,7 +64,7 @@ class twilioTest extends WebTestCase
     {
         $client = $this->createClient();
 
-        $crawler = $client->request('GET', '/twiml');
+        $crawler = $client->request('POST', '/twiml');
 
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
