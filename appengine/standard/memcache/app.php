@@ -16,24 +16,40 @@
  */
 
 use Silex\Application;
+use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 // create the Silex application
 $app = new Application();
+$app->register(new TwigServiceProvider());
+$app['twig.path'] = [ __DIR__ ];
 
-// Simple HTTP GET and PUT operators.
-$app->get('/', function() {
-    static $message = <<<EOT
-<html><body>
-<p>A simple REST server that stores and retrieves values from memcache.
-<p>GET and PUT to<br>
-<a href="/memcache">/memcache/{key}</a><br>
-<a href="/memcached">/memcached/{key}</a>
-</body></html>
-EOT;
-    return $message;
+$app->get('/', function (Application $app, Request $request) {
+    /** @var Twig_Environment $twig */
+    $twig = $app['twig'];
+    $memcache = new Memcached;
+    return $twig->render('memcache.html.twig', [
+        'who' => $memcache->get('who'),
+        'count' => $memcache->get('count'),
+        'host' => $request->getHost(),
+    ]);
 });
 
+$app->post('/', function (Application $app, Request $request) {
+    /** @var Twig_Environment $twig */
+    $twig = $app['twig'];
+    # [START who_count]
+    $memcache = new Memcached;
+    $memcache->set('who', $request->get('who'));
+    return $twig->render('memcache.html.twig', [
+        'who' => $request->get('who'),
+        'count' => $memcache->increment('count', 1, 0),
+        'host' => $request->getHost(),
+    ]);
+    # [END who_count]
+});
+
+// Simple HTTP GET and PUT operators.
 $app->get('/memcache/{key}', function ($key) {
     # [START memcache_get]
     $memcache = new Memcache;

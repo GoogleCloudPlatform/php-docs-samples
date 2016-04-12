@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2015 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// Install composer dependencies with "composer install"
-// @see http://getcomposer.org for more information.
-require __DIR__ . '/vendor/autoload.php';
-
-$app = require __DIR__ . '/app.php';
-
-// Run the app!
-// use "gcloud preview app deploy"
-$app['debug'] = false;
-$app->run();
+require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../../../testing/E2EDeploymentTrait.php';
+require_once __DIR__ . '/../../../../testing/GaeApp.php';
+require_once __DIR__ . '/../../../../testing/LocalTestTrait.php';
