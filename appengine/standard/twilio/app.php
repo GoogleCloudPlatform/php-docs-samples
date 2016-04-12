@@ -40,7 +40,7 @@ $app->get('/', function () use ($app) {
     # [END send_sms]
 });
 
-$app->get('/twiml', function () {
+$app->post('/twiml', function () {
     # [START twiml]
     $response = new Services_Twilio_Twiml();
     $response->say('Hello Monkey');
