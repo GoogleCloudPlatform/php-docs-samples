@@ -52,18 +52,17 @@ define('WP_HOME', $protocol_to_use . HTTP_HOST);
 if ($onGae) {
     /** The name of the Cloud SQL database for WordPress */
     define('DB_NAME', '{{db_name}}');
-    /** Live environment Cloud SQL login and SITE_URL info */
-    /** From App Engine, the password is not required, so leave it blank here */
+    /** Production login info */
     define('DB_HOST', ':/cloudsql/{{project_id}}:{{db_instance}}');
-    define('DB_USER', 'root');
-    define('DB_PASSWORD', '');
+    define('DB_USER', '{{db_user}}');
+    define('DB_PASSWORD', '{{db_password}}');
 } else {
     /** The name of the local database for WordPress */
     define('DB_NAME', '{{db_name}}');
     /** Local environment MySQL login info */
     define('DB_HOST', '127.0.0.1');
-    define('DB_USER', '{{db_user}}');
-    define('DB_PASSWORD', '{{db_password}}');
+    define('DB_USER', '{{local_db_user}}');
+    define('DB_PASSWORD', '{{local_db_password}}');
 }
 
 /** Database Charset to use in creating database tables. */

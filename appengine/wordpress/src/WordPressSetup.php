@@ -99,6 +99,20 @@ class WordPressSetup extends Command
                 ''
             )
             ->addOption(
+                'local_db_user',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Local SQL database username',
+                ''
+            )
+            ->addOption(
+                'local_db_password',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Local SQL database password',
+                ''
+            )
+            ->addOption(
                 'wordpress_url',
                 null,
                 InputOption::VALUE_OPTIONAL,
@@ -155,7 +169,7 @@ class WordPressSetup extends Command
                 }
                 $q = new Question(
                     'Please enter ' . $key . $note . ': ', $default);
-                if ($key === 'db_password') {
+                if (strpos($key, 'password') !== false) {
                     $q->setHidden(true);
                     $q->setHiddenFallback(false);
                 }
@@ -249,12 +263,12 @@ class WordPressSetup extends Command
             $dir . '/wordpress/wp-content/object-cache.php'
         );
 
-        $configKeys = array(
+        $keys = array(
             'project_id' => '',
             'db_instance' => 'wp',
             'db_name' => 'wp',
             'db_user' => 'wp',
-            'db_password' => ''
+            'db_password' => '',
         );
         if ($env === self::STANDARD_ENV) {
             $copyFiles = array(
@@ -287,7 +301,22 @@ class WordPressSetup extends Command
             $templateDir = __DIR__ . '/files/flexible';
         }
         $params = array();
-        $this->askParameters($configKeys, $params, $input, $output, $helper);
+        $this->askParameters($keys, $params, $input, $output, $helper);
+        $q = new ConfirmationQuestion(
+            'Do you want to use the same db user and password for '
+            . 'local run? (Y/n)',
+            true
+        );
+        if ($helper->ask($input, $output, $q)) {
+            $params['local_db_user'] = $params['db_user'];
+            $params['local_db_password'] = $params['db_password'];
+        } else {
+            $keys = array(
+                'local_db_user' => 'wp',
+                'local_db_password' => '',
+            );
+            $this->askParameters($keys, $params, $input, $output, $helper);
+        }
         $this->addAuthKeys($params);
         $project->copyFiles($templateDir, $copyFiles, $params);
         if (!$this->report($output, $project)) {

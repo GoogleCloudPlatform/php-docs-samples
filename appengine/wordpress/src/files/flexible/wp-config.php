@@ -85,9 +85,9 @@ if ($onGae) {
     /** The name of the database for WordPress */
     define('DB_NAME', '{{db_name}}');
     /** MySQL database username */
-    define('DB_USER', '{{db_user}}');
+    define('DB_USER', '{{local_db_user}}');
     /** MySQL database password */
-    define('DB_PASSWORD', '{{db_password}}');
+    define('DB_PASSWORD', '{{local_db_password}}');
     define('DB_HOST', '127.0.0.1');
 }
 
