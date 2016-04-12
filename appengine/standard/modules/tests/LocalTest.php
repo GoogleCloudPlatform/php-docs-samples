@@ -16,59 +16,11 @@
  */
 namespace Google\Cloud\Test;
 
-use GuzzleHttp\Client;
-use Google\Cloud\TestUtils\GaeApp;
+use Google\Cloud\TestUtils\LocalTestTrait;
 
 class LocalTest extends \PHPUnit_Framework_TestCase
 {
-    private static $gaeApp;
-
-    private $client;
-
-    const PROJECT_ENV = 'GOOGLE_PROJECT_ID';
-    const VERSION_ENV = 'GOOGLE_VERSION_ID';
-
-    private static function getVersion()
-    {
-        return "modules-" . getenv(self::VERSION_ENV);
-    }
-
-    private static function getTargetDir()
-    {
-        return realpath(__DIR__ . '/../');
-    }
-
-    public static function setUpBeforeClass()
-    {
-        self::markTestIncomplete(
-            'dev_appserver.py is not working for us now');
-        $project_id = getenv(self::PROJECT_ENV);
-        $e2e_test_version = getenv(self::VERSION_ENV);
-        if ($project_id === false) {
-            self::fail('Please set ' . self::PROJECT_ENV . ' env var.');
-        }
-        if ($e2e_test_version === false) {
-            self::fail('Please set ' . self::VERSION_ENV . ' env var.');
-        }
-        self::$gaeApp = new GaeApp(
-            $project_id,
-            $e2e_test_version,
-            self::getTargetDir());
-        if (self::$gaeApp->run() === false) {
-            self::fail('dev_appserver failed.');
-        }
-    }
-
-    public static function tearDownAfterClass()
-    {
-        self::$gaeApp->stop();
-    }
-
-    public function setUp()
-    {
-        $url = self::$gaeApp->getLocalBaseUrl();
-        $this->client = new Client(['base_uri' => $url]);
-    }
+    use LocalTestTrait;
 
     public function testIndex()
     {

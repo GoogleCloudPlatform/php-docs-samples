@@ -20,47 +20,37 @@ namespace Google\Cloud\TestUtils;
 use GuzzleHttp\Client;
 
 /**
- * Class E2EDeploymentTrait
+ * Class LocalTestTrait
  * @package Google\Cloud\TestUtils
  *
- * Use this trait to deploy the project to GCP for an end-to-end test.
+ * Use this trait to use dev_appserver for testing.
  */
-trait E2EDeploymentTrait
+trait LocalTestTrait
 {
     private static $gaeApp;
     private $client;
 
-    public static $projectEnv = 'GOOGLE_PROJECT_ID';
-    public static $versionEnv = 'GOOGLE_VERSION_ID';
-
     /**
      * @beforeClass
      */
-    public static function deployApp()
+    public static function startServer()
     {
-        $project_id = getenv(self::$projectEnv);
-        $e2e_test_version = getenv(self::$versionEnv);
-        if ($project_id === false) {
-            self::fail('Please set ' . self::$projectEnv . ' env var.');
-        }
-        if ($e2e_test_version === false) {
-            self::fail('Please set ' . self::$versionEnv . ' env var.');
-        }
-        self::$gaeApp = new GaeApp(
-            $project_id,
-            $e2e_test_version
+        self::markTestIncomplete(
+            'dev_appserver.py is not working for us now.'
+            . ' TODO: Make this work with specifying --php_gae_extension_path'
         );
-        if (self::$gaeApp->deploy() === false) {
-            self::fail('Deployment failed.');
+        self::$gaeApp = new GaeApp('', '');
+        if (self::$gaeApp->run() === false) {
+            self::fail('dev_appserver failed');
         }
     }
 
     /**
      * @afterClass
      */
-    public static function deleteApp()
+    public static function stopServer()
     {
-        self::$gaeApp->delete();
+        self::$gaeApp->stop();
     }
 
     /**
@@ -68,7 +58,7 @@ trait E2EDeploymentTrait
      */
     public function setUpClient()
     {
-        $url = self::$gaeApp->getBaseUrl();
+        $url = self::$gaeApp->getLocalBaseUrl();
         $this->client = new Client(['base_uri' => $url]);
     }
 }

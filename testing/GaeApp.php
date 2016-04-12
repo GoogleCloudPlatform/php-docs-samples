@@ -17,6 +17,8 @@
 
 namespace Google\Cloud\TestUtils;
 
+use Symfony\Component\Process\Process;
+
 /**
  * Class GaeApp
  * @package Google\Cloud\TestUtils
@@ -29,6 +31,7 @@ class GaeApp
     private $version;
     private $port;
     private $deployed;
+    private $isRunning;
     private $process;
     private $dir;
 
@@ -47,7 +50,7 @@ class GaeApp
             exec($cmd, $output, $ret);
             if ($ret === 0) {
                 return true;
-            } else if ($i <= $retry) {
+            } elseif ($i <= $retry) {
                 $this->errorLog('Retrying the command: ' . $cmd);
             }
         }
@@ -77,6 +80,7 @@ class GaeApp
         }
         $this->version = $version;
         $this->deployed = false;
+        $this->isRunning = false;
         $this->dir = $dir;
         $this->port = $port;
     }
@@ -118,6 +122,41 @@ class GaeApp
     }
 
     /**
+     * Runs the app with dev_appserver.
+     *
+     * @return bool true if the app is running, otherwise false
+     */
+    public function run()
+    {
+        $options = '--port ' . $this->port
+            . ' --php_executable_path ' . PHP_BINARY;
+        $cmd = 'dev_appserver.py --port ' . $this->port
+            . ' --php_executable_path ' . PHP_BINARY
+            . ' ' . $this->dir;
+        $this->process = new Process($cmd);
+        $this->process->start();
+        sleep(3);
+        if (! $this->process->isRunning()) {
+            $this->errorLog('dev_appserver failed to run.');
+            $this->errorLog($this->process->getErrorOutput());
+            return false;
+        }
+        $this->isRunning = true;
+        return true;
+    }
+
+    /**
+     * Stops the dev_appserver.
+     */
+    public function stop()
+    {
+        if ($this->process->isRunning()) {
+            $this->process->stop();
+        }
+        $this->isRunning = false;
+    }
+
+    /**
      * Deletes the deployed app.
      *
      * @param string $module
@@ -136,8 +175,24 @@ class GaeApp
     }
 
     /**
+     * Returns the base URL of the local dev_appserver.
+     *
+     * @return mixed returns the base URL of the running app, or false when
+     *     the app is not running
+     */
+    public function getLocalBaseUrl()
+    {
+        if (! $this->isRunning) {
+            $this->errorLog('The app is not running.');
+            return false;
+        }
+        return 'http://localhost:' . $this->port;
+    }
+
+    /**
      * Returns the base URL of the deployed app.
      *
+     * @param string $module optional
      * @return mixed returns the base URL of the deployed app, or false when
      *     the app is not deployed.
      */
