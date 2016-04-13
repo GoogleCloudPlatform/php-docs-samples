@@ -88,14 +88,14 @@ class GaeApp
     /**
      * Deploys the app to the Google Cloud Platform.
      *
-     * @param string $target yaml files for deployments
+     * @param string $targets optional yaml files for deployments
      * @param bool $promote optional true if you want to promote the new app
      * @param int $retry optional number of retries upon failure
      *
      * @return bool true if deployment suceeds, false upon failure
      */
     public function deploy(
-        $target = 'app.yaml',
+        $targets = 'app.yaml',
         $promote = false,
         $retry = self::DEFAULT_RETRY
     ) {
@@ -104,6 +104,10 @@ class GaeApp
             return false;
         }
         $orgDir = getcwd();
+        if (chdir($this->dir) === false) {
+            $this->errorLog('Can not chdir to ' . $this->dir);
+            return false;
+        }
         $cmd = "gcloud -q " . self::GCLOUD_APP . " deploy "
             . "--project " . $this->project . " "
             . "--version " . $this->version . " ";
@@ -112,7 +116,7 @@ class GaeApp
         } else {
             $cmd .= "--no-promote ";
         }
-        $cmd .= $target;
+        $cmd .= $targets;
         $ret = $this->execWithRetry($cmd, $retry);
         chdir($orgDir);
         if ($ret) {
@@ -124,17 +128,25 @@ class GaeApp
     /**
      * Runs the app with dev_appserver.
      *
+     * @param string $targets optional yaml files for local run
+     * @param string $phpCgiPath optional path to php-cgi
      * @return bool true if the app is running, otherwise false
      */
-    public function run()
-    {
-        $options = '--port ' . $this->port
-            . ' --php_executable_path ' . PHP_BINARY;
+    public function run(
+        $targets = 'app.yaml',
+        $phpCgiPath = '/usr/bin/php-cgi'
+    ) {
         $cmd = 'dev_appserver.py --port ' . $this->port
-            . ' --php_executable_path ' . PHP_BINARY
-            . ' ' . $this->dir;
+            . ' --php_executable_path ' . $phpCgiPath
+            . ' ' . $targets;
+        $orgDir = getcwd();
+        if (chdir($this->dir) === false) {
+            $this->errorLog('Can not chdir to ' . $this->dir);
+            return false;
+        }
         $this->process = new Process($cmd);
         $this->process->start();
+        chdir($orgDir);
         sleep(3);
         if (! $this->process->isRunning()) {
             $this->errorLog('dev_appserver failed to run.');

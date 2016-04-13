@@ -1,0 +1,8 @@
+runtime: php55
+api_version: 1
+threadsafe: true
+module: my-backend
+
+handlers:
+- url: /.*
+  script: backend.php

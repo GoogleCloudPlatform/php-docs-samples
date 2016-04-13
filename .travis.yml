@@ -73,6 +73,11 @@ script:
   - composer install
   - phpunit
   - popd
+  # run modules tests
+  - pushd appengine/standard/modules
+  - if [ ${TRAVIS_PHP_VERSION} == '5.5' ]; then composer install; fi;
+  - if [ ${TRAVIS_PHP_VERSION} == '5.5' ]; then env PHP_CGI_PATH=`which php-cgi` LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit; fi;
+  - popd
 
 after_script:
   - composer install
