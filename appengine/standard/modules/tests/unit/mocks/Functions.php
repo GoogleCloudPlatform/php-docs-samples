@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,10 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Google\Cloud\Samples\Appengine\Modules;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../../../../testing/E2EDeploymentTrait.php';
-require_once __DIR__ . '/../../../../testing/GaeApp.php';
-require_once __DIR__ . '/../../../../testing/LocalTestTrait.php';
-require_once __DIR__ . '/unit/mocks/User.php';
-require_once __DIR__ . '/unit/mocks/UserService.php';
+/**
+ * Simple mock function for file_get_contents.
+ */
+function file_get_contents($url)
+{
+    // Just return the given url.
+    return $url;
+}

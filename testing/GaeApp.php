@@ -136,7 +136,8 @@ class GaeApp
         $targets = 'app.yaml',
         $phpCgiPath = '/usr/bin/php-cgi'
     ) {
-        $cmd = 'dev_appserver.py --port ' . $this->port
+        $cmd = 'exec dev_appserver.py --port ' . $this->port
+            . ' --skip_sdk_update_check true'
             . ' --php_executable_path ' . $phpCgiPath
             . ' ' . $targets;
         $orgDir = getcwd();
