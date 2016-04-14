@@ -1,4 +1,5 @@
 runtime: php55
+threadsafe: yes
 api_version: 1
 
 handlers:

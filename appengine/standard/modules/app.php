@@ -25,11 +25,19 @@ use google\appengine\api\modules\ModulesService;
 $app = new Application();
 
 $app->get('/', function () use ($app) {
-    // [START modules_methods]
+    // [START simple_methods]
     $module = ModulesService::getCurrentModuleName();
     $instance = ModulesService::getCurrentInstanceId();
-    // [END modules_methods]
+    // [END simple_methods]
     return "$module:$instance";
+});
+
+$app->get('/access_backend', function () use ($app) {
+    // [START access_another_module]
+    $url = 'http://' . ModulesService::getHostname('my-backend') . '/';
+    $result = file_get_contents($url);
+    // [END access_another_module]
+    return $result;
 });
 
 return $app;

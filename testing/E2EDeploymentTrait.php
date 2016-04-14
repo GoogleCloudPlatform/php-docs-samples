@@ -30,25 +30,27 @@ trait E2EDeploymentTrait
     private static $gaeApp;
     private $client;
 
-    public static $projectEnv = 'GOOGLE_PROJECT_ID';
-    public static $versionEnv = 'GOOGLE_VERSION_ID';
+    private static $projectEnv = 'GOOGLE_PROJECT_ID';
+    private static $versionEnv = 'GOOGLE_VERSION_ID';
+    private static $projectId;
+    private static $versionId;
 
     /**
      * @beforeClass
      */
     public static function deployApp()
     {
-        $project_id = getenv(self::$projectEnv);
-        $e2e_test_version = getenv(self::$versionEnv);
-        if ($project_id === false) {
+        self::$projectId = getenv(self::$projectEnv);
+        self::$versionId = getenv(self::$versionEnv);
+        if (self::$projectId === false) {
             self::fail('Please set ' . self::$projectEnv . ' env var.');
         }
-        if ($e2e_test_version === false) {
+        if (self::$versionId === false) {
             self::fail('Please set ' . self::$versionEnv . ' env var.');
         }
         self::$gaeApp = new GaeApp(
-            $project_id,
-            $e2e_test_version
+            self::$projectId,
+            self::$versionId
         );
         if (self::$gaeApp->deploy() === false) {
             self::fail('Deployment failed.');

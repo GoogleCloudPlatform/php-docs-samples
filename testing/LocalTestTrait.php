@@ -35,12 +35,16 @@ trait LocalTestTrait
      */
     public static function startServer()
     {
-        self::markTestIncomplete(
-            'dev_appserver.py is not working for us now.'
-            . ' TODO: Make this work with specifying --php_gae_extension_path'
-        );
+        $phpCgi = getenv('PHP_CGI_PATH');
+        if ($phpCgi === false) {
+            $phpCgi = '/usr/bin/php-cgi';
+        }
+        $targets = getenv('LOCAL_TEST_TARGETS');
+        if ($targets === false) {
+            $targets = 'app.yaml';
+        }
         self::$gaeApp = new GaeApp('', '');
-        if (self::$gaeApp->run() === false) {
+        if (self::$gaeApp->run($targets, $phpCgi) === false) {
             self::fail('dev_appserver failed');
         }
     }

@@ -30,3 +30,7 @@ gcloud config set app/promote_by_default false
 gcloud config set app/use_cloud_build true
 gcloud auth activate-service-account --key-file \
     "${GOOGLE_APPLICATION_CREDENTIALS}"
+gcloud -q components install app-engine-python
+gcloud -q components install app-engine-php
+# pinning to 104.0.0 because 105.0.0 is broken for php app
+gcloud -q components update --version 104.0.0

@@ -21,15 +21,5 @@ use Google\Cloud\TestUtils\E2EDeploymentTrait;
 class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use E2EDeploymentTrait;
-
-    public function testIndex()
-    {
-        // Access the modules app top page.
-        $resp = $this->client->get('');
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
-        $this->assertContains(
-            'default:',
-            $resp->getBody()->getContents());
-    }
+    use ModulesTestTrait;
 }

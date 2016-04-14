@@ -14,12 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Test;
 
-use Google\Cloud\TestUtils\LocalTestTrait;
-
-class LocalTest extends \PHPUnit_Framework_TestCase
-{
-    use LocalTestTrait;
-    use ModulesTestTrait;
-}
+/*
+ * This application is only for testig purpose. Please deploy this app with
+ * backend.yaml if you want to run tests/DeployTests.php.
+ */
+echo 'This is my backend.';
