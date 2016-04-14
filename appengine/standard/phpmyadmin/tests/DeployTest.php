@@ -59,7 +59,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         return realpath($ret);
     }
 
-    private function downloadPhpmyadmin($dir)
+    private static function downloadPhpmyadmin($dir)
     {
         $tmp = sys_get_temp_dir();
         $url = 'https://files.phpmyadmin.net/phpMyAdmin/'
