@@ -73,6 +73,11 @@ script:
   - composer install
   - phpunit
   - popd
+  # run appengine logging tests
+  - pushd appengine/standard/logging
+  - composer install
+  - phpunit
+  - popd
   # run modules tests
   - pushd appengine/standard/modules
   - if [ ${TRAVIS_PHP_VERSION} == '5.5' ]; then composer install; fi;
