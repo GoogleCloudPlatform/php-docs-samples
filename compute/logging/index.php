@@ -5,11 +5,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Fluent\Logger\FluentLogger;
 
-$logger = new FluentLogger('localhost', '24224');
+$GLOBALS['logger'] = new FluentLogger('localhost', '24224');
 
 function fluentd_exception_handler(Exception $e)
 {
     global $logger;
+
     $msg = array(
         'message' => $e->getMessage(),
         'serviceContext' => array('service' => 'myapp'),
