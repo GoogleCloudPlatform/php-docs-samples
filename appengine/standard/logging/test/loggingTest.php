@@ -61,7 +61,7 @@ class loggingTest extends PHPUnit_Framework_TestCase
         include __DIR__ . '/../index.php';
         $result = ob_get_contents();
         ob_end_clean();
-        // Make sure it looks like Shakespeare.
+
         $this->assertContains('127.0.0.1', $result);
         $this->assertContains('log-status-1', $result);
         $this->assertContains('log-method-1', $result);
@@ -69,5 +69,25 @@ class loggingTest extends PHPUnit_Framework_TestCase
         $this->assertContains($d1->format('c'), $result);
         $this->assertContains('applog-message-1', $result);
         $this->assertContains($d2->format('c'), $result);
+    }
+
+    public function testSyslog()
+    {
+        // not authorized
+        ob_start();
+        include __DIR__ . '/../syslog.php';
+        $result = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('false', $result);
+
+        // authorized
+        $_GET['authorized'] = 1;
+        ob_start();
+        include __DIR__ . '/../syslog.php';
+        $result = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('true', $result);
     }
 }
