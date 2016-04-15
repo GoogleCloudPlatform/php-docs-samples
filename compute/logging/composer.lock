@@ -1,0 +1,72 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "27dad74d408b0b848d82c498ce4cf3ef",
+    "content-hash": "1ac6bef12b52bca1e2bc43b46f30bc1e",
+    "packages": [
+        {
+            "name": "fluent/logger",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fluent/fluent-logger-php.git",
+                "reference": "360ad86483847f81ba25a79aa183520d790f6fca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fluent/fluent-logger-php/zipball/360ad86483847f81ba25a79aa183520d790f6fca",
+                "reference": "360ad86483847f81ba25a79aa183520d790f6fca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.3",
+                "phpunit/phpunit-mock-objects": "2.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fluent\\Logger\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache"
+            ],
+            "authors": [
+                {
+                    "name": "Shuhei Tanuma",
+                    "email": "chobieee@gmail.com"
+                },
+                {
+                    "name": "Sotaro Karasawa",
+                    "email": "sotarok@crocos.co.jp"
+                },
+                {
+                    "name": "DQNEO",
+                    "email": "dqneoo@gmail.com"
+                }
+            ],
+            "description": "a logging library for Fluentd",
+            "homepage": "http://github.com/fluent/fluent-logger-php",
+            "keywords": [
+                "log",
+                "logging"
+            ],
+            "time": "2015-10-16 05:38:10"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
