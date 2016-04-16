@@ -19,6 +19,7 @@ branches:
 language: php
 php:
   - 5.5
+    env: RUN_DEVSERVER_TESTS=true
   - 5.6
   - hhvm
   - nightly
@@ -28,6 +29,7 @@ env:
     - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
     - PATH=${HOME}/gcloud/google-cloud-sdk/bin:${PATH}
+    - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
 
 before_install:
   - php dump_credentials.php
@@ -78,17 +80,23 @@ script:
   - composer install
   - phpunit
   - popd
-  # run modules tests
-  - pushd appengine/standard/modules
-  - if [ ${TRAVIS_PHP_VERSION} == '5.5' ]; then composer install; fi;
-  - if [ ${TRAVIS_PHP_VERSION} == '5.5' ]; then env PHP_CGI_PATH=`which php-cgi` LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit; fi;
-  - popd
   # run compute engine logging tests
   - pushd compute/logging
   - composer install
   - phpunit
   - popd
+  # run modules API e2e tests
+  - pushd appengine/standard/modules
+  - composer install
+  - env LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit -c phpunit-e2e.xml.dist
+  - popd
+  # run users API tests
+  - pushd appengine/standard/modules
+  - composer install
+  - phpunit
+  - phpunit -c phpunit-e2e.xml.dist
+  - popd
 
-after_script:
+after_success:
   - composer require "satooshi/php-coveralls:^1.0"
   - travis_retry php vendor/bin/coveralls -v

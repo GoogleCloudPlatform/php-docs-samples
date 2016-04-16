@@ -35,6 +35,11 @@ trait LocalTestTrait
      */
     public static function startServer()
     {
+        if (getenv('RUN_DEVSERVER_TESTS') !== 'true') {
+            self::markTestSkipped(
+                'To run this test, set RUN_DEVSERVER_TESTS env to true.'
+            );
+        }
         $phpCgi = getenv('PHP_CGI_PATH');
         if ($phpCgi === false) {
             $phpCgi = '/usr/bin/php-cgi';

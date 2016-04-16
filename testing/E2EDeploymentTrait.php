@@ -40,6 +40,11 @@ trait E2EDeploymentTrait
      */
     public static function deployApp()
     {
+        if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
+            self::markTestSkipped(
+                'To run this test, set RUN_DEPLOYMENT_TESTS env to true.'
+            );
+        }
         self::$projectId = getenv(self::$projectEnv);
         self::$versionId = getenv(self::$versionEnv);
         if (self::$projectId === false) {
