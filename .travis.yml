@@ -90,9 +90,10 @@ script:
   - composer install
   - env LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit -c phpunit-e2e.xml.dist
   - popd
-  # run users API e2e tests
+  # run users API tests
   - pushd appengine/standard/modules
   - composer install
+  - phpunit
   - phpunit -c phpunit-e2e.xml.dist
   - popd
 
