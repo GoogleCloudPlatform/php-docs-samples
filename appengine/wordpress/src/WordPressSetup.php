@@ -40,6 +40,9 @@ class WordPressSetup extends Command
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
 
+    const CLOUDSQL_FIRST_GEN = 'First Generation CloudSQL Instance';
+    const CLOUDSQL_SECOND_GEN = 'Second Generation CloudSQL Instance';
+
     protected function configure()
     {
         $this
@@ -53,6 +56,17 @@ class WordPressSetup extends Command
                 . self::FLEXIBLE_ENV
                 . ', s: '
                 . self::STANDARD_ENV
+                . '.',
+                null
+            )
+            ->addOption(
+                'sql_gen',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'CloudSQL generation to use; 2: '
+                . self::CLOUDSQL_SECOND_GEN
+                . ', 1: '
+                . self::CLOUDSQL_FIRST_GEN
                 . '.',
                 null
             )
@@ -74,7 +88,7 @@ class WordPressSetup extends Command
                 'db_instance',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Cloud SQL instance id',
+                'Cloud SQL region',
                 ''
             )
             ->addOption(
@@ -152,7 +166,8 @@ class WordPressSetup extends Command
         array &$params,
         InputInterface $input,
         OutputInterface $output,
-        $helper
+        $helper,
+        $sqlGen = false
     ) {
         foreach ($configKeys as $key => $default) {
             $value = $input->getOption($key);
@@ -173,6 +188,18 @@ class WordPressSetup extends Command
                     $q->setHidden(true);
                     $q->setHiddenFallback(false);
                 }
+                if ($key === 'db_region')  {
+                    if ($sqlGen === self::CLOUDSQL_FIRST_GEN) {
+                        $value = ':';
+                        $params[$key] = $value;
+                        continue;
+                    } elseif ($sqlGen === self::CLOUDSQL_SECOND_GEN) {
+                        $value = $helper->ask($input, $output, $q);
+                        $value = ':' . $value . ':';
+                        $params[$key] = $value;
+                        continue;
+                    }
+                }
                 $value = $helper->ask($input, $output, $q);
                 if (empty($value)) {
                     $output->writeln(
@@ -181,6 +208,7 @@ class WordPressSetup extends Command
             }
             $params[$key] = $value;
         }
+        return 0;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -225,7 +253,22 @@ class WordPressSetup extends Command
             $q->setErrorMessage('Environment %s is invalid.');
             $env = $helper->ask($input, $output, $q);
         }
-        $output->writeln('Creating a new project for: ' . $env);
+        $sqlGen = $input->getOption('sql_gen');
+        if ($sqlGen === 'o') {
+            $sqlGen = self::CLOUDSQL_FIRST_GEN;
+        } elseif ($sqlGen === 't') {
+            $sqlGen = self::CLOUDSQL_SECOND_GEN;
+        } else {
+            $q = new ChoiceQuestion(
+                'Please select the CloudSQL Instance Generation '
+                . '(defaults to ' . self::CLOUDSQL_SECOND_GEN . ')',
+                array(self::CLOUDSQL_SECOND_GEN, self::CLOUDSQL_FIRST_GEN),
+                self::CLOUDSQL_SECOND_GEN
+            );
+            $q->setErrorMessage('CloudSQL Instance Generation %s is invalid.');
+            $sqlGen = $helper->ask($input, $output, $q);
+        }
+        $output->writeln('Creating a new project for: ' . $env . 'with a' . $sqlGen);
 
         $output->writeln('Downloading the WordPress archive...');
         $wpUrl = $input->getOption('wordpress_url');
@@ -301,7 +344,7 @@ class WordPressSetup extends Command
             $templateDir = __DIR__ . '/files/flexible';
         }
         $params = array();
-        $this->askParameters($keys, $params, $input, $output, $helper);
+        $this->askParameters($keys, $params, $input, $output, $helper, $sqlGen);
         $q = new ConfirmationQuestion(
             'Do you want to use the same db user and password for '
             . 'local run? (Y/n)',

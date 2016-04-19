@@ -2,7 +2,7 @@ runtime: custom
 vm: true
 
 beta_settings:
- cloud_sql_instances: {{project_id}}:us-central1:{{db_instance}}
+ cloud_sql_instances: {{project_id}}{{db_region}}{{db_instance}}
 
 env_variables:
   DOCUMENT_ROOT: /app/wordpress
