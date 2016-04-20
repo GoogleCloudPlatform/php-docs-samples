@@ -19,19 +19,18 @@ namespace google\appengine\api\mail;
 
 class Message
 {
-
     private $attachments =[];
-    private $sender = "";
-    private $subject = "";
-    private $textBody = "";
+    private $sender = '';
+    private $subject = '';
+    private $textBody = '';
     private $to =[];
 
     public function addAttachment($name, $data, $id)
     {
         $obj = [
-            "name" => $name,
-            "data" => $data,
-            "id" => $id,
+            'name' => $name,
+            'data' => $data,
+            'id' => $id,
         ];
 
         array_push($this->attachments, $obj);
