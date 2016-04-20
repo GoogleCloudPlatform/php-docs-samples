@@ -25,14 +25,14 @@ $image_content_id = '<image-content-id>';
 $image_data = file_get_contents('image.jpg');
 
 try {
-  $message = new Message();
-  $message->setSender("from@google.com");
-  $message->addTo("to@google.com");
-  $message->setSubject("Example email");
-  $message->setTextBody("Hello, world!");
-  $message->addAttachment('image.jpg', $image_data, $image_content_id);
-  $message->send();
-  echo "Mail Sent";
+    $message = new Message();
+    $message->setSender("from@google.com");
+    $message->addTo("to@google.com");
+    $message->setSubject("Example email");
+    $message->setTextBody("Hello, world!");
+    $message->addAttachment('image.jpg', $image_data, $image_content_id);
+    $message->send();
+    echo "Mail Sent";
 } catch (InvalidArgumentException $e) {
-  echo "There was an error";
+    echo "There was an error";
 }

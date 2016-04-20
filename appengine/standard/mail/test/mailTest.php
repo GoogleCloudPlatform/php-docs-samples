@@ -15,13 +15,11 @@
  * limitations under the License.
  */
 
-use google\appengine\api\mail\Message;
 
 class mailTest extends PHPUnit_Framework_TestCase
 {
     public function testSendMail()
     {
-
         ob_start();
         include __DIR__ . '/../index.php';
         $result = ob_get_contents();
@@ -32,7 +30,6 @@ class mailTest extends PHPUnit_Framework_TestCase
 
     public function testIncomingHandle()
     {
-
         $_POST["content"] ="";
 
         ob_start();
@@ -44,7 +41,6 @@ class mailTest extends PHPUnit_Framework_TestCase
     }
     public function testBounceHandle()
     {
-
         $_POST["content"] ="";
 
         ob_start();
@@ -54,6 +50,4 @@ class mailTest extends PHPUnit_Framework_TestCase
 
         $this->assertContains("1", $result);
     }
-
-
 }

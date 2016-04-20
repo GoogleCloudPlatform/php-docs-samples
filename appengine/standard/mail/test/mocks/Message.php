@@ -20,27 +20,26 @@ namespace google\appengine\api\mail;
 class Message
 {
 
-	private $attachments =[];
-	private $sender = "";
-	private $subject = "";
-	private $textBody = "";
-	private $to =[];
+    private $attachments =[];
+    private $sender = "";
+    private $subject = "";
+    private $textBody = "";
+    private $to =[];
 
-	public function addAttachment($name, $data, $id)
+    public function addAttachment($name, $data, $id)
     {
-    	$obj = [
-		    "name" => $name,
-		    "data" => $data,
-		    "id" => $id,
-		];
+        $obj = [
+            "name" => $name,
+            "data" => $data,
+            "id" => $id,
+        ];
 
-		array_push( $this->attachments, $obj);
-
+        array_push($this->attachments, $obj);
     }
 
-	public function addTo($email)
+    public function addTo($email)
     {
-    	array_push( $this->to, $email);
+        array_push($this->to, $email);
     }
 
     public function setSender($email)
@@ -60,8 +59,5 @@ class Message
 
     public function send()
     {
-        
     }
-
-   
 }
