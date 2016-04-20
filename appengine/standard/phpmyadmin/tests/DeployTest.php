@@ -22,7 +22,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 {
     private $client;
 
-    const PHPMYADMIN_VERSION = '4.5.5.1';
+    const PHPMYADMIN_VERSION = '4.6.0';
     const PROJECT_ENV = 'GOOGLE_PROJECT_ID';
     const VERSION_ENV = 'GOOGLE_VERSION_ID';
     const DB_PASSWORD_ENV = 'MYSQLADMIN_ROOT_PASSWORD';
