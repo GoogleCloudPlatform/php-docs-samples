@@ -62,6 +62,11 @@ script:
   - composer install
   - phpunit
   - popd
+  # run appengine storage tests
+  - pushd appengine/standard/storage
+  - composer install
+  - phpunit
+  - popd
   # run mailgun tests
   - pushd appengine/standard/mailgun
   - composer install
