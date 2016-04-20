@@ -1,0 +1,18 @@
+runtime: php55
+threadsafe: yes
+api_version: 1
+
+inbound_services:
+- mail
+- mail_bounce
+
+handlers:
+
+- url: /_ah/mail/.+
+  script: handle_incoming_email.php
+  # login: admin
+- url: /_ah/bounce
+  script: handle_bounced_email.php
+  login: admin  
+- url: .*
+  script: index.php 
