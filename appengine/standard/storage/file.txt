@@ -1,0 +1,2 @@
+This is the contents of a static file, to illustrate your application
+ has readonly access to the filesystem while running in Google App Engine.
