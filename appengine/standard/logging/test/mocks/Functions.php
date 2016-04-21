@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright 2015 Google Inc.
+ * Copyright 2015 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,13 +15,16 @@
  * limitations under the License.
  */
 
-$user_is_authorized = !empty($_GET['authorized']);
+namespace Google\Cloud\Samples\AppEngine\Logging;
 
-# [START syslog]
-if ($user_is_authorized) {
-    syslog(LOG_INFO, 'Authorized access');
-} else {
-    syslog(LOG_WARNING, 'Unauthorized access');
+function connection_status()
+{
+    global $startTime;
+
+    // timeout after 2 seconds
+    if ($startTime + 2 < time()) {
+        return CONNECTION_TIMEOUT;
+    }
+
+    return 0;
 }
-# [END syslog]
-var_export($user_is_authorized);

@@ -27,6 +27,7 @@
         <whitelist>
             <file>index.php</file>
             <file>syslog.php</file>
+            <file>timeout.php</file>
         </whitelist>
     </filter>
 </phpunit>

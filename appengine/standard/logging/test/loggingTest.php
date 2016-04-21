@@ -90,4 +90,19 @@ class loggingTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('true', $result);
     }
+
+    public function testTimeout()
+    {
+        global $startTime;
+        $startTime = time();
+
+        // timeout after 2 seconds
+        ob_start();
+        include __DIR__ . '/../timeout.php';
+        $result = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('Got timeout! Cleaning up...', $result);
+        $this->assertGreaterThan($startTime + 2, time());
+    }
 }
