@@ -15,13 +15,23 @@
  * limitations under the License.
  */
 
-$user_is_authorized = !empty($_GET['authorized']);
+namespace Google\Cloud\Samples\AppEngine\Logging;
 
-# [START syslog]
-if ($user_is_authorized) {
-    syslog(LOG_INFO, 'Authorized access');
-} else {
-    syslog(LOG_WARNING, 'Unauthorized access');
+$taskIsRunning = true;
+
+# [START timeout]
+function check_conn_timeout()
+{
+    $status = connection_status();
+    if (($status & CONNECTION_TIMEOUT) == CONNECTION_TIMEOUT) {
+        return true;
+    }
 }
-# [END syslog]
-var_export($user_is_authorized);
+
+while ($taskIsRunning) {
+    if (check_conn_timeout()) {
+        echo "Got timeout! Cleaning up...";
+        break;
+    }
+}
+# [END timeout]
