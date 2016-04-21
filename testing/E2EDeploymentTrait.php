@@ -27,7 +27,9 @@ use GuzzleHttp\Client;
  */
 trait E2EDeploymentTrait
 {
+    /** @var  \Google\Cloud\TestUtils\GaeApp */
     private static $gaeApp;
+    /** @var  \GuzzleHttp\Client */
     private $client;
 
     private static $projectEnv = 'GOOGLE_PROJECT_ID';

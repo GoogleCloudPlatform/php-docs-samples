@@ -27,7 +27,9 @@ use GuzzleHttp\Client;
  */
 trait LocalTestTrait
 {
+    /** @var  \Google\Cloud\TestUtils\GaeApp */
     private static $gaeApp;
+    /** @var  \GuzzleHttp\Client */
     private $client;
 
     /**
