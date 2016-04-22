@@ -45,10 +45,8 @@ $app->get('/', function () use ($app) {
 $app->get('/admin', function () use ($app) {
     # [START check_administrator]
     $user = UserService::getCurrentUser();
-    if (isset($user)) {
-        if (UserService::isCurrentUserAdmin()) {
-            return 'Welcome administrator.';
-        }
+    if (isset($user) && UserService::isCurrentUserAdmin()) {
+        return 'Welcome administrator.';
     }
     return 'You are not an administrator.';
     # [END check_administrator]
