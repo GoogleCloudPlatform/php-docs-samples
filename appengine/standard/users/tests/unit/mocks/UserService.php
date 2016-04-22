@@ -22,7 +22,6 @@ namespace google\appengine\api\users;
  */
 class UserService
 {
-
     public static $user;
 
     public static $loginUrl = 'http://localhost:8080/login';

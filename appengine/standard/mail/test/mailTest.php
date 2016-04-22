@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 class mailTest extends PHPUnit_Framework_TestCase
 {
     public function testSendMail()
@@ -30,24 +29,24 @@ class mailTest extends PHPUnit_Framework_TestCase
 
     public function testIncomingHandle()
     {
-        $_POST["content"] ="";
+        $_POST["content"] = '';
 
         ob_start();
         include __DIR__ . '/../handle_incoming_email.php';
         $result = ob_get_contents();
         ob_end_clean();
 
-        $this->assertContains("1", $result);
+        $this->assertContains('1', $result);
     }
     public function testBounceHandle()
     {
-        $_POST["content"] ="";
+        $_POST["content"] = '';
 
         ob_start();
         include __DIR__ . '/../handle_bounced_email.php';
         $result = ob_get_contents();
         ob_end_clean();
 
-        $this->assertContains("1", $result);
+        $this->assertContains('1', $result);
     }
 }

@@ -1,0 +1,12 @@
+# [START admin_protection]
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /tasks/process
+  script: process.php
+  login: admin
+# [END admin_protection]
+- url: /.*
+  script: index.php

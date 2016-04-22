@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 runtime: php55
 threadsafe: yes
 api_version: 1
 
 inbound_services:
-# [START mail_service]  
+# [START mail_service]
 - mail
 # [END mail_service]
-# [START bounce_service]  
+# [START bounce_service]
 - mail_bounce
 # [END bounce_service]
 handlers:
@@ -30,10 +29,10 @@ handlers:
   script: handle_incoming_email.php
   login: admin
 # [END incoming_handler]
-# [START bounce_handler]  
+# [START bounce_handler]
 - url: /_ah/bounce
   script: handle_bounced_email.php
   login: admin
-# [END bounce_handler]    
+# [END bounce_handler]
 - url: .*
-  script: index.php 
+  script: index.php

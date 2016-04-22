@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Storage Example</title>
+  </head>
+
+  <body>
+    <h1>Storage Example</h1>
+
+    <div>
+        <h3>
+            Write
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/#simple_file_write">docs</a>]:
+        </h3>
+        <form action="/write" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello }}</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <h3>
+            Write with Options
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/#simple_file_write">docs</a>]:
+        </h3>
+        <form action="/write/options" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello_options %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello_options }}</p>
+        {% endif %}
+    <div>
+
+    <div>
+        <h3>
+            Stream Write
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/#streamed_file_write">docs</a>]:
+        </h3>
+        <form action="/write/stream" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello_stream %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello_stream }}</p>
+        {% endif %}
+    <div>
+
+    <div>
+        <h3>
+            Write with Caching
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/advanced#cached_file_reads">docs</a>]:
+        </h3>
+        <form action="/write/caching" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello_caching %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello_caching }}</p>
+        {% endif %}
+    <div>
+
+    <div>
+        <h3>
+            Write with Metadata
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/advanced#reading_and_writing_custom_metadata">docs</a>]:
+        </h3>
+        <form action="/write/metadata" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello_metadata %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello_metadata }}</p>
+            <p><strong>Your metadata:</strong><p>
+            <pre>
+{% for key,value in metadata %}
+    {{ key }}: {{ value }}
+{% endfor %}
+            </pre>
+            <p><strong>Your content type:</strong><p>
+            <p>{{ metadata_content_type }}</p>
+        {% endif %}
+    <div>
+
+    <div>
+        <h3>
+            Write (default)
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/setup">docs</a>]:
+        </h3>
+        <form action="/write/default" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello_default %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello_default }}</p>
+        {% endif %}
+    <div>
+
+    <div>
+        <h3>
+            Stream Write (default)
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/setup">docs</a>]:
+        </h3>
+        <form action="/write/default/stream" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if hello_default_stream %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ hello_default_stream }}</p>
+        {% endif %}
+    <div>
+
+    <div>
+        <h3>
+            Serve a File
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/public_access#serving_files_from_a_script">docs</a>]:
+        </h3>
+        <p><em><a href="/serve" target="_blank">Example of serving a file</a></em></p>
+    </div>
+
+    <div>
+        <h3>
+            Write and Serve Public Files
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/public_access#serving_files_directly_from_google_cloud_storage">docs</a>]:
+        </h3>
+        <p><em><a href="/write/public" target="_blank">Example of writing and serving a public file</a></em></p>
+    </div>
+
+    <div>
+        <h3>
+            User Uploads
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/user_upload">docs</a>]:
+        </h3>
+
+        {# [START user_upload_form] #}
+        <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
+            Files to upload: <br>
+           <input type="file" name="uploaded_files" size="40">
+           <input type="submit" value="Send">
+        </form>
+        {# [END user_upload_form] #}
+    </div>
+
+    <div>
+        <h3>
+            Serve an Image
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/images">docs</a>]:
+        </h3>
+        <p><em><a href="/serve/image" target="_blank">Example of serving an image</a></em></p>
+    </div>
+
+    <div>
+        <h3>
+            Read from the Filesystem
+            [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/#is_there_any_other_way_to_read_and_write_files">docs</a>]:
+        </h3>
+        <p><em><a href="/file.txt" target="_blank">Example of reading from the filesystem</a></em></p>
+    </div>
+</html>

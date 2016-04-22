@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// Get the contents of the mail here. 
+// Get the contents of the mail here.
 $mail_data = var_export($_POST, true);
 
 // Do something with those contents
