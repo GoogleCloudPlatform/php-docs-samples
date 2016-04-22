@@ -102,6 +102,11 @@ script:
   - composer install
   - phpunit
   - popd
+  # run taskqueue API tests
+  - pushd appengine/standard/taskqueue
+  - composer install
+  - phpunit
+  - popd
 
 after_success:
   - composer require "satooshi/php-coveralls:^1.0"
