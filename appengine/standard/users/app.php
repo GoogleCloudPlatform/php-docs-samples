@@ -18,6 +18,10 @@
 # [START import]
 use google\appengine\api\users\UserService;
 # [END import]
+# [START import_user]
+use google\appengine\api\users\User;
+# [END import_user]
+
 use Silex\Application;
 
 // create the Silex application
@@ -36,6 +40,30 @@ $app->get('/', function () use ($app) {
             UserService::createLoginUrl('/'));
     }
     # [END get_current_user]
+});
+
+$app->get('/admin', function () use ($app) {
+    # [START check_administrator]
+    $user = UserService::getCurrentUser();
+    if (isset($user) && UserService::isCurrentUserAdmin()) {
+        return 'Welcome administrator.';
+    }
+    return 'You are not an administrator.';
+    # [END check_administrator]
+});
+
+$app->get('/user', function () use ($app) {
+    # [START new_user]
+    $user = new User('Albert.Johnson@example.com');
+    # [END new_user]
+    return sprintf('Nickname is %s', $user->getNickname());
+});
+
+$app->get('/federatedUser', function () use ($app) {
+    # [START new_federated_user]
+    $user = new User(null, 'http://example.com/id/ajohnson');
+    # [END new_federated_user]
+    return sprintf('Nickname is %s', $user->getNickname());
 });
 
 return $app;

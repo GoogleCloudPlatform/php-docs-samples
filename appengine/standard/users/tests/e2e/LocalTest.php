@@ -21,15 +21,5 @@ use Google\Cloud\TestUtils\LocalTestTrait;
 class LocalTest extends \PHPUnit_Framework_TestCase
 {
     use LocalTestTrait;
-
-    public function testIndex()
-    {
-        // Access the modules app top page.
-        $resp = $this->client->get('');
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
-        $this->assertContains(
-            'register',
-            $resp->getBody()->getContents());
-    }
+    use E2EUsersTestTrait;
 }

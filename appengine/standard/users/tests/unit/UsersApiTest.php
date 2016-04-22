@@ -20,7 +20,6 @@ use Silex\WebTestCase;
 
 class UsersApiTest extends WebTestCase
 {
-
     private $user;
 
     public function createApplication()
