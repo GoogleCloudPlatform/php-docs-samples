@@ -34,3 +34,10 @@ gcloud -q components install app-engine-python
 gcloud -q components install app-engine-php
 # pinning to 104.0.0 because 105.0.0 is broken for php app
 gcloud -q components update --version 104.0.0
+
+
+# Install PHP-cs-fixer
+if [ ! -d php-cs-fixer ] && [ ! -z ${RUN_CS_FIXER} ]; then
+    wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer
+    chmod a+x php-cs-fixer
+fi

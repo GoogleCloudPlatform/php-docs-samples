@@ -21,7 +21,7 @@ language: php
 matrix:
   include:
     - php: 5.5
-      env: RUN_DEVSERVER_TESTS=true
+      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
     - php: 5.6
     - php: hhvm
     - php: nightly
@@ -35,13 +35,13 @@ env:
 
 before_install:
   - php dump_credentials.php
-  - wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer.phar
   - testing/install_test_deps.sh
 
 script:
   # run php-cs-fixer
-  - php php-cs-fixer.phar fix --dry-run --diff --level=psr2
-    --fixers=concat_with_spaces,unused_use,trailing_spaces,indentation .
+  - if [ ! -z $RUN_CS_FIXER ]; then
+      ./php-cs-fixer fix --dry-run --diff --config-file=.php_cs .;
+    fi
   # run bigquery tests
   - pushd bigquery/api
   - composer install
