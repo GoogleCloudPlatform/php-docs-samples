@@ -89,6 +89,11 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
+        if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
+            self::markTestSkipped(
+                'To run this test, set RUN_DEPLOYMENT_TESTS env to true.'
+            );
+        }
         $project_id = getenv(self::PROJECT_ENV);
         $e2e_test_version = getenv(self::VERSION_ENV);
         $blowfish_secret = getenv(self::BF_SECRET_ENV);
