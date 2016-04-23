@@ -1,4 +1,5 @@
 <?php
+// [START_EXCLUDE]
 /**
  * Copyright 2016 Google Inc.
  *
@@ -14,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// [START config-inc-php]
+// [END_EXCLUDE]
 /*
  * This is needed for cookie based authentication to encrypt password in
  * cookie
@@ -61,4 +61,3 @@ $cfg['SaveDir'] = '';
 $cfg['PmaNoRelation_DisableWarning'] = true;
 $cfg['ExecTimeLimit'] = 60;
 $cfg['CheckConfigurationPermissions'] = false;
-// [END config-inc-php]
