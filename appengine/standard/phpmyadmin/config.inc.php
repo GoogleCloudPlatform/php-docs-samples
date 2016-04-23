@@ -1,5 +1,6 @@
+<!-- [START all] -->
 <?php
-// [START_EXCLUDE]
+// [START_EXCLUDE silent]
 /**
  * Copyright 2016 Google Inc.
  *
@@ -61,3 +62,4 @@ $cfg['SaveDir'] = '';
 $cfg['PmaNoRelation_DisableWarning'] = true;
 $cfg['ExecTimeLimit'] = 60;
 $cfg['CheckConfigurationPermissions'] = false;
+// [END all]
