@@ -21,7 +21,7 @@
         </testsuite>
     </testsuites>
     <logging>
-        <log type="coverage-clover" target="../../../build/logs/clover-gae-mail.xml"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
     <filter>
         <whitelist>

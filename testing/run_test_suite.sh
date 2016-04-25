@@ -41,6 +41,10 @@ for DIR in "${DIRS[@]}"; do
   pushd ${DIR}
   composer install
   phpunit
+  if [ -f build/logs/clover.xml ]; then
+      cp build/logs/clover.xml \
+          ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
+  fi
   popd
 done
 
@@ -49,4 +53,8 @@ done
 pushd appengine/standard/modules
 composer install
 env LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit
+if [ -f build/logs/clover.xml ]; then
+    cp build/logs/clover.xml \
+        ${TEST_BUILD_DIR}/build/logs/clover-appengine_standard_modules.xml
+fi
 popd

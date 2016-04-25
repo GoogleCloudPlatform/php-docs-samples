@@ -32,10 +32,12 @@ env:
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
     - PATH=${HOME}/gcloud/google-cloud-sdk/bin:${PATH}
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
+    - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
 
 before_install:
   - php dump_credentials.php
   - testing/install_test_deps.sh
+  - mkdir -p build/logs
 
 script:
   - testing/run_test_suite.sh
