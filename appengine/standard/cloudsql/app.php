@@ -73,4 +73,24 @@ $app['database'] = function () use ($app) {
 };
 # [END all]
 
+$app->get('create_tables', function () use ($app) {
+    /** @var PDO $db */
+    $db = $app['database'];
+    # [START create_tables]
+    // create the tables
+    $stmt = $db->prepare('CREATE TABLE entries ('
+        . 'entryID INT NOT NULL AUTO_INCREMENT, '
+        . 'guestName VARCHAR(255), '
+        . 'content VARCHAR(255), '
+        . 'PRIMARY KEY(entryID))');
+    $result = $stmt->execute();
+    # [END create_tables]
+
+    if (false === $result) {
+        return sprintf("Error: %s\n", $stmt->errorInfo()[2]);
+    } else {
+        return 'Tables created';
+    }
+});
+
 return $app;
