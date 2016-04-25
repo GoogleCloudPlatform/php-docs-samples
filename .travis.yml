@@ -32,81 +32,15 @@ env:
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
     - PATH=${HOME}/gcloud/google-cloud-sdk/bin:${PATH}
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
+    - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
 
 before_install:
   - php dump_credentials.php
   - testing/install_test_deps.sh
+  - mkdir -p build/logs
 
 script:
-  # run php-cs-fixer
-  - if [ ! -z $RUN_CS_FIXER ]; then
-      ./php-cs-fixer fix --dry-run --diff --config-file=.php_cs .;
-    fi
-  # run bigquery tests
-  - pushd bigquery/api
-  - composer install
-  - phpunit
-  - popd
-  # run datastore tests
-  - pushd datastore
-  - composer install
-  - phpunit
-  - popd
-  # run pubsub tests
-  - pushd pubsub
-  - composer install
-  - phpunit
-  - popd
-  # run storage tests
-  - pushd storage/api
-  - composer install
-  - phpunit
-  - popd
-  # run appengine storage tests
-  - pushd appengine/standard/storage
-  - composer install
-  - phpunit
-  - popd
-  # run mailgun tests
-  - pushd appengine/standard/mailgun
-  - composer install
-  - phpunit
-  - popd
-  # run mailjet tests
-  - pushd appengine/standard/mailjet
-  - composer install
-  - phpunit
-  - popd
-  # run cloudsql tests
-  - pushd appengine/standard/cloudsql
-  - composer install
-  - phpunit
-  - popd
-  # run appengine logging tests
-  - pushd appengine/standard/logging
-  - composer install
-  - phpunit
-  - popd
-  # run compute engine logging tests
-  - pushd compute/logging
-  - composer install
-  - phpunit
-  - popd
-  # run modules API tests
-  - pushd appengine/standard/modules
-  - composer install
-  - env LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit
-  - popd
-  # run users API tests
-  - pushd appengine/standard/users
-  - composer install
-  - phpunit
-  - popd
-  # run taskqueue API tests
-  - pushd appengine/standard/taskqueue
-  - composer install
-  - phpunit
-  - popd
+  - testing/run_test_suite.sh
 
 after_success:
   - composer require "satooshi/php-coveralls:^1.0"

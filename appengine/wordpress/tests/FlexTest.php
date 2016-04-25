@@ -39,6 +39,11 @@ class FlexTest extends \PHPUnit_Framework_TestCase
     }
     public static function setUpBeforeClass()
     {
+        if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
+            self::markTestSkipped(
+                'To run this test, set RUN_DEPLOYMENT_TESTS env to true.'
+            );
+        }
         $project_id = getenv(self::PROJECT_ENV);
         $e2e_test_version = getenv(self::VERSION_ENV);
         $db_password = getenv(self::DB_PASSWORD_ENV);
@@ -90,7 +95,7 @@ class FlexTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         for ($i = 0; $i <= 3; $i++) {
-            exec('gcloud -q preview app modules delete default --version '
+            exec('gcloud -q preview app versions delete --service default '
                  . self::getVersion()
                  . ' --project '
                  . getenv(self::PROJECT_ENV),

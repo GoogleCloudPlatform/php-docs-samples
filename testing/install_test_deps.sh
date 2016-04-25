@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright 2016 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,29 +15,56 @@
 
 set -ex
 
-# Install gcloud
-if [ ! -d ${HOME}/gcloud/google-cloud-sdk ]; then
-    mkdir -p ${HOME}/gcloud &&
-    wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=${HOME}/gcloud &&
-    cd "${HOME}/gcloud" &&
-    tar xzf google-cloud-sdk.tar.gz &&
-    ./google-cloud-sdk/install.sh --usage-reporting false --path-update false --command-completion false &&
-    cd "${TRAVIS_BUILD_DIR}";
+install_gcloud()
+{
+    # Install gcloud
+    if [ ! -d ${HOME}/gcloud/google-cloud-sdk ]; then
+        mkdir -p ${HOME}/gcloud
+        wget \
+            https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+            --directory-prefix=${HOME}/gcloud
+        pushd "${HOME}/gcloud"
+        tar xzf google-cloud-sdk.tar.gz
+        ./google-cloud-sdk/install.sh \
+            --usage-reporting false \
+            --path-update false \
+            --command-completion false
+        popd
+    fi
+}
+
+configure_gcloud()
+{
+    # Configure gcloud
+    gcloud config set project ${GOOGLE_PROJECT_ID}
+    gcloud config set app/promote_by_default false
+    gcloud config set app/use_cloud_build true
+    if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
+        gcloud auth activate-service-account --key-file \
+            "${GOOGLE_APPLICATION_CREDENTIALS}"
+    fi
+    gcloud -q components install app-engine-python
+    gcloud -q components install app-engine-php
+    gcloud -q components update --version 106.0.0
+    # Use gsutil for deploying appengine std apps.
+    gcloud config set app/use_gsutil true
+}
+
+install_php_cs_fixer()
+{
+    # Install PHP-cs-fixer
+    if [ ! -f php-cs-fixer ]; then
+        wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer
+        chmod a+x php-cs-fixer
+    fi
+}
+
+if [ "${RUN_DEPLOYMENT_TESTS}" = "true" ] \
+    || [ "${RUN_DEVSERVER_TESTS}" = "true" ]; then
+    install_gcloud
+    configure_gcloud
 fi
 
-gcloud config set project ${GOOGLE_PROJECT_ID}
-gcloud config set app/promote_by_default false
-gcloud config set app/use_cloud_build true
-gcloud auth activate-service-account --key-file \
-    "${GOOGLE_APPLICATION_CREDENTIALS}"
-gcloud -q components install app-engine-python
-gcloud -q components install app-engine-php
-# pinning to 104.0.0 because 105.0.0 is broken for php app
-gcloud -q components update --version 104.0.0
-
-
-# Install PHP-cs-fixer
-if [ ! -d php-cs-fixer ] && [ ! -z ${RUN_CS_FIXER} ]; then
-    wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer
-    chmod a+x php-cs-fixer
+if [ "${RUN_CS_FIXER}" = "true" ]; then
+    install_php_cs_fixer
 fi
