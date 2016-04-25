@@ -68,4 +68,4 @@ in your browser.
 
 ## Create the MySQL Tables
 
-Once your application is running, browse to `/createTables.php` to create the required tables for this example.
+Once your application is running, browse to `/create_table` to create the required tables for this example.

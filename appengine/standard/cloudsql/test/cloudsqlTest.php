@@ -67,4 +67,13 @@ class cloudsqlTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains($time, $response->getContent());
     }
+
+    public function testCreateTables()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('get', '/create_tables');
+
+        $this->assertTrue($client->getResponse()->isOk());
+    }
 }
