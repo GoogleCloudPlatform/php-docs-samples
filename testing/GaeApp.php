@@ -172,17 +172,18 @@ class GaeApp
     /**
      * Deletes the deployed app.
      *
-     * @param string $module
+     * @param string $service
      * @param int $retry optional number of retries upon failure
      *
      * @return bool true if the app is succesfully deleted, otherwise false
      */
     public function delete(
-        $module = 'default',
+        $service = 'default',
         $retry = self::DEFAULT_RETRY
     ) {
-        $cmd = "gcloud -q " . self::GCLOUD_APP . " modules delete $module "
-            . "--version " . $this->version . " --project " . $this->project;
+        $cmd = "gcloud -q " . self::GCLOUD_APP . " versions delete "
+            . "--service " . $service . " "
+            . $this->version . " --project " . $this->project;
         $ret = $this->execWithRetry($cmd, $retry);
         return $ret;
     }

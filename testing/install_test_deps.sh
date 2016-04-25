@@ -45,8 +45,9 @@ configure_gcloud()
     fi
     gcloud -q components install app-engine-python
     gcloud -q components install app-engine-php
-    # pinning to 104.0.0 because 105.0.0 is broken for php app
-    gcloud -q components update --version 104.0.0
+    gcloud -q components update --version 106.0.0
+    # Use gsutil for deploying appengine std apps.
+    gcloud config set app/use_gsutil true
 }
 
 install_php_cs_fixer()

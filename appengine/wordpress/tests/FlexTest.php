@@ -95,7 +95,7 @@ class FlexTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         for ($i = 0; $i <= 3; $i++) {
-            exec('gcloud -q preview app modules delete default --version '
+            exec('gcloud -q preview app versions delete --service default '
                  . self::getVersion()
                  . ' --project '
                  . getenv(self::PROJECT_ENV),

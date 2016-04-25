@@ -157,19 +157,21 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        $command = 'gcloud -q preview app modules delete phpmyadmin --version '
+        $command = 'gcloud -q preview app versions delete --service phpmyadmin '
             . getenv(self::VERSION_ENV)
             . ' --project '
             . getenv(self::PROJECT_ENV);
-        exec($command, $output, $ret);
-        foreach ($output as $line) {
-            self::output($line);
-        }
-        if ($ret === 0) {
-            self::output('Successfully delete the version');
-            return;
-        } else {
-            self::output('Retrying to delete the version');
+        for ($i = 0; $i <= 3; $i++) {
+            exec($command, $output, $ret);
+            foreach ($output as $line) {
+                self::output($line);
+            }
+            if ($ret === 0) {
+                self::output('Successfully delete the version');
+                return;
+            } else {
+                self::output('Retrying to delete the version');
+            }
         }
         self::fail('Failed to delete the version.');
     }
