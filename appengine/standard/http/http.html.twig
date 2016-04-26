@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Http Example</title>
+  </head>
+
+  <body>
+    <h1>Http Example</h1>
+
+    <form action="/http_request" method="post">
+        <input type="submit" value="Make an HTTP Request" />
+    </form>
+
+    {% if result is defined %}
+        <pre>{{ result }}</pre>
+    {% endif %}
+  </body>
+</html>

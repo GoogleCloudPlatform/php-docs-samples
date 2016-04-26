@@ -22,6 +22,7 @@ fi
 
 DIRS=(
     appengine/standard/cloudsql
+    appengine/standard/http
     appengine/standard/logging
     appengine/standard/mailgun
     appengine/standard/mailjet
