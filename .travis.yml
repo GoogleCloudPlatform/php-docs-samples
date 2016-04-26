@@ -36,7 +36,7 @@ env:
 
 before_install:
   - php dump_credentials.php
-  - testing/install_test_deps.sh
+  - travis_retry testing/install_test_deps.sh
   - mkdir -p build/logs
 
 script:
