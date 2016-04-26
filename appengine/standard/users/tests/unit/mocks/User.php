@@ -22,6 +22,29 @@ namespace google\appengine\api\users;
  */
 class User
 {
+
+    private $email;
+    private $url;
+
+    /**
+     * A simple constructor for the mock User object.
+     */
+    public function __construct(
+            $email = null,
+            $federated_identity = null,
+            $federated_provider = null,
+            $user_id = null)
+    {
+        if ($email === null and $federated_identity === null) {
+            throw new \InvalidArgumentException(
+                'One of $email or $federated_identity must be set.');
+        }
+        $this->email = $email;
+        $this->federated_identity = $federated_identity;
+        $this->federated_provider = $federated_provider;
+        $this->user_id = $user_id;
+    }
+
     /**
      * Returns the user's nickname.
      *
@@ -29,6 +52,9 @@ class User
      */
     public function getNickname()
     {
-        return 'Nick';
+        if ($this->email !== null) {
+            return explode('@', $this->email)[0];
+        }
+        return $this->federated_identity;
     }
 }

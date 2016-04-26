@@ -33,6 +33,12 @@ class UserService
         return self::$user;
     }
 
+    public static function isCurrentUserAdmin()
+    {
+        $ret = getenv('USER_IS_ADMIN');
+        return ($ret === '1');
+    }
+
     public static function createLoginUrl($url)
     {
         return self::$loginUrl . '?next=' . $url;
