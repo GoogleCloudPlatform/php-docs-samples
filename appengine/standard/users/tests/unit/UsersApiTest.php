@@ -48,6 +48,32 @@ class UsersApiTest extends WebTestCase
             $client->getResponse()->getContent());
     }
 
+    public function testAdmin()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('GET', '/admin');
+
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertContains(
+            'You are not an administrator.',
+            $client->getResponse()->getContent());
+    }
+
+    public function testAdminWithAdminUser()
+    {
+        $client = $this->createClient();
+        $nickname = 'tmatsuo';
+        $this->user->method('getNickname')->willReturn($nickname);
+        UserService::$user = $this->user;
+        $ret = putenv('USER_IS_ADMIN=1');
+        $client->request('GET', '/admin');
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertContains(
+            'Welcome administrator.',
+            $client->getResponse()->getContent());
+    }
+
     public function testLogoutUrl()
     {
         $nickname = 'tmatsuo';
@@ -62,5 +88,29 @@ class UsersApiTest extends WebTestCase
         $body = $client->getResponse()->getContent();
         $this->assertContains(UserService::$logoutUrl, $body);
         $this->assertContains($nickname, $body);
+    }
+
+    public function testUser()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('GET', '/user');
+
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertContains(
+            'Nickname is Albert.Johnson',
+            $client->getResponse()->getContent());
+    }
+
+    public function testFederatedUser()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('GET', '/federatedUser');
+
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertContains(
+            'Nickname is http://example.com/id/ajohnson',
+            $client->getResponse()->getContent());
     }
 }
