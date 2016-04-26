@@ -20,43 +20,22 @@ if [ "${RUN_CS_FIXER}" = "true" ]; then
     ./php-cs-fixer fix --dry-run --diff --config-file=.php_cs .
 fi
 
-DIRS=(
-    appengine/standard/cloudsql
-    appengine/standard/http
-    appengine/standard/logging
-    appengine/standard/mailgun
-    appengine/standard/mailjet
-    appengine/standard/memcache
-    appengine/standard/phpmyadmin
-    appengine/standard/storage
-    appengine/standard/taskqueue
-    appengine/standard/users
-    appengine/wordpress
-    bigquery/api
-    compute/logging
-    datastore
-    pubsub
-    storage/api
-)
-
-for DIR in "${DIRS[@]}"; do
-  pushd ${DIR}
-  composer install
-  phpunit
-  if [ -f build/logs/clover.xml ]; then
-      cp build/logs/clover.xml \
-          ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
-  fi
-  popd
+# loop through all directories containing "phpunit.xml" and run them
+find * -name phpunit.xml -not -path '*/vendor/*' -exec dirname {} \; | while read DIR
+do
+    pushd ${DIR}
+    if [ -f "composer.json" ]; then
+        composer install
+    fi
+    if [ "$DIR" = "appengine/standard/modules" ]; then
+        # tests that needs special envvars
+        LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit
+    else
+        phpunit
+    fi
+    if [ -f build/logs/clover.xml ]; then
+        cp build/logs/clover.xml \
+            ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
+    fi
+    popd
 done
-
-# run tests that needs special envvars
-# run modules API tests
-pushd appengine/standard/modules
-composer install
-env LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit
-if [ -f build/logs/clover.xml ]; then
-    cp build/logs/clover.xml \
-        ${TEST_BUILD_DIR}/build/logs/clover-appengine_standard_modules.xml
-fi
-popd
