@@ -3,8 +3,6 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /createTables.php
-  script: createTables.php
 - url: /.*
   script: index.php
 

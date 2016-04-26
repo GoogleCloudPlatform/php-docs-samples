@@ -26,7 +26,6 @@
     <filter>
         <whitelist>
             <file>app.php</file>
-            <file>createTables.php</file>
         </whitelist>
     </filter>
 </phpunit>
