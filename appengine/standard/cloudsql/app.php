@@ -78,7 +78,7 @@ $app->get('create_tables', function () use ($app) {
     $db = $app['database'];
     # [START create_tables]
     // create the tables
-    $stmt = $db->prepare('CREATE TABLE entries ('
+    $stmt = $db->prepare('CREATE TABLE IF NOT EXISTS entries ('
         . 'entryID INT NOT NULL AUTO_INCREMENT, '
         . 'guestName VARCHAR(255), '
         . 'content VARCHAR(255), '
