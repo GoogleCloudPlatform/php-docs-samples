@@ -25,6 +25,7 @@ DIRS=(
     appengine/standard/logging
     appengine/standard/mailgun
     appengine/standard/mailjet
+    appengine/standard/memcache
     appengine/standard/phpmyadmin
     appengine/standard/storage
     appengine/standard/taskqueue
