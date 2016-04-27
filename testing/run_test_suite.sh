@@ -27,12 +27,7 @@ do
     if [ -f "composer.json" ]; then
         composer install
     fi
-    if [ "$DIR" = "appengine/standard/modules" ]; then
-        # tests that needs special envvars
-        LOCAL_TEST_TARGETS='app.yaml backend.yaml' phpunit
-    else
-        phpunit
-    fi
+    phpunit
     if [ -f build/logs/clover.xml ]; then
         cp build/logs/clover.xml \
             ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
