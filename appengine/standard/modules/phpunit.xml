@@ -15,6 +15,9 @@
   limitations under the License.
 -->
 <phpunit bootstrap="tests/bootstrap.php">
+    <php>
+        <env name="LOCAL_TEST_TARGETS" value="app.yaml backend.yaml"/>
+    </php>
     <testsuites>
         <testsuite name="PHP Modules API unit tests">
             <directory>tests</directory>
