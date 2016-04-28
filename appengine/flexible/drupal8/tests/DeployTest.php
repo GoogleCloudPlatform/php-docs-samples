@@ -167,6 +167,12 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             $target = sprintf('%s/drupal8.test/%s', $targetDir, $file);
             copy($source, $target);
         }
+
+        // if a service name has been defined, add it to "app.yaml"
+        if ($service = getenv('GOOGLE_SERVICE_NAME')) {
+            $appYaml = sprintf('%s/drupal8.test/app.yaml', $targetDir);
+            file_put_contents($appYaml, "service: $service\n", FILE_APPEND);
+        }
     }
 
     public static function deploy($projectId, $versionId, $targetDir)
