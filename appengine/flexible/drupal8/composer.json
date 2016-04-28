@@ -1,0 +1,9 @@
+{
+    "require-dev": {
+        "symfony/yaml": "^3.0",
+        "symfony/console": " ~2.6.0",
+        "symfony/process": "^3.0",
+        "monolog/monolog": "^1.19",
+        "guzzlehttp/guzzle": "^6.2"
+    }
+}
