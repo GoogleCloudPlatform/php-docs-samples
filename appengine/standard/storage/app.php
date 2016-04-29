@@ -107,11 +107,11 @@ $app->post('/write', function (Request $request) use ($app) {
 $app->post('/write/options', function (Request $request) use ($app) {
     $newFileContent = $request->get('content');
     $my_bucket = $app['bucket_name'];
-    # [START write_simple_options]
+    # [START write_options]
     $options = ['gs' => ['Content-Type' => 'text/plain']];
     $context = stream_context_create($options);
     file_put_contents("gs://${my_bucket}/hello_options.txt", $newFileContent, 0, $context);
-    # [END write_simple_options]
+    # [END write_options]
     return $app->redirect('/');
 });
 
@@ -138,11 +138,17 @@ $app->post('/write/stream', function (Request $request) use ($app) {
 $app->post('/write/caching', function (Request $request) use ($app) {
     $newFileContent = $request->get('content');
     $my_bucket = $app['bucket_name'];
-    # [START write_simple_options]
-    $options = ['gs' => ['Content-Type' => 'text/plain']];
+    # [START write_caching]
+    $options = [
+        'gs' => [
+            'enable_cache' => true,
+            'enable_optimistic_cache' => true,
+            'read_cache_expiry_seconds' => 300,
+        ]
+    ];
     $context = stream_context_create($options);
     file_put_contents("gs://${my_bucket}/hello_caching.txt", $newFileContent, 0, $context);
-    # [END write_simple_options]
+    # [END write_caching]
     return $app->redirect('/');
 });
 
