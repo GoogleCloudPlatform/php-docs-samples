@@ -45,6 +45,11 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         return getenv('GOOGLE_PROJECT_ID');
     }
 
+    public static function getServiceName()
+    {
+        return getenv('GOOGLE_SERVICE_NAME');
+    }
+
     private static function getTargetDir()
     {
         $tmp = sys_get_temp_dir();
@@ -169,7 +174,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         }
 
         // if a service name has been defined, add it to "app.yaml"
-        if ($service = getenv('GOOGLE_SERVICE_NAME')) {
+        if ($service = self::getServiceName()) {
             $appYaml = sprintf('%s/drupal8.test/app.yaml', $targetDir);
             file_put_contents($appYaml, "service: $service\n", FILE_APPEND);
         }
@@ -196,11 +201,12 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         for ($i = 0; $i <= 3; $i++) {
-            $process = self::createProcess(
-                'gcloud -q preview app versions delete --service default '
-                 . self::getVersion()
-                 . ' --project ' . self::getProjectId()
-            );
+            $process = self::createProcess(sprintf(
+                'gcloud -q preview app versions delete %s --service %s --project %s',
+                self::getVersion(),
+                self::getServiceName() ?: 'default',
+                self::getProjectId()
+            ));
             $process->setTimeout(600); // 10 minutes
             if (self::executeProcess($process, false)) {
                 return;
@@ -211,9 +217,11 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $url = sprintf('https://%s-dot-%s.appspot.com/',
-           self::getVersion(),
-           self::getProjectId());
+        $service = self::getServiceName();
+        $url = sprintf('https://%s%s-dot-%s.appspot.com/',
+            self::getVersion(),
+            $service ? "-dot-$service" : '',
+            self::getProjectId());
         $this->client = new Client(['base_uri' => $url]);
     }
 
