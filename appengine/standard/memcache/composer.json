@@ -1,12 +1,11 @@
 {
     "require": {
         "silex/silex": "^1.3",
-        "twig/twig": "^1.24",
-        "symfony/process": "^3.0"
+        "twig/twig": "^1.24"
     },
     "require-dev": {
+        "google/cloud-tools": "dev-master",
         "phpunit/phpunit": "~4",
-        "guzzlehttp/guzzle": "~6.0",
         "symfony/browser-kit": "^3.0"
     }
 }

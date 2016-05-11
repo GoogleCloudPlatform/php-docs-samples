@@ -16,10 +16,10 @@
  */
 namespace Google\Cloud\Test;
 
-use Google\Cloud\TestUtils\LocalTestTrait;
+use Google\Cloud\TestUtils\DevAppserverTestTrait;
 
 class LocalTest extends \PHPUnit_Framework_TestCase
 {
-    use LocalTestTrait;
+    use DevAppserverTestTrait;
     use E2EUsersTestTrait;
 }

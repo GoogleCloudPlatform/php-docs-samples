@@ -16,10 +16,6 @@
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../../../../testing/E2EDeploymentTrait.php';
-require_once __DIR__ . '/../../../../testing/GaeApp.php';
-require_once __DIR__ . '/../../../../testing/LocalTestTrait.php';
 require_once __DIR__ . '/unit/mocks/User.php';
 require_once __DIR__ . '/unit/mocks/UserService.php';
-require_once __DIR__ . '/../../../../testing/E2EDeploymentTrait.php';
 require_once __DIR__ . '/../testing/E2EUsersTestTrait.php';
