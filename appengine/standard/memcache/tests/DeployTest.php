@@ -16,11 +16,11 @@
  */
 namespace Google\Cloud\Test;
 
-use Google\Cloud\TestUtils\E2EDeploymentTrait;
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 
 class DeployTest extends \PHPUnit_Framework_TestCase
 {
-    use E2EDeploymentTrait;
+    use AppEngineDeploymentTrait;
 
     public function testIndex()
     {
@@ -58,7 +58,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
      */
     private function put($path, $body)
     {
-        $url = join('/', [trim(self::$gaeApp->getLocalBaseUrl(), '/'),
+        $url = join('/', [trim(self::$gcloudWrapper->getLocalBaseUrl(), '/'),
             trim($path, '/')]);
         $request = new \GuzzleHttp\Psr7\Request('PUT', $url, array(), $body);
         $this->client->send($request);
