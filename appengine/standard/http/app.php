@@ -30,27 +30,92 @@ $app->get('/', function () use ($app) {
     return $twig->render('http.html.twig');
 });
 
-$app->post('/http_request', function () use ($app) {
+$app->post('/request/file', function () use ($app) {
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
 
     # [START http_bin]
+    $url = 'http://httpbin.org/post?query=update';
     $data = ['data' => 'this', 'data2' => 'that'];
-    $postData = http_build_query($data);
+    $headers = "accept: */*\r\n" .
+        "Content-Type: application/x-www-form-urlencoded\r\n" .
+        "Custom-Header: custom-value\r\n" .
+        "Custom-Header-Two: custom-value-2\r\n";
+
     $context = [
         'http' => [
             'method' => 'POST',
-            'header' => "accept: */*\r\n" .
-                        "content-type: application/x-www-form-urlencoded\r\n" .
-                        "custom-header: custom-value\r\n" .
-                        "custom-header-two: custom-value-2\r\n",
-            'content' => $postData
+            'header' => $headers,
+            'content' => http_build_query($data),
         ]
     ];
     $context = stream_context_create($context);
-    $result = file_get_contents('http://httpbin.org/post?query=update', false, $context);
+    $result = file_get_contents($url, false, $context);
     # [END http_bin]
-    return $twig->render('http.html.twig', ['result' => $result]);
+    return $twig->render('http.html.twig', ['file_result' => $result]);
+});
+
+$app->post('/request/curl', function () use ($app) {
+    /** @var Twig_Environment $twig */
+    $twig = $app['twig'];
+
+    // make sure one of the extensions is installed
+    if (!function_exists('curl_init')) {
+        throw new \Exception('You must enable cURL or cURLite in php.ini');
+    }
+
+    # [START curl_request]
+    $url = 'http://httpbin.org/post?query=update';
+    $data = ['data' => 'this', 'data2' => 'that'];
+    $headers = [
+        'Accept: */*',
+        'Content-Type: application/x-www-form-urlencoded',
+        'Custom-Header: custom-value',
+        'Custom-Header-Two: custom-value-2'
+    ];
+
+    // open connection
+    $ch = curl_init();
+
+    // set curl options
+    $options = [
+        CURLOPT_URL => $url,
+        CURLOPT_POST => count($data),
+        CURLOPT_POSTFIELDS => http_build_query($data),
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_RETURNTRANSFER => true,
+    ];
+    curl_setopt_array($ch, $options);
+
+    // execute
+    $result = curl_exec($ch);
+
+    // close connection
+    curl_close($ch);
+    # [END curl_request]
+    return $twig->render('http.html.twig', ['curl_result' => $result]);
+});
+
+$app->post('/request/guzzle', function () use ($app) {
+    /** @var Twig_Environment $twig */
+    $twig = $app['twig'];
+
+    # [START guzzle_request]
+    $url = 'http://httpbin.org/post?query=update';
+    $data = ['data' => 'this', 'data2' => 'that'];
+    $headers = [
+        'Accept' => '*/*',
+        'Content-Type' => 'application/x-www-form-urlencoded',
+        'Custom-Header' => 'custom-value',
+        'Custom-Header-Two' => 'custom-value',
+    ];
+
+    $guzzle = new GuzzleHttp\Client;
+    $request = new GuzzleHttp\Psr7\Request('POST', $url, $headers, http_build_query($data));
+    $result = $guzzle->send($request);
+    # [END guzzle_request]
+
+    return $twig->render('http.html.twig', ['guzzle_result' => $result->getBody()]);
 });
 
 return $app;
