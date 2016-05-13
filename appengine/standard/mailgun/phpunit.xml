@@ -25,7 +25,6 @@
     </logging>
     <filter>
         <whitelist>
-            <file>functions.php</file>
             <file>app.php</file>
         </whitelist>
     </filter>
