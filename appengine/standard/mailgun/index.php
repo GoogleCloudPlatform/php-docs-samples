@@ -22,7 +22,7 @@ require __DIR__ . '/vendor/autoload.php';
 $app = require __DIR__ . '/app.php';
 
 // set your Mailgun domain name and API key
-$app['mailgun.domain'] = 'MAILGUN_DOMAIN_NAME';;
+$app['mailgun.domain'] = 'MAILGUN_DOMAIN_NAME';
 $app['mailgun.api_key'] = 'MAILGUN_API_KEY';
 
 // Run the app!

@@ -14,10 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 use Silex\Application;
-
-require_once __DIR__ . '/functions.php';
 
 // create the Silex application
 $app = new Application();
@@ -26,6 +23,7 @@ $app->get('/', function () use ($app) {
     if ($app['mailgun.domain'] == 'MAILGUN_DOMAIN_NAME') {
         return 'set your mailgun domain and API key in <code>index.php</code>';
     }
+
     return <<<EOF
 <!doctype html>
 <html><body>
@@ -43,11 +41,60 @@ $app->post('/', function () use ($app) {
     $request = $app['request'];
     $recipient = $request->get('recipient');
     $action = $request->get('submit');
-    $sendFunction = sprintf('send%sMessage', ucfirst($action));
 
-    $sendFunction($recipient, $app['mailgun.domain'], $app['mailgun.api_key']);
+    $app['send_message.' . $action]($recipient, $app['mailgun.domain'], $app['mailgun.api_key']);
 
     return ucfirst($action . ' email sent');
+});
+
+$app['send_message.simple'] = $app->protect(function (
+    $recipient,
+    $mailgunDomain,
+    $mailgunApiKey
+) {
+    # [START simple_message]
+    // Instantiate the client.
+    $httpClient = new Http\Adapter\Guzzle6\Client();
+    $mailgunClient = new Mailgun\Mailgun($mailgunApiKey, $httpClient);
+
+    // Make the call to the client.
+    $result = $mailgunClient->sendMessage($mailgunDomain, array(
+        'from' => sprintf('Example Sender <mailgun@%s>', $mailgunDomain),
+        'to' => $recipient,
+        'subject' => 'Hello',
+        'text' => 'Testing some Mailgun awesomeness!',
+    ));
+    # [END simple_message]
+    return $result;
+});
+
+$app['send_message.complex'] = $app->protect(function (
+    $recipient,
+    $mailgunDomain,
+    $mailgunApiKey,
+    $cc = 'cc@example.com',
+    $bcc = 'bcc@example.com'
+) {
+    # [START complex_message]
+    // Instantiate the client.
+    $httpClient = new Http\Adapter\Guzzle6\Client();
+    $mailgunClient = new Mailgun\Mailgun($mailgunApiKey, $httpClient);
+    $fileAttachment = __DIR__ . '/attachment.txt';
+
+    // Make the call to the client.
+    $result = $mailgunClient->sendMessage($mailgunDomain, array(
+        'from' => sprintf('Example Sender <mailgun@%s>', $mailgunDomain),
+        'to' => $recipient,
+        'cc' => $cc,
+        'bcc' => $bcc,
+        'subject' => 'Hello',
+        'text' => 'Testing some Mailgun awesomeness!',
+        'html' => '<html>HTML version of the body</html>',
+    ), array(
+        'attachment' => array($fileAttachment, $fileAttachment),
+    ));
+    # [END complex_message]
+    return $result;
 });
 
 return $app;

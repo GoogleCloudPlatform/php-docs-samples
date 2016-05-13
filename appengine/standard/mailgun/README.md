@@ -19,23 +19,22 @@ Before running this sample:
 composer install
 ```
 
-## Run locally
-
-you can run locally using PHP's built-in web server:
-
-```sh
-cd php-docs-samples/appengine/standard/mailgun
-php -S localhost:8080
-```
-
-Now you can view the app running at [http://localhost:8080](http://localhost:8080)
-in your browser.
-
 ## Deploy to App Engine
 
 **Prerequisites**
 
 - Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
+
+**Run Locally**
+
+Run the sample with [`dev_appserver.py`](https://cloud.google.com/appengine/docs/php/tools/using-local-server):
+
+```
+cd /path/to/php-docs-samples/appengine/standard/mailgun
+dev_appserver.py .
+```
+
+Now browse to `http://localhost:8080` to view the sample.
 
 **Deploy with gcloud**
 
