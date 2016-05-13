@@ -18,6 +18,44 @@ use Silex\WebTestCase;
 
 class httpTest extends WebTestCase
 {
+    private $expected;
+
+    public function setup()
+    {
+        parent::setup();
+
+        $this->expected = '{
+  "args": {
+    "query": "update"
+  },
+  "data": "",
+  "files": {},
+  "form": {
+    "data": "this",
+    "data2": "that"
+  },
+  "headers": {
+    "Accept": "*/*",
+    "Content-Length": "20",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Custom-Header": "custom-value",
+    "Custom-Header-Two": "custom-value-2",
+    "Host": "httpbin.org"
+  },
+  "json": null,
+  "origin": "ORIGIN_IP_ADDRESS",
+  "url": "http://httpbin.org/post?query=update"
+}';
+        // fix issue where there are trailing spaces after the commas
+        $this->expected = str_replace(',', ', ', $this->expected);
+
+        // escape for regex
+        $this->expected = '#' . preg_quote(htmlspecialchars($this->expected), '#') . '#';
+
+        // allow for any IP address
+        $this->expected = str_replace('ORIGIN_IP_ADDRESS', '.*', $this->expected);
+    }
+
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
@@ -41,47 +79,39 @@ class httpTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
-    public function testHttpRequest()
+    public function testFileRequest()
     {
         $client = $this->createClient();
 
-        $crawler = $client->request('POST', '/http_request');
+        $crawler = $client->request('POST', '/request/file');
 
         $this->assertTrue($client->getResponse()->isOk());
-        $result = <<<EOF
-{
-  "args": {
-    "query": "update"
-  },
-  "data": "",
-  "files": {},
-  "form": {
-    "data": "this",
-    "data2": "that"
-  },
-  "headers": {
-    "Accept": "*/*",
-    "Content-Length": "20",
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Custom-Header": "custom-value",
-    "Custom-Header-Two": "custom-value-2",
-    "Host": "httpbin.org"
-  },
-  "json": null,
-  "origin": "ORIGIN_IP_ADDRESS",
-  "url": "http://httpbin.org/post?query=update"
-}
-EOF;
-        // fix issue where there are trailing spaces after the commas
-        $result = str_replace(',', ', ', $result);
-
-        // escape for regex
-        $result = '#' . preg_quote(htmlspecialchars($result), '#') . '#';
-
-        // allow for any IP address
-        $result = str_replace('ORIGIN_IP_ADDRESS', '.*', $result);
 
         // test the regex exists
-        $this->assertRegExp($result, (string) $client->getResponse());
+        $this->assertRegExp($this->expected, (string) $client->getResponse());
+    }
+
+    public function testCurlRequest()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('POST', '/request/curl');
+
+        $this->assertTrue($client->getResponse()->isOk());
+
+        // test the regex exists
+        $this->assertRegExp($this->expected, (string) $client->getResponse());
+    }
+
+    public function testGuzzleRequest()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('POST', '/request/curl');
+
+        $this->assertTrue($client->getResponse()->isOk());
+
+        // test the regex exists
+        $this->assertRegExp($this->expected, (string) $client->getResponse());
     }
 }
