@@ -30,13 +30,16 @@ env:
   global:
     - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
-    - PATH=${HOME}/gcloud/google-cloud-sdk/bin:${PATH}
+    - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
 
 before_install:
-  - php dump_credentials.php
-  - travis_retry testing/install_test_deps.sh
+  - pushd ${HOME}
+  - git clone https://github.com/GoogleCloudPlatform/php-tools.git
+  - php php-tools/scripts/dump_credentials.php
+  - travis_retry php-tools/scripts/install_test_deps.sh
+  - popd
   - mkdir -p build/logs
 
 script:
