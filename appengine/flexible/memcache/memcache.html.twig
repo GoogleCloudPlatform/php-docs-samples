@@ -1,0 +1,33 @@
+<html>
+<body>
+<H1>REST Server Sample</H1>
+<p>A simple REST server that stores and retrieves values from memcache.</p>
+
+<p>GET and PUT to<br>
+    /memcached/{key}
+</p>
+<p>For example:</p>
+<pre>$ echo hello > hello.txt
+$ echo bye > bye.txt
+$ curl http://{{host}}/memcached/a
+# Store the value hello in /a.
+$ curl http://{{host}}/memcached/a -T hello.txt
+$ curl http://{{host}}/memcached/a
+hello    
+</pre>
+<hr>
+<H1>Incrementer Sample</H1>
+<p>Click the button to increment a counter in memcache.<br>
+    Current count: {{ count }}<br>
+    Last incremented by: {{ who }}<br>
+    <form method="POST" action="./">
+        <label for="who">Your name:</label>
+        <input type="text" name="who" id="who">
+        <button type="submit">Increment</button>
+    </form>
+    <form method="POST" action="./reset">
+        <button type="submit">Reset</button>
+    </form>
+
+</body>
+</html>
