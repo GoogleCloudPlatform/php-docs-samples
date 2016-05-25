@@ -33,7 +33,7 @@ class WordPressSetup extends Command
     const LATEST_BATCACHE =
         'https://downloads.wordpress.org/plugin/batcache.1.4.zip';
     const LATEST_MEMCACHED =
-        'https://downloads.wordpress.org/plugin/memcached.2.0.4.zip';
+        'https://downloads.wordpress.org/plugin/memcached.3.0.1.zip';
     const LATEST_GAE_WP =
         'https://downloads.wordpress.org/plugin/google-app-engine.1.6.zip';
 
@@ -292,7 +292,6 @@ class WordPressSetup extends Command
                 'app.yaml' => '/',
                 'cron.yaml' => '/',
                 'composer.json' => '/',
-                'Dockerfile' => '/',
                 'gcs-media.php' => '/wordpress/wp-content/plugins/',
                 'nginx-app.conf' => '/',
                 'php.ini' => '/',
