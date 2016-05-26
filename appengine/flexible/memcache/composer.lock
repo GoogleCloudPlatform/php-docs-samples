@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bfef86ae53b246117f7a819c76884d8c",
-    "content-hash": "c5ac915416054644297ea888eb28ed70",
+    "hash": "aea3f16e0ec7b1008cacb0cd9a07f8d3",
+    "content-hash": "cd59ced768af83659f2265d6b331c634",
     "packages": [
         {
             "name": "pimple/pimple",
@@ -673,16 +673,16 @@
         },
         {
             "name": "google/cloud-tools",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "cdc4d23c932d899cccae8dfb6511250ccdcdc29b"
+                "reference": "7d919aa448b01ce7ab0ddaedacb7bf968455277a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/cdc4d23c932d899cccae8dfb6511250ccdcdc29b",
-                "reference": "cdc4d23c932d899cccae8dfb6511250ccdcdc29b",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/7d919aa448b01ce7ab0ddaedacb7bf968455277a",
+                "reference": "7d919aa448b01ce7ab0ddaedacb7bf968455277a",
                 "shasum": ""
             },
             "require": {
@@ -691,6 +691,9 @@
                 "phpunit/phpunit": "~4|~5",
                 "symfony/browser-kit": "~2|~3",
                 "symfony/process": "~2|~3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "autoload": {
@@ -716,7 +719,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2016-05-11 15:43:45"
+            "time": "2016-05-13 22:37:50"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2080,9 +2083,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "google/cloud-tools": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

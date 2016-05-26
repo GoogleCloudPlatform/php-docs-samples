@@ -4,9 +4,9 @@
         "twig/twig": "^1.24"
     },
     "require-dev": {
-        "google/cloud-tools": "dev-master",
         "phpunit/phpunit": "~4",
         "guzzlehttp/guzzle": "^6.2",
-        "monolog/monolog": "^1.19"
+        "monolog/monolog": "^1.19",
+        "google/cloud-tools": "^0.1.0"
     }
 }
