@@ -22,7 +22,6 @@ namespace google\appengine\api\users;
  */
 class User
 {
-
     private $email;
     private $url;
 

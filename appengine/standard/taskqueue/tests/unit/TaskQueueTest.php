@@ -20,7 +20,6 @@ use Silex\WebTestCase;
 
 class TaskQueueTest extends WebTestCase
 {
-
     public function createApplication()
     {
         $app = require __DIR__ . '/../../app.php';

@@ -6,3 +6,4 @@ vendor/
 credentials.*
 **/vendor/
 **/build/
+.php_cs.cache

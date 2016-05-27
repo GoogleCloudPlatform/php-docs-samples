@@ -17,7 +17,7 @@ set -ex
 
 # run php-cs-fixer
 if [ "${RUN_CS_FIXER}" = "true" ]; then
-    ${HOME}/php-cs-fixer fix --dry-run --diff --config-file=.php_cs .
+    ${HOME}/php-cs-fixer fix --dry-run --diff --config=.php_cs
 fi
 
 # loop through all directories containing "phpunit.xml" and run them
