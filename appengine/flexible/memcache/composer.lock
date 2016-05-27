@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aea3f16e0ec7b1008cacb0cd9a07f8d3",
-    "content-hash": "cd59ced768af83659f2265d6b331c634",
+    "hash": "6552c378a6a8685010ce89b0e430f685",
+    "content-hash": "4848d8021a0b6962554cb641f31bb545",
     "packages": [
+        {
+            "name": "gecko-packages/gecko-memcache-mock",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeckoPackages/GeckoMemcacheMock.git",
+                "reference": "4332ce34d0b849bdf4351e6be2d439132d0d4a30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeckoPackages/GeckoMemcacheMock/zipball/4332ce34d0b849bdf4351e6be2d439132d0d4a30",
+                "reference": "4332ce34d0b849bdf4351e6be2d439132d0d4a30",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4 || ^7.0",
+                "psr/log": "~1.0",
+                "symfony/stopwatch": "~2.5|~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GeckoPackages\\MemcacheMock\\": "src\\MemcacheMock"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Memcache mock.",
+            "homepage": "https://github.com/GeckoPackages",
+            "keywords": [
+                "memcache",
+                "memcached",
+                "mock",
+                "test"
+            ],
+            "time": "2016-05-13 14:19:01"
+        },
         {
             "name": "pimple/pimple",
             "version": "v1.1.1",
@@ -553,6 +592,55 @@
                 "url"
             ],
             "time": "2016-05-03 12:23:49"
+        },
+        {
+            "name": "symfony/stopwatch",
+            "version": "v3.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/stopwatch.git",
+                "reference": "6015187088421e9499d8f8316bdb396f8b806c06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/6015187088421e9499d8f8316bdb396f8b806c06",
+                "reference": "6015187088421e9499d8f8316bdb396f8b806c06",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Stopwatch\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Stopwatch Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-03-04 07:55:57"
         },
         {
             "name": "twig/twig",
