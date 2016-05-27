@@ -19,7 +19,6 @@ namespace google\appengine\api\taskqueue;
 
 class PushTask
 {
-
     public static $tasks = array();
     public static $added = array();
     public $url;

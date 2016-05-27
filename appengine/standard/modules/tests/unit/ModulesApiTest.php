@@ -19,7 +19,6 @@ use Silex\WebTestCase;
 
 class ModulesApiTest extends WebTestCase
 {
-
     public function createApplication()
     {
         $app = require __DIR__ . '/../../app.php';
