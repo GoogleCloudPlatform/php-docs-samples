@@ -1,4 +1,4 @@
-runtime: custom
+runtime: php
 vm: true
 
 beta_settings:
