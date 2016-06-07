@@ -3,5 +3,9 @@ threadsafe: yes
 api_version: 1
 
 handlers:
-- url: .*
+- url: /timeout.php
+  script: timeout.php
+- url: /syslog.php
+  script: syslog.php
+- url: /
   script: index.php
