@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./tests/bootstrap.php" colors="true">
+  <testsuites>
+    <testsuite>
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>
+  </logging>
+  <filter>
+    <whitelist>
+      <file>app.php</file>
+    </whitelist>
+  </filter>
+</phpunit>
