@@ -40,6 +40,18 @@ class WordPressSetup extends Command
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
 
+    const CLOUD_SQL_FIRST_GEN = 'Cloud SQL First Generation';
+    const CLOUD_SQL_SECOND_GEN = 'Cloud SQL Second Generation';
+
+    const DEFAULT_DB_REGION = 'us-central1';
+
+    private static $availableDbRegions = array(
+        'us-central1',
+        'us-east1',
+        'europe-west1',
+        'asia-east1',
+    );
+
     protected function configure()
     {
         $this
@@ -64,10 +76,26 @@ class WordPressSetup extends Command
                 self::DEFAULT_DIR
             )
             ->addOption(
+                'sql_gen',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Cloud SQL generation to use; 2: '
+                . self::CLOUD_SQL_SECOND_GEN . ', 1: '
+                . self::CLOUD_SQL_FIRST_GEN . '.',
+                null
+            )
+            ->addOption(
                 'project_id',
                 'p',
                 InputOption::VALUE_OPTIONAL,
                 'Google Cloud project id',
+                ''
+            )
+            ->addOption(
+                'db_region',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Cloud SQL region',
                 ''
             )
             ->addOption(
@@ -225,7 +253,8 @@ class WordPressSetup extends Command
             $q->setErrorMessage('Environment %s is invalid.');
             $env = $helper->ask($input, $output, $q);
         }
-        $output->writeln('Creating a new project for: ' . $env);
+        $output->writeln('Creating a new project for: <info>' . $env
+                         . '</info>');
 
         $output->writeln('Downloading the WordPress archive...');
         $wpUrl = $input->getOption('wordpress_url');
@@ -233,7 +262,34 @@ class WordPressSetup extends Command
         if (!$this->report($output, $project)) {
             return self::DEFAULT_ERROR;
         }
-
+        $sql_gen = $input->getOption('sql_gen');
+        if ($sql_gen === '1') {
+            if ($env === self::FLEXIBLE_ENV) {
+                $output->writeln('<error>You can not use '
+                                 . self::CLOUD_SQL_FIRST_GEN . ' with '
+                                 . self::FLEXIBLE_ENV . '.</error>');
+                return self::DEFAULT_ERROR;
+            }
+            $sql_gen = self::CLOUD_SQL_FIRST_GEN;
+            $db_region_str = ':';
+        } else {
+            // Defaults to 2nd gen.
+            $sql_gen = self::CLOUD_SQL_SECOND_GEN;
+            $db_region = $input->getOption('db_region');
+            if (! in_array($db_region, self::$availableDbRegions)) {
+                $q = new ChoiceQuestion(
+                    'Please select the region of your Cloud SQL instance '
+                    . '(defaults to ' . self::DEFAULT_DB_REGION . ')',
+                    self::$availableDbRegions,
+                    self::DEFAULT_DB_REGION
+                );
+                $q->setErrorMessage('DB region %s is invalid.');
+                $db_region = $helper->ask($input, $output, $q);
+                $output->writeln('Using a db_region: <info>' . $db_region
+                                 . '</info>');
+            }
+            $db_region_str = sprintf(":%s:", $db_region);
+        }
         $output->writeln('Downloading the Batcache plugin...');
         $project->downloadArchive(
             'Batcache plugin', self::LATEST_BATCACHE,
@@ -301,6 +357,7 @@ class WordPressSetup extends Command
         }
         $params = array();
         $this->askParameters($keys, $params, $input, $output, $helper);
+        $params['db_region'] = $db_region_str;
         $q = new ConfirmationQuestion(
             'Do you want to use the same db user and password for '
             . 'local run? (Y/n)',
