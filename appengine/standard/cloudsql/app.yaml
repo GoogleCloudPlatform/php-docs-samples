@@ -10,7 +10,7 @@ handlers:
 env_variables:
   # Replace project, instance, database, user and password with the values obtained
   # when configuring your Cloud SQL instance.
-  MYSQL_DSN: mysql:unix_socket=/cloudsql/PROJECT:INSTANCE;dbname=DATABASE
+  MYSQL_DSN: mysql:unix_socket=/cloudsql/INSTANCE_CONNECTION_NAME;dbname=DATABASE
   MYSQL_USER: root
   MYSQL_PASSWORD: ''
 # [END env]
