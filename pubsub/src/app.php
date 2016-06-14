@@ -106,4 +106,44 @@ $app->post('/send_message', function () use ($app) {
     return new Response('', 400);
 });
 
+$app->post('/create_topic_and_subscription', function () use ($app) {
+    /** @var Google_Client $client */
+    $client = $app['google_client'];
+    $projectName = sprintf('projects/%s', $app['project_id']);
+    $pubsub = new Google_Service_Pubsub($client);
+    $topic = new Google_Service_Pubsub_Topic();
+    $topic->setName(sprintf('%s/topics/%s', $projectName, $app['topic']));
+    try {
+        $pubsub->projects_topics->create($topic->getName(), $topic);
+    } catch (Google_Service_Exception $e) {
+        // 409 is ok.  The topic already exists.
+        if ($e->getCode() != 409) {
+            throw $e;
+        }
+    }
+    $subscription = new Google_Service_Pubsub_Subscription();
+    $subscription->setName(sprintf(
+        '%s/subscriptions/%s',
+        $projectName,
+        $app['topic']
+    ));
+    $subscription->setTopic($topic->getName());
+    $config = new Google_Service_Pubsub_PushConfig();
+    $project_id = $app['project_id'];
+    $config->setPushEndpoint("https://$project_id.appspot.com/receive_message");
+    $subscription->setPushConfig($config);
+    try {
+        $pubsub->projects_subscriptions->create(
+            $subscription->getName(),
+            $subscription
+        );
+    } catch (Google_Service_Exception $e) {
+        // 409 is ok.  The subscription already exists.
+        if ($e->getCode() != 409) {
+            throw $e;
+        }
+    }
+    return 'OK';
+});
+
 return $app;

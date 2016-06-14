@@ -16,6 +16,7 @@ pubsub.PubsubController = function($http, $log, $timeout) {
   this.interval = 1;
   this.isAutoUpdating = true;
   this.failCount = 0;
+  this.hasAttemptedToCreateTopicAndSubscription = false;
   this.fetchMessages();
 };
 
@@ -54,6 +55,21 @@ pubsub.PubsubController.prototype.sendMessage = function(message) {
     self.message = null;
   }).error(function(data, status) {
     self.logger.error('Failed to send the message. Status: ' + status + '.');
+    if (!self.hasAttemptedToCreateTopicAndSubscription) {
+      // Try to create the topic and subscription once.
+      self.hasAttemptedToCreateTopicAndSubscription = true;
+      self.logger.info('Trying to create the topic and subscription...');
+      self.http({
+        method: 'POST',
+        url: '/create_topic_and_subscription'
+      }).success(function(data, status) {
+        // Try one more time to send the message.
+        self.sendMessage(message);
+      }).error(function(data, status) {
+        self.logger.error('Failed to create the topic and subscription. ' +
+            'Status: ' + status + '.');
+      });
+    }
   });
 };
 
