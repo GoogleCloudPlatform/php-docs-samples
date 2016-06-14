@@ -3,3 +3,10 @@ vm: true
 
 runtime_config:
   document_root: web
+
+#[START env]
+env_variables:
+  MYSQL_DSN: "mysql:host=127.0.0.1;port=3306;dbname=guestbook"
+  MYSQL_USERNAME: root
+  MYSQL_PASSWORD: 
+#[END env]

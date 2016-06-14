@@ -3,3 +3,8 @@ vm: true
 
 runtime_config:
   document_root: web
+
+#[START env]
+env_variables:
+  GA_TRACKING_ID: your-tracking-id
+#[END env]

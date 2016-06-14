@@ -3,3 +3,8 @@ vm: true
 
 runtime_config:
   document_root: web
+
+#[START env]
+env_variables:
+  GCLOUD_DATASET_ID: YOUR_GCP_PROJECT_ID
+#[END env]
