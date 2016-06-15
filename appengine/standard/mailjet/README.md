@@ -7,7 +7,7 @@ This sample application demonstrates how to use [Mailjet with Google App Engine]
 Before running this sample:
 
 1. You will need a [Mailjet account](http://www.mailjet.com).
-2. Update `MAILJET_API_KEY` and `MAILJET_SECRET` in `index.php` to match your
+2. Update `MAILJET_APIKEY` and `MAILJET_SECRET` in `index.php` to match your
    Mailjet credentials.
 
 ## Prerequisites

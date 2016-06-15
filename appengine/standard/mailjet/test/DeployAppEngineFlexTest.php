@@ -31,7 +31,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
         chdir($tmpDir);
         $indexPhp = file_get_contents('index.php');
         $indexPhp = str_replace(
-            'MAILJET_API_KEY',
+            'MAILJET_APIKEY',
             getenv('MAILJET_APIKEY'),
             $indexPhp
         );

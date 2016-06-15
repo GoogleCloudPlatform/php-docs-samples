@@ -22,7 +22,7 @@ require __DIR__ . '/vendor/autoload.php';
 $app = require __DIR__ . '/app.php';
 
 // set your Mailjet API key and secret
-$app['mailjet.api_key'] = 'MAILJET_API_KEY';
+$app['mailjet.api_key'] = 'MAILJET_APIKEY';
 $app['mailjet.secret'] = 'MAILJET_SECRET';
 
 // Run the app!

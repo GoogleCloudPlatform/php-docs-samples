@@ -36,7 +36,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
             $indexPhp
         );
         $indexPhp = str_replace(
-            'MAILGUN_API_KEY',
+            'MAILGUN_APIKEY',
             getenv('MAILGUN_APIKEY'),
             $indexPhp
         );

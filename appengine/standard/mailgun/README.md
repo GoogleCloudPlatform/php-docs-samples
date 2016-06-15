@@ -7,7 +7,7 @@ This sample application demonstrates how to use [Mailgun with Google App Engine]
 Before running this sample:
 
 1. You will need a [Mailgun account](http://www.mailgun.com/google).
-2. Update `MAILGUN_DOMAIN` and `MAILGUN_API_KEY` in `index.php` to match your
+2. Update `MAILGUN_DOMAIN` and `MAILGUN_APIKEY` in `index.php` to match your
    Mailgun credentials. You can use your account's sandbox domain.
 
 ## Prerequisites

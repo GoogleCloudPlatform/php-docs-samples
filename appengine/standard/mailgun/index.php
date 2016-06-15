@@ -23,7 +23,7 @@ $app = require __DIR__ . '/app.php';
 
 // set your Mailgun domain name and API key
 $app['mailgun.domain'] = 'MAILGUN_DOMAIN_NAME';
-$app['mailgun.api_key'] = 'MAILGUN_API_KEY';
+$app['mailgun.api_key'] = 'MAILGUN_APIKEY';
 
 // Run the app!
 // use "gcloud preview app deploy" or run "php -S localhost:8000"
