@@ -23,7 +23,7 @@ class FileUtil
     {
         $array = array();
         for ($i = 0; $i < $length; ++$i) {
-            array_push($array, chr(random_int(ord('a'), ord('z') + 1)));
+            array_push($array, chr(random_int(ord('a'), ord('z'))));
         }
         return join('', $array);
     }
