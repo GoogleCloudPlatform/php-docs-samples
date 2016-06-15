@@ -40,9 +40,6 @@ class WordPressSetup extends Command
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
 
-    const CLOUD_SQL_FIRST_GEN = 'Cloud SQL First Generation';
-    const CLOUD_SQL_SECOND_GEN = 'Cloud SQL Second Generation';
-
     const DEFAULT_DB_REGION = 'us-central1';
 
     private static $availableDbRegions = array(
@@ -79,10 +76,10 @@ class WordPressSetup extends Command
                 'sql_gen',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Cloud SQL generation to use; 2: '
-                . self::CLOUD_SQL_SECOND_GEN . ', 1: '
-                . self::CLOUD_SQL_FIRST_GEN . '.',
-                null
+                sprintf ('Cloud SQL generation to use; 2: %s, 1: %s',
+                         'Second Generation',
+                         'First Generation'),
+                2
             )
             ->addOption(
                 'project_id',
@@ -263,32 +260,40 @@ class WordPressSetup extends Command
             return self::DEFAULT_ERROR;
         }
         $sql_gen = $input->getOption('sql_gen');
-        if ($sql_gen === '1') {
-            if ($env === self::FLEXIBLE_ENV) {
-                $output->writeln('<error>You can not use '
-                                 . self::CLOUD_SQL_FIRST_GEN . ' with '
-                                 . self::FLEXIBLE_ENV . '.</error>');
-                return self::DEFAULT_ERROR;
-            }
-            $sql_gen = self::CLOUD_SQL_FIRST_GEN;
-            $db_region_str = ':';
-        } else {
-            // Defaults to 2nd gen.
-            $sql_gen = self::CLOUD_SQL_SECOND_GEN;
-            $db_region = $input->getOption('db_region');
-            if (! in_array($db_region, self::$availableDbRegions)) {
-                $q = new ChoiceQuestion(
-                    'Please select the region of your Cloud SQL instance '
-                    . '(defaults to ' . self::DEFAULT_DB_REGION . ')',
-                    self::$availableDbRegions,
-                    self::DEFAULT_DB_REGION
+        switch ($sql_gen) {
+            case '1':
+                if ($env === self::FLEXIBLE_ENV) {
+                    $output->writeln('<error>You can not use '
+                                     . 'Cloud SQL First Generation with '
+                                     . self::FLEXIBLE_ENV . '.</error>');
+                    return self::DEFAULT_ERROR;
+                }
+                $db_region_str = ':';
+                break;
+            case '2':
+                $db_region = $input->getOption('db_region');
+                if (! in_array($db_region, self::$availableDbRegions)) {
+                    $q = new ChoiceQuestion(
+                        'Please select the region of your Cloud SQL instance '
+                        . '(defaults to ' . self::DEFAULT_DB_REGION . ')',
+                        self::$availableDbRegions,
+                        self::DEFAULT_DB_REGION
+                    );
+                    $q->setErrorMessage('DB region %s is invalid.');
+                    $db_region = $helper->ask($input, $output, $q);
+                    $output->writeln('Using a db_region: <info>' . $db_region
+                                     . '</info>');
+                }
+                $db_region_str = sprintf(":%s:", $db_region);
+                break;
+            default:
+                $output->writeln(
+                    sprintf(
+                        '<error>Invalid value for sql_gen: %s.</error>',
+                        $sql_gen
+                    )
                 );
-                $q->setErrorMessage('DB region %s is invalid.');
-                $db_region = $helper->ask($input, $output, $q);
-                $output->writeln('Using a db_region: <info>' . $db_region
-                                 . '</info>');
-            }
-            $db_region_str = sprintf(":%s:", $db_region);
+                return self::DEFAULT_ERROR;
         }
         $output->writeln('Downloading the Batcache plugin...');
         $project->downloadArchive(
