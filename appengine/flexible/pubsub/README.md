@@ -1,12 +1,12 @@
-# Google PubSub PHP Sample Application
+# Google PubSub PHP Sample Application for App Engine Flexible Environment.
 
 ## Description
 
-Note: The push endpoints don't work with the App Engine's local
-devserver. The push notifications will go to an HTTP URL on the App
-Engine server even when you run this sample locally. So we recommend
-you deploy and run the app on App Engine.
-TODO(tmatsuo): Better implementation for devserver.
+This sample demonstrates how to invoke PubSub from Google App Engine Flexible
+Environment.
+
+The sample code lives in [a parent pubsub directory](../../../pubsub).
+Only two configuration files differ: `app.yaml` and `nginx-app.conf`.
 
 ## Register your application
 
@@ -23,18 +23,16 @@ TODO(tmatsuo): Better implementation for devserver.
   - Set the following environment variable:
     - `GOOGLE_APPLICATION_CREDENTIALS`: the file path to the downloaded JSON file.
 
-## Prerequisites
 
-- Install [`composer`](https://getcomposer.org)
-- Install the App Engine Python SDK.
-  We recommend you install
-  [Cloud SDK](https://developers.google.com/cloud/sdk/) rather than
-  just installing App Engine SDK.
+## Configuration
 
-- Install Google API client library for PHP into 'lib' directory by running:
+- Edit `app.yaml`.  Replace `your-google-project-id` with your google project id.
 
-```
-$ composer install
+- Copy `app.yaml` and `nginx-app.conf` into [../../../pubsub](../../../pubsub).  Ex:
+```sh
+~/gitrepos/php-docs-samples/appengine/flexible/pubsub$ cp -f app.yaml nginx-app.conf ../../../pubsub
+~/gitrepos/php-docs-samples/appengine/flexible/pubsub$ cd ../../../pubsub/
+~/gitrepos/php-docs-samples/pubsub$ 
 ```
 
 ## Deploy the application to App Engine
@@ -46,22 +44,18 @@ $ gcloud preview app deploy app.yaml --set-default --project YOUR_PROJECT_NAME
 Then access the following URL:
   https://{YOUR_PROJECT_NAME}.appspot.com/
 
-## Deploy the application to App Engine Flexible Environment.
-
-See the instructions [here](../appengine/flexible/pubsub/README.md).
-
 ## Run the application locally
 
 ```
-$ dev_appserver.py -A your-project-name .
+/usr/bin/php -S localhost:8910 -t web
 ```
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../../../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../LICENSE)
+* See [LICENSE](../../../LICENSE)
 
 
