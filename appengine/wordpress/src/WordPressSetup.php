@@ -253,12 +253,7 @@ class WordPressSetup extends Command
         $output->writeln('Creating a new project for: <info>' . $env
                          . '</info>');
 
-        $output->writeln('Downloading the WordPress archive...');
-        $wpUrl = $input->getOption('wordpress_url');
-        $project->downloadArchive('the WordPress archive', $wpUrl);
-        if (!$this->report($output, $project)) {
-            return self::DEFAULT_ERROR;
-        }
+        // Determine the Cloud SQL Generation to use.
         $sql_gen = $input->getOption('sql_gen');
         switch ($sql_gen) {
             case '1':
@@ -294,6 +289,13 @@ class WordPressSetup extends Command
                     )
                 );
                 return self::DEFAULT_ERROR;
+        }
+
+        $output->writeln('Downloading the WordPress archive...');
+        $wpUrl = $input->getOption('wordpress_url');
+        $project->downloadArchive('the WordPress archive', $wpUrl);
+        if (!$this->report($output, $project)) {
+            return self::DEFAULT_ERROR;
         }
         $output->writeln('Downloading the Batcache plugin...');
         $project->downloadArchive(
