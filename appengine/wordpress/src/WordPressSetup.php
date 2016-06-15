@@ -76,9 +76,9 @@ class WordPressSetup extends Command
                 'sql_gen',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                sprintf ('Cloud SQL generation to use; 2: %s, 1: %s',
-                         'Second Generation',
-                         'First Generation'),
+                sprintf('Cloud SQL generation to use; 2: %s, 1: %s',
+                        'Second Generation',
+                        'First Generation'),
                 2
             )
             ->addOption(
