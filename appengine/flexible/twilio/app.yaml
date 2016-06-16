@@ -1,0 +1,10 @@
+runtime: php
+vm: true
+
+runtime_config:
+  document_root: .
+
+env_variables:
+    TWILIO_ACCOUNT_SID: your-account-sid
+    TWILIO_AUTH_TOKEN: your-auth-token
+    TWILIO_NUMBER: your-twilio-number
