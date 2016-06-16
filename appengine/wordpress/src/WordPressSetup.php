@@ -263,7 +263,7 @@ class WordPressSetup extends Command
                                      . self::FLEXIBLE_ENV . '.</error>');
                     return self::DEFAULT_ERROR;
                 }
-                $db_region_str = ':';
+                $db_connection_pattern = '%s:%s';
                 break;
             case '2':
                 $db_region = $input->getOption('db_region');
@@ -279,7 +279,7 @@ class WordPressSetup extends Command
                     $output->writeln('Using a db_region: <info>' . $db_region
                                      . '</info>');
                 }
-                $db_region_str = sprintf(":%s:", $db_region);
+                $db_connection_pattern = "%s:$db_region:%s";
                 break;
             default:
                 $output->writeln(
@@ -364,7 +364,11 @@ class WordPressSetup extends Command
         }
         $params = array();
         $this->askParameters($keys, $params, $input, $output, $helper);
-        $params['db_region'] = $db_region_str;
+        $params['db_connection'] = sprintf(
+            $db_connection_pattern,
+            $params['project_id'],
+            $params['db_instance']
+        );
         $q = new ConfirmationQuestion(
             'Do you want to use the same db user and password for '
             . 'local run? (Y/n)',

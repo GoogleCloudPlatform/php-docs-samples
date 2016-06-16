@@ -53,7 +53,7 @@ if ($onGae) {
     /** The name of the Cloud SQL database for WordPress */
     define('DB_NAME', '{{db_name}}');
     /** Production login info */
-    define('DB_HOST', ':/cloudsql/{{project_id}}{{db_region}}{{db_instance}}');
+    define('DB_HOST', ':/cloudsql/{{db_connection}}');
     define('DB_USER', '{{db_user}}');
     define('DB_PASSWORD', '{{db_password}}');
 } else {

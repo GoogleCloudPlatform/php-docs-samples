@@ -70,7 +70,7 @@ $_SERVER['HTTPS'] = $onGae ? $_SERVER['HTTP_X_APPENGINE_HTTPS'] : false;
 // ** MySQL settings - You can get this info from your web host ** //
 if ($onGae) {
     /** Production environment */
-    define('DB_HOST', ':/cloudsql/{{project_id}}{{db_region}}{{db_instance}}');
+    define('DB_HOST', ':/cloudsql/{{db_connection}}');
     /** The name of the database for WordPress */
     define('DB_NAME', '{{db_name}}');
     /** MySQL database username */
