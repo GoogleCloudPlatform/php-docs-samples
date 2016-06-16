@@ -70,7 +70,7 @@ $app->post('/send', function () use ($app) {
 });
 
 $app['mailjet'] = function () use ($app) {
-    if ($app['mailjet.api_key'] == 'MAILJET_API_KEY') {
+    if ($app['mailjet.api_key'] == 'MAILJET_APIKEY') {
         return 'set your mailjet api key and secret in <code>index.php</code>';
     }
     $mailjetApiKey = $app['mailjet.api_key'];
