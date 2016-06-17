@@ -40,6 +40,15 @@ class WordPressSetup extends Command
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
 
+    const DEFAULT_DB_REGION = 'us-central1';
+
+    private static $availableDbRegions = array(
+        'us-central1',
+        'us-east1',
+        'europe-west1',
+        'asia-east1',
+    );
+
     protected function configure()
     {
         $this
@@ -64,10 +73,26 @@ class WordPressSetup extends Command
                 self::DEFAULT_DIR
             )
             ->addOption(
+                'sql_gen',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                sprintf('Cloud SQL generation to use; 2: %s, 1: %s',
+                        'Second Generation',
+                        'First Generation'),
+                2
+            )
+            ->addOption(
                 'project_id',
                 'p',
                 InputOption::VALUE_OPTIONAL,
                 'Google Cloud project id',
+                ''
+            )
+            ->addOption(
+                'db_region',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Cloud SQL region',
                 ''
             )
             ->addOption(
@@ -225,7 +250,46 @@ class WordPressSetup extends Command
             $q->setErrorMessage('Environment %s is invalid.');
             $env = $helper->ask($input, $output, $q);
         }
-        $output->writeln('Creating a new project for: ' . $env);
+        $output->writeln('Creating a new project for: <info>' . $env
+                         . '</info>');
+
+        // Determine the Cloud SQL Generation to use.
+        $sql_gen = $input->getOption('sql_gen');
+        switch ($sql_gen) {
+            case '1':
+                if ($env === self::FLEXIBLE_ENV) {
+                    $output->writeln('<error>You can not use '
+                                     . 'Cloud SQL First Generation with '
+                                     . self::FLEXIBLE_ENV . '.</error>');
+                    return self::DEFAULT_ERROR;
+                }
+                $db_connection_pattern = '%s:%s';
+                break;
+            case '2':
+                $db_region = $input->getOption('db_region');
+                if (! in_array($db_region, self::$availableDbRegions)) {
+                    $q = new ChoiceQuestion(
+                        'Please select the region of your Cloud SQL instance '
+                        . '(defaults to ' . self::DEFAULT_DB_REGION . ')',
+                        self::$availableDbRegions,
+                        self::DEFAULT_DB_REGION
+                    );
+                    $q->setErrorMessage('DB region %s is invalid.');
+                    $db_region = $helper->ask($input, $output, $q);
+                    $output->writeln('Using a db_region: <info>' . $db_region
+                                     . '</info>');
+                }
+                $db_connection_pattern = "%s:$db_region:%s";
+                break;
+            default:
+                $output->writeln(
+                    sprintf(
+                        '<error>Invalid value for sql_gen: %s.</error>',
+                        $sql_gen
+                    )
+                );
+                return self::DEFAULT_ERROR;
+        }
 
         $output->writeln('Downloading the WordPress archive...');
         $wpUrl = $input->getOption('wordpress_url');
@@ -233,7 +297,6 @@ class WordPressSetup extends Command
         if (!$this->report($output, $project)) {
             return self::DEFAULT_ERROR;
         }
-
         $output->writeln('Downloading the Batcache plugin...');
         $project->downloadArchive(
             'Batcache plugin', self::LATEST_BATCACHE,
@@ -301,6 +364,11 @@ class WordPressSetup extends Command
         }
         $params = array();
         $this->askParameters($keys, $params, $input, $output, $helper);
+        $params['db_connection'] = sprintf(
+            $db_connection_pattern,
+            $params['project_id'],
+            $params['db_instance']
+        );
         $q = new ConfirmationQuestion(
             'Do you want to use the same db user and password for '
             . 'local run? (Y/n)',
