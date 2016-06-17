@@ -237,6 +237,6 @@ Enjoy your WordPress installation!
 [cloud-sql-api-enable]: https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
 [app-engine-setting]: https://console.cloud.google.com/appengine/settings
 [gcloud-sdk]: https://cloud.google.com/sdk/
-[cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/sql-proxy#installing
+[cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/external#appaccess
 [credentials-section]: https://console.cloud.google.com/apis/credentials/
 [php-docker]: https://github.com/googlecloudplatform/php-docker
