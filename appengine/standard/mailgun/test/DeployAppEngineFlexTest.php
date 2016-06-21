@@ -23,21 +23,29 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
-    public function beforeDeploy()
+    public static function beforeDeploy()
     {
+        // set your Mailgun domain name and API key
+        $mailgunDomain = getenv('MAILGUN_DOMAIN');
+        $mailgunApiKey = getenv('MAILGUN_APIKEY');
+
+        if (empty($mailgunDomain) || empty($mailgunApiKey)) {
+            self::markTestSkipped('set the MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
+        }
+
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         FileUtil::copyDir(__DIR__ . '/../../../flexible/mailgun', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
         $indexPhp = file_get_contents('index.php');
         $indexPhp = str_replace(
-            'MAILGUN_DOMAIN_NAME',
-            getenv('MAILGUN_DOMAIN_NAME'),
+            'MAILGUN_DOMAIN',
+            $mailgunDomain,
             $indexPhp
         );
         $indexPhp = str_replace(
             'MAILGUN_APIKEY',
-            getenv('MAILGUN_APIKEY'),
+            $mailgunApiKey,
             $indexPhp
         );
         file_put_contents('index.php', $indexPhp);
