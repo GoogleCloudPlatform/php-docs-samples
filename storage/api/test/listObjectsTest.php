@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class listBucketsTest extends PHPUnit_Framework_TestCase
+class listObjectsTest extends PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
@@ -35,17 +35,22 @@ class listBucketsTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('GOOGLE_BUCKET_NAME must be set.');
         }
 
+        if (!$objectName = getenv('GOOGLE_OBJECT_NAME')) {
+            $this->markTestSkipped('GOOGLE_OBJECT_NAME must be set.');
+        }
+
         // Invoke listBuckets.php, and fake first argument.
         global $argc, $argv;
         $argv[1] = getenv('GOOGLE_PROJECT_ID');
+        $argv[2] = $bucketName;
 
         // Capture stdout.
         ob_start();
-        include __DIR__ . '/../listBuckets.php';
+        include __DIR__ . '/../listObjects.php';
         $result = ob_get_contents();
         ob_end_clean();
 
         // Make sure it looks correct
-        $this->assertContains($bucketName, $result);
+        $this->assertContains($objectName, $result);
     }
 }
