@@ -20,7 +20,7 @@ use Silex\Application;
 $app = new Application();
 
 $app->get('/', function () use ($app) {
-    if ($app['mailgun.domain'] == 'MAILGUN_DOMAIN_NAME') {
+    if ($app['mailgun.domain'] == 'MAILGUN_DOMAIN') {
         return 'set your mailgun domain and API key in <code>index.php</code>';
     }
 
