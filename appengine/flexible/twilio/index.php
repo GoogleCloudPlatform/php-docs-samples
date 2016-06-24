@@ -21,9 +21,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = require __DIR__ . '/app.php';
 
-// set your Mailgun domain name and API key
-$app['mailgun.domain'] = 'MAILGUN_DOMAIN';
-$app['mailgun.api_key'] = 'MAILGUN_APIKEY';
+$app['twilio.account_sid'] = getenv('TWILIO_ACCOUNT_SID');
+$app['twilio.auth_token']  = getenv('TWILIO_AUTH_TOKEN');
+$app['twilio.number'] = getenv('TWILIO_FROM_NUMBER') ?
+    getenv('TWILIO_FROM_NUMBER') : getenv('TWILIO_NUMBER');
 
 // Run the app!
 // use "gcloud preview app deploy" or run "php -S localhost:8000"

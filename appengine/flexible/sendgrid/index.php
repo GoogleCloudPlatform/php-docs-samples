@@ -21,9 +21,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = require __DIR__ . '/app.php';
 
-// set your Mailgun domain name and API key
-$app['mailgun.domain'] = 'MAILGUN_DOMAIN';
-$app['mailgun.api_key'] = 'MAILGUN_APIKEY';
+$app['sendgrid.sender'] = getenv('SENDGRID_SENDER');
+$app['sendgrid.api_key'] = getenv('SENDGRID_API_KEY');
 
 // Run the app!
 // use "gcloud preview app deploy" or run "php -S localhost:8000"
