@@ -33,7 +33,6 @@ $app['twig.path'] = [ __DIR__ . '/../templates' ];
 $client = new Google_Client();
 $client->useApplicationDefaultCredentials();
 $client->addScope(Google_Service_Datastore::DATASTORE);
-$client->addScope(Google_Service_Datastore::USERINFO_EMAIL);
 
 // add the api client and project id to our silex app
 $app['google_client'] = $client;
@@ -51,7 +50,7 @@ $app->get('/', function () use ($app) {
     $datastore = new Google_Service_Datastore($client);
     $util = new DatastoreHelper();
     $query = $util->createSimpleQuery();
-    $response = $datastore->datasets->runQuery($projectId, $query);
+    $response = $datastore->projects->runQuery($projectId, $query);
 
     // create an array of the queried DataStore comments
     // and pass them to the view layer
@@ -61,7 +60,7 @@ $app->get('/', function () use ($app) {
         $comments[] = [
             'name' => $properties['name']->getStringValue(),
             'body' => $properties['body']->getStringValue(),
-            'created' => $properties['created']->getDateTimeValue(),
+            'created' => $properties['created']->getTimestampValue(),
         ];
     }
 
@@ -96,12 +95,12 @@ $app->post('/store', function (Request $request) use ($app) {
 
     // generate a unique key to store this item using the APIs
     $keyRequest = $util->createUniqueKeyRequest();
-    $uniqueId = $datastore->datasets->allocateIds($datasetId, $keyRequest);
+    $uniqueId = $datastore->projects->allocateIds($datasetId, $keyRequest);
     $key = $uniqueId->getKeys()[0];
 
     // submit the changes to datastore
     $request = $util->createCommentRequest($key, $name, $body);
-    $result = $datastore->datasets->commit($datasetId, $request);
+    $result = $datastore->projects->commit($datasetId, $request);
 
     return new Response('', 301, ['Location' => $urlgen->generate('home')]);
 })->bind('store');
