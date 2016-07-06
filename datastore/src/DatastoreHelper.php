@@ -45,10 +45,8 @@ class DatastoreHelper
                     ],
                 ],
             ],
-            'kinds' => [
-                [
-                    'name' => self::KIND
-                ],
+            'kind' => [
+                'name' => self::KIND
             ],
             'limit' => $limit,
         ]);
@@ -68,8 +66,10 @@ class DatastoreHelper
         $entity = $this->createEntity($id, $name, $body);
         $req = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'upsert' => [$entity]
+            'mutations' => [
+                [
+                    'upsert' => $entity
+                ]
             ]
         ]);
 
@@ -92,7 +92,7 @@ class DatastoreHelper
                     'stringValue' => $body,
                 ],
                 'created' => [
-                    'dateTimeValue' => date('c')
+                    'timestampValue' => date('c')
                 ],
             ]
         ]);
