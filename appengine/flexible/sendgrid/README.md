@@ -35,8 +35,8 @@ php -S localhost:8000 -t .
 **Deploy with gcloud**
 ```
 gcloud config set project YOUR_PROJECT_ID
-gcloud preview app deploy
-gcloud preview app browse
+gcloud app deploy
+gcloud app browse
 ```
 
 The last command will open `https://{YOUR_PROJECT_ID}.appspot.com/`

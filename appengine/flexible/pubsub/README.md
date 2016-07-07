@@ -38,7 +38,7 @@ Only two configuration files differ: `app.yaml` and `nginx-app.conf`.
 ## Deploy the application to App Engine
 
 ```
-$ gcloud preview app deploy app.yaml --set-default --project YOUR_PROJECT_NAME
+$ gcloud app deploy app.yaml --set-default --project YOUR_PROJECT_NAME
 ```
 
 Then access the following URL:

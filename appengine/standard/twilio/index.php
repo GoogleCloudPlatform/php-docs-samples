@@ -27,7 +27,7 @@ $app['twilio.from_number'] = 'TWILIO_FROM_NUMBER';
 $app['twilio.to_number']   = 'TWILIO_TO_NUMBER';
 
 // Run the app!
-// use "gcloud preview app deploy" or run "php -S localhost:8080"
+// use "gcloud app deploy" or run "php -S localhost:8080"
 // and browse to "index.php"
 $app['debug'] = true;
 $app->run();

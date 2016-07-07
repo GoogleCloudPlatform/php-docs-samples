@@ -38,10 +38,10 @@ Open the `swagger.yaml` file and in the `host` property, replace
 
 Then, deploy the sample using `gcloud`:
 
-    gcloud preview app deploy
+    gcloud app deploy
 
 Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/
-or run the command `gcloud preview app browse`.
+or run the command `gcloud app browse`.
 
 ### Using the echo client
 

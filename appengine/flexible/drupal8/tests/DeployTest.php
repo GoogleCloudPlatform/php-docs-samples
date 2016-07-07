@@ -184,7 +184,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     {
         for ($i = 0; $i <= 3; $i++) {
             $process = self::createProcess(
-                "gcloud -q preview app deploy "
+                "gcloud -q app deploy "
                 . "--version $versionId "
                 . "--project $projectId --no-promote -q "
                 . "$targetDir/drupal8.test/app.yaml"
@@ -202,7 +202,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     {
         for ($i = 0; $i <= 3; $i++) {
             $process = self::createProcess(sprintf(
-                'gcloud -q preview app versions delete %s --service %s --project %s',
+                'gcloud -q app versions delete %s --service %s --project %s',
                 self::getVersion(),
                 self::getServiceName() ?: 'default',
                 self::getProjectId()

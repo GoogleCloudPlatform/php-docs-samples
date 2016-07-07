@@ -22,8 +22,8 @@ composer install
 
 ```
 gcloud config set project YOUR_PROJECT_ID
-gcloud preview app deploy app.yaml
-gcloud preview app browse
+gcloud app deploy app.yaml
+gcloud app browse
 ```
 
 The last command will open `https://{YOUR_PROJECT_ID}.appspot.com/`

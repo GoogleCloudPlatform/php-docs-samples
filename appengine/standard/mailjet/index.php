@@ -26,6 +26,6 @@ $app['mailjet.api_key'] = 'MAILJET_APIKEY';
 $app['mailjet.secret'] = 'MAILJET_SECRET';
 
 // Run the app!
-// use "gcloud preview app deploy" or run "php -S localhost:8000"
+// use "gcloud app deploy" or run "php -S localhost:8000"
 $app['debug'] = true;
 $app->run();

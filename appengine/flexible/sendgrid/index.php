@@ -25,6 +25,6 @@ $app['sendgrid.sender'] = getenv('SENDGRID_SENDER');
 $app['sendgrid.api_key'] = getenv('SENDGRID_API_KEY');
 
 // Run the app!
-// use "gcloud preview app deploy" or run "php -S localhost:8000"
+// use "gcloud app deploy" or run "php -S localhost:8000"
 $app['debug'] = true;
 $app->run();

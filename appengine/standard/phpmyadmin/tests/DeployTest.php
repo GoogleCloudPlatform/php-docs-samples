@@ -135,7 +135,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public static function deploy($project_id, $e2e_test_version, $target)
     {
-        $command = "gcloud -q preview app deploy --no-promote "
+        $command = "gcloud -q app deploy --no-promote "
             . "--no-stop-previous-version "
             . "--version $e2e_test_version "
             . "--project $project_id "
@@ -157,7 +157,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        $command = 'gcloud -q preview app versions delete --service phpmyadmin '
+        $command = 'gcloud -q app versions delete --service phpmyadmin '
             . getenv(self::VERSION_ENV)
             . ' --project '
             . getenv(self::PROJECT_ENV);
