@@ -59,7 +59,7 @@ in your browser.
 **Deploy with gcloud**
 
 ```
-$ gcloud preview app deploy app.yaml --set-default --project YOUR_GCP_PROJECT_ID
+$ gcloud app deploy app.yaml --set-default --project YOUR_GCP_PROJECT_ID
 ```
 
 Then access the following URL:

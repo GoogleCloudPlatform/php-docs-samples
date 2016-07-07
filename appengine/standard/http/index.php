@@ -22,6 +22,6 @@ require __DIR__ . '/vendor/autoload.php';
 $app = require __DIR__ . '/app.php';
 
 // Run the app!
-// use "gcloud preview app deploy" or run locally with dev_appserver.py
+// use "gcloud app deploy" or run locally with dev_appserver.py
 $app['debug'] = true;
 $app->run();

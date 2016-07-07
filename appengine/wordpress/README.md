@@ -158,7 +158,7 @@ Now it’s ready for the first deployment.
 You can deploy your WordPress project by the following command.
 
 ```
-$ gcloud preview app deploy \
+$ gcloud app deploy \
     --promote --stop-previous-version app.yaml cron.yaml
 ```
 

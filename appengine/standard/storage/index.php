@@ -25,6 +25,6 @@ $app = require __DIR__ . '/app.php';
 $app['bucket_name'] = '<your-bucket-name>';
 
 // Run the app!
-// use "gcloud preview app deploy" or run locally with dev_appserver.py
+// use "gcloud app deploy" or run locally with dev_appserver.py
 $app['debug'] = true;
 $app->run();

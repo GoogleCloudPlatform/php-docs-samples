@@ -22,7 +22,7 @@ require __DIR__ . '/vendor/autoload.php';
 $app = require __DIR__ . '/app.php';
 
 // Run the app!
-// use "gcloud preview app deploy" or use `dev_appserver.py`.
+// use "gcloud app deploy" or use `dev_appserver.py`.
 // then browse '/'.
 $app['debug'] = true;
 $app->run();

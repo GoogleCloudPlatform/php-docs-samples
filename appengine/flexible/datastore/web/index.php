@@ -22,7 +22,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = require __DIR__ . '/../app.php';
 
 // Run the app!
-// use "gcloud preview app deploy"
+// use "gcloud app deploy"
 $app['debug'] = true;
 $app['google.dataset_id'] = getenv('GCLOUD_DATASET_ID');
 $app->run();

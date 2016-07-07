@@ -243,7 +243,7 @@ class WordPressSetup extends Command
         } else {
             $q = new ChoiceQuestion(
                 'Please select the App Engine Environment '
-                . '(defaults to ' . self::FLEXIBLE_ENV  . ')',
+                . '(defaults to ' . self::FLEXIBLE_ENV . ')',
                 array(self::FLEXIBLE_ENV, self::STANDARD_ENV),
                 self::FLEXIBLE_ENV
             );

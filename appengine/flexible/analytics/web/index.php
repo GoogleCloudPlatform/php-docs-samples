@@ -22,7 +22,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = require __DIR__ . '/../app.php';
 
 // Run the app!
-// use "gcloud preview app deploy"
+// use "gcloud app deploy"
 $app['debug'] = true;
 $app['GA_TRACKING_ID'] = getenv('GA_TRACKING_ID');
 $app->run();

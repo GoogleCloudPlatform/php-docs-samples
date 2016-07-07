@@ -44,5 +44,5 @@ This sample application demonstrates how to invoke Google Cloud Datastore from
 
 ```
 $ gcloud config set project YOUR_PROJECT_ID
-$ gcloud preview app deploy
+$ gcloud app deploy
 ```

@@ -21,7 +21,7 @@ $ composer install
 
 ```
 $ gcloud config set project YOUR_PROJECT_ID
-$ gcloud preview app deploy
+$ gcloud app deploy
 ```
 
 **Store and retrieve values from the cache.**

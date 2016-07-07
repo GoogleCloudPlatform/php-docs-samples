@@ -75,7 +75,7 @@ class StdTest extends \PHPUnit_Framework_TestCase
         $target = self::getTargetDir();
         for ($i = 0; $i <= 3; $i++) {
             exec(
-                "gcloud -q preview app deploy "
+                "gcloud -q app deploy "
                 . "--version $e2e_test_version "
                 . "--project $project_id --no-promote "
                 . "$target/app.yaml $target/cron.yaml",
@@ -95,7 +95,7 @@ class StdTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         for ($i = 0; $i <= 3; $i++) {
-            exec('gcloud -q preview app versions delete --service default '
+            exec('gcloud -q app versions delete --service default '
                  . self::getVersion()
                  . ' --project '
                  . getenv(self::PROJECT_ENV),

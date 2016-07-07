@@ -27,6 +27,6 @@ $app['twilio.number'] = getenv('TWILIO_FROM_NUMBER') ?
     getenv('TWILIO_FROM_NUMBER') : getenv('TWILIO_NUMBER');
 
 // Run the app!
-// use "gcloud preview app deploy" or run "php -S localhost:8000"
+// use "gcloud app deploy" or run "php -S localhost:8000"
 $app['debug'] = true;
 $app->run();
