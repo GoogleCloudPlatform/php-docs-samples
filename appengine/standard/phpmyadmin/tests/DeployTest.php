@@ -22,7 +22,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 {
     private $client;
 
-    const PHPMYADMIN_VERSION = '4.6.0';
+    const PHPMYADMIN_VERSION = '4.6.3';
     const PROJECT_ENV = 'GOOGLE_PROJECT_ID';
     const VERSION_ENV = 'GOOGLE_VERSION_ID';
     const DB_PASSWORD_ENV = 'MYSQLADMIN_ROOT_PASSWORD';
@@ -124,9 +124,8 @@ class DeployTest extends \PHPUnit_Framework_TestCase
                 'config.inc.php'  => $target
             ),
             array(
-                'your_project_id' => $project_id,
+                'your_connection_string' => "$project_id/$cloudsql_instance",
                 'your_secret' => $blowfish_secret,
-                'your_cloudsql_instance' => $cloudsql_instance
             )
         );
         rename("$target/app-e2e.yaml", "$target/app.yaml");

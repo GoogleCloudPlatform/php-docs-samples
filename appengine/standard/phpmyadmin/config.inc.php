@@ -30,7 +30,7 @@ $cfg['blowfish_secret'] = '{{your_secret}}'; /* YOU MUST FILL IN THIS FOR COOKIE
 $i = 0;
 
 // Change this to use the project and instance that you've created.
-$host = '/cloudsql/{{your_project_id}}:{{your_cloudsql_instance}}';
+$host = '/cloudsql/{{your_connection_string}}';
 $type = 'socket';
 
 /*
