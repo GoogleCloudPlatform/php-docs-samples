@@ -4,7 +4,7 @@
         "google/apiclient": "~2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4",
-        "google/cloud-tools": "^0.1.0"
+        "google/cloud-tools": "<=1.0",
+        "phpunit/phpunit": "~4"
     }
 }
