@@ -63,7 +63,7 @@ class DatastoreHelper
 
         $kind = new \Google_Service_Datastore_KindExpression();
         $kind->setName('PubSubMessage');
-        $query->setKinds([$kind]);
+        $query->setKind($kind);
 
         $query->setLimit($limit);
 
@@ -95,10 +95,10 @@ class DatastoreHelper
     {
         $entity = new \Google_Service_Datastore_Entity();
         $entity->setKey($key);
-        $messageProp = new \Google_Service_Datastore_Property();
+        $messageProp = new \Google_Service_Datastore_Value();
         $messageProp->setStringValue($message);
-        $createdProp = new \Google_Service_Datastore_Property();
-        $createdProp->setDateTimeValue(date('c'));
+        $createdProp = new \Google_Service_Datastore_Value();
+        $createdProp->setTimeStampValue(date('c'));
         $properties = [
             'message' => $messageProp,
             'created' => $createdProp,
@@ -115,7 +115,7 @@ class DatastoreHelper
     public function createUniqueKeyRequest()
     {
         // retrieve a unique ID from datastore
-        $path = new \Google_Service_Datastore_KeyPathElement();
+        $path = new \Google_Service_Datastore_PathElement();
         $path->setKind('PubSubMessage');
         $key = new \Google_Service_Datastore_Key();
         $key->setPath([$path]);
@@ -137,7 +137,7 @@ class DatastoreHelper
 
         $query = $this->createQuery();
 
-        $response = $datastore->datasets->runQuery($this->datasetId, $query);
+        $response = $datastore->projects->runQuery($this->datasetId, $query);
 
         $messages = [];
         foreach ($response->getBatch()->getEntityResults() as $entityResult) {
