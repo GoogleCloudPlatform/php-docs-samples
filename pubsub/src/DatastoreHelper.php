@@ -79,10 +79,10 @@ class DatastoreHelper
     {
         $entity = $this->createEntity($id, $message);
         $mutation = new \Google_Service_Datastore_Mutation();
-        $mutation->setUpsert([$entity]);
+        $mutation->setUpsert($entity);
         $req = new \Google_Service_Datastore_CommitRequest();
         $req->setMode('NON_TRANSACTIONAL');
-        $req->setMutation($mutation);
+        $req->setMutations([$mutation]);
 
         return $req;
     }
@@ -159,12 +159,12 @@ class DatastoreHelper
         $datastore = new \Google_Service_Datastore($this->client);
 
         $idRequest = $this->createUniqueKeyRequest();
-        $uniqueId = $datastore->datasets->allocateIds($this->datasetId, $idRequest);
+        $uniqueId = $datastore->projects->allocateIds($this->datasetId, $idRequest);
         $key = $uniqueId->getKeys()[0];
 
         // build the API request to send using the key and message
         $request = $this->createMessageRequest($key, $message);
 
-        return $datastore->datasets->commit($this->datasetId, $request);
+        return $datastore->projects->commit($this->datasetId, $request);
     }
 }
