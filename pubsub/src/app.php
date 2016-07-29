@@ -36,7 +36,6 @@ $client = new Google_Client();
 $client->useApplicationDefaultCredentials();
 $client->addScope(Google_Service_Pubsub::PUBSUB);
 $client->addScope(Google_Service_Datastore::DATASTORE);
-$client->addScope(Google_Service_Datastore::USERINFO_EMAIL);
 
 $app['google_client'] = $client;
 

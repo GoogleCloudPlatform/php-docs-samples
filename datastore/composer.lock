@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f477a851992c38a1dfc2687bc72f6b21",
-    "content-hash": "d11400fcd93228a575c12aa93aaae993",
+    "hash": "60555bbe2185f72d5c8d6c3a69549df3",
+    "content-hash": "051f44fe179acea57b1198ef15eacaec",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -52,21 +52,21 @@
         },
         {
             "name": "google/apiclient",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client.git",
-                "reference": "984f6a96297242e901bde518489374a9dec209df"
+                "reference": "18dd5534280318598e8770cb7929e9a542e91c0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/984f6a96297242e901bde518489374a9dec209df",
-                "reference": "984f6a96297242e901bde518489374a9dec209df",
+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/18dd5534280318598e8770cb7929e9a542e91c0d",
+                "reference": "18dd5534280318598e8770cb7929e9a542e91c0d",
                 "shasum": ""
             },
             "require": {
                 "firebase/php-jwt": "~2.0|~3.0",
-                "google/apiclient-services": "*@dev",
+                "google/apiclient-services": "^0.5",
                 "google/auth": "0.9",
                 "guzzlehttp/guzzle": "~5.2|~6.0",
                 "guzzlehttp/psr7": "^1.2",
@@ -107,21 +107,21 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-06-24 16:44:42"
+            "time": "2016-07-21 18:41:10"
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.3",
+            "version": "v0.5",
             "target-dir": "Google/Service",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client-services.git",
-                "reference": "b2faa3d37da789be2cdcf0c5acae3896a0cda958"
+                "reference": "a2d43f4c7eace8c7aa16c5ea83191344c63b4526"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/b2faa3d37da789be2cdcf0c5acae3896a0cda958",
-                "reference": "b2faa3d37da789be2cdcf0c5acae3896a0cda958",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/a2d43f4c7eace8c7aa16c5ea83191344c63b4526",
+                "reference": "a2d43f4c7eace8c7aa16c5ea83191344c63b4526",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-06-02 18:58:36"
+            "time": "2016-07-21 18:01:41"
         },
         {
             "name": "google/auth",
@@ -194,27 +194,27 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.0",
+            "version": "6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "d094e337976dff9d8e2424e8485872194e768662"
+                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d094e337976dff9d8e2424e8485872194e768662",
-                "reference": "d094e337976dff9d8e2424e8485872194e768662",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/3f808fba627f2c5b69e2501217bf31af349c1427",
+                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/promises": "~1.0",
-                "guzzlehttp/psr7": "~1.1",
-                "php": ">=5.5.0"
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.3.1",
+                "php": ">=5.5"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "~4.0",
-                "psr/log": "~1.0"
+                "phpunit/phpunit": "^4.0",
+                "psr/log": "^1.0"
             },
             "type": "library",
             "extra": {
@@ -252,7 +252,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-03-21 20:02:09"
+            "time": "2016-07-15 17:22:37"
         },
         {
             "name": "guzzlehttp/promises",
@@ -365,16 +365,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.19.0",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf"
+                "reference": "55841909e2bcde01b5318c35f2b74f8ecc86e037"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5f56ed5212dc509c8dc8caeba2715732abb32dbf",
-                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/55841909e2bcde01b5318c35f2b74f8ecc86e037",
+                "reference": "55841909e2bcde01b5318c35f2b74f8ecc86e037",
                 "shasum": ""
             },
             "require": {
@@ -393,8 +393,8 @@
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
-                "raven/raven": "^0.13",
                 "ruflin/elastica": ">=0.90 <3.0",
+                "sentry/sentry": "^0.13",
                 "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
@@ -406,9 +406,9 @@
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
-                "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+                "sentry/sentry": "Allow sending log messages to a Sentry server"
             },
             "type": "library",
             "extra": {
@@ -439,7 +439,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-04-12 18:29:35"
+            "time": "2016-07-02 14:02:10"
         },
         {
             "name": "phpseclib/phpseclib",

@@ -16,15 +16,11 @@
  * limitations under the License.
  */
 
-use Symfony\Component\Debug\Debug;
-
 // composer autoloading
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = require_once __DIR__ . '/../src/app.php';
 
 $app['debug'] = true;
-
-Debug::enable();
 
 $app->run();
