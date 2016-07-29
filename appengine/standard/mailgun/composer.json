@@ -7,7 +7,7 @@
     },
     "require-dev": {
         "symfony/browser-kit": "^3.0",
-        "google/cloud-tools": "^0.3.0",
+        "google/cloud-tools": "<=1.0",
         "paragonie/random_compat": "^2.0"
     }
 }

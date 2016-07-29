@@ -4,7 +4,7 @@
         "twig/twig": "^1.24"
     },
     "require-dev": {
-        "google/cloud-tools": "dev-master",
+        "google/cloud-tools": "<=1.0",
         "phpunit/phpunit": "~4",
         "symfony/browser-kit": "^3.0"
     }

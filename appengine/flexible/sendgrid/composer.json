@@ -4,9 +4,9 @@
         "sendgrid/sendgrid": "^5.0"
     },
     "require-dev": {
-        "symfony/browser-kit": "^3.0",
-        "google/cloud-tools": "^0.3.0",
+        "google/cloud-tools": "<=1.0",
         "paragonie/random_compat": "^2.0",
+        "symfony/browser-kit": "^3.0",
         "symfony/yaml": "^3.1"
     }
 }
