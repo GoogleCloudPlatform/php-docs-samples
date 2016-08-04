@@ -1,6 +1,4 @@
-application: {{your_project_id}}
-version: 1
-module: phpmyadmin
+service: phpmyadmin
 runtime: php55
 api_version: 1
 
