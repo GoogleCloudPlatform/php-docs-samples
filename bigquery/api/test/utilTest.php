@@ -121,7 +121,7 @@ class utilTest extends PHPUnit_Framework_TestCase
         $datasets = listDatasets(self::$bigquery, self::$projectId);
         echo 'Datasets for ' . self::$projectId . ':';
         foreach ($datasets as $dataset) {
-            echo $dataset;
+            echo $dataset->getFriendlyName();
         }
         echo '';
     }
