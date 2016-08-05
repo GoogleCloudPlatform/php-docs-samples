@@ -1,4 +1,4 @@
-module: phpmyadmin
+service: phpmyadmin
 runtime: php55
 api_version: 1
 
