@@ -14,7 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class mainTest extends PHPUnit_Framework_TestCase
+
+namespace Google\Cloud\Samples\BigQuery\Tests;
+
+use Google\Cloud\Samples\BigQuery\DatasetsCommand;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
+
+/**
+ * Unit Tests for ImportCommand
+ */
+class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
@@ -25,7 +35,7 @@ class mainTest extends PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function test()
+    public function testDatasets()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -35,17 +45,18 @@ class mainTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('No project ID');
         }
 
-        // Invoke main.php.
-        global $argc, $argv;
-        $argv[1] = $projectId;
-        $argc = 2;
-        // Capture stdout.
-        ob_start();
-        include __DIR__ . '/../main.php';
-        $result = ob_get_contents();
-        ob_end_clean();
-        // Make sure it looks like Shakespeare.
-        $this->assertContains('hamlet', $result);
-        $this->assertContains('kinglear', $result);
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+
+        $application = new Application();
+        $application->add(new DatasetsCommand());
+        $commandTester = new CommandTester($application->get('datasets'));
+        $commandTester->execute(
+            ['--project' => $projectId],
+            ['interactive' => false]
+        );
+
+        $this->assertContains($datasetId, $commandTester->getDisplay());
     }
 }
