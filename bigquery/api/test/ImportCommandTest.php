@@ -240,6 +240,124 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Google\Cloud\BigQuery\Job', $result);
     }
 
+    public function testStreamRow()
+    {
+        $data = ['name' => 'Brent Shaffer', 'title' => 'PHP Developer'];
+        $import = new ImportCommand();
+        $insertResponse = $this->getMockBuilder('Google\Cloud\BigQuery\InsertResponse')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $insertResponse->expects($this->exactly(2))
+            ->method('isSuccessful')
+            ->will($this->returnValue(true));
+        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $table->expects($this->once())
+            ->method('insertRows')
+            ->with([
+                ['insertId' => '123', 'data' => $data]
+            ])
+            ->will($this->returnValue($insertResponse));;
+        $result = $import->streamRow($table, $data, '123');
+        $this->assertTrue($result);
+    }
+
+    public function testStreamRowWithErrors()
+    {
+        $output = $this->getMockBuilder('Symfony\Component\Console\Output\OutputInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $output->expects($this->once())
+            ->method('write')
+            ->with('invalid: Missing required field: title.' . PHP_EOL);
+        $GLOBALS['output'] = $output;
+        $data = ['name' => 'Brent Shaffer', 'title' => null];
+        $import = new ImportCommand();
+        $insertResponse = $this->getMockBuilder('Google\Cloud\BigQuery\InsertResponse')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $insertResponse->expects($this->exactly(2))
+            ->method('isSuccessful')
+            ->will($this->returnValue(false));
+        $insertResponse->expects($this->once())
+            ->method('failedRows')
+            ->will($this->returnValue([
+                [
+                    'errors' => [
+                        ['reason' => 'invalid', 'message' => 'Missing required field: title.']
+                    ]
+                ]
+            ]));
+        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $table->expects($this->once())
+            ->method('insertRows')
+            ->with([
+                ['insertId' => null, 'data' => $data]
+            ])
+            ->will($this->returnValue($insertResponse));
+        $result = $import->streamRow($table, $data);
+        $this->assertFalse($result);
+    }
+
+    public function testImportStreamRow()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+
+        $tableId = sprintf('test_table_%s', time());
+        $this->createTempTable($projectId, $datasetId, $tableId);
+
+        $questionHelper = $this->getMockBuilder('Symfony\Component\Console\Helper\QuestionHelper')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $questionHelper->expects($this->exactly(2))
+            ->method('ask')
+            ->will($this->onConsecutiveCalls('Brent Shaffer', 'PHP Developer'));
+        $helperSet = $this->getMockBuilder('Symfony\Component\Console\Helper\HelperSet')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $helperSet->expects($this->once())
+            ->method('get')
+            ->with('question')
+            ->will($this->returnValue($questionHelper));
+
+        // run the import
+        $application = new Application();
+        $application->add($import = new ImportCommand());
+        $import->setHelperSet($helperSet);
+        $commandTester = new CommandTester($application->get('import'));
+        $commandTester->execute([
+            'dataset.table' => $datasetId . '.' . $tableId,
+            '--project' => $projectId,
+        ], ['interactive' => false]);
+
+        $this->assertContains('Data streamed into BigQuery successfully', $commandTester->getDisplay());
+
+        sleep(1); // streaming doesn't use jobs, so we need this to ensure the data
+        $application->add(new QueryCommand());
+        $commandTester = new CommandTester($application->get('query'));
+        $commandTester->execute([
+            'query' => sprintf('SELECT * FROM [%s.%s]', $datasetId, $tableId),
+            '--project' => $projectId,
+        ], ['interactive' => false]);
+
+        $this->deleteTempTable($projectId, $datasetId, $tableId);
+
+        $this->assertContains('Brent Shaffer', $commandTester->getDisplay());
+    }
+
     /**
      * @dataProvider provideImport
      */
@@ -270,7 +388,6 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new ImportCommand());
         $application->add(new QueryCommand());
-        $application->add(new SchemaCommand());
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute([
             'dataset.table' => $datasetId . '.' . $tableId,
