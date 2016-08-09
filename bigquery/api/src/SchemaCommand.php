@@ -1,4 +1,19 @@
 <?php
+/**
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace Google\Cloud\Samples\BigQuery;
 
@@ -11,19 +26,19 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Exception\BadRequestException;
+use InvalidArgumentException;
 
 /**
-*
-*/
+ * Command line utility to create a BigQuery schema.
+ */
 class SchemaCommand extends Command
 {
     protected function configure()
     {
         $this
             ->setName('schema')
-            ->setDescription('BigQuery schema command')
+            ->setDescription('Create or delete a table schema in BigQuery')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command is an interactive tool for creating a BigQuery table
 and defining a schema.
@@ -33,14 +48,9 @@ and defining a schema.
 EOF
             )
             ->addArgument(
-                'dataset',
+                'dataset.table',
                 InputArgument::REQUIRED,
-                'The dataset to import to'
-            )
-            ->addArgument(
-                'table',
-                InputArgument::OPTIONAL,
-                'The table to import to'
+                'The table to be created or deleted'
             )
             ->addArgument(
                 'schema-json',
@@ -54,6 +64,18 @@ EOF
                 'The Google Cloud Platform project name to use for this invocation. ' .
                 'If omitted then the current gcloud project is assumed. '
             )
+            ->addOption(
+                'delete',
+                null,
+                InputOption::VALUE_NONE,
+                'Provide this option without a "schema-json" argument to delete the BigQuery table'
+            )
+            ->addOption(
+                'no-confirmation',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, this utility will not prompt when deleting a table with "--delete"'
+            )
         ;
     }
 
@@ -66,33 +88,50 @@ EOF
                     'You must supply a project ID using --project');
             }
         }
-        $message = sprintf('<info>Creating schema for project %s</info>', $projectId);
+        $message = sprintf('<info>Using project %s</info>', $projectId);
         $output->writeln($message);
 
-        $datasetId = $input->getArgument('dataset');
-        # [START build_service]
+        $fullTableName = $input->getArgument('dataset.table');
+        if (1 !== substr_count($fullTableName, '.')) {
+            throw new InvalidArgumentException('Table must in the format "dataset.table"');
+        }
+        list($datasetId, $tableId) = explode('.', $fullTableName);
         $bigQuery = new BigQueryClient([
             'projectId' => $projectId
         ]);
-        # [END build_service]
 
         $dataset = $bigQuery->dataset($datasetId);
         if (!$dataset->exists()) {
             $message = sprintf('Dataset %s does not exist. Create it? [y/n]: ', $datasetId);
             $q = new ConfirmationQuestion($message);
             if (!$question->ask($input, $output, $q)) {
-                return $output->writeln('<error>Task aborted by user</error>');
+                return $output->writeln('<error>Task cancelled by user.</error>');
             }
             $dataset = $bigQuery->createDataset($datasetId);
         }
 
-        if (!$tableId = $input->getArgument('table')) {
-            $q = new Question('Enter a BigQuery table name: ');
-            $q->setValidator($this->getNotEmptyValidator());
-            $tableId = $question->ask($input, $output, $q);
-        }
         if ($file = $input->getArgument('schema-json')) {
             $fields = json_decode(file_get_contents($file), true);
+        } elseif ($input->getOption('delete')) {
+            $table = $dataset->table($tableId);
+            if (!$table->exists()) {
+                throw new InvalidArgumentException('The supplied table does not exist');
+            }
+            if (!$input->isInteractive() && !$input->getOption('no-confirmation')) {
+                throw new \LogicException(
+                    '"no-confirmation" is required for deletion if the command is not interactive');
+            }
+            if (!$input->getOption('no-confirmation')) {
+                $message = sprintf(
+                    'Are you sure you want to delete the BigQuery table "%s"? [y/n]: ',
+                    $tableId
+                );
+                if (!$question->ask($input, $output, new ConfirmationQuestion($message))) {
+                    return $output->writeln('<error>Task cancelled by user.</error>');
+                }
+            }
+            $table->delete();
+            return $output->writeln('<info>Table deleted successfully</info>');
         } else {
             if (!$input->isInteractive()) {
                 throw new \LogicException(
@@ -104,7 +143,7 @@ EOF
         $message = $fieldsJson . "\nDoes this schema look correct? [y/n]: ";
         if ($input->isInteractive()) {
             if (!$question->ask($input, $output, new ConfirmationQuestion($message))) {
-                return $output->writeln('<error>Task aborted by user</error>');
+                return $output->writeln('<error>Task cancelled by user.</error>');
             }
         }
         try {

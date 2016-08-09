@@ -1,4 +1,19 @@
 <?php
+/**
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace Google\Cloud\Samples\BigQuery;
 
@@ -9,21 +24,26 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Exception\BadRequestException;
 
 /**
-*
-*/
+ * Command line utility to run a BigQuery query.
+ */
 class QueryCommand extends Command
 {
     protected function configure()
     {
         $this
             ->setName('query')
-            ->setDescription('BigQuery query command')
+            ->setDescription('Run a BigQuery query')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command queries your dataset
 EOF
+            )
+            ->addArgument(
+                'query',
+                InputArgument::OPTIONAL,
+                'The query to run'
             )
             ->addOption(
                 'project',
@@ -33,10 +53,10 @@ EOF
                 'If omitted then the current gcloud project is assumed. '
             )
             ->addOption(
-                'query',
+                'sync',
                 null,
-                InputOption::VALUE_REQUIRED,
-                'The query to run'
+                InputOption::VALUE_NONE,
+                'run the query syncronously'
             )
         ;
     }
@@ -52,9 +72,13 @@ EOF
         }
         $message = sprintf('<info>Running query for project %s</info>', $projectId);
         $output->writeln($message);
-        if (!$query = $input->getOption('query')) {
-            $q = new Question('Enter your query: ');
-            $query = $question->ask($input, $output, $q);
+        if (!$query = $input->getArgument('query')) {
+            if ($input->isInteractive()) {
+                $q = new Question('Enter your query: ');
+                $query = $question->ask($input, $output, $q);
+            } else {
+                throw new \Exception('You must supply a query argument');
+            }
         }
 
         # [START build_service]
@@ -62,22 +86,58 @@ EOF
             'projectId' => $projectId
         ]);
         # [END build_service]
-        # [START run_query]
-        $queryResults = $bigQuery->runQuery($query);
-        # [END run_query]
+        $sync = $input->getOption('sync');
+        try {
+            $queryResults = $this->runQuery($bigQuery, $query, $sync);
+        } catch (BadRequestException $e) {
+            $response = $e->getServiceException()->getResponse();
+            $errorJson = json_decode((string) $response->getBody(), true);
+            $error = $errorJson['error']['errors'][0]['message'];
+            $output->writeln(sprintf('<error>%s</error>', $error));
+            throw $e;
+        }
 
         # [START print_results]
         if ($queryResults->isComplete()) {
+            $i = 0;
             $rows = $queryResults->rows();
-            foreach ($rows as $i => $row) {
-                printf("--- %s ---\n", $i);
+            foreach ($rows as $row) {
+                $output->writeln(sprintf('--- Row %s ---', ++$i));
                 foreach ($row as $column => $value) {
-                    printf("%s: %s\n", $column, $value);
+                    $output->writeln(sprintf('%s: %s', $column, $value));
                 }
-                printf("\n");
+                $output->writeln('');
             }
+            $output->writeln(sprintf('Found %s row(s)', $i));
+        } else {
+            throw new \Exception('The query failed to complete');
         }
         # [END print_results]
+    }
+
+    public function runQuery(BigQueryClient $bigQuery, $query, $sync = false)
+    {
+        if ($sync) {
+            # [START run_query]
+            $queryResults = $bigQuery->runQuery($query);
+            # [END run_query]
+        } else {
+            # [START run_query_async]
+            $job = $bigQuery->runQueryAsJob($query);
+            # [END run_query_async]
+            # [START poll_job]
+            $intervalMs = 2000; // check every 2 seconds
+            while (true) {
+                $job->reload();
+                if ($job->isComplete()) {
+                    break;
+                }
+                usleep(1000 * $intervalMs);
+            }
+            $queryResults = $job->queryResults();
+            # [END poll_job]
+        }
+        return $queryResults;
     }
 
     private function getProjectIdFromGcloud()
