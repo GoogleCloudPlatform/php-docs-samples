@@ -46,19 +46,19 @@ test_dataset3
 
 Import data into a BigQuery table. You can import from several sources.
 
-1.  Import from a local JSON or CSV file. Make sure your files are [formatted correctly][0]
+1.  Import from a local JSON or CSV file. Make sure your files are [formatted correctly][1]
 
     ```sh
     $ php bigquery.php import test_dataset.test_table /path/to/your_data.csv
     $ php bigquery.php import test_dataset.test_table /path/to/your_data.json
 ```
-1.  Import from [a JSON or CSV file in Google Cloud Storage][1]
+1.  Import from [a JSON or CSV file in Google Cloud Storage][2]
 
     ```sh
     $ php bigquery.php import test_dataset.test_table gs://your-storage-bucket/your_data.csv
     $ php bigquery.php import test_dataset.test_table gs://your-storage-bucket/your_data.json
 ```
-1.  Import from a [Datastore Backup][2]
+1.  Import from a [Datastore Backup][3]
 
     ```sh
     $ php bigquery.php import test_dataset.test_table gs://your-storage-bucket/your_data.backup_info
@@ -135,6 +135,6 @@ Table deleted successfully
 
 * See [LICENSE](../../LICENSE)
 
-[0]: https://cloud.google.com/bigquery/loading-data#specifying_the_source_format
-[1]: https://cloud.google.com/bigquery/docs/loading-data-cloud-storage
-[2]: https://cloud.google.com/bigquery/loading-data-cloud-datastore
+[1]: https://cloud.google.com/bigquery/loading-data#specifying_the_source_format
+[2]: https://cloud.google.com/bigquery/docs/loading-data-cloud-storage
+[3]: https://cloud.google.com/bigquery/loading-data-cloud-datastore
