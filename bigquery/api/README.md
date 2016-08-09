@@ -70,6 +70,10 @@ one record at a time. This approach enables querying data without the delay of r
 
 ```sh
 $ php bigquery.php import test_dataset.test_table
+Import data for project cloud-samples-tests-php? [y/n]: y
+name (required): Brent Shaffer
+title (required): PHP Developer
+Data streamed into BigQuery successfully
 ```
 
 ### query

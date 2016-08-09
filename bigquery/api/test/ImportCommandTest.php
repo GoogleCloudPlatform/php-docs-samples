@@ -121,7 +121,6 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     public function testImportFromFileWithJson()
     {
         $file = tempnam(sys_get_temp_dir(), 'bigquery-source');

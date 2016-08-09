@@ -28,6 +28,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Exception\BadRequestException;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * Command line utility to create a BigQuery schema.
@@ -102,17 +103,26 @@ EOF
 
         $dataset = $bigQuery->dataset($datasetId);
         if (!$dataset->exists()) {
-            $message = sprintf('Dataset %s does not exist. Create it? [y/n]: ', $datasetId);
-            $q = new ConfirmationQuestion($message);
-            if (!$question->ask($input, $output, $q)) {
-                return $output->writeln('<error>Task cancelled by user.</error>');
+            if ($input->getOption('delete')) {
+                throw new InvalidArgumentException('The supplied dataset does not exist');
+            }
+            if (!$input->getOption('no-confirmation')) {
+                if (!$input->isInteractive()) {
+                    throw new LogicException('"no-confirmation" is required to create a dataset if the command is not interactive');
+                }
+                $message = sprintf('Dataset %s does not exist. Create it? [y/n]: ', $datasetId);
+                $q = new ConfirmationQuestion($message);
+                if (!$question->ask($input, $output, $q)) {
+                    return $output->writeln('<error>Task cancelled by user.</error>');
+                }
             }
             $dataset = $bigQuery->createDataset($datasetId);
         }
 
-        if ($file = $input->getArgument('schema-json')) {
-            $fields = json_decode(file_get_contents($file), true);
-        } elseif ($input->getOption('delete')) {
+        if ($input->getOption('delete')) {
+            if ($input->getArgument('schema-json')) {
+                throw new LogicException('Cannot supply "--delete" with the "schema-json" argument');
+            }
             $table = $dataset->table($tableId);
             if (!$table->exists()) {
                 throw new InvalidArgumentException('The supplied table does not exist');
@@ -132,6 +142,8 @@ EOF
             }
             $table->delete();
             return $output->writeln('<info>Table deleted successfully</info>');
+        } elseif ($file = $input->getArgument('schema-json')) {
+            $fields = json_decode(file_get_contents($file), true);
         } else {
             if (!$input->isInteractive()) {
                 throw new \LogicException(
