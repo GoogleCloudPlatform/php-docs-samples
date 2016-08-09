@@ -63,6 +63,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // set the output to globals for functions defined in functions.php
+        $GLOBALS['output'] = $output;
         $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
             if (!$projectId = $this->getProjectIdFromGcloud()) {
@@ -102,13 +104,12 @@ EOF
             $i = 0;
             $rows = $queryResults->rows();
             foreach ($rows as $row) {
-                $output->writeln(sprintf('--- Row %s ---', ++$i));
+                printf('--- Row %s ---' . PHP_EOL, ++$i);
                 foreach ($row as $column => $value) {
-                    $output->writeln(sprintf('%s: %s', $column, $value));
+                    printf('%s: %s' . PHP_EOL, $column, $value);
                 }
-                $output->writeln('');
             }
-            $output->writeln(sprintf('Found %s row(s)', $i));
+            printf('Found %s row(s)' . PHP_EOL, $i);
         } else {
             throw new \Exception('The query failed to complete');
         }

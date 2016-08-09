@@ -65,6 +65,13 @@ Import data into a BigQuery table. You can import from several sources.
     $ php bigquery.php import test_dataset.test_table gs://your-storage-bucket/your_data.backup_info
 ```
 
+You can also [stream data into bigquery](https://cloud.google.com/bigquery/streaming-data-into-bigquery)
+one record at a time. This approach enables querying data without the delay of running a load job:
+
+```sh
+$ php bigquery.php import test_dataset.test_table
+```
+
 ### query
 
 Run a BigQuery query
@@ -74,11 +81,9 @@ $ php bigquery.php query "SELECT TOP(corpus, 3) as title, COUNT(*) as unique_wor
 --- Row 1 ---
 title: hamlet
 unique_words: 5318
-
 --- Row 2 ---
 title: kinghenryv
 unique_words: 5104
-
 --- Row 3 ---
 title: cymbeline
 unique_words: 4875

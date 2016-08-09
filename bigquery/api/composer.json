@@ -7,6 +7,9 @@
     "autoload": {
         "psr-4": {
             "Google\\Cloud\\Samples\\BigQuery\\": "src/"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     }
 }

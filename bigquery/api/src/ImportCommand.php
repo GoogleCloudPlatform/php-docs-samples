@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\BigQuery\Table as BigQueryTable;
 use Google\Cloud\ExponentialBackoff;
@@ -64,7 +65,7 @@ EOF
             )
             ->addArgument(
                 'source',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'The filepath, datastore key, or GCS object path to use.'
             )
             ->addOption(
@@ -73,16 +74,23 @@ EOF
                 InputOption::VALUE_REQUIRED,
                 'The Google Cloud Platform project name to use for this invocation. ' .
                 'If omitted then the current gcloud project is assumed. '
+            )->addOption(
+                'stream',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the streamed rows will be appended to an existing table. '
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // set the output to globals for functions defined in functions.php
+        $GLOBALS['output'] = $output;
+        $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
             if ($projectId = $this->getProjectIdFromGcloud()) {
                 if ($input->isInteractive()) {
-                    $question = $this->getHelper('question');
                     $message = sprintf('Import data for project %s? [y/n]: ', $projectId);
                     if (!$question->ask($input, $output, new ConfirmationQuestion($message))) {
                         return $output->writeln('<error>Task cancelled by user.</error>');
@@ -117,6 +125,15 @@ EOF
             }
         }
 
+        if (empty($source)) {
+            $info = $table->info();
+            $data = $this->getRowData($info['schema']['fields'], $question, $input, $output);
+            if ($this->streamRow($table, $data)) {
+                $output->writeln('<info>Data streamed into BigQuery successfully</info>');
+            }
+            return;
+        }
+
         if (0 === strpos($source, 'gs://')) {
             # [START storage_client]
             $storage = new StorageClient([
@@ -131,8 +148,8 @@ EOF
         # [START job_completion]
         // reload the job until it is complete
         $backoff = new ExponentialBackoff(10);
-        $backoff->execute(function ($job) use ($output) {
-            $output->writeln('Waiting for job to complete');
+        $backoff->execute(function ($job) {
+            printf('Waiting for job to complete' . PHP_EOL);
             $job->reload();
             if (!$job->isComplete()) {
                 throw new \Exception('Job has not yet completed', 500);
@@ -187,6 +204,46 @@ EOF
         $job = $table->load(fopen($source, 'r'), $options);
         # [END import_from_file]
         return $job;
+    }
+
+    public function streamRow(BigQueryTable $table, $data, $insertId = null)
+    {
+        # [START stream_rows]
+        $insertResponse = $table->insertRows([
+            ['insertId' => $insertId, 'data' => $data],
+        ]);
+        if (!$insertResponse->isSuccessful()) {
+            foreach ($insertResponse->failedRows() as $row) {
+                foreach ($row['errors'] as $error) {
+                    printf('%s: %s' . PHP_EOL, $error['reason'], $error['message']);
+                }
+            }
+        }
+        # [END stream_rows]
+        return $insertResponse->isSuccessful();
+    }
+
+    private function getRowData($fields, $question, $input, $output)
+    {
+        $data = [];
+        foreach ($fields as $field) {
+            if ($field['type'] === 'RECORD') {
+                throw new \Exception('Field type RECORD not supported for streaming. Use JSON or Datastore');
+            }
+            $required = $field['mode'] === 'REQUIRED';
+            $repeated = $askAgain = $field['mode'] === 'REPEATED';
+            $q = new Question(sprintf('%s%s: ', $field['name'], $required ? ' (required)' : ''));
+            $answers = [];
+            do {
+                if ($answer = $question->ask($input, $output, $q)) {
+                    $answers[] = $answer;
+                } else {
+                    $askAgain = false;
+                }
+            } while($askAgain);
+            $data[$field['name']] = $repeated ? $answers : array_shift($answers);
+        }
+        return $data;
     }
 
     private function getProjectIdFromGcloud()

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d4f20762ea0d5ce3846e7ded0a5be26c",
+    "hash": "40a1ef7d4765753b6f70f7961c7173f4",
     "content-hash": "57f15a80815bac47a211b07d007e7bbf",
     "packages": [
         {
@@ -198,12 +198,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/gcloud-php.git",
-                "reference": "f35030cc34e111312ab7b88446d1ab50031e8ed6"
+                "reference": "f60da85dcc7f4b32e7b579428d3ab2c1d87a0e96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/f35030cc34e111312ab7b88446d1ab50031e8ed6",
-                "reference": "f35030cc34e111312ab7b88446d1ab50031e8ed6",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/f60da85dcc7f4b32e7b579428d3ab2c1d87a0e96",
+                "reference": "f60da85dcc7f4b32e7b579428d3ab2c1d87a0e96",
                 "shasum": ""
             },
             "require": {
@@ -218,7 +218,8 @@
             "require-dev": {
                 "phpdocumentor/phpdocumentor": "2.8.*",
                 "phpunit/phpunit": "4.8.*",
-                "squizlabs/php_codesniffer": "2.*"
+                "squizlabs/php_codesniffer": "2.*",
+                "symfony/console": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -252,7 +253,7 @@
                 "google cloud",
                 "google cloud platform"
             ],
-            "time": "2016-08-08 22:49:46"
+            "time": "2016-08-09 17:56:31"
         },
         {
             "name": "guzzlehttp/guzzle",
