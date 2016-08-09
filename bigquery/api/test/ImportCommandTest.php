@@ -257,7 +257,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             ->with([
                 ['insertId' => '123', 'data' => $data]
             ])
-            ->will($this->returnValue($insertResponse));;
+            ->will($this->returnValue($insertResponse));
         $result = $import->streamRow($table, $data, '123');
         $this->assertTrue($result);
     }

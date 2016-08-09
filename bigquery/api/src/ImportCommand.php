@@ -240,7 +240,7 @@ EOF
                 } else {
                     $askAgain = false;
                 }
-            } while($askAgain);
+            } while ($askAgain);
             $data[$field['name']] = $repeated ? $answers : array_shift($answers);
         }
         return $data;

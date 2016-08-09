@@ -78,7 +78,7 @@ class SchemaCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('schema'));
         $commandTester->execute(
             [
-                'dataset.table' => $datasetId.'.table_name',
+                'dataset.table' => $datasetId . '.table_name',
                 '--project' => $projectId,
             ],
             ['interactive' => false]
