@@ -36,7 +36,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$gcsBucket = getenv('GOOGLE_STORAGE_BUCKET');
+        self::$gcsBucket = getenv('GOOGLE_BUCKET_NAME');
     }
 
     /**
@@ -103,12 +103,20 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidTableNameThrowsException()
     {
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+
         // run the import
         $application = new Application();
         $application->add(new ImportCommand());
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute(
-            ['dataset.table' => 'invalid.table.name', 'source' => 'foo'],
+            [
+                'dataset.table' => 'invalid.table.name',
+                'source' => 'foo',
+                '--project' => $projectId,
+            ],
             ['interactive' => false]
         );
     }
@@ -287,7 +295,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
 
     public function provideImport()
     {
-        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
+        $bucket = getenv('GOOGLE_BUCKET_NAME');
         return [
             [__DIR__ . '/data/test_data.csv'],
             [__DIR__ . '/data/test_data.json'],

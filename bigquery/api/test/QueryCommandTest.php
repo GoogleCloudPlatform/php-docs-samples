@@ -92,7 +92,10 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
-        $commandTester->execute(['query' => $query, '--project' => $projectId], ['interactive' => false]);
+        $commandTester->execute(
+            ['query' => $query, '--project' => $projectId],
+            ['interactive' => false]
+        );
 
         // Make sure it looks like Shakespeare.
         $this->assertContains('hamlet', $commandTester->getDisplay());
@@ -111,7 +114,10 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
-        $commandTester->execute(['query' => $query, '--project' => $projectId], ['interactive' => false]);
+        $commandTester->execute(
+            ['query' => $query, '--project' => $projectId],
+            ['interactive' => false]
+        );
 
         $this->assertContains('Found 0 row(s)', $commandTester->getDisplay());
     }
@@ -139,7 +145,10 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
-        $commandTester->execute(['query' => $query, '--project' => $projectId], ['interactive' => false]);
+        $commandTester->execute(
+            ['query' => $query, '--project' => $projectId],
+            ['interactive' => false]
+        );
 
         $this->assertContains('Found 1 row(s)', $commandTester->getDisplay());
     }
