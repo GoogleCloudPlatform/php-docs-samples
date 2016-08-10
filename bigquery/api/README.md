@@ -23,13 +23,29 @@ This simple command-line application demonstrates how to invoke Google BigQuery 
 5.  Run `php bigquery.php`. The following commands are available:
 
     ```sh
-    datasets  List BigQuery datasets for a project
-    import    Import data into a BigQuery table
-    query     Run a BigQuery query
-    schema    Create or delete a table schema in BigQuery
+    browse-table  Browse a BigQuery table
+    datasets      List BigQuery datasets
+    export        Export data from a BigQuery table into a Cloud Storage bucket
+    import        Import data into a BigQuery table
+    projects      List BigQuery projects
+    query         Run a BigQuery query
+    schema        Create or delete a table schema in BigQuery
+    tables        List BigQuery tables
 ```
 
 ## The commands
+
+### browse-table
+
+Browse a BigQuery table.
+
+```sh
+$ php bigquery.php browse-table test_dataset1.test_table1
+--- Row 1 ---
+name: Brent Shaffer
+title: PHP Developer
+[Press enter for next page, "n" to exit]
+```
 
 ### datasets
 
@@ -40,6 +56,15 @@ $ php bigquery.php datasets
 test_dataset1
 test_dataset2
 test_dataset3
+```
+
+### export
+
+Export data from a BigQuery table:
+
+```sh
+$ php bigquery.php export test_dataset.test_table gs://your_bucket/your_data.csv --format=csv
+$ php bigquery.php export test_dataset.test_table gs://your_bucket/your_data.json --format=json
 ```
 
 ### import
@@ -74,6 +99,17 @@ Import data for project cloud-samples-tests-php? [y/n]: y
 name (required): Brent Shaffer
 title (required): PHP Developer
 Data streamed into BigQuery successfully
+```
+
+### projects
+
+List your BigQuery projects.
+
+```sh
+$ php bigquery.php projects
+test_project1
+test_project2
+test_project3
 ```
 
 ### query
@@ -135,6 +171,17 @@ $ php bigquery.php schema my_dataset.my_table --project your-project-id --delete
 Using project your-project-id
 Are you sure you want to delete the BigQuery table "my_table"? [y/n]: y
 Table deleted successfully
+```
+
+### tables
+
+List tables for a BigQuery dataset.
+
+```sh
+$ php bigquery.php tables test_dataset1
+test_table1
+test_table2
+test_table3
 ```
 
 ## Contributing changes

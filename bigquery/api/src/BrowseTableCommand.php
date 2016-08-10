@@ -18,29 +18,37 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Output\OutputInterface;
+use InvalidArgumentException;
 use Exception;
 
 /**
- * Command line utility to list BigQuery datasets.
+ * Command line utility to list BigQuery tables.
  *
- * Usage: php bigquery.php datasets
+ * Usage: php bigquery.php tables
  */
-class DatasetsCommand extends Command
+class BrowseTableCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('datasets')
-            ->setDescription('List BigQuery datasets')
+            ->setName('browse-table')
+            ->setDescription('Browse a BigQuery table')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command lists all the datasets associated with your project.
+The <info>%command.name%</info> command lists all the tables associated with BigQuery.
 
     <info>php %command.full_name%</info>
 
 EOF
+            )
+            ->addArgument(
+                'dataset.table',
+                InputArgument::REQUIRED,
+                'The dataset to list tables'
             )
             ->addOption(
                 'project',
@@ -48,6 +56,13 @@ EOF
                 InputOption::VALUE_REQUIRED,
                 'The Google Cloud Platform project name to use for this invocation. ' .
                 'If omitted then the current gcloud project is assumed. '
+            )
+            ->addOption(
+                'max-results',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The number of rows to return on each API call.',
+                10
             )
         ;
     }
@@ -61,7 +76,27 @@ EOF
                     'You must supply a project ID using --project');
             }
         }
-        list_datasets($projectId);
+        $maxResults = $input->getOption('max-results');
+        $fullTableName = $input->getArgument('dataset.table');
+        if (1 !== substr_count($fullTableName, '.')) {
+            throw new InvalidArgumentException('Table must in the format "dataset.table"');
+        }
+        list($datasetId, $tableId) = explode('.', $fullTableName);
+
+        // create the function to determine if we should paginate
+        $question = $this->getHelper('question');
+        $q = new ConfirmationQuestion('[Press enter for next page, "n" to exit]');
+        $shouldPaginate = function () use ($input, $output, $question, $q) {
+            if (!$input->isInteractive()) {
+                return false;
+            }
+
+            return $question->ask($input, $output, $q);
+        };
+
+        $totalRows = paginate_table($projectId, $datasetId, $tableId, $maxResults, $shouldPaginate);
+
+        printf('Found %s row(s)' . PHP_EOL, $totalRows);
     }
 
     private function getProjectIdFromGcloud()

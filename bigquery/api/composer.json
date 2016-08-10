@@ -9,7 +9,18 @@
             "Google\\Cloud\\Samples\\BigQuery\\": "src/"
         },
         "files": [
-            "src/functions.php"
+            "src/functions/browse_table.php",
+            "src/functions/delete_table.php",
+            "src/functions/export_table.php",
+            "src/functions/functions.php",
+            "src/functions/import_from_file.php",
+            "src/functions/import_from_storage.php",
+            "src/functions/list_datasets.php",
+            "src/functions/list_projects.php",
+            "src/functions/list_tables.php",
+            "src/functions/run_query.php",
+            "src/functions/run_query_as_job.php",
+            "src/functions/stream_row.php"
         ]
     }
 }

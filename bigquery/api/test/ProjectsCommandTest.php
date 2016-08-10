@@ -17,46 +17,42 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
-use Google\Cloud\Samples\BigQuery\DatasetsCommand;
+use Google\Auth\CredentialsLoader;
+use Google\Cloud\Samples\BigQuery\ProjectsCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for DatasetsCommand.
+ * Unit Tests for ProjectsCommand.
  */
-class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
+class ProjectsCommandTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $hasCredentials;
-
-    public static function setUpBeforeClass()
+    public function testProjects()
     {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
-
-    public function testDatasets()
-    {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
-            $this->markTestSkipped('No bigquery dataset name');
+        if (!CredentialsLoader::fromWellKnownFile()) {
+            if ($keyFile = getenv('GOOGLE_KEY_FILE')) {
+                $home = getenv('HOME');
+                $path = sprintf('%s/.config/gcloud/', $home);
+                @mkdir($path, 0777, true);
+                file_put_contents(
+                    $path . '/application_default_credentials.json',
+                    $keyFile
+                );
+            } else {
+                $this->markTestSkipped('No key file');
+            }
         }
-
         $application = new Application();
-        $application->add(new DatasetsCommand());
-        $commandTester = new CommandTester($application->get('datasets'));
+        $application->add(new ProjectsCommand());
+        $commandTester = new CommandTester($application->get('projects'));
         $commandTester->execute(
-            ['--project' => $projectId],
+            [],
             ['interactive' => false]
         );
 
-        $this->assertContains($datasetId, $commandTester->getDisplay());
+        $this->assertContains($projectId, $commandTester->getDisplay());
     }
 }

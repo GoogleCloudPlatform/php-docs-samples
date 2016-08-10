@@ -22,7 +22,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for ImportCommand
+ * Unit Tests for SchemaCommand.
  */
 class SchemaCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,7 +67,6 @@ class SchemaCommandTest extends \PHPUnit_Framework_TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
@@ -143,7 +142,6 @@ class SchemaCommandTest extends \PHPUnit_Framework_TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
@@ -171,7 +169,6 @@ class SchemaCommandTest extends \PHPUnit_Framework_TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
@@ -200,11 +197,9 @@ class SchemaCommandTest extends \PHPUnit_Framework_TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
-
         if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
             $this->markTestSkipped('No bigquery table name');
         }

@@ -17,14 +17,14 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
-use Google\Cloud\Samples\BigQuery\DatasetsCommand;
+use Google\Cloud\Samples\BigQuery\BrowseTableCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for DatasetsCommand.
+ * Unit Tests for BrowseTableCommand.
  */
-class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
+class BrowseTableCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
@@ -35,28 +35,33 @@ class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function testDatasets()
+    public function testBrowseTable()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
 
         $application = new Application();
-        $application->add(new DatasetsCommand());
-        $commandTester = new CommandTester($application->get('datasets'));
+        $application->add(new BrowseTableCommand());
+        $commandTester = new CommandTester($application->get('browse-table'));
         $commandTester->execute(
-            ['--project' => $projectId],
+            [
+                'dataset.table' => $datasetId . '.' . $tableId,
+                '--max-results' => 1,
+                '--project' => $projectId,
+            ],
             ['interactive' => false]
         );
 
-        $this->assertContains($datasetId, $commandTester->getDisplay());
+        $this->assertContains('Found 1 row(s)', $commandTester->getDisplay());
     }
 }

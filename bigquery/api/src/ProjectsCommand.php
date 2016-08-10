@@ -19,35 +19,28 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Google\Auth\CredentialsLoader;
 use Exception;
 
 /**
- * Command line utility to list BigQuery datasets.
+ * Command line utility to list BigQuery projects.
  *
- * Usage: php bigquery.php datasets
+ * Usage: php bigquery.php projects
  */
-class DatasetsCommand extends Command
+class ProjectsCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('datasets')
-            ->setDescription('List BigQuery datasets')
+            ->setName('projects')
+            ->setDescription('List BigQuery projects')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command lists all the datasets associated with your project.
+The <info>%command.name%</info> command lists all the projects associated with BigQuery.
 
     <info>php %command.full_name%</info>
 
 EOF
-            )
-            ->addOption(
-                'project',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'The Google Cloud Platform project name to use for this invocation. ' .
-                'If omitted then the current gcloud project is assumed. '
             )
         ;
     }
@@ -55,18 +48,15 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $GLOBALS['output'] = $output;
-        if (!$projectId = $input->getOption('project')) {
-            if (!$projectId = $this->getProjectIdFromGcloud()) {
-                throw new Exception('Could not derive a project ID from gloud. ' .
-                    'You must supply a project ID using --project');
-            }
+        if (!$keyFile = CredentialsLoader::fromWellKnownFile()) {
+            throw new Exception('Could not derive a key file. Run "gcloud auth login".');
         }
-        list_datasets($projectId);
+        list_projects();
     }
 
-    private function getProjectIdFromGcloud()
+    private function getAccessTokenFromGcloud()
     {
-        exec("gcloud config list --format 'value(core.project)' 2>/dev/null", $output, $return_var);
+        exec('gcloud beta auth application-default print-access-token 2>/dev/null', $output, $return_var);
 
         if (0 === $return_var) {
             return array_pop($output);

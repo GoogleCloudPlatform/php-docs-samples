@@ -24,14 +24,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\BigQuery\Table as BigQueryTable;
-use Google\Cloud\ExponentialBackoff;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\ServiceBuilder;
 use InvalidArgumentException;
+use Exception;
 
 /**
  * Command line utility to import data into BigQuery.
+ *
+ * Usage: php bigquery.php import
  */
 class ImportCommand extends Command
 {
@@ -46,15 +46,15 @@ a file, Datastore, or Cloud Storage.
 
 Import a JSON file
 
-    <info>php %command.full_name% DATASET_ID TABLE_NAME /path/to/my_data.json</info>
+    <info>php %command.full_name% DATASET.TABLE /path/to/my_data.json</info>
 
 Import from Google Cloud Storage
 
-    <info>php %command.full_name% DATASET_ID TABLE_NAME gs://my_bucket/my_data.csv</info>
+    <info>php %command.full_name% DATASET.TABLE gs://my_bucket/my_data.csv</info>
 
 Import from Google Datastore
 
-    <info>php %command.full_name% DATASET_ID TABLE_NAME gs://my_bucket/datastore_entity.backup_info</info>
+    <info>php %command.full_name% DATASET.TABLE gs://my_bucket/datastore_entity.backup_info</info>
 
 EOF
             )
@@ -97,7 +97,7 @@ EOF
                     }
                 }
             } else {
-                throw new \Exception('Could not derive a project ID from gloud. ' .
+                throw new Exception('Could not derive a project ID from gloud. ' .
                     'You must supply a project ID using --project');
             }
         }
@@ -106,13 +106,12 @@ EOF
             throw new InvalidArgumentException('Table must in the format "dataset.table"');
         }
         list($datasetId, $tableId) = explode('.', $fullTableName);
-        # [START build_service]
-        $bigQuery = new BigQueryClient([
-            'projectId' => $projectId
+        $builder = new ServiceBuilder([
+            'projectId' => $projectId,
         ]);
+        $bigQuery = $builder->bigQuery();
         $dataset = $bigQuery->dataset($datasetId);
         $table = $dataset->table($tableId);
-        # [END build_service]
         $source = $input->getArgument('source');
         $isDatastoreBackup = '.backup_info' === substr($source, -12);
         if (!$dataset->exists()) {
@@ -128,99 +127,20 @@ EOF
         if (empty($source)) {
             $info = $table->info();
             $data = $this->getRowData($info['schema']['fields'], $question, $input, $output);
-            if ($this->streamRow($table, $data)) {
-                $output->writeln('<info>Data streamed into BigQuery successfully</info>');
+            stream_row($projectId, $datasetId, $tableId, $data);
+        } elseif (0 === strpos($source, 'gs://')) {
+            $source = substr($source, 5);
+            if (false === strpos($source, '/')) {
+                throw new InvalidArgumentException('Source does not contain object name');
             }
-            return;
-        }
-
-        if (0 === strpos($source, 'gs://')) {
-            # [START storage_client]
-            $storage = new StorageClient([
-                'projectId' => $projectId
-            ]);
-            # [END storage_client]
-            $job = $this->importFromCloudStorage($table, $storage, $source);
+            list($bucketName, $objectName) = explode('/', $source, 2);
+            import_from_storage($projectId, $datasetId, $tableId, $bucketName, $objectName);
         } else {
-            $job = $this->importFromFile($table, $source);
-        }
-
-        # [START job_completion]
-        // reload the job until it is complete
-        $backoff = new ExponentialBackoff(10);
-        $backoff->execute(function ($job) {
-            printf('Waiting for job to complete' . PHP_EOL);
-            $job->reload();
-            if (!$job->isComplete()) {
-                throw new \Exception('Job has not yet completed', 500);
+            if (!(file_exists($source) && is_readable($source))) {
+                throw new InvalidArgumentException('Source file does not exist or is not readable');
             }
-        }, [$job]);
-        # [END job_completion]
-
-        // check if the job has errors
-        if (isset($job->info()['status']['errorResult'])) {
-            $error = $job->info()['status']['errorResult']['message'];
-            $output->writeln(sprintf('<error>Error running job: %s</error>', $error));
-        } else {
-            $output->writeln('<info>Data imported successfully</info>');
+            import_from_file($projectId, $datasetId, $tableId, $source);
         }
-    }
-
-    public function importFromCloudStorage(BigQueryTable $table, StorageClient $storage, $source)
-    {
-        $source = substr($source, 5);
-        if (false === strpos($source, '/')) {
-            throw new InvalidArgumentException('Source does not contain object name');
-        }
-        list($bucketName, $objectName) = explode('/', $source, 2);
-        # [START import_from_storage]
-        $options = [];
-        if ('.backup_info' === substr($objectName, -12)) {
-            $options['jobConfig'] = [ 'sourceFormat' => 'DATASTORE_BACKUP' ];
-        } elseif ('.json' === substr($objectName, -5)) {
-            $options['jobConfig'] = [ 'sourceFormat' => 'NEWLINE_DELIMITED_JSON' ];
-        }
-        $object = $storage->bucket($bucketName)->object($objectName);
-        $job = $table->loadFromStorage($object, $options);
-        # [END import_from_storage]
-        return $job;
-    }
-
-    public function importFromFile(BigQueryTable $table, $source)
-    {
-        if (!(file_exists($source) && is_readable($source))) {
-            throw new InvalidArgumentException('Source file does not exist or is not readable');
-        }
-        # [START import_from_file]
-        $options = [];
-        $pathInfo = pathinfo($source) + ['extension' => null];
-        if ('csv' === $pathInfo['extension']) {
-            $options['jobConfig'] = [ 'sourceFormat' => 'CSV' ];
-        } elseif ('json' === $pathInfo['extension']) {
-            $options['jobConfig'] = [ 'sourceFormat' => 'NEWLINE_DELIMITED_JSON' ];
-        } else {
-            throw new InvalidArgumentException('Source format unknown. Must be JSON or CSV');
-        }
-        $job = $table->load(fopen($source, 'r'), $options);
-        # [END import_from_file]
-        return $job;
-    }
-
-    public function streamRow(BigQueryTable $table, $data, $insertId = null)
-    {
-        # [START stream_rows]
-        $insertResponse = $table->insertRows([
-            ['insertId' => $insertId, 'data' => $data],
-        ]);
-        if (!$insertResponse->isSuccessful()) {
-            foreach ($insertResponse->failedRows() as $row) {
-                foreach ($row['errors'] as $error) {
-                    printf('%s: %s' . PHP_EOL, $error['reason'], $error['message']);
-                }
-            }
-        }
-        # [END stream_rows]
-        return $insertResponse->isSuccessful();
     }
 
     private function getRowData($fields, $question, $input, $output)
@@ -228,7 +148,7 @@ EOF
         $data = [];
         foreach ($fields as $field) {
             if ($field['type'] === 'RECORD') {
-                throw new \Exception('Field type RECORD not supported for streaming. Use JSON or Datastore');
+                throw new Exception('Field type RECORD not supported for streaming. Use JSON or Datastore');
             }
             $required = $field['mode'] === 'REQUIRED';
             $repeated = $askAgain = $field['mode'] === 'REPEATED';
@@ -243,6 +163,7 @@ EOF
             } while ($askAgain);
             $data[$field['name']] = $repeated ? $answers : array_shift($answers);
         }
+
         return $data;
     }
 
