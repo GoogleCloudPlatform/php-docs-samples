@@ -45,7 +45,9 @@ $app->get('/', function (Application $app, Request $request) {
         $octets = ['bad', 'ip'];  // IP address will be recorded as bad.ip.
     }
     // Replace empty chunks with zeros.
-    $octets = array_map(function ($x) { return $x == '' ? '0' : $x; }, $octets);
+    $octets = array_map(function ($x) {
+        return $x == '' ? '0' : $x;
+    }, $octets);
     $user_ip = $octets[0] . $separator . $octets[1];
 
     // Insert a visit into the database.

@@ -48,7 +48,9 @@ $app->get('/', function (Application $app, Request $request) {
         $octets = ['bad', 'ip'];
     }
     // Replace empty chunks with zeros.
-    $octets = array_map(function ($x) { return $x == '' ? '0' : $x; }, $octets);
+    $octets = array_map(function ($x) {
+        return $x == '' ? '0' : $x;
+    }, $octets);
     $user_ip = $octets[0] . $separator . $octets[1];
     // Create an entity to insert into datastore.
     $key = new \Google_Service_Datastore_Key(['path' => ['kind' => 'visit']]);
