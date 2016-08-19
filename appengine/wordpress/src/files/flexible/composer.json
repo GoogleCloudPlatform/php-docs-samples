@@ -3,6 +3,6 @@
         "google/appengine-php-sdk": "^1.9"
     },
     "require-dev": {
-        "wp-cli/wp-cli": "^0.22.0"
+        "wp-cli/wp-cli": "^0.24.1"
     }
 }

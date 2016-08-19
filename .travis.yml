@@ -24,7 +24,7 @@ matrix:
       env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
     - php: 5.6
     - php: hhvm
-    - php: nightly
+    - php: 7.0
 
 env:
   global:
