@@ -27,8 +27,10 @@ class UsersApiTest extends WebTestCase
         $app = require __DIR__ . '/../../app.php';
 
         // Create mock user
-        $this->user = $this->getMockBuilder('User')
-            ->setMethods(array('getNickname'))->getMock();
+        $this->user = $this->getMockBuilder('google\appengine\api\users\User')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getNickname'))
+            ->getMock();
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);
