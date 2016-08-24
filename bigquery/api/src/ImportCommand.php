@@ -97,7 +97,7 @@ EOF
                     }
                 }
             } else {
-                throw new Exception('Could not derive a project ID from gloud. ' .
+                throw new Exception('Could not derive a project ID from gcloud. ' .
                     'You must supply a project ID using --project');
             }
         }

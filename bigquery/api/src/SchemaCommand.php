@@ -99,7 +99,7 @@ EOF
         $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
             if (!$projectId = $this->detectProjectId()) {
-                throw new Exception('Could not derive a project ID from gloud. ' .
+                throw new Exception('Could not derive a project ID from gcloud. ' .
                     'You must supply a project ID using --project');
             }
         }
