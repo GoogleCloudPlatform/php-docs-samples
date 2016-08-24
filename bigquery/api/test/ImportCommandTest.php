@@ -155,38 +155,6 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Source file does not exist or is not readable
-     */
-    public function testUnreadableFileThrowsException()
-    {
-        $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
-        chmod($file, 000);
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('No project ID');
-        }
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
-            $this->markTestSkipped('No bigquery dataset name');
-        }
-        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
-            $this->markTestSkipped('No bigquery table name');
-        }
-
-        // run the import
-        $application = new Application();
-        $application->add(new ImportCommand());
-        $commandTester = new CommandTester($application->get('import'));
-        $commandTester->execute(
-            [
-                'dataset.table' => $datasetId . '.' . $tableId,
-                'source' => $file,
-                '--project' => $projectId,
-            ],
-            ['interactive' => false]
-        );
-    }
-
     public function testImportStreamRow()
     {
         if (!self::$hasCredentials) {

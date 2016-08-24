@@ -56,6 +56,10 @@ Import from Google Datastore
 
     <info>php %command.full_name% DATASET.TABLE gs://my_bucket/datastore_entity.backup_info</info>
 
+Stream data into BigQuery
+
+    <info>php %command.full_name% DATASET.TABLE</info>
+
 EOF
             )
             ->addArgument(
@@ -74,11 +78,6 @@ EOF
                 InputOption::VALUE_REQUIRED,
                 'The Google Cloud Platform project name to use for this invocation. ' .
                 'If omitted then the current gcloud project is assumed. '
-            )->addOption(
-                'stream',
-                null,
-                InputOption::VALUE_NONE,
-                'If set, the streamed rows will be appended to an existing table. '
             )
         ;
     }

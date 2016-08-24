@@ -39,7 +39,7 @@ class TablesCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command lists all the tables associated with BigQuery.
 
-    <info>php %command.full_name%</info>
+    <info>php %command.full_name% DATASET</info>
 
 EOF
             )

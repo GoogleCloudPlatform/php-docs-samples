@@ -39,7 +39,10 @@ class QueryCommand extends Command
             ->setName('query')
             ->setDescription('Run a BigQuery query')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command queries your dataset
+The <info>%command.name%</info> command queries your dataset.
+
+    <info>%command.full_name% "SELECT TOP(corpus, 3) as title, COUNT(*) as unique_words FROM [publicdata:samples.shakespeare]"</info>
+
 EOF
             )
             ->addArgument(

@@ -44,10 +44,18 @@ class SchemaCommand extends Command
             ->setName('schema')
             ->setDescription('Create or delete a table schema in BigQuery')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command is an interactive tool for creating a BigQuery table
+The <info>%command.name%</info> command is a tool for creating a BigQuery table
 and defining a schema.
 
-    <info>php %command.full_name% DATASET_ID</info>
+    <info>php %command.full_name% DATASET path/to/schema.json</info>
+
+If a schema file is not supplied, you can create a schema interactively.
+
+    <info>php %command.full_name% DATASET</info>
+
+The <info>%command.name%</info> command also allows the deletion of tables.
+
+    <info>php %command.full_name% DATASET.TABLE --delete</info>
 
 EOF
             )

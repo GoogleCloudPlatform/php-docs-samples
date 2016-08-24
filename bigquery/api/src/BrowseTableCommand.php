@@ -39,9 +39,9 @@ class BrowseTableCommand extends Command
             ->setName('browse-table')
             ->setDescription('Browse a BigQuery table')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command lists all the tables associated with BigQuery.
+The <info>%command.name%</info> command outputs the rows of a BigQuery table.
 
-    <info>php %command.full_name%</info>
+    <info>php %command.full_name% DATASET.TABLE</info>
 
 EOF
             )
