@@ -33,17 +33,18 @@ class ProjectsCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No project ID');
         }
         if (!CredentialsLoader::fromWellKnownFile()) {
-            if ($keyFile = getenv('GOOGLE_KEY_FILE')) {
-                $home = getenv('HOME');
-                $path = sprintf('%s/.config/gcloud/', $home);
-                @mkdir($path, 0777, true);
-                file_put_contents(
-                    $path . '/application_default_credentials.json',
-                    $keyFile
-                );
-            } else {
+            if (!$keyFile = getenv('GOOGLE_KEY_FILE')) {
                 $this->markTestSkipped('No key file');
             }
+            if (!$home = getenv('HOME')) {
+                $this->markTestSkipped('No home directory for key file');
+            }
+            $path = sprintf('%s/.config/gcloud/', $home);
+            @mkdir($path, 0777, true);
+            file_put_contents(
+                $path . '/application_default_credentials.json',
+                $keyFile
+            );
         }
         $application = new Application();
         $application->add(new ProjectsCommand());
