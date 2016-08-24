@@ -59,7 +59,7 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
-        printf('Waiting for job to complete' . PHP_EOL);
+        print('Waiting for job to complete' . PHP_EOL);
         $job->reload();
         if (!$job->isComplete()) {
             throw new Exception('Job has not yet completed', 500);
@@ -70,7 +70,7 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
         $error = $job->info()['status']['errorResult']['message'];
         printf('Error running job: %s' . PHP_EOL, $error);
     } else {
-        printf('Data imported successfully' . PHP_EOL);
+        print('Data imported successfully' . PHP_EOL);
     }
 }
 # [END import_from_storage]

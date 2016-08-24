@@ -62,6 +62,7 @@ class BrowseTableCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains('Found 1 row(s)', $commandTester->getDisplay());
+
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 }

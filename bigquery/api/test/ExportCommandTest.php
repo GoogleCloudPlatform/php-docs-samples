@@ -186,7 +186,7 @@ class ExportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Data exported successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Data exported successfully/');
 
         // verify the contents of the bucket
         $builder = new ServiceBuilder([

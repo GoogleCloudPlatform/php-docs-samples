@@ -46,7 +46,7 @@ function browse_table($projectId, $datasetId, $tableId, $maxResults = 10, $start
     $i = 0;
     $options = ['maxResults' => $maxResults, 'startIndex' => $startIndex];
     foreach ($table->rows($options) as $row) {
-        printf('---');
+        print('---');
         foreach ($row as $column => $value) {
             printf('%s: %s' . PHP_EOL, $column, $value);
         }

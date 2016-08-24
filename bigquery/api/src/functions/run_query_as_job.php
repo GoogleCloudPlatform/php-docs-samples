@@ -49,7 +49,7 @@ function run_query_as_job($projectId, $query)
     $job = $bigQuery->runQueryAsJob($query);
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
-        printf('Waiting for job to complete' . PHP_EOL);
+        print('Waiting for job to complete' . PHP_EOL);
         $job->reload();
         if (!$job->isComplete()) {
             throw new Exception('Job has not yet completed', 500);

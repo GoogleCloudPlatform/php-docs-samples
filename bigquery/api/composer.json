@@ -12,7 +12,6 @@
             "src/functions/browse_table.php",
             "src/functions/delete_table.php",
             "src/functions/export_table.php",
-            "src/functions/functions.php",
             "src/functions/import_from_file.php",
             "src/functions/import_from_storage.php",
             "src/functions/list_datasets.php",

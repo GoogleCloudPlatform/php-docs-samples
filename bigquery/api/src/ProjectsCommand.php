@@ -47,7 +47,6 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $GLOBALS['output'] = $output;
         if (!$keyFile = CredentialsLoader::fromWellKnownFile()) {
             throw new Exception('Could not derive a key file. Run "gcloud auth login".');
         }

@@ -58,6 +58,6 @@ class TablesCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains($tableId, $commandTester->getDisplay());
+        $this->expectOutputRegex("/$tableId/");
     }
 }

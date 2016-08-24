@@ -39,7 +39,7 @@ function list_tables($projectId, $datasetId)
     $dataset = $bigQuery->dataset($datasetId);
     $tables = $dataset->tables();
     foreach ($tables as $table) {
-        printf($table->id() . PHP_EOL);
+        print($table->id() . PHP_EOL);
     }
 }
 # [END list_tables]

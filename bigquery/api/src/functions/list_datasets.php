@@ -37,7 +37,7 @@ function list_datasets($projectId)
     $bigQuery = $builder->bigQuery();
     $datasets = $bigQuery->datasets();
     foreach ($datasets as $dataset) {
-        printf($dataset->id() . PHP_EOL);
+        print($dataset->id() . PHP_EOL);
     }
 }
 # [END list_datasets]

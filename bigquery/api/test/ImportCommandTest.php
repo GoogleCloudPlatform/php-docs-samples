@@ -194,7 +194,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Data streamed into BigQuery successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Data streamed into BigQuery successfully/');
 
         sleep(1); // streaming doesn't use jobs, so we need this to ensure the data
         $application->add(new QueryCommand());
@@ -206,7 +206,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->deleteTempTable($projectId, $datasetId, $tableId);
 
-        $this->assertContains('Brent Shaffer', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Brent Shaffer/');
     }
 
     /**
@@ -242,7 +242,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Data imported successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Data imported successfully/');
 
         $commandTester = new CommandTester($application->get('query'));
         $commandTester->execute([
@@ -252,9 +252,9 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->deleteTempTable($projectId, $datasetId, $tableId);
 
-        $this->assertContains('Brent Shaffer', $commandTester->getDisplay());
-        $this->assertContains('Takashi Matsuo', $commandTester->getDisplay());
-        $this->assertContains('Jeffrey Rennie', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Brent Shaffer/');
+        $this->expectOutputRegex('/Takashi Matsuo/');
+        $this->expectOutputRegex('/Jeffrey Rennie/');
     }
 
     public function provideImport()
@@ -290,7 +290,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Table created successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Table created successfully/');
     }
 
     private function deleteTempTable($projectId, $datasetId, $tableId)
@@ -307,7 +307,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Table deleted successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Table deleted successfully/');
     }
 
     private function getMockServiceBuilder($table, $storage = null)

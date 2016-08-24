@@ -53,6 +53,6 @@ class ProjectsCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains($projectId, $commandTester->getDisplay());
+        $this->expectOutputRegex("/$projectId/");
     }
 }

@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
+use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -38,6 +39,8 @@ use Exception;
  */
 class SchemaCommand extends Command
 {
+    use ClientTrait;
+
     protected function configure()
     {
         $this
@@ -95,7 +98,7 @@ EOF
     {
         $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
-            if (!$projectId = $this->getProjectIdFromGcloud()) {
+            if (!$projectId = $this->detectProjectId()) {
                 throw new Exception('Could not derive a project ID from gloud. ' .
                     'You must supply a project ID using --project');
             }
@@ -244,15 +247,6 @@ EOF
         }
 
         return $schema;
-    }
-
-    private function getProjectIdFromGcloud()
-    {
-        exec("gcloud config list --format 'value(core.project)' 2>/dev/null", $output, $return_var);
-
-        if (0 === $return_var) {
-            return array_pop($output);
-        }
     }
 
     private function getNotEmptyValidator()

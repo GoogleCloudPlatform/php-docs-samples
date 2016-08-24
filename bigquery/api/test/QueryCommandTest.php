@@ -53,9 +53,9 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         // Make sure it looks like Shakespeare.
-        $this->assertContains('hamlet', $commandTester->getDisplay());
-        $this->assertContains('kinglear', $commandTester->getDisplay());
-        $this->assertContains('Found 10 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/hamlet/');
+        $this->expectOutputRegex('/kinglear/');
+        $this->expectOutputRegex('/Found 10 row\(s\)/');
     }
 
     public function testQueryWithNoResults()
@@ -74,7 +74,7 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains('Found 0 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Found 0 row\(s\)/');
     }
 
     public function testQuery()
@@ -102,7 +102,7 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains('Found 1 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 
     public function testQueryAsJob()
@@ -130,6 +130,6 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains('Found 1 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 }

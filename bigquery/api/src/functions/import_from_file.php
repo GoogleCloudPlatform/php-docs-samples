@@ -70,7 +70,7 @@ function import_from_file($projectId, $datasetId, $tableId, $source)
         $error = $job->info()['status']['errorResult']['message'];
         printf('Error running job: %s' . PHP_EOL, $error);
     } else {
-        printf('Data imported successfully' . PHP_EOL);
+        print('Data imported successfully' . PHP_EOL);
     }
 }
 # [END import_from_file]

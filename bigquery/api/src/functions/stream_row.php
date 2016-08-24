@@ -58,7 +58,7 @@ function stream_row($projectId, $datasetId, $tableId, $data, $insertId = null)
         // additional rows can go here
     ]);
     if ($insertResponse->isSuccessful()) {
-        printf('Data streamed into BigQuery successfully' . PHP_EOL);
+        print('Data streamed into BigQuery successfully' . PHP_EOL);
     } else {
         foreach ($insertResponse->failedRows() as $row) {
             foreach ($row['errors'] as $error) {

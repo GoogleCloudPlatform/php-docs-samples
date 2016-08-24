@@ -57,6 +57,6 @@ class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains($datasetId, $commandTester->getDisplay());
+        $this->expectOutputRegex("/$datasetId/");
     }
 }

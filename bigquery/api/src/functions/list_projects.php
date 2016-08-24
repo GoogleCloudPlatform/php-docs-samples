@@ -38,7 +38,7 @@ function list_projects()
     ]);
     $result = $connection->send('projects', 'list');
     foreach ($result['projects'] as $project) {
-        printf($project['id'] . PHP_EOL);
+        print($project['id'] . PHP_EOL);
     }
 }
 # [END list_projects]

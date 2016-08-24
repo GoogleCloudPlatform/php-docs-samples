@@ -53,7 +53,7 @@ function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
-        printf('Waiting for job to complete' . PHP_EOL);
+        print('Waiting for job to complete' . PHP_EOL);
         $job->reload();
         if (!$job->isComplete()) {
             throw new Exception('Job has not yet completed', 500);
@@ -64,7 +64,7 @@ function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName
         $error = $job->info()['status']['errorResult']['message'];
         printf('Error running job: %s' . PHP_EOL, $error);
     } else {
-        printf('Data exported successfully' . PHP_EOL);
+        print('Data exported successfully' . PHP_EOL);
     }
 }
 # [END export_table]
