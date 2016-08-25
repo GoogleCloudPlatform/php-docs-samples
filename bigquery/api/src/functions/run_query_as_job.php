@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
+# [START query_as_job]
 use Google\Cloud\ServiceBuilder;
 use Google\Cloud\ExponentialBackoff;
 
@@ -41,7 +42,6 @@ use Google\Cloud\ExponentialBackoff;
  */
 function run_query_as_job($projectId, $query)
 {
-    # [START async_query]
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
@@ -56,7 +56,6 @@ function run_query_as_job($projectId, $query)
         }
     });
     $queryResults = $job->queryResults();
-    # [END async_query]
 
     if ($queryResults->isComplete()) {
         $i = 0;
@@ -72,3 +71,4 @@ function run_query_as_job($projectId, $query)
         throw new Exception('The query failed to complete');
     }
 }
+# [END query_as_job]
