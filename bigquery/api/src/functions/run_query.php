@@ -24,9 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START all]
-# [START namespace]
 use Google\Cloud\ServiceBuilder;
-# [END namespace]
 
 /**
  * Run a BigQuery query.
@@ -42,17 +40,15 @@ use Google\Cloud\ServiceBuilder;
  */
 function run_query($projectId, $query)
 {
-    # [START query]
-    # [START authentication]
-    # [START service_builder]
+    # [START build_service]
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
-    # [END service_builder]
     $bigQuery = $builder->bigQuery();
-    # [END authentication]
+    # [END build_service]
+    # [START run_query]
     $queryResults = $bigQuery->runQuery($query);
-    # [END query]
+    # [END run_query]
 
     # [START print_results]
     if ($queryResults->isComplete()) {
