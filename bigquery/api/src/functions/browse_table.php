@@ -27,6 +27,12 @@ namespace Google\Cloud\Samples\BigQuery;
 use Google\Cloud\ServiceBuilder;
 
 /**
+ * Browse a bigquery table.
+ * Example:
+ * ```
+ * browse_table($projectId, $datasetId, $tableId);
+ * ```
+ *
  * @param string $projectId  The Google project ID.
  * @param string $datasetId  The BigQuery dataset ID.
  * @param string $tableId    The BigQuery table ID.
@@ -37,28 +43,40 @@ use Google\Cloud\ServiceBuilder;
  */
 function browse_table($projectId, $datasetId, $tableId, $maxResults = 10, $startIndex = 0)
 {
+    $options = [
+        'maxResults' => $maxResults,
+        'startIndex' => $startIndex
+    ];
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
     $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
-    $i = 0;
-    $options = ['maxResults' => $maxResults, 'startIndex' => $startIndex];
+    $numRows = 0;
     foreach ($table->rows($options) as $row) {
         print('---');
         foreach ($row as $column => $value) {
             printf('%s: %s' . PHP_EOL, $column, $value);
         }
-        ++$i;
+        $numRows++;
     }
 
-    return $i;
+    return $numRows;
 }
 # [END browse_table]
 
 # [START paginate_table]
 /**
+ * Paginate through a bigquery table.
+ * Example:
+ * ```
+ * $shouldPaginateFunc = function () {
+ *     return true; // always paginate
+ * }
+ * browse_table($projectId, $datasetId, $tableId);
+ * ```
+ *
  * @param string   $projectId          The Google project ID.
  * @param string   $datasetId          The BigQuery dataset ID.
  * @param string   $tableId            The BigQuery table ID.

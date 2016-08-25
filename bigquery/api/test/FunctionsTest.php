@@ -19,13 +19,14 @@ namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery;
 use Google\Cloud\BigQuery\BigQueryClient;
+use Google\Cloud\BigQuery\Table;
 
 /**
  * Unit Tests for BrowseTableCommand.
  */
 class FunctionsTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAuthenticateBigQuery()
+    public function testBigQueryClient()
     {
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
@@ -34,5 +35,21 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         $bigQuery = require __DIR__ . '/../src/functions/bigquery_client.php';
 
         $this->assertInstanceOf(BigQueryClient::class, $bigQuery);
+    }
+    public function testGetTable()
+    {
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
+
+        $table = BigQuery\get_table($projectId, $datasetId, $tableId);
+
+        $this->assertInstanceOf(Table::class, $table);
     }
 }

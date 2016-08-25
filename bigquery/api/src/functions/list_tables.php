@@ -42,4 +42,19 @@ function list_tables($projectId, $datasetId)
         print($table->id() . PHP_EOL);
     }
 }
+
+/**
+ * @param string $projectId The Google project ID.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId   The BigQuery table ID.
+ */
+function get_table($projectId, $datasetId, $tableId)
+{
+    $builder = new ServiceBuilder([
+        'projectId' => $projectId,
+    ]);
+    $bigQuery = $builder->bigQuery();
+    $dataset = $bigQuery->dataset($datasetId);
+    return $dataset->table($tableId);
+}
 # [END list_tables]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START stream_rows]
+# [START stream_row]
 use Google\Cloud\ServiceBuilder;
 
 /**
@@ -67,4 +67,4 @@ function stream_row($projectId, $datasetId, $tableId, $data, $insertId = null)
         }
     }
 }
-# [END stream_rows]
+# [END stream_row]
