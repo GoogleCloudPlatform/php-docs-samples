@@ -41,12 +41,12 @@ use Google\Cloud\ServiceBuilder;
 function run_query($projectId, $query)
 {
     # [START sync_query]
+    # [START authentication]
     # [START service_builder]
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
     # [END service_builder]
-    # [START authentication]
     $bigQuery = $builder->bigQuery();
     # [END authentication]
     $queryResults = $bigQuery->runQuery($query);
