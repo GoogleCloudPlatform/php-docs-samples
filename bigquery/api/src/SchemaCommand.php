@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +29,6 @@ use Google\Cloud\ServiceBuilder;
 use Google\Cloud\Exception\BadRequestException;
 use InvalidArgumentException;
 use LogicException;
-use Exception;
 
 /**
  * Command line utility to create a BigQuery schema.
@@ -39,7 +37,7 @@ use Exception;
  */
 class SchemaCommand extends Command
 {
-    use ClientTrait;
+    use ProjectIdTrait;
 
     protected function configure()
     {
@@ -98,10 +96,7 @@ EOF
     {
         $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
-            if (!$projectId = $this->detectProjectId()) {
-                throw new Exception('Could not derive a project ID from gcloud. ' .
-                    'You must supply a project ID using --project');
-            }
+            $projectId = $this->getProjectIdFromGcloud();
         }
         $message = sprintf('<info>Using project %s</info>', $projectId);
         $output->writeln($message);
