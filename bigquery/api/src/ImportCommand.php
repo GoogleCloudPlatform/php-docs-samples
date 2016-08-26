@@ -17,13 +17,11 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Google\Cloud\ServiceBuilder;
 use InvalidArgumentException;
@@ -36,7 +34,7 @@ use Exception;
  */
 class ImportCommand extends Command
 {
-    use ClientTrait;
+    use ProjectIdTrait;
 
     protected function configure()
     {
@@ -89,18 +87,10 @@ EOF
     {
         $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
-            if ($projectId = $this->detectProjectId()) {
-                if ($input->isInteractive()) {
-                    $message = sprintf('Import data for project %s? [y/n]: ', $projectId);
-                    if (!$question->ask($input, $output, new ConfirmationQuestion($message))) {
-                        return $output->writeln('<error>Task cancelled by user.</error>');
-                    }
-                }
-            } else {
-                throw new Exception('Could not derive a project ID from gcloud. ' .
-                    'You must supply a project ID using --project');
-            }
+            $projectId = $this->getProjectIdFromGcloud();
         }
+        $message = sprintf('<info>Using project %s</info>', $projectId);
+        $output->writeln($message);
         $fullTableName = $input->getArgument('dataset.table');
         if (1 !== substr_count($fullTableName, '.')) {
             throw new InvalidArgumentException('Table must in the format "dataset.table"');

@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,7 +24,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Output\OutputInterface;
 use InvalidArgumentException;
-use Exception;
 
 /**
  * Command line utility to list BigQuery tables.
@@ -34,7 +32,7 @@ use Exception;
  */
 class BrowseTableCommand extends Command
 {
-    use ClientTrait;
+    use ProjectIdTrait;
 
     protected function configure()
     {
@@ -73,10 +71,7 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$projectId = $input->getOption('project')) {
-            if (!$projectId = $this->detectProjectId()) {
-                throw new Exception('Could not derive a project ID from gcloud. ' .
-                    'You must supply a project ID using --project');
-            }
+            $projectId = $this->detectProjectId();
         }
         $maxResults = $input->getOption('max-results');
         $fullTableName = $input->getArgument('dataset.table');
