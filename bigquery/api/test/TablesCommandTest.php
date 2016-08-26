@@ -17,14 +17,14 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
-use Google\Cloud\Samples\BigQuery\DatasetsCommand;
+use Google\Cloud\Samples\BigQuery\TablesCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for DatasetsCommand.
+ * Unit Tests for TablesCommand.
  */
-class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
+class TablesCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
@@ -35,28 +35,29 @@ class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function testDatasets()
+    public function testTables()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
 
         $application = new Application();
-        $application->add(new DatasetsCommand());
-        $commandTester = new CommandTester($application->get('datasets'));
+        $application->add(new TablesCommand());
+        $commandTester = new CommandTester($application->get('tables'));
         $commandTester->execute(
-            ['--project' => $projectId],
+            ['dataset' => $datasetId, '--project' => $projectId],
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex("/$datasetId/");
+        $this->expectOutputRegex("/$tableId/");
     }
 }

@@ -19,39 +19,39 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use Google\Cloud\Exception\BadRequestException;
+use InvalidArgumentException;
 use Exception;
 
 /**
- * Command line utility to run a BigQuery query.
+ * Command line utility to list BigQuery tables.
  *
- * Usage: php bigquery.php query
+ * Usage: php bigquery.php tables
  */
-class QueryCommand extends Command
+class BrowseTableCommand extends Command
 {
     use ClientTrait;
 
     protected function configure()
     {
         $this
-            ->setName('query')
-            ->setDescription('Run a BigQuery query')
+            ->setName('browse-table')
+            ->setDescription('Browse a BigQuery table')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command queries your dataset.
+The <info>%command.name%</info> command outputs the rows of a BigQuery table.
 
-    <info>%command.full_name% "SELECT TOP(corpus, 3) as title, COUNT(*) as unique_words FROM [publicdata:samples.shakespeare]"</info>
+    <info>php %command.full_name% DATASET.TABLE</info>
 
 EOF
             )
             ->addArgument(
-                'query',
-                InputArgument::OPTIONAL,
-                'The query to run'
+                'dataset.table',
+                InputArgument::REQUIRED,
+                'The dataset to list tables'
             )
             ->addOption(
                 'project',
@@ -61,46 +61,43 @@ EOF
                 'If omitted then the current gcloud project is assumed. '
             )
             ->addOption(
-                'sync',
+                'max-results',
                 null,
-                InputOption::VALUE_NONE,
-                'run the query syncronously'
+                InputOption::VALUE_REQUIRED,
+                'The number of rows to return on each API call.',
+                10
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
             if (!$projectId = $this->detectProjectId()) {
                 throw new Exception('Could not derive a project ID from gcloud. ' .
                     'You must supply a project ID using --project');
             }
         }
-        $message = sprintf('<info>Running query for project %s</info>', $projectId);
-        $output->writeln($message);
-        if (!$query = $input->getArgument('query')) {
-            if ($input->isInteractive()) {
-                $q = new Question('Enter your query: ');
-                $query = $question->ask($input, $output, $q);
-            } else {
-                throw new Exception('You must supply a query argument');
-            }
+        $maxResults = $input->getOption('max-results');
+        $fullTableName = $input->getArgument('dataset.table');
+        if (1 !== substr_count($fullTableName, '.')) {
+            throw new InvalidArgumentException('Table must in the format "dataset.table"');
         }
+        list($datasetId, $tableId) = explode('.', $fullTableName);
 
-        try {
-            if ($input->getOption('sync')) {
-                run_query($projectId, $query);
-            } else {
-                run_query_as_job($projectId, $query);
+        // create the function to determine if we should paginate
+        $question = $this->getHelper('question');
+        $q = new ConfirmationQuestion('[Press enter for next page, "n" to exit]');
+        $shouldPaginate = function () use ($input, $output, $question, $q) {
+            if (!$input->isInteractive()) {
+                return false;
             }
-        } catch (BadRequestException $e) {
-            $response = $e->getServiceException()->getResponse();
-            $errorJson = json_decode((string) $response->getBody(), true);
-            $error = $errorJson['error']['errors'][0]['message'];
-            $output->writeln(sprintf('<error>%s</error>', $error));
-            throw $e;
-        }
+
+            return $question->ask($input, $output, $q);
+        };
+
+        $totalRows = paginate_table($projectId, $datasetId, $tableId, $maxResults, $shouldPaginate);
+
+        printf('Found %s row(s)' . PHP_EOL, $totalRows);
     }
 }

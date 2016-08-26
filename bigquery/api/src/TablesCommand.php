@@ -19,31 +19,37 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
 
 /**
- * Command line utility to list BigQuery datasets.
+ * Command line utility to list BigQuery tables.
  *
- * Usage: php bigquery.php datasets
+ * Usage: php bigquery.php tables
  */
-class DatasetsCommand extends Command
+class TablesCommand extends Command
 {
     use ClientTrait;
 
     protected function configure()
     {
         $this
-            ->setName('datasets')
-            ->setDescription('List BigQuery datasets')
+            ->setName('tables')
+            ->setDescription('List BigQuery tables')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command lists all the datasets associated with your project.
+The <info>%command.name%</info> command lists all the tables associated with BigQuery.
 
-    <info>php %command.full_name%</info>
+    <info>php %command.full_name% DATASET</info>
 
 EOF
+            )
+            ->addArgument(
+                'dataset',
+                InputArgument::REQUIRED,
+                'The dataset to list tables'
             )
             ->addOption(
                 'project',
@@ -63,6 +69,8 @@ EOF
                     'You must supply a project ID using --project');
             }
         }
-        list_datasets($projectId);
+        $datasetId = $input->getArgument('dataset');
+
+        list_tables($projectId, $datasetId);
     }
 }

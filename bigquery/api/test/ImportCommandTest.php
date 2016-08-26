@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
+use Google\Cloud\Samples\BigQuery;
 use Google\Cloud\Samples\BigQuery\ImportCommand;
 use Google\Cloud\Samples\BigQuery\QueryCommand;
 use Google\Cloud\Samples\BigQuery\SchemaCommand;
@@ -24,7 +25,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for ImportCommand
+ * Unit Tests for ImportCommand.
  */
 class ImportCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,64 +38,6 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
         self::$gcsBucket = getenv('GOOGLE_BUCKET_NAME');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Source file does not exist or is not readable
-     */
-    public function testNonexistantFileThrowsException()
-    {
-        $import = new ImportCommand();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $import->importFromFile($table, '/this/file/doesnotexist.json');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Source file does not exist or is not readable
-     */
-    public function testUnreadableFileThrowsException()
-    {
-        $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
-        chmod($file, 000);
-        $import = new ImportCommand();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $import->importFromFile($table, $file);
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Source format unknown. Must be JSON or CSV
-     */
-    public function testFileWithWrongExtensionThrowsException()
-    {
-        $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
-        $import = new ImportCommand();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $import->importFromFile($table, $file);
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Source does not contain object name
-     */
-    public function testBucketWithoutObjectThrowsException()
-    {
-        $import = new ImportCommand();
-        $storage = $this->getMockBuilder('Google\Cloud\Storage\StorageClient')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $import->importFromCloudStorage($table, $storage, 'gs://foo');
     }
 
     /**
@@ -121,184 +64,95 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testImportFromFileWithJson()
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Source file does not exist or is not readable
+     */
+    public function testNonexistantFileThrowsException()
+    {
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
+
+        // run the import
+        $application = new Application();
+        $application->add(new ImportCommand());
+        $commandTester = new CommandTester($application->get('import'));
+        $commandTester->execute(
+            [
+                'dataset.table' => $datasetId . '.' . $tableId,
+                'source' => '/this/file/doesnotexist.json',
+                '--project' => $projectId,
+            ],
+            ['interactive' => false]
+        );
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Source format unknown. Must be JSON or CSV
+     */
+    public function testFileWithWrongExtensionThrowsException()
     {
         $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
-        rename($file, $file .= '.json');
-        $import = new ImportCommand();
-        $job = $this->getMockBuilder('Google\Cloud\BigQuery\Job')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table->expects($this->once())
-            ->method('load')
-            ->with(
-                $this->isType('resource'),
-                [ 'jobConfig' => [ 'sourceFormat' => 'NEWLINE_DELIMITED_JSON' ]]
-            )
-            ->will($this->returnValue($job));
-        $result = $import->importFromFile($table, $file);
-        $this->assertInstanceOf('Google\Cloud\BigQuery\Job', $result);
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
+
+        // run the import
+        $application = new Application();
+        $application->add(new ImportCommand());
+        $commandTester = new CommandTester($application->get('import'));
+        $commandTester->execute(
+            [
+                'dataset.table' => $datasetId . '.' . $tableId,
+                'source' => $file,
+                '--project' => $projectId,
+            ],
+            ['interactive' => false]
+        );
     }
 
-    public function testImportFromFileWithCsv()
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Source does not contain object name
+     */
+    public function testBucketWithoutObjectThrowsException()
     {
-        $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
-        rename($file, $file .= '.csv');
-        $import = new ImportCommand();
-        $job = $this->getMockBuilder('Google\Cloud\BigQuery\Job')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table->expects($this->once())
-            ->method('load')
-            ->with(
-                $this->isType('resource'),
-                [ 'jobConfig' => [ 'sourceFormat' => 'CSV' ]]
-            )
-            ->will($this->returnValue($job));
-        $result = $import->importFromFile($table, $file);
-        $this->assertInstanceOf('Google\Cloud\BigQuery\Job', $result);
-    }
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
 
-    public function testImportFromCloudStorage()
-    {
-        $import = new ImportCommand();
-        $object = $this->getMockBuilder('Google\Cloud\Storage\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bucket = $this->getMockBuilder('Google\Cloud\Storage\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bucket->expects($this->once())
-            ->method('object')
-            ->with('bar')
-            ->will($this->returnValue($object));
-        $storage = $this->getMockBuilder('Google\Cloud\Storage\StorageClient')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $storage->expects($this->once())
-            ->method('bucket')
-            ->with('foo')
-            ->will($this->returnValue($bucket));
-        $job = $this->getMockBuilder('Google\Cloud\BigQuery\Job')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table->expects($this->once())
-            ->method('loadFromStorage')
-            ->with(
-                $object,
-                [ ]
-            )
-            ->will($this->returnValue($job));
-        $result = $import->importFromCloudStorage($table, $storage, 'gs://foo/bar');
-        $this->assertInstanceOf('Google\Cloud\BigQuery\Job', $result);
-    }
-
-    public function testImportDatastoreBackupFromCloudStorage()
-    {
-        $import = new ImportCommand();
-        $object = $this->getMockBuilder('Google\Cloud\Storage\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bucket = $this->getMockBuilder('Google\Cloud\Storage\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bucket->expects($this->once())
-            ->method('object')
-            ->with('bar.backup_info')
-            ->will($this->returnValue($object));
-        $storage = $this->getMockBuilder('Google\Cloud\Storage\StorageClient')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $storage->expects($this->once())
-            ->method('bucket')
-            ->with('foo')
-            ->will($this->returnValue($bucket));
-        $job = $this->getMockBuilder('Google\Cloud\BigQuery\Job')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table->expects($this->once())
-            ->method('loadFromStorage')
-            ->with(
-                $object,
-                [ 'jobConfig' => [ 'sourceFormat' => 'DATASTORE_BACKUP' ]]
-            )
-            ->will($this->returnValue($job));
-        $result = $import->importFromCloudStorage($table, $storage, 'gs://foo/bar.backup_info');
-        $this->assertInstanceOf('Google\Cloud\BigQuery\Job', $result);
-    }
-
-    public function testStreamRow()
-    {
-        $data = ['name' => 'Brent Shaffer', 'title' => 'PHP Developer'];
-        $import = new ImportCommand();
-        $insertResponse = $this->getMockBuilder('Google\Cloud\BigQuery\InsertResponse')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $insertResponse->expects($this->exactly(2))
-            ->method('isSuccessful')
-            ->will($this->returnValue(true));
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table->expects($this->once())
-            ->method('insertRows')
-            ->with([
-                ['insertId' => '123', 'data' => $data]
-            ])
-            ->will($this->returnValue($insertResponse));
-        $result = $import->streamRow($table, $data, '123');
-        $this->assertTrue($result);
-    }
-
-    public function testStreamRowWithErrors()
-    {
-        $output = $this->getMockBuilder('Symfony\Component\Console\Output\OutputInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $output->expects($this->once())
-            ->method('write')
-            ->with('invalid: Missing required field: title.' . PHP_EOL);
-        $GLOBALS['output'] = $output;
-        $data = ['name' => 'Brent Shaffer', 'title' => null];
-        $import = new ImportCommand();
-        $insertResponse = $this->getMockBuilder('Google\Cloud\BigQuery\InsertResponse')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $insertResponse->expects($this->exactly(2))
-            ->method('isSuccessful')
-            ->will($this->returnValue(false));
-        $insertResponse->expects($this->once())
-            ->method('failedRows')
-            ->will($this->returnValue([
-                [
-                    'errors' => [
-                        ['reason' => 'invalid', 'message' => 'Missing required field: title.']
-                    ]
-                ]
-            ]));
-        $table = $this->getMockBuilder('Google\Cloud\BigQuery\Table')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $table->expects($this->once())
-            ->method('insertRows')
-            ->with([
-                ['insertId' => null, 'data' => $data]
-            ])
-            ->will($this->returnValue($insertResponse));
-        $result = $import->streamRow($table, $data);
-        $this->assertFalse($result);
+        // run the import
+        $application = new Application();
+        $application->add(new ImportCommand());
+        $commandTester = new CommandTester($application->get('import'));
+        $commandTester->execute(
+            [
+                'dataset.table' => $datasetId . '.' . $tableId,
+                'source' => 'gs://',
+                '--project' => $projectId,
+            ],
+            ['interactive' => false]
+        );
     }
 
     public function testImportStreamRow()
@@ -306,11 +160,9 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
@@ -342,7 +194,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Data streamed into BigQuery successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Data streamed into BigQuery successfully/');
 
         sleep(1); // streaming doesn't use jobs, so we need this to ensure the data
         $application->add(new QueryCommand());
@@ -354,7 +206,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->deleteTempTable($projectId, $datasetId, $tableId);
 
-        $this->assertContains('Brent Shaffer', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Brent Shaffer/');
     }
 
     /**
@@ -365,19 +217,15 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
-
         if (0 === strpos($source, 'gs://') && !self::$gcsBucket) {
             $this->markTestSkipped('No Cloud Storage bucket');
         }
-
         $tableId = sprintf('test_table_%s', time());
         if ($createTable) {
             $this->createTempTable($projectId, $datasetId, $tableId);
@@ -394,7 +242,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Data imported successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Data imported successfully/');
 
         $commandTester = new CommandTester($application->get('query'));
         $commandTester->execute([
@@ -404,14 +252,15 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->deleteTempTable($projectId, $datasetId, $tableId);
 
-        $this->assertContains('Brent Shaffer', $commandTester->getDisplay());
-        $this->assertContains('Takashi Matsuo', $commandTester->getDisplay());
-        $this->assertContains('Jeffrey Rennie', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Brent Shaffer/');
+        $this->expectOutputRegex('/Takashi Matsuo/');
+        $this->expectOutputRegex('/Jeffrey Rennie/');
     }
 
     public function provideImport()
     {
         $bucket = getenv('GOOGLE_BUCKET_NAME');
+
         return [
             [__DIR__ . '/data/test_data.csv'],
             [__DIR__ . '/data/test_data.json'],
@@ -441,7 +290,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Table created successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Table created successfully/');
     }
 
     private function deleteTempTable($projectId, $datasetId, $tableId)
@@ -458,6 +307,36 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->assertContains('Table deleted successfully', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Table deleted successfully/');
+    }
+
+    private function getMockServiceBuilder($table, $storage = null)
+    {
+        $dataset = $this->getMockBuilder('Google\Cloud\BigQuery\Dataset')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $dataset->expects($this->once())
+            ->method('table')
+            ->will($this->returnValue($table));
+        $bigQuery = $this->getMockBuilder('Google\Cloud\BigQuery\BigQueryClient')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $bigQuery->expects($this->once())
+            ->method('dataset')
+            ->will($this->returnValue($dataset));
+        $builder = $this->getMockBuilder('Google\Cloud\ServiceBuilder')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $builder->expects($this->once())
+            ->method('bigQuery')
+            ->will($this->returnValue($bigQuery));
+
+        if ($storage) {
+            $builder->expects($this->once())
+                ->method('storage')
+                ->will($this->returnValue($storage));
+        }
+
+        return $builder;
     }
 }

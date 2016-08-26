@@ -22,7 +22,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for ImportCommand
+ * Unit Tests for QueryCommand.
  */
 class QueryCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,51 +33,6 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-    }
-
-    public function testSyncQuery()
-    {
-        $query = new QueryCommand();
-        $q = 'SELECT * from [brent]';
-        $queryResults = $this->getMockBuilder('Google\Cloud\BigQuery\QueryResults')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bigQuery = $this->getMockBuilder('Google\Cloud\BigQuery\BigQueryClient')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bigQuery->expects($this->once())
-            ->method('runQuery')
-            ->with($q)
-            ->will($this->returnValue($queryResults));
-        $queryResults = $query->runQuery($bigQuery, $q, true);
-        $this->assertInstanceOf('Google\Cloud\BigQuery\QueryResults', $queryResults);
-    }
-
-    public function testAsyncQuery()
-    {
-        $query = new QueryCommand();
-        $q = 'SELECT * from [brent]';
-        $queryResults = $this->getMockBuilder('Google\Cloud\BigQuery\QueryResults')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $job = $this->getMockBuilder('Google\Cloud\BigQuery\Job')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $job->expects($this->once())
-            ->method('isComplete')
-            ->will($this->returnValue(true));
-        $job->expects($this->once())
-            ->method('queryResults')
-            ->will($this->returnValue($queryResults));
-        $bigQuery = $this->getMockBuilder('Google\Cloud\BigQuery\BigQueryClient')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bigQuery->expects($this->once())
-            ->method('runQueryAsJob')
-            ->with($q)
-            ->will($this->returnValue($job));
-        $queryResults = $query->runQuery($bigQuery, $q, false);
-        $this->assertInstanceOf('Google\Cloud\BigQuery\QueryResults', $queryResults);
     }
 
     public function testPublicQuery()
@@ -98,9 +53,9 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         // Make sure it looks like Shakespeare.
-        $this->assertContains('hamlet', $commandTester->getDisplay());
-        $this->assertContains('kinglear', $commandTester->getDisplay());
-        $this->assertContains('Found 10 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/hamlet/');
+        $this->expectOutputRegex('/kinglear/');
+        $this->expectOutputRegex('/Found 10 row\(s\)/');
     }
 
     public function testQueryWithNoResults()
@@ -119,23 +74,48 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains('Found 0 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Found 0 row\(s\)/');
     }
 
-    public function testProjectQuery()
+    public function testQuery()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
             $this->markTestSkipped('No bigquery dataset name');
         }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
 
+        $query = sprintf('SELECT * FROM [%s.%s] LIMIT 1', $datasetId, $tableId);
+
+        $application = new Application();
+        $application->add(new QueryCommand());
+        $commandTester = new CommandTester($application->get('query'));
+        $commandTester->execute(
+            ['query' => $query, '--project' => $projectId, '--sync'],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
+    }
+
+    public function testQueryAsJob()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
         if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
             $this->markTestSkipped('No bigquery table name');
         }
@@ -150,6 +130,6 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->assertContains('Found 1 row(s)', $commandTester->getDisplay());
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 }

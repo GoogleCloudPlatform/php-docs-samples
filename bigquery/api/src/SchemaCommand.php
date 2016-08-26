@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
+use Google\Cloud\ClientTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,26 +26,39 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Google\Cloud\BigQuery\BigQueryClient;
+use Google\Cloud\ServiceBuilder;
 use Google\Cloud\Exception\BadRequestException;
 use InvalidArgumentException;
 use LogicException;
+use Exception;
 
 /**
  * Command line utility to create a BigQuery schema.
+ *
+ * Usage: php bigquery.php schema
  */
 class SchemaCommand extends Command
 {
+    use ClientTrait;
+
     protected function configure()
     {
         $this
             ->setName('schema')
             ->setDescription('Create or delete a table schema in BigQuery')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command is an interactive tool for creating a BigQuery table
+The <info>%command.name%</info> command is a tool for creating a BigQuery table
 and defining a schema.
 
-    <info>php %command.full_name% DATASET_ID</info>
+    <info>php %command.full_name% DATASET path/to/schema.json</info>
+
+If a schema file is not supplied, you can create a schema interactively.
+
+    <info>php %command.full_name% DATASET</info>
+
+The <info>%command.name%</info> command also allows the deletion of tables.
+
+    <info>php %command.full_name% DATASET.TABLE --delete</info>
 
 EOF
             )
@@ -84,8 +98,8 @@ EOF
     {
         $question = $this->getHelper('question');
         if (!$projectId = $input->getOption('project')) {
-            if (!$projectId = $this->getProjectIdFromGcloud()) {
-                throw new \Exception('Could not derive a project ID from gloud. ' .
+            if (!$projectId = $this->detectProjectId()) {
+                throw new Exception('Could not derive a project ID from gcloud. ' .
                     'You must supply a project ID using --project');
             }
         }
@@ -97,11 +111,12 @@ EOF
             throw new InvalidArgumentException('Table must in the format "dataset.table"');
         }
         list($datasetId, $tableId) = explode('.', $fullTableName);
-        $bigQuery = new BigQueryClient([
-            'projectId' => $projectId
+        $builder = new ServiceBuilder([
+            'projectId' => $projectId,
         ]);
-
+        $bigQuery = $builder->bigQuery();
         $dataset = $bigQuery->dataset($datasetId);
+        $table = $dataset->table($tableId);
         if (!$dataset->exists()) {
             if ($input->getOption('delete')) {
                 throw new InvalidArgumentException('The supplied dataset does not exist');
@@ -123,12 +138,11 @@ EOF
             if ($input->getArgument('schema-json')) {
                 throw new LogicException('Cannot supply "--delete" with the "schema-json" argument');
             }
-            $table = $dataset->table($tableId);
             if (!$table->exists()) {
                 throw new InvalidArgumentException('The supplied table does not exist');
             }
             if (!$input->isInteractive() && !$input->getOption('no-confirmation')) {
-                throw new \LogicException(
+                throw new LogicException(
                     '"no-confirmation" is required for deletion if the command is not interactive');
             }
             if (!$input->getOption('no-confirmation')) {
@@ -140,13 +154,14 @@ EOF
                     return $output->writeln('<error>Task cancelled by user.</error>');
                 }
             }
-            $table->delete();
+            delete_table($projectId, $datasetId, $tableId);
+
             return $output->writeln('<info>Table deleted successfully</info>');
         } elseif ($file = $input->getArgument('schema-json')) {
             $fields = json_decode(file_get_contents($file), true);
         } else {
             if (!$input->isInteractive()) {
-                throw new \LogicException(
+                throw new LogicException(
                     '"schema-json" is required if the command is not interactive');
             }
             $fields = $this->getFieldSchema($question, $input, $output);
@@ -191,14 +206,14 @@ EOF
                 'nullable',
                 'required',
                 'repeated',
-            ]
+            ],
         ];
-        for ($i = 0; true; $i++) {
+        for ($i = 0; true; ++$i) {
             $schema[$i] = array();
             foreach ($fields as $field => $choices) {
                 $message = sprintf('%s%s column %s',
                     $prefix,
-                    $this->addNumberSuffix($i+1),
+                    $this->addNumberSuffix($i + 1),
                     $field
                 );
                 if ($choices) {
@@ -234,21 +249,13 @@ EOF
         return $schema;
     }
 
-    private function getProjectIdFromGcloud()
-    {
-        exec("gcloud config list --format 'value(core.project)' 2>/dev/null", $output, $return_var);
-
-        if (0 === $return_var) {
-            return array_pop($output);
-        }
-    }
-
     private function getNotEmptyValidator()
     {
         return function ($value) {
             if (is_null($value)) {
-                throw new \InvalidArgumentException('value required');
+                throw new InvalidArgumentException('value required');
             }
+
             return $value;
         };
     }
