@@ -27,10 +27,16 @@ accept your pull requests.
    Contributor License Agreement (see details above).
 1. Fork the desired repo, develop and test your code changes.
 1. Ensure that your code adheres to the existing style in the sample to which
-   you are contributing. Refer to the
-   [Google Cloud Platform Samples Style Guide]
-   (https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the
-   recommended coding standards for this organization.
+   you are contributing.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
    Set up [Travis](./TRAVIS.md) to run the unit tests on your fork.
 1. Submit a pull request.
+
+## Style
+
+Samples in this repository follow the [PSR2][psr2] and [PSR4][psr4]
+recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer].
+
+[psr2]: http://www.php-fig.org/psr/psr-2/
+[psr4]: http://www.php-fig.org/psr/psr-4/
+[php-cs-fixer]: https://github.com/FriendsOfPHP/PHP-CS-Fixer
