@@ -105,6 +105,38 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 
+    public function testQueryStandardSql()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
+
+        $query = sprintf('SELECT * FROM `%s.%s` LIMIT 1', $datasetId, $tableId);
+
+        $application = new Application();
+        $application->add(new QueryCommand());
+        $commandTester = new CommandTester($application->get('query'));
+        $commandTester->execute(
+            [
+              'query' => $query,
+              '--project' => $projectId,
+              '--sync',
+              '--standardSql'],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
+    }
+
     public function testQueryAsJob()
     {
         if (!self::$hasCredentials) {
@@ -127,6 +159,34 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('query'));
         $commandTester->execute(
             ['query' => $query, '--project' => $projectId],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Found 1 row\(s\)/');
+    }
+
+    public function testQueryAsJobStandardSql()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('No project ID');
+        }
+        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+            $this->markTestSkipped('No bigquery dataset name');
+        }
+        if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
+            $this->markTestSkipped('No bigquery table name');
+        }
+
+        $query = sprintf('SELECT * FROM `%s.%s` LIMIT 1', $datasetId, $tableId);
+
+        $application = new Application();
+        $application->add(new QueryCommand());
+        $commandTester = new CommandTester($application->get('query'));
+        $commandTester->execute(
+            ['query' => $query, '--project' => $projectId, '--standardSql'],
             ['interactive' => false]
         );
 

@@ -34,19 +34,23 @@ use Google\Cloud\ExponentialBackoff;
  * ```
  * $query = 'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
  *          'FROM [publicdata:samples.shakespeare]';
- * run_query_as_job($projectId, $query);
+ * run_query_as_job($projectId, $query, true);
  * ```.
  *
  * @param string $projectId The Google project ID.
- * @param string $query     A SQL query to run.
+ * @param string $query     A SQL query to run. *
+ * @param bool $useLegacySql Specifies whether to use BigQuery's legacy SQL
+ *        syntax or standard SQL syntax for this query.
  */
-function run_query_as_job($projectId, $query)
+function run_query_as_job($projectId, $query, $useLegacySql)
 {
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
     $bigQuery = $builder->bigQuery();
-    $job = $bigQuery->runQueryAsJob($query);
+    $job = $bigQuery->runQueryAsJob(
+        $query,
+        ['jobConfig' => ['useLegacySql' => $useLegacySql]]);
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
         print('Waiting for job to complete' . PHP_EOL);
