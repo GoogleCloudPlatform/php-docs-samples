@@ -32,13 +32,15 @@ use Google\Cloud\ServiceBuilder;
  * ```
  * $query = 'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
  *          'FROM [publicdata:samples.shakespeare]';
- * run_query($projectId, $query);
+ * run_query($projectId, $query, true);
  * ```.
  *
  * @param string $projectId The Google project ID.
  * @param string $query     A SQL query to run.
+ * @param bool $useLegacySql Specifies whether to use BigQuery's legacy SQL
+ *        syntax or standard SQL syntax for this query.
  */
-function run_query($projectId, $query)
+function run_query($projectId, $query, $useLegacySql)
 {
     # [START build_service]
     $builder = new ServiceBuilder([
@@ -47,7 +49,9 @@ function run_query($projectId, $query)
     $bigQuery = $builder->bigQuery();
     # [END build_service]
     # [START run_query]
-    $queryResults = $bigQuery->runQuery($query);
+    $queryResults = $bigQuery->runQuery(
+        $query,
+        ['useLegacySql' => $useLegacySql]);
     # [END run_query]
 
     # [START print_results]
