@@ -1,0 +1,9 @@
+{
+    "require": {
+        "google/cloud": "<2.0",
+        "symfony/console": "^3.0"
+    },
+    "autoload": {
+        "psr-4": { "Google\\Cloud\\Samples\\Logging\\": "src" }
+    }
+}
