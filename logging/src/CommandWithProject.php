@@ -17,18 +17,19 @@
 
 namespace Google\Cloud\Samples\Logging;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Trait for determining the current project ID using "gcloud"
+ * A base class for commands which needs project id.
  */
-trait GoogleProjectTrait
+class CommandWithProject extends Command
 {
     /**
      * Add project option to $this.
      */
-    private function addProjectOption()
+    protected function addProjectOption()
     {
         $this->addOption(
             'project',

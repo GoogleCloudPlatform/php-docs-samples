@@ -20,15 +20,21 @@ namespace Google\Cloud\Samples\Logging;
 // [START write_log_use]
 use Google\Cloud\Logging\LoggingClient;
 // [END write_log_use]
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Write extends Command {
-
-    use GoogleProjectTrait;
-
+/**
+ * Class Write
+ * @package Google\Cloud\Samples\Logging
+ *
+ * This command simply writes a log message via Logging API.
+ */
+class Write extends CommandWithProject
+{
+    /**
+     * @inheritDoc
+     */
     protected function configure()
     {
         $this
@@ -43,6 +49,9 @@ class Write extends Command {
         $this->addProjectOption();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $message = $input->getArgument("message");
