@@ -41,9 +41,6 @@ class CommandWithProject extends Command
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function interact(InputInterface $input)
     {
         if (empty($input->getOption("project"))) {

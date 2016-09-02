@@ -32,9 +32,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Write extends CommandWithProject
 {
-    /**
-     * @inheritDoc
-     */
     protected function configure()
     {
         $this
@@ -49,9 +46,6 @@ class Write extends CommandWithProject
         $this->addProjectOption();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $message = $input->getArgument("message");
