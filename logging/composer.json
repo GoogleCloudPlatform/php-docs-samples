@@ -1,0 +1,12 @@
+{
+    "require": {
+        "google/cloud": "<2.0",
+        "symfony/console": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": { "Google\\Cloud\\Samples\\Logging\\": "src" }
+    }
+}
