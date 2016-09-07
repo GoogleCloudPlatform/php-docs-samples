@@ -17,51 +17,46 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START write_log_use]
+// [START list_log_use]
 use Google\Cloud\Logging\LoggingClient;
-// [END write_log_use]
-use Symfony\Component\Console\Input\InputArgument;
+// [END list_log_use]
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Write
+ * Class ListEntries
  * @package Google\Cloud\Samples\Logging
  *
- * This command simply writes a log message via Logging API.
+ * This command simply lists log messages.
  */
-class Write extends BaseCommand
+class ListEntries extends BaseCommand
 {
     protected function configure()
     {
         $this
-            ->setName('write')
-            ->setDescription('Writes log entries to the given logger')
-            ->addArgument(
-                "message",
-                InputArgument::OPTIONAL,
-                "The log message to write",
-                "Hello"
-            );
+            ->setName('list-entries')
+            ->setDescription('Lists log entries in the logger');
         $this->addCommonOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $input->getArgument('message');
-        $projectId = $input->getOption('project');
+        $project = $input->getOption('project');
         $loggerName = $input->getOption('logger');
-        // [START write_log]
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        $logger = $logging->logger($loggerName);
-        $entry = $logger->entry($message, [
-            'type' => 'gcs_bucket',
-            'labels' => [
-                'bucket_name' => 'my_bucket'
-            ]
-        ]);
-        $logger->write($entry);
-        // [END write_log]
-        printf("Wrote a log to a logger '%s'.\n", $loggerName);
+        // [START list_log]
+        $logging = new LoggingClient(['projectId' => $project]);
+        $loggerFullName = sprintf('projects/%s/logs/%s', $project, $loggerName);
+        $options = [
+            'filter' => sprintf('logName = "%s"', $loggerFullName)
+        ];
+        foreach ($logging->entries($options) as $entry) {
+            /* @var $entry \Google\Cloud\Logging\Entry */
+            printf(
+                "%s : %s\n",
+                $entry->info()['timestamp'],
+                $entry->info()['textPayload']
+            );
+        }
+        // [END list_log]
     }
 }

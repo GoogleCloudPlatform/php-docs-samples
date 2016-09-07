@@ -24,9 +24,9 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Functional tests for Write.
+ * Functional tests for ListEntries.
  */
-class WriteTest extends \PHPUnit_Framework_TestCase
+class ListEntriesTest extends \PHPUnit_Framework_TestCase
 {
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
@@ -34,6 +34,10 @@ class WriteTest extends \PHPUnit_Framework_TestCase
     private $application;
     /* @var $projectId mixed|string */
     private $projectId;
+    /* @var $loggerName string */
+    private $loggerName;
+    /* @var $message string */
+    private $message;
 
     public static function setUpBeforeClass()
     {
@@ -55,23 +59,31 @@ class WriteTest extends \PHPUnit_Framework_TestCase
         $this->application->add(new DeleteLogger());
         $this->application->add(new ListEntries());
         $this->application->add(new Write());
-    }
-
-    public function testWrite()
-    {
-        $loggerName = 'my_test_logger';
+        $this->loggerName = 'my_test_logger';
+        $this->message = 'Test Message';
         $commandTester = new CommandTester($this->application->get('write'));
-        $message = 'Test Message';
         $commandTester->execute(
             [
                 '--project' => $this->projectId,
-                '--logger' => $loggerName,
-                'message' => $message
+                '--logger' => $this->loggerName,
+                'message' => $this->message
             ],
             ['interactive' => false]
         );
+        sleep(2);
+    }
+
+    public function testListEntries()
+    {
+        $commandTester = new CommandTester(
+            $this->application->get('list-entries')
+        );
+        $commandTester->execute(
+            ['--project' => $this->projectId, '--logger' => $this->loggerName],
+            ['interactive' => false]
+        );
         $this->expectOutputRegex(
-            sprintf("/Wrote a log to a logger '%s'./", $loggerName)
+            sprintf('/: %s/', $this->message)
         );
     }
 }

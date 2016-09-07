@@ -24,12 +24,12 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * A base class for commands which needs project id.
  */
-class CommandWithProject extends Command
+abstract class BaseCommand extends Command
 {
     /**
-     * Add project option to $this.
+     * Add --project and --logger options.
      */
-    protected function addProjectOption()
+    protected function addCommonOptions()
     {
         $this->addOption(
             'project',
@@ -38,6 +38,12 @@ class CommandWithProject extends Command
             'The Google Cloud Platform project name to use for this command. ' .
             'If omitted then the current gcloud project is assumed. ',
             $this->getProjectIdFromGcloud()
+        );
+        $this->addOption(
+            'logger',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'name of the logger', 'my_logger'
         );
     }
 

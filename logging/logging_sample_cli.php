@@ -18,9 +18,13 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use Google\Cloud\Samples\Logging\DeleteLogger;
+use Google\Cloud\Samples\Logging\ListEntries;
 use Google\Cloud\Samples\Logging\Write;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
+$application->add(new DeleteLogger());
+$application->add(new ListEntries());
 $application->add(new Write());
 $application->run();
