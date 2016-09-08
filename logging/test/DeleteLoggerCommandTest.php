@@ -17,27 +17,20 @@
 
 namespace Google\Cloud\Samples\Logging\Tests;
 
-use Google\Cloud\Samples\Logging\DeleteLogger;
-use Google\Cloud\Samples\Logging\ListEntries;
-use Google\Cloud\Samples\Logging\Write;
+use Google\Cloud\Samples\Logging\DeleteLoggerCommand;
+use Google\Cloud\Samples\Logging\WriteCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Functional tests for DeleteLogger.
+ * Functional tests for DeleteLoggerCommand.
  */
-class DeleteLoggerTest extends \PHPUnit_Framework_TestCase
+class DeleteLoggerCommandTest extends \PHPUnit_Framework_TestCase
 {
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
-    /* @var $application \Symfony\Component\Console\Application */
-    private $application;
     /* @var $projectId mixed|string */
     private $projectId;
-    /* @var $loggerName string */
-    private $loggerName;
-    /* @var $message string */
-    private $message;
 
     public static function setUpBeforeClass()
     {
@@ -55,18 +48,14 @@ class DeleteLoggerTest extends \PHPUnit_Framework_TestCase
         if (!$this->projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-        $this->application = new Application();
-        $this->application->add(new DeleteLogger());
-        $this->application->add(new ListEntries());
-        $this->application->add(new Write());
-        $this->loggerName = 'my_test_logger';
-        $this->message = 'Test Message';
-        $commandTester = new CommandTester($this->application->get('write'));
+        $application = new Application();
+        $application->add(new WriteCommand());
+        $commandTester = new CommandTester($application->get('write'));
         $commandTester->execute(
             [
                 '--project' => $this->projectId,
-                '--logger' => $this->loggerName,
-                'message' => $this->message
+                '--logger' => 'my_test_logger',
+                'message' => 'Test Message'
             ],
             ['interactive' => false]
         );
@@ -75,15 +64,15 @@ class DeleteLoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteLogger()
     {
-        $commandTester = new CommandTester(
-            $this->application->get('delete-logger')
-        );
+        $application = new Application();
+        $application->add(new DeleteLoggerCommand());
+        $commandTester = new CommandTester($application->get('delete-logger'));
         $commandTester->execute(
-            ['--project' => $this->projectId, '--logger' => $this->loggerName],
+            ['--project' => $this->projectId, '--logger' => 'my_test_logger'],
             ['interactive' => false]
         );
         $this->expectOutputRegex(
-            sprintf("/Deleted a logger '%s'./", $this->loggerName)
+            sprintf("/Deleted a logger '%s'./", 'my_test_logger')
         );
     }
 }

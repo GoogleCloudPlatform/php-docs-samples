@@ -17,37 +17,51 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START delete_logger_use]
+// [START write_log_use]
 use Google\Cloud\Logging\LoggingClient;
-// [END delete_logger_use]
+// [END write_log_use]
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class DeleteLogger
+ * Class WriteCommand
  * @package Google\Cloud\Samples\Logging
  *
- * This command deletes a logger and all its entries.
+ * This command simply writes a log message via Logging API.
  */
-class DeleteLogger extends BaseCommand
+class WriteCommand extends BaseCommand
 {
     protected function configure()
     {
         $this
-            ->setName('delete-logger')
-            ->setDescription('Deletes the given logger and its entries');
+            ->setName('write')
+            ->setDescription('Writes log entries to the given logger')
+            ->addArgument(
+                "message",
+                InputArgument::OPTIONAL,
+                "The log message to write",
+                "Hello"
+            );
         $this->addCommonOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $message = $input->getArgument('message');
         $projectId = $input->getOption('project');
         $loggerName = $input->getOption('logger');
-        // [START delete_logger]
+        // [START write_log]
         $logging = new LoggingClient(['projectId' => $projectId]);
         $logger = $logging->logger($loggerName);
-        $logger->delete();
-        // [END delete_logger]
-        printf("Deleted a logger '%s'.\n", $loggerName);
+        $entry = $logger->entry($message, [
+            'type' => 'gcs_bucket',
+            'labels' => [
+                'bucket_name' => 'my_bucket'
+            ]
+        ]);
+        $logger->write($entry);
+        // [END write_log]
+        printf("Wrote a log to a logger '%s'.\n", $loggerName);
     }
 }

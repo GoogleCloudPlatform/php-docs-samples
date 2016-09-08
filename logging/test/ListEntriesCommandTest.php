@@ -17,21 +17,18 @@
 
 namespace Google\Cloud\Samples\Logging\Tests;
 
-use Google\Cloud\Samples\Logging\DeleteLogger;
-use Google\Cloud\Samples\Logging\ListEntries;
-use Google\Cloud\Samples\Logging\Write;
+use Google\Cloud\Samples\Logging\ListEntriesCommand;
+use Google\Cloud\Samples\Logging\WriteCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Functional tests for Write.
+ * Functional tests for ListEntriesCommand.
  */
-class WriteTest extends \PHPUnit_Framework_TestCase
+class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
 {
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
-    /* @var $application \Symfony\Component\Console\Application */
-    private $application;
     /* @var $projectId mixed|string */
     private $projectId;
 
@@ -51,27 +48,29 @@ class WriteTest extends \PHPUnit_Framework_TestCase
         if (!$this->projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-        $this->application = new Application();
-        $this->application->add(new DeleteLogger());
-        $this->application->add(new ListEntries());
-        $this->application->add(new Write());
-    }
-
-    public function testWrite()
-    {
-        $loggerName = 'my_test_logger';
-        $commandTester = new CommandTester($this->application->get('write'));
-        $message = 'Test Message';
+        $application = new Application();
+        $application->add(new WriteCommand());
+        $commandTester = new CommandTester($application->get('write'));
         $commandTester->execute(
             [
                 '--project' => $this->projectId,
-                '--logger' => $loggerName,
-                'message' => $message
+                '--logger' => 'my_test_logger',
+                'message' => 'Test Message'
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex(
-            sprintf("/Wrote a log to a logger '%s'./", $loggerName)
+        sleep(2);
+    }
+
+    public function testListEntries()
+    {
+        $application = new Application();
+        $application->add(new ListEntriesCommand());
+        $commandTester = new CommandTester($application->get('list-entries'));
+        $commandTester->execute(
+            ['--project' => $this->projectId, '--logger' => 'my_test_logger'],
+            ['interactive' => false]
         );
+        $this->expectOutputRegex('/: Test Message/');
     }
 }

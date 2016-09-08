@@ -43,7 +43,10 @@ abstract class BaseCommand extends Command
             'logger',
             null,
             InputOption::VALUE_OPTIONAL,
-            'name of the logger', 'my_logger'
+            'The name of the logger. By naming a logger, you can logically '
+            . 'treat log entries in a logger; e.g. you can list or delete '
+            . 'all the log entries by the name of the logger.',
+            'my_logger'
         );
     }
 

@@ -24,12 +24,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ListEntries
+ * Class ListEntriesCommand
  * @package Google\Cloud\Samples\Logging
  *
  * This command simply lists log messages.
  */
-class ListEntries extends BaseCommand
+class ListEntriesCommand extends BaseCommand
 {
     protected function configure()
     {
