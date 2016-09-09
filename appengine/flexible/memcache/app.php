@@ -106,7 +106,7 @@ $app->put('/memcached/{key}', function (Application $app, $key, Request $request
     /** @var Memcached $memcached */
     $memcached = $app['memcached'];
     $value = $request->getContent();
-    return $memcached->set($key, $value);
+    return $memcached->set($key, $value, time() + 600); // 10 minutes expiration
 });
 # [END memcached]
 
