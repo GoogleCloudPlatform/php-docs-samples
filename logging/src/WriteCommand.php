@@ -20,17 +20,17 @@ namespace Google\Cloud\Samples\Logging;
 // [START write_log_use]
 use Google\Cloud\Logging\LoggingClient;
 // [END write_log_use]
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Write
+ * Class WriteCommand
  * @package Google\Cloud\Samples\Logging
  *
  * This command simply writes a log message via Logging API.
  */
-class Write extends CommandWithProject
+class WriteCommand extends BaseCommand
 {
     protected function configure()
     {
@@ -43,16 +43,17 @@ class Write extends CommandWithProject
                 "The log message to write",
                 "Hello"
             );
-        $this->addProjectOption();
+        $this->addCommonOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $input->getArgument("message");
-        $project = $input->getOption('project');
+        $message = $input->getArgument('message');
+        $projectId = $input->getOption('project');
+        $loggerName = $input->getOption('logger');
         // [START write_log]
-        $logging = new LoggingClient(['projectId' => $project]);
-        $logger = $logging->logger('my_logger');
+        $logging = new LoggingClient(['projectId' => $projectId]);
+        $logger = $logging->logger($loggerName);
         $entry = $logger->entry($message, [
             'type' => 'gcs_bucket',
             'labels' => [
@@ -61,6 +62,6 @@ class Write extends CommandWithProject
         ]);
         $logger->write($entry);
         // [END write_log]
-        print "Wrote a log to a logger.\n";
+        printf("Wrote a log to a logger '%s'.\n", $loggerName);
     }
 }

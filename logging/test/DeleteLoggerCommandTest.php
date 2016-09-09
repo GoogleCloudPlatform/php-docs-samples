@@ -17,16 +17,20 @@
 
 namespace Google\Cloud\Samples\Logging\Tests;
 
-use Google\Cloud\Samples\Logging\Write;
+use Google\Cloud\Samples\Logging\DeleteLoggerCommand;
+use Google\Cloud\Samples\Logging\WriteCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Functional test for Write
+ * Functional tests for DeleteLoggerCommand.
  */
-class WriteTest extends \PHPUnit_Framework_TestCase
+class DeleteLoggerCommandTest extends \PHPUnit_Framework_TestCase
 {
+    /* @var $hasCredentials boolean */
     protected static $hasCredentials;
+    /* @var $projectId mixed|string */
+    private $projectId;
 
     public static function setUpBeforeClass()
     {
@@ -35,24 +39,40 @@ class WriteTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function testWrite()
+    public function setUp()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
-
         $application = new Application();
-        $application->add(new Write());
+        $application->add(new WriteCommand());
         $commandTester = new CommandTester($application->get('write'));
         $commandTester->execute(
-            ['--project' => $projectId],
+            [
+                '--project' => $this->projectId,
+                '--logger' => 'my_test_logger',
+                'message' => 'Test Message'
+            ],
             ['interactive' => false]
         );
+        sleep(2);
+    }
 
-        $this->expectOutputRegex("/Wrote a log to a logger./");
+    public function testDeleteLogger()
+    {
+        $application = new Application();
+        $application->add(new DeleteLoggerCommand());
+        $commandTester = new CommandTester($application->get('delete-logger'));
+        $commandTester->execute(
+            ['--project' => $this->projectId, '--logger' => 'my_test_logger'],
+            ['interactive' => false]
+        );
+        $this->expectOutputRegex(
+            sprintf("/Deleted a logger '%s'./", 'my_test_logger')
+        );
     }
 }
