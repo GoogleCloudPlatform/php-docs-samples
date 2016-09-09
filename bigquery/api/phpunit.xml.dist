@@ -26,6 +26,7 @@
     <filter>
         <whitelist>
             <file>bigquery.php</file>
+	    <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
 </phpunit>

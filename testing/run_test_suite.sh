@@ -20,8 +20,8 @@ if [ "${RUN_CS_FIXER}" = "true" ]; then
     ${HOME}/php-cs-fixer fix --dry-run --diff
 fi
 
-# loop through all directories containing "phpunit.xml" and run them
-find * -name phpunit.xml -not -path '*/vendor/*' -exec dirname {} \; | while read DIR
+# loop through all directories containing "phpunit.xml*" and run them
+find * -name 'phpunit.xml*' -not -path '*/vendor/*' -exec dirname {} \; | while read DIR
 do
     pushd ${DIR}
     if [ -f "composer.json" ]; then

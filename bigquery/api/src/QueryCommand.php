@@ -66,7 +66,7 @@ EOF
                 'run the query syncronously'
             )
             ->addOption(
-                'standardSql',
+                'standard-sql',
                 null,
                 InputOption::VALUE_NONE,
                 'run the query using standard SQL instead of legacy SQL syntax'
@@ -96,12 +96,12 @@ EOF
                 run_query(
                     $projectId,
                     $query,
-                    !$input->getOption('standardSql'));
+                    !$input->getOption('standard-sql'));
             } else {
                 run_query_as_job(
                     $projectId,
                     $query,
-                    !$input->getOption('standardSql'));
+                    !$input->getOption('standard-sql'));
             }
         } catch (BadRequestException $e) {
             $response = $e->getServiceException()->getResponse();

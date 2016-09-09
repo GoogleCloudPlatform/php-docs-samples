@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Logging;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A base class for commands which needs project id.
@@ -50,7 +51,7 @@ abstract class BaseCommand extends Command
         );
     }
 
-    protected function interact(InputInterface $input)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
         if (empty($input->getOption("project"))) {
             throw new \Exception("Project ID not specified");
