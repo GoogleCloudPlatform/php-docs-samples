@@ -130,7 +130,8 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
               'query' => $query,
               '--project' => $projectId,
               '--sync',
-              '--standardSql'],
+              '--standard-sql' => true
+            ],
             ['interactive' => false]
         );
 
@@ -186,7 +187,11 @@ class QueryCommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
         $commandTester->execute(
-            ['query' => $query, '--project' => $projectId, '--standardSql'],
+            [
+                'query' => $query,
+                '--project' => $projectId,
+                '--standard-sql' => true
+            ],
             ['interactive' => false]
         );
 

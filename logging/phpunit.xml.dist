@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="test/bootstrap.php">
     <testsuites>
-        <testsuite name="Google Stackdriver Logging Cloud library Tests">
+        <testsuite name="Stackdriver Logging Cloud library Tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -25,7 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <dir>src</dir>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
 </phpunit>
