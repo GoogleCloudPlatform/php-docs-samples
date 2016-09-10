@@ -1,6 +1,5 @@
 {
     "require": {
-        "google/apiclient": "^2.0",
         "google/cloud": "0.6",
         "symfony/console": "^3.0"
     },
