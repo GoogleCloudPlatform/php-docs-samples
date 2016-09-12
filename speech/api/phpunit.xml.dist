@@ -25,7 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <file>speech.php</file>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
 </phpunit>

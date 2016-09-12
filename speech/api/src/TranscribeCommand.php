@@ -70,6 +70,12 @@ EOF
                 'The sample rate of the audio file. This is required if the sample ' .
                 'rate is unable to be determined. '
             )
+            ->addOption(
+                'sync',
+                null,
+                InputOption::VALUE_NONE,
+                'Run the transcription synchronously. '
+            )
         ;
     }
 
@@ -81,10 +87,15 @@ EOF
         $encoding = $input->getOption('encoding');
         $sampleRate = $input->getOption('sample-rate');
         $audioFile = $input->getArgument('audio-file');
-
-        transcribe($projectId, $audioFile, [
+        $options = [
             'encoding' => $encoding,
             'sampleRate' => $sampleRate,
-        ]);
+        ];
+
+        if ($input->getOption('sync')) {
+            transcribe_sync($projectId, $audioFile, $options);
+        } else {
+            transcribe_async($projectId, $audioFile, $options);
+        }
     }
 }

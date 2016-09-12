@@ -8,7 +8,8 @@
             "Google\\Cloud\\Samples\\Speech\\": "src/"
         },
         "files": [
-            "src/functions/transcribe.php"
+            "src/functions/transcribe_async.php",
+            "src/functions/transcribe_sync.php"
         ]
     }
 }

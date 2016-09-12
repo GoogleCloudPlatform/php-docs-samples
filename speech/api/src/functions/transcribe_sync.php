@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 use Exception;
-# [START transcribe]
+# [START transcribe_sync]
 use Google\Cloud\ServiceBuilder;
 use Google\Cloud\ExponentialBackoff;
 
@@ -32,7 +32,7 @@ use Google\Cloud\ExponentialBackoff;
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe($projectId, '/path/to/audiofile.wav');
+ * transcribe_sync($projectId, '/path/to/audiofile.wav');
  * ```.
  *
  * @param string $projectId The Google project ID.
@@ -40,30 +40,16 @@ use Google\Cloud\ExponentialBackoff;
  *
  * @return string the text transcription
  */
-function transcribe($projectId, $audioFile, $options = [])
+function transcribe_sync($projectId, $audioFile, $options = [])
 {
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
     $speech = $builder->speech();
-    $operation = $speech->beginRecognizeOperation(
+    $results = $speech->recognize(
         fopen($audioFile, 'r'),
         $options
     );
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($operation) {
-        print('Waiting for operation to complete' . PHP_EOL);
-        $operation->reload();
-        if (!$operation->isComplete()) {
-            throw new Exception('Job has not yet completed', 500);
-        }
-    });
-
-    if ($operation->isComplete()) {
-        if (empty($results = $operation->results())) {
-            $results = $operation->info();
-        }
-        print_r($results);
-    }
+    print_r($results);
 }
-# [END transcribe]
+# [END transcribe_sync]
