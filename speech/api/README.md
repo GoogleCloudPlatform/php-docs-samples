@@ -9,6 +9,17 @@ Library for PHP][google-cloud-php] to make REST calls as well as
 contains samples using the more-efficient (though sometimes more
 complex) [GRPC][grpc] API. The GRPC API also allows streaming requests.
 
+## Installation
+
+Install the dependencies for this library via [composer](https://getcomposer.org)
+
+    $ cd /path/to/php-docs-samples/speech/api
+    $ composer install 
+
+Authenticate your project using [gcloud](https://cloud.google.com/sdk/gcloud/)
+
+    $ gcloud config set project YOUR_PROJECT_ID
+
 ## Audio Format
 
 For the best results, use [SoX][sox] to format audio files into raw format:
