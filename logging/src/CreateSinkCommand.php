@@ -87,6 +87,6 @@ class CreateSinkCommand extends BaseCommand
             ['filter' => $filterString]
         );
         // [END create_sink]
-        printf("Created a sink '%s'.\n", $sinkName);
+        printf("Created a sink '%s'." . PHP_EOL, $sinkName);
     }
 }

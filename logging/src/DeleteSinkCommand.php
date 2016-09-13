@@ -55,6 +55,6 @@ class DeleteSinkCommand extends BaseCommand
         $logging = new LoggingClient(['projectId' => $projectId]);
         $logging->sink($sinkName)->delete();
         // [END delete_sink]
-        printf("Deleted a sink '%s'.\n", $sinkName);
+        printf("Deleted a sink '%s'." . PHP_EOL, $sinkName);
     }
 }

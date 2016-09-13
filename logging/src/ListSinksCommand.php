@@ -50,7 +50,7 @@ class ListSinksCommand extends BaseCommand
             foreach ($sink->info() as $key => $value) {
                 print "$key:$value\n";
             }
-            print "\n";
+            print PHP_EOL;
         }
         // [END list_sinks]
     }

@@ -48,6 +48,6 @@ class DeleteLoggerCommand extends BaseCommand
         $logger = $logging->logger($loggerName);
         $logger->delete();
         // [END delete_logger]
-        printf("Deleted a logger '%s'.\n", $loggerName);
+        printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
     }
 }

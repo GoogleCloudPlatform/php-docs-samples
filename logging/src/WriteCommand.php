@@ -62,6 +62,6 @@ class WriteCommand extends BaseCommand
         ]);
         $logger->write($entry);
         // [END write_log]
-        printf("Wrote a log to a logger '%s'.\n", $loggerName);
+        printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
     }
 }
