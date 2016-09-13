@@ -9,6 +9,27 @@ Library for PHP][google-cloud-php] to make REST calls as well as
 contains samples using the more-efficient (though sometimes more
 complex) [GRPC][grpc] API. The GRPC API also allows streaming requests.
 
+## Audio Format
+
+For the best results, use [SoX][sox] to format audio files into raw format:
+
+```sh
+sox YourAudio.mp3 --rate 16k -encoding signed -bits 8 YourAudio.raw
+```
+
+See [Choosing an Audio Encoding][choose-encoding] for more information.
+
+## Usage
+
+Once you have a speech sample in the proper format, send it through the speech
+API using the transcribe command:
+
+```sh
+php speech.php transcribe YourAudio.raw --encoding LINEAR16 --sample-rate 16000
+```
+
 [speech-api]: http://cloud.google.com/speech
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php/
+[choose-encoding]: https://cloud.google.com/speech/docs/best-practices#choosing_an_audio_encoding
+[sox]: http://sox.sourceforge.net/
 [grpc]: http://grpc.io
