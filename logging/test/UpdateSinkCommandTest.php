@@ -86,7 +86,7 @@ class UpdateSinkCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testListSinks()
+    public function testUpdateSink()
     {
         $application = new Application();
         $application->add(new UpdateSinkCommand());
@@ -113,5 +113,28 @@ class UpdateSinkCommandTest extends \PHPUnit_Framework_TestCase
                 'updated-logger'
             ),
             $sink->info['filter']);
+    }
+
+    public function testUpdateSinkWithFilter()
+    {
+        $application = new Application();
+        $application->add(new UpdateSinkCommand());
+        $commandTester = new CommandTester($application->get('update-sink'));
+        $commandTester->execute(
+            [
+                '--project' => $this->projectId,
+                '--sink' => self::$sinkName,
+                '--filter' => 'severity >= INFO',
+            ],
+            ['interactive' => false]
+        );
+        $this->expectOutputRegex(
+            sprintf("/Updated a sink '%s'./", self::$sinkName)
+        );
+        // Check the updated filter value
+        $logging = new LoggingClient(['projectId' => $this->projectId]);
+        $sink = $logging->sink(self::$sinkName);
+        $sink->reload();
+        $this->assertRegExp('/severity >= INFO/', $sink->info['filter']);
     }
 }
