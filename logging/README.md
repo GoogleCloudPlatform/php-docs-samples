@@ -1,8 +1,8 @@
 # Stackdriver Logging v2 API Samples
 
-`logging_sample_cli.php` is a simple command-line program to demonstrate writing
-to a log, listing its entries, deleting it, interacting with sinks to export
-logs to Google Cloud Storage.
+`logging.php` is a simple command-line program to demonstrate writing to a log,
+listing its entries, deleting it, interacting with sinks to export logs to
+Google Cloud Storage.
 
 To use logging sinks, you will also need a Google Cloud Storage Bucket.
 
@@ -22,6 +22,6 @@ Use the [Cloud SDK](https://cloud.google.com/sdk) to provide authentication:
 Run the samples:
 
     ```
-    php logging_sample_cli.php list # For getting sub command list
-    php logging sample_cli.php help write # For showing help for write sub command `write`
+    php logging.php list # For getting sub command list
+    php logging.php help write # For showing help for write sub command `write`
     ```
