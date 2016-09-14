@@ -17,51 +17,44 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START write_log_use]
+// [START delete_sink_use]
 use Google\Cloud\Logging\LoggingClient;
-// [END write_log_use]
-use Symfony\Component\Console\Input\InputArgument;
+// [END delete_sink_use]
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class WriteCommand
+ * Class DeleteSinkCommand
  * @package Google\Cloud\Samples\Logging
  *
- * This command simply writes a log message via Logging API.
+ * This command simply creates a sink.
  */
-class WriteCommand extends BaseCommand
+class DeleteSinkCommand extends BaseCommand
 {
     protected function configure()
     {
         $this
-            ->setName('write')
-            ->setDescription('Writes log entries to the given logger')
-            ->addArgument(
-                "message",
-                InputArgument::OPTIONAL,
-                "The log message to write",
-                "Hello"
+            ->setName('delete-sink')
+            ->setDescription('Deletes a Logging sink')
+            ->addOption(
+                'sink',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The name of the Logging sink',
+                'my_sink'
             );
         $this->addCommonOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $input->getArgument('message');
+        $sinkName = $input->getOption('sink');
         $projectId = $input->getOption('project');
-        $loggerName = $input->getOption('logger');
-        // [START write_log]
+        // [START delete_sink]
         $logging = new LoggingClient(['projectId' => $projectId]);
-        $logger = $logging->logger($loggerName);
-        $entry = $logger->entry($message, [
-            'type' => 'gcs_bucket',
-            'labels' => [
-                'bucket_name' => 'my_bucket'
-            ]
-        ]);
-        $logger->write($entry);
-        // [END write_log]
-        printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
+        $logging->sink($sinkName)->delete();
+        // [END delete_sink]
+        printf("Deleted a sink '%s'." . PHP_EOL, $sinkName);
     }
 }

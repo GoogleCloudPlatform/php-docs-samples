@@ -52,7 +52,7 @@ class ListEntriesCommand extends BaseCommand
         foreach ($logging->entries($options) as $entry) {
             /* @var $entry \Google\Cloud\Logging\Entry */
             printf(
-                "%s : %s\n",
+                "%s : %s" . PHP_EOL,
                 $entry->info()['timestamp'],
                 $entry->info()['textPayload']
             );
