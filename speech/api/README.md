@@ -14,9 +14,9 @@ complex) [GRPC][grpc] API. The GRPC API also allows streaming requests.
 Install the dependencies for this library via [composer](https://getcomposer.org)
 
     $ cd /path/to/php-docs-samples/speech/api
-    $ composer install 
+    $ composer install
 
-Authenticate your project using [gcloud](https://cloud.google.com/sdk/gcloud/)
+Configure your project using [gcloud](https://cloud.google.com/sdk/gcloud/)
 
     $ gcloud config set project YOUR_PROJECT_ID
 
