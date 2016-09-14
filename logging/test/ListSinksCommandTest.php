@@ -53,7 +53,7 @@ class ListSinksCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No project ID');
         }
         if (!$bucket = getenv('GOOGLE_BUCKET_NAME')) {
-            $this->markTestSkipped('No SINK_BUCKET envvar');
+            $this->markTestSkipped('No GOOGLE_BUCKET_NAME envvar');
         }
         $application = new Application();
         $application->add(new CreateSinkCommand());

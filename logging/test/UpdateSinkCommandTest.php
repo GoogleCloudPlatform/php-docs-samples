@@ -17,15 +17,17 @@
 
 namespace Google\Cloud\Samples\Logging\Tests;
 
+use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Samples\Logging\CreateSinkCommand;
 use Google\Cloud\Samples\Logging\DeleteSinkCommand;
+use Google\Cloud\Samples\Logging\UpdateSinkCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Functional tests for ListSinkCommand.
+ * Functional tests for UpdateSinkCommand.
  */
-class CreateSinkCommandTest extends \PHPUnit_Framework_TestCase
+class UpdateSinkCommandTest extends \PHPUnit_Framework_TestCase
 {
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
@@ -51,6 +53,22 @@ class CreateSinkCommandTest extends \PHPUnit_Framework_TestCase
         if (!$this->projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
+        if (!$bucket = getenv('GOOGLE_BUCKET_NAME')) {
+            $this->markTestSkipped('No GOOGLE_BUCKET_NAME envvar');
+        }
+        $application = new Application();
+        $application->add(new CreateSinkCommand());
+        $commandTester = new CommandTester($application->get('create-sink'));
+        $loggerName = 'my_test_logger';
+        $commandTester->execute(
+            [
+                '--project' => $this->projectId,
+                '--logger' => $loggerName,
+                '--bucket' => $bucket,
+                '--sink' => self::$sinkName,
+            ],
+            ['interactive' => false]
+        );
     }
 
     public function tearDown()
@@ -68,26 +86,55 @@ class CreateSinkCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCreateSink()
+    public function testUpdateSink()
     {
-        if (!$bucket = getenv('GOOGLE_BUCKET_NAME')) {
-            $this->markTestSkipped('No GOOGLE_BUCKET_NAME envvar');
-        }
         $application = new Application();
-        $application->add(new CreateSinkCommand());
-        $commandTester = new CommandTester($application->get('create-sink'));
-        $loggerName = 'my_test_logger';
+        $application->add(new UpdateSinkCommand());
+        $commandTester = new CommandTester($application->get('update-sink'));
         $commandTester->execute(
             [
                 '--project' => $this->projectId,
-                '--logger' => $loggerName,
-                '--bucket' => $bucket,
                 '--sink' => self::$sinkName,
+                '--logger' => 'updated-logger',
             ],
             ['interactive' => false]
         );
         $this->expectOutputRegex(
-            sprintf("/Created a sink '%s'./", self::$sinkName)
+            sprintf("/Updated a sink '%s'./", self::$sinkName)
         );
+        // Check the updated filter value
+        $logging = new LoggingClient(['projectId' => $this->projectId]);
+        $sink = $logging->sink(self::$sinkName);
+        $sink->reload();
+        $this->assertRegExp(
+            sprintf(
+                '|projects/%s/logs/%s|',
+                $this->projectId,
+                'updated-logger'
+            ),
+            $sink->info['filter']);
+    }
+
+    public function testUpdateSinkWithFilter()
+    {
+        $application = new Application();
+        $application->add(new UpdateSinkCommand());
+        $commandTester = new CommandTester($application->get('update-sink'));
+        $commandTester->execute(
+            [
+                '--project' => $this->projectId,
+                '--sink' => self::$sinkName,
+                '--filter' => 'severity >= INFO',
+            ],
+            ['interactive' => false]
+        );
+        $this->expectOutputRegex(
+            sprintf("/Updated a sink '%s'./", self::$sinkName)
+        );
+        // Check the updated filter value
+        $logging = new LoggingClient(['projectId' => $this->projectId]);
+        $sink = $logging->sink(self::$sinkName);
+        $sink->reload();
+        $this->assertRegExp('/severity >= INFO/', $sink->info['filter']);
     }
 }
