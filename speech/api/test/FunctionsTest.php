@@ -28,6 +28,7 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
 
         $base64Audio = require __DIR__ . '/../src/functions/base64_encode_audio.php';
 
-        $this->assertEquals(base64_decode($base64Audio), stream_get_contents($audioFile));
+        $audioFileResource = fopen($audioFile, 'r');
+        $this->assertEquals(base64_decode($base64Audio), stream_get_contents($audioFileResource));
     }
 }

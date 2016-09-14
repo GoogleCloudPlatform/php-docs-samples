@@ -12,6 +12,7 @@ namespace Google\Cloud\Samples\Speech;
  * ```
  */
 # [START base64_audio]
-$base64Audio = base64_encode(stream_get_contents($audioFile));
+$audioFileResource = fopen($audioFile, 'r');
+$base64Audio = base64_encode(stream_get_contents($audioFileResource));
 # [end base64_audio]
 return $base64Audio;
