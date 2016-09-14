@@ -15,21 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\pubsub\test;
+namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\Client;
 
-class pubsubTest extends WebTestCase
+class appTest extends WebTestCase
 {
     public function createApplication()
     {
         // pull the app and set parameters for testing
-        $app = require __DIR__ . '/../src/app.php';
+        $app = require __DIR__ . '/../app.php';
 
         $app['session.test'] = true;
         $app['debug'] = true;
         $app['project_id'] = 'cloud-samples-tests-php';
+        $app['topic'] = getenv('GOOGLE_PUBSUB_TOPIC');
+        $app['subscription'] = getenv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
         // this will be set by travis, but may not be set locally
         if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
@@ -39,6 +41,9 @@ class pubsubTest extends WebTestCase
 
         if (!file_exists($credentials) || 0 == filesize($credentials)) {
             $this->markTestSkipped('credentials not found');
+        }
+        if (empty($app['topic']) || empty($app['subscription'])) {
+            $this->markTestSkipped('topic or subscription not set');
         }
 
         // prevent HTML error exceptions
@@ -61,22 +66,8 @@ class pubsubTest extends WebTestCase
 
     public function testFetchMessages()
     {
-        // set up mock objects
-        $apiResponse = new \Google_Service_Datastore_RunQueryResponse();
-        $apiResponse->setBatch(new \Google_Service_Datastore_QueryResultBatch());
-        $apiClient = $this->getMock('Google_Client');
-        $apiClient
-            ->expects($this->once())
-            ->method('execute')
-            ->will($this->returnValue($apiResponse));
-        $apiClient
-            ->expects($this->once())
-            ->method('getLogger')
-            ->will($this->returnValue($this->getMock('Psr\Log\LoggerInterface')));
-
         // create the application
         $app = $this->createApplication();
-        $app['google_client'] = $apiClient;
         $client = new Client($app);
 
         // make the request
@@ -86,25 +77,12 @@ class pubsubTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertTrue($response->isOk());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals('[]', $response->getContent());
+        $this->assertTrue(is_array(json_decode($response->getContent())));
     }
 
     public function testSendMessage()
-    {
-        // set up mock objects
-        $apiClient = $this->getMock('Google_Client');
-        $apiClient
-            ->expects($this->once())
-            ->method('execute')
-            ->will($this->returnValue(true));
-        $apiClient
-            ->expects($this->once())
-            ->method('getLogger')
-            ->will($this->returnValue($this->getMock('Psr\Log\LoggerInterface')));
-
-        // create the application
+    {   // create the application
         $app = $this->createApplication();
-        $app['google_client'] = $apiClient;
         $client = new Client($app);
 
         // make the request

@@ -1,8 +1,5 @@
 runtime: php
 vm: true
 
-runtime_config:
-  document_root: web
-
 env_variables:
-  GOOGLE_PROJECT_NAME: your-google-project-id
+  GOOGLE_PROJECT_NAME: YOUR_PROJECT_ID

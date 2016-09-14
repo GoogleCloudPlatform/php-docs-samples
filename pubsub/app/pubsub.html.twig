@@ -20,7 +20,6 @@
     <button ng-click="PubsubController.toggleAutoUpdate()" ng-hide="PubsubController.isAutoUpdating">
         Start auto update
     </button>
-    per <input type="text" size="3" ng-model="PubsubController.interval"> seconds.
     <span ng-show="PubsubController.errorNotice"><b>{{ "{{ PubsubController.errorNotice }}" }}</b></span>
 
     <h2>Messages:</h2>
@@ -28,6 +27,6 @@
         <li ng-repeat="m in PubsubController.messages track by $index">{{ "{{ m }}" }}</li>
     </ul>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-    <script src="/js/pubsub.js"></script>
+    <script src="/pubsub.js"></script>
   </body>
 </html>

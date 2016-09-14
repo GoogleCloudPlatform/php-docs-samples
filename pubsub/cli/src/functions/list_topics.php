@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -16,11 +15,30 @@
  * limitations under the License.
  */
 
-// composer autoloading
-require_once __DIR__ . '/../vendor/autoload.php';
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/pubsub/README.md
+ */
 
-$app = require_once __DIR__ . '/../src/app.php';
+namespace Google\Cloud\Samples\PubSub;
 
-$app['debug'] = true;
+# [START list_topics]
+use Google\Cloud\ServiceBuilder;
 
-$app->run();
+/**
+ * Lists all Pub/Sub topics.
+ *
+ * @param string $projectId  The Google project ID.
+ */
+function list_topics($projectId)
+{
+    $builder = new ServiceBuilder([
+        'projectId' => $projectId,
+    ]);
+    $pubsub = $builder->pubsub();
+    foreach ($pubsub->topics() as $topic) {
+        printf('Topic: %s' . PHP_EOL, $topic->name());
+    }
+}
+# [END list_topics]
