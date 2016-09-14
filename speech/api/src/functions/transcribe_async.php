@@ -32,19 +32,16 @@ use Google\Cloud\ExponentialBackoff;
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_async($projectId, '/path/to/audiofile.wav');
+ * transcribe_async('/path/to/audiofile.wav');
  * ```.
  *
- * @param string $projectId The Google project ID.
  * @param string $audioFile path to an audio file.
  *
  * @return string the text transcription
  */
-function transcribe_async($projectId, $audioFile, $options = [])
+function transcribe_async($audioFile, $options = [])
 {
-    $builder = new ServiceBuilder([
-        'projectId' => $projectId,
-    ]);
+    $builder = new ServiceBuilder();
     $speech = $builder->speech();
     $operation = $speech->beginRecognizeOperation(
         fopen($audioFile, 'r'),
