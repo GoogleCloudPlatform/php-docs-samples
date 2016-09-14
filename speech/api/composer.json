@@ -1,0 +1,15 @@
+{
+    "require": {
+        "google/cloud": "0.8",
+        "symfony/console": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Speech\\": "src/"
+        },
+        "files": [
+            "src/functions/transcribe_async.php",
+            "src/functions/transcribe_sync.php"
+        ]
+    }
+}
