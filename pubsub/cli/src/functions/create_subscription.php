@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START create_subscription]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Creates a Pub/Sub subscription.
@@ -35,10 +35,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function create_subscription($projectId, $topicName, $subscriptionName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $topic = $pubsub->topic($topicName);
     $subscription = $topic->subscription($subscriptionName);
     $subscription->create();

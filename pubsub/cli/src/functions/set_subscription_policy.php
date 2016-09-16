@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START set_subscription_policy]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Adds a user to the policy for a Pub/Sub subscription.
@@ -35,10 +35,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function set_subscription_policy($projectId, $subscriptionName, $userEmail)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $subscription = $pubsub->subscription($subscriptionName);
     $policy = $subscription->iam()->policy();
     $policy['bindings'][] = [

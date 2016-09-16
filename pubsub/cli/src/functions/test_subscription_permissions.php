@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START test_subscription_permissions]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Prints the permissions of a subscription.
@@ -34,10 +34,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function test_subscription_permissions($projectId, $subscriptionName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $subscription = $pubsub->subscription($subscriptionName);
     $permissions = $subscription->iam()->testPermissions([
         'pubsub.subscriptions.consume',

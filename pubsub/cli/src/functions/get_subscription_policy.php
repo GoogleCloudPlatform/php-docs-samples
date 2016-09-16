@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START get_subscription_policy]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Prints the policy for a PubSub subscription.
@@ -34,10 +34,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function get_subscription_policy($projectId, $subscriptionName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $subscription = $pubsub->subscription($subscriptionName);
     $policy = $subscription->iam()->policy();
     print_r($policy);

@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START pull_message]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Pulls all Pub/Sub messages for a subscription.
@@ -34,10 +34,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function pull_messages($projectId, $subscriptionName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $subscription = $pubsub->subscription($subscriptionName);
     foreach ($subscription->pull() as $message) {
         $messageData = $message['message']['data'];

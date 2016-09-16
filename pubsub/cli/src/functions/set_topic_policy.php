@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START set_topic_policy]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Adds a user to the policy for a Pub/Sub topic.
@@ -35,10 +35,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function set_topic_policy($projectId, $topicName, $userEmail)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $topic = $pubsub->topic($topicName);
     $policy = $topic->iam()->policy();
     $policy['bindings'][] = [

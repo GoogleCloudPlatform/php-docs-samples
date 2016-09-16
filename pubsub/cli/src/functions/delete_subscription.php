@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START delete_subscription]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Creates a Pub/Sub subscription.
@@ -34,10 +34,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function delete_subscription($projectId, $subscriptionName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $subscription = $pubsub->subscription($subscriptionName);
     $subscription->delete();
 

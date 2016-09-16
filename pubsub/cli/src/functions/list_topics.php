@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START list_topics]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Lists all Pub/Sub topics.
@@ -33,10 +33,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function list_topics($projectId)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     foreach ($pubsub->topics() as $topic) {
         printf('Topic: %s' . PHP_EOL, $topic->name());
     }

@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START create_topic]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Creates a Pub/Sub topic.
@@ -34,10 +34,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function create_topic($projectId, $topicName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $topic = $pubsub->createTopic($topicName);
 
     printf('Topic created: %s' . PHP_EOL, $topic->name());

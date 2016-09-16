@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START publish_message]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Publishes a message for a Pub/Sub topic.
@@ -35,10 +35,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function publish_message($projectId, $topicName, $message)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $topic = $pubsub->topic($topicName);
     $topic->publish(['data' => $message]);
     print('Message published' . PHP_EOL);

@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START test_topic_permissions]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Prints the permissions of a topic.
@@ -34,10 +34,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function test_topic_permissions($projectId, $topicName)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     $topic = $pubsub->topic($topicName);
     $permissions = $topic->iam()->testPermissions([
         'pubsub.topics.attachSubscription',

@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START list_subscriptions]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Lists all Pub/Sub subscriptions.
@@ -33,10 +33,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function list_subscriptions($projectId)
 {
-    $builder = new ServiceBuilder([
+    $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $pubsub = $builder->pubsub();
     foreach ($pubsub->subscriptions() as $subscription) {
         printf('Subscription: %s' . PHP_EOL, $subscription->name());
     }

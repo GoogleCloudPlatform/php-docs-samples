@@ -33,11 +33,10 @@ namespace Google\Cloud\Samples\PubSub;
  * ```
  */
 # [START build_service]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\PubSub\PubSubClient;
 
-$builder = new ServiceBuilder([
+$pubsub = new PubSubClient([
     'projectId' => $projectId,
 ]);
-$pubsub = $builder->pubsub();
 # [END build_service]
 return $pubsub;
