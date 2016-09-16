@@ -100,16 +100,16 @@
         },
         {
             "name": "google/cloud",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "703b896807334b5f3ec1a06b446135266e0795f5"
+                "reference": "79a765fdcb2be9e756f8bf9283ad3626cd2f61d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/703b896807334b5f3ec1a06b446135266e0795f5",
-                "reference": "703b896807334b5f3ec1a06b446135266e0795f5",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/79a765fdcb2be9e756f8bf9283ad3626cd2f61d4",
+                "reference": "79a765fdcb2be9e756f8bf9283ad3626cd2f61d4",
                 "shasum": ""
             },
             "require": {
@@ -122,6 +122,7 @@
                 "rize/uri-template": "~0.3"
             },
             "require-dev": {
+                "james-heinrich/getid3": "^1.9",
                 "league/json-guard": "^0.3",
                 "phpdocumentor/phpdocumentor": "2.8.*",
                 "phpunit/phpunit": "4.8.*",
@@ -130,7 +131,8 @@
             },
             "suggest": {
                 "google/gax": "Required to support gRPC",
-                "google/proto-client-php": "Required to support gRPC"
+                "google/proto-client-php": "Required to support gRPC",
+                "james-heinrich/getid3": "Allows the Google Cloud Speech client to determine sample rate and encoding of audio inputs"
             },
             "type": "library",
             "autoload": {
@@ -158,6 +160,7 @@
                 "big query",
                 "bigquery",
                 "cloud",
+                "datastore",
                 "gcs",
                 "google",
                 "google api",
@@ -169,12 +172,13 @@
                 "natural language",
                 "pub sub",
                 "pubsub",
+                "speech",
                 "stackdriver logging",
                 "storage",
                 "translate",
                 "vision"
             ],
-            "time": "2016-08-31 22:16:34"
+            "time": "2016-09-09 14:17:08"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -605,16 +609,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f9e638e8149e9e41b570ff092f8007c477ef0ce5"
+                "reference": "8ea494c34f0f772c3954b5fbe00bffc5a435e563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f9e638e8149e9e41b570ff092f8007c477ef0ce5",
-                "reference": "f9e638e8149e9e41b570ff092f8007c477ef0ce5",
+                "url": "https://api.github.com/repos/symfony/console/zipball/8ea494c34f0f772c3954b5fbe00bffc5a435e563",
+                "reference": "8ea494c34f0f772c3954b5fbe00bffc5a435e563",
                 "shasum": ""
             },
             "require": {
@@ -661,7 +665,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-26 08:04:17"
+            "time": "2016-08-19 06:48:39"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1731,16 +1735,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac"
+                "reference": "f291ed25eb1435bddbe8a96caaef16469c2a092d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/1819adf2066880c7967df7180f4f662b6f0567ac",
-                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/f291ed25eb1435bddbe8a96caaef16469c2a092d",
+                "reference": "f291ed25eb1435bddbe8a96caaef16469c2a092d",
                 "shasum": ""
             },
             "require": {
@@ -1776,7 +1780,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17 14:02:08"
+            "time": "2016-09-02 02:12:52"
         },
         {
             "name": "webmozart/assert",

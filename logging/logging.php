@@ -23,6 +23,7 @@ use Google\Cloud\Samples\Logging\DeleteLoggerCommand;
 use Google\Cloud\Samples\Logging\DeleteSinkCommand;
 use Google\Cloud\Samples\Logging\ListEntriesCommand;
 use Google\Cloud\Samples\Logging\ListSinksCommand;
+use Google\Cloud\Samples\Logging\UpdateSinkCommand;
 use Google\Cloud\Samples\Logging\WriteCommand;
 use Symfony\Component\Console\Application;
 
@@ -32,5 +33,6 @@ $application->add(new DeleteLoggerCommand());
 $application->add(new DeleteSinkCommand());
 $application->add(new ListEntriesCommand());
 $application->add(new ListSinksCommand());
+$application->add(new UpdateSinkCommand());
 $application->add(new WriteCommand());
 $application->run();
