@@ -41,9 +41,6 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('No project ID');
-        }
 
         $application = new Application();
         $application->add(new TranscribeCommand());
@@ -53,7 +50,6 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
                 'audio-file' => $audioFile,
                 '--encoding' => $encoding,
                 '--sample-rate' => $sampleRate,
-                '--project' => $projectId
             ],
             ['interactive' => false]
         );

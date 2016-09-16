@@ -30,19 +30,16 @@ use Google\Cloud\ServiceBuilder;
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_sync($projectId, '/path/to/audiofile.wav');
+ * transcribe_sync('/path/to/audiofile.wav');
  * ```.
  *
- * @param string $projectId The Google project ID.
  * @param string $audioFile path to an audio file.
  *
  * @return string the text transcription
  */
-function transcribe_sync($projectId, $audioFile, $options = [])
+function transcribe_sync($audioFile, $options = [])
 {
-    $builder = new ServiceBuilder([
-        'projectId' => $projectId,
-    ]);
+    $builder = new ServiceBuilder();
     $speech = $builder->speech();
     $results = $speech->recognize(
         fopen($audioFile, 'r'),
