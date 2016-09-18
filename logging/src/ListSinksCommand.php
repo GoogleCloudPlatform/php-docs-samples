@@ -17,51 +17,41 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START write_log_use]
+// [START list_sinks_use]
 use Google\Cloud\Logging\LoggingClient;
-// [END write_log_use]
-use Symfony\Component\Console\Input\InputArgument;
+// [END list_sinks_use]
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class WriteCommand
+ * Class ListSinksCommand
  * @package Google\Cloud\Samples\Logging
  *
- * This command simply writes a log message via Logging API.
+ * This command simply list sinks
  */
-class WriteCommand extends BaseCommand
+class ListSinksCommand extends BaseCommand
 {
     protected function configure()
     {
         $this
-            ->setName('write')
-            ->setDescription('Writes log entries to the given logger')
-            ->addArgument(
-                "message",
-                InputArgument::OPTIONAL,
-                "The log message to write",
-                "Hello"
-            );
+            ->setName('list-sinks')
+            ->setDescription('Lists sinks');
         $this->addCommonOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $input->getArgument('message');
         $projectId = $input->getOption('project');
-        $loggerName = $input->getOption('logger');
-        // [START write_log]
+        //$loggerName = $input->getOption('logger');
+        // [START list_sinks]
         $logging = new LoggingClient(['projectId' => $projectId]);
-        $logger = $logging->logger($loggerName);
-        $entry = $logger->entry($message, [
-            'type' => 'gcs_bucket',
-            'labels' => [
-                'bucket_name' => 'my_bucket'
-            ]
-        ]);
-        $logger->write($entry);
-        // [END write_log]
-        printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
+        foreach ($logging->sinks() as $sink) {
+            /* @var $sink \Google\Cloud\Logging\Sink */
+            foreach ($sink->info() as $key => $value) {
+                print "$key:$value\n";
+            }
+            print PHP_EOL;
+        }
+        // [END list_sinks]
     }
 }
