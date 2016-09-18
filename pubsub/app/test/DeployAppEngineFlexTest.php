@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\pubsub\test;
+namespace Google\Cloud\Samples\PubSub\test;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
@@ -27,11 +27,11 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
     public function beforeDeploy()
     {
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        FileUtil::copyDir(__DIR__ . '/../../appengine/flexible/pubsub', $tmpDir);
+        FileUtil::copyDir(__DIR__ . '/../../../appengine/flexible/pubsub', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
         $appYaml = Yaml::parse(file_get_contents('app.yaml'));
-        $appYaml['env_variables']['GOOGLE_PROJECT_NAME'] =
+        $appYaml['env_variables']['GOOGLE_PROJECT_ID'] =
             getenv('GOOGLE_PROJECT_ID');
         file_put_contents('app.yaml', Yaml::dump($appYaml));
     }
@@ -46,10 +46,6 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
 
     public function testSendMessage()
     {
-        $resp = $this->client->request('POST', '/create_topic_and_subscription');
-        $this->assertEquals('200', $resp->getStatusCode(),
-            '/create_topic_and_subscription status code');
-
         $resp = $this->client->request('POST', '/send_message', [
             'form_params' => [
                 'message' => 'Good day!'
