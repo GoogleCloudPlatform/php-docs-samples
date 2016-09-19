@@ -98,7 +98,7 @@ $app['save_pull_message'] = $app->protect(function ($message) use ($app) {
     $app['memcache']->set('pull-messages', $messages);
 });
 
-$app['memcache'] = function() {
+$app['memcache'] = function () {
     return new Memcached;
 };
 
