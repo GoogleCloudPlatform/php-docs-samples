@@ -24,26 +24,22 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START analyze_entities]
-use Google\Cloud\ServiceBuilder;
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
 
 /**
  * Find the entities in text.
  * ```
- * analyze_entities($projectId, 'Do you know the way to San Jose?');
+ * analyze_entities('Do you know the way to San Jose?');
  * ```.
  *
- * @param string $projectId The Google project ID.
  * @param string $text The text to analyze.
  *
  * @return Annotation
  */
 function analyze_entities($text, $options = [])
 {
-    $builder = new ServiceBuilder();
-    /** @var NaturalLanguageClient $language */
-    $language = $builder->naturalLanguage();
+    $language = new NaturalLanguageClient();
     $annotation = $language->analyzeEntities($text);
     return $annotation;
 }

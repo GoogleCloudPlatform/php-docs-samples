@@ -24,26 +24,22 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START analyze_syntax]
-use Google\Cloud\ServiceBuilder;
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
 
 /**
  * Find the syntax in text.
  * ```
- * analyze_syntax($projectId, 'Do you know the way to San Jose?');
+ * analyze_syntax('Do you know the way to San Jose?');
  * ```.
  *
- * @param string $projectId The Google project ID.
  * @param string $text The text to analyze.
  *
  * @return Annotation
  */
 function analyze_syntax($text, $options = [])
 {
-    $builder = new ServiceBuilder();
-    /** @var NaturalLanguageClient $language */
-    $language = $builder->naturalLanguage();
+    $language = new NaturalLanguageClient();
     $annotation = $language->analyzeSyntax($text);
     return $annotation;
 }

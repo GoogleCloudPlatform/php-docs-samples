@@ -24,26 +24,22 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START analyze_everything]
-use Google\Cloud\ServiceBuilder;
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
 
 /**
  * Find the everything in text.
  * ```
- * analyze_everything($projectId, 'Do you know the way to San Jose?');
+ * analyze_everything('Do you know the way to San Jose?');
  * ```.
  *
- * @param string $projectId The Google project ID.
  * @param string $text The text to analyze.
  *
  * @return Annotation
  */
 function analyze_everything($text, $options = [])
 {
-    $builder = new ServiceBuilder();
-    /** @var NaturalLanguageClient $language */
-    $language = $builder->naturalLanguage();
+    $language = new NaturalLanguageClient();
     $annotation = $language->annotateText($text, [
         'features' => ['entities', 'syntax', 'sentiment']
     ]);
