@@ -53,6 +53,6 @@ EOF
     {
         $text = implode(" ", $input->getArgument('text'));
         $result = analyze_syntax($text);
-        print_r($result->info());
+        print_annotation($result);
     }
 }

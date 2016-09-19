@@ -14,3 +14,4 @@ $application->add(new AnalyzeEverythingCommand());
 $application->add(new AnalyzeSentimentCommand());
 $application->add(new AnalyzeSyntaxCommand());
 $application->run();
+

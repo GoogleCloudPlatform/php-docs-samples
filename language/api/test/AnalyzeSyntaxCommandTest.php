@@ -35,7 +35,7 @@ class AnalyzeSyntaxCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function testEverything()
+    public function testSyntax()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -48,6 +48,6 @@ class AnalyzeSyntaxCommandTest extends \PHPUnit_Framework_TestCase
             ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex(preg_quote("/[tag] => NOUN/"));
+        $this->expectOutputRegex(`0: Do you know the way`);
     }
 }

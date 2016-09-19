@@ -48,6 +48,6 @@ class AnalyzeEntitiesCommandTest extends \PHPUnit_Framework_TestCase
             ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex(preg_quote("/[name] => San Jose/"));
+        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
     }
 }

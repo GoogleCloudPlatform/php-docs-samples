@@ -11,7 +11,8 @@
             "src/functions/analyze_entities.php",
             "src/functions/analyze_everything.php",
             "src/functions/analyze_sentiment.php",
-            "src/functions/analyze_syntax.php"
+            "src/functions/analyze_syntax.php",
+            "src/functions/print_annotation.php"
         ]
     }
 }

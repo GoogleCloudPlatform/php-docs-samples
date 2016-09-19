@@ -48,8 +48,8 @@ class AnalyzeEverythingCommandTest extends \PHPUnit_Framework_TestCase
             ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex(preg_quote("/[name] => San Jose/"));
-        $this->expectOutputRegex(preg_quote("/[tag] => NOUN/"));
-        $this->expectOutputRegex(preg_quote("/[documentSentiment] => Array/"));
+        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
+        $this->expectOutputRegex(`sentiment: -`);
+        $this->expectOutputRegex(`0: Do you know the way`);
     }
 }
