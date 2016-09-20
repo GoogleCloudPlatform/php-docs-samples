@@ -23,7 +23,7 @@ function print_annotation(Annotation $annotation)
 {
     $info = $annotation->info();
     if (isset($info['language'])) {
-        print "language: " . $info['language'] . "\n";
+        printf('language: %s' . PHP_EOL, $info['language']);
     }
 
     if (isset($info['documentSentiment'])) {
@@ -32,25 +32,35 @@ function print_annotation(Annotation $annotation)
         if ($polarity < 0) {
             $magnitude = -$magnitude;
         }
-        print "sentiment: " . $magnitude . "\n";
+        printf('sentiment: %s' . PHP_EOL, $magnitude);
     }
 
     if (isset($info['sentences'])) {
-        print "sentences:\n";
+        print 'sentences:' . PHP_EOL;
         foreach ($info['sentences'] as $sentence) {
-            print "  " . $sentence['text']['beginOffset'] . ": " .
-                $sentence['text']['content'] . "\n";
+            printf('  %s: %s' . PHP_EOL,
+                $sentence['text']['beginOffset'],
+                $sentence['text']['content']);
+        }
+    }
+
+    if (isset($info['tokens'])) {
+        print 'tokens:' . PHP_EOL;
+        foreach ($info['tokens'] as $token) {
+            printf('  %s: %s' . PHP_EOL,
+                $token['lemma'],
+                $token['partOfSpeech']['tag']);
         }
     }
 
     if (isset($info['entities'])) {
-        print "entities:\n";
+        print 'entities:' . PHP_EOL;
         foreach ($info['entities'] as $entity) {
-            print "  " . $entity['name'];
+            printf('  %s', $entity['name']);
             if (isset($entity['metadata']['wikipedia_url'])) {
-                print ": " .  $entity['metadata']['wikipedia_url'];
+                printf(': %s', $entity['metadata']['wikipedia_url']);
             }
-            print "\n";
+            print PHP_EOL;
         }
     }
 }
