@@ -19,23 +19,23 @@ namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\NaturalLanguage\Annotation;
 
-function print_annotation(Annotation $annotation) {
+function print_annotation(Annotation $annotation)
+{
     $info = $annotation->info();
     if (isset($info['language'])) {
         print "language: " . $info['language'] . "\n";
     }
 
-    if (isset($info['documentSentiment']))
-    {
+    if (isset($info['documentSentiment'])) {
         $magnitude = $info['documentSentiment']['magnitude'];
         $polarity = $info['documentSentiment']['polarity'];
-        if ($polarity < 0)
+        if ($polarity < 0) {
             $magnitude = -$magnitude;
+        }
         print "sentiment: " . $magnitude . "\n";
     }
 
-    if (isset($info['sentences']))
-    {
+    if (isset($info['sentences'])) {
         print "sentences:\n";
         foreach ($info['sentences'] as $sentence) {
             print "  " . $sentence['text']['beginOffset'] . ": " .
@@ -43,13 +43,13 @@ function print_annotation(Annotation $annotation) {
         }
     }
 
-    if (isset($info['entities']))
-    {
+    if (isset($info['entities'])) {
         print "entities:\n";
         foreach ($info['entities'] as $entity) {
             print "  " . $entity['name'];
-            if (isset($entity['metadata']['wikipedia_url']))
+            if (isset($entity['metadata']['wikipedia_url'])) {
                 print ": " .  $entity['metadata']['wikipedia_url'];
+            }
             print "\n";
         }
     }
