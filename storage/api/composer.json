@@ -1,5 +1,41 @@
 {
     "require": {
-        "google/apiclient": "^2.0"
+        "google/cloud": "0.9",
+        "paragonie/random_compat": "^2.0",
+        "symfony/console": " ^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Storage\\": "src/"
+        },
+        "files": [
+            "src/functions/add_bucket_acl.php",
+            "src/functions/add_default_bucket_acl.php",
+            "src/functions/add_object_acl.php",
+            "src/functions/copy_object.php",
+            "src/functions/create_bucket.php",
+            "src/functions/delete_bucket.php",
+            "src/functions/delete_bucket_acl.php",
+            "src/functions/delete_default_bucket_acl.php",
+            "src/functions/delete_object.php",
+            "src/functions/delete_object_acl.php",
+            "src/functions/download_encrypted_object.php",
+            "src/functions/download_object.php",
+            "src/functions/object_metadata.php",
+            "src/functions/generate_encryption_key.php",
+            "src/functions/get_bucket_acl.php",
+            "src/functions/get_bucket_acl_for_entity.php",
+            "src/functions/get_default_bucket_acl.php",
+            "src/functions/get_default_bucket_acl_for_entity.php",
+            "src/functions/get_object_acl.php",
+            "src/functions/get_object_acl_for_entity.php",
+            "src/functions/list_buckets.php",
+            "src/functions/list_objects.php",
+            "src/functions/make_public.php",
+            "src/functions/move_object.php",
+            "src/functions/rotate_encryption_key.php",
+            "src/functions/upload_encrypted_object.php",
+            "src/functions/upload_object.php"
+        ]
     }
 }
