@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START delete_sink_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END delete_sink_use]
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,10 +48,7 @@ class DeleteSinkCommand extends BaseCommand
     {
         $sinkName = $input->getOption('sink');
         $projectId = $input->getOption('project');
-        // [START delete_sink]
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        $logging->sink($sinkName)->delete();
-        // [END delete_sink]
+        delete_sink($projectId, $sinkName);
         printf("Deleted a sink '%s'." . PHP_EOL, $sinkName);
     }
 }

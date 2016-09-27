@@ -43,11 +43,7 @@ class DeleteLoggerCommand extends BaseCommand
     {
         $projectId = $input->getOption('project');
         $loggerName = $input->getOption('logger');
-        // [START delete_logger]
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        $logger = $logging->logger($loggerName);
-        $logger->delete();
-        // [END delete_logger]
+        delete_logger($projectId, $loggerName);
         printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
     }
 }

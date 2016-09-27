@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START update_sink_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END update_sink_use]
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,7 +56,6 @@ class UpdateSinkCommand extends BaseCommand
         $projectId = $input->getOption('project');
         $loggerName = $input->getOption('logger');
         $filter = $input->getOption('filter');
-        // [START update_sink]
         $loggerFullName = sprintf(
             'projects/%s/logs/%s',
             $projectId,
@@ -69,10 +65,7 @@ class UpdateSinkCommand extends BaseCommand
         if (!empty($filter)) {
             $filterString .= ' AND ' . $filter;
         }
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        $sink = $logging->sink($sinkName);
-        $sink->update(['filter' => $filterString]);
-        // [END update_sink]
+        update_sink($projectId, $sinkName, $filterString);
         printf("Updated a sink '%s'." . PHP_EOL, $sinkName);
     }
 }
