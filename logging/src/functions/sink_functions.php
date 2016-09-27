@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Logging;
 
 // [START logging_use]
 use Google\Cloud\Logging\LoggingClient;
+
 // [END logging_use]
 
 // [START create_sink]
@@ -83,4 +84,3 @@ function update_sink($projectId, $sinkName, $filterString)
     $sink->update(['filter' => $filterString]);
 }
 // [END update_sink]
-

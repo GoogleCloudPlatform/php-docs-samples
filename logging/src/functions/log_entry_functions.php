@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Logging;
 
 // [START logging_use]
 use Google\Cloud\Logging\LoggingClient;
+
 // [END logging_use]
 
 // [START write_log]
@@ -73,4 +74,3 @@ function delete_logger($projectId, $loggerName)
     $logger->delete();
 }
 // [END delete_logger]
-

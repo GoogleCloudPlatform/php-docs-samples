@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START delete_logger_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END delete_logger_use]
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
