@@ -18,33 +18,28 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/pubsub/README.md
  */
 
-namespace Google\Cloud\Samples\Speech;
+namespace Google\Cloud\Samples\PubSub;
 
-# [START transcribe_sync]
-use Google\Cloud\ServiceBuilder;
+# [START publish_message]
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Transcribe an audio file using Google Cloud Speech API
- * Example:
- * ```
- * transcribe_sync('/path/to/audiofile.wav');
- * ```.
+ * Publishes a message for a Pub/Sub topic.
  *
- * @param string $audioFile path to an audio file.
- *
- * @return string the text transcription
+ * @param string $projectId  The Google project ID.
+ * @param string $topicName  The Pub/Sub topic name.
+ * @param string $message  The message to publish.
  */
-function transcribe_sync($audioFile, $options = [])
+function publish_message($projectId, $topicName, $message)
 {
-    $builder = new ServiceBuilder();
-    $speech = $builder->speech();
-    $results = $speech->recognize(
-        fopen($audioFile, 'r'),
-        $options
-    );
-    print_r($results);
+    $pubsub = new PubSubClient([
+        'projectId' => $projectId,
+    ]);
+    $topic = $pubsub->topic($topicName);
+    $topic->publish(['data' => $message]);
+    print('Message published' . PHP_EOL);
 }
-# [END transcribe_sync]
+# [END publish_message]

@@ -1,0 +1,29 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Google\\Cloud\\Samples\\PubSub\\": "src"
+    },
+    "files": [
+      "src/functions/create_subscription.php",
+      "src/functions/create_topic.php",
+      "src/functions/create_push_subscription.php",
+      "src/functions/delete_subscription.php",
+      "src/functions/delete_topic.php",
+      "src/functions/get_subscription_policy.php",
+      "src/functions/get_topic_policy.php",
+      "src/functions/list_subscriptions.php",
+      "src/functions/list_topics.php",
+      "src/functions/publish_message.php",
+      "src/functions/pull_messages.php",
+      "src/functions/set_subscription_policy.php",
+      "src/functions/set_topic_policy.php",
+      "src/functions/test_subscription_permissions.php",
+      "src/functions/test_topic_permissions.php"
+    ]
+  },
+  "require": {
+    "php": ">=5.4",
+    "google/cloud": "0.8",
+    "symfony/console": " ^3.0"
+  }
+}

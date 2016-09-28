@@ -18,33 +18,26 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/pubsub/README.md
  */
 
-namespace Google\Cloud\Samples\Speech;
+namespace Google\Cloud\Samples\PubSub;
 
-# [START transcribe_sync]
-use Google\Cloud\ServiceBuilder;
+# [START list_subscriptions]
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Transcribe an audio file using Google Cloud Speech API
- * Example:
- * ```
- * transcribe_sync('/path/to/audiofile.wav');
- * ```.
+ * Lists all Pub/Sub subscriptions.
  *
- * @param string $audioFile path to an audio file.
- *
- * @return string the text transcription
+ * @param string $projectId  The Google project ID.
  */
-function transcribe_sync($audioFile, $options = [])
+function list_subscriptions($projectId)
 {
-    $builder = new ServiceBuilder();
-    $speech = $builder->speech();
-    $results = $speech->recognize(
-        fopen($audioFile, 'r'),
-        $options
-    );
-    print_r($results);
+    $pubsub = new PubSubClient([
+        'projectId' => $projectId,
+    ]);
+    foreach ($pubsub->subscriptions() as $subscription) {
+        printf('Subscription: %s' . PHP_EOL, $subscription->name());
+    }
 }
-# [END transcribe_sync]
+# [END list_subscriptions]

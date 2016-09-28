@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Speech\Tests;
+namespace Google\Cloud\Samples\Language\Tests;
 
-use Google\Cloud\Samples\Speech\TranscribeCommand;
+use Google\Cloud\Samples\Language\AnalyzeSyntaxCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for TablesCommand.
  */
-class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
+class AnalyzeSyntaxCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
@@ -35,33 +35,19 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    /** @dataProvider provideTranscribe */
-    public function testTranscribe($audioFile, $encoding, $sampleRate)
+    public function testSyntax()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
 
         $application = new Application();
-        $application->add(new TranscribeCommand());
-        $commandTester = new CommandTester($application->get('transcribe'));
+        $application->add(new AnalyzeSyntaxCommand());
+        $commandTester = new CommandTester($application->get('syntax'));
         $commandTester->execute(
-            [
-                'audio-file' => $audioFile,
-                '--encoding' => $encoding,
-                '--sample-rate' => $sampleRate,
-            ],
+            ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-
-        $this->expectOutputRegex("/how old is the Brooklyn Bridge/");
-    }
-
-    public function provideTranscribe()
-    {
-        return [
-            [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
-            [__DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
-        ];
+        $this->expectOutputRegex(`0: Do you know the way`);
     }
 }

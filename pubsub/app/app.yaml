@@ -1,0 +1,12 @@
+runtime: php55
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: pubsub.js
+  static_file: pubsub.js
+- url: /.*
+  script: index.php
+
+env_variables:
+  GOOGLE_PROJECT_ID: "cloud-samples-tests-php"

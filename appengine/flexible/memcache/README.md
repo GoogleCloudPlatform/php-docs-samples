@@ -28,10 +28,9 @@ $ gcloud app deploy
 
 ```
 $ echo hello > hello.txt
-$ echo bye > bye.txt
-$ curl http://{YOUR_PROJECT_ID}.appspot.com/memcache/a
+$ curl http://{YOUR_PROJECT_ID}.appspot.com/memcached/a
 # Store the value hello in /a.
-$ curl http://{YOUR_PROJECT_ID}.appspot.com/memcache/a -T hello.txt
-$ curl http://{YOUR_PROJECT_ID}.appspot.com/memcache/a
+$ curl http://{YOUR_PROJECT_ID}.appspot.com/memcached/a -T hello.txt
+$ curl http://{YOUR_PROJECT_ID}.appspot.com/memcached/a
 hello
 ```

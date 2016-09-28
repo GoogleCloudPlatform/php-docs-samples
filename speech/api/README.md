@@ -16,9 +16,9 @@ Install the dependencies for this library via [composer](https://getcomposer.org
     $ cd /path/to/php-docs-samples/speech/api
     $ composer install
 
-Configure your project using [gcloud](https://cloud.google.com/sdk/gcloud/)
+Configure your project using [Application Default Credentials][adc]
 
-    $ gcloud config set project YOUR_PROJECT_ID
+    $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 
 ## Audio Format
 
@@ -44,3 +44,4 @@ php speech.php transcribe YourAudio.raw --encoding LINEAR16 --sample-rate 16000
 [choose-encoding]: https://cloud.google.com/speech/docs/best-practices#choosing_an_audio_encoding
 [sox]: http://sox.sourceforge.net/
 [grpc]: http://grpc.io
+[adc]: https://developers.google.com/identity/protocols/application-default-credentials

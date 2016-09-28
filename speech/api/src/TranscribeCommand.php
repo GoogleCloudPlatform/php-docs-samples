@@ -30,8 +30,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TranscribeCommand extends Command
 {
-    use ProjectIdTrait;
-
     protected function configure()
     {
         $this
@@ -48,13 +46,6 @@ EOF
                 'audio-file',
                 InputArgument::REQUIRED,
                 'The audio file to transcribe'
-            )
-            ->addOption(
-                'project',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'The Google Cloud Platform project name to use for this invocation. ' .
-                'If omitted then the current gcloud project is assumed. '
             )
             ->addOption(
                 'encoding',
@@ -81,9 +72,6 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$projectId = $input->getOption('project')) {
-            $projectId = $this->getProjectIdFromGcloud();
-        }
         $encoding = $input->getOption('encoding');
         $sampleRate = $input->getOption('sample-rate');
         $audioFile = $input->getArgument('audio-file');
@@ -93,9 +81,9 @@ EOF
         ];
 
         if ($input->getOption('sync')) {
-            transcribe_sync($projectId, $audioFile, $options);
+            transcribe_sync($audioFile, $options);
         } else {
-            transcribe_async($projectId, $audioFile, $options);
+            transcribe_async($audioFile, $options);
         }
     }
 }
