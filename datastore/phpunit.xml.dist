@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="test/bootstrap.php">
     <testsuites>
-        <testsuite name="PHP datastore test">
+        <testsuite name="Datastore Cloud library Tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
