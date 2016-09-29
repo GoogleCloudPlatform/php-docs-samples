@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START delete_logger_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END delete_logger_use]
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -43,11 +40,7 @@ class DeleteLoggerCommand extends BaseCommand
     {
         $projectId = $input->getOption('project');
         $loggerName = $input->getOption('logger');
-        // [START delete_logger]
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        $logger = $logging->logger($loggerName);
-        $logger->delete();
-        // [END delete_logger]
+        delete_logger($projectId, $loggerName);
         printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
     }
 }

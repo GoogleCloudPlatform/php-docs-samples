@@ -7,6 +7,10 @@
         "phpunit/phpunit": "~4.8"
     },
     "autoload": {
-        "psr-4": { "Google\\Cloud\\Samples\\Logging\\": "src" }
+        "psr-4": { "Google\\Cloud\\Samples\\Logging\\": "src" },
+        "files": [
+            "src/functions/log_entry_functions.php",
+            "src/functions/sink_functions.php"
+        ]
     }
 }
