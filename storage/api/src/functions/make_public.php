@@ -27,9 +27,10 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Add ACL to a Cloud Storage Bucket.
+ * Make an object publically accessible.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $objectName the name of your Cloud Storage object.
  *
  * @return void
  */
@@ -38,7 +39,7 @@ function make_public($bucketName, $objectName)
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
-    $object->update([], ['predefinedAcl' => 'public']);
+    $object->update(['acl' => []], ['predefinedAcl' => 'PUBLICREAD']);
     printf('gs://%s/%s is now public.' . PHP_EOL, $bucketName, $objectName);
 }
 # [END make_public]

@@ -27,9 +27,11 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Delete an entity from the ACL of a Cloud Storage file.
+ * Delete an entity from an object's ACL.
  *
- * @param string $objectName name of the object to delete.
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $objectName the name of your Cloud Storage object.
+ * @param string $entity The entity to update access controls for.
  * @param array $options
  *
  * @return void

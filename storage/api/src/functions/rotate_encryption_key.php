@@ -28,9 +28,9 @@ use Exception;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Add ACL to a Cloud Storage Bucket.
+ * Rotate your encryption keys
  *
- * @param string $projectId the project ID of your project
+ * @param string $encryptionKey the encryption key to rotate.
  *
  * @return void
  */

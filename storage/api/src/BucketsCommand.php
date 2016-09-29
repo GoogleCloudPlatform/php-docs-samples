@@ -73,7 +73,7 @@ EOF
                 throw new \Exception('Supply --create or --delete with bucket name');
             }
         } else {
-            list_objects();
+            list_buckets();
         }
     }
 }

@@ -27,9 +27,10 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Add ACL to a Cloud Storage Bucket.
+ * Delete an object.
  *
- * @param string $objectName name of the object to delete.
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $objectName the name of your Cloud Storage object.
  * @param array $options
  *
  * @return void
@@ -40,5 +41,6 @@ function delete_object($bucketName, $objectName, $options = [])
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->delete();
+    printf('Deleted gs://%s/%s' . PHP_EOL, $bucketName, $objectName);
 }
 # [END delete_object]

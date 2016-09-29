@@ -79,7 +79,7 @@ EOF
             ->addOption(
                 'make-public',
                 null,
-                InputOption::VALUE_REQUIRED,
+                InputOption::VALUE_NONE,
                 'makes the supplied object public'
             )
             ->addOption(

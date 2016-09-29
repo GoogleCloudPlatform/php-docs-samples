@@ -27,10 +27,12 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Add ACL to a Cloud Storage Bucket.
+ * Copy an object to a new name and/or bucket.
  *
- * @param string $projectId the project ID of your project
- *
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $objectName the name of your Cloud Storage object.
+ * @param string $newBucketName the destination bucket name.
+ * @param string $newObjectName the destination object name.
  * @return void
  */
 function copy_object($bucketName, $objectName, $newBucketName, $newObjectName)
@@ -40,9 +42,6 @@ function copy_object($bucketName, $objectName, $newBucketName, $newObjectName)
     $object = $bucket->object($objectName);
     $object->copy($newBucketName, ['name' => $newObjectName]);
     printf('Copied gs://%s/%s to gs://%s/%s' . PHP_EOL,
-        $bucketName,
-        $objectName,
-        $newBucketName,
-        $newObjectName);
+        $bucketName, $objectName, $newBucketName, $newObjectName);
 }
 # [END copy_object]

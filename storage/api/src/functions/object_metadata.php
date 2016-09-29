@@ -27,9 +27,10 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Add ACL to a Cloud Storage Bucket.
+ * List object metadata.
  *
- * @param string $projectId the project ID of your project
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $objectName the name of your Cloud Storage object.
  *
  * @return void
  */

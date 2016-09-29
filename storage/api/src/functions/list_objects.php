@@ -29,7 +29,7 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Add ACL to a Cloud Storage Bucket.
  *
- * @param string $bucketName
+ * @param string $bucketName the name of your Cloud Storage bucket.
  *
  * @return void
  */

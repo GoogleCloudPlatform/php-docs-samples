@@ -46,6 +46,6 @@ function download_encrypted_object($bucketName, $objectName, $destination, $encr
         'encryptionKeySHA256' => hash('SHA256', $encryptionKey, true),
     ]);
     printf('Encrypted object gs://%s/%s downloaded to %s' . PHP_EOL,
-        $bucketName, $objectName, $destination);
+        $bucketName, $objectName, basename($destination));
 }
 # [END download_encrypted_object]

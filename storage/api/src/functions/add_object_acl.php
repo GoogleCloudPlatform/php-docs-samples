@@ -27,9 +27,14 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Add ACL to a Cloud Storage Bucket.
+ * Add an entity and role to an object's ACL.
  *
- * @param string $projectId the project ID of your project
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $objectName the name of your Cloud Storage object.
+ * @param string $entity The entity to update access controls for.
+ * @param string $role The permissions to add for the specified entity. May
+ *        be one of 'OWNER', 'READER', or 'WRITER'.
+ * @param array $options
  *
  * @return void
  */

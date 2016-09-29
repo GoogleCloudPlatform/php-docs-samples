@@ -27,6 +27,8 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
+ * Download an object from Cloud Storage and save it as a local file.
+ *
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of your Google Cloud object.
  * @param string $destination the local destination to save the encrypted object.
@@ -38,6 +40,7 @@ function download_object($bucketName, $objectName, $destination)
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
-    return $object->downloadToFile($destination);
+    $object->downloadToFile($destination);
+    printf('Downloaded gs://%s/%s to %s', $bucketName, $objectName, basename($destination));
 }
 # [END download_object]

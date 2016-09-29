@@ -43,6 +43,6 @@ function upload_object($bucketName, $objectName, $source)
     $object = $bucket->upload($file, [
         'name' => $objectName
     ]);
-    return $object;
+    printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
 }
 # [END upload_object]
