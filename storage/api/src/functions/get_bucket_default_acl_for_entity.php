@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START get_default_bucket_acl_for_entity]
+# [START get_bucket_default_acl_for_entity]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @return Google\Cloud\Storage\Acl the ACL for the Cloud Storage bucket.
  */
-function get_default_bucket_acl_for_entity($bucketName, $entity)
+function get_bucket_default_acl_for_entity($bucketName, $entity)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -42,4 +42,4 @@ function get_default_bucket_acl_for_entity($bucketName, $entity)
     $item = $acl->get(['entity' => $entity]);
     printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
 }
-# [END get_default_bucket_acl_for_entity]
+# [END get_bucket_default_acl_for_entity]

@@ -23,23 +23,26 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START get_default_bucket_acl]
+# [START add_bucket_default_acl]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Print all entities and roles for a bucket's default ACL.
+ * Add an entity and role to a bucket's default ACL.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $entity The entity to update access controls for.
+ * @param string $role The permissions to add for the specified entity. May
+ *        be one of 'OWNER', 'READER', or 'WRITER'.
+ * @param array $options
  *
- * @return Google\Cloud\Storage\Acl the ACL for the Cloud Storage bucket.
+ * @return void
  */
-function get_default_bucket_acl($bucketName)
+function add_bucket_default_acl($bucketName, $entity, $role, $options = [])
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();
-    foreach ($acl->get() as $item) {
-        printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
-    }
+    $acl->add($entity, $role, $options);
+    printf('Added %s (%s) to gs://%s default ACL.' . PHP_EOL, $entity, $role, $bucketName);
 }
-# [END get_default_bucket_acl]
+# [END add_bucket_default_acl]

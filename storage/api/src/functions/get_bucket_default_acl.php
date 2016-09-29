@@ -23,24 +23,23 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START delete_default_bucket_acl]
+# [START get_bucket_default_acl]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Delete an entity from a bucket's default ACL.
+ * Print all entities and roles for a bucket's default ACL.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $entity the name of the entity to remove from the ACL.
- * @param array $options
  *
- * @return void
+ * @return Google\Cloud\Storage\Acl the ACL for the Cloud Storage bucket.
  */
-function delete_default_bucket_acl($bucketName, $entity, $options = [])
+function get_bucket_default_acl($bucketName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();
-    $acl->delete($entity, $options);
-    printf('Deleted %s from gs://%s default ACL.' . PHP_EOL, $entity, $bucketName);
+    foreach ($acl->get() as $item) {
+        printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
+    }
 }
-# [END delete_default_bucket_acl]
+# [END get_bucket_default_acl]

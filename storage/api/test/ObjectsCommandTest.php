@@ -146,7 +146,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Copied \S+$basename to \S+$basename-moved/");
+        $this->expectOutputRegex("/Copied \S+$basename to \S+$objectName-moved/");
 
         $this->commandTester->execute(
             [
@@ -156,6 +156,6 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Deleted \S+$basename-moved/");
+        $this->expectOutputRegex("/Deleted \S+$objectName-moved/");
     }
 }

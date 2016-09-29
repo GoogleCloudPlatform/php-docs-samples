@@ -26,14 +26,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command line utility to manage Cloud Storage ACLs.
  *
- * Usage: php storage.php acl
+ * Usage: php storage.php object-acl
  */
-class AclCommand extends Command
+class ObjectAclCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('acl')
+            ->setName('object-acl')
             ->setDescription('Manage ACL for Storage objects')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
@@ -49,7 +49,7 @@ EOF
             )
             ->addArgument(
                 'object',
-                InputArgument::OPTIONAL,
+                InputArgument::REQUIRED,
                 'The Cloud Storage object name'
             )
             ->addOption(
@@ -72,12 +72,6 @@ EOF
                 'Create an ACL for the supplied user'
             )
             ->addOption(
-                'default',
-                null,
-                InputOption::VALUE_NONE,
-                'Target the default bucket ACL'
-            )
-            ->addOption(
                 'delete',
                 null,
                 InputOption::VALUE_NONE,
@@ -91,44 +85,17 @@ EOF
         $bucketName = $input->getArgument('bucket');
         $entity = $input->getOption('entity');
         $role = $input->getOption('role');
-        if ($objectName = $input->getArgument('object')) {
-            if ($entity) {
-                if ($input->getOption('create')) {
-                    add_object_acl($bucketName, $objectName, $entity, $role);
-                } elseif ($input->getOption('delete')) {
-                    delete_object_acl($bucketName, $objectName, $entity);
-                } else {
-                    get_object_acl_for_entity($bucketName, $objectName, $entity);
-                }
+        $objectName = $input->getArgument('object');
+        if ($entity) {
+            if ($input->getOption('create')) {
+                add_object_acl($bucketName, $objectName, $entity, $role);
+            } elseif ($input->getOption('delete')) {
+                delete_object_acl($bucketName, $objectName, $entity);
             } else {
-                get_object_acl($bucketName, $objectName);
+                get_object_acl_for_entity($bucketName, $objectName, $entity);
             }
         } else {
-            if ($entity) {
-                if ($input->getOption('default')) {
-                    if ($input->getOption('create')) {
-                        add_default_bucket_acl($bucketName, $entity, $role);
-                    } elseif ($input->getOption('delete')) {
-                        delete_default_bucket_acl($bucketName, $entity);
-                    } else {
-                        get_default_bucket_acl_for_entity($bucketName, $entity);
-                    }
-                } else {
-                    if ($input->getOption('create')) {
-                        add_bucket_acl($bucketName, $entity, $role);
-                    } elseif ($input->getOption('delete')) {
-                        delete_bucket_acl($bucketName, $entity);
-                    } else {
-                        get_bucket_acl_for_entity($bucketName, $entity);
-                    }
-                }
-            } else {
-                if ($input->getOption('default')) {
-                    get_default_bucket_acl($bucketName);
-                } else {
-                    get_bucket_acl($bucketName);
-                }
-            }
+            get_object_acl($bucketName, $objectName);
         }
     }
 }
