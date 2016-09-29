@@ -73,7 +73,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         $key = base64_encode(random_bytes(32));
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $uploadFromBasename = basename($uploadFrom);
-        file_put_contents($uploadFrom, 'foo'.rand());
+        file_put_contents($uploadFrom, 'foo' . rand());
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
 

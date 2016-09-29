@@ -71,10 +71,10 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('No storage bucket name.');
         }
-        $objectName = 'test-object-'.time();
+        $objectName = 'test-object-' . time();
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $basename = basename($uploadFrom);
-        file_put_contents($uploadFrom, 'foo'.rand());
+        file_put_contents($uploadFrom, 'foo' . rand());
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
 

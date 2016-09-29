@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Storage;
 
 use Exception;
 # [START rotate_encryption_key]
-use Google\Cloud\Storage\StorageClient;
 
 /**
  * Rotate your encryption keys

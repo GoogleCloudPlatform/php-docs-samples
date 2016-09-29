@@ -23,9 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-use Exception;
 # [START generate_encryption_key]
-use Google\Cloud\Storage\StorageClient;
 
 /**
  * Generate an encryption key for Google Cloud Storage.

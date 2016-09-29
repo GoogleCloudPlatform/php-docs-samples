@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage;
 use Google\Cloud\Samples\Storage\AclCommand;
-use Google\Cloud\Samples\Storage\ObjectCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 

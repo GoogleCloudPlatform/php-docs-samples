@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage;
 use Google\Cloud\Samples\Storage\BucketsCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -63,7 +62,7 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        $bucketName = 'test-bucket-'.time();
+        $bucketName = 'test-bucket-' . time();
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
