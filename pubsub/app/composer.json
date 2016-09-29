@@ -8,10 +8,12 @@
   },
   "require-dev": {
     "google/cloud-tools": "<=1.0",
+    "gecko-packages/gecko-memcache-mock": "^2.0",
     "paragonie/random_compat": "^2.0",
     "symfony/browser-kit": "~2.7",
     "symfony/css-selector": "~2.0",
     "symfony/dom-crawler": "~2.0",
-    "symfony/yaml": "^3.1"
+    "symfony/yaml": "^3.1",
+    "phpunit/phpunit": " ~4.1"
   }
 }
