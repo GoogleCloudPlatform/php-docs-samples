@@ -40,7 +40,8 @@ class ListEntriesCommand extends BaseCommand
     {
         $projectId = $input->getOption('project');
         $loggerName = $input->getOption('logger');
-        foreach (list_entries($projectId, $loggerName) as $entry) {
+        $entries = list_entries($projectId, $loggerName);
+        foreach ($entries as $entry) {
             /* @var $entry \Google\Cloud\Logging\Entry */
             printf(
                 "%s : %s" . PHP_EOL,

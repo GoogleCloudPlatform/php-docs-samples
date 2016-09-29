@@ -39,8 +39,8 @@ class ListSinksCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $projectId = $input->getOption('project');
-        //$loggerName = $input->getOption('logger');
-        foreach (list_sinks($projectId) as $sink) {
+        $sinks = list_sinks($projectId);
+        foreach ($sinks as $sink) {
             /* @var $sink \Google\Cloud\Logging\Sink */
             foreach ($sink->info() as $key => $value) {
                 print "$key:$value\n";
