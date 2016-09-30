@@ -66,7 +66,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('No storage bucket name.');
         }
-        if (!$objectName = getenv('GOOGLE_STORAGE_BUCKET')) {
+        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
             $this->markTestSkipped('No storage object name.');
         }
         $key = base64_encode(random_bytes(32));
