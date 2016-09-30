@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage;
 use Google\Cloud\Samples\Storage\EncryptionCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -51,7 +50,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->commandTester->execute(
             [
-                '--generate' => true
+                '--generate-key' => true
             ],
             ['interactive' => false]
         );
@@ -73,7 +72,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         $key = base64_encode(random_bytes(32));
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $uploadFromBasename = basename($uploadFrom);
-        file_put_contents($uploadFrom, 'foo' . rand());
+        file_put_contents($uploadFrom, $contents = 'foo' . rand());
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
 
@@ -96,6 +95,9 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $this->assertTrue(file_exists($downloadTo));
+        $this->assertEquals($contents, file_get_contents($downloadTo));
 
         $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
         $outputString = <<<EOF

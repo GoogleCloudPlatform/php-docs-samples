@@ -34,7 +34,7 @@ class BucketsCommand extends Command
     {
         $this
             ->setName('buckets')
-            ->setDescription('Manage buckets for Cloud Storage objects')
+            ->setDescription('Manage Cloud Storage buckets')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 

@@ -17,8 +17,9 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage;
+use Google\Cloud\Exception\NotFoundException;
 use Google\Cloud\Samples\Storage\ObjectAclCommand;
+use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -29,6 +30,7 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
+    protected $storage;
 
     public static function setUpBeforeClass()
     {
@@ -42,6 +44,7 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new ObjectAclCommand());
         $this->commandTester = new CommandTester($application->get('object-acl'));
+        $this->storage = new StorageClient();
     }
 
     public function testObjectAcl()
@@ -79,6 +82,10 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No storage object name.');
         }
 
+        $bucket = $this->storage->bucket($bucketName);
+        $object = $bucket->object($objectName);
+        $acl = $object->acl();
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -88,6 +95,10 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
+        $this->assertArrayHasKey('role', $aclInfo);
+        $this->assertEquals('READER', $aclInfo['role']);
 
         $this->commandTester->execute(
             [
@@ -107,6 +118,13 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        try {
+            $acl->get(['entity' => 'allAuthenticatedUsers']);
+            $this->fail();
+        } catch (NotFoundException $e) {
+            $this->assertTrue(true);
+        }
 
         $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
         $outputString = <<<EOF

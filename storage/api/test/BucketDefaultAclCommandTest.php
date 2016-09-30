@@ -17,8 +17,9 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage;
+use Google\Cloud\Exception\NotFoundException;
 use Google\Cloud\Samples\Storage\BucketDefaultAclCommand;
+use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -29,6 +30,7 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
+    protected $storage;
 
     public static function setUpBeforeClass()
     {
@@ -42,6 +44,7 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new BucketDefaultAclCommand());
         $this->commandTester = new CommandTester($application->get('bucket-default-acl'));
+        $this->storage = new StorageClient();
     }
 
     public function testBucketDefaultAcl()
@@ -72,6 +75,9 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No storage bucket name.');
         }
 
+        $bucket = $this->storage->bucket($bucketName);
+        $acl = $bucket->defaultAcl();
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -80,6 +86,10 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
+        $this->assertArrayHasKey('role', $aclInfo);
+        $this->assertEquals('READER', $aclInfo['role']);
 
         $this->commandTester->execute(
             [
@@ -97,6 +107,13 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        try {
+            $acl->get(['entity' => 'allAuthenticatedUsers']);
+            $this->fail();
+        } catch (NotFoundException $e) {
+            $this->assertTrue(true);
+        }
 
         $bucketUrl = sprintf('gs://%s', $bucketName);
         $outputString = <<<EOF

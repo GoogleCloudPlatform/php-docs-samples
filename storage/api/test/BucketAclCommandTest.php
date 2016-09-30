@@ -17,8 +17,9 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage;
+use Google\Cloud\Exception\NotFoundException;
 use Google\Cloud\Samples\Storage\BucketAclCommand;
+use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -29,6 +30,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
+    protected $storage;
 
     public static function setUpBeforeClass()
     {
@@ -42,6 +44,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new BucketAclCommand());
         $this->commandTester = new CommandTester($application->get('bucket-acl'));
+        $this->storage = new StorageClient();
     }
 
     public function testBucketAcl()
@@ -65,13 +68,15 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testManageBucketAcl()
     {
-        $this->expectOutputString('');
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('No storage bucket name.');
         }
+
+        $bucket = $this->storage->bucket($bucketName);
+        $acl = $bucket->acl();
 
         $this->commandTester->execute(
             [
@@ -81,6 +86,10 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
+        $this->assertArrayHasKey('role', $aclInfo);
+        $this->assertEquals('READER', $aclInfo['role']);
 
         $this->commandTester->execute(
             [
@@ -98,6 +107,13 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        try {
+            $acl->get(['entity' => 'allAuthenticatedUsers']);
+            $this->fail();
+        } catch (NotFoundException $e) {
+            $this->assertTrue(true);
+        }
 
         $bucketUrl = sprintf('gs://%s', $bucketName);
         $outputString = <<<EOF

@@ -18,6 +18,7 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\BucketsCommand;
+use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -28,6 +29,7 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
+    protected $storage;
 
     public static function setUpBeforeClass()
     {
@@ -41,6 +43,7 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new BucketsCommand());
         $this->commandTester = new CommandTester($application->get('buckets'));
+        $this->storage = new StorageClient();
     }
 
     public function testListBuckets()
@@ -62,7 +65,12 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
+
         $bucketName = 'test-bucket-' . time();
+        $bucket = $this->storage->bucket($bucketName);
+
+        $this->assertFalse($bucket->exists());
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -71,6 +79,9 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
+        $bucket->reload();
+        $this->assertTrue($bucket->exists());
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -78,6 +89,8 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $this->assertFalse($bucket->exists());
 
         $outputString = <<<EOF
 Bucket created: $bucketName

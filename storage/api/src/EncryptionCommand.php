@@ -34,7 +34,7 @@ class EncryptionCommand extends Command
     {
         $this
             ->setName('encryption')
-            ->setDescription('Upload and download Storage objects with encryption')
+            ->setDescription('Upload and download Cloud Storage objects with encryption')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 
@@ -71,7 +71,7 @@ EOF
                 'Supply your encryption key'
             )
             ->addOption(
-                'generate',
+                'generate-key',
                 null,
                 InputOption::VALUE_NONE,
                 'Generates an encryption key'
@@ -81,7 +81,7 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('generate')) {
+        if ($input->getOption('generate-key')) {
             generate_encryption_key();
         } else {
             $bucketName = $input->getArgument('bucket');
@@ -96,7 +96,7 @@ EOF
                     throw new \Exception('supply either --upload-from or --download-to');
                 }
             } else {
-                throw new \Exception('Supply a bucket, object and --key OR --generate');
+                throw new \Exception('Supply a bucket, object and --key OR --generate-key');
             }
         }
     }

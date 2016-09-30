@@ -34,7 +34,7 @@ class ObjectAclCommand extends Command
     {
         $this
             ->setName('object-acl')
-            ->setDescription('Manage ACL for Storage objects')
+            ->setDescription('Manage the ACL for Cloud Storage objects')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 

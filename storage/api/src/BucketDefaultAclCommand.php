@@ -34,7 +34,7 @@ class BucketDefaultAclCommand extends Command
     {
         $this
             ->setName('bucket-default-acl')
-            ->setDescription('Manage the default ACL for Storage buckets.')
+            ->setDescription('Manage the default ACL for Cloud Storage buckets.')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 

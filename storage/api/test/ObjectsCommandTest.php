@@ -17,8 +17,8 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage;
 use Google\Cloud\Samples\Storage\ObjectsCommand;
+use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -29,6 +29,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
+    protected $storage;
 
     public static function setUpBeforeClass()
     {
@@ -42,6 +43,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new ObjectsCommand());
         $this->commandTester = new CommandTester($application->get('objects'));
+        $this->storage = new StorageClient();
     }
 
     public function testListObjects()
@@ -71,12 +73,17 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('No storage bucket name.');
         }
+
         $objectName = 'test-object-' . time();
+        $bucket = $this->storage->bucket($bucketName);
+        $object = $bucket->object($objectName);
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $basename = basename($uploadFrom);
         file_put_contents($uploadFrom, 'foo' . rand());
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
+
+        $this->assertFalse($object->exists());
 
         $this->commandTester->execute(
             [
@@ -85,7 +92,10 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
                 '--upload-from' => $uploadFrom,
             ],
             ['interactive' => false]
-        );;
+        );
+
+        $object->reload();
+        $this->assertTrue($object->exists());
 
         $this->commandTester->execute(
             [
@@ -96,6 +106,9 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
+        $copyObject = $bucket->object($objectName . '-copy');
+        $this->assertTrue($copyObject->exists());
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -104,6 +117,8 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $this->assertFalse($copyObject->exists());
 
         $this->commandTester->execute(
             [
@@ -114,6 +129,10 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
+        $acl = $object->acl()->get(['entity' => 'allUsers']);
+        $this->assertArrayHasKey('role', $acl);
+        $this->assertEquals('READER', $acl['role']);
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -122,6 +141,8 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $this->assertTrue(file_exists($downloadTo));
 
         $this->commandTester->execute(
             [
@@ -132,6 +153,10 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
+        $this->assertFalse($object->exists());
+        $movedObject = $bucket->object($objectName . '-moved');
+        $this->assertTrue($movedObject->exists());
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
@@ -140,6 +165,8 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
+
+        $this->assertFalse($movedObject->exists());
 
         // $bucketUrl = sprintf('gs://%s', $bucketName);
         $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
