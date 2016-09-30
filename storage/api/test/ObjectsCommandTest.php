@@ -1,0 +1,185 @@
+<?php
+/**
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Google\Cloud\Samples\Storage\Tests;
+
+use Google\Cloud\Samples\Storage\ObjectsCommand;
+use Google\Cloud\Storage\StorageClient;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
+
+/**
+ * Unit Tests for ObjectsCommand.
+ */
+class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
+{
+    protected static $hasCredentials;
+    protected $commandTester;
+    protected $storage;
+
+    public static function setUpBeforeClass()
+    {
+        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+        self::$hasCredentials = $path && file_exists($path) &&
+            filesize($path) > 0;
+    }
+
+    public function setUp()
+    {
+        $application = new Application();
+        $application->add(new ObjectsCommand());
+        $this->commandTester = new CommandTester($application->get('objects'));
+        $this->storage = new StorageClient();
+    }
+
+    public function testListObjects()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('No storage bucket name.');
+        }
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex("/Object:/");
+    }
+
+    public function testManageObject()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('No storage bucket name.');
+        }
+
+        $objectName = 'test-object-' . time();
+        $bucket = $this->storage->bucket($bucketName);
+        $object = $bucket->object($objectName);
+        $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
+        $basename = basename($uploadFrom);
+        file_put_contents($uploadFrom, 'foo' . rand());
+        $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
+        $downloadToBasename = basename($downloadTo);
+
+        $this->assertFalse($object->exists());
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName,
+                '--upload-from' => $uploadFrom,
+            ],
+            ['interactive' => false]
+        );
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName,
+                '--copy-to' => $objectName . '-copy',
+            ],
+            ['interactive' => false]
+        );
+
+        $copyObject = $bucket->object($objectName . '-copy');
+        $this->assertTrue($copyObject->exists());
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName . '-copy',
+                '--delete' => true,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->assertFalse($copyObject->exists());
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName,
+                '--make-public' => true,
+            ],
+            ['interactive' => false]
+        );
+
+        $acl = $object->acl()->get(['entity' => 'allUsers']);
+        $this->assertArrayHasKey('role', $acl);
+        $this->assertEquals('READER', $acl['role']);
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName,
+                '--download-to' => $downloadTo,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->assertTrue(file_exists($downloadTo));
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName,
+                '--move-to' => $objectName . '-moved',
+            ],
+            ['interactive' => false]
+        );
+
+        $this->assertFalse($object->exists());
+        $movedObject = $bucket->object($objectName . '-moved');
+        $this->assertTrue($movedObject->exists());
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                'object' => $objectName . '-moved',
+                '--delete' => true,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->assertFalse($movedObject->exists());
+
+        // $bucketUrl = sprintf('gs://%s', $bucketName);
+        $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
+        $outputString = <<<EOF
+Uploaded $basename to $objectUrl
+Copied $objectUrl to $objectUrl-copy
+Deleted $objectUrl-copy
+$objectUrl is now public
+Downloaded $objectUrl to $downloadToBasename
+Moved $objectUrl to $objectUrl-moved
+Deleted $objectUrl-moved
+
+EOF;
+        $this->expectOutputString($outputString);
+    }
+}
