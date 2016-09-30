@@ -26,7 +26,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Unit Tests for BucketDefaultAclCommand.
  */
-class AclCommandTest extends \PHPUnit_Framework_TestCase
+class BucketDefaultAclCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
