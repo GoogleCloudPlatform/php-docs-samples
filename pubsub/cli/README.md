@@ -23,11 +23,11 @@ This simple command-line application demonstrates how to invoke Google Pub\Sub f
 5.  Run `php pubsub.php`. The following commands are available:
 
     ```sh
-      iam           Manage IAM for Pub\Sub
-      subscription  Manage subscriptions for Pub\Sub
-      topic         Manage topics for Pub\Sub
-6. Run `php pubsub.php COMMAND --help` to print information about the usage of each command.
+    iam           Manage IAM for Pub\Sub
+    subscription  Manage subscriptions for Pub\Sub
+    topic         Manage topics for Pub\Sub
 ```
+6. Run `php pubsub.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes
 
