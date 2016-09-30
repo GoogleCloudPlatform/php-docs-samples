@@ -6,17 +6,13 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Cloud\Storage\StorageClient;
 
-# Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
-
 # Instantiates a client
-$storageClient = new StorageClient([
-    'projectId' => $projectId
-]);
+$storage = new StorageClient();
 
 # The name for the new bucket
 $bucketName = 'my-new-bucket';
 
 # Creates the new bucket
-$bucket = $storageClient->createBucket($bucketName);
+$bucket = $storage->createBucket($bucketName);
 # [END storage_quickstart]
+return $bucket;

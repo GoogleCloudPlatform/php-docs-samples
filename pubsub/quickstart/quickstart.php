@@ -6,13 +6,8 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Cloud\PubSub\PubSubClient;
 
-# Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
-
 # Instantiates a client
-$pubsubClient = new PubSubClient([
-    'projectId' => $projectId
-]);
+$pubsubClient = new PubSubClient();
 
 # The name for the new topic
 $topicName = 'my-new-topic';
@@ -20,3 +15,4 @@ $topicName = 'my-new-topic';
 # Creates the new topic
 $topic = $pubsubClient->createTopic($topicName);
 # [END pubsub_quickstart]
+return $topic;

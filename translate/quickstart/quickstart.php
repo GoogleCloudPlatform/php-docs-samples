@@ -10,7 +10,7 @@ use Google\Cloud\Translate\TranslateClient;
 $apiKey = 'YOUR_API_KEY';
 
 # Instantiates a client
-$translateClient = new TranslateClient([
+$translate = new TranslateClient([
     'key' => $apiKey
 ]);
 
@@ -20,7 +20,8 @@ $text = 'Hello, world!';
 $target = 'ru';
 
 # Translates some text into Russian
-$translation = $translateClient->translate($text, [
+$translation = $translate->translate($text, [
     'target' => $target
 ]);
 # [END translate_quickstart]
+return $translation;
