@@ -149,7 +149,7 @@ function delete_entity(DatastoreClient $datastore, Key $taskKey)
  * Upsert multiple Datastore entities.
  *
  * @param DatastoreClient $datastore
- * @param array <Google\Cloud\Datastore\Entity> $tasks
+ * @param array <\Google\Cloud\Datastore\Entity> $tasks
  */
 function upsert_multi(DatastoreClient $datastore, array $tasks)
 {
@@ -163,7 +163,7 @@ function upsert_multi(DatastoreClient $datastore, array $tasks)
  *
  * @param DatastoreClient $datastore
  * @param array <Key> $keys
- * @return array <Google\Cloud\Datastore\Entity>
+ * @return array <\Google\Cloud\Datastore\Entity>
  */
 function lookup_multi(DatastoreClient $datastore, array $keys)
 {
