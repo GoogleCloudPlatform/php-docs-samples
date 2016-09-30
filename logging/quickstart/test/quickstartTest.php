@@ -32,11 +32,13 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
-        $entries = include $file;
+        $entry = include $file;
 
         // Make sure it looks correct
-        $this->assertInstanceOf('Generator', $entries);
-        $entry = $entries->current();
         $this->assertInstanceOf('Google\Cloud\Logging\Entry', $entry);
+        $info = $entry->info();
+        $this->assertEquals('Hello, world!', $info['textPayload']);
+        $this->assertContains('my-log', $info['logName']);
+        $this->assertEquals('global', $info['resource']['type']);
     }
 }
