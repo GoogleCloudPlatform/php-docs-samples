@@ -85,8 +85,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
                 '--upload-from' => $uploadFrom,
             ],
             ['interactive' => false]
-        );
-        $this->expectOutputRegex("/Uploaded $basename to \S+/");
+        );;
 
         $this->commandTester->execute(
             [
@@ -96,7 +95,6 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Copied \S+$basename to \S+$basename-copy/");
 
         $this->commandTester->execute(
             [
@@ -106,7 +104,6 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Deleted \S+$basename-copy/");
 
         $this->commandTester->execute(
             [
@@ -116,17 +113,6 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/\S+$basename-moved is now public/");
-
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--make-public' => true,
-            ],
-            ['interactive' => false]
-        );
-        $this->expectOutputRegex("/\S+$basename-moved is now public/");
 
         $this->commandTester->execute(
             [
@@ -136,7 +122,6 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Downloaded \S+$basename to $downloadToBasename/");
 
         $this->commandTester->execute(
             [
@@ -146,7 +131,6 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Copied \S+$basename to \S+$objectName-moved/");
 
         $this->commandTester->execute(
             [
@@ -156,6 +140,19 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Deleted \S+$objectName-moved/");
+
+        // $bucketUrl = sprintf('gs://%s', $bucketName);
+        $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
+        $outputString = <<<EOF
+Uploaded $basename to $objectUrl
+Copied $objectUrl to $objectUrl-copy
+Deleted $objectUrl-copy
+$objectUrl is now public
+Downloaded $objectUrl to $downloadToBasename
+Moved $objectUrl to $objectUrl-moved
+Deleted $objectUrl-moved
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }

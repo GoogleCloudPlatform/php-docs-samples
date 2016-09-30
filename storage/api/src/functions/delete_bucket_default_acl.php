@@ -41,6 +41,6 @@ function delete_bucket_default_acl($bucketName, $entity, $options = [])
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();
     $acl->delete($entity, $options);
-    printf('Deleted %s from gs://%s default ACL.' . PHP_EOL, $entity, $bucketName);
+    printf('Deleted %s from gs://%s default ACL' . PHP_EOL, $entity, $bucketName);
 }
 # [END delete_bucket_default_acl]

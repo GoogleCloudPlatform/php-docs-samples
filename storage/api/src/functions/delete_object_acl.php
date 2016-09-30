@@ -43,6 +43,6 @@ function delete_object_acl($bucketName, $objectName, $entity, $options = [])
     $object = $bucket->object($objectName);
     $acl = $object->acl();
     $acl->delete($entity, $options);
-    printf('Deleted %s from gs://%s/%s ACL.' . PHP_EOL, $entity, $bucketName, $objectName);
+    printf('Deleted %s from gs://%s/%s ACL' . PHP_EOL, $entity, $bucketName, $objectName);
 }
 # [END delete_object_acl]

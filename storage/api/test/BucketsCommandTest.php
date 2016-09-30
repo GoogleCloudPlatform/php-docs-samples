@@ -70,7 +70,6 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Bucket created: $bucketName/");
 
         $this->commandTester->execute(
             [
@@ -79,6 +78,12 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Bucket deleted: $bucketName/");
+
+        $outputString = <<<EOF
+Bucket created: $bucketName
+Bucket deleted: $bucketName
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }

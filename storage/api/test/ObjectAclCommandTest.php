@@ -88,7 +88,6 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Added allAuthenticatedUsers (READER) to \S+ ACL/");
 
         $this->commandTester->execute(
             [
@@ -98,7 +97,6 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/allAuthenticatedUsers: READER/");
 
         $this->commandTester->execute(
             [
@@ -109,6 +107,14 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Deleted allAuthenticatedUsers from \S+ ACL/");
+
+        $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
+        $outputString = <<<EOF
+Added allAuthenticatedUsers (READER) to $objectUrl ACL
+allAuthenticatedUsers: READER
+Deleted allAuthenticatedUsers from $objectUrl ACL
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }

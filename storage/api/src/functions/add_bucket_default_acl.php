@@ -43,6 +43,6 @@ function add_bucket_default_acl($bucketName, $entity, $role, $options = [])
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();
     $acl->add($entity, $role, $options);
-    printf('Added %s (%s) to gs://%s default ACL.' . PHP_EOL, $entity, $role, $bucketName);
+    printf('Added %s (%s) to gs://%s default ACL' . PHP_EOL, $entity, $role, $bucketName);
 }
 # [END add_bucket_default_acl]

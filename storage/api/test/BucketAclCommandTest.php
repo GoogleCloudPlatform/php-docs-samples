@@ -65,6 +65,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testManageBucketAcl()
     {
+        $this->expectOutputString('');
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
@@ -80,7 +81,6 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Added allAuthenticatedUsers (READER) to \S+ ACL/");
 
         $this->commandTester->execute(
             [
@@ -89,7 +89,6 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/allAuthenticatedUsers: READER/");
 
         $this->commandTester->execute(
             [
@@ -99,6 +98,14 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Deleted allAuthenticatedUsers from \S+ ACL/");
+
+        $bucketUrl = sprintf('gs://%s', $bucketName);
+        $outputString = <<<EOF
+Added allAuthenticatedUsers (READER) to $bucketUrl ACL
+allAuthenticatedUsers: READER
+Deleted allAuthenticatedUsers from $bucketUrl ACL
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }

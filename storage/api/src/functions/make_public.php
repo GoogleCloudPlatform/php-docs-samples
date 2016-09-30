@@ -40,6 +40,6 @@ function make_public($bucketName, $objectName)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->update(['acl' => []], ['predefinedAcl' => 'PUBLICREAD']);
-    printf('gs://%s/%s is now public.' . PHP_EOL, $bucketName, $objectName);
+    printf('gs://%s/%s is now public' . PHP_EOL, $bucketName, $objectName);
 }
 # [END make_public]

@@ -41,6 +41,6 @@ function delete_bucket_acl($bucketName, $entity, $options = [])
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->acl();
     $acl->delete($entity, $options);
-    printf('Deleted %s from gs://%s ACL.' . PHP_EOL, $entity, $bucketName);
+    printf('Deleted %s from gs://%s ACL' . PHP_EOL, $entity, $bucketName);
 }
 # [END delete_bucket_acl]

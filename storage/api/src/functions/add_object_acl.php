@@ -45,6 +45,6 @@ function add_object_acl($bucketName, $objectName, $entity, $role, $options = [])
     $object = $bucket->object($objectName);
     $acl = $object->acl();
     $acl->add($entity, $role, $options);
-    printf('Added %s (%s) to gs://%s/%s ACL.' . PHP_EOL, $entity, $role, $bucketName, $objectName);
+    printf('Added %s (%s) to gs://%s/%s ACL' . PHP_EOL, $entity, $role, $bucketName, $objectName);
 }
 # [END add_object_acl]

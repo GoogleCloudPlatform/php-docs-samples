@@ -80,7 +80,6 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Added allAuthenticatedUsers (READER) to \S+ default ACL/");
 
         $this->commandTester->execute(
             [
@@ -89,7 +88,6 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/allAuthenticatedUsers: READER/");
 
         $this->commandTester->execute(
             [
@@ -99,6 +97,14 @@ class AclCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Deleted allAuthenticatedUsers from \S+ default ACL/");
+
+        $bucketUrl = sprintf('gs://%s', $bucketName);
+        $outputString = <<<EOF
+Added allAuthenticatedUsers (READER) to $bucketUrl default ACL
+allAuthenticatedUsers: READER
+Deleted allAuthenticatedUsers from $bucketUrl default ACL
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }

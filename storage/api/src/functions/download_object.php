@@ -41,6 +41,7 @@ function download_object($bucketName, $objectName, $destination)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->downloadToFile($destination);
-    printf('Downloaded gs://%s/%s to %s', $bucketName, $objectName, basename($destination));
+    printf('Downloaded gs://%s/%s to %s' . PHP_EOL,
+        $bucketName, $objectName, basename($destination));
 }
 # [END download_object]

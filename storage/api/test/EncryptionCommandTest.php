@@ -86,7 +86,6 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Encrypted Object $uploadFromBasename uploaded to \S+/");
 
         $this->commandTester->execute(
             [
@@ -97,6 +96,13 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        $this->expectOutputRegex("/Encrypted object \S+ downloaded to $downloadToBasename/");
+
+        $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
+        $outputString = <<<EOF
+Uploaded encrypted $uploadFromBasename to $objectUrl
+Encrypted object $objectUrl downloaded to $downloadToBasename
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }
