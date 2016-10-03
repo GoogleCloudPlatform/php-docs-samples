@@ -82,7 +82,7 @@ $app->post('/send_message', function () use ($app) {
     return new Response('', 400);
 });
 
-$app['get_pull_messages'] = $app->protect(function ($clearMessages = false) {
+$app['get_pull_messages'] = $app->protect(function ($clearMessages = false) use ($app) {
     if ($pullMessages = $app['memcache']->get('pull-messages')) {
         if ($clearMessages) {
             $app['memcache']->set('pull-messages', []);
