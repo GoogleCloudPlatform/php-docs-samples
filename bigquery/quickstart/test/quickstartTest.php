@@ -16,6 +16,8 @@
  */
 class quickstartTest extends PHPUnit_Framework_TestCase
 {
+    private $dataset;
+
     public function testQuickstart()
     {
         $datasetId = 'my_new_dataset_' . time();
@@ -29,11 +31,17 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
-        $dataset = include $file;
+        $this->dataset = include $file;
 
         // Make sure it looks correct
-        $this->assertInstanceOf('Google\Cloud\BigQuery\Dataset', $dataset);
-        $this->assertEquals($datasetId, $dataset->id());
-        $dataset->delete();
+        $this->assertInstanceOf('Google\Cloud\BigQuery\Dataset', $this->dataset);
+        $this->assertEquals($datasetId, $this->dataset->id());
+    }
+
+    public function tearDown()
+    {
+        if ($this->dataset) {
+            $this->dataset->delete();
+        }
     }
 }
