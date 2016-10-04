@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START list_sinks_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END list_sinks_use]
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -42,16 +39,13 @@ class ListSinksCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $projectId = $input->getOption('project');
-        //$loggerName = $input->getOption('logger');
-        // [START list_sinks]
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        foreach ($logging->sinks() as $sink) {
+        $sinks = list_sinks($projectId);
+        foreach ($sinks as $sink) {
             /* @var $sink \Google\Cloud\Logging\Sink */
             foreach ($sink->info() as $key => $value) {
                 print "$key:$value\n";
             }
             print PHP_EOL;
         }
-        // [END list_sinks]
     }
 }

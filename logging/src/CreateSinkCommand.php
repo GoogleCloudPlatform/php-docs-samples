@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START create_sink_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END create_sink_use]
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -66,7 +63,6 @@ class CreateSinkCommand extends BaseCommand
         $loggerName = $input->getOption('logger');
         $filter = $input->getOption('filter');
         $bucketName = $input->getOption('bucket');
-        // [START create_sink]
         $destination = sprintf(
             'storage.googleapis.com/%s',
             $bucketName
@@ -80,13 +76,7 @@ class CreateSinkCommand extends BaseCommand
         if (!empty($filter)) {
             $filterString .= ' AND ' . $filter;
         }
-        $logging = new LoggingClient(['projectId' => $projectId]);
-        $logging->createSink(
-            $sinkName,
-            $destination,
-            ['filter' => $filterString]
-        );
-        // [END create_sink]
+        create_sink($projectId, $sinkName, $destination, $filterString);
         printf("Created a sink '%s'." . PHP_EOL, $sinkName);
     }
 }

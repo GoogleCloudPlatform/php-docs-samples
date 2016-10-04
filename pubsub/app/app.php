@@ -82,11 +82,10 @@ $app->post('/send_message', function () use ($app) {
     return new Response('', 400);
 });
 
-$app['get_pull_messages'] = $app->protect(function ($clearMessages = false) {
-    $memcache = new Memcached;
-    if ($pullMessages = $memcache->get('pull-messages')) {
+$app['get_pull_messages'] = $app->protect(function ($clearMessages = false) use ($app) {
+    if ($pullMessages = $app['memcache']->get('pull-messages')) {
         if ($clearMessages) {
-            $memcache->set('pull-messages', []);
+            $app['memcache']->set('pull-messages', []);
         }
         return $pullMessages;
     }
@@ -94,10 +93,13 @@ $app['get_pull_messages'] = $app->protect(function ($clearMessages = false) {
 });
 
 $app['save_pull_message'] = $app->protect(function ($message) use ($app) {
-    $memcache = new Memcached;
     $messages = $app['get_pull_messages']();
     $messages[] = $message;
-    $memcache->set('pull-messages', $messages);
+    $app['memcache']->set('pull-messages', $messages);
 });
+
+$app['memcache'] = function () {
+    return new Memcached;
+};
 
 return $app;

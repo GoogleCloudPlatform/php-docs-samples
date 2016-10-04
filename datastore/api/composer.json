@@ -1,0 +1,14 @@
+{
+    "require": {
+        "google/cloud": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": { "Google\\Cloud\\Samples\\Datastore\\": "src" },
+        "files": [
+            "src/functions/concepts.php"
+        ]
+    }
+}

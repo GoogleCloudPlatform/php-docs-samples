@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START list_log_use]
-use Google\Cloud\Logging\LoggingClient;
-// [END list_log_use]
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -41,15 +38,10 @@ class ListEntriesCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $project = $input->getOption('project');
+        $projectId = $input->getOption('project');
         $loggerName = $input->getOption('logger');
-        // [START list_log]
-        $logging = new LoggingClient(['projectId' => $project]);
-        $loggerFullName = sprintf('projects/%s/logs/%s', $project, $loggerName);
-        $options = [
-            'filter' => sprintf('logName = "%s"', $loggerFullName)
-        ];
-        foreach ($logging->entries($options) as $entry) {
+        $entries = list_entries($projectId, $loggerName);
+        foreach ($entries as $entry) {
             /* @var $entry \Google\Cloud\Logging\Entry */
             printf(
                 "%s : %s" . PHP_EOL,
@@ -57,6 +49,5 @@ class ListEntriesCommand extends BaseCommand
                 $entry->info()['textPayload']
             );
         }
-        // [END list_log]
     }
 }
