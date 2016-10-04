@@ -26,21 +26,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command line utility for the Natural Language APIs.
  *
- * Usage: php language.php everything TEXT
+ * Usage: php language.php all TEXT
  */
-class EverythingCommand extends Command
+class AllCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('everything')
+            ->setName('all')
             ->setDescription('Analyze some natural language text.')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command analyzes text using the Google Cloud Natural Language API.
 
     <info>php %command.full_name% Text to analyze.</info>
 
-    <info>php %command.full_name% --gcs-path gs://my-bucket/file_with_text.txt</info>
+    <info>php %command.full_name% gs://my-bucket/file_with_text.txt</info>
 
 EOF
             )
@@ -58,10 +58,10 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z|0-9|\.|-]+)\/(\S+)$/', $content, $matches)) {
-            $storage = new StorageClient();
-            $content = $storage->bucket($matches[1])->object($matches[2]);
+            $result = analyze_all_from_file($matches[1], $matches[2]);
+        } else {
+            $result = analyze_all($content);
         }
-        $result = analyze_everything($content);
         print_annotation($result);
     }
 }

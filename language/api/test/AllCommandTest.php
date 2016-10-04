@@ -17,14 +17,14 @@
 
 namespace Google\Cloud\Samples\Language\Tests;
 
-use Google\Cloud\Samples\Language\EverythingCommand;
+use Google\Cloud\Samples\Language\AllCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for EverythingCommand.
+ * Unit Tests for AllCommand.
  */
-class EverythingCommandTest extends \PHPUnit_Framework_TestCase
+class AllCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     private $commandTester;
@@ -40,8 +40,8 @@ class EverythingCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $application = new Application();
-        $application->add(new EverythingCommand());
-        $this->commandTester = new CommandTester($application->get('everything'));
+        $application->add(new AllCommand());
+        $this->commandTester = new CommandTester($application->get('all'));
         $this->expectedString = <<<EOF
 language: en
 sentiment: -0.3

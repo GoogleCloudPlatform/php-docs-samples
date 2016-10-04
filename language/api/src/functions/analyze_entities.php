@@ -26,23 +26,21 @@ namespace Google\Cloud\Samples\Language;
 # [START analyze_entities]
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
-use Google\Cloud\Storage\StorageObject;
 
 /**
  * Find the entities in text.
  * ```
  * analyze_entities('Do you know the way to San Jose?');
- * analyze_entities($storageObject);
  * ```
  *
- * @param string|StorageObject $content The content to analyze.
+ * @param string $text The text to analyze.
  *
  * @return Annotation
  */
-function analyze_entities($content, $options = [])
+function analyze_entities($text, $options = [])
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeEntities($content);
+    $annotation = $language->analyzeEntities($text, $options);
     return $annotation;
 }
 # [END analyze_entities]

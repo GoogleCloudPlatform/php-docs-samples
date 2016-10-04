@@ -58,10 +58,10 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z|0-9|\.|-]+)\/(\S+)$/', $content, $matches)) {
-            $storage = new StorageClient();
-            $content = $storage->bucket($matches[1])->object($matches[2]);
+            $result = analyze_syntax_from_file($matches[1], $matches[2]);
+        } else {
+            $result = analyze_syntax($content);
         }
-        $result = analyze_syntax($content);
         print_annotation($result);
     }
 }
