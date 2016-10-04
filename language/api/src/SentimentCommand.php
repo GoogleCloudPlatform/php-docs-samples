@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
