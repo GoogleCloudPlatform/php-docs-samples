@@ -39,7 +39,7 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
 
     <info>php %command.full_name% Text to analyze.</info>
 
-    <info>php %command.full_name% gs://my-bucket/file_with_text.txt</info>
+    <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
 EOF
             )
@@ -56,7 +56,7 @@ EOF
         $content = implode(' ', (array) $input->getArgument('content'));
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
-        if (preg_match('/^gs:\/\/([a-z|0-9|\.|-]+)\/(\S+)$/', $content, $matches)) {
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
             $result = analyze_sentiment_from_file($matches[1], $matches[2]);
         } else {
             $result = analyze_sentiment($content);
