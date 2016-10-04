@@ -17,16 +17,17 @@
 
 namespace Google\Cloud\Samples\Language\Tests;
 
-use Google\Cloud\Samples\Language\AnalyzeSyntaxCommand;
+use Google\Cloud\Samples\Language\EntitiesCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for TablesCommand.
+ * Unit Tests for EntitiesCommand.
  */
-class AnalyzeSyntaxCommandTest extends \PHPUnit_Framework_TestCase
+class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+    private $commandTester;
 
     public static function setUpBeforeClass()
     {
@@ -35,19 +36,39 @@ class AnalyzeSyntaxCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function testSyntax()
+    public function setUp()
+    {
+        $application = new Application();
+        $application->add(new EntitiesCommand());
+        $this->commandTester = new CommandTester($application->get('entities'));
+    }
+
+    public function testEntities()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $application = new Application();
-        $application->add(new AnalyzeSyntaxCommand());
-        $commandTester = new CommandTester($application->get('syntax'));
-        $commandTester->execute(
-            ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
+        $this->commandTester->execute(
+            ['content' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex(`0: Do you know the way`);
+        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
+    }
+
+    public function testEntitiesFromStorageObject()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
+            $this->markTestSkipped('No GCS file.');
+        }
+
+        $this->commandTester->execute(
+            ['content' =>  $gcsFile],
+            ['interactive' => false]
+        );
+        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
     }
 }

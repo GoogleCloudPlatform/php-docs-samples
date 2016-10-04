@@ -23,24 +23,26 @@
 
 namespace Google\Cloud\Samples\Language;
 
-# [START analyze_syntax]
+# [START analyze_all]
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
 
 /**
- * Find the syntax in text.
+ * Find the everything in text.
  * ```
- * analyze_syntax('Do you know the way to San Jose?');
+ * analyze_all('Do you know the way to San Jose?');
  * ```
  *
  * @param string $text The text to analyze.
  *
  * @return Annotation
  */
-function analyze_syntax($text, $options = [])
+function analyze_all($text)
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeSyntax($text, $options);
+    $annotation = $language->annotateText($text, [
+        'features' => ['entities', 'syntax', 'sentiment']
+    ]);
     return $annotation;
 }
-# [END analyze_syntax]
+# [END analyze_all]
