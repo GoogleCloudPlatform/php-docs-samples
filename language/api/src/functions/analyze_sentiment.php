@@ -26,21 +26,23 @@ namespace Google\Cloud\Samples\Language;
 # [START analyze_sentiment]
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
+use Google\Cloud\Storage\StorageObject;
 
 /**
  * Find the sentiment in text.
  * ```
  * analyze_sentiment('Do you know the way to San Jose?');
- * ```.
+ * analyze_sentiment($storageObject);
+ * ```
  *
- * @param string $text The text to analyze.
+ * @param string|StorageObject $content The content to analyze.
  *
  * @return Annotation
  */
-function analyze_sentiment($text, $options = [])
+function analyze_sentiment($content, $options = [])
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeSentiment($text);
+    $annotation = $language->analyzeSentiment($content);
     return $annotation;
 }
 # [END analyze_sentiment]

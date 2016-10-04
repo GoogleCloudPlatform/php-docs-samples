@@ -17,16 +17,17 @@
 
 namespace Google\Cloud\Samples\Language\Tests;
 
-use Google\Cloud\Samples\Language\AnalyzeSentimentCommand;
+use Google\Cloud\Samples\Language\SentimentCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for TablesCommand.
+ * Unit Tests for SentimentCommand.
  */
-class AnalyzeSentimentCommandTest extends \PHPUnit_Framework_TestCase
+class SentimentCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+    private $commandTester;
 
     public static function setUpBeforeClass()
     {
@@ -35,19 +36,41 @@ class AnalyzeSentimentCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
+    public function setUp()
+    {
+        $application = new Application();
+        $application->add(new SentimentCommand());
+        $this->commandTester = new CommandTester($application->get('sentiment'));
+    }
+
     public function testSentiment()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $application = new Application();
-        $application->add(new AnalyzeSentimentCommand());
-        $commandTester = new CommandTester($application->get('sentiment'));
-        $commandTester->execute(
-            ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
+        $this->commandTester->execute(
+            ['content' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex(`sentiment: -`);
+
+        $this->expectOutputRegex('/sentiment: -/');
+    }
+
+    public function testEverythingFromStorageObject()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
+            $this->markTestSkipped('No GCS file.');
+        }
+
+        $this->commandTester->execute(
+            ['content' =>  $gcsFile],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/sentiment: -/');
     }
 }

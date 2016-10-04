@@ -17,16 +17,17 @@
 
 namespace Google\Cloud\Samples\Language\Tests;
 
-use Google\Cloud\Samples\Language\AnalyzeEntitiesCommand;
+use Google\Cloud\Samples\Language\SyntaxCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for TablesCommand.
+ * Unit Tests for SyntaxCommand.
  */
-class AnalyzeEntitiesCommandTest extends \PHPUnit_Framework_TestCase
+class SyntaxCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+    private $commandTester;
 
     public static function setUpBeforeClass()
     {
@@ -35,19 +36,41 @@ class AnalyzeEntitiesCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
-    public function testEntities()
+    public function setUp()
+    {
+        $application = new Application();
+        $application->add(new SyntaxCommand());
+        $this->commandTester = new CommandTester($application->get('syntax'));
+    }
+
+    public function testSyntax()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $application = new Application();
-        $application->add(new AnalyzeEntitiesCommand());
-        $commandTester = new CommandTester($application->get('entities'));
-        $commandTester->execute(
-            ['text' =>  explode(' ', 'Do you know the way to San Jose?')],
+        $this->commandTester->execute(
+            ['content' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
+
+        $this->expectOutputRegex('/0: Do you know the way/');
+    }
+
+    public function testEverythingFromStorageObject()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
+            $this->markTestSkipped('No GCS file.');
+        }
+
+        $this->commandTester->execute(
+            ['content' =>  $gcsFile],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/0: Do you know the way/');
     }
 }

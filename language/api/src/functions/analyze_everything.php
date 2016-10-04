@@ -26,21 +26,23 @@ namespace Google\Cloud\Samples\Language;
 # [START analyze_everything]
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
+use Google\Cloud\Storage\StorageObject;
 
 /**
  * Find the everything in text.
  * ```
  * analyze_everything('Do you know the way to San Jose?');
- * ```.
+ * analyze_everything($storageObject);
+ * ```
  *
- * @param string $text The text to analyze.
+ * @param string|StorageObject $content The content to analyze.
  *
  * @return Annotation
  */
-function analyze_everything($text, $options = [])
+function analyze_everything($content, $options = [])
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->annotateText($text, [
+    $annotation = $language->annotateText($content, [
         'features' => ['entities', 'syntax', 'sentiment']
     ]);
     return $annotation;

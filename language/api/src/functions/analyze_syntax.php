@@ -26,21 +26,23 @@ namespace Google\Cloud\Samples\Language;
 # [START analyze_syntax]
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
+use Google\Cloud\Storage\StorageObject;
 
 /**
  * Find the syntax in text.
  * ```
  * analyze_syntax('Do you know the way to San Jose?');
- * ```.
+ * analyze_syntax($storageObject);
+ * ```
  *
- * @param string $text The text to analyze.
+ * @param string|StorageObject $content The content to analyze.
  *
  * @return Annotation
  */
-function analyze_syntax($text, $options = [])
+function analyze_syntax($content, $options = [])
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeSyntax($text);
+    $annotation = $language->analyzeSyntax($content);
     return $annotation;
 }
 # [END analyze_syntax]

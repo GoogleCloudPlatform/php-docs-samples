@@ -2,15 +2,15 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Google\Cloud\Samples\Language\AnalyzeEntitiesCommand;
-use Google\Cloud\Samples\Language\AnalyzeEverythingCommand;
-use Google\Cloud\Samples\Language\AnalyzeSentimentCommand;
-use Google\Cloud\Samples\Language\AnalyzeSyntaxCommand;
+use Google\Cloud\Samples\Language\EntitiesCommand;
+use Google\Cloud\Samples\Language\EverythingCommand;
+use Google\Cloud\Samples\Language\SentimentCommand;
+use Google\Cloud\Samples\Language\SyntaxCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$application->add(new AnalyzeEntitiesCommand());
-$application->add(new AnalyzeEverythingCommand());
-$application->add(new AnalyzeSentimentCommand());
-$application->add(new AnalyzeSyntaxCommand());
+$application->add(new EntitiesCommand());
+$application->add(new EverythingCommand());
+$application->add(new SentimentCommand());
+$application->add(new SyntaxCommand());
 $application->run();
