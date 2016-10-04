@@ -1,8 +1,9 @@
 <?php
 
+# [START bigquery_quickstart]
+# Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-# [START bigquery_quickstart]
 # Imports the Google Cloud client library
 use Google\Cloud\BigQuery\BigQueryClient;
 

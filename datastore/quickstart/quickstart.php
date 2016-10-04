@@ -1,8 +1,9 @@
 <?php
 
+# [START datastore_quickstart]
+# Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-# [START datastore_quickstart]
 # Imports the Google Cloud client library
 use Google\Cloud\Datastore\DatastoreClient;
 
