@@ -33,7 +33,7 @@ class AllCommand extends Command
     {
         $this
             ->setName('all')
-            ->setDescription('Analyze some natural language text.')
+            ->setDescription('Analyze syntax, sentiment and entities in text.')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command analyzes text using the Google Cloud Natural Language API.
 

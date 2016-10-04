@@ -33,7 +33,7 @@ class EntitiesCommand extends Command
     {
         $this
             ->setName('entities')
-            ->setDescription('Analyze some natural language text.')
+            ->setDescription('Analyze entities in text.')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command analyzes text using the Google Cloud Natural Language API.
 

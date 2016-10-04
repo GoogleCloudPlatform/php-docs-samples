@@ -33,7 +33,7 @@ class SyntaxCommand extends Command
     {
         $this
             ->setName('syntax')
-            ->setDescription('Analyze some natural language text.')
+            ->setDescription('Analyze syntax in text.')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command analyzes text using the Google Cloud Natural Language API.
 
