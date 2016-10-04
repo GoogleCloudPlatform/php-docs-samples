@@ -11,13 +11,12 @@ use Google\Cloud\Datastore\DatastoreClient;
 $datastore = new DatastoreClient();
 
 # The kind of the entity to retrieve
-$kind = 'Task';
-# The id of the entity to retrieve
-$id = 1234567890;
-# The Datastore key for the entity
-$taskKey = $datastore->key($kind, $id);
+$kind = 'Person';
 
-# Retrieves the entity
-$entity = $datastore->entity($taskKey);
+# Creates a Datastore query
+$query = $datastore->gqlQuery("Select * from $kind");
+
+# Runs the query
+$results = $datastore->runQuery($query);
 # [END datastore_quickstart]
-return $entity;
+return $results;
