@@ -16,6 +16,7 @@
  */
 class quickstartTest extends PHPUnit_Framework_TestCase
 {
+    private $topic;
     public function testQuickstart()
     {
         if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
@@ -33,11 +34,17 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
-        $topic = include $file;
+        $this->topic = include $file;
 
         // Make sure it looks correct
-        $this->assertInstanceOf('Google\Cloud\PubSub\Topic', $topic);
-        $this->assertContains($topicName, $topic->name());
-        $topic->delete();
+        $this->assertInstanceOf('Google\Cloud\PubSub\Topic', $this->topic);
+        $this->assertContains($topicName, $this->topic->name());
+    }
+
+    public function tearDown()
+    {
+        if ($this->topic) {
+            $this->topic->delete();
+        }
     }
 }
