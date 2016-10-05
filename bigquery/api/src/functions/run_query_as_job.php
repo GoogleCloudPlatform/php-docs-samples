@@ -48,9 +48,11 @@ function run_query_as_job($projectId, $query, $useLegacySql)
         'projectId' => $projectId,
     ]);
     $bigQuery = $builder->bigQuery();
+    // [START run_query_as_job]
     $job = $bigQuery->runQueryAsJob(
         $query,
         ['jobConfig' => ['useLegacySql' => $useLegacySql]]);
+    // [END run_query_as_job]
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
         print('Waiting for job to complete' . PHP_EOL);
