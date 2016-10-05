@@ -13,10 +13,13 @@ $datastore = new DatastoreClient();
 # The kind of the entity to retrieve
 $kind = 'Person';
 
-# Creates a Datastore query
-$query = $datastore->gqlQuery("Select * from $kind");
+# The name/ID of the entity to retrieve
+$name = 'Bob';
 
-# Runs the query
-$results = $datastore->runQuery($query);
+# The Datastore key for the entity
+$taskKey = $datastore->key($kind, $name);
+
+# Retrieves the entity
+$entity = $datastore->lookup($taskKey);
 # [END datastore_quickstart]
-return $results;
+return $entity;

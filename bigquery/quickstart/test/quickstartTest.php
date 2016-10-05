@@ -21,7 +21,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
     public function testQuickstart()
     {
         $datasetId = 'my_new_dataset_' . time();
-        $file = sys_get_temp_dir() . '/quickstart_quickstart.php';
+        $file = sys_get_temp_dir() . '/bigquery_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
             ['my_new_dataset', '__DIR__'],

@@ -26,10 +26,10 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
         $file = __DIR__ . '/../quickstart.php';
 
         // Invoke quickstart.php
-        $results = include $file;
+        $entity = include $file;
 
         // Make sure it looks correct
-        $this->assertInstanceOf('Generator', $results);
-        $this->assertTrue(count($results) > 0);
+        $this->assertInstanceOf('Google\Cloud\Datastore\Entity', $entity);
+        $this->assertEquals('Bob', $entity->key()->path()[0]['name']);
     }
 }
