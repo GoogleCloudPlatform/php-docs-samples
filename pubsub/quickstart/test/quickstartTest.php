@@ -20,7 +20,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 
     public function testQuickstart()
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('GOOGLE_APPLICATION_CREDENTIALS must be set.');
         }
 
@@ -28,8 +28,8 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         $file = sys_get_temp_dir() . '/pubsub_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['my-new-topic', '__DIR__'],
-            [$topicName, sprintf('"%s/.."', __DIR__)],
+            ['my-new-topic', 'YOUR_PROJECT_ID', '__DIR__'],
+            [$topicName, $projectId, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);
