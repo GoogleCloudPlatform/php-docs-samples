@@ -35,9 +35,12 @@ trait ExecuteCommandTrait
      * @param $cmd
      * @throws \Exception
      */
-    public static function execute($cmd)
+    public static function execute($cmd, $timeout = null)
     {
         $process = self::createProcess($cmd);
+        if ($timeout) {
+            $process->setTimeout($timeout);
+        }
         self::executeProcess($process);
 
         return $process->getOutput();

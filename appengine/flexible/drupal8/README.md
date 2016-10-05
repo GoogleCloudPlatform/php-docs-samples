@@ -17,13 +17,22 @@ Before setting up Drupal 8 on Managed VMs, you will need to complete the followi
 
 ### Download
 
-Use the [Drupal 8 Console][4] to install a drupal project with the following command:
+Use the [Drupal 8 Drush CLI][4] to install a drupal project. This can be installed locally
+by running `composer install` in this directory:
 
 ```sh
-drupal site:new PROJECT_NAME 8.0.0
+composer install
+./vendor/bin/drush
 ```
 
-Alternatively, you can download a compressed file from the [Drupal Website][5].
+Now you can run the command to download drupal:
+
+```sh
+cd /path/to/drupal
+/path/to/drush dl drupal
+```
+
+Alternatively, you can download a compressed file of Druapl 8 from the [Drupal Website][5].
 
 ### Installation
 
@@ -34,17 +43,14 @@ Alternatively, you can download a compressed file from the [Drupal Website][5].
   ```
   Open [http://localhost:8080](http://localhost:8080) in your browser after running these steps
 
-  1. **BETA** You can also try setting up your Drupal 8 instance using the [Drupal 8 Console][4]
+  1. You can also try setting up your Drupal 8 instance using [Drush][4]
   ```sh
   cd /path/to/drupal
-  drupal site:install \
-    --langcode en \
-    --db-type mysql \
-    --db-name DATABASE_NAME
-    --db-user DATABASE_USERNAME
-    --db-pass DATABASE_PASSWORD
-    --site-name 'My Drupal Site On Google' \
-    --site-mail you@example.com \
+  /path/to/drush site-install \
+    --locale=en \
+    --db-path=mysql://user@pass:host/db_name \
+    --site-name='My Drupal Site On Google' \
+    --site-mail=you@example.com \
     --account-name admin \
     --account-mail you@example.com \
     --account-pass admin
@@ -64,13 +70,12 @@ git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-d
 cd /path/to/php-docs-samples/
 
 # copy the four files below to the root directory of your Drupal project
-cp managed_vms/drupal8/{app.yaml,php.ini,Dockerfile,nginx-app.conf} /path/to/drupal
+cp managed_vms/drupal8/{app.yaml,php.ini,nginx-app.conf} /path/to/drupal
 ```
 
 The four files needed are as follows:
 
   1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
-  1. [`Dockerfile`](Dockerfile) - Container configuration for the PHP runtime
   1. [`php.ini`](php.ini) - Optional ini used to extend the runtime configuration.
   1. [`nginx-app.conf`](nginx-app.conf) - Nginx web server configuration needed for `Drupal 8`
 
@@ -80,19 +85,20 @@ For now, you need to disable the CSS and JS preprocessed caching that Drupal 8 e
 To do this, go to `/admin/config/development/performance` and deselect the two
 chechboxes (`Aggregate CSS files` and `Aggregate JS files`) under **Bandwidth Optimizations**.
 
-Alternatively, you can use the [Drupal 8 Console][4] to change this config setting:
+Alternatively, you can use [Drush][4] to change this config setting:
 
 ```sh
 # this command must be run inside the root directory of a drupal project
 $ cd /path/to/drupal
-# this will expand your text editor
-$ drupal config:edit system.performance
+$ /path/to/drush pm-enable config -y
+$ /path/to/drush config-set system.performance css.preprocess 0
+$ /path/to/drush config-set system.performance js.preprocess 0
 ```
 
-Change the values `preprocess` under `css` and `js` to `false`.
+This will change the values `preprocess` under `css` and `js` to `false`.
 
 [1]: https://cloud.google.com/appengine/docs/managed-vms/
 [2]: https://console.cloud.google.com
 [3]: https://cloud.google.com/sql/docs/getting-started
-[4]: https://www.drupal.org/project/console
+[4]: http://docs.drush.org/en/master/install/
 [5]: https://www.drupal.org/8/download
