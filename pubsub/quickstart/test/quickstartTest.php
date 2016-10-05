@@ -17,6 +17,7 @@
 class quickstartTest extends PHPUnit_Framework_TestCase
 {
     private $topic;
+
     public function testQuickstart()
     {
         if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
