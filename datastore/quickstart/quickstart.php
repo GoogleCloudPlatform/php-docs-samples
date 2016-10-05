@@ -11,10 +11,10 @@ use Google\Cloud\Datastore\DatastoreClient;
 $datastore = new DatastoreClient();
 
 # The kind of the entity to retrieve
-$kind = 'Person';
+$kind = 'Task';
 
 # The name/ID of the entity to retrieve
-$name = 'Bob';
+$name = 'sampletask1';
 
 # The Datastore key for the entity
 $taskKey = $datastore->key($kind, $name);

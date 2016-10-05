@@ -32,6 +32,6 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
 
         // Make sure it looks correct
         $this->assertInstanceOf('Google\Cloud\Datastore\Entity', $entity);
-        $this->assertEquals('Bob', $entity->key()->path()[0]['name']);
+        $this->assertEquals('sampletask1', $entity->key()->path()[0]['name']);
     }
 }
