@@ -7,13 +7,8 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Cloud\Logging\LoggingClient;
 
-# Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
-
 # Instantiates a client
-$logging = new LoggingClient([
-    'projectId' => $projectId
-]);
+$logging = new LoggingClient();
 
 # The name of the log to write to
 $logName = 'my-log';

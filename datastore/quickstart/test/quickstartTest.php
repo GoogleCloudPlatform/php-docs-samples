@@ -23,6 +23,10 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
 {
     public function testQuickstart()
     {
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            $this->markTestSkipped('GOOGLE_APPLICATION_CREDENTIALS must be set.');
+        }
+
         $file = __DIR__ . '/../quickstart.php';
 
         // Invoke quickstart.php
