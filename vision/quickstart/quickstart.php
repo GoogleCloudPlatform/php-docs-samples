@@ -16,10 +16,10 @@ $vision = new VisionClient([
 ]);
 
 # The name of the image file to annotate
-$fileName = '/resources/wakeupcat.jpg';
+$fileName = __DIR__ . '/resources/wakeupcat.jpg';
 
 # Prepare the image to be annotated
-$image = $vision->image(fopen(__DIR__ . $fileName, 'r'), [
+$image = $vision->image(fopen($fileName, 'r'), [
     'LABEL_DETECTION'
 ]);
 

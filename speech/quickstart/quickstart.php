@@ -16,7 +16,7 @@ $speech = new SpeechClient([
 ]);
 
 # The name of the audio file to transcribe
-$fileName = '/resources/audio.raw';
+$fileName = __DIR__ . '/resources/audio.raw';
 
 # The audio file's encoding and sample rate
 $options = [
@@ -25,8 +25,8 @@ $options = [
 ];
 
 # Detects speech in the audio file
-$results = $speech->recognize(fopen(__DIR__ . $fileName, 'r'), $options);
+$results = $speech->recognize(fopen($fileName, 'r'), $options);
 
-echo 'Transcription: '.$results[0]['transcript'];
+echo 'Transcription: ' . $results[0]['transcript'];
 # [END speech_quickstart]
 return $results;
