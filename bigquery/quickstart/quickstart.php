@@ -15,5 +15,7 @@ $datasetName = 'my_new_dataset';
 
 # Creates the new dataset
 $dataset = $bigquery->createDataset($datasetName);
+
+echo 'Dataset ' . $dataset->id() . ' created.';
 # [END bigquery_quickstart]
 return $dataset;

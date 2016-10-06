@@ -26,5 +26,7 @@ $entry = $logger->entry($text, [
 
 # Writes the log entry
 $logger->write($entry);
+
+echo 'Logged ' . $text;
 # [END logging_quickstart]
 return $entry;

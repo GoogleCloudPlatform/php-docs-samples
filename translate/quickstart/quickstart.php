@@ -24,5 +24,8 @@ $target = 'ru';
 $translation = $translate->translate($text, [
     'target' => $target
 ]);
+
+echo 'Text: ' . $text . '
+Translation: ' . $translation['text'];
 # [END translate_quickstart]
 return $translation;

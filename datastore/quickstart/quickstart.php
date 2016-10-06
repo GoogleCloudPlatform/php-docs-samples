@@ -19,7 +19,9 @@ $name = 'sampletask1';
 # The Datastore key for the entity
 $taskKey = $datastore->key($kind, $name);
 
-# Retrieves the entity
-$entity = $datastore->lookup($taskKey);
+# Retrieves the task
+$task = $datastore->lookup($taskKey);
+
+echo 'Fetched task: ' . $task->key();
 # [END datastore_quickstart]
-return $entity;
+return $task;
