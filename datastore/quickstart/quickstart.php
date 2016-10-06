@@ -10,18 +10,21 @@ use Google\Cloud\Datastore\DatastoreClient;
 # Instantiates a client
 $datastore = new DatastoreClient();
 
-# The kind of the entity to retrieve
+# The kind for the new entity
 $kind = 'Task';
 
-# The name/ID of the entity to retrieve
+# The name/ID for the new entity
 $name = 'sampletask1';
 
-# The Datastore key for the entity
+# The Cloud Datastore key for the new entity
 $taskKey = $datastore->key($kind, $name);
 
-# Retrieves the task
-$task = $datastore->lookup($taskKey);
+# Prepares the new entity
+$task = $datastore->entity($taskKey, ['description' => 'Buy milk']);
 
-echo 'Fetched task: ' . $task->key();
+# Saves the entity
+$datastore->upsert($task);
+
+echo 'Saved ' . $task->key() . ': ' . $task['description'];
 # [END datastore_quickstart]
 return $task;
