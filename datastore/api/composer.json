@@ -3,7 +3,8 @@
         "google/cloud": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8"
+        "phpunit/phpunit": "~4.8",
+        "google/cloud-tools": "<2.0"
     },
     "autoload": {
         "psr-4": { "Google\\Cloud\\Samples\\Datastore\\": "src" },
