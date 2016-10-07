@@ -15,5 +15,7 @@ $bucketName = 'my-new-bucket';
 
 # Creates the new bucket
 $bucket = $storage->createBucket($bucketName);
+
+echo 'Bucket ' . $bucket->name() . ' created.';
 # [END storage_quickstart]
 return $bucket;
