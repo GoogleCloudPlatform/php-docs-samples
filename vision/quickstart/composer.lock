@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "961be53cdb568c9c0c19f48f55b0fa66",
-    "content-hash": "52daf6d8a20f698e105309ea10a69031",
+    "hash": "f75b529e9f42e9c698da7cbb22ae4f13",
+    "content-hash": "4c7836060be1fc699affa599c19eb06d",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -100,16 +100,16 @@
         },
         {
             "name": "google/cloud",
-            "version": "v0.9.0",
+            "version": "v0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "a972770d8f36687dbb34f23df7d6d76027bf2323"
+                "reference": "ad867d788e855b3423fb8866b15ea23fbe844cbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/a972770d8f36687dbb34f23df7d6d76027bf2323",
-                "reference": "a972770d8f36687dbb34f23df7d6d76027bf2323",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/ad867d788e855b3423fb8866b15ea23fbe844cbe",
+                "reference": "ad867d788e855b3423fb8866b15ea23fbe844cbe",
                 "shasum": ""
             },
             "require": {
@@ -128,7 +128,8 @@
                 "phpdocumentor/reflection": "^3.0",
                 "phpunit/phpunit": "4.8.*",
                 "squizlabs/php_codesniffer": "2.*",
-                "symfony/console": "^3.0"
+                "symfony/console": "^3.0",
+                "vierbergenlars/php-semver": "^3.0"
             },
             "suggest": {
                 "google/gax": "Required to support gRPC",
@@ -179,7 +180,7 @@
                 "translate",
                 "vision"
             ],
-            "time": "2016-09-26 15:59:01"
+            "time": "2016-10-05 15:18:51"
         },
         {
             "name": "guzzlehttp/guzzle",
