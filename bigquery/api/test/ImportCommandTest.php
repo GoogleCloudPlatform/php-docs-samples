@@ -17,10 +17,10 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
-use Google\Cloud\Samples\BigQuery;
 use Google\Cloud\Samples\BigQuery\ImportCommand;
 use Google\Cloud\Samples\BigQuery\QueryCommand;
 use Google\Cloud\Samples\BigQuery\SchemaCommand;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -29,15 +29,33 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class ImportCommandTest extends \PHPUnit_Framework_TestCase
 {
+    use EventuallyConsistentTestTrait;
+
     protected static $hasCredentials;
-    protected static $gcsBucket;
+    private $gcsBucket;
+    private $projectId;
+    private $datasetId;
+    private $tempTableId;
 
     public static function setUpBeforeClass()
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$gcsBucket = getenv('GOOGLE_BUCKET_NAME');
+    }
+
+    public function setUp()
+    {
+        $this->gcsBucket = getenv('GOOGLE_BUCKET_NAME');
+        $this->projectId = getenv('GOOGLE_PROJECT_ID');
+        $this->datasetId = getenv('GOOGLE_BIGQUERY_DATASET');
+    }
+
+    public function tearDown()
+    {
+        if ($this->tempTableId) {
+            $this->deleteTempTable($this->projectId, $this->datasetId, $this->tempTableId);
+        }
     }
 
     /**
@@ -46,7 +64,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidTableNameThrowsException()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId) {
             $this->markTestSkipped('No project ID');
         }
 
@@ -58,7 +76,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             [
                 'dataset.table' => 'invalid.table.name',
                 'source' => 'foo',
-                '--project' => $projectId,
+                '--project' => $this->projectId,
             ],
             ['interactive' => false]
         );
@@ -70,10 +88,10 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonexistantFileThrowsException()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId) {
             $this->markTestSkipped('No project ID');
         }
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+        if (!$this->datasetId) {
             $this->markTestSkipped('No bigquery dataset name');
         }
         if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
@@ -86,9 +104,9 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute(
             [
-                'dataset.table' => $datasetId . '.' . $tableId,
+                'dataset.table' => $this->datasetId . '.' . $tableId,
                 'source' => '/this/file/doesnotexist.json',
-                '--project' => $projectId,
+                '--project' => $this->projectId,
             ],
             ['interactive' => false]
         );
@@ -100,16 +118,16 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testFileWithWrongExtensionThrowsException()
     {
-        $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId) {
             $this->markTestSkipped('No project ID');
         }
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+        if (!$this->datasetId) {
             $this->markTestSkipped('No bigquery dataset name');
         }
         if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
             $this->markTestSkipped('No bigquery table name');
         }
+        $file = tempnam(sys_get_temp_dir(), 'bigquery-source');
 
         // run the import
         $application = new Application();
@@ -117,9 +135,9 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute(
             [
-                'dataset.table' => $datasetId . '.' . $tableId,
+                'dataset.table' => $this->datasetId . '.' . $tableId,
                 'source' => $file,
-                '--project' => $projectId,
+                '--project' => $this->projectId,
             ],
             ['interactive' => false]
         );
@@ -131,10 +149,10 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testBucketWithoutObjectThrowsException()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId) {
             $this->markTestSkipped('No project ID');
         }
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+        if (!$this->datasetId) {
             $this->markTestSkipped('No bigquery dataset name');
         }
         if (!$tableId = getenv('GOOGLE_BIGQUERY_TABLE')) {
@@ -147,9 +165,9 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute(
             [
-                'dataset.table' => $datasetId . '.' . $tableId,
+                'dataset.table' => $this->datasetId . '.' . $tableId,
                 'source' => 'gs://',
-                '--project' => $projectId,
+                '--project' => $this->projectId,
             ],
             ['interactive' => false]
         );
@@ -160,15 +178,15 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId) {
             $this->markTestSkipped('No project ID');
         }
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+        if (!$this->datasetId) {
             $this->markTestSkipped('No bigquery dataset name');
         }
 
         $tableId = sprintf('test_table_%s', time());
-        $this->createTempTable($projectId, $datasetId, $tableId);
+        $this->createTempTable($this->projectId, $this->datasetId, $tableId);
 
         $questionHelper = $this->getMockBuilder('Symfony\Component\Console\Helper\QuestionHelper')
             ->disableOriginalConstructor()
@@ -186,27 +204,29 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
 
         // run the import
         $application = new Application();
+        $application->add(new QueryCommand());
         $application->add($import = new ImportCommand());
         $import->setHelperSet($helperSet);
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute([
-            'dataset.table' => $datasetId . '.' . $tableId,
-            '--project' => $projectId,
+            'dataset.table' => $this->datasetId . '.' . $tableId,
+            '--project' => $this->projectId,
         ], ['interactive' => false]);
 
         $this->expectOutputRegex('/Data streamed into BigQuery successfully/');
 
-        sleep(1); // streaming doesn't use jobs, so we need this to ensure the data
-        $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
-        $commandTester->execute([
-            'query' => sprintf('SELECT * FROM [%s.%s]', $datasetId, $tableId),
-            '--project' => $projectId,
-        ], ['interactive' => false]);
+        $testFunction = function () use ($commandTester, $tableId) {
+            ob_start();
+            $commandTester->execute([
+                'query' => sprintf('SELECT * FROM [%s.%s]', $this->datasetId, $tableId),
+                '--project' => $this->projectId,
+            ], ['interactive' => false]);
+            $output = ob_get_clean();
+            $this->assertContains('Brent Shaffer', $output);
+        };
 
-        $this->deleteTempTable($projectId, $datasetId, $tableId);
-
-        $this->expectOutputRegex('/Brent Shaffer/');
+        $this->runEventuallyConsistentTest($testFunction);
     }
 
     /**
@@ -217,18 +237,18 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!$this->projectId) {
             $this->markTestSkipped('No project ID');
         }
-        if (!$datasetId = getenv('GOOGLE_BIGQUERY_DATASET')) {
+        if (!$this->datasetId) {
             $this->markTestSkipped('No bigquery dataset name');
         }
-        if (0 === strpos($source, 'gs://') && !self::$gcsBucket) {
+        if (0 === strpos($source, 'gs://') && !$this->gcsBucket) {
             $this->markTestSkipped('No Cloud Storage bucket');
         }
         $tableId = sprintf('test_table_%s', time());
         if ($createTable) {
-            $this->createTempTable($projectId, $datasetId, $tableId);
+            $this->createTempTable($this->projectId, $this->datasetId, $tableId);
         }
 
         // run the import
@@ -237,24 +257,27 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('import'));
         $commandTester->execute([
-            'dataset.table' => $datasetId . '.' . $tableId,
+            'dataset.table' => $this->datasetId . '.' . $tableId,
             'source' => $source,
-            '--project' => $projectId,
+            '--project' => $this->projectId,
         ], ['interactive' => false]);
 
         $this->expectOutputRegex('/Data imported successfully/');
 
         $commandTester = new CommandTester($application->get('query'));
-        $commandTester->execute([
-            'query' => sprintf('SELECT * FROM [%s.%s]', $datasetId, $tableId),
-            '--project' => $projectId,
-        ], ['interactive' => false]);
+        $testFunction = function () use ($commandTester, $tableId) {
+            ob_start();
+            $commandTester->execute([
+                'query' => sprintf('SELECT * FROM [%s.%s]', $this->datasetId, $tableId),
+                '--project' => $this->projectId,
+            ], ['interactive' => false]);
+            $output = ob_get_clean();
+            $this->assertContains('Brent Shaffer', $output);
+            $this->assertContains('Takashi Matsuo', $output);
+            $this->assertContains('Jeffrey Rennie', $output);
+        };
 
-        $this->deleteTempTable($projectId, $datasetId, $tableId);
-
-        $this->expectOutputRegex('/Brent Shaffer/');
-        $this->expectOutputRegex('/Takashi Matsuo/');
-        $this->expectOutputRegex('/Jeffrey Rennie/');
+        $this->runEventuallyConsistentTest($testFunction);
     }
 
     public function provideImport()
@@ -290,7 +313,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->expectOutputRegex('/Table created successfully/');
+        $this->tempTableId = $tableId;
     }
 
     private function deleteTempTable($projectId, $datasetId, $tableId)
@@ -306,8 +329,6 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--no-confirmation' => true,
             '--project' => $projectId,
         ], ['interactive' => false]);
-
-        $this->expectOutputRegex('/Table deleted successfully/');
     }
 
     private function getMockServiceBuilder($table, $storage = null)

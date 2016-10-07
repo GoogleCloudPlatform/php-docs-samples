@@ -3,6 +3,9 @@
         "google/cloud": "0.6",
         "symfony/console": "^3.0"
     },
+    "require-dev": {
+        "google/cloud-tools": "<=1.0"
+    },
     "autoload": {
         "psr-4": {
             "Google\\Cloud\\Samples\\BigQuery\\": "src/"
