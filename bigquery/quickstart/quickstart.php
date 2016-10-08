@@ -7,8 +7,13 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Cloud\BigQuery\BigQueryClient;
 
+# Your Google Cloud Platform project ID
+$projectId = 'YOUR_PROJECT_ID';
+
 # Instantiates a client
-$bigquery = new BigQueryClient();
+$bigquery = new BigQueryClient([
+    'projectId' => $projectId
+]);
 
 # The name for the new dataset
 $datasetName = 'my_new_dataset';

@@ -20,16 +20,16 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 
     public function testQuickstart()
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('GOOGLE_APPLICATION_CREDENTIALS must be set.');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
 
         $datasetId = 'my_new_dataset_' . time();
         $file = sys_get_temp_dir() . '/bigquery_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['my_new_dataset', '__DIR__'],
-            [$datasetId, sprintf('"%s/.."', __DIR__)],
+            ['YOUR_PROJECT_ID', 'my_new_dataset', '__DIR__'],
+            [$projectId, $datasetId, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);

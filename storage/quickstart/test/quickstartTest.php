@@ -18,16 +18,16 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 {
     public function testQuickstart()
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('GOOGLE_APPLICATION_CREDENTIALS must be set.');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
 
         $bucketName = 'my-new-bucket-' . time();
         $file = sys_get_temp_dir() . '/storage_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['my-new-bucket', '__DIR__'],
-            [$bucketName, sprintf('"%s/.."', __DIR__)],
+            ['YOUR_PROJECT_ID', 'my-new-bucket', '__DIR__'],
+            [$projectId, $bucketName, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);

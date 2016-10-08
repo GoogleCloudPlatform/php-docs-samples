@@ -7,8 +7,13 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Cloud\Datastore\DatastoreClient;
 
+# Your Google Cloud Platform project ID
+$projectId = 'YOUR_PROJECT_ID';
+
 # Instantiates a client
-$datastore = new DatastoreClient();
+$datastore = new DatastoreClient([
+    'projectId' => $projectId
+]);
 
 # The kind for the new entity
 $kind = 'Task';
