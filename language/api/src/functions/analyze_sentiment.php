@@ -31,7 +31,7 @@ use Google\Cloud\NaturalLanguage\Annotation;
  * Find the sentiment in text.
  * ```
  * analyze_sentiment('Do you know the way to San Jose?');
- * ```.
+ * ```
  *
  * @param string $text The text to analyze.
  *
@@ -40,7 +40,7 @@ use Google\Cloud\NaturalLanguage\Annotation;
 function analyze_sentiment($text, $options = [])
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeSentiment($text);
+    $annotation = $language->analyzeSentiment($text, $options);
     return $annotation;
 }
 # [END analyze_sentiment]

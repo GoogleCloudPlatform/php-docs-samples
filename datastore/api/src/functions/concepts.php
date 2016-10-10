@@ -198,7 +198,7 @@ function delete_multi(DatastoreClient $datastore, array $keys)
  */
 function create_complete_key(DatastoreClient $datastore)
 {
-    // [START names_key]
+    // [START named_key]
     $taskKey = $datastore->key('Task', 'sampleTask');
     // [END named_key]
     return $taskKey;
@@ -258,7 +258,7 @@ function create_key_with_multi_level_parent(DatastoreClient $datastore)
  */
 function create_entity_with_option(DatastoreClient $datastore, Key $key)
 {
-    // [START entity_with_option]
+    // [START properties]
     $task = $datastore->entity(
         $key,
         [
@@ -270,7 +270,7 @@ function create_entity_with_option(DatastoreClient $datastore, Key $key)
         ],
         ['excludeFromIndexes' => ['description']]
     );
-    // [END entity_with_option]
+    // [END properties]
     return $task;
 }
 

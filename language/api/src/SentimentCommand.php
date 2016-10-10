@@ -23,36 +23,45 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command line utility to transcribe.
+ * Command line utility for the Natural Language APIs.
  *
- * Usage: php speech.php transcribe
+ * Usage: php language.php sentiment TEXT
  */
-class AnalyzeEntitiesCommand extends Command
+class SentimentCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('entities')
-            ->setDescription('Analyze some natural language text.')
+            ->setName('sentiment')
+            ->setDescription('Analyze sentiment in text.')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command analyzes text using the Google Cloud Natural Language API.
 
     <info>php %command.full_name% Text to analyze.</info>
 
+    <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
+
 EOF
             )
             ->addArgument(
-                'text',
+                'content',
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
-                'Text to analyze'
+                'Text or path to Cloud Storage file'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text = implode(" ", $input->getArgument('text'));
-        $result = analyze_entities($text);
+        $content = implode(' ', (array) $input->getArgument('content'));
+        // Regex to match a Cloud Storage path as the first argument
+        // e.g "gs://my-bucket/file_with_text.txt"
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
+            $result = analyze_sentiment_from_file($matches[1], $matches[2]);
+        } else {
+            $result = analyze_sentiment($content);
+        }
+
         print_annotation($result);
     }
 }

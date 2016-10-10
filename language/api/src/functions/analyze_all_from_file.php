@@ -23,24 +23,34 @@
 
 namespace Google\Cloud\Samples\Language;
 
-# [START analyze_syntax]
+# [START analyze_all_from_file]
 use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
 use Google\Cloud\NaturalLanguage\Annotation;
+use Google\Cloud\Storage\StorageClient;
 
 /**
- * Find the syntax in text.
+ * Find the everything in text stored in a Cloud Storage bucket.
  * ```
- * analyze_syntax('Do you know the way to San Jose?');
+ * analyze_all_from_file('my-bucket', 'file_with_text.txt');;
  * ```
  *
- * @param string $text The text to analyze.
+ * @param string $bucketName The Cloud Storage bucket.
+ * @param string $objectName The Cloud Storage object with text.
  *
  * @return Annotation
  */
-function analyze_syntax($text, $options = [])
+function analyze_all_from_file($bucketName, $objectName)
 {
+    // Create the Cloud Storage object
+    $storage = new StorageClient();
+    $bucket = $storage->bucket($bucketName);
+    $storageObject = $bucket->object($objectName);
+
+    // Call the Natural Language client
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeSyntax($text, $options);
+    $annotation = $language->annotateText($storageObject, [
+        'features' => ['entities', 'syntax', 'sentiment']
+    ]);
     return $annotation;
 }
-# [END analyze_syntax]
+# [END analyze_all_from_file]

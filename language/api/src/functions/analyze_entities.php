@@ -31,7 +31,7 @@ use Google\Cloud\NaturalLanguage\Annotation;
  * Find the entities in text.
  * ```
  * analyze_entities('Do you know the way to San Jose?');
- * ```.
+ * ```
  *
  * @param string $text The text to analyze.
  *
@@ -40,7 +40,7 @@ use Google\Cloud\NaturalLanguage\Annotation;
 function analyze_entities($text, $options = [])
 {
     $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeEntities($text);
+    $annotation = $language->analyzeEntities($text, $options);
     return $annotation;
 }
 # [END analyze_entities]
