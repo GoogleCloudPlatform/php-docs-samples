@@ -9,4 +9,4 @@ handlers:
   script: index.php
 
 env_variables:
-  GOOGLE_PROJECT_ID: "cloud-samples-tests-php"
+  GOOGLE_PROJECT_ID: "YOUR_PROJECT_ID"

@@ -18,8 +18,6 @@
 namespace Google\Cloud\Samples\AppEngine\Drupal;
 
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Yaml\Yaml;
 use Monolog\Logger;
 use GuzzleHttp\Client;
 
@@ -56,14 +54,6 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $versionId = self::getVersion();
         $targetDir = sprintf('%s/%s', $tmp, $versionId);
 
-        if (!file_exists($targetDir)) {
-            mkdir($targetDir);
-        }
-
-        if (!is_writable($targetDir)) {
-            throw new \Exception(sprintf('Cannot write to %s', $targetDir));
-        }
-
         return $targetDir;
     }
 
@@ -83,10 +73,8 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $projectId = self::getProjectId();
         $version = self::getVersion();
 
-        // move into the target directory
-        self::setWorkingDirectory($targetDir);
-        $console = self::installDrupalConsole($targetDir);
-        self::downloadAndInstallDrupal($targetDir, $console);
+        // download, install, and deploy
+        self::downloadAndInstallDrupal($targetDir);
         self::deploy($projectId, $version, $targetDir);
     }
 
@@ -108,75 +96,52 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    private static function installDrupalConsole($targetDir)
+    private static function downloadAndInstallDrupal($targetDir)
     {
-        $console = sprintf('%s/drupal', $targetDir);
-        if (!file_exists($console)) {
-            $cmd = sprintf(
-                'curl https://drupalconsole.com/installer -Lo %s',
-                $console
-            );
-            self::execute($cmd);
-            self::execute(sprintf('chmod +x %s', $console));
-        }
+        $console = __DIR__ . '/../vendor/bin/drush';
 
-        return $console;
-    }
+        $dbUrl = sprintf('mysql://%s:%s@%s/%s',
+            getenv('DRUPAL_DATABASE_USER'),
+            getenv('DRUPAL_DATABASE_PASS'),
+            getenv('DRUPAL_DATABASE_HOST'),
+            getenv('DRUPAL_DATABASE_NAME')
+        );
 
-    private static function downloadAndInstallDrupal($targetDir, $console)
-    {
-        $installFile = sprintf('%s/config/install_drupal8.yml', __DIR__);
-        $config = Yaml::parse(file_get_contents($installFile));
-
-        $configVars = [
-            'db-host' => 'DRUPAL_DATABASE_HOST',
-            'db-name' => 'DRUPAL_DATABASE_NAME',
-            'db-user' => 'DRUPAL_DATABASE_USER',
-            'db-pass' => 'DRUPAL_DATABASE_PASS',
-            'account-name' => 'DRUPAL_ADMIN_USERNAME',
-            'account-pass' => 'DRUPAL_ADMIN_PASSWORD',
-        ];
-
-        foreach ($configVars as $key => $name) {
-            $config['commands'][1]['options'][$key] = getenv($name);
-        }
-
-        $newInstallFile = sprintf('%s/install_drupal8.yml', $targetDir);
-        file_put_contents($newInstallFile, Yaml::dump($config));
+        // download
+        self::setWorkingDirectory(dirname($targetDir));
+        $downloadCmd = sprintf('%s dl drupal --drupal-project-rename=%s',
+            $console,
+            basename($targetDir));
+        self::execute($downloadCmd);
 
         // install
-        self::execute(sprintf('%s init', $console));
-        self::execute(sprintf('%s chain --file=%s', $console, $newInstallFile));
-
-        // move into the drupal directory so additional commands can be loaded
-        self::setWorkingDirectory($targetDir . '/drupal8.test');
-
-        // run setup commands
-        self::execute(sprintf('%s theme:download bootstrap 8.x-3.0-beta2', $console));
-
-        // this one is long, so create the process to extend the timeout
-        $process = self::createProcess(sprintf('%s cache:rebuild all', $console));
-        $process->setTimeout(300); // 5 minutes
+        self::setWorkingDirectory($targetDir);
+        $installCmd = sprintf('%s site-install standard ' .
+            '--db-url=%s --account-name=%s --account-pass=%s -y',
+            $console,
+            $dbUrl,
+            getenv('DRUPAL_ADMIN_USERNAME'),
+            getenv('DRUPAL_ADMIN_PASSWORD'));
+        $process = self::createProcess($installCmd);
+        $process->setTimeout(null);
         self::executeProcess($process);
 
-        // install drupal dependencies
-        self::execute('composer install');
         // this is to fix a PHP runtime bug
         // @TODO - FIX THIS!!
         self::execute('rm composer.*');
 
         // move the code for the sample to the new drupal installation
-        $files = ['app.yaml', 'php.ini', 'Dockerfile', 'nginx-app.conf'];
+        $files = ['app.yaml', 'php.ini', 'nginx-app.conf'];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
-            $target = sprintf('%s/drupal8.test/%s', $targetDir, $file);
+            $target = sprintf('%s/%s', $targetDir, $file);
             copy($source, $target);
         }
 
         // if a service name has been defined, add it to "app.yaml"
         if ($service = self::getServiceName()) {
-            $appYaml = sprintf('%s/drupal8.test/app.yaml', $targetDir);
-            file_put_contents($appYaml, "service: $service\n", FILE_APPEND);
+            $appYaml = sprintf('%s/app.yaml', $targetDir);
+            file_put_contents($appYaml, "\nservice: $service\n", FILE_APPEND);
         }
     }
 
@@ -187,7 +152,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
                 "gcloud -q app deploy "
                 . "--version $versionId "
                 . "--project $projectId --no-promote -q "
-                . "$targetDir/drupal8.test/app.yaml"
+                . "$targetDir/app.yaml"
             );
             $process->setTimeout(60 * 30); // 30 minutes
             if (self::executeProcess($process, false)) {

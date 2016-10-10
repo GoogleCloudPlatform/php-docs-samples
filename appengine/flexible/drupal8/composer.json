@@ -1,9 +1,11 @@
 {
+    "require": {
+        "drush/drush": "^8.1"
+    },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.2",
         "monolog/monolog": "^1.19",
-        "symfony/console": " ~2.6.0",
-        "symfony/process": "^3.0",
-        "symfony/yaml": "^3.0"
+        "symfony/console": " ^2.7",
+        "symfony/process": "^3.0"
     }
 }
