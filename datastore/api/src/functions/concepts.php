@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Datastore;
 
 // [START datastore_use ]
 use Google\Cloud\Datastore\DatastoreClient;
-
 // [END datastore_use ]
 use Google\Cloud\Datastore\Key;
 
