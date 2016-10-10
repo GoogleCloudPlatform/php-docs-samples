@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\AppEngine\Drupal;
 
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
-use Symfony\Component\Process\Process;
 use Monolog\Logger;
 use GuzzleHttp\Client;
 
