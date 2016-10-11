@@ -27,9 +27,11 @@ require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\BigQuery\BigQueryClient;
 
 // get the project ID as the first argument
-if (2 != count($argv) || !$projectId = $argv[1]) {
+if (2 != count($argv)) {
     die("Usage: php shakespeare.php YOUR_PROJECT_ID\n");
 }
+
+$projectId = $argv[1];
 
 # [START build_service]
 $bigQuery = new BigQueryClient([
