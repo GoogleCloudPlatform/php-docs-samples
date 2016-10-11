@@ -1,0 +1,7 @@
+{
+    "scripts": {
+        "post-deploy-cmd": [
+            "chmod -R ug+w /app/var"
+        ]
+    }
+}
