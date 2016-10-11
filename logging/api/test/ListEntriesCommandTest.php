@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Logging\Tests;
 
 use Google\Cloud\Samples\Logging\ListEntriesCommand;
 use Google\Cloud\Samples\Logging\WriteCommand;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -27,6 +28,8 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
 {
+    use EventuallyConsistentTestTrait;
+
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
     /* @var $projectId mixed|string */
@@ -59,7 +62,6 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-        sleep(2);
     }
 
     public function testListEntries()
@@ -67,10 +69,15 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new ListEntriesCommand());
         $commandTester = new CommandTester($application->get('list-entries'));
-        $commandTester->execute(
-            ['--project' => $this->projectId, '--logger' => 'my_test_logger'],
-            ['interactive' => false]
-        );
-        $this->expectOutputRegex('/: Test Message/');
+        $this->runEventuallyConsistentTest(function() use ($commandTester) {
+            $commandTester->execute(
+                [
+                    '--project' => $this->projectId,
+                    '--logger' => 'my_test_logger'
+                ],
+                ['interactive' => false]
+            );
+            $this->expectOutputRegex('/: Test Message/');
+        });
     }
 }
