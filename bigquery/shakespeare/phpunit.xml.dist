@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="test/bootstrap.php">
     <testsuites>
-        <testsuite name="PHP bigquery test">
+        <testsuite name="PHP BigQuery Shakespeare test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -25,7 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <file>bigquery.php</file>
+            <file>shakespeare.php</file>
         <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
