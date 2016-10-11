@@ -70,6 +70,7 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new ListEntriesCommand());
         $commandTester = new CommandTester($application->get('list-entries'));
         $this->runEventuallyConsistentTest(function() use ($commandTester) {
+            ob_start();
             $commandTester->execute(
                 [
                     '--project' => $this->projectId,
@@ -77,7 +78,8 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
                 ],
                 ['interactive' => false]
             );
-            $this->expectOutputRegex('/: Test Message/');
+            $output = ob_get_clean();
+            $this->assertRegexp('/: Test Message/', $output);
         });
     }
 }
