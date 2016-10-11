@@ -1,7 +1,11 @@
 {
     "require": {
-        "google/cloud": "0.6",
+        "google/cloud": "0.10",
         "symfony/console": "^3.0"
+    },
+    "require-dev": {
+        "google/cloud-tools": "<=1.0",
+        "phpunit/phpunit": "~4"
     },
     "autoload": {
         "psr-4": {
