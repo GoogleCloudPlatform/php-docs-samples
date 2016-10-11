@@ -69,7 +69,7 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new ListEntriesCommand());
         $commandTester = new CommandTester($application->get('list-entries'));
-        $this->runEventuallyConsistentTest(function() use ($commandTester) {
+        $this->runEventuallyConsistentTest(function () use ($commandTester) {
             ob_start();
             $commandTester->execute(
                 [
