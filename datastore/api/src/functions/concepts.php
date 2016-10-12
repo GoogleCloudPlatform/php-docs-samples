@@ -17,9 +17,11 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-// [START datastore_use ]
+use Generator;
+use Google;
+// [START datastore_use]
 use Google\Cloud\Datastore\DatastoreClient;
-// [END datastore_use ]
+// [END datastore_use]
 use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\Query;
 
@@ -40,7 +42,7 @@ function initialize_client()
  * Create a Datastore entity.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
 function basic_entity(DatastoreClient $datastore)
 {
@@ -59,7 +61,7 @@ function basic_entity(DatastoreClient $datastore)
  * Create a Datastore entity and upsert it.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
 function upsert(DatastoreClient $datastore)
 {
@@ -82,7 +84,7 @@ function upsert(DatastoreClient $datastore)
  * an entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
 function insert(DatastoreClient $datastore)
 {
@@ -102,7 +104,7 @@ function insert(DatastoreClient $datastore)
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity|null
+ * @return Google\Cloud\Datastore\Entity|null
  */
 function lookup(DatastoreClient $datastore)
 {
@@ -117,7 +119,7 @@ function lookup(DatastoreClient $datastore)
  * Update a Datastore entity in a transaction.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity|null
+ * @return Google\Cloud\Datastore\Entity|null
  */
 function update(DatastoreClient $datastore)
 {
@@ -149,7 +151,7 @@ function delete(DatastoreClient $datastore, Key $taskKey)
  * Upsert multiple Datastore entities.
  *
  * @param DatastoreClient $datastore
- * @param array <\Google\Cloud\Datastore\Entity> $tasks
+ * @param array <Google\Cloud\Datastore\Entity> $tasks
  */
 function batch_upsert(DatastoreClient $datastore, array $tasks)
 {
@@ -163,7 +165,7 @@ function batch_upsert(DatastoreClient $datastore, array $tasks)
  *
  * @param DatastoreClient $datastore
  * @param array <Key> $keys
- * @return array <\Google\Cloud\Datastore\Entity>
+ * @return array <Google\Cloud\Datastore\Entity>
  */
 function batch_lookup(DatastoreClient $datastore, array $keys)
 {
@@ -255,7 +257,7 @@ function key_with_multilevel_parent(DatastoreClient $datastore)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
 function properties(DatastoreClient $datastore, Key $key)
 {
@@ -281,7 +283,7 @@ function properties(DatastoreClient $datastore, Key $key)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
 function array_value(DatastoreClient $datastore, Key $key)
 {
@@ -319,7 +321,7 @@ function basic_query(DatastoreClient $datastore)
  * Run a given query.
  *
  * @param DatastoreClient $datastore
- * @return \Generator <\Google\Cloud\Datastore\Entity>
+ * @return Generator <Google\Cloud\Datastore\Entity>
  */
 function run_query(DatastoreClient $datastore, Query $query)
 {
@@ -509,7 +511,7 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
     $priorities = array();
     $percentCompletes = array();
     $result = $datastore->runQuery($query);
-    /* @var \Google\Cloud\Datastore\Entity $task */
+    /* @var Google\Cloud\Datastore\Entity $task */
     foreach ($result as $task) {
         $priorities[] = $task['priority'];
         $percentCompletes[] = $task['percent_complete'];
@@ -605,7 +607,7 @@ function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
     $result = $datastore->runQuery($query);
     $nextPageCursor = '';
     /* ignoreOnTheDocs */ $entities = [];
-    /* @var \Google\Cloud\Datastore\Entity $entity */
+    /* @var Google\Cloud\Datastore\Entity $entity */
     foreach ($result as $entity) {
         $nextPageCursor = $entity->cursor();
         /* ignoreOnTheDocs */ $entities[] = $entity;

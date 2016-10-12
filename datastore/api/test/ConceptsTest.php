@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
+use Google;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\Query\Query;
@@ -621,7 +622,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $query = inequality_range(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(\Generator::class, $result);
-        /* @var \Google\Cloud\Datastore\Entity $e */
+        /* @var Google\Cloud\Datastore\Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -633,14 +634,14 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Google\Cloud\Exception\BadRequestException
+     * @expectedException Google\Cloud\Exception\BadRequestException
      */
     public function testInequalityInvalid()
     {
         $query = inequality_invalid(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(\Generator::class, $result);
-        /* @var \Google\Cloud\Datastore\Entity $e */
+        /* @var Google\Cloud\Datastore\Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -656,7 +657,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $query = equal_and_inequality_range(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(\Generator::class, $result);
-        /* @var \Google\Cloud\Datastore\Entity $e */
+        /* @var Google\Cloud\Datastore\Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -672,7 +673,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $query = inequality_sort(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(\Generator::class, $result);
-        /* @var \Google\Cloud\Datastore\Entity $e */
+        /* @var Google\Cloud\Datastore\Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -684,14 +685,14 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Google\Cloud\Exception\BadRequestException
+     * @expectedException Google\Cloud\Exception\BadRequestException
      */
     public function testInequalitySortInvalidNotSame()
     {
         $query = inequality_sort_invalid_not_same(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(\Generator::class, $result);
-        /* @var \Google\Cloud\Datastore\Entity $e */
+        /* @var Google\Cloud\Datastore\Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -703,14 +704,14 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Google\Cloud\Exception\BadRequestException
+     * @expectedException Google\Cloud\Exception\BadRequestException
      */
     public function testInequalitySortInvalidNotFirst()
     {
         $query = inequality_sort_invalid_not_first(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(\Generator::class, $result);
-        /* @var \Google\Cloud\Datastore\Entity $e */
+        /* @var Google\Cloud\Datastore\Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
