@@ -148,10 +148,10 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     private static function addPostBuildCommands($targetDir)
     {
-        self::execute(sprintf('php %s/../add_composer_scripts.php %s/composer.json',
-            __DIR__,
-            $targetDir
-        ));
+        $contents = file_get_contents($targetDir . '/composer.json');
+        $json = json_decode($contents, true);
+        $json['scripts']['post-deploy-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
+        file_put_contents($targetDir . '/composer.json', json_encode($json, JSON_PRETTY_PRINT));
     }
 
     public static function deploy($projectId, $versionId, $targetDir)

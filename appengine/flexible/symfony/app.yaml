@@ -6,3 +6,4 @@ runtime_config:
 
 env_variables:
   WHITELIST_FUNCTIONS: libxml_disable_entity_loader
+

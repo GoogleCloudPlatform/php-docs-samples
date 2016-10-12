@@ -40,19 +40,13 @@ The two files needed are as follows:
   1. [`nginx-app.conf`](nginx-app.conf) - Nginx web server configuration needed for `Symfony`
 
 Finally, you need to have a few scripts run after your application deploys.
-You can do this by providing the path to your `composer.json` to the `add_composer_scripts.php`
-script:
-
-```sh
-php ./add_composer_scripts.php /path/to/symfony/composer.json
-```
-This will add the following scripts to your project's `composer.json`:
+Add the following scripts to your project's `composer.json`:
 
 ```json
 {
     "scripts": {
         "post-deploy-cmd": [
-            "chmod -R ug+w /app/var"
+            "chmod -R ug+w $APP_DIR/var"
         ]
     }
 }
