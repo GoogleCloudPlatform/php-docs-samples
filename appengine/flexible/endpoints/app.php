@@ -23,30 +23,10 @@
  */
 
 use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Yaml\Yaml;
 
 // create the Silex application
 $app = new Application();
-$app->register(new TwigServiceProvider());
-$app['twig.path'] = [ __DIR__ ];
-
-$app->get('/', function () use ($app) {
-    /** @var Twig_Environment $twig */
-    $twig = $app['twig'];
-
-    // Shows the index page
-    return $app['twig']->render('endpoints.html.twig');
-});
-
-$app->get('/api-docs', function () use ($app) {
-    // Serves up the Swagger spec for the API.
-    $swaggerText = file_get_contents(__DIR__ . '/swagger.yaml');
-    $swaggerArray = Yaml::parse($swaggerText);
-
-    return $app->json($swaggerArray);
-});
 
 $app->post('/echo', function () use ($app) {
     // Simple echo service.
