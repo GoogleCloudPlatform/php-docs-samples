@@ -85,6 +85,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         // move into the target directory
         self::setWorkingDirectory($targetDir);
         self::createSymfonyProject($targetDir);
+        self::addPostBuildCommands($targetDir);
         self::deploy($projectId, $version, $targetDir);
     }
 
@@ -131,7 +132,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         file_put_contents($installFile, Yaml::dump($config));
 
         // move the code for the sample to the new drupal installation
-        $files = ['app.yaml', 'Dockerfile', 'nginx-app.conf'];
+        $files = ['app.yaml', 'nginx-app.conf'];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
             $target = sprintf('%s/%s', $targetDir, $file);
@@ -143,6 +144,14 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             $appYaml = sprintf('%s/app.yaml', $targetDir);
             file_put_contents($appYaml, "service: $service\n", FILE_APPEND);
         }
+    }
+
+    private static function addPostBuildCommands($targetDir)
+    {
+        $contents = file_get_contents($targetDir . '/composer.json');
+        $json = json_decode($contents, true);
+        $json['scripts']['post-deploy-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
+        file_put_contents($targetDir . '/composer.json', json_encode($json, JSON_PRETTY_PRINT));
     }
 
     public static function deploy($projectId, $versionId, $targetDir)
