@@ -357,63 +357,242 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
 
     public function testBasicQuery()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['priority'] = 4;
+        $entity1['done'] = false;
+        $entity2['priority'] = 5;
+        $entity2['done'] = false;
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = basic_query(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(2, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key2->path());
+                $this->assertTrue($entities[1]->key()->path() == $key1->path());
+            });
     }
 
     public function testRunQuery()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['priority'] = 4;
+        $entity1['done'] = false;
+        $entity2['priority'] = 5;
+        $entity2['done'] = false;
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = basic_query(self::$datastore);
-        $result = run_query(self::$datastore, $query);
-        $this->assertInstanceOf(\Generator::class, $result);
+        $this->assertInstanceOf(Query::class, $query);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $query) {
+                $result = run_query(self::$datastore, $query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(2, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key2->path());
+                $this->assertTrue($entities[1]->key()->path() == $key1->path());
+            });
     }
 
     public function testPropertyFilter()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['done'] = false;
+        $entity2['done'] = true;
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = property_filter(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(1, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key1->path());
+            });
     }
 
     public function testCompositeFilter()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['done'] = false;
+        $entity1['priority'] = 4;
+        $entity2['done'] = false;
+        $entity2['priority'] = 5;
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = composite_filter(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(1, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key1->path());
+            });
     }
 
     public function testKeyFilter()
     {
+        $key1 = self::$datastore->key('Task', 'taskWhichShouldMatch');
+        $key2 = self::$datastore->key('Task', 'keyWhichShouldNotMatch');
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = key_filter(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(1, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key1->path());
+            });
     }
 
     public function testAscendingSort()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['created'] = new \DateTime('2016-10-13 14:04:01');
+        $entity2['created'] = new \DateTime('2016-10-13 14:04:00');
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = ascending_sort(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(2, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key2->path());
+                $this->assertTrue($entities[1]->key()->path() == $key1->path());
+            });
     }
 
     public function testDescendingSort()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['created'] = new \DateTime('2016-10-13 14:04:00');
+        $entity2['created'] = new \DateTime('2016-10-13 14:04:01');
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = descending_sort(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(2, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key2->path());
+                $this->assertTrue($entities[1]->key()->path() == $key1->path());
+            });
     }
 
     public function testMultiSort()
     {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $key3 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity3 = self::$datastore->entity($key3);
+        $entity3['created'] = new \DateTime('2016-10-13 14:04:03');
+        $entity3['priority'] = 5;
+        $entity2['created'] = new \DateTime('2016-10-13 14:04:01');
+        $entity2['priority'] = 4;
+        $entity1['created'] = new \DateTime('2016-10-13 14:04:02');
+        $entity1['priority'] = 4;
+        self::$keys = [$key1, $key2, $key3];
+        self::$datastore->upsertBatch([$entity1, $entity2, $entity3]);
         $query = multi_sort(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $key3, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(3, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key3->path());
+                $this->assertTrue($entities[1]->key()->path() == $key2->path());
+                $this->assertTrue($entities[2]->key()->path() == $key1->path());
+            });
     }
 
     public function testAncestorQuery()
@@ -439,11 +618,29 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
 
     public function testKindlessQuery()
     {
+        $key1 = self::$datastore->key('Task', 'taskWhichShouldMatch');
+        $key2 = self::$datastore->key('Task', 'entityWhichShouldNotMatch');
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $lastSeenKey = self::$datastore->key('Task', 'lastSeen');
         $query = kindless_query(self::$datastore, $lastSeenKey);
         $this->assertInstanceOf(Query::class, $query);
-        $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $query) {
+                $result = self::$datastore->runQuery($query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(1, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key1->path());
+            });
     }
 
     public function testKeysOnlyQuery()
@@ -519,10 +716,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $entity1['category'] = 'work';
         $entity2['priority'] = 5;
         $entity2['category'] = 'work';
-        self::$keys[] = $key1;
-        self::$keys[] = $key2;
-        self::$datastore->upsert($entity1);
-        self::$datastore->upsert($entity2);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         $this->runEventuallyConsistentTest(function () use ($key1) {
             $query = distinct_on(self::$datastore);
             $result = self::$datastore->runQuery($query);
@@ -760,10 +955,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $entity2 = self::$datastore->entity($key2);
         $entity1['balance'] = 100;
         $entity2['balance'] = 0;
-        self::$keys[] = $key1;
-        self::$keys[] = $key2;
-        self::$datastore->upsert($entity1);
-        self::$datastore->upsert($entity2);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         transfer_funds(self::$datastore, $key1, $key2, 100);
         $fromAccount = self::$datastore->lookup($key1);
         $this->assertEquals(0, $fromAccount['balance']);
@@ -779,10 +972,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $entity2 = self::$datastore->entity($key2);
         $entity1['balance'] = 10;
         $entity2['balance'] = 0;
-        self::$keys[] = $key1;
-        self::$keys[] = $key2;
-        self::$datastore->upsert($entity1);
-        self::$datastore->upsert($entity2);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
         transactional_retry(self::$datastore, $key1, $key2);
         $fromAccount = self::$datastore->lookup($key1);
         $this->assertEquals(0, $fromAccount['balance']);

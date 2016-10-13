@@ -29,3 +29,15 @@ indexes:
   properties:
   - name: priority
   - name: created
+
+- kind: Task
+  properties:
+  - name: done
+  - name: priority
+    direction: desc
+
+- kind: Task
+  properties:
+  - name: priority
+    direction: desc
+  - name: created
