@@ -722,6 +722,96 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testUnindexedPropertyQuery()
+    {
+        $query = unindexed_property_query(self::$datastore);
+        $result = self::$datastore->runQuery($query);
+        $this->assertInstanceOf(\Generator::class, $result);
+        /* @var Google\Cloud\Datastore\Entity $e */
+        foreach ($result as $e) {
+            $this->fail(
+                sprintf(
+                    'Should not match the entity with this query with '
+                    . ' a description: %s',
+                    $e['description']
+                )
+            );
+        }
+    }
+
+    public function testExplodingProperties()
+    {
+        $task = exploding_properties(self::$datastore);
+        self::$datastore->insert($task);
+        self::$keys[] = $task->key();
+        $this->assertEquals(['fun', 'programming', 'learn'], $task['tags']);
+        $this->assertEquals(
+            ['alice', 'bob', 'charlie'],
+            $task['collaborators']
+        );
+        $this->assertArrayHasKey('id', $task->key()->pathEnd());
+    }
+
+    public function testTransferFunds()
+    {
+        $key1 = self::$datastore->key('Account', generateRandomString());
+        $key2 = self::$datastore->key('Account', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['balance'] = 100;
+        $entity2['balance'] = 0;
+        self::$keys[] = $key1;
+        self::$keys[] = $key2;
+        self::$datastore->upsert($entity1);
+        self::$datastore->upsert($entity2);
+        transfer_funds(self::$datastore, $key1, $key2, 100);
+        $fromAccount = self::$datastore->lookup($key1);
+        $this->assertEquals(0, $fromAccount['balance']);
+        $toAccount = self::$datastore->lookup($key2);
+        $this->assertEquals(100, $toAccount['balance']);
+    }
+
+    public function testTransactionalRetry()
+    {
+        $key1 = self::$datastore->key('Account', generateRandomString());
+        $key2 = self::$datastore->key('Account', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['balance'] = 10;
+        $entity2['balance'] = 0;
+        self::$keys[] = $key1;
+        self::$keys[] = $key2;
+        self::$datastore->upsert($entity1);
+        self::$datastore->upsert($entity2);
+        transactional_retry(self::$datastore, $key1, $key2);
+        $fromAccount = self::$datastore->lookup($key1);
+        $this->assertEquals(0, $fromAccount['balance']);
+        $toAccount = self::$datastore->lookup($key2);
+        $this->assertEquals(10, $toAccount['balance']);
+    }
+
+    public function testGetTaskListEntities()
+    {
+        $taskListKey = self::$datastore->key('TaskList', 'default');
+        $taskKey = self::$datastore->key('Task', 'first task')
+            ->ancestorKey($taskListKey);
+        $task = self::$datastore->entity(
+            $taskKey,
+            ['description' => 'finish datastore sample']
+        );
+        self::$keys[] = $taskKey;
+        self::$datastore->upsert($task);
+        $result = get_task_list_entities(self::$datastore);
+        $num = 0;
+        /* @var Entity $e */
+        foreach ($result as $e) {
+            $this->assertEquals($taskKey->path(), $e->key()->path());
+            $this->assertEquals('finish datastore sample', $e['description']);
+            $num += 1;
+        }
+        self::assertEquals(1, $num);
+    }
+
     public function tearDown()
     {
         if (! empty(self::$keys)) {

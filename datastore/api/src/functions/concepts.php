@@ -22,6 +22,7 @@ use Google;
 // [START datastore_use]
 use Google\Cloud\Datastore\DatastoreClient;
 // [END datastore_use]
+use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\Query;
 
@@ -724,4 +725,149 @@ function inequality_sort_invalid_not_first(DatastoreClient $datastore)
         ->order('priority');
     // [END inequality_sort_invalid_not_first]
     return $query;
+}
+
+/**
+ * Create a query with an equality filter on 'description'.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function unindexed_property_query(DatastoreClient $datastore)
+{
+    // [START unindexed_property_query]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('description',  '=', 'A task description.');
+    // [END unindexed_property_query]
+    return $query;
+}
+
+/**
+ * Create an entity with two array properties.
+ *
+ * @param DatastoreClient $datastore
+ * @return Google\Cloud\Datastore\Entity
+ */
+function exploding_properties(DatastoreClient $datastore)
+{
+    // [START exploding_properties]
+    $task = $datastore->entity(
+        $datastore->key('Task'),
+        [
+            'tags' => ['fun', 'programming', 'learn'],
+            'collaborators' => ['alice', 'bob', 'charlie'],
+            'created' => new \DateTime(),
+        ]
+    );
+    // [END exploding_properties]
+    return $task;
+}
+
+// [START transactional_update]
+/**
+ * Update two entities in a transaction.
+ *
+ * @param DatastoreClient $datastore
+ * @param Key $fromKey
+ * @param Key $toKey
+ * @param $amount
+ */
+function transfer_funds(
+    DatastoreClient $datastore,
+    Key $fromKey,
+    Key $toKey,
+    $amount
+) {
+    $transaction = $datastore->transaction();
+    $result = $transaction->lookupBatch([$fromKey, $toKey]);
+    if (count($result['found']) != 2) {
+        $transaction->rollback();
+    }
+    // Currently, the result from lookupBatch doesn't guarantee the same order
+    // as the given keys with the client library.
+    // TODO: remove this hack once the issue below is fixed.
+    // https://github.com/GoogleCloudPlatform/google-cloud-php/issues/175
+    if ($result['found'][0]->key()->path() ==  $fromKey->path()) {
+        $fromAccount = $result['found'][0];
+        $toAccount = $result['found'][1];
+    } else {
+        $fromAccount = $result['found'][1];
+        $toAccount = $result['found'][0];
+    }
+    $fromAccount['balance'] -= $amount;
+    $toAccount['balance'] += $amount;
+    $transaction->updateBatch([$fromAccount, $toAccount]);
+    $transaction->commit();
+}
+// [END transactional_update]
+
+/**
+ * Call a function and retry upon conflicts for several times.
+ *
+ * @param DatastoreClient $datastore
+ * @param Key $fromKey
+ * @param Key $toKey
+ */
+function transactional_retry(
+    DatastoreClient $datastore,
+    Key $fromKey,
+    Key $toKey
+) {
+    // [START transactional_retry]
+    $retries = 5;
+    for ($i = 0; $i < $retries; $i++) {
+        try {
+            transfer_funds($datastore, $fromKey, $toKey, 10);
+        } catch (Google\Cloud\Exception\ConflictException $e) {
+            // if $i >= $retries, the failure is final
+            continue;
+        }
+        // Succeeded!
+        break;
+    }
+    // [END transactional_retry]
+}
+
+/**
+ * Insert an entity only if there is no entity with the same key.
+ *
+ * @param DatastoreClient $datastore
+ * @param Entity $task
+ */
+function get_or_create(DatastoreClient $datastore, Entity $task)
+{
+    // [START transactional_get_or_create]
+    $transaction = $datastore->transaction();
+    $existed = $transaction->lookup($task->key());
+    if ($existed === null) {
+        $transaction->insert($task);
+        $transaction->commit();
+    }
+    // [END transactional_get_or_create]
+}
+
+/**
+ * Run a query with an ancestor inside a transaction.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<Entity>
+ */
+function get_task_list_entities(DatastoreClient $datastore)
+{
+    // [START transactional_single_entity_group_read_only]
+    $transaction = $datastore->transaction();
+    $taskListKey = $datastore->key('TaskList', 'default');
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('__key__', Query::OP_HAS_ANCESTOR, $taskListKey);
+    $result = $transaction->runQuery($query);
+    $taskListEntities = [];
+    /* @var Entity $task */
+    foreach ($result as $task) {
+        $taskListEntities[] = $task;
+    }
+    $transaction->commit();
+    // [END transactional_single_entity_group_read_only]
+    return $taskListEntities;
 }
