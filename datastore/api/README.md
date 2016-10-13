@@ -17,4 +17,5 @@ To run the tests do the following:
 1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
+1. Create Datastore indexes by running `gcloud preview datastore create-indexes index.yaml`
 1. Run `phpunit`

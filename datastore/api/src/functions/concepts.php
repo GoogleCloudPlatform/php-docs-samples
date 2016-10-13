@@ -17,10 +17,13 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-// [START datastore_use ]
+use Generator;
+use Google;
+// [START datastore_use]
 use Google\Cloud\Datastore\DatastoreClient;
-// [END datastore_use ]
+// [END datastore_use]
 use Google\Cloud\Datastore\Key;
+use Google\Cloud\Datastore\Query\Query;
 
 /**
  * Initialize the Datastore client.
@@ -29,9 +32,9 @@ use Google\Cloud\Datastore\Key;
  */
 function initialize_client()
 {
-    // [START init_client]
+    // [START initialize_client]
     $datastore = new DatastoreClient();
-    // [END init_client]
+    // [END initialize_client]
     return $datastore;
 }
 
@@ -39,18 +42,18 @@ function initialize_client()
  * Create a Datastore entity.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
-function create_entity(DatastoreClient $datastore)
+function basic_entity(DatastoreClient $datastore)
 {
-    // [START create_entity]
+    // [START basic_entity]
     $task = $datastore->entity('Task', [
         'category' => 'Personal',
         'done' => false,
         'priority' => 4,
         'description' => 'Learn Cloud Datastore'
     ]);
-    // [END create_entity]
+    // [END basic_entity]
     return $task;
 }
 
@@ -58,11 +61,11 @@ function create_entity(DatastoreClient $datastore)
  * Create a Datastore entity and upsert it.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
-function upsert_entity(DatastoreClient $datastore)
+function upsert(DatastoreClient $datastore)
 {
-    // [START upsert_entity]
+    // [START upsert]
     $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->entity($key, [
         'category' => 'Personal',
@@ -71,7 +74,7 @@ function upsert_entity(DatastoreClient $datastore)
         'description' => 'Learn Cloud Datastore'
     ]);
     $datastore->upsert($task);
-    // [END upsert_entity]
+    // [END upsert]
 
     return $task;
 }
@@ -81,11 +84,11 @@ function upsert_entity(DatastoreClient $datastore)
  * an entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
-function insert_entity(DatastoreClient $datastore)
+function insert(DatastoreClient $datastore)
 {
-    // [START insert_entity]
+    // [START insert]
     $task = $datastore->entity('Task', [
         'category' => 'Personal',
         'done' => false,
@@ -93,7 +96,7 @@ function insert_entity(DatastoreClient $datastore)
         'description' => 'Learn Cloud Datastore'
     ]);
     $datastore->insert($task);
-    // [END insert_entity]
+    // [END insert]
     return $task;
 }
 
@@ -101,14 +104,14 @@ function insert_entity(DatastoreClient $datastore)
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity|null
+ * @return Google\Cloud\Datastore\Entity|null
  */
 function lookup(DatastoreClient $datastore)
 {
-    // [START lookup_entity]
+    // [START lookup]
     $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->lookup($key);
-    // [END lookup_entity]
+    // [END lookup]
     return $task;
 }
 
@@ -116,18 +119,18 @@ function lookup(DatastoreClient $datastore)
  * Update a Datastore entity in a transaction.
  *
  * @param DatastoreClient $datastore
- * @return \Google\Cloud\Datastore\Entity|null
+ * @return Google\Cloud\Datastore\Entity|null
  */
-function update_entity(DatastoreClient $datastore)
+function update(DatastoreClient $datastore)
 {
-    // [START update_entity]
+    // [START update]
     $transaction = $datastore->transaction();
     $key = $datastore->key('Task', 'sampleTask');
     $task = $transaction->lookup($key);
     $task['priority'] = 5;
     $transaction->upsert($task);
     $transaction->commit();
-    // [END update_entity]
+    // [END update]
     return $task;
 }
 
@@ -137,24 +140,24 @@ function update_entity(DatastoreClient $datastore)
  * @param DatastoreClient $datastore
  * @param Key $taskKey
  */
-function delete_entity(DatastoreClient $datastore, Key $taskKey)
+function delete(DatastoreClient $datastore, Key $taskKey)
 {
-    // [START delete_entity]
+    // [START delete]
     $datastore->delete($taskKey);
-    // [END delete_entity]
+    // [END delete]
 }
 
 /**
  * Upsert multiple Datastore entities.
  *
  * @param DatastoreClient $datastore
- * @param array <\Google\Cloud\Datastore\Entity> $tasks
+ * @param array <Google\Cloud\Datastore\Entity> $tasks
  */
-function upsert_multi(DatastoreClient $datastore, array $tasks)
+function batch_upsert(DatastoreClient $datastore, array $tasks)
 {
-    // [START upsert_multi]
+    // [START batch_upsert]
     $datastore->upsertBatch($tasks);
-    // [END upsert_multi]
+    // [END batch_upsert]
 }
 
 /**
@@ -162,18 +165,18 @@ function upsert_multi(DatastoreClient $datastore, array $tasks)
  *
  * @param DatastoreClient $datastore
  * @param array <Key> $keys
- * @return array <\Google\Cloud\Datastore\Entity>
+ * @return array <Google\Cloud\Datastore\Entity>
  */
-function lookup_multi(DatastoreClient $datastore, array $keys)
+function batch_lookup(DatastoreClient $datastore, array $keys)
 {
-    // [START lookup_multi]
+    // [START batch_lookup]
     $result = $datastore->lookupBatch($keys);
     if (isset($result['found'])) {
         // $result['found'] is an array of entities.
     } else {
         // No entities found.
     }
-    // [END lookup_multi]
+    // [END batch_lookup]
     return $result;
 }
 
@@ -183,11 +186,11 @@ function lookup_multi(DatastoreClient $datastore, array $keys)
  * @param DatastoreClient $datastore
  * @param array <Key> $keys
  */
-function delete_multi(DatastoreClient $datastore, array $keys)
+function batch_delete(DatastoreClient $datastore, array $keys)
 {
-    // [START delete_multi]
+    // [START batch_delete]
     $datastore->deleteBatch($keys);
-    // [END delete_multi]
+    // [END batch_delete]
 }
 
 /**
@@ -196,7 +199,7 @@ function delete_multi(DatastoreClient $datastore, array $keys)
  * @param DatastoreClient $datastore
  * @return Key
  */
-function create_complete_key(DatastoreClient $datastore)
+function named_key(DatastoreClient $datastore)
 {
     // [START named_key]
     $taskKey = $datastore->key('Task', 'sampleTask');
@@ -210,7 +213,7 @@ function create_complete_key(DatastoreClient $datastore)
  * @param DatastoreClient $datastore
  * @return Key
  */
-function create_incomplete_key(DatastoreClient $datastore)
+function incomplete_key(DatastoreClient $datastore)
 {
     // [START incomplete_key]
     $taskKey = $datastore->key('Task');
@@ -224,7 +227,7 @@ function create_incomplete_key(DatastoreClient $datastore)
  * @param DatastoreClient $datastore
  * @return Key
  */
-function create_key_with_parent(DatastoreClient $datastore)
+function key_with_parent(DatastoreClient $datastore)
 {
     // [START key_with_parent]
     $taskKey = $datastore->key('TaskList', 'default')
@@ -239,13 +242,13 @@ function create_key_with_parent(DatastoreClient $datastore)
  * @param DatastoreClient $datastore
  * @return Key
  */
-function create_key_with_multi_level_parent(DatastoreClient $datastore)
+function key_with_multilevel_parent(DatastoreClient $datastore)
 {
-    // [START key_with_multi_level_parent]
+    // [START key_with_multilevel_parent]
     $taskKey = $datastore->key('User', 'alice')
         ->pathElement('TaskList', 'default')
         ->pathElement('Task', 'sampleTask');
-    // [END key_with_multi_level_parent]
+    // [END key_with_multilevel_parent]
     return $taskKey;
 }
 
@@ -254,9 +257,9 @@ function create_key_with_multi_level_parent(DatastoreClient $datastore)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
-function create_entity_with_option(DatastoreClient $datastore, Key $key)
+function properties(DatastoreClient $datastore, Key $key)
 {
     // [START properties]
     $task = $datastore->entity(
@@ -265,6 +268,7 @@ function create_entity_with_option(DatastoreClient $datastore, Key $key)
             'category' => 'Personal',
             'created' => new \DateTime(),
             'done' => false,
+            'priority' => 4,
             'percent_complete' => 10.0,
             'description' => 'Learn Cloud Datastore'
         ],
@@ -279,11 +283,11 @@ function create_entity_with_option(DatastoreClient $datastore, Key $key)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
-function create_entity_with_array_property(DatastoreClient $datastore, Key $key)
+function array_value(DatastoreClient $datastore, Key $key)
 {
-    // [START entity_with_array_property]
+    // [START array_value]
     $task = $datastore->entity(
         $key,
         [
@@ -291,6 +295,433 @@ function create_entity_with_array_property(DatastoreClient $datastore, Key $key)
             'collaborators' => ['alice', 'bob']
         ]
     );
-    // [END entity_with_option]
+    // [END array_value]
     return $task;
+}
+
+/**
+ * Create a basic Datastore query.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function basic_query(DatastoreClient $datastore)
+{
+    // [START basic_query]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('done', '=', false)
+        ->filter('priority', '>=', 4)
+        ->order('priority', Query::ORDER_DESCENDING);
+    // [END basic_query]
+    return $query;
+}
+
+/**
+ * Run a given query.
+ *
+ * @param DatastoreClient $datastore
+ * @return Generator <Google\Cloud\Datastore\Entity>
+ */
+function run_query(DatastoreClient $datastore, Query $query)
+{
+    // [START run_query]
+    $result = $datastore->runQuery($query);
+    // [END run_query]
+    return $result;
+}
+
+/**
+ * Create a query with a property filter.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function property_filter(DatastoreClient $datastore)
+{
+    // [START property_filter]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('done', '=', false);
+    // [END property_filter]
+    return $query;
+}
+
+/**
+ * Create a query with a composite filter.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function composite_filter(DatastoreClient $datastore)
+{
+    // [START composite_filter]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('done', '=', false)
+        ->filter('priority', '=', 4);
+    // [END composite_filter]
+    return $query;
+}
+
+/**
+ * Create a query with a key filter.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function key_filter(DatastoreClient $datastore)
+{
+    // [START key_filter]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('__key__', '>', $datastore->key('Task', 'someTask'));
+    // [END key_filter]
+    return $query;
+}
+
+/**
+ * Create a query with ascending sort.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function ascending_sort(DatastoreClient $datastore)
+{
+    // [START ascending_sort]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->order('created');
+    // [END ascending_sort]
+    return $query;
+}
+
+/**
+ * Create a query with descending sort.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function descending_sort(DatastoreClient $datastore)
+{
+    // [START descending_sort]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->order('create', Query::ORDER_DESCENDING);
+    // [END descending_sort]
+    return $query;
+}
+
+/**
+ * Create a query sorting with multiple properties.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function multi_sort(DatastoreClient $datastore)
+{
+    // [START multi_sort]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->order('priority', Query::ORDER_DESCENDING)
+        ->order('created');
+    // [END multi_sort]
+    return $query;
+}
+
+/**
+ * Create an ancestor query.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function ancestor_query(DatastoreClient $datastore)
+{
+    // TODO: Move to `hasAncestor` once it's available.
+    // https://github.com/GoogleCloudPlatform/google-cloud-php/issues/186
+    // [START ancestor_query]
+    $ancestorKey = $datastore->key('TaskList', 'default');
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('__key__', Query::OP_HAS_ANCESTOR, $ancestorKey);
+    // [END ancestor_query]
+    return $query;
+}
+
+/**
+ * Create a kindless query.
+ *
+ * @param DatastoreClient $datastore
+ * @param Key $lastSeenKey
+ * @return Query
+ */
+function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
+{
+    // [START kindless_query]
+    $query = $datastore->query()
+        ->filter('__key__', '>', $lastSeenKey);
+    // [END kindless_query]
+    return $query;
+}
+
+/**
+ * Create a keys-only query.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function keys_only_query(DatastoreClient $datastore)
+{
+    // TODO: Move to `keysOnly()` once it's available.
+    // https://github.com/GoogleCloudPlatform/google-cloud-php/issues/187
+    // [START keys_only_query]
+    $query = $datastore->query()
+        ->projection('__key__')
+        ->limit(1);
+    // [END keys_only_query]
+    return $query;
+}
+
+/**
+ * Create a projection query.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function projection_query(DatastoreClient $datastore)
+{
+    // [START projection_query]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->projection(['priority', 'percent_complete']);
+    // [END projection_query]
+    return $query;
+}
+
+/**
+ * Run the given projection query and collect the projected properties.
+ *
+ * @param DatastoreClient $datastore
+ * @param Query $query
+ * @return array
+ */
+function run_projection_query(DatastoreClient $datastore, Query $query)
+{
+    // [START run_projection_query]
+    $priorities = array();
+    $percentCompletes = array();
+    $result = $datastore->runQuery($query);
+    /* @var Google\Cloud\Datastore\Entity $task */
+    foreach ($result as $task) {
+        $priorities[] = $task['priority'];
+        $percentCompletes[] = $task['percent_complete'];
+    }
+    // [END run_projection_query]
+    return array($priorities, $percentCompletes);
+}
+
+/**
+ * Create a query with distinctOn.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function distinct_on(DatastoreClient $datastore)
+{
+    // [START distinct_on]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->order('category')
+        ->order('priority')
+        ->projection(['category', 'priority'])
+        ->distinctOn('category');
+    // [END distinct_on]
+    return $query;
+}
+
+/**
+ * Create a query with inequality filters.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function array_value_inequality_range(DatastoreClient $datastore)
+{
+    // [START array_value_inequality_range]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('tag', '>', 'learn')
+        ->filter('tag', '<', 'math');
+    // [END array_value_inequality_range]
+    return $query;
+}
+
+/**
+ * Create a query with equality filters.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function array_value_equality(DatastoreClient $datastore)
+{
+    // [START array_value_equality]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('tag', '=', 'fun')
+        ->filter('tag', '=', 'programming');
+    // [END array_value_equality]
+    return $query;
+}
+
+/**
+ * Create a query with a limit.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function limit(DatastoreClient $datastore)
+{
+    // [START limit]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->limit(5);
+    // [END limit]
+    return $query;
+}
+
+/**
+ * Fetch a query cursor.
+ *
+ * @param DatastoreClient $datastore
+ * @param string $pageSize
+ * @param string $pageCursor
+ * @return string $nextPageCursor
+ */
+function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
+{
+    // [START cursor_paging]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->limit($pageSize)
+        ->start($pageCursor);
+    $result = $datastore->runQuery($query);
+    $nextPageCursor = '';
+    /* ignoreOnTheDocs */ $entities = [];
+    /* @var Google\Cloud\Datastore\Entity $entity */
+    foreach ($result as $entity) {
+        $nextPageCursor = $entity->cursor();
+        /* ignoreOnTheDocs */ $entities[] = $entity;
+    }
+    // [END cursor_paging]
+    return array(
+        'nextPageCursor' => $nextPageCursor,
+        'entities' => $entities
+    );
+}
+
+/**
+ * Create a query with inequality range filters on the same property.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function inequality_range(DatastoreClient $datastore)
+{
+    // [START inequality_range]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('created', '>', new \DateTime('1990-01-01T00:00:00z'))
+        ->filter('created', '<', new \DateTime('2000-12-31T23:59:59z'));
+    // [END inequality_range]
+    return $query;
+}
+
+/**
+ * Create an invalid query with inequality filters on multiple properties.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function inequality_invalid(DatastoreClient $datastore)
+{
+    // [START inequality_invalid]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('priority', '>', 3)
+        ->filter('created', '>', new \DateTime('1990-01-01T00:00:00z'));
+    // [END inequality_invalid]
+    return $query;
+}
+
+/**
+ * Create a query with equality filters and inequality range filters on a
+ * single property.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function equal_and_inequality_range(DatastoreClient $datastore)
+{
+    // [START equal_and_inequality_range]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('priority', '=', 4)
+        ->filter('done', '=', false)
+        ->filter('created', '>', new \DateTime('1990-01-01T00:00:00z'))
+        ->filter('created', '<', new \DateTime('2000-12-31T23:59:59z'));
+    // [END equal_and_inequality_range]
+    return $query;
+}
+
+/**
+ * Create a query with an inequality filter and multiple sort orders.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function inequality_sort(DatastoreClient $datastore)
+{
+    // [START inequality_sort]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('priority', '>', 3)
+        ->order('priority')
+        ->order('created');
+    // [END inequality_sort]
+    return $query;
+}
+
+/**
+ * Create an invalid query with an inequality filter and a wrong sort order.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function inequality_sort_invalid_not_same(DatastoreClient $datastore)
+{
+    // [START inequality_sort_invalid_not_same]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('priority', '>', 3)
+        ->order('created');
+    // [END inequality_sort_invalid_not_same]
+    return $query;
+}
+
+/**
+ * Create an invalid query with an inequality filter and a wrong sort order.
+ *
+ * @param DatastoreClient $datastore
+ * @return Query
+ */
+function inequality_sort_invalid_not_first(DatastoreClient $datastore)
+{
+    // [START inequality_sort_invalid_not_first]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->filter('priority', '>', 3)
+        ->order('created')
+        ->order('priority');
+    // [END inequality_sort_invalid_not_first]
+    return $query;
 }

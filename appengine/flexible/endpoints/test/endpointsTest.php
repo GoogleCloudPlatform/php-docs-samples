@@ -29,15 +29,6 @@ class endpointsTest extends WebTestCase
         return $app;
     }
 
-    public function testHome()
-    {
-        $client = $this->createClient();
-
-        $crawler = $client->request('GET', '/');
-
-        $this->assertTrue($client->getResponse()->isOk());
-    }
-
     public function testEcho()
     {
         $client = $this->createClient();

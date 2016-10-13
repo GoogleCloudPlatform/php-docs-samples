@@ -27,6 +27,7 @@ do
     if [ -f "composer.json" ]; then
         composer install
     fi
+    echo "running phpunit in ${DIR}"
     phpunit
     if [ -f build/logs/clover.xml ]; then
         cp build/logs/clover.xml \
