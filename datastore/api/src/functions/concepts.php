@@ -829,7 +829,6 @@ function transactional_retry(
     // [END transactional_retry]
 }
 
-// [START transactional_get_or_create]
 /**
  * Insert an entity only if there is no entity with the same key.
  *
@@ -838,14 +837,15 @@ function transactional_retry(
  */
 function get_or_create(DatastoreClient $datastore, Entity $task)
 {
+    // [START transactional_get_or_create]
     $transaction = $datastore->transaction();
     $existed = $transaction->lookup($task->key());
     if ($existed === null) {
         $transaction->insert($task);
         $transaction->commit();
     }
+    // [END transactional_get_or_create]
 }
-// [END transactional_get_or_create]
 
 /**
  * Run a query with an ancestor inside a transaction.
