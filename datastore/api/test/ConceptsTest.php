@@ -590,8 +590,13 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
                 }
                 self::assertEquals(3, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key3->path());
+                $this->assertEquals(5, $entities[0]['priority']);
                 $this->assertTrue($entities[1]->key()->path() == $key2->path());
+                $this->assertEquals(4, $entities[1]['priority']);
                 $this->assertTrue($entities[2]->key()->path() == $key1->path());
+                $this->assertEquals(4, $entities[2]['priority']);
+                $this->assertTrue($entities[0]['created'] > $entities[1]['created']);
+                $this->assertTrue($entities[1]['created'] < $entities[2]['created']);
             });
     }
 
