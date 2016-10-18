@@ -1008,6 +1008,134 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(1, $num);
     }
 
+    public function testEventualConsistentQuery()
+    {
+        $taskListKey = self::$datastore->key('TaskList', 'default');
+        $taskKey = self::$datastore->key('Task', generateRandomString())
+            ->ancestorKey($taskListKey);
+        $task = self::$datastore->entity(
+            $taskKey,
+            ['description' => 'learn eventual consistency']
+        );
+        self::$keys[] = $taskKey;
+        self::$datastore->upsert($task);
+        $this->runEventuallyConsistentTest(function () use ($taskKey) {
+            $num = 0;
+            $result = get_task_list_entities(self::$datastore);
+            /* @var Entity $e */
+            foreach ($result as $e) {
+                $this->assertEquals($taskKey->path(), $e->key()->path());
+                $this->assertEquals(
+                    'learn eventual consistency',
+                    $e['description']);
+                $num += 1;
+            }
+            self::assertEquals(1, $num);
+        });
+    }
+
+    public function testEntityWithParent()
+    {
+        $entity = entity_with_parent(self::$datastore);
+        $parentPath = ['kind' => 'TaskList', 'name' => 'default'];
+        $pathEnd = ['kind' => 'Task'];
+        $this->assertEquals($parentPath, $entity->key()->path()[0]);
+        $this->assertEquals($pathEnd, $entity->key()->path()[1]);
+    }
+
+    public function testNamespaceRunQuery()
+    {
+        $testNamespace = 'namespaceTest';
+        $datastore = new DatastoreClient(
+            ['namespaceId' => $testNamespace]
+        );
+        // Fixed namespace and the entity key. We don't need to clean it up.
+        $key = $datastore->key('Task', 'namespaceTestKey');
+        $datastore->upsert($datastore->entity($key));
+
+        $this->runEventuallyConsistentTest(
+            function () use ($datastore, $testNamespace) {
+                $namespaces = namespace_run_query($datastore, 'm', 'o');
+                $this->assertEquals([$testNamespace], $namespaces);
+            }
+        );
+    }
+
+    public function testKindRunQuery()
+    {
+        $key1 = self::$datastore->key('Account', 'alice');
+        $key2 = self::$datastore->key('Task', 'Task1');
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
+        $this->runEventuallyConsistentTest(function () {
+            $kinds = kind_run_query(self::$datastore);
+            $this->assertEquals(['Account', 'Task'], $kinds);
+        });
+    }
+
+    public function testPropertyRunQuery()
+    {
+        $key1 = self::$datastore->key('Account', 'alice');
+        $key2 = self::$datastore->key('Task', 'Task1');
+        $entity1 = self::$datastore->entity($key1, ['accountType' => 'gold']);
+        $entity2 = self::$datastore->entity($key2, ['description' => 'desc']);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
+        $this->runEventuallyConsistentTest(function () {
+            $properties = property_run_query(self::$datastore);
+            $this->assertEquals(
+                [
+                    'Account' => ['accountType'],
+                    'Task' => ['description']
+                ],
+                $properties
+            );
+        });
+    }
+
+    public function testPropertyByKindRunQuery()
+    {
+        $key1 = self::$datastore->key('Account', 'alice');
+        $key2 = self::$datastore->key('Task', 'Task1');
+        $entity1 = self::$datastore->entity($key1, ['accountType' => 'gold']);
+        $entity2 = self::$datastore->entity($key2, ['description' => 'desc']);
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
+        $this->runEventuallyConsistentTest(function () {
+            $properties = property_by_kind_run_query(self::$datastore);
+            $this->assertEquals(['description' => ['STRING']], $properties);
+        });
+    }
+
+    public function testPropertyFilteringRunQuery()
+    {
+        $key1 = self::$datastore->key('TaskList', 'default');
+        $key2 = self::$datastore->key('Task', 'Task1');
+        $entity1 = self::$datastore->entity(
+            $key1,
+            ['created' => new \Datetime()]
+        );
+        $entity2 = self::$datastore->entity(
+            $key2,
+            [
+                'category' => 'work',
+                'priority' => 4,
+                'tags' => ['programming', 'fun']
+            ]
+        );
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
+        $this->runEventuallyConsistentTest(function () {
+            $properties = property_filtering_run_query(self::$datastore);
+            $this->assertEquals(
+                ['Task.priority', 'Task.tags', 'TaskList.created'],
+                $properties
+            );
+        });
+    }
+
     public function tearDown()
     {
         if (! empty(self::$keys)) {

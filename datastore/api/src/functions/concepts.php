@@ -860,3 +860,169 @@ function get_task_list_entities(DatastoreClient $datastore)
     // [END transactional_single_entity_group_read_only]
     return $taskListEntities;
 }
+
+/**
+ * Create and run a query with readConsistency option.
+ *
+ * @param DatastoreClient $datastore
+ * @return Generator
+ */
+function eventual_consistent_query(DatastoreClient $datastore)
+{
+    // [START eventual_consistent_query]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->hasAncestor($datastore->key('TaskList', 'default'));
+    $result = $datastore->runQuery($query, ['readConsistency' => 'EVENTUAL']);
+    // [END eventual_consistent_query]
+    return $result;
+}
+
+/**
+ * Create an entity with a parent key.
+ *
+ * @param DatastoreClient $datastore
+ * @return Entity
+ */
+function entity_with_parent(DatastoreClient $datastore)
+{
+    // [START entity_with_parent]
+    $parentKey = $datastore->key('TaskList', 'default');
+    $key = $datastore->key('Task')->ancestorKey($parentKey);
+    $task = $datastore->entity(
+        $key,
+        [
+            'Category' => 'Personal',
+            'Done' => false,
+            'Priority' => 4,
+            'Description' => 'Learn Cloud Datastore'
+        ]
+    );
+    // [END entity_with_parent]
+    return $task;
+}
+
+/**
+ * Create and run a namespace query.
+ *
+ * @param DatastoreClient $datastore
+ * @param string $start a starting namespace (inclusive)
+ * @param string $end an ending namespace (exclusive)
+ * @return array<string> namespaces returned from the query.
+ */
+function namespace_run_query(DatastoreClient $datastore, $start, $end)
+{
+    // [START namespace_run_query]
+    $query = $datastore->query()
+        ->kind('__namespace__')
+        ->projection(['__key__'])
+        ->filter('__key__', '>=', $datastore->key('__namespace__', $start))
+        ->filter('__key__', '<', $datastore->key('__namespace__', $end));
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $namespaces */
+    $namespaces = [];
+    foreach ($result as $namespace) {
+        $namespaces[] = $namespace->key()->pathEnd()['name'];
+    }
+    // [END namespace_run_query]
+    return $namespaces;
+}
+
+/**
+ * Create and run a kind query.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<string> kinds returned from the query
+ */
+function kind_run_query(DatastoreClient $datastore)
+{
+    // [START kind_run_query]
+    $query = $datastore->query()
+        ->kind('__kind__')
+        ->projection(['__key__']);
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $kinds */
+    $kinds = [];
+    foreach ($result as $kind) {
+        $kinds[] = $kind->key()->pathEnd()['name'];
+    }
+    // [END kind_run_query]
+    return $kinds;
+}
+
+/**
+ * Create and run a property query.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<string => string>
+ */
+function property_run_query(DatastoreClient $datastore)
+{
+    // [START property_run_query]
+    $query = $datastore->query()
+        ->kind('__property__')
+        ->projection(['__key__']);
+    $result = $datastore->runQuery($query);
+    /* @var array<string => array<string>> $properties */
+    $properties = [];
+    /* @var Entity $entity */
+    foreach ($result as $entity) {
+        $kind = $entity->key()->path()[0]['name'];
+        $propertyName = $entity->key()->path()[1]['name'];
+        if (!isset($properties[$kind])) {
+            $properties[$kind] = [];
+        }
+        $properties[$kind][] = $propertyName;
+    }
+    // [END property_run_query]
+    return $properties;
+}
+
+/**
+ * Create and run a property query with a kind.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<string => string>
+ */
+function property_by_kind_run_query(DatastoreClient $datastore)
+{
+    // [START property_run_query]
+    $ancestorKey = $datastore->key('__kind__', 'Task');
+    $query = $datastore->query()
+        ->kind('__property__')
+        ->hasAncestor($ancestorKey);
+    $result = $datastore->runQuery($query);
+    /* @var array<string => string> $properties */
+    $properties = [];
+    /* @var Entity $entity */
+    foreach ($result as $entity) {
+        $propertyName = $entity->key()->path()[1]['name'];
+        $propertyType = $entity['property_representation'];
+        $properties[$propertyName] = $propertyType;
+    }
+    // Example values of $properties: ['description' => ['STRING']]
+    // [END property_run_query]
+    return $properties;
+}
+
+function property_filtering_run_query(DatastoreClient $datastore)
+{
+    // [START property_filtering_run_query]
+    $ancestorKey = $datastore->key('__kind__', 'Task');
+    $startKey = $datastore->key('__property__', 'priority')
+        ->ancestorKey($ancestorKey);
+    $query = $datastore->query()
+        ->kind('__property__')
+        ->filter('__key__', '>=', $startKey);
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $properties */
+    $properties = [];
+    /* @var Entity $entity */
+    foreach ($result as $entity) {
+        $kind = $entity->key()->path()[0]['name'];
+        $propertyName = $entity->key()->path()[1]['name'];
+        $properties[] = "$kind.$propertyName";
+    }
+    // [END property_filtering_run_query]
+    return $properties;
+}
