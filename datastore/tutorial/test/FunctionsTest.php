@@ -20,8 +20,6 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 
-
-
 class FunctionsTest extends \PHPUnit_Framework_TestCase
 {
     use EventuallyConsistentTestTrait;
