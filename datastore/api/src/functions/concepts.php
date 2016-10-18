@@ -929,7 +929,7 @@ function namespace_run_query(DatastoreClient $datastore, $start, $end)
 }
 
 /**
- * Create and run a kind query.
+ * Create and run a query to list all kinds in Datastore.
  *
  * @param DatastoreClient $datastore
  * @return array<string> kinds returned from the query
@@ -954,7 +954,7 @@ function kind_run_query(DatastoreClient $datastore)
  * Create and run a property query.
  *
  * @param DatastoreClient $datastore
- * @return array<string => string>
+ * @return array<string>
  */
 function property_run_query(DatastoreClient $datastore)
 {
@@ -963,16 +963,13 @@ function property_run_query(DatastoreClient $datastore)
         ->kind('__property__')
         ->projection(['__key__']);
     $result = $datastore->runQuery($query);
-    /* @var array<string => array<string>> $properties */
+    /* @var array<string> $properties */
     $properties = [];
     /* @var Entity $entity */
     foreach ($result as $entity) {
         $kind = $entity->key()->path()[0]['name'];
         $propertyName = $entity->key()->path()[1]['name'];
-        if (!isset($properties[$kind])) {
-            $properties[$kind] = [];
-        }
-        $properties[$kind][] = $propertyName;
+        $properties[] = "$kind.$propertyName";
     }
     // [END property_run_query]
     return $properties;
@@ -986,7 +983,7 @@ function property_run_query(DatastoreClient $datastore)
  */
 function property_by_kind_run_query(DatastoreClient $datastore)
 {
-    // [START property_run_query]
+    // [START property_by_kind_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
     $query = $datastore->query()
         ->kind('__property__')
@@ -1001,10 +998,16 @@ function property_by_kind_run_query(DatastoreClient $datastore)
         $properties[$propertyName] = $propertyType;
     }
     // Example values of $properties: ['description' => ['STRING']]
-    // [END property_run_query]
+    // [END property_by_kind_run_query]
     return $properties;
 }
 
+/**
+ * Create and run a property query with property filtering.
+ *
+ * @param DatastoreClient $datastore
+ * @return array
+ */
 function property_filtering_run_query(DatastoreClient $datastore)
 {
     // [START property_filtering_run_query]

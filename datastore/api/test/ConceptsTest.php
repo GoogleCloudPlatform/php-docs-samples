@@ -1086,10 +1086,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $this->runEventuallyConsistentTest(function () {
             $properties = property_run_query(self::$datastore);
             $this->assertEquals(
-                [
-                    'Account' => ['accountType'],
-                    'Task' => ['description']
-                ],
+                ['Account.accountType', 'Task.description'],
                 $properties
             );
         });
