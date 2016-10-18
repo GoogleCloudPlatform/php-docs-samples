@@ -408,7 +408,7 @@ function descending_sort(DatastoreClient $datastore)
     // [START descending_sort]
     $query = $datastore->query()
         ->kind('Task')
-        ->order('create', Query::ORDER_DESCENDING);
+        ->order('created', Query::ORDER_DESCENDING);
     // [END descending_sort]
     return $query;
 }
@@ -438,13 +438,11 @@ function multi_sort(DatastoreClient $datastore)
  */
 function ancestor_query(DatastoreClient $datastore)
 {
-    // TODO: Move to `hasAncestor` once it's available.
-    // https://github.com/GoogleCloudPlatform/google-cloud-php/issues/186
     // [START ancestor_query]
     $ancestorKey = $datastore->key('TaskList', 'default');
     $query = $datastore->query()
         ->kind('Task')
-        ->filter('__key__', Query::OP_HAS_ANCESTOR, $ancestorKey);
+        ->hasAncestor($ancestorKey);
     // [END ancestor_query]
     return $query;
 }
@@ -473,11 +471,9 @@ function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
  */
 function keys_only_query(DatastoreClient $datastore)
 {
-    // TODO: Move to `keysOnly()` once it's available.
-    // https://github.com/GoogleCloudPlatform/google-cloud-php/issues/187
     // [START keys_only_query]
     $query = $datastore->query()
-        ->projection('__key__')
+        ->keysOnly()
         ->limit(1);
     // [END keys_only_query]
     return $query;
@@ -780,21 +776,14 @@ function transfer_funds(
     $amount
 ) {
     $transaction = $datastore->transaction();
-    $result = $transaction->lookupBatch([$fromKey, $toKey]);
+    // The option 'sort' is important here, otherwise the order of the result
+    // might be different from the order of the keys.
+    $result = $transaction->lookupBatch([$fromKey, $toKey], ['sort' => true]);
     if (count($result['found']) != 2) {
         $transaction->rollback();
     }
-    // Currently, the result from lookupBatch doesn't guarantee the same order
-    // as the given keys with the client library.
-    // TODO: remove this hack once the issue below is fixed.
-    // https://github.com/GoogleCloudPlatform/google-cloud-php/issues/175
-    if ($result['found'][0]->key()->path() ==  $fromKey->path()) {
-        $fromAccount = $result['found'][0];
-        $toAccount = $result['found'][1];
-    } else {
-        $fromAccount = $result['found'][1];
-        $toAccount = $result['found'][0];
-    }
+    $fromAccount = $result['found'][0];
+    $toAccount = $result['found'][1];
     $fromAccount['balance'] -= $amount;
     $toAccount['balance'] += $amount;
     $transaction->updateBatch([$fromAccount, $toAccount]);
