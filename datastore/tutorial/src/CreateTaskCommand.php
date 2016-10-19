@@ -46,9 +46,10 @@ class CreateTaskCommand extends Command
         $datastore = build_datastore_service();
         $description = $input->getArgument('description');
         $task = add_task($datastore, $description);
-        printf(
-            'Created new task with ID %d.' . PHP_EOL,
-            $task->key()->pathEnd()['id']
+        $output->writeln(
+            sprintf(
+                'Created new task with ID %d.', $task->key()->pathEnd()['id']
+            )
         );
     }
 }

@@ -46,6 +46,6 @@ class MarkTaskDoneCommand extends Command
         $datastore = build_datastore_service();
         $taskId = intval($input->getArgument('taskId'));
         mark_done($datastore, $taskId);
-        printf('Task %d updated successfully.' . PHP_EOL, $taskId);
+        $output->writeln(sprintf('Task %d updated successfully.', $taskId));
     }
 }

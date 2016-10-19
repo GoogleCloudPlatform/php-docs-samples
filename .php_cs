@@ -10,7 +10,8 @@ return Symfony\CS\Config\Config::create()
         'concat_with_spaces',
         'unused_use',
         'trailing_spaces',
-        'indentation'
+        'indentation',
+	'-psr0'
     ])
     ->finder($finder)
 ;

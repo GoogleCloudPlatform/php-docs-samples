@@ -31,6 +31,10 @@ function build_datastore_service()
     // [START build_service]
     $datastore = new DatastoreClient();
     // [END build_service]
+    $namespace = getenv('CLOUD_DATASTORE_NAMESPACE');
+    if ($namespace !== false) {
+        $datastore = new DatastoreClient(['namespaceId' => $namespace]);
+    }
     return $datastore;
 }
 

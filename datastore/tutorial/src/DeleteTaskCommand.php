@@ -46,6 +46,6 @@ class DeleteTaskCommand extends Command
         $datastore = build_datastore_service();
         $taskId = intval($input->getArgument('taskId'));
         delete_task($datastore, $taskId);
-        printf('Task %d deleted successfully.' . PHP_EOL, $taskId);
+        $output->writeln(sprintf('Task %d deleted successfully.', $taskId));
     }
 }
