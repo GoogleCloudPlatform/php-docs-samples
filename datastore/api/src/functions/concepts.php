@@ -504,7 +504,7 @@ function projection_query(DatastoreClient $datastore)
  */
 function run_projection_query(DatastoreClient $datastore, Query $query)
 {
-    // [START run_projection_query]
+    // [START run_query_projection]
     $priorities = array();
     $percentCompletes = array();
     $result = $datastore->runQuery($query);
@@ -513,7 +513,7 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
         $priorities[] = $task['priority'];
         $percentCompletes[] = $task['percent_complete'];
     }
-    // [END run_projection_query]
+    // [END run_query_projection]
     return array($priorities, $percentCompletes);
 }
 
@@ -525,14 +525,14 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
  */
 function distinct_on(DatastoreClient $datastore)
 {
-    // [START distinct_on]
+    // [START distinct_on_query]
     $query = $datastore->query()
         ->kind('Task')
         ->order('category')
         ->order('priority')
         ->projection(['category', 'priority'])
         ->distinctOn('category');
-    // [END distinct_on]
+    // [END distinct_on_query]
     return $query;
 }
 
