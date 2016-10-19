@@ -27,6 +27,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 class SentimentCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+
+    /* @var CommandTester $commandTester */
     private $commandTester;
 
     public static function setUpBeforeClass()
@@ -54,10 +56,11 @@ class SentimentCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex('/sentiment: -/');
+        $output = $this->commandTester->getDisplay();
+        $this->assertRegExp('/sentiment: -/', $output);
     }
 
-    public function testEverythingFromStorageObject()
+    public function testSentimentFromStorageObject()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -71,6 +74,7 @@ class SentimentCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex('/sentiment: -/');
+        $output = $this->commandTester->getDisplay();
+        $this->assertRegExp('/sentiment: -/', $output);
     }
 }
