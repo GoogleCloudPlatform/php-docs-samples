@@ -603,11 +603,15 @@ function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
         ->start($pageCursor);
     $result = $datastore->runQuery($query);
     $nextPageCursor = '';
-    /* ignoreOnTheDocs */ $entities = [];
+    // In this example, it collects all the entities in an array. This will
+    // consume lot of memory if there are many entities. The query result is a
+    // generator, so you can write a memory-efficient loop if you don't
+    // collect all the entities in the array.
+    $entities = [];
     /* @var Google\Cloud\Datastore\Entity $entity */
     foreach ($result as $entity) {
         $nextPageCursor = $entity->cursor();
-        /* ignoreOnTheDocs */ $entities[] = $entity;
+        $entities[] = $entity;
     }
     // [END cursor_paging]
     return array(
