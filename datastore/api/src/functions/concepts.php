@@ -473,8 +473,7 @@ function keys_only_query(DatastoreClient $datastore)
 {
     // [START keys_only_query]
     $query = $datastore->query()
-        ->keysOnly()
-        ->limit(1);
+        ->keysOnly();
     // [END keys_only_query]
     return $query;
 }
