@@ -38,15 +38,13 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$datastore = new DatastoreClient(
-            array('namespaceId' => uniqid())
-        );
+        self::$datastore = build_datastore_service_with_namespace();
         self::$keys[] = self::$datastore->key('Task', 'sampleTask');
     }
 
     public function testBuildDatastoreService()
     {
-        $client = build_datastore_service();
+        $client = build_datastore_service('my-project-id');
         $this->assertInstanceOf(DatastoreClient::class, $client);
     }
 

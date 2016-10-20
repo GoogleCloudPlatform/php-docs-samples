@@ -17,25 +17,37 @@
 
 namespace Google\Cloud\Samples\Datastore\Tasks;
 
+use DateTime;
 use Generator;
+use Google;
+// [START build_service]
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Entity;
 
 /**
- * Create a Datastore service.
+ * Create a Cloud Datastore client.
+ *
+ * @param string $projectId
+ * @return DatastoreClient
+ */
+function build_datastore_service($projectId)
+{
+    $datastore = new DatastoreClient(['projectId' => $projectId]);
+    return $datastore;
+}
+// [END build_service]
+
+/**
+ * Create a Cloud Datastore client with a namespace.
  *
  * @return DatastoreClient
  */
-function build_datastore_service()
+function build_datastore_service_with_namespace()
 {
-    // [START build_service]
-    $datastore = new DatastoreClient();
-    // [END build_service]
-    $namespace = getenv('CLOUD_DATASTORE_NAMESPACE');
-    if ($namespace !== false) {
-        $datastore = new DatastoreClient(['namespaceId' => $namespace]);
+    $namespaceId = getenv('CLOUD_DATASTORE_NAMESPACE');
+    if ($namespaceId === false) {
+        return new DatastoreClient();
     }
-    return $datastore;
+    return new DatastoreClient(['namespaceId' => $namespaceId]);
 }
 
 // [START add_entity]
@@ -44,7 +56,7 @@ function build_datastore_service()
  *
  * @param DatastoreClient $datastore
  * @param $description
- * @return \Google\Cloud\Datastore\Entity
+ * @return Google\Cloud\Datastore\Entity
  */
 function add_task(DatastoreClient $datastore, $description)
 {
@@ -52,7 +64,7 @@ function add_task(DatastoreClient $datastore, $description)
     $task = $datastore->entity(
         $taskKey,
         [
-            'created' => new \DateTime(),
+            'created' => new DateTime(),
             'description' => $description,
             'done' => false
         ],
@@ -100,7 +112,7 @@ function delete_task(DatastoreClient $datastore, $taskId)
  * Return a generator for all the tasks in ascending order of creation time.
  *
  * @param DatastoreClient $datastore
- * @return Generator<Entity>
+ * @return Generator<Google\Cloud\Datastore\Entity>
  */
 function list_tasks(DatastoreClient $datastore)
 {

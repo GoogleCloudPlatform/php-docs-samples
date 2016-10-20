@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -38,12 +39,23 @@ class MarkTaskDoneCommand extends Command
                 'taskId',
                 InputArgument::REQUIRED,
                 'The id of the task to mark as done'
+            )
+            ->addOption(
+                'project-id',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Your cloud project id'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $datastore = build_datastore_service();
+        $projectId = $input->getOption('project-id');
+        if (!empty($projectId)) {
+            $datastore = build_datastore_service($projectId);
+        } else {
+            $datastore = build_datastore_service_with_namespace();
+        }
         $taskId = intval($input->getArgument('taskId'));
         mark_done($datastore, $taskId);
         $output->writeln(sprintf('Task %d updated successfully.', $taskId));
