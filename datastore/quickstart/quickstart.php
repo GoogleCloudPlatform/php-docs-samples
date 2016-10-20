@@ -30,6 +30,6 @@ $task = $datastore->entity($taskKey, ['description' => 'Buy milk']);
 # Saves the entity
 $datastore->upsert($task);
 
-echo 'Saved ' . $task->key() . ': ' . $task['description'] . "\n";
+echo 'Saved ' . $task->key() . ': ' . $task['description'] . PHP_EOL;
 # [END datastore_quickstart]
 return $task;
