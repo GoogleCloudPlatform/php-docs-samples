@@ -38,7 +38,7 @@ class CommandSystemTest extends \PHPUnit_Framework_TestCase
                 'No service account credentials were found.'
             );
         }
-        $this->datastore = build_datastore_service();
+        $this->datastore = build_datastore_service_with_namespace();
         // Also delete stale entities here.
         /* @var array<Key> $keys */
         $keys = [];
@@ -47,7 +47,6 @@ class CommandSystemTest extends \PHPUnit_Framework_TestCase
             $keys[] = $entity->key();
         }
         $this->datastore->deleteBatch($keys);
-
         $this->keys = array();
     }
 

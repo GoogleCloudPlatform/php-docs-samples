@@ -21,6 +21,7 @@ use Google\Cloud\Datastore\Entity;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -35,12 +36,23 @@ class ListTasksCommand extends Command
     {
         $this->setName('list-tasks')
             ->setDescription(
-                'List all the tasks in ascending order of creation time');
+                'List all the tasks in ascending order of creation time')
+            ->addOption(
+                'project-id',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Your cloud project id'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $datastore = build_datastore_service();
+        $projectId = $input->getOption('project-id');
+        if (!empty($projectId)) {
+            $datastore = build_datastore_service($projectId);
+        } else {
+            $datastore = build_datastore_service_with_namespace();
+        }
         $result = list_tasks($datastore);
         $table = new Table($output);
         $table->setHeaders(array('ID', 'Description', 'Status', 'Created'));
