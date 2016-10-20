@@ -46,7 +46,6 @@ class DeleteTaskCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Your cloud project id'
             );
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
