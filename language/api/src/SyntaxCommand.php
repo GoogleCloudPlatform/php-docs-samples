@@ -61,6 +61,6 @@ EOF
         } else {
             $result = analyze_syntax($content);
         }
-        print_annotation($result);
+        $output->write(annotation_to_string($result));
     }
 }

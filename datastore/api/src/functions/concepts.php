@@ -17,8 +17,8 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
+use DateTime;
 use Generator;
-use Google;
 // [START datastore_use]
 use Google\Cloud\Datastore\DatastoreClient;
 // [END datastore_use]
@@ -43,7 +43,7 @@ function initialize_client()
  * Create a Datastore entity.
  *
  * @param DatastoreClient $datastore
- * @return Google\Cloud\Datastore\Entity
+ * @return Entity
  */
 function basic_entity(DatastoreClient $datastore)
 {
@@ -62,7 +62,7 @@ function basic_entity(DatastoreClient $datastore)
  * Create a Datastore entity and upsert it.
  *
  * @param DatastoreClient $datastore
- * @return Google\Cloud\Datastore\Entity
+ * @return Entity
  */
 function upsert(DatastoreClient $datastore)
 {
@@ -85,7 +85,7 @@ function upsert(DatastoreClient $datastore)
  * an entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @return Google\Cloud\Datastore\Entity
+ * @return Entity
  */
 function insert(DatastoreClient $datastore)
 {
@@ -105,7 +105,7 @@ function insert(DatastoreClient $datastore)
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
- * @return Google\Cloud\Datastore\Entity|null
+ * @return Entity|null
  */
 function lookup(DatastoreClient $datastore)
 {
@@ -120,7 +120,7 @@ function lookup(DatastoreClient $datastore)
  * Update a Datastore entity in a transaction.
  *
  * @param DatastoreClient $datastore
- * @return Google\Cloud\Datastore\Entity|null
+ * @return Entity|null
  */
 function update(DatastoreClient $datastore)
 {
@@ -152,7 +152,7 @@ function delete(DatastoreClient $datastore, Key $taskKey)
  * Upsert multiple Datastore entities.
  *
  * @param DatastoreClient $datastore
- * @param array <Google\Cloud\Datastore\Entity> $tasks
+ * @param array <Entity> $tasks
  */
 function batch_upsert(DatastoreClient $datastore, array $tasks)
 {
@@ -166,7 +166,7 @@ function batch_upsert(DatastoreClient $datastore, array $tasks)
  *
  * @param DatastoreClient $datastore
  * @param array <Key> $keys
- * @return array <Google\Cloud\Datastore\Entity>
+ * @return array <Entity>
  */
 function batch_lookup(DatastoreClient $datastore, array $keys)
 {
@@ -258,7 +258,7 @@ function key_with_multilevel_parent(DatastoreClient $datastore)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return Google\Cloud\Datastore\Entity
+ * @return Entity
  */
 function properties(DatastoreClient $datastore, Key $key)
 {
@@ -267,7 +267,7 @@ function properties(DatastoreClient $datastore, Key $key)
         $key,
         [
             'category' => 'Personal',
-            'created' => new \DateTime(),
+            'created' => new DateTime(),
             'done' => false,
             'priority' => 4,
             'percent_complete' => 10.0,
@@ -284,7 +284,7 @@ function properties(DatastoreClient $datastore, Key $key)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return Google\Cloud\Datastore\Entity
+ * @return Entity
  */
 function array_value(DatastoreClient $datastore, Key $key)
 {
@@ -322,7 +322,7 @@ function basic_query(DatastoreClient $datastore)
  * Run a given query.
  *
  * @param DatastoreClient $datastore
- * @return Generator <Google\Cloud\Datastore\Entity>
+ * @return Generator <Entity>
  */
 function run_query(DatastoreClient $datastore, Query $query)
 {
@@ -473,8 +473,7 @@ function keys_only_query(DatastoreClient $datastore)
 {
     // [START keys_only_query]
     $query = $datastore->query()
-        ->keysOnly()
-        ->limit(1);
+        ->keysOnly();
     // [END keys_only_query]
     return $query;
 }
@@ -504,16 +503,16 @@ function projection_query(DatastoreClient $datastore)
  */
 function run_projection_query(DatastoreClient $datastore, Query $query)
 {
-    // [START run_projection_query]
+    // [START run_query_projection]
     $priorities = array();
     $percentCompletes = array();
     $result = $datastore->runQuery($query);
-    /* @var Google\Cloud\Datastore\Entity $task */
+    /* @var Entity $task */
     foreach ($result as $task) {
         $priorities[] = $task['priority'];
         $percentCompletes[] = $task['percent_complete'];
     }
-    // [END run_projection_query]
+    // [END run_query_projection]
     return array($priorities, $percentCompletes);
 }
 
@@ -525,14 +524,14 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
  */
 function distinct_on(DatastoreClient $datastore)
 {
-    // [START distinct_on]
+    // [START distinct_on_query]
     $query = $datastore->query()
         ->kind('Task')
         ->order('category')
         ->order('priority')
         ->projection(['category', 'priority'])
         ->distinctOn('category');
-    // [END distinct_on]
+    // [END distinct_on_query]
     return $query;
 }
 
@@ -586,35 +585,35 @@ function limit(DatastoreClient $datastore)
     return $query;
 }
 
+// [START cursor_paging]
 /**
  * Fetch a query cursor.
  *
  * @param DatastoreClient $datastore
  * @param string $pageSize
  * @param string $pageCursor
- * @return string $nextPageCursor
+ * @return array
  */
 function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
 {
-    // [START cursor_paging]
     $query = $datastore->query()
         ->kind('Task')
         ->limit($pageSize)
         ->start($pageCursor);
     $result = $datastore->runQuery($query);
     $nextPageCursor = '';
-    /* ignoreOnTheDocs */ $entities = [];
-    /* @var Google\Cloud\Datastore\Entity $entity */
+    $entities = [];
+    /* @var Entity $entity */
     foreach ($result as $entity) {
         $nextPageCursor = $entity->cursor();
-        /* ignoreOnTheDocs */ $entities[] = $entity;
+        $entities[] = $entity;
     }
-    // [END cursor_paging]
     return array(
         'nextPageCursor' => $nextPageCursor,
         'entities' => $entities
     );
 }
+// [END cursor_paging]
 
 /**
  * Create a query with inequality range filters on the same property.
@@ -627,8 +626,8 @@ function inequality_range(DatastoreClient $datastore)
     // [START inequality_range]
     $query = $datastore->query()
         ->kind('Task')
-        ->filter('created', '>', new \DateTime('1990-01-01T00:00:00z'))
-        ->filter('created', '<', new \DateTime('2000-12-31T23:59:59z'));
+        ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'))
+        ->filter('created', '<', new DateTime('2000-12-31T23:59:59z'));
     // [END inequality_range]
     return $query;
 }
@@ -645,7 +644,7 @@ function inequality_invalid(DatastoreClient $datastore)
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
-        ->filter('created', '>', new \DateTime('1990-01-01T00:00:00z'));
+        ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'));
     // [END inequality_invalid]
     return $query;
 }
@@ -664,8 +663,8 @@ function equal_and_inequality_range(DatastoreClient $datastore)
         ->kind('Task')
         ->filter('priority', '=', 4)
         ->filter('done', '=', false)
-        ->filter('created', '>', new \DateTime('1990-01-01T00:00:00z'))
-        ->filter('created', '<', new \DateTime('2000-12-31T23:59:59z'));
+        ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'))
+        ->filter('created', '<', new DateTime('2000-12-31T23:59:59z'));
     // [END equal_and_inequality_range]
     return $query;
 }
@@ -743,7 +742,7 @@ function unindexed_property_query(DatastoreClient $datastore)
  * Create an entity with two array properties.
  *
  * @param DatastoreClient $datastore
- * @return Google\Cloud\Datastore\Entity
+ * @return Entity
  */
 function exploding_properties(DatastoreClient $datastore)
 {
@@ -753,7 +752,7 @@ function exploding_properties(DatastoreClient $datastore)
         [
             'tags' => ['fun', 'programming', 'learn'],
             'collaborators' => ['alice', 'bob', 'charlie'],
-            'created' => new \DateTime(),
+            'created' => new DateTime(),
         ]
     );
     // [END exploding_properties]
@@ -849,7 +848,7 @@ function get_task_list_entities(DatastoreClient $datastore)
     $taskListKey = $datastore->key('TaskList', 'default');
     $query = $datastore->query()
         ->kind('Task')
-        ->filter('__key__', Query::OP_HAS_ANCESTOR, $taskListKey);
+        ->hasAncestor($taskListKey);
     $result = $transaction->runQuery($query);
     $taskListEntities = [];
     /* @var Entity $task */
@@ -859,4 +858,173 @@ function get_task_list_entities(DatastoreClient $datastore)
     $transaction->commit();
     // [END transactional_single_entity_group_read_only]
     return $taskListEntities;
+}
+
+/**
+ * Create and run a query with readConsistency option.
+ *
+ * @param DatastoreClient $datastore
+ * @return Generator
+ */
+function eventual_consistent_query(DatastoreClient $datastore)
+{
+    // [START eventual_consistent_query]
+    $query = $datastore->query()
+        ->kind('Task')
+        ->hasAncestor($datastore->key('TaskList', 'default'));
+    $result = $datastore->runQuery($query, ['readConsistency' => 'EVENTUAL']);
+    // [END eventual_consistent_query]
+    return $result;
+}
+
+/**
+ * Create an entity with a parent key.
+ *
+ * @param DatastoreClient $datastore
+ * @return Entity
+ */
+function entity_with_parent(DatastoreClient $datastore)
+{
+    // [START entity_with_parent]
+    $parentKey = $datastore->key('TaskList', 'default');
+    $key = $datastore->key('Task')->ancestorKey($parentKey);
+    $task = $datastore->entity(
+        $key,
+        [
+            'Category' => 'Personal',
+            'Done' => false,
+            'Priority' => 4,
+            'Description' => 'Learn Cloud Datastore'
+        ]
+    );
+    // [END entity_with_parent]
+    return $task;
+}
+
+/**
+ * Create and run a namespace query.
+ *
+ * @param DatastoreClient $datastore
+ * @param string $start a starting namespace (inclusive)
+ * @param string $end an ending namespace (exclusive)
+ * @return array<string> namespaces returned from the query.
+ */
+function namespace_run_query(DatastoreClient $datastore, $start, $end)
+{
+    // [START namespace_run_query]
+    $query = $datastore->query()
+        ->kind('__namespace__')
+        ->projection(['__key__'])
+        ->filter('__key__', '>=', $datastore->key('__namespace__', $start))
+        ->filter('__key__', '<', $datastore->key('__namespace__', $end));
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $namespaces */
+    $namespaces = [];
+    foreach ($result as $namespace) {
+        $namespaces[] = $namespace->key()->pathEnd()['name'];
+    }
+    // [END namespace_run_query]
+    return $namespaces;
+}
+
+/**
+ * Create and run a query to list all kinds in Datastore.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<string> kinds returned from the query
+ */
+function kind_run_query(DatastoreClient $datastore)
+{
+    // [START kind_run_query]
+    $query = $datastore->query()
+        ->kind('__kind__')
+        ->projection(['__key__']);
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $kinds */
+    $kinds = [];
+    foreach ($result as $kind) {
+        $kinds[] = $kind->key()->pathEnd()['name'];
+    }
+    // [END kind_run_query]
+    return $kinds;
+}
+
+/**
+ * Create and run a property query.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<string>
+ */
+function property_run_query(DatastoreClient $datastore)
+{
+    // [START property_run_query]
+    $query = $datastore->query()
+        ->kind('__property__')
+        ->projection(['__key__']);
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $properties */
+    $properties = [];
+    /* @var Entity $entity */
+    foreach ($result as $entity) {
+        $kind = $entity->key()->path()[0]['name'];
+        $propertyName = $entity->key()->path()[1]['name'];
+        $properties[] = "$kind.$propertyName";
+    }
+    // [END property_run_query]
+    return $properties;
+}
+
+/**
+ * Create and run a property query with a kind.
+ *
+ * @param DatastoreClient $datastore
+ * @return array<string => string>
+ */
+function property_by_kind_run_query(DatastoreClient $datastore)
+{
+    // [START property_by_kind_run_query]
+    $ancestorKey = $datastore->key('__kind__', 'Task');
+    $query = $datastore->query()
+        ->kind('__property__')
+        ->hasAncestor($ancestorKey);
+    $result = $datastore->runQuery($query);
+    /* @var array<string => string> $properties */
+    $properties = [];
+    /* @var Entity $entity */
+    foreach ($result as $entity) {
+        $propertyName = $entity->key()->path()[1]['name'];
+        $propertyType = $entity['property_representation'];
+        $properties[$propertyName] = $propertyType;
+    }
+    // Example values of $properties: ['description' => ['STRING']]
+    // [END property_by_kind_run_query]
+    return $properties;
+}
+
+/**
+ * Create and run a property query with property filtering.
+ *
+ * @param DatastoreClient $datastore
+ * @return array
+ */
+function property_filtering_run_query(DatastoreClient $datastore)
+{
+    // [START property_filtering_run_query]
+    $ancestorKey = $datastore->key('__kind__', 'Task');
+    $startKey = $datastore->key('__property__', 'priority')
+        ->ancestorKey($ancestorKey);
+    $query = $datastore->query()
+        ->kind('__property__')
+        ->filter('__key__', '>=', $startKey);
+    $result = $datastore->runQuery($query);
+    /* @var array<string> $properties */
+    $properties = [];
+    /* @var Entity $entity */
+    foreach ($result as $entity) {
+        $kind = $entity->key()->path()[0]['name'];
+        $propertyName = $entity->key()->path()[1]['name'];
+        $properties[] = "$kind.$propertyName";
+    }
+    // [END property_filtering_run_query]
+    return $properties;
 }

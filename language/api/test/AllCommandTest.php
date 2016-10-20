@@ -27,8 +27,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 class AllCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+
+    /* @var CommandTester $commandTester */
     private $commandTester;
-    private $expectedString;
+
+    /* @var array<string> $expectedPatterns */
+    private $expectedPatterns;
 
     public static function setUpBeforeClass()
     {
@@ -42,25 +46,25 @@ class AllCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new AllCommand());
         $this->commandTester = new CommandTester($application->get('all'));
-        $this->expectedString = <<<EOF
-language: en
-sentiment: -0.3
-sentences:
-  0: Do you know the way to San Jose?
-tokens:
-  Do: VERB
-  you: PRON
-  know: VERB
-  the: DET
-  way: NOUN
-  to: ADP
-  San: NOUN
-  Jose: NOUN
-  ?: PUNCT
-entities:
-  San Jose: http://en.wikipedia.org/wiki/San_Jose,_California
-
-EOF;
+        $this->expectedPatterns = array(
+            '/language: en/',
+            '/sentiment: -*\d.\d/',
+            '/sentences:/',
+            '/0: Do you know the way to San Jose\\?/',
+            '/tokens:/',
+            '/Do: VERB/',
+            '/you: PRON/',
+            '/know: VERB/',
+            '/the: DET/',
+            '/way: NOUN/',
+            '/to: ADP/',
+            '/San: NOUN/',
+            '/Jose: NOUN/',
+            '/\\?: PUNCT/',
+            '/entities:/',
+            '/San Jose: http:\\/\\/en.wikipedia.org\\/wiki\\/San_Jose,'
+            . '_California/',
+        );
     }
 
     public function testEverything()
@@ -74,7 +78,10 @@ EOF;
             ['interactive' => false]
         );
 
-        $this->expectOutputString($this->expectedString);
+        $output = $this->commandTester->getDisplay();
+        foreach ($this->expectedPatterns as $expectedPattern) {
+            $this->assertRegExp($expectedPattern, $output);
+        }
     }
 
     public function testEverythingFromStorageObject()
@@ -91,6 +98,9 @@ EOF;
             ['interactive' => false]
         );
 
-        $this->expectOutputString($this->expectedString);
+        $output = $this->commandTester->getDisplay();
+        foreach ($this->expectedPatterns as $expectedPattern) {
+            $this->assertRegExp($expectedPattern, $output);
+        }
     }
 }

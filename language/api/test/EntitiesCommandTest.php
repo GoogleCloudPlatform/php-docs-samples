@@ -27,6 +27,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+
+    /* @var CommandTester $commandTester */
     private $commandTester;
 
     public static function setUpBeforeClass()
@@ -53,7 +55,9 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
             ['content' =>  explode(' ', 'Do you know the way to San Jose?')],
             ['interactive' => false]
         );
-        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
+
+        $output = $this->commandTester->getDisplay();
+        $this->assertRegExp('/San Jose: http:\/\/en.wikipedia.org/', $output);
     }
 
     public function testEntitiesFromStorageObject()
@@ -69,6 +73,8 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
             ['content' =>  $gcsFile],
             ['interactive' => false]
         );
-        $this->expectOutputRegex('/San Jose: http:\/\/en.wikipedia.org/');
+
+        $output = $this->commandTester->getDisplay();
+        $this->assertRegExp('/San Jose: http:\/\/en.wikipedia.org/', $output);
     }
 }
