@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
+use Generator;
 use Google;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
@@ -329,7 +330,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
                 ->projection(['tags', 'collaborators'])
                 ->filter('collaborators', '<', 'charlie');
             $result = self::$datastore->runQuery($query);
-            $this->assertInstanceOf(\Generator::class, $result);
+            $this->assertInstanceOf(Generator::class, $result);
             $num = 0;
             /* @var Entity $e */
             foreach ($result as $e) {
@@ -612,7 +613,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $query = ancestor_query(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+        $this->assertInstanceOf(Generator::class, $result);
         $found = false;
         foreach ($result as $e) {
             $found = true;
@@ -655,14 +656,17 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $entity['prop'] = 'value';
         self::$keys[] = $key;
         self::$datastore->upsert($entity);
-        $this->runEventuallyConsistentTest(function () {
+        $this->runEventuallyConsistentTest(function () use ($key) {
             $query = keys_only_query(self::$datastore);
             $result = self::$datastore->runQuery($query);
-            $this->assertInstanceOf(\Generator::class, $result);
+            $this->assertInstanceOf(Generator::class, $result);
             $found = false;
+            /* @var Entity $e */
             foreach ($result as $e) {
                 $this->assertNull($e['prop']);
+                $this->assertEquals($key->path(), $e->key()->path());
                 $found = true;
+                break;
             }
             self::assertTrue($found);
         });
@@ -680,7 +684,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $this->runEventuallyConsistentTest(function () {
             $query = projection_query(self::$datastore);
             $result = self::$datastore->runQuery($query);
-            $this->assertInstanceOf(\Generator::class, $result);
+            $this->assertInstanceOf(Generator::class, $result);
             $found = false;
             foreach ($result as $e) {
                 $this->assertEquals(4, $e['priority']);
@@ -726,7 +730,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $this->runEventuallyConsistentTest(function () use ($key1) {
             $query = distinct_on(self::$datastore);
             $result = self::$datastore->runQuery($query);
-            $this->assertInstanceOf(\Generator::class, $result);
+            $this->assertInstanceOf(Generator::class, $result);
             $num = 0;
             /* @var Entity $e */
             foreach ($result as $e) {
@@ -752,7 +756,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         sleep(5);
         $query = array_value_inequality_range(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
+        $this->assertInstanceOf(Generator::class, $result);
         /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
@@ -765,7 +769,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $this->runEventuallyConsistentTest(function () use ($key) {
             $query = array_value_equality(self::$datastore);
             $result = self::$datastore->runQuery($query);
-            $this->assertInstanceOf(\Generator::class, $result);
+            $this->assertInstanceOf(Generator::class, $result);
             $num = 0;
             /* @var Entity $e */
             foreach ($result as $e) {
@@ -789,7 +793,7 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $this->runEventuallyConsistentTest(function () {
             $query = limit(self::$datastore);
             $result = self::$datastore->runQuery($query);
-            $this->assertInstanceOf(\Generator::class, $result);
+            $this->assertInstanceOf(Generator::class, $result);
             $num = 0;
             /* @var Entity $e */
             foreach ($result as $e) {
@@ -821,8 +825,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = inequality_range(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -840,8 +844,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = inequality_invalid(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -856,8 +860,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = equal_and_inequality_range(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -872,8 +876,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = inequality_sort(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -891,8 +895,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = inequality_sort_invalid_not_same(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -910,8 +914,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = inequality_sort_invalid_not_first(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
@@ -926,8 +930,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
     {
         $query = unindexed_property_query(self::$datastore);
         $result = self::$datastore->runQuery($query);
-        $this->assertInstanceOf(\Generator::class, $result);
-        /* @var Google\Cloud\Datastore\Entity $e */
+        $this->assertInstanceOf(Generator::class, $result);
+        /* @var Entity $e */
         foreach ($result as $e) {
             $this->fail(
                 sprintf(
