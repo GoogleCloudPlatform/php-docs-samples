@@ -27,6 +27,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 class SyntaxCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+
+    /* @var CommandTester $commandTester */
     private $commandTester;
 
     public static function setUpBeforeClass()
@@ -54,10 +56,11 @@ class SyntaxCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex('/0: Do you know the way/');
+        $output = $this->commandTester->getDisplay();
+        $this->assertRegExp('/0: Do you know the way/', $output);
     }
 
-    public function testEverythingFromStorageObject()
+    public function testSyntaxFromStorageObject()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -71,6 +74,7 @@ class SyntaxCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex('/0: Do you know the way/');
+        $output = $this->commandTester->getDisplay();
+        $this->assertRegExp('/0: Do you know the way/', $output);
     }
 }

@@ -19,11 +19,18 @@ namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\NaturalLanguage\Annotation;
 
-function print_annotation(Annotation $annotation)
+/**
+ * Convert an Annotation to a string.
+ *
+ * @param Annotation $annotation
+ * @return string
+ */
+function annotation_to_string(Annotation $annotation)
 {
+    $ret = '';
     $info = $annotation->info();
     if (isset($info['language'])) {
-        printf('language: %s' . PHP_EOL, $info['language']);
+        $ret .= sprintf('language: %s' . PHP_EOL, $info['language']);
     }
 
     if (isset($info['documentSentiment'])) {
@@ -32,35 +39,36 @@ function print_annotation(Annotation $annotation)
         if ($polarity < 0) {
             $magnitude = -$magnitude;
         }
-        printf('sentiment: %s' . PHP_EOL, $magnitude);
+        $ret .= sprintf('sentiment: %s' . PHP_EOL, $magnitude);
     }
 
     if (isset($info['sentences'])) {
-        print 'sentences:' . PHP_EOL;
+        $ret .= 'sentences:' . PHP_EOL;
         foreach ($info['sentences'] as $sentence) {
-            printf('  %s: %s' . PHP_EOL,
+            $ret .= sprintf('  %s: %s' . PHP_EOL,
                 $sentence['text']['beginOffset'],
                 $sentence['text']['content']);
         }
     }
 
     if (isset($info['tokens'])) {
-        print 'tokens:' . PHP_EOL;
+        $ret .= 'tokens:' . PHP_EOL;
         foreach ($info['tokens'] as $token) {
-            printf('  %s: %s' . PHP_EOL,
+            $ret .= sprintf('  %s: %s' . PHP_EOL,
                 $token['lemma'],
                 $token['partOfSpeech']['tag']);
         }
     }
 
     if (isset($info['entities'])) {
-        print 'entities:' . PHP_EOL;
+        $ret .= 'entities:' . PHP_EOL;
         foreach ($info['entities'] as $entity) {
-            printf('  %s', $entity['name']);
+            $ret .= sprintf('  %s', $entity['name']);
             if (isset($entity['metadata']['wikipedia_url'])) {
-                printf(': %s', $entity['metadata']['wikipedia_url']);
+                $ret .= sprintf(': %s', $entity['metadata']['wikipedia_url']);
             }
-            print PHP_EOL;
+            $ret .= PHP_EOL;
         }
     }
+    return $ret;
 }

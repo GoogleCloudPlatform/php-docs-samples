@@ -62,6 +62,6 @@ EOF
             $result = analyze_sentiment($content);
         }
 
-        print_annotation($result);
+        $output->write(annotation_to_string($result));
     }
 }
