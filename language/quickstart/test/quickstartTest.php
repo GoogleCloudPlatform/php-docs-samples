@@ -32,20 +32,26 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
+
+        ob_start();
         $sentiment = include $file;
+        $output = ob_get_clean();
 
         // Make sure it looks correct
         $this->assertTrue(is_array($sentiment));
         $this->assertArrayHasKey('polarity', $sentiment);
         $this->assertArrayHasKey('magnitude', $sentiment);
         $this->assertEquals(1, $sentiment['polarity']);
-        $this->assertEquals(.6, $sentiment['magnitude']);
+        $this->assertTrue(0.1 < $sentiment['magnitude']);
+        $this->assertTrue($sentiment['magnitude'] < 1.0);
 
-        $expectedOutput = <<<EOF
-Text: Hello, world!
-Sentiment: 1, 0.6
-EOF;
-
-        $this->expectOutputString($expectedOutput);
+        
+        $expectedPatterns = array(
+            '/Text: Hello, world!/',
+            '/Sentiment: \\d, \\d.\\d/',
+        );
+        foreach ($expectedPatterns as $pattern) {
+            $this->assertRegExp($pattern, $output);
+        }
     }
 }
