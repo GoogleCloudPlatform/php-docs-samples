@@ -1,5 +1,5 @@
 runtime: php
-env: flex
+vm: true
 
 runtime_config:
   document_root: web
