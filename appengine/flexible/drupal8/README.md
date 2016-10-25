@@ -1,13 +1,13 @@
-Drupal 8 on Managed VMs
-=======================
+Drupal 8 on App Engine Flexible
+===============================
 
 ## Overview
 
-This guide will help you deploy Drupal 8 on [App Engine Managed VMs][1]
+This guide will help you deploy Drupal 8 on [App Engine Flexible][1]
 
 ## Prerequisites
 
-Before setting up Drupal 8 on Managed VMs, you will need to complete the following:
+Before setting up Drupal 8 on App Engine Flexible, you will need to complete the following:
 
   1. Create a [Google Cloud Platform project][2]. Note your **Project ID**, as you will need it
      later.
@@ -61,7 +61,7 @@ Drupal backend.
 
 ## Copy over App Engine files
 
-For your app to deploy on App Engine Managed VMs, you will need to copy over the files in this
+For your app to deploy on App Engine Flexible, you will need to copy over the files in this
 directory:
 
 ```sh
@@ -69,15 +69,14 @@ directory:
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 cd /path/to/php-docs-samples/
 
-# copy the four files below to the root directory of your Drupal project
-cp managed_vms/drupal8/{app.yaml,php.ini,nginx-app.conf} /path/to/drupal
+# copy the two files below to the root directory of your Drupal project
+cp appengine/flexible/drupal8/{app.yaml,php.ini} /path/to/drupal
 ```
 
-The four files needed are as follows:
+The two files needed are as follows:
 
   1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
   1. [`php.ini`](php.ini) - Optional ini used to extend the runtime configuration.
-  1. [`nginx-app.conf`](nginx-app.conf) - Nginx web server configuration needed for `Drupal 8`
 
 ## Disable CSS and JS Cache
 
@@ -97,7 +96,7 @@ $ /path/to/drush config-set system.performance js.preprocess 0
 
 This will change the values `preprocess` under `css` and `js` to `false`.
 
-[1]: https://cloud.google.com/appengine/docs/managed-vms/
+[1]: https://cloud.google.com/appengine/docs/flexible/
 [2]: https://console.cloud.google.com
 [3]: https://cloud.google.com/sql/docs/getting-started
 [4]: http://docs.drush.org/en/master/install/
