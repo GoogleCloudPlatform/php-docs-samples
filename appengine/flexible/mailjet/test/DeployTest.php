@@ -19,16 +19,16 @@ namespace Google\Cloud\Samples\mailgun\test;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
     public function beforeDeploy()
     {
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        FileUtil::copyDir(__DIR__ . '/../../../flexible/mailjet', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
+
         $indexPhp = file_get_contents('index.php');
         $indexPhp = str_replace(
             'MAILJET_APIKEY',
