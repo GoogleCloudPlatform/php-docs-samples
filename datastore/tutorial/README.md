@@ -25,4 +25,4 @@ or
 1. Download the json key file of the service account.
 1. Set GOOGLE_APPLICATION_CREDENTIALS environment variable pointing to that file.
 
-Then you can run the command: `php tasks`
+Then you can run the command: `php tasks.php`
