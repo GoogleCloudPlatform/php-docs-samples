@@ -131,7 +131,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         self::execute('rm composer.*');
 
         // move the code for the sample to the new drupal installation
-        $files = ['app.yaml', 'php.ini', 'nginx-app.conf'];
+        $files = ['app.yaml', 'php.ini'];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
             $target = sprintf('%s/%s', $targetDir, $file);
