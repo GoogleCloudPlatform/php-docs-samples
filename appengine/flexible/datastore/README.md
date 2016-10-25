@@ -12,19 +12,6 @@ This sample application demonstrates how to invoke Google Cloud Datastore from
 
 - Enable the "Google Cloud Datastore API" under "APIs & auth > APIs."
 
-- edit `app.yaml` and change `YOUR_GCP_PROJECT_ID` to your App Engine project ID
-
-- For local development also follow the instructions below.
-
-  - Go to "Credentials" and create a new Service Account.
-
-  - Select "Generate new JSON key", then download a new JSON file.
-
-  - Set the following environment variables:
-
-    - `GOOGLE_APPLICATION_CREDENTIALS`: the file path to the downloaded JSON file.
-    - `GCLOUD_DATASET_ID`: Your app engine project ID
-
 ## Prerequisites
 
 - Install [`composer`](https://getcomposer.org)
@@ -46,3 +33,14 @@ This sample application demonstrates how to invoke Google Cloud Datastore from
 $ gcloud config set project YOUR_PROJECT_ID
 $ gcloud app deploy
 ```
+
+## Run Locally
+
+- Go to "Credentials" and create a new Service Account.
+
+- Select "Generate new JSON key", then download a new JSON file.
+
+- Set the following environment variables:
+
+  - `GOOGLE_APPLICATION_CREDENTIALS`: the file path to the downloaded JSON file.
+  - `GCLOUD_PROJECT`: Your project ID
