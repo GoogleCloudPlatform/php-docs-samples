@@ -91,7 +91,6 @@ Now you can use the client ID to make requests to the API:
 
     $ php endpoints.php make-request https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-secrets.json
 
-
 ## Viewing the Endpoints graphs
 
 By using Endpoints, you get access to several metrics that are displayed graphically in the Cloud Console.
