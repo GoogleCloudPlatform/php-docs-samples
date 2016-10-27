@@ -4,6 +4,8 @@
         "monolog/monolog": "^1.19",
         "symfony/console": " ~2.6.0",
         "symfony/process": "^3.0",
-        "symfony/yaml": "^3.0"
+        "symfony/yaml": "^3.0",
+        "google/cloud-tools": "<1.0",
+        "paragonie/random_compat": " ^2.0"
     }
 }
