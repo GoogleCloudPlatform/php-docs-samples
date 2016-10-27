@@ -4,8 +4,10 @@
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.2",
+        "google/cloud-tools": "<1.0",
         "monolog/monolog": "^1.19",
         "symfony/console": " ^2.7",
-        "symfony/process": "^3.0"
+        "symfony/process": "^3.0",
+        "paragonie/random_compat": " ^2.0"
     }
 }
