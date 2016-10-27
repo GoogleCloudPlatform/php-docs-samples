@@ -30,7 +30,7 @@ class cloudsqlTest extends WebTestCase
         $dsn = getenv('MYSQL_DSN');
         $username = getenv('MYSQL_USERNAME');
         $password = getenv('MYSQL_PASSWORD');
-        if (!isset($dsn, $username) || false === $password) {
+        if (empty($dsn) || empty($username) || false === $password) {
             $this->markTestSkipped('set the MYSQL_DSN, MYSQL_USER and MYSQL_PASSWORD environment variables');
         }
 
