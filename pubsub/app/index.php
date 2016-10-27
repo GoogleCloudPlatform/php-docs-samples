@@ -21,7 +21,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $app = require_once __DIR__ . '/app.php';
 
-$app['project_id'] = getenv('GOOGLE_PROJECT_ID');
+$app['project_id'] = getenv('GOOGLE_PROJECT_ID') ?: getenv('GCLOUD_PROJECT');
 $app['topic'] = 'php-example-topic';
 $app['subscription'] = 'php-example-subscription';
 $app['debug'] = true;

@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\Client;
-use GeckoPackages\MemcacheMock\MemcachedMock;
 
 class appTest extends WebTestCase
 {
@@ -33,8 +32,6 @@ class appTest extends WebTestCase
         $app['project_id'] = 'cloud-samples-tests-php';
         $app['topic'] = getenv('GOOGLE_PUBSUB_TOPIC');
         $app['subscription'] = getenv('GOOGLE_PUBSUB_SUBSCRIPTION');
-        $app['memcache'] = new MemcachedMock;
-        $app['memcache']->addServer("localhost", 11211);
 
         // this will be set by travis, but may not be set locally
         if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
