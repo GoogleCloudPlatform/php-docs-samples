@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\mailgun\test;
+namespace Google\Cloud\Samples\AppEngine\Mailgun;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
@@ -34,9 +34,9 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
         }
 
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        FileUtil::copyDir(__DIR__ . '/../../../flexible/mailgun', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
+
         $indexPhp = file_get_contents('index.php');
         $indexPhp = str_replace(
             'MAILGUN_DOMAIN',
