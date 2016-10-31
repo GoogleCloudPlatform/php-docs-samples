@@ -21,8 +21,8 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Google\Cloud\ServiceBuilder;
-use Memcached;
+use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\Datastore\DatastoreClient;
 
 $app = new Application();
 $app->register(new TwigServiceProvider());
@@ -35,21 +35,33 @@ $app->get('/', function () use ($app) {
 });
 
 $app->get('/fetch_messages', function () use ($app) {
-    $messages = $app['get_pull_messages'](true);
-    $builder = new ServiceBuilder([
-        'projectId' => $app['project_id'],
-    ]);
-    $pubsub = $builder->pubsub();
+    // get PUSH pubsub messages
+    $datastore = $app['datastore'];
+    $query = $datastore->query()->kind('PubSubPushMessage');
+    $messages = [];
+    $pushKeys = [];
+    foreach ($datastore->runQuery($query) as $pushMessage)  {
+        $pushKeys[] = $pushMessage->key();
+        $messages[] = $pushMessage['message'];
+    }
+    // delete PUSH messages
+    if ($pushKeys) {
+        $datastore->deleteBatch($pushKeys);
+    }
+
+    // get PULL pubsub messages
+    $pubsub = $app['pubsub'];
     $subscription = $pubsub->subscription($app['subscription']);
-    $ackIds = [];
-    foreach ($subscription->pull(['returnImmediately' => true]) as $message) {
-        $ackIds[] = $message['ackId'];
-        $messageData = $message['message']['data'];
-        $messages[] = base64_decode($messageData);
+    $pullMessages = [];
+    foreach ($subscription->pull(['returnImmediately' => true]) as $pullMessage) {
+        $pullMessages[] = $pullMessage;
+        $messages[] = $pullMessage->data();
     }
-    if ($ackIds) {
-        $subscription->acknowledgeBatch($ackIds);
+    // acknowledge PULL messages
+    if ($pullMessages) {
+        $subscription->acknowledgeBatch($pullMessages);
     }
+
     return new JsonResponse($messages);
 });
 
@@ -63,18 +75,19 @@ $app->post('/receive_message', function () use ($app) {
     ) {
         return new Response('', 400);
     }
-    // store the push message in memcache
-    $app['save_pull_message']($message);
+    // store the push message in datastore
+    $datastore = $app['datastore'];
+    $message = $datastore->entity('PubSubPushMessage', [
+        'message' => $message
+    ]);
+    $datastore->insert($message);
+
     return new Response();
 });
 
 $app->post('/send_message', function () use ($app) {
-    // send the pubsub message
     if ($message = $app['request']->get('message')) {
-        $builder = new ServiceBuilder([
-            'projectId' => $app['project_id'],
-        ]);
-        $pubsub = $builder->pubsub();
+        $pubsub = $app['pubsub'];
         $topic = $pubsub->topic($app['topic']);
         $response = $topic->publish(['data' => $message]);
         return new Response('', 204);
@@ -82,24 +95,16 @@ $app->post('/send_message', function () use ($app) {
     return new Response('', 400);
 });
 
-$app['get_pull_messages'] = $app->protect(function ($clearMessages = false) use ($app) {
-    if ($pullMessages = $app['memcache']->get('pull-messages')) {
-        if ($clearMessages) {
-            $app['memcache']->set('pull-messages', []);
-        }
-        return $pullMessages;
-    }
-    return [];
-});
+$app['datastore'] = function () use ($app) {
+    return new DatastoreClient([
+        'projectId' => $app['project_id'],
+    ]);
+};
 
-$app['save_pull_message'] = $app->protect(function ($message) use ($app) {
-    $messages = $app['get_pull_messages']();
-    $messages[] = $message;
-    $app['memcache']->set('pull-messages', $messages);
-});
-
-$app['memcache'] = function () {
-    return new Memcached;
+$app['pubsub'] = function() use ($app) {
+    return new PubSubClient([
+        'projectId' => $app['project_id'],
+    ]);
 };
 
 return $app;

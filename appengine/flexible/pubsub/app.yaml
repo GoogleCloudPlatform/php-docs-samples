@@ -1,5 +1,2 @@
 runtime: php
-vm: true
-
-env_variables:
-  GOOGLE_PROJECT_NAME: YOUR_PROJECT_ID
+env: flex
