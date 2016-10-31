@@ -38,6 +38,9 @@ Then, deploy the sample using `gcloud`:
 
     gcloud beta app deploy
 
+> **IMPORTANT** be sure to use the gcloud `beta` command when deploying, otherwise
+  endpoints will not take affect, and you will get a `502`.
+
 Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/
 or run the command `gcloud app browse`.
 

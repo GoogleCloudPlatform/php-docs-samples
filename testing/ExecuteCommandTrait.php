@@ -35,12 +35,9 @@ trait ExecuteCommandTrait
      * @param $cmd
      * @throws \Exception
      */
-    public static function execute($cmd, $timeout = null)
+    public static function execute($cmd, $timeout = false)
     {
-        $process = self::createProcess($cmd);
-        if ($timeout) {
-            $process->setTimeout($timeout);
-        }
+        $process = self::createProcess($cmd, $timeout);
         self::executeProcess($process);
 
         return $process->getOutput();
@@ -74,10 +71,13 @@ trait ExecuteCommandTrait
     /**
      * @return Process
      */
-    private static function createProcess($cmd)
+    private static function createProcess($cmd, $timeout = false)
     {
         $process = new Process($cmd);
         $process->setWorkingDirectory(self::$workingDirectory);
+        if (false !== $timeout) {
+            $process->setTimeout($timeout);
+        }
 
         return $process;
     }
@@ -94,5 +94,21 @@ trait ExecuteCommandTrait
                 }
             };
         }
+    }
+
+    protected static function executeWithRetry($cmd, $timeout = false, $retries = 3)
+    {
+        $process = self::createProcess($cmd, $timeout);
+        for ($i = 0; $i <= $retries; $i++) {
+            // only allow throwing exceptions on final attempt
+            $throwExceptionOnFailure = $i == $retries;
+            if (self::executeProcess($process, $throwExceptionOnFailure)) {
+                return true;
+            }
+            if (self::$logger && $i < $retries) {
+                self::$logger->debug('Retrying the command: ' . $cmd);
+            }
+        }
+        return false;
     }
 }
