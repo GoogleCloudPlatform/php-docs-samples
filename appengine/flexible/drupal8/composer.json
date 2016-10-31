@@ -4,7 +4,7 @@
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.2",
-        "google/cloud-tools": "<1.0",
+        "google/cloud-tools": "^0.5",
         "monolog/monolog": "^1.19",
         "symfony/console": " ^2.7",
         "symfony/process": "^3.0",
