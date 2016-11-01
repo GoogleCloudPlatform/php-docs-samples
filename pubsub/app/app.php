@@ -40,7 +40,7 @@ $app->get('/fetch_messages', function () use ($app) {
     $query = $datastore->query()->kind('PubSubPushMessage');
     $messages = [];
     $pushKeys = [];
-    foreach ($datastore->runQuery($query) as $pushMessage)  {
+    foreach ($datastore->runQuery($query) as $pushMessage) {
         $pushKeys[] = $pushMessage->key();
         $messages[] = $pushMessage['message'];
     }
@@ -101,7 +101,7 @@ $app['datastore'] = function () use ($app) {
     ]);
 };
 
-$app['pubsub'] = function() use ($app) {
+$app['pubsub'] = function () use ($app) {
     return new PubSubClient([
         'projectId' => $app['project_id'],
     ]);
