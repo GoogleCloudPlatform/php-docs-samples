@@ -16,7 +16,7 @@
  */
 use Silex\WebTestCase;
 
-class endpointsTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     public function createApplication()
     {
