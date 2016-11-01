@@ -17,76 +17,35 @@
 
 namespace Google\Cloud\Samples\AppEngine\Symfony;
 
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 use Monolog\Logger;
 use GuzzleHttp\Client;
 
 class DeployTest extends \PHPUnit_Framework_TestCase
 {
+    use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
 
-    private $client;
-    private static $version;
-
-    private static function getVersion()
+    public function beforeDeploy()
     {
-        if (is_null(self::$version)) {
-            $versionId = getenv('GOOGLE_VERSION_ID') ?: time();
-            self::$version = "symfony-" . $versionId;
-        }
-
-        return self::$version;
-    }
-
-    public static function getProjectId()
-    {
-        return getenv('GOOGLE_PROJECT_ID');
-    }
-
-    public static function getServiceName()
-    {
-        return getenv('GOOGLE_SERVICE_NAME');
-    }
-
-    private static function getTargetDir()
-    {
-        $tmp = sys_get_temp_dir();
-        $versionId = self::getVersion();
-        $targetDir = sprintf('%s/%s', $tmp, $versionId);
-
-        if (!file_exists($targetDir)) {
-            mkdir($targetDir);
-        }
-
-        if (!is_writable($targetDir)) {
-            throw new \Exception(sprintf('Cannot write to %s', $targetDir));
-        }
-
-        return $targetDir;
-    }
-
-    public static function setUpBeforeClass()
-    {
-        if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
-            self::markTestSkipped(
-                'To run this test, set RUN_DEPLOYMENT_TESTS env to "true".'
-            );
-        }
-
-        self::$logger = new Logger('phpunit');
-
         // verify and set environment variables
         self::verifyEnvironmentVariables();
-        $targetDir = self::getTargetDir();
-        $projectId = self::getProjectId();
-        $version = self::getVersion();
 
-        // move into the target directory
-        self::setWorkingDirectory($targetDir);
-        self::createSymfonyProject($targetDir);
-        self::addPostBuildCommands($targetDir);
-        self::deploy($projectId, $version, $targetDir);
+        // ensure logging output is displayed in phpunit
+        self::$logger = new Logger('phpunit');
+
+        // build the symfony project
+        $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
+        self::setWorkingDirectory($tmpDir);
+        self::createSymfonyProject($tmpDir);
+        self::addPostBuildCommands($tmpDir);
+
+        // set the directory in gcloud and move there
+        self::$gcloudWrapper->setDir($tmpDir);
+        chdir($tmpDir);
     }
 
     private static function verifyEnvironmentVariables()
@@ -138,12 +97,6 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             $target = sprintf('%s/%s', $targetDir, $file);
             copy($source, $target);
         }
-
-        // if a service name has been defined, add it to "app.yaml"
-        if ($service = self::getServiceName()) {
-            $appYaml = sprintf('%s/app.yaml', $targetDir);
-            file_put_contents($appYaml, "service: $service\n", FILE_APPEND);
-        }
     }
 
     private static function addPostBuildCommands($targetDir)
@@ -152,51 +105,6 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $json = json_decode($contents, true);
         $json['scripts']['post-deploy-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
         file_put_contents($targetDir . '/composer.json', json_encode($json, JSON_PRETTY_PRINT));
-    }
-
-    public static function deploy($projectId, $versionId, $targetDir)
-    {
-        for ($i = 0; $i <= 3; $i++) {
-            $process = self::createProcess(
-                "gcloud -q app deploy "
-                . "--version $versionId "
-                . "--project $projectId --no-promote -q "
-                . "$targetDir/app.yaml"
-            );
-            $process->setTimeout(60 * 30); // 30 minutes
-            if (self::executeProcess($process, false)) {
-                return;
-            }
-            self::$logger->warning('Retrying deployment');
-        }
-        self::fail('Deployment failed.');
-    }
-
-    public static function tearDownAfterClass()
-    {
-        for ($i = 0; $i <= 3; $i++) {
-            $process = self::createProcess(sprintf(
-                'gcloud -q app versions delete %s --service %s --project %s',
-                self::getVersion(),
-                self::getServiceName() ?: 'default',
-                self::getProjectId()
-            ));
-            $process->setTimeout(600); // 10 minutes
-            if (self::executeProcess($process, false)) {
-                return;
-            }
-            self::$logger->warning('Retrying to delete the version');
-        }
-    }
-
-    public function setUp()
-    {
-        $service = self::getServiceName();
-        $url = sprintf('https://%s%s-dot-%s.appspot.com/',
-            self::getVersion(),
-            $service ? "-dot-$service" : '',
-            self::getProjectId());
-        $this->client = new Client(['base_uri' => $url]);
     }
 
     public function testHomepage()
