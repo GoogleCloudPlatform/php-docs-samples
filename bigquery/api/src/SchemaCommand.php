@@ -126,7 +126,7 @@ EOF
                     return $output->writeln('<error>Task cancelled by user.</error>');
                 }
             }
-            $dataset = $bigQuery->createDataset($datasetId);
+            $dataset = create_dataset($projectId, $datasetId);
         }
 
         if ($input->getOption('delete')) {
@@ -169,8 +169,8 @@ EOF
             }
         }
         try {
-            $options = ['schema' => ['fields' => $fields]];
-            $table = $dataset->createTable($tableId, $options);
+            $schema = ['fields' => $fields];
+            create_table($projectId, $datasetId, $tableId, $schema);
         } catch (BadRequestException $e) {
             $response = $e->getServiceException()->getResponse();
             $errorJson = json_decode((string) $response->getBody(), true);
