@@ -18,9 +18,12 @@
 
 namespace Google\Cloud\Samples\Translate;
 
+// [START translate_detect_language]
 use Google\Cloud\Translate\TranslateClient;
+// [END translate_detect_language]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -29,21 +32,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DetectLanguageCommand extends Command
 {
-    public function __construct($apiKey)
-    {
-        parent::__construct();
-        $this->apiKey = $apiKey;
-    }
     protected function configure()
     {
         $this
             ->setName('detect')
             ->setDescription('Detect which language text was written in using '
                 . 'Google Cloud Translate API')
-            ->setHelp(<<<'EOF'
+            ->setHelp(<<<EOF
 The <info>%command.name%</info> command detects which language text was written in using the Google Cloud Translate API.
 
-    <info>php %command.full_name% "Your text here"</info>
+    <info>php %command.full_name% -k YOUR-API-KEY "Your text here"</info>
 
 EOF
             )
@@ -52,23 +50,36 @@ EOF
                 InputArgument::REQUIRED,
                 'The text to examine.'
             )
+            ->addOption(
+                'api-key',
+                'k',
+                InputOption::VALUE_REQUIRED,
+                'Your API key.'
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectLanguage($input->getArgument('text'), $output);
+        $this->detectLanguage(
+            $input->getOption('api-key'),
+            $input->getArgument('text')
+        );
     }
 
     // [START translate_detect_language]
-    protected function detectLanguage($text, OutputInterface $output)
+    /***
+     * @param $apiKey string Your API key.
+     * @param $text string The text for which to detect the language.
+     */
+    protected function detectLanguage($apiKey, $text)
     {
         $translate = new TranslateClient([
-            'key' => $this->apiKey,
+            'key' => $apiKey,
         ]);
         $result = $translate->detectLanguage($text);
-        $output->writeln("Language code: $result[languageCode]");
-        $output->writeln("Confidence: $result[confidence]");
+        print("Language code: $result[languageCode]\n");
+        print("Confidence: $result[confidence]\n");
     }
     // [END translate_detect_language]
 }

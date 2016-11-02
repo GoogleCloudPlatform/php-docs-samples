@@ -18,7 +18,9 @@
 
 namespace Google\Cloud\Samples\Translate;
 
+// [START translate_translate_text]
 use Google\Cloud\Translate\TranslateClient;
+// [END translate_translate_text]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,22 +32,23 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TranslateCommand extends Command
 {
-    public function __construct($apiKey)
-    {
-        parent::__construct();
-        $this->apiKey = $apiKey;
-    }
     protected function configure()
     {
         $this
             ->setName('translate')
             ->setDescription('Translate text using Google Cloud Translate API')
-            ->setHelp(<<<'EOF'
+            ->setHelp(<<<EOF
 The <info>%command.name%</info> command transcribes audio using the Google Cloud Translate API.
 
-    <info>php %command.full_name% -t ja "Hello World."</info>
+    <info>php %command.full_name% -k YOUR-API-KEY -t ja "Hello World."</info>
 
 EOF
+            )
+            ->addOption(
+                'api-key',
+                'k',
+                InputOption::VALUE_REQUIRED,
+                'Your API key.'
             )
             ->addArgument(
                 'text',
@@ -64,6 +67,7 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->translate(
+            $input->getOption('api-key'),
             $input->getArgument('text'),
             $input->getOption('target-language'),
             $output
@@ -71,16 +75,21 @@ EOF
     }
 
     // [START translate_translate_text]
-    protected function translate($text, $targetLanguage, OutputInterface $output)
+    /**
+     * @param $apiKey string Your API key.
+     * @param $text string The text to translate.
+     * @param $targetLanguage string The target language code.
+     */
+    protected function translate($apiKey, $text, $targetLanguage)
     {
         $translate = new TranslateClient([
-            'key' => $this->apiKey,
+            'key' => $apiKey
         ]);
         $result = $translate->translate($text, [
             'target' => $targetLanguage,
         ]);
-        $output->writeln("Source language: $result[source]");
-        $output->writeln("Translation: $result[text]");
+        print("Source language: $result[source]\n");
+        print("Translation: $result[text]\n");
     }
     // [END translate_translate_text]
 }

@@ -37,17 +37,18 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     public function testTranslate()
     {
         $application = new Application();
-        $application->add(new TranslateCommand($this->apiKey));
+        $application->add(new TranslateCommand());
         $commandTester = new CommandTester($application->get('translate'));
         $commandTester->execute(
             [
+                '-k' => $this->apiKey,
                 'text' => 'Hello.',
                 '-t' => 'ja',
             ],
             ['interactive' => false]
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $commandTester->getDisplay();
+        $display = $this->getActualOutput();
         $this->assertContains('Source language: en', $display);
         $this->assertContains('Translation:', $display);
     }
@@ -55,11 +56,12 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     public function testTranslateBadLanguage()
     {
         $application = new Application();
-        $application->add(new TranslateCommand($this->apiKey));
+        $application->add(new TranslateCommand());
         $commandTester = new CommandTester($application->get('translate'));
         $this->setExpectedException('Google\Cloud\Exception\BadRequestException');
         $commandTester->execute(
             [
+                '-k' => $this->apiKey,
                 'text' => 'Hello.',
                 '-t' => 'jp',
             ],
@@ -70,16 +72,17 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     public function testDetectLanguage()
     {
         $application = new Application();
-        $application->add(new DetectLanguageCommand($this->apiKey));
+        $application->add(new DetectLanguageCommand());
         $commandTester = new CommandTester($application->get('detect'));
         $commandTester->execute(
             [
+                '-k' => $this->apiKey,
                 'text' => 'Hello.',
             ],
             ['interactive' => false]
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $commandTester->getDisplay();
+        $display = $this->getActualOutput();
         $this->assertContains('Language code: en', $display);
         $this->assertContains('Confidence:', $display);
     }
@@ -87,11 +90,11 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     public function testListCodes()
     {
         $application = new Application();
-        $application->add(new ListCodesCommand($this->apiKey));
+        $application->add(new ListCodesCommand());
         $commandTester = new CommandTester($application->get('list-codes'));
-        $commandTester->execute([], ['interactive' => false]);
+        $commandTester->execute(['-k' => $this->apiKey], ['interactive' => false]);
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $commandTester->getDisplay();
+        $display = $this->getActualOutput();
         $this->assertContains("\nen\n", $display);
         $this->assertContains("\nja\n", $display);
     }
@@ -99,22 +102,28 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     public function testListLanguagesInEnglish()
     {
         $application = new Application();
-        $application->add(new ListLanguagesCommand($this->apiKey));
+        $application->add(new ListLanguagesCommand());
         $commandTester = new CommandTester($application->get('list-langs'));
-        $commandTester->execute(['-t' => 'en'], ['interactive' => false]);
+        $commandTester->execute(
+            ['-k' => $this->apiKey, '-t' => 'en'],
+            ['interactive' => false]
+        );
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $commandTester->getDisplay();
+        $display = $this->getActualOutput();
         $this->assertContains('ja: Japanese', $display);
     }
 
     public function testListLanguagesInJapanese()
     {
         $application = new Application();
-        $application->add(new ListLanguagesCommand($this->apiKey));
+        $application->add(new ListLanguagesCommand());
         $commandTester = new CommandTester($application->get('list-langs'));
-        $commandTester->execute(['-t' => 'ja'], ['interactive' => false]);
+        $commandTester->execute(
+            ['-k' => $this->apiKey, '-t' => 'ja'],
+            ['interactive' => false]
+        );
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $commandTester->getDisplay();
+        $display = $this->getActualOutput();
         $this->assertContains('en: 英語', $display);
     }
 }

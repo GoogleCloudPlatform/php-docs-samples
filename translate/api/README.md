@@ -12,10 +12,7 @@ Translate API.
 2. Click `Credentials` -> `Create Credentials` -> `API key`.  Copy the
 API key.
 
-3. Replace `YOUR-API-KEY` in `translate.php` with your api key copied
-in step 2.
-
-4. Run:
+3. Run:
 ```
 $ php translate.php 
 Console Tool

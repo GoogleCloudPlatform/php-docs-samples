@@ -18,9 +18,12 @@
 
 namespace Google\Cloud\Samples\Translate;
 
+// [START translate_list_codes]
 use Google\Cloud\Translate\TranslateClient;
+// [END translate_list_codes]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -28,40 +31,44 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListCodesCommand extends Command
 {
-    public function __construct($apiKey)
-    {
-        parent::__construct();
-        $this->apiKey = $apiKey;
-    }
     protected function configure()
     {
         $this
             ->setName('list-codes')
             ->setDescription('List all the language codes in the ' .
                 'Google Cloud Translate API')
-            ->setHelp(<<<'EOF'
+            ->setHelp(<<<EOF
 The <info>%command.name%</info> command lists all the language codes in the Google Cloud Translate API.
 
-    <info>php %command.full_name%</info>
+    <info>php %command.full_name% -k YOUR-API-KEY</info>
 
 EOF
+            )
+            ->addOption(
+                'api-key',
+                'k',
+                InputOption::VALUE_REQUIRED,
+                'Your API key.'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->listCodes($output);
+        $this->listCodes($input->getOption('api-key'));
     }
 
     // [START translate_list_codes]
-    protected function listCodes(OutputInterface $output)
+    /**
+     * @param $apiKey string Your API key.
+     */
+    protected function listCodes($apiKey)
     {
         $translate = new TranslateClient([
-            'key' => $this->apiKey,
+            'key' => $apiKey,
         ]);
         foreach ($translate->languages() as $code) {
-            $output->writeln($code);
+            print("$code\n");
         }
     }
     // [END translate_list_codes]

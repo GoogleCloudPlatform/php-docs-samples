@@ -18,7 +18,9 @@
 
 namespace Google\Cloud\Samples\Translate;
 
+// [START translate_list_language_names]
 use Google\Cloud\Translate\TranslateClient;
+// [END translate_list_language_names]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -29,23 +31,24 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListLanguagesCommand extends Command
 {
-    public function __construct($apiKey)
-    {
-        parent::__construct();
-        $this->apiKey = $apiKey;
-    }
     protected function configure()
     {
         $this
             ->setName('list-langs')
             ->setDescription('List language codes and names in the '
                 . 'Google Cloud Translate API')
-            ->setHelp(<<<'EOF'
+            ->setHelp(<<<EOF
 The <info>%command.name%</info> lists language codes and names in the Google Cloud Translate API.
 
-    <info>php %command.full_name% -t en</info>
+    <info>php %command.full_name% -k YOUR-API-KEY -t en</info>
 
 EOF
+            )
+            ->addOption(
+                'api-key',
+                'k',
+                InputOption::VALUE_REQUIRED,
+                'Your API key.'
             )
             ->addOption(
                 'target-language',
@@ -58,20 +61,28 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->listLanguage($input->getOption('target-language'), $output);
+        $this->listLanguage(
+            $input->getOption('api-key'),
+            $input->getOption('target-language')
+        );
     }
 
     // [START translate_list_language_names]
-    protected function listLanguage($targetLanguage, OutputInterface $output)
+    /**
+     * @param $apiKey string Your API key.
+     * @param $targetLanguage string Language code: Print the names of the
+     *   language in which language?
+     */
+    protected function listLanguage($apiKey, $targetLanguage)
     {
         $translate = new TranslateClient([
-            'key' => $this->apiKey,
+            'key' => $apiKey,
         ]);
         $result = $translate->localizedLanguages([
             'target' => $targetLanguage,
         ]);
         foreach ($result as $lang) {
-            $output->writeln("$lang[code]: $lang[name]");
+            print("$lang[code]: $lang[name]\n");
         }
     }
     // [END translate_list_language_names]
