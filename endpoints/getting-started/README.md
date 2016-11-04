@@ -1,6 +1,10 @@
 # Google Cloud Endpoints & PHP
 
-This sample demonstrates how to use Google Cloud Endpoints on Google App Engine Flexible Environment using PHP.
+This sample demonstrates how to use Google Cloud Endpoints using PHP.
+
+For a complete walkthrough showing how to run this sample in different
+environments, see the
+[Google Cloud Endpoints Quickstarts](https://cloud.google.com/endpoints/docs/quickstarts).
 
 This sample consists of two parts:
 
@@ -10,8 +14,6 @@ This sample consists of two parts:
 ## Running locally
 
 ### Running the backend
-
-For more info on running Flexible applications locally, see [the getting started documentation](https://cloud.google.com/php/getting-started/hello-world).
 
 Install all the dependencies:
 
@@ -29,23 +31,10 @@ With the app running locally, you can execute the simple echo client using:
 
 The `APIKEY` can be any string as the local endpoint proxy doesn't need authentication.
 
-## Deploying to Google Cloud Platform
+## Deploying to Production
 
-### Deploying to Google App Engine Flexible
-
-Follow the [Endpoints for App Engine Flexible Environment](https://cloud.google.com/endpoints/docs/quickstart-app-engine) quickstart.
-
-### Deploying to Google Container Engine
-
-Follow the [Endpoints for Container Engine](https://cloud.google.com/endpoints/docs/quickstart-container-engine) quickstart.
-
-### Deploying to Google Compute Engine
-
-Follow the [Endpoints for Compute Engine](https://cloud.google.com/endpoints/docs/quickstart-compute-engine) quickstart.
-
-### Deploying to Google Compute Engine with Docker
-
-Follow the [Endpoints for Compute Engine with Docker](https://cloud.google.com/endpoints/docs/quickstart-compute-engine-docker) quickstart.
+See the
+[Google Cloud Endpoints Quickstarts](https://cloud.google.com/endpoints/docs/quickstarts).
 
 ### Using the echo client
 
