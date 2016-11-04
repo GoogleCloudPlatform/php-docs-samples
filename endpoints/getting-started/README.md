@@ -1,4 +1,4 @@
-# Google Cloud Endpoints & App Engine Flexible Environment & PHP
+# Google Cloud Endpoints & PHP
 
 This sample demonstrates how to use Google Cloud Endpoints on Google App Engine Flexible Environment using PHP.
 
