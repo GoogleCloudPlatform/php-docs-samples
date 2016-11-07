@@ -5,12 +5,9 @@ https://cloud.google.com/translate/).
 
 ## Setup
 
-1. Visit the [Google API Console](
-https://pantheon.corp.google.com/apis/dashboard) and enable the Cloud 
-Translate API.
+1. Visit the [Google API Console](https://console.cloud.google.com/flows/enableapi?apiid=translate.googleapis.com) and enable the Cloud Translate API.
 
-2. Click `Credentials` -> `Create Credentials` -> `API key`.  Copy the
-API key.
+2. Click `Credentials` -> `Create Credentials` -> `API key`.  Copy the API key.
 
 3. Run:
 ```
