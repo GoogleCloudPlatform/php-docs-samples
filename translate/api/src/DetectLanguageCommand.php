@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-// [START translate_detect_language]
-use Google\Cloud\Translate\TranslateClient;
-// [END translate_detect_language]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -61,25 +58,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectLanguage(
-            $input->getOption('api-key'),
-            $input->getArgument('text')
-        );
+        $apiKey = $input->getOption('api-key');
+        $text = $input->getArgument('text');
+        require(__DIR__ . '/snippets/detect_language.php');
     }
-
-    // [START translate_detect_language]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $text string The text for which to detect the language.
-     */
-    protected function detectLanguage($apiKey, $text)
-    {
-        $translate = new TranslateClient([
-            'key' => $apiKey,
-        ]);
-        $result = $translate->detectLanguage($text);
-        print("Language code: $result[languageCode]\n");
-        print("Confidence: $result[confidence]\n");
-    }
-    // [END translate_detect_language]
 }

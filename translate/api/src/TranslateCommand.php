@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-// [START translate_translate_text]
-use Google\Cloud\Translate\TranslateClient;
-// [END translate_translate_text]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,30 +63,9 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->translate(
-            $input->getOption('api-key'),
-            $input->getArgument('text'),
-            $input->getOption('target-language'),
-            $output
-        );
+        $apiKey = $input->getOption('api-key');
+        $text = $input->getArgument('text');
+        $targetLanguage = $input->getOption('target-language');
+        require(__DIR__ . '/snippets/translate.php');
     }
-
-    // [START translate_translate_text]
-    /**
-     * @param $apiKey string Your API key.
-     * @param $text string The text to translate.
-     * @param $targetLanguage string The target language code.
-     */
-    protected function translate($apiKey, $text, $targetLanguage)
-    {
-        $translate = new TranslateClient([
-            'key' => $apiKey
-        ]);
-        $result = $translate->translate($text, [
-            'target' => $targetLanguage,
-        ]);
-        print("Source language: $result[source]\n");
-        print("Translation: $result[text]\n");
-    }
-    // [END translate_translate_text]
 }

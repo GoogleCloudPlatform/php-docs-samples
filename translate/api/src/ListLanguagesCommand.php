@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-// [START translate_list_language_names]
-use Google\Cloud\Translate\TranslateClient;
-// [END translate_list_language_names]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -61,29 +58,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->listLanguage(
-            $input->getOption('api-key'),
-            $input->getOption('target-language')
-        );
+        $apiKey = $input->getOption('api-key');
+        $targetLanguage = $input->getOption('target-language');
+        require(__DIR__ . '/snippets/list_languages.php');
     }
-
-    // [START translate_list_language_names]
-    /**
-     * @param $apiKey string Your API key.
-     * @param $targetLanguage string Language code: Print the names of the
-     *   language in which language?
-     */
-    protected function listLanguage($apiKey, $targetLanguage)
-    {
-        $translate = new TranslateClient([
-            'key' => $apiKey,
-        ]);
-        $result = $translate->localizedLanguages([
-            'target' => $targetLanguage,
-        ]);
-        foreach ($result as $lang) {
-            print("$lang[code]: $lang[name]\n");
-        }
-    }
-    // [END translate_list_language_names]
 }

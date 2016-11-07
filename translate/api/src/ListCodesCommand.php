@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-// [START translate_list_codes]
-use Google\Cloud\Translate\TranslateClient;
-// [END translate_list_codes]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -55,21 +52,7 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->listCodes($input->getOption('api-key'));
+        $apiKey = $input->getOption('api-key');
+        require(__DIR__ . '/snippets/list_codes.php');
     }
-
-    // [START translate_list_codes]
-    /**
-     * @param $apiKey string Your API key.
-     */
-    protected function listCodes($apiKey)
-    {
-        $translate = new TranslateClient([
-            'key' => $apiKey,
-        ]);
-        foreach ($translate->languages() as $code) {
-            print("$code\n");
-        }
-    }
-    // [END translate_list_codes]
 }
