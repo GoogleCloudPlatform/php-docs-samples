@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START face_detection]
-use Google\Cloud\Vision\VisionClient;
-// [END face_detection]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,7 +46,7 @@ EOF
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
-                'The text to examine.'
+                'The image to examine.'
             )
             ->addOption(
                 'api-key',
@@ -62,59 +59,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectFace(
-            $input->getOption('api-key'),
-            $input->getArgument('path')
-        );
+        $apiKey = $input->getOption('api-key');
+        $path = $input->getArgument('path');
+        require(__DIR__ . '/snippets/detect_face.php');
     }
-
-    // [START face_detection]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $path string The path to the image file.
-     */
-    protected function detectFace($apiKey, $path)
-    {
-        $vision = new VisionClient([
-            'key' => $apiKey,
-        ]);
-        $image = $vision->image(file_get_contents($path), ['FACE_DETECTION']);
-        $result = $vision->annotate($image);
-        foreach ($result->info()['faceAnnotations'] as $annotation) {
-            print("FACE\n");
-            if (isset($annotation['boundingPoly'])) {
-                print("  BOUNDING POLY\n");
-                foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-                    $x = isset($vertex['x']) ? $vertex['x'] : '';
-                    $y = isset($vertex['y']) ? $vertex['y'] : '';
-                    print("    x:$x\ty:$y\n");
-                }
-            }
-            print("  LANDMARKS\n");
-            foreach ($annotation['landmarks'] as $landmark) {
-                $pos = $landmark['position'];
-                print("    $landmark[type]:\tx:$pos[x]\ty:$pos[y]\tz:$pos[z]\n");
-            }
-            $scalar_features = [
-                'rollAngle',
-                'panAngle',
-                'tiltAngle',
-                'detectionConfidence',
-                'landmarkingConfidence',
-                'joyLikelihood',
-                'sorrowLikelihood',
-                'angerLikelihood',
-                'surpriseLikelihood',
-                'underExposedLikelihood',
-                'blurredLikelihood',
-                'headwearLikelihood'
-            ];
-            foreach ($scalar_features as $feature) {
-                if (isset($annotation[$feature])) {
-                    print("  $feature:\t$annotation[$feature]\n");
-                }
-            }
-        }
-    }
-    // [END face_detection]
 }

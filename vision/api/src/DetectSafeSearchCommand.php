@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START safe_search_detection]
-use Google\Cloud\Vision\VisionClient;
-// [END safe_search_detection]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,7 +46,7 @@ EOF
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
-                'The text to examine.'
+                'The image to examine.'
             )
             ->addOption(
                 'api-key',
@@ -62,33 +59,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectSafeSearch(
-            $input->getOption('api-key'),
-            $input->getArgument('path')
-        );
+        $apiKey = $input->getOption('api-key');
+        $path = $input->getArgument('path');
+        require(__DIR__ . '/snippets/detect_safe_search.php');
     }
-
-    // [START safe_search_detection]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $path string The path to the image file.
-     */
-    protected function detectSafeSearch($apiKey, $path)
-    {
-        $vision = new VisionClient([
-            'key' => $apiKey,
-        ]);
-        $image = $vision->image(file_get_contents($path),
-            ['SAFE_SEARCH_DETECTION']);
-        $result = $vision->annotate($image);
-        $annotation = $result->info()['safeSearchAnnotation'];
-        print("SAFE_SEARCH\n");
-        $scalar_features = ['adult', 'spoof', 'medical', 'violence'];
-        foreach ($scalar_features as $feature) {
-            if (isset($annotation[$feature])) {
-                print("  $feature:\t$annotation[$feature]\n");
-            }
-        }
-    }
-    // [END safe_search_detection]
 }

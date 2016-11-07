@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START text_detection]
-use Google\Cloud\Vision\VisionClient;
-// [END text_detection]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,7 +46,7 @@ EOF
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
-                'The text to examine.'
+                'The image to examine.'
             )
             ->addOption(
                 'api-key',
@@ -62,37 +59,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectText(
-            $input->getOption('api-key'),
-            $input->getArgument('path')
-        );
+        $apiKey = $input->getOption('api-key');
+        $path = $input->getArgument('path');
+        require(__DIR__ . '/snippets/detect_text.php');
     }
-
-    // [START text_detection]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $path string The path to the image file.
-     */
-    protected function detectText($apiKey, $path)
-    {
-        $vision = new VisionClient([
-            'key' => $apiKey,
-        ]);
-        $image = $vision->image(file_get_contents($path), ['TEXT_DETECTION']);
-        $result = $vision->annotate($image);
-        foreach ($result->info()['textAnnotations'] as $annotation) {
-            print("TEXT\n");
-            if (isset($annotation['locale'])) {
-                print("  locale: $annotation[locale]\n");
-            }
-            print("  description: $annotation[description]\n");
-            if (isset($annotation['boundingPoly'])) {
-                print("  BOUNDING POLY\n");
-                foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-                    print("    x:$vertex[x]\ty:$vertex[y]\n");
-                }
-            }
-        }
-    }
-    // [END text_detection]
 }

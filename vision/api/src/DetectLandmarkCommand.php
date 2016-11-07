@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START landmark_detection]
-use Google\Cloud\Vision\VisionClient;
-// [END landmark_detection]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,7 +46,7 @@ EOF
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
-                'The text to examine.'
+                'The image to examine.'
             )
             ->addOption(
                 'api-key',
@@ -62,43 +59,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectLandmark(
-            $input->getOption('api-key'),
-            $input->getArgument('path')
-        );
+        $apiKey = $input->getOption('api-key');
+        $path = $input->getArgument('path');
+        require(__DIR__ . '/snippets/detect_landmark.php');
     }
-
-    // [START landmark_detection]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $path string The path to the image file.
-     */
-    protected function detectLandmark($apiKey, $path)
-    {
-        $vision = new VisionClient([
-            'key' => $apiKey,
-        ]);
-        $image = $vision->image(file_get_contents($path), ['LANDMARK_DETECTION']);
-        $result = $vision->annotate($image);
-        foreach ($result->info()['landmarkAnnotations'] as $annotation) {
-            print("LANDMARK\n");
-            print("  mid: $annotation[mid]\n");
-            print("  description: $annotation[description]\n");
-            print("  score: $annotation[score]\n");
-            if (isset($annotation['boundingPoly'])) {
-                print("  BOUNDING POLY\n");
-                foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-                    print("    x:$vertex[x]\ty:$vertex[y]\n");
-                }
-            }
-            foreach ($annotation['locations'] as $location) {
-                if (isset($location['latLng'])) {
-                    $ll = $location['latLng'];
-                    print("  LOCATION:\tlatitude:$ll[latitude]\t" .
-                        "longitude:$ll[longitude]\n");
-                }
-            }
-        }
-    }
-    // [END landmark_detection]
 }

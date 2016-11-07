@@ -67,6 +67,22 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('extinct', $display);
     }
 
+    public function testTextCommandWithImageLackingText()
+    {
+        $application = new Application();
+        $application->add(new DetectTextCommand());
+        $commandTester = new CommandTester($application->get('text'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/faulkner.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertEquals('', $display);
+    }
+
     public function testFaceCommand()
     {
         $application = new Application();
@@ -82,6 +98,22 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $display = $this->getActualOutput();
         $this->assertContains('NOSE_TIP', $display);
         $this->assertContains('angerLikelihood:', $display);
+    }
+
+    public function testFaceCommandWithImageLackingFaces()
+    {
+        $application = new Application();
+        $application->add(new DetectFaceCommand());
+        $commandTester = new CommandTester($application->get('face'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/tower.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertEquals('', $display);
     }
 
     public function testLandmarkCommand()
@@ -100,6 +132,22 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Eiffel', $display);
     }
 
+    public function testLandmarkCommandWithImageLackingLandmarks()
+    {
+        $application = new Application();
+        $application->add(new DetectLandmarkCommand());
+        $commandTester = new CommandTester($application->get('landmark'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/faulkner.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertEquals('', $display);
+    }
+
     public function testLogoCommand()
     {
         $application = new Application();
@@ -114,6 +162,22 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
         $this->assertContains('Google', $display);
+    }
+
+    public function testLogoCommandWithImageLackingLogo()
+    {
+        $application = new Application();
+        $application->add(new DetectLogoCommand());
+        $commandTester = new CommandTester($application->get('logo'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/tower.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertEquals('', $display);
     }
 
     public function testSafeSearchCommand()

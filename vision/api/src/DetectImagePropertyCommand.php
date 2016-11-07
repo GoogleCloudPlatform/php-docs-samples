@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START image_property_detection]
-use Google\Cloud\Vision\VisionClient;
-// [END image_property_detection]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,7 +46,7 @@ EOF
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
-                'The text to examine.'
+                'The image to examine.'
             )
             ->addOption(
                 'api-key',
@@ -62,35 +59,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectImageProperty(
-            $input->getOption('api-key'),
-            $input->getArgument('path')
-        );
+        $apiKey = $input->getOption('api-key');
+        $path = $input->getArgument('path');
+        require(__DIR__ . '/snippets/detect_image_property.php');
     }
-
-    // [START image_property_detection]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $path string The path to the image file.
-     */
-    protected function detectImageProperty($apiKey, $path)
-    {
-        $vision = new VisionClient([
-            'key' => $apiKey,
-        ]);
-        $image = $vision->image(file_get_contents($path),
-            ['IMAGE_PROPERTIES']);
-        $result = $vision->annotate($image);
-        var_dump($result);
-        $annotation = $result->info()['imagePropertiesAnnotation'];
-        print("COLORS\n");
-        foreach ($annotation['dominantColors']['colors'] as $color) {
-            $rgb = $color['color'];
-            print("  COLOR\n");
-            print("  red:$rgb[red]\tgreen:$rgb[green]\tblue:$rgb[blue]\n");
-            print("  score:$color[score]\n");
-            print("  pixelFraction:$color[pixelFraction]\n");
-        }
-    }
-    // [END image_property_detection]
 }

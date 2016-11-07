@@ -18,9 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START label_detection]
-use Google\Cloud\Vision\VisionClient;
-// [END label_detection]
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,43 +46,20 @@ EOF
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
-                'The text to examine.'
+                'The image to examine.'
             )
             ->addOption(
                 'api-key',
                 'k',
                 InputOption::VALUE_REQUIRED,
                 'Your API key.'
-            )
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectLabel(
-            $input->getOption('api-key'),
-            $input->getArgument('path')
-        );
+        $apiKey = $input->getOption('api-key');
+        $path = $input->getArgument('path');
+        require(__DIR__ . '/snippets/detect_label.php');
     }
-
-    // [START label_detection]
-    /***
-     * @param $apiKey string Your API key.
-     * @param $path string The path to the image file.
-     */
-    protected function detectLabel($apiKey, $path)
-    {
-        $vision = new VisionClient([
-            'key' => $apiKey,
-        ]);
-        $image = $vision->image(file_get_contents($path), ['LABEL_DETECTION']);
-        $result = $vision->annotate($image);
-        foreach ($result->info()['labelAnnotations'] as $annotation) {
-            print("LABEL\n");
-            print("  mid: $annotation[mid]\n");
-            print("  description: $annotation[description]\n");
-            print("  score: $annotation[score]\n");
-        }
-    }
-    // [END label_detection]
 }

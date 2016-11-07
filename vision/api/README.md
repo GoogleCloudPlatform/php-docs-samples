@@ -6,7 +6,7 @@ This simple command-line application demonstrates how to invoke Google
 Vision API from PHP.
 
 ## Build and Run
-1.  **Enable APIs** - [Enable the Vision API](https://console.cloud.google.com/apis/library)
+1.  **Enable APIs** - [Enable the Vision API](https://console.cloud.google.com/flows/enableapi?apiid=vision.googleapis.com)
     and create a new project or select an existing project.
 2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click "New Credentials"
     and select "Service Account Key". Create a new service account, use the JSON key type, and
