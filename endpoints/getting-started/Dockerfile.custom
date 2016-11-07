@@ -10,6 +10,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN chmod 777 /usr/local/bin/composer
 
 COPY * /app/
+WORKDIR /app
 RUN cd /app/ && /usr/local/bin/composer install
 
-ENTRYPOINT ["/usr/bin/php", "-S", "localhost:8081"]
+CMD ["/usr/bin/php", "-S", "0.0.0.0:8081"]
