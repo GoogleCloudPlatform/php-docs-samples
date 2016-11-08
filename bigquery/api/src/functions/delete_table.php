@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START delete_table]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * @param string $projectId The Google project ID.
@@ -33,11 +33,10 @@ use Google\Cloud\ServiceBuilder;
  */
 function delete_table($projectId, $datasetId, $tableId)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
     # [START get_table]
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     # [END get_table]

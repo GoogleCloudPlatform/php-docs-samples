@@ -48,7 +48,7 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
     $builder = new ServiceBuilder([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
+    $bigQuery = $builder->bigquery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     // load the storage object

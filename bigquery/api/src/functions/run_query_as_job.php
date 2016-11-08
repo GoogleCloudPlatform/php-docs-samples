@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
 # [START query_as_job]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\ExponentialBackoff;
 
 /**
@@ -44,10 +44,9 @@ use Google\Cloud\ExponentialBackoff;
  */
 function run_query_as_job($projectId, $query, $useLegacySql)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $job = $bigQuery->runQueryAsJob(
         $query,
         ['jobConfig' => ['useLegacySql' => $useLegacySql]]);

@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START list_tables]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * @param string $projectId The Google project ID.
@@ -32,10 +32,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function list_tables($projectId, $datasetId)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $tables = $dataset->tables();
     foreach ($tables as $table) {
@@ -50,10 +49,9 @@ function list_tables($projectId, $datasetId)
  */
 function get_table($projectId, $datasetId, $tableId)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     return $dataset->table($tableId);
 }

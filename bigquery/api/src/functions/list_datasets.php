@@ -24,17 +24,16 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START list_datasets]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * @param string $projectId The Google project ID.
  */
 function list_datasets($projectId)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $datasets = $bigQuery->datasets();
     foreach ($datasets as $dataset) {
         print($dataset->id() . PHP_EOL);

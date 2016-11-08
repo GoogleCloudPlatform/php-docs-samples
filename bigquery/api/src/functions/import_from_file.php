@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\BigQuery;
 use Exception;
 use InvalidArgumentException;
 # [START import_from_file]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\ExponentialBackoff;
 
 /**
@@ -48,10 +48,9 @@ function import_from_file($projectId, $datasetId, $tableId, $source)
         throw new InvalidArgumentException('Source format unknown. Must be JSON or CSV');
     }
     // instantiate the bigquery table service
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     // create the import job

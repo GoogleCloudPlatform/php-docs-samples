@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START stream_row]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * Stream a row of data into your BigQuery table
@@ -46,10 +46,9 @@ use Google\Cloud\ServiceBuilder;
 function stream_row($projectId, $datasetId, $tableId, $data, $insertId = null)
 {
     // instantiate the bigquery table service
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
 

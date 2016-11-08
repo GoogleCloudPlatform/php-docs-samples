@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START create_dataset]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * @param string $projectId The Google project ID.
@@ -32,10 +32,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function create_dataset($projectId, $datasetId)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->createDataset($datasetId);
     return $dataset;
 }

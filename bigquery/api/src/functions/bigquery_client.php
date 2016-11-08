@@ -12,11 +12,10 @@ namespace Google\Cloud\Samples\BigQuery;
  * ```
  */
 # [START build_service]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
-$builder = new ServiceBuilder([
+$bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
-$bigQuery = $builder->bigQuery();
 # [END build_service]
 return $bigQuery;

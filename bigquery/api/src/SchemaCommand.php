@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Exception\BadRequestException;
 use InvalidArgumentException;
 use LogicException;
@@ -106,10 +106,9 @@ EOF
             throw new InvalidArgumentException('Table must in the format "dataset.table"');
         }
         list($datasetId, $tableId) = explode('.', $fullTableName);
-        $builder = new ServiceBuilder([
+        $bigQuery = new BigQueryClient([
             'projectId' => $projectId,
         ]);
-        $bigQuery = $builder->bigQuery();
         $dataset = $bigQuery->dataset($datasetId);
         $table = $dataset->table($tableId);
         if (!$dataset->exists()) {
