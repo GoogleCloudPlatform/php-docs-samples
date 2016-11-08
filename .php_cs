@@ -1,17 +1,16 @@
 <?php
 
-$finder = Symfony\CS\Finder\DefaultFinder::create()
+$finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
+    ->notPath('appengine/wordpress/src/files/flexible/wp-config.php')
+    ->notPath('appengine/wordpress/src/files/standard/wp-config.php')
 ;
 
-return Symfony\CS\Config\Config::create()
-    ->level(Symfony\CS\FixerInterface::PSR2_LEVEL)
-    ->fixers([
-        'concat_with_spaces',
-        'unused_use',
-        'trailing_spaces',
-        'indentation',
-	'-psr0'
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        'concat_with_spaces' => true,
+        'no_unused_imports' => true,
     ])
-    ->finder($finder)
+    ->setFinder($finder)
 ;
