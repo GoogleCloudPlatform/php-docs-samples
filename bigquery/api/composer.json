@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud": "0.10",
+        "google/cloud": "^0.11",
         "symfony/console": "^3.0"
     },
     "require-dev": {
@@ -13,6 +13,9 @@
         },
         "files": [
             "src/functions/browse_table.php",
+            "src/functions/copy_table.php",
+            "src/functions/create_dataset.php",
+            "src/functions/create_table.php",
             "src/functions/delete_table.php",
             "src/functions/export_table.php",
             "src/functions/import_from_file.php",
