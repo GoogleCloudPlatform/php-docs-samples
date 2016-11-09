@@ -252,6 +252,12 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         if ($createTable) {
             $this->createTempTable($this->projectId, $this->datasetId, $tableId);
         }
+        if ('sql' === substr($source, -3)) {
+            $contents = file_get_contents($source);
+            $contents = str_replace('test_table', $tableId, $contents);
+            $source = sprintf('%s/%s.sql', sys_get_temp_dir(), $tableId);
+            file_put_contents($source, $contents);
+        }
 
         // run the import
         $application = new Application();
@@ -291,6 +297,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         return [
             [__DIR__ . '/data/test_data.csv'],
             [__DIR__ . '/data/test_data.json'],
+            [__DIR__ . '/data/test_data.sql'],
             [sprintf('gs://%s/test_data.csv', $bucket)],
             [sprintf('gs://%s/test_data.json', $bucket)],
             [sprintf('gs://%s/test_data.backup_info', $bucket), false],
@@ -300,8 +307,8 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
     private function createTempTable($projectId, $datasetId, $tableId)
     {
         $schema = [
-            ['name' => 'name', 'type' => 'string', 'mode' => 'required'],
-            ['name' => 'title', 'type' => 'string', 'mode' => 'required'],
+            ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+            ['name' => 'title', 'type' => 'string', 'mode' => 'nullable'],
         ];
         $schemaJson = tempnam(sys_get_temp_dir(), 'schema-');
         file_put_contents($schemaJson, json_encode($schema));
