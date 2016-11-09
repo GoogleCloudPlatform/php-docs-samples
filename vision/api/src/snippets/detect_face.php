@@ -69,4 +69,4 @@ foreach ($result->info()['faceAnnotations'] as $annotation) {
         }
     }
 }
-    // [END face_detection]
+// [END face_detection]

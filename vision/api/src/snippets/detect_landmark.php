@@ -53,3 +53,4 @@ foreach ($result->info()['landmarkAnnotations'] as $annotation) {
         }
     }
 }
+// [END landmark_detection]
