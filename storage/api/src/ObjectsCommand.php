@@ -88,6 +88,12 @@ EOF
                 InputOption::VALUE_NONE,
                 'Delete the bucket'
             )
+            ->addOption(
+                'prefix',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'List objects matching a prefix'
+            )
         ;
     }
 
@@ -111,7 +117,11 @@ EOF
                 object_metadata($bucketName, $objectName);
             }
         } else {
-            list_objects($bucketName);
+            if ($prefix = $input->getOption('prefix')) {
+                list_objects_with_prefix($bucketName, $prefix);
+            } else {
+                list_objects($bucketName);
+            }
         }
     }
 }
