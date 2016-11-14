@@ -17,14 +17,15 @@
 
 // Install composer dependencies with "composer install"
 // @see http://getcomposer.org for more information.
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
-$app = require __DIR__ . '/../app.php';
+$app = require __DIR__ . '/app.php';
+
+// set your Mailgun domain name and API key
+$app['mailgun.domain'] = 'MAILGUN_DOMAIN';
+$app['mailgun.api_key'] = 'MAILGUN_APIKEY';
 
 // Run the app!
-// use "gcloud app deploy"
+// use "gcloud app deploy" or run "php -S localhost:8000"
 $app['debug'] = true;
-$app['mysql.dsn'] = getenv('MYSQL_DSN');
-$app['mysql.user'] = getenv('MYSQL_USER');
-$app['mysql.password'] = getenv('MYSQL_PASSWORD');
 $app->run();

@@ -16,7 +16,7 @@
  */
 use Silex\WebTestCase;
 
-class endpointsTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     public function createApplication()
     {
@@ -26,36 +26,35 @@ class endpointsTest extends WebTestCase
         $app['session.test'] = true;
         $app['debug'] = true;
 
+        $app['sendgrid.sender'] = getenv('SENDGRID_SENDER');
+        $app['sendgrid.api_key'] = getenv('SENDGRID_API_KEY');
+
+        if (empty($app['sendgrid.sender']) || empty($app['sendgrid.api_key'])) {
+            $this->markTestSkipped(
+                'set the SENDGRID_SENDER and SENDGRID_API_KEY' .
+                'environment variables'
+            );
+        }
+
+        // prevent HTML error exceptions
+        unset($app['exception_handler']);
+
         return $app;
     }
 
-    public function testEcho()
+    public function testHome()
     {
         $client = $this->createClient();
+        $client->request('GET', '/');
+        $this->assertTrue($client->getResponse()->isOk());
+    }
 
-        $message = <<<EOF
-So if you're lost and on your own
-You can never surrender
-And if your path won't lead you home
-You can never surrender
-EOF;
-
-        // create and send in JSON request
-        $crawler = $client->request(
-            'POST',
-            '/echo',
-            [],
-            [],
-            [ 'CONTENT_TYPE' => 'application/json' ],
-            json_encode([ 'message' => $message ])
-        );
-
+    public function testSimpleEmail()
+    {
+        $client = $this->createClient();
+        $client->request('POST', '/', ['recipient' => 'fake@example.com']);
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-
-        $json = json_decode((string) $response->getContent(), true);
-        $this->assertNotNull($json);
-        $this->assertArrayHasKey('message', $json);
-        $this->assertEquals($message, $json['message']);
+        $this->assertEquals('Email sent.', $response->getContent());
     }
 }

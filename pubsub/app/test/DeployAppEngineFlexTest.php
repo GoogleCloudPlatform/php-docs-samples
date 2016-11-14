@@ -18,7 +18,6 @@ namespace Google\Cloud\Samples\PubSub\test;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
-use Symfony\Component\Yaml\Yaml;
 
 class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,10 +29,6 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
         FileUtil::copyDir(__DIR__ . '/../../../appengine/flexible/pubsub', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
-        $appYaml = Yaml::parse(file_get_contents('app.yaml'));
-        $appYaml['env_variables']['GOOGLE_PROJECT_ID'] =
-            getenv('GOOGLE_PROJECT_ID');
-        file_put_contents('app.yaml', Yaml::dump($appYaml));
     }
 
     public function testIndex()

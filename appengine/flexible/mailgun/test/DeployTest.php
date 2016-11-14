@@ -14,28 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\sendgrid\test;
+namespace Google\Cloud\Samples\AppEngine\Mailgun;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
-use Symfony\Component\Yaml\Yaml;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
-    public function beforeDeploy()
+    public static function beforeDeploy()
     {
+        // set your Mailgun domain name and API key
+        $mailgunDomain = getenv('MAILGUN_DOMAIN');
+        $mailgunApiKey = getenv('MAILGUN_APIKEY');
+
+        if (empty($mailgunDomain) || empty($mailgunApiKey)) {
+            self::markTestSkipped('set the MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
+        }
+
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $appYaml = Yaml::parse(file_get_contents('app.yaml'));
-        $appYaml['env_variables']['SENDGRID_API_KEY'] =
-            getenv('SENDGRID_API_KEY');
-        $appYaml['env_variables']['SENDGRID_SENDER'] =
-            getenv('SENDGRID_SENDER');
-        file_put_contents('app.yaml', Yaml::dump($appYaml));
+        $indexPhp = file_get_contents('index.php');
+        $indexPhp = str_replace(
+            'MAILGUN_DOMAIN',
+            $mailgunDomain,
+            $indexPhp
+        );
+        $indexPhp = str_replace(
+            'MAILGUN_APIKEY',
+            $mailgunApiKey,
+            $indexPhp
+        );
+        file_put_contents('index.php', $indexPhp);
     }
 
     public function testIndex()
@@ -51,6 +64,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
         $resp = $this->client->request('POST', '/', [
             'form_params' => [
                 'recipient' => 'fake@example.com',
+                'submit' => 'simple',
             ]
         ]);
 

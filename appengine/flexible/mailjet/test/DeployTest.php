@@ -19,33 +19,25 @@ namespace Google\Cloud\Samples\mailgun\test;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
-    public static function beforeDeploy()
+    public function beforeDeploy()
     {
-        // set your Mailgun domain name and API key
-        $mailgunDomain = getenv('MAILGUN_DOMAIN');
-        $mailgunApiKey = getenv('MAILGUN_APIKEY');
-
-        if (empty($mailgunDomain) || empty($mailgunApiKey)) {
-            self::markTestSkipped('set the MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
-        }
-
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        FileUtil::copyDir(__DIR__ . '/../../../flexible/mailgun', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
+
         $indexPhp = file_get_contents('index.php');
         $indexPhp = str_replace(
-            'MAILGUN_DOMAIN',
-            $mailgunDomain,
+            'MAILJET_APIKEY',
+            getenv('MAILJET_APIKEY'),
             $indexPhp
         );
         $indexPhp = str_replace(
-            'MAILGUN_APIKEY',
-            $mailgunApiKey,
+            'MAILJET_SECRET',
+            getenv('MAILJET_SECRET'),
             $indexPhp
         );
         file_put_contents('index.php', $indexPhp);
@@ -61,10 +53,9 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
 
     public function testSendMessage()
     {
-        $resp = $this->client->request('POST', '/', [
+        $resp = $this->client->request('POST', '/send', [
             'form_params' => [
                 'recipient' => 'fake@example.com',
-                'submit' => 'simple',
             ]
         ]);
 

@@ -6,7 +6,7 @@ This sample demonstrates how to invoke PubSub from Google App Engine Flexible
 Environment.
 
 The sample code lives in [a parent pubsub directory](../../../pubsub/app).
-Only two configuration files differ: `app.yaml` and `nginx-app.conf`.
+Only one configuration file differs: `app.yaml`.
 
 ## Register your application
 
@@ -14,9 +14,9 @@ Only two configuration files differ: `app.yaml` and `nginx-app.conf`.
 
 - Edit `app.yaml`.  Replace `YOUR_PROJECT_ID` with your google project id.
 
-- Copy `app.yaml` and `nginx-app.conf` into [../../../pubsub/app](../../../pubsub/app).  Ex:
+- Copy `app.yaml` into [../../../pubsub/app](../../../pubsub/app).  Ex:
 ```sh
-~/gitrepos/php-docs-samples/appengine/flexible/pubsub$ cp -f app.yaml nginx-app.conf ../../../pubsub/app
+~/gitrepos/php-docs-samples/appengine/flexible/pubsub$ cp -f app.yaml ../../../pubsub/app
 ~/gitrepos/php-docs-samples/appengine/flexible/pubsub$ cd ../../../pubsub/app
 ~/gitrepos/php-docs-samples/pubsub$
 ```

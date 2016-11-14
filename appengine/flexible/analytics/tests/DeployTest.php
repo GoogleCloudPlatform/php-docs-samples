@@ -16,30 +16,19 @@
  */
 namespace Google\Cloud\Samples\AppEngine\Analytics;
 
-use Silex\WebTestCase;
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 
-class LocalTest extends WebTestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
-
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../app.php';
-        $app['GA_TRACKING_ID'] = getenv('GA_TRACKING_ID');
-        return $app;
-    }
+    use AppEngineDeploymentTrait;
 
     public function testIndex()
     {
         // Access the modules app top page.
-        $client = $this->client;
-        $crawler = $client->request('GET', '/');
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertEquals(1, $crawler->filter(
-            'html:contains("returned 200")')->count());
+        $resp = $this->client->get('/');
+        $this->assertEquals('200', $resp->getStatusCode(),
+            'top page status code');
+        $this->assertContains('returned 200', (string) $resp->getBody(),
+            'top page content');
     }
 }
