@@ -1,0 +1,16 @@
+FROM debian:jessie
+
+# Install PHP
+RUN apt-get update && \
+    apt-get install -y build-essential curl php5 php5-cli && \
+    apt-get clean && \
+    rm /var/lib/apt/lists/*_*
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+RUN chmod 777 /usr/local/bin/composer
+
+COPY * /app/
+WORKDIR /app
+RUN cd /app/ && /usr/local/bin/composer install
+
+CMD ["/usr/bin/php", "-S", "0.0.0.0:8081"]
