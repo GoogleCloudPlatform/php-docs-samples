@@ -35,11 +35,9 @@ function annotation_to_string(Annotation $annotation)
 
     if (isset($info['documentSentiment'])) {
         $magnitude = $info['documentSentiment']['magnitude'];
-        $polarity = $info['documentSentiment']['polarity'];
-        if ($polarity < 0) {
-            $magnitude = -$magnitude;
-        }
-        $ret .= sprintf('sentiment: %s' . PHP_EOL, $magnitude);
+        $score = $info['documentSentiment']['score'];
+        $ret .= sprintf('sentiment magnitude: %s score: %s' . PHP_EOL,
+            $magnitude, $score);
     }
 
     if (isset($info['sentences'])) {
