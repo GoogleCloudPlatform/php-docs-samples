@@ -29,7 +29,7 @@ class LocalTest extends WebTestCase
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
-        $app['google.dataset_id'] = getenv('GOOGLE_PROJECT_ID');
+        $app['google.dataset_id'] = getenv('GCLOUD_PROJECT');
         return $app;
     }
 

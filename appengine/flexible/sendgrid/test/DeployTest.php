@@ -14,33 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\mailgun\test;
+namespace Google\Cloud\Samples\sendgrid\test;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use Symfony\Component\Yaml\Yaml;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
     public function beforeDeploy()
     {
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        FileUtil::copyDir(__DIR__ . '/../../../flexible/mailjet', $tmpDir);
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
-        $indexPhp = file_get_contents('index.php');
-        $indexPhp = str_replace(
-            'MAILJET_APIKEY',
-            getenv('MAILJET_APIKEY'),
-            $indexPhp
-        );
-        $indexPhp = str_replace(
-            'MAILJET_SECRET',
-            getenv('MAILJET_SECRET'),
-            $indexPhp
-        );
-        file_put_contents('index.php', $indexPhp);
+
+        $appYaml = Yaml::parse(file_get_contents('app.yaml'));
+        $appYaml['env_variables']['SENDGRID_API_KEY'] =
+            getenv('SENDGRID_API_KEY');
+        $appYaml['env_variables']['SENDGRID_SENDER'] =
+            getenv('SENDGRID_SENDER');
+        file_put_contents('app.yaml', Yaml::dump($appYaml));
     }
 
     public function testIndex()
@@ -53,7 +48,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
 
     public function testSendMessage()
     {
-        $resp = $this->client->request('POST', '/send', [
+        $resp = $this->client->request('POST', '/', [
             'form_params' => [
                 'recipient' => 'fake@example.com',
             ]

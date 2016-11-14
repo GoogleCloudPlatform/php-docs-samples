@@ -38,6 +38,9 @@ Then, deploy the sample using `gcloud`:
 
     gcloud beta app deploy
 
+> **IMPORTANT** be sure to use the gcloud `beta` command when deploying, otherwise
+  endpoints will not take affect, and you will get a `502`.
+
 Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/
 or run the command `gcloud app browse`.
 
@@ -90,7 +93,6 @@ To use the client ID for authentication:
 Now you can use the client ID to make requests to the API:
 
     $ php endpoints.php make-request https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-secrets.json
-
 
 ## Viewing the Endpoints graphs
 
