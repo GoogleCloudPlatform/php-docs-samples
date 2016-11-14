@@ -19,7 +19,7 @@
             "src/functions/analyze_sentiment_from_file.php",
             "src/functions/analyze_syntax.php",
             "src/functions/analyze_syntax_from_file.php",
-            "src/functions/print_annotation.php"
+            "src/functions/annotation_to_string.php"
         ]
     }
 }
