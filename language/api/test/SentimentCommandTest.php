@@ -75,6 +75,6 @@ class SentimentCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        $this->assertRegExp('/sentiment: /', $output);
+        $this->assertRegExp('/sentiment/', $output);
     }
 }
