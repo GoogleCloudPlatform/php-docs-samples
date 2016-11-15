@@ -733,7 +733,7 @@ function unindexed_property_query(DatastoreClient $datastore)
     // [START unindexed_property_query]
     $query = $datastore->query()
         ->kind('Task')
-        ->filter('description', '=', 'A task description.');
+        ->filter('description',  '=', 'A task description.');
     // [END unindexed_property_query]
     return $query;
 }
