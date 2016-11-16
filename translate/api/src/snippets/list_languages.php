@@ -21,12 +21,9 @@ namespace Google\Cloud\Samples\Translate;
 // [START translate_list_language_names]
 use Google\Cloud\Translate\TranslateClient;
 
-// $apiKey = 'YOUR-API-KEY'
 // $targetLanguage = 'en'; // Print the names of the languages in which language?
 
-$translate = new TranslateClient([
-    'key' => $apiKey,
-]);
+$translate = new TranslateClient();
 $result = $translate->localizedLanguages([
     'target' => $targetLanguage,
 ]);

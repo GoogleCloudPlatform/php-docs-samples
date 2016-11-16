@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Translate;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -38,7 +37,7 @@ class DetectLanguageCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command detects which language text was written in using the Google Cloud Translate API.
 
-    <info>php %command.full_name% -k YOUR-API-KEY "Your text here"</info>
+    <info>php %command.full_name% "Your text here"</info>
 
 EOF
             )
@@ -47,18 +46,11 @@ EOF
                 InputArgument::REQUIRED,
                 'The text to examine.'
             )
-            ->addOption(
-                'api-key',
-                'k',
-                InputOption::VALUE_REQUIRED,
-                'Your API key.'
-            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
         $text = $input->getArgument('text');
         require(__DIR__ . '/snippets/detect_language.php');
     }

@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Translate;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -37,22 +36,15 @@ class ListCodesCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command lists all the language codes in the Google Cloud Translate API.
 
-    <info>php %command.full_name% -k YOUR-API-KEY</info>
+    <info>php %command.full_name%</info>
 
 EOF
-            )
-            ->addOption(
-                'api-key',
-                'k',
-                InputOption::VALUE_REQUIRED,
-                'Your API key.'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
         require(__DIR__ . '/snippets/list_codes.php');
     }
 }

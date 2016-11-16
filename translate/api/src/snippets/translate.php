@@ -21,13 +21,10 @@ namespace Google\Cloud\Samples\Translate;
 // [START translate_translate_text]
 use Google\Cloud\Translate\TranslateClient;
 
-// $apiKey = 'YOUR-API-KEY'
 // $text = 'The text to translate."
 // $targetLanguage = 'ja';  // Which language to translate to?
 
-$translate = new TranslateClient([
-    'key' => $apiKey
-]);
+$translate = new TranslateClient();
 $result = $translate->translate($text, [
     'target' => $targetLanguage,
 ]);

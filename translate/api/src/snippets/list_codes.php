@@ -19,11 +19,7 @@
 // [START translate_list_codes]
 use Google\Cloud\Translate\TranslateClient;
 
-// $apiKey = 'YOUR-API-KEY';
-
-$translate = new TranslateClient([
-    'key' => $apiKey,
-]);
+$translate = new TranslateClient();
 foreach ($translate->languages() as $code) {
     print("$code\n");
 }

@@ -37,15 +37,9 @@ class TranslateCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command transcribes audio using the Google Cloud Translate API.
 
-    <info>php %command.full_name% -k YOUR-API-KEY -t ja "Hello World."</info>
+    <info>php %command.full_name% -t ja "Hello World."</info>
 
 EOF
-            )
-            ->addOption(
-                'api-key',
-                'k',
-                InputOption::VALUE_REQUIRED,
-                'Your API key.'
             )
             ->addArgument(
                 'text',
@@ -63,7 +57,6 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
         $text = $input->getArgument('text');
         $targetLanguage = $input->getOption('target-language');
         require(__DIR__ . '/snippets/translate.php');
