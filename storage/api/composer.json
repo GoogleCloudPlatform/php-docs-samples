@@ -31,6 +31,7 @@
             "src/functions/get_object_acl_for_entity.php",
             "src/functions/list_buckets.php",
             "src/functions/list_objects.php",
+            "src/functions/list_objects_with_prefix.php",
             "src/functions/make_public.php",
             "src/functions/move_object.php",
             "src/functions/rotate_encryption_key.php",

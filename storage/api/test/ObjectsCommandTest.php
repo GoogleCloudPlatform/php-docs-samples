@@ -65,6 +65,28 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex("/Object:/");
     }
 
+    public function testListObjectsWithPrefix()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('No storage bucket name.');
+        }
+
+        ob_start();
+        $this->commandTester->execute(
+            [
+                'bucket' => $bucketName,
+                '--prefix' => 'test_data.csv'
+            ],
+            ['interactive' => false]
+        );
+        $output = ob_get_clean();
+
+        $this->assertEquals(1, substr_count($output, 'Object: '));
+    }
+
     public function testManageObject()
     {
         if (!self::$hasCredentials) {
