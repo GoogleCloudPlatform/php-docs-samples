@@ -9,7 +9,7 @@ This guide will help you deploy Laravel on [App Engine Flexible Environment][1]
 
 Before setting up Laravel on App Engine, you will need to complete the following:
 
-  1. Create a [Google Cloud Platform project][2]. Note your **Project ID**, as you will need it
+  1. Create a project in the [Google Cloud console][2]. Note your **Project ID**, as you will need it
      later.
 
 ## Install Laravel
@@ -52,8 +52,8 @@ to allow the cache and session to persist across instances.
   mysql -h 127.0.0.1 -u root -p -e "CREATE DATABASE laravel;"
   ```
 
-1. Run the database migrations for Laravel. This can be done by setting the
-  your parameters in `.env` or by passing them in as environemnt variables:
+1. Run the database migrations for Laravel. This can be done by setting your
+  parameters in `.env` or by passing them in as environemnt variables:
   ```sh
   # create a migration for the session table
   php artisan session:table
@@ -82,7 +82,7 @@ For your app to deploy on App Engine Flexible, you will need to copy over
 # clone this repo somewhere
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 
-# copy the two files below to the root directory of your Laravel project
+# copy the file below to the root directory of your Laravel project
 cp /path/to/php-docs-samples/appengine/flexible/laravel/app.yaml /path/to/laravel
 ```
 
