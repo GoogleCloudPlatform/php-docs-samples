@@ -20,7 +20,7 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
@@ -29,6 +29,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
+
         $appYaml = Yaml::parse(file_get_contents('app.yaml'));
         $appYaml['env_variables']['TWILIO_ACCOUNT_SID'] =
             getenv('TWILIO_ACCOUNT_SID');
@@ -39,7 +40,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
                 getenv('TWILIO_FROM_NUMBER') : getenv('TWILIO_NUMBER');
         file_put_contents('app.yaml', Yaml::dump($appYaml));
     }
-    
+
     public function testReceiveCall()
     {
         $response = $this->client->request('POST', '/call/receive');

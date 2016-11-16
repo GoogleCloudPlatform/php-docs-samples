@@ -48,7 +48,7 @@ class AllCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester = new CommandTester($application->get('all'));
         $this->expectedPatterns = array(
             '/language: en/',
-            '/sentiment: -*\d.\d/',
+            '/sentiment/',
             '/sentences:/',
             '/0: Do you know the way to San Jose\\?/',
             '/tokens:/',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2015 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Google\Cloud\Samples\AppEngine\Datastore;
 
-// Install composer dependencies with "composer install"
-// @see http://getcomposer.org for more information.
-require __DIR__ . '/../vendor/autoload.php';
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 
-$app = require __DIR__ . '/../app.php';
+class DeployTest extends \PHPUnit_Framework_TestCase
+{
+    use AppEngineDeploymentTrait;
 
-// Run the app!
-// use "gcloud app deploy"
-$app['debug'] = true;
-$app['google.dataset_id'] = getenv('GCLOUD_DATASET_ID');
-$app->run();
+    public function testIndex()
+    {
+        // Access the modules app top page.
+        $resp = $this->client->get('/');
+        $this->assertEquals('200', $resp->getStatusCode(),
+            'top page status code');
+
+        $this->assertContains("Last 10 visits:", (string) $resp->getBody());
+    }
+}
