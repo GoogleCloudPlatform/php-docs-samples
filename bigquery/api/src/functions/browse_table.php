@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START browse_table]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * Browse a bigquery table.
@@ -47,10 +47,9 @@ function browse_table($projectId, $datasetId, $tableId, $maxResults = 10, $start
         'maxResults' => $maxResults,
         'startIndex' => $startIndex
     ];
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     $numRows = 0;

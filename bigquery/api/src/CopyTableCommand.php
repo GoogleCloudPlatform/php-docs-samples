@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 use InvalidArgumentException;
 
 /**
@@ -80,10 +80,9 @@ EOF
         }
         $datasetId = $input->getArgument('dataset');
         $sourceTableId = $input->getArgument('source-table');
-        $builder = new ServiceBuilder([
+        $bigQuery = new BigQueryClient([
             'projectId' => $projectId,
         ]);
-        $bigQuery = $builder->bigQuery();
         $dataset = $bigQuery->dataset($datasetId);
         $sourceTable = $dataset->table($sourceTableId);
         $destinationTableId = $input->getArgument('destination-table');

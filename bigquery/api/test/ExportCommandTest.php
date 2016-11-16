@@ -18,7 +18,7 @@
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery\ExportCommand;
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -189,10 +189,9 @@ class ExportCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex('/Data exported successfully/');
 
         // verify the contents of the bucket
-        $builder = new ServiceBuilder([
+        $storage = new StorageClient([
             'projectId' => $projectId,
         ]);
-        $storage = $builder->storage();
         $object = $storage->bucket(self::$gcsBucket)->object($objectName);
         $contents = $object->downloadAsString();
         $this->assertContains('Brent Shaffer', $contents);

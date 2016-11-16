@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
 # [START copy_table]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\ExponentialBackoff;
 
 /**
@@ -36,10 +36,9 @@ use Google\Cloud\ExponentialBackoff;
  */
 function copy_table($projectId, $datasetId, $sourceTableId, $destinationTableId)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $sourceTable = $dataset->table($sourceTableId);
     $destinationTable = $dataset->table($destinationTableId);

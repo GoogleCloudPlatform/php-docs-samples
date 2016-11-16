@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START all]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * Run a BigQuery query.
@@ -43,10 +43,9 @@ use Google\Cloud\ServiceBuilder;
 function run_query($projectId, $query, $useLegacySql)
 {
     # [START build_service]
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     # [END build_service]
     # [START run_query]
     $queryResults = $bigQuery->runQuery(

@@ -227,6 +227,8 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->runEventuallyConsistentTest($testFunction);
+
+        $this->tempTableId = $tableId;
     }
 
     /**
@@ -278,6 +280,8 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->runEventuallyConsistentTest($testFunction);
+
+        $this->tempTableId = $tableId;
     }
 
     public function provideImport()
@@ -312,8 +316,6 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             'schema-json' => $schemaJson,
             '--project' => $projectId,
         ], ['interactive' => false]);
-
-        $this->tempTableId = $tableId;
     }
 
     private function deleteTempTable($projectId, $datasetId, $tableId)
@@ -329,35 +331,5 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
             '--no-confirmation' => true,
             '--project' => $projectId,
         ], ['interactive' => false]);
-    }
-
-    private function getMockServiceBuilder($table, $storage = null)
-    {
-        $dataset = $this->getMockBuilder('Google\Cloud\BigQuery\Dataset')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dataset->expects($this->once())
-            ->method('table')
-            ->will($this->returnValue($table));
-        $bigQuery = $this->getMockBuilder('Google\Cloud\BigQuery\BigQueryClient')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bigQuery->expects($this->once())
-            ->method('dataset')
-            ->will($this->returnValue($dataset));
-        $builder = $this->getMockBuilder('Google\Cloud\ServiceBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $builder->expects($this->once())
-            ->method('bigQuery')
-            ->will($this->returnValue($bigQuery));
-
-        if ($storage) {
-            $builder->expects($this->once())
-                ->method('storage')
-                ->will($this->returnValue($storage));
-        }
-
-        return $builder;
     }
 }

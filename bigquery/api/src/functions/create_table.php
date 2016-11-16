@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START create_table]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * Example:
@@ -50,10 +50,9 @@ use Google\Cloud\ServiceBuilder;
  */
 function create_table($projectId, $datasetId, $tableId, $schema)
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $options = ['schema' => $schema];
     $table = $dataset->createTable($tableId, $options);
