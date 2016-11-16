@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "52a8773db7a79b32b0dcf7f8a7234942",
+    "hash": "c784da86ce6ff73ea958f3b4049cd9ad",
+    "content-hash": "1cfe841f06a96a87237a296516626e66",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -47,7 +48,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2015-07-22T18:31:08+00:00"
+            "time": "2015-07-22 18:31:08"
         },
         {
             "name": "google/auth",
@@ -95,25 +96,25 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2016-08-02T22:00:48+00:00"
+            "time": "2016-08-02 22:00:48"
         },
         {
             "name": "google/cloud",
-            "version": "v0.11.1",
+            "version": "v0.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "7207d5b9bfb55cc732b082588f488150594141c2"
+                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/7207d5b9bfb55cc732b082588f488150594141c2",
-                "reference": "7207d5b9bfb55cc732b082588f488150594141c2",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/397f0f648b6ff3895753ac8fcea154302eda5c7f",
+                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "0.10",
-                "guzzlehttp/guzzle": "~5.2|~6.0",
+                "guzzlehttp/guzzle": "^5.3|^6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "~1",
                 "php": ">=5.5",
@@ -122,6 +123,8 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
+                "google/gax": "^0.3",
+                "google/proto-client-php": "^0.5",
                 "james-heinrich/getid3": "^1.9",
                 "league/json-guard": "^0.3",
                 "phpdocumentor/reflection": "^3.0",
@@ -179,7 +182,7 @@
                 "translate",
                 "vision"
             ],
-            "time": "2016-10-13T20:41:02+00:00"
+            "time": "2016-11-14 22:06:59"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -241,7 +244,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-10-08T15:01:37+00:00"
+            "time": "2016-10-08 15:01:37"
         },
         {
             "name": "guzzlehttp/promises",
@@ -292,7 +295,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-05-18T16:56:05+00:00"
+            "time": "2016-05-18 16:56:05"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -350,7 +353,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-06-24T23:00:38+00:00"
+            "time": "2016-06-24 23:00:38"
         },
         {
             "name": "monolog/monolog",
@@ -428,7 +431,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-07-29T03:23:52+00:00"
+            "time": "2016-07-29 03:23:52"
         },
         {
             "name": "psr/cache",
@@ -474,7 +477,7 @@
                 "psr",
                 "psr-6"
             ],
-            "time": "2016-08-06T20:24:11+00:00"
+            "time": "2016-08-06 20:24:11"
         },
         {
             "name": "psr/http-message",
@@ -524,7 +527,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
@@ -571,7 +574,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "rize/uri-template",
@@ -615,7 +618,7 @@
                 "template",
                 "uri"
             ],
-            "time": "2015-04-17T16:12:22+00:00"
+            "time": "2015-04-17 16:12:22"
         },
         {
             "name": "symfony/console",
@@ -676,7 +679,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-10-06T01:44:51+00:00"
+            "time": "2016-10-06 01:44:51"
         },
         {
             "name": "symfony/debug",
@@ -733,20 +736,20 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06T11:02:40+00:00"
+            "time": "2016-09-06 11:02:40"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "dff51f72b0706335131b00a7f49606168c582594"
+                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/dff51f72b0706335131b00a7f49606168c582594",
-                "reference": "dff51f72b0706335131b00a7f49606168c582594",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
+                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
                 "shasum": ""
             },
             "require": {
@@ -758,7 +761,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "1.3-dev"
                 }
             },
             "autoload": {
@@ -792,7 +795,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-05-18T14:26:46+00:00"
+            "time": "2016-11-14 01:06:16"
         }
     ],
     "packages-dev": [],

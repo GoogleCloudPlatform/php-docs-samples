@@ -7,12 +7,12 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Cloud\Translate\TranslateClient;
 
-# Your Translate API key
-$apiKey = 'YOUR_API_KEY';
+# Your Google Cloud Platform project ID
+$projectId = 'YOUR_PROJECT_ID';
 
 # Instantiates a client
 $translate = new TranslateClient([
-    'key' => $apiKey
+    'projectId' => $projectId
 ]);
 
 # The text to translate

@@ -19,12 +19,9 @@
 // [START translate_detect_language]
 use Google\Cloud\Translate\TranslateClient;
 
-// $apiKey = 'YOUR-API-KEY';
 // $text = 'The text whose language to detect.  This will be detected as en.';
 
-$translate = new TranslateClient([
-    'key' => $apiKey,
-]);
+$translate = new TranslateClient();
 $result = $translate->detectLanguage($text);
 print("Language code: $result[languageCode]\n");
 print("Confidence: $result[confidence]\n");

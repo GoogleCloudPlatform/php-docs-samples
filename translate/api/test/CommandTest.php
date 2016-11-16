@@ -26,14 +26,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CommandTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->apiKey = getenv('GOOGLE_API_KEY');
-        if (!$this->apiKey) {
-            $this->markTestSkipped('No api key was found.');
-        }
-    }
-
     public function testTranslate()
     {
         $application = new Application();
@@ -41,7 +33,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('translate'));
         $commandTester->execute(
             [
-                '-k' => $this->apiKey,
                 'text' => 'Hello.',
                 '-t' => 'ja',
             ],
@@ -61,7 +52,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Google\Cloud\Exception\BadRequestException');
         $commandTester->execute(
             [
-                '-k' => $this->apiKey,
                 'text' => 'Hello.',
                 '-t' => 'jp',
             ],
@@ -76,7 +66,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('detect'));
         $commandTester->execute(
             [
-                '-k' => $this->apiKey,
                 'text' => 'Hello.',
             ],
             ['interactive' => false]
@@ -92,7 +81,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new ListCodesCommand());
         $commandTester = new CommandTester($application->get('list-codes'));
-        $commandTester->execute(['-k' => $this->apiKey], ['interactive' => false]);
+        $commandTester->execute([], ['interactive' => false]);
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
         $this->assertContains("\nen\n", $display);
@@ -105,7 +94,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new ListLanguagesCommand());
         $commandTester = new CommandTester($application->get('list-langs'));
         $commandTester->execute(
-            ['-k' => $this->apiKey, '-t' => 'en'],
+            ['-t' => 'en'],
             ['interactive' => false]
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
@@ -119,7 +108,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new ListLanguagesCommand());
         $commandTester = new CommandTester($application->get('list-langs'));
         $commandTester->execute(
-            ['-k' => $this->apiKey, '-t' => 'ja'],
+            ['-t' => 'ja'],
             ['interactive' => false]
         );
         $this->assertEquals(0, $commandTester->getStatusCode());

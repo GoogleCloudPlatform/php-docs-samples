@@ -37,15 +37,9 @@ class ListLanguagesCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> lists language codes and names in the Google Cloud Translate API.
 
-    <info>php %command.full_name% -k YOUR-API-KEY -t en</info>
+    <info>php %command.full_name% -t en</info>
 
 EOF
-            )
-            ->addOption(
-                'api-key',
-                'k',
-                InputOption::VALUE_REQUIRED,
-                'Your API key.'
             )
             ->addOption(
                 'target-language',
@@ -58,7 +52,6 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
         $targetLanguage = $input->getOption('target-language');
         require(__DIR__ . '/snippets/list_languages.php');
     }
