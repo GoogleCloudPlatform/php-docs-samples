@@ -91,28 +91,32 @@ EOF
         }
         $message = sprintf('<info>Using project %s</info>', $projectId);
         $output->writeln($message);
+        $source = $input->getArgument('source');
+        $isSqlImport = 'sql' === substr((string) $source, -3);
+        $isDatastoreBackup = '.backup_info' === substr($source, -12);
         $fullTableName = $input->getArgument('dataset.table');
         if (1 !== substr_count($fullTableName, '.')) {
-            throw new InvalidArgumentException('Table must in the format "dataset.table"');
+            if (!$isSqlImport) {
+                throw new InvalidArgumentException('Table must in the format "dataset.table"');
+            }
+            list($datasetId, $tableId) = [$fullTableName, ''];
+        } else {
+            list($datasetId, $tableId) = explode('.', $fullTableName);
         }
-        list($datasetId, $tableId) = explode('.', $fullTableName);
         $bigQuery = new BigQueryClient([
             'projectId' => $projectId,
         ]);
         $dataset = $bigQuery->dataset($datasetId);
         $table = $dataset->table($tableId);
-        $source = $input->getArgument('source');
-        $isDatastoreBackup = '.backup_info' === substr($source, -12);
         if (!$dataset->exists()) {
             throw new InvalidArgumentException('The supplied dataset does not exist for this project');
         }
-        if (!$isDatastoreBackup) {
+        if (!$isDatastoreBackup && !$isSqlImport) {
             if (!$table->exists()) {
                 throw new InvalidArgumentException('The supplied table does not exist for this project. ' .
                     'Create a schema in the UI or use the "schema" command');
             }
         }
-
         if (empty($source)) {
             $info = $table->info();
             $data = $this->getRowData($info['schema']['fields'], $question, $input, $output);
@@ -128,7 +132,11 @@ EOF
             if (!(file_exists($source) && is_readable($source))) {
                 throw new InvalidArgumentException('Source file does not exist or is not readable');
             }
-            import_from_file($projectId, $datasetId, $tableId, $source);
+            if ($isSqlImport) {
+                insert_sql($projectId, $datasetId, $source);
+            } else {
+                import_from_file($projectId, $datasetId, $tableId, $source);
+            }
         }
     }
 

@@ -20,6 +20,7 @@
             "src/functions/export_table.php",
             "src/functions/import_from_file.php",
             "src/functions/import_from_storage.php",
+            "src/functions/insert_sql.php",
             "src/functions/list_datasets.php",
             "src/functions/list_projects.php",
             "src/functions/list_tables.php",
