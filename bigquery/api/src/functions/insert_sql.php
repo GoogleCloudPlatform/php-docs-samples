@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START insert_sql]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
  * @param string $projectId The Google project ID.
@@ -33,12 +33,11 @@ use Google\Cloud\ServiceBuilder;
  */
 function insert_sql($projectId, $datasetId, $source)
 {
-    // instantiate the bigquery table service
-    $builder = new ServiceBuilder([
+    // instantiate the bigquery client
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
-    // create the import job
+    // run a sync query for each line of the import
     $file = fopen($source, 'r');
     while ($line = fgets($file)) {
         if (0 !== strpos(trim($line), 'INSERT')) {
