@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-use InvalidArgumentException;
 # [START insert_sql]
 use Google\Cloud\ServiceBuilder;
 
