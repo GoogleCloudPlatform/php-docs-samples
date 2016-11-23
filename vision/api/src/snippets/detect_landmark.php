@@ -19,14 +19,18 @@
 // [START landmark_detection]
 use Google\Cloud\Vision\VisionClient;
 
+// [START get_vision_service]
 // $apiKey = 'YOUR-API-KEY';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
     'key' => $apiKey,
 ]);
+// [END get_vision_service]
+// [START construct_request]
 $image = $vision->image(file_get_contents($path), ['LANDMARK_DETECTION']);
 $result = $vision->annotate($image);
+// [END construct_request]
 if (!isset($result->info()['landmarkAnnotations'])) {
     return;
 }
