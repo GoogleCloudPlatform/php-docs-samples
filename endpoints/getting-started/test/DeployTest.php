@@ -59,9 +59,9 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $swagger = str_replace(
             ['YOUR-PROJECT-ID', 'YOUR-CLIENT-ID', 'YOUR-SERVICE-ACCOUNT-EMAIL'],
             [self::getProjectId(), $clientId, $serviceAccountEmail],
-            file_get_contents('swagger.yaml')
+            file_get_contents('openapi.yaml')
         );
-        file_put_contents($tmpDir . '/swagger.yaml', $swagger);
+        file_put_contents($tmpDir . '/openapi.yaml', $swagger);
     }
 
     /**
