@@ -61,7 +61,7 @@ The JWT client demonstrates how to use service accounts to authenticate to endpo
 
 To use the service account for authentication:
 
-1. Update the `google_jwt`'s `x-jwks_uri` in `swagger.yaml` with your service account's email address.
+1. Update the `google_jwt`'s `x-jwks_uri` in `openapi.yaml` with your service account's email address.
 2. Redeploy your application.
 
 Now you can use the JWT client to make requests to the API:
@@ -79,7 +79,7 @@ The ID Token client demonstrates how to use user credentials to authenticate to 
 
 To use the client ID for authentication:
 
-1. Update the `/auth/info/googleidtoken`'s `audiences` in `swagger.yaml` with your client ID.
+1. Update the `/auth/info/googleidtoken`'s `audiences` in `openapi.yaml` with your client ID.
 2. Redeploy your application.
 
 Now you can use the client ID to make requests to the API:
