@@ -22,6 +22,9 @@ class LocalTest extends WebTestCase
 {
     public function setUp()
     {
+        if (!getenv('GCLOUD_PROJECT')) {
+            $this->markTestSkipped('Must set GCLOUD_PROJECT');
+        }
         parent::setUp();
         $this->client = $this->createClient();
     }
