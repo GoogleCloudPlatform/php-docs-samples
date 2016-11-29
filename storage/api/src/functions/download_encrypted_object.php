@@ -32,12 +32,13 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of your Google Cloud object.
  * @param string $destination the local destination to save the encrypted file.
- * @param string $encryptionKey the encryption key.
+ * @param string $base64EncryptionKey the base64 encoded encryption key.
  *
  * @return void
  */
-function download_encrypted_object($bucketName, $objectName, $destination, $encryptionKey)
+function download_encrypted_object($bucketName, $objectName, $destination, $base64EncryptionKey)
 {
+    $encryptionKey = base64_decode($base64EncryptionKey);
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

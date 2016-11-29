@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
+use Google\Cloud\Exception\BadRequestException;
 use Google\Cloud\Samples\Storage\EncryptionCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -69,6 +70,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
             $this->markTestSkipped('No storage object name.');
         }
+        $objectName = 'encrypted_' . $objectName;
         $key = base64_encode(random_bytes(32));
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $uploadFromBasename = basename($uploadFrom);
@@ -106,5 +108,39 @@ Encrypted object $objectUrl downloaded to $downloadToBasename
 
 EOF;
         $this->expectOutputString($outputString);
+    }
+
+    public function testDownloadEncryptedFileFails()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('No storage bucket name.');
+        }
+        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
+            $this->markTestSkipped('No storage object name.');
+        }
+        $objectName = 'encrypted_' . $objectName;
+        $invalidKey = base64_encode(random_bytes(32));
+        $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
+
+        try {
+            $this->commandTester->execute(
+                [
+                    'bucket' => $bucketName,
+                    'object' => $objectName,
+                    '--key'  => $invalidKey,
+                    '--download-to' => $downloadTo,
+                ],
+                ['interactive' => false]
+            );
+            $this->fail('An exception should have been thrown');
+        } catch (BadRequestException $e) {}
+
+        $this->assertContains(
+            'CustomerEncryptionKeyIsIncorrect',
+            $e->getMessage()
+        );
     }
 }
