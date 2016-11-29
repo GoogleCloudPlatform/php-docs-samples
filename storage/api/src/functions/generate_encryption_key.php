@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Storage;
 # [START generate_encryption_key]
 
 /**
- * Generate an encryption key for Google Cloud Storage.
+ * Generate a base64 encoded encryption key for Google Cloud Storage.
  *
  * @return void
  */

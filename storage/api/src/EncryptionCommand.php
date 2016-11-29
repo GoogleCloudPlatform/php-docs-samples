@@ -71,6 +71,12 @@ EOF
                 'Supply your encryption key'
             )
             ->addOption(
+                'rotate-key',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Supply a new encryption key'
+            )
+            ->addOption(
                 'generate-key',
                 null,
                 InputOption::VALUE_NONE,
@@ -92,11 +98,16 @@ EOF
                     upload_encrypted_object($bucketName, $objectName, $source, $encryptionKey);
                 } elseif ($destination = $input->getOption('download-to')) {
                     download_encrypted_object($bucketName, $objectName, $destination, $encryptionKey);
+                } elseif ($rotateKey = $input->getOption('rotate-key')) {
+                    if (is_null($encryptionKey)) {
+                        throw new \Exception('--key is required when using --rotate-key');
+                    }
+                    rotate_encryption_key($bucketName, $objectName, $encryptionKey, $rotateKey);
                 } else {
-                    throw new \Exception('supply either --upload-from or --download-to');
+                    throw new \Exception('Supply --rotate-key, --upload-from or --download-to');
                 }
             } else {
-                throw new \Exception('Supply a bucket, object and --key OR --generate-key');
+                throw new \Exception('Supply a bucket and object OR --generate-key');
             }
         }
     }
