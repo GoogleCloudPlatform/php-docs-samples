@@ -16,6 +16,9 @@ $ composer install
 **Prerequisites**
 
 - Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
+- Set up memcache using [Redis Labs Memcache Cloud][redis labs memcache].
+- edit `app.yaml` and update the environment variables for your Memcache
+  instance.
 
 **Deploy with gcloud**
 
@@ -34,3 +37,5 @@ $ curl http://{YOUR_PROJECT_ID}.appspot.com/memcached/a -T hello.txt
 $ curl http://{YOUR_PROJECT_ID}.appspot.com/memcached/a
 hello
 ```
+
+[redis labs memcache]: https://cloud.google.com/appengine/docs/flexible/python/using-redislabs-memcache

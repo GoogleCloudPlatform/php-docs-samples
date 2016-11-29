@@ -26,9 +26,20 @@ $app = new Application();
 $app->register(new TwigServiceProvider());
 $app['twig.path'] = [ __DIR__ ];
 $app['memcached'] = function () {
-    $addr = getenv('MEMCACHE_PORT_11211_TCP_ADDR');
-    $port = (int) getenv('MEMCACHE_PORT_11211_TCP_PORT');
+    if (getenv('USE_GAE_MEMCACHE')) {
+        $addr = getenv('GAE_MEMCACHE_HOST') ?: 'localhost';
+        $port = getenv('GAE_MEMCACHE_PORT') ?: '11211';
+    } else {
+        $server = getenv('MEMCACHE_SERVER') ?: 'localhost:11211';
+        list($addr, $port) = explode(':', $server);
+    }
+    $username = getenv('MEMCACHE_USERNAME');
+    $password = getenv('MEMCACHE_PASSWORD');
     $memcached = new Memcached;
+    if ($username && $password) {
+        $memcached->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+        $memcached->setSaslAuthData($username, $password);
+    }
     if (!$memcached->addServer($addr, $port)) {
         throw new Exception("Failed to add server $addr:$port");
     }
