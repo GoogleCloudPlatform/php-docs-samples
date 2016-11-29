@@ -37,6 +37,7 @@ $app['memcached'] = function () {
     $password = getenv('MEMCACHE_PASSWORD');
     $memcached = new Memcached;
     if ($username && $password) {
+        $memcached->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
         $memcached->setSaslAuthData($username, $password);
     }
     if (!$memcached->addServer($addr, $port)) {

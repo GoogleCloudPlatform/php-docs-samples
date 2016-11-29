@@ -6,6 +6,7 @@
     "require-dev": {
         "gecko-packages/gecko-memcache-mock": "^2.0",
         "google/cloud-tools": "<=1.0",
+        "paragonie/random_compat": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
         "monolog/monolog": "^1.19",
         "phpunit/phpunit": "~4"
