@@ -23,19 +23,38 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-use Exception;
-
 # [START rotate_encryption_key]
+use Google\Cloud\Storage\StorageClient;
 
 /**
- * Rotate your encryption keys
+ * Change the encryption key used to store an existing object.
  *
- * @param string $encryptionKey the encryption key to rotate.
+ * @param string $bucketName the name of your Google Cloud bucket.
+ * @param string $objectName the name of your Google Cloud object.
+ * @param string $base64EncryptionKey the base64 encoded encryption key.
+ * @param string $newBase64EncryptionKey the new base64 encoded encryption key.
  *
  * @return void
  */
-function rotate_encryption_key($encryptionKey)
-{
-    throw new Exception('This is currently not available using the Cloud Client Library.');
+function rotate_encryption_key(
+    $bucketName,
+    $objectName,
+    $base64EncryptionKey,
+    $newBase64EncryptionKey
+) {
+    $encryptionKey = base64_decode($base64EncryptionKey);
+    $newEncryptionKey = base64_decode($newBase64EncryptionKey);
+    $storage = new StorageClient();
+    $object = $storage->bucket($bucketName)->object($objectName);
+
+    $rewrittenObject = $object->rewrite($bucketName, [
+        'encryptionKey' => $encryptionKey,
+        'encryptionKeySHA256' => hash('SHA256', $encryptionKey, true),
+        'destinationEncryptionKey' => $newEncryptionKey,
+        'destinationEncryptionKeySHA256' => hash('SHA256', $newEncryptionKey, true),
+    ]);
+
+    printf('Rotated encryption key for object gs://%s/%s' . PHP_EOL,
+        $bucketName, $objectName);
 }
 # [END rotate_encryption_key]
