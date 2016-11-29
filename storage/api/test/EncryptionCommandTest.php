@@ -199,7 +199,9 @@ EOF;
                 ['interactive' => false]
             );
             $this->fail('An exception should have been thrown');
-        } catch (BadRequestException $e) {}
+        } catch (BadRequestException $e) {
+            // Expected exception
+        }
 
         $this->assertContains(
             'CustomerEncryptionKeyIsIncorrect',
