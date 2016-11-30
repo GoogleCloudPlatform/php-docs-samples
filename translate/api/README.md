@@ -6,7 +6,7 @@ These samples show how to use the [Google Cloud Translate API](
 https://cloud.google.com/translate/).
 
 ## Build and Run
-1.  **Enable APIs** - [Enable the Translate API](https://console.cloud.google.com/flows/enableapi?apiid=translate.googleapis.com)
+1.  **Enable APIs** - [Enable the Translate API](https://console.cloud.google.com/flows/enableapi?apiid=translate)
     and create a new project or select an existing project.
 2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click "Create Credentials"
     and select "API key". Copy the API key.
