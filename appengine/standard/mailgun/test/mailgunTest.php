@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,8 @@ use Silex\WebTestCase;
 
 class mailgunTest extends WebTestCase
 {
+    private $recipient;
+
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
@@ -30,9 +32,11 @@ class mailgunTest extends WebTestCase
         // set your Mailgun domain name and API key
         $mailgunDomain = getenv('MAILGUN_DOMAIN');
         $mailgunApiKey = getenv('MAILGUN_APIKEY');
+        $this->recipient = getenv('MAILGUN_RECIPIENT');
 
-        if (empty($mailgunDomain) || empty($mailgunApiKey)) {
-            $this->markTestSkipped('set the MAILGUN_DOMAIN and MAILGUN_APIKEY environment variables');
+        if (empty($mailgunDomain) || empty($mailgunApiKey) || empty($this->recipient)) {
+            $this->markTestSkipped('set the MAILGUN_DOMAIN, MAILGUN_APIKEY ' .
+                'and MAILGUN_RECIPIENT environment variables');
         }
 
         $app['mailgun.domain'] = $mailgunDomain;
@@ -58,7 +62,7 @@ class mailgunTest extends WebTestCase
         $client = $this->createClient();
 
         $crawler = $client->request('POST', '/', [
-            'recipient' => 'fake@example.com',
+            'recipient' => $this->recipient,
             'submit' => 'simple',
         ]);
 
@@ -72,7 +76,7 @@ class mailgunTest extends WebTestCase
         $client = $this->createClient();
 
         $crawler = $client->request('POST', '/', [
-            'recipient' => 'fake@example.com',
+            'recipient' => $this->recipient,
             'submit' => 'complex',
         ]);
 

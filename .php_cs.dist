@@ -1,0 +1,15 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        'concat_space' => ['spacing' => 'one'],
+        'no_unused_imports' => true,
+    ])
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->notPath('appengine/wordpress/src/files/flexible/wp-config.php')
+            ->notPath('appengine/wordpress/src/files/standard/wp-config.php')
+            ->in(__DIR__)
+    )
+;
