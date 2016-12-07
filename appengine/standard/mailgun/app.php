@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2015 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,8 +72,8 @@ $app['send_message.complex'] = $app->protect(function (
     $recipient,
     $mailgunDomain,
     $mailgunApiKey,
-    $cc = 'cc@example.com',
-    $bcc = 'bcc@example.com'
+    $cc = '',
+    $bcc = ''
 ) {
     # [START complex_message]
     // Instantiate the client.
@@ -81,16 +81,24 @@ $app['send_message.complex'] = $app->protect(function (
     $mailgunClient = new Mailgun\Mailgun($mailgunApiKey, $httpClient);
     $fileAttachment = __DIR__ . '/attachment.txt';
 
-    // Make the call to the client.
-    $result = $mailgunClient->sendMessage($mailgunDomain, array(
+    $postData = array(
         'from' => sprintf('Example Sender <mailgun@%s>', $mailgunDomain),
         'to' => $recipient,
-        'cc' => $cc,
-        'bcc' => $bcc,
         'subject' => 'Hello',
         'text' => 'Testing some Mailgun awesomeness!',
         'html' => '<html>HTML version of the body</html>',
-    ), array(
+    );
+
+    if ($cc) {
+        $postData['cc'] = $cc;
+    }
+
+    if ($bcc) {
+        $postData['bcc'] = $bcc;
+    }
+
+    // Make the call to the client.
+    $result = $mailgunClient->sendMessage($mailgunDomain, $postData, array(
         'attachment' => array($fileAttachment, $fileAttachment),
     ));
     # [END complex_message]
