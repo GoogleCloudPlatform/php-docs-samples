@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+# [START bigquery_quickstart]
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
