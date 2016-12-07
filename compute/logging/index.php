@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+# [START logging]
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Fluent\Logger\FluentLogger;
