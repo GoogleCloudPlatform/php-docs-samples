@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud": "~1.0|~0.11",
+        "google/cloud": "^0.12",
         "symfony/console": "^3.0"
     },
     "require-dev": {

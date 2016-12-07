@@ -81,6 +81,9 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             $versionId);
         $timeout = 60 * 60; // timeout is 1 hour
         self::executeWithRetry($cmd, $timeout);
+        if ((int) $delay = getenv('GOOGLE_DEPLOYMENT_DELAY')) {
+            sleep($delay);
+        }
     }
 
     public function testEcho()
