@@ -1106,7 +1106,8 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         self::$datastore->upsertBatch([$entity1, $entity2]);
         $this->runEventuallyConsistentTest(function () {
             $properties = property_by_kind_run_query(self::$datastore);
-            $this->assertEquals(['description' => ['STRING']], $properties);
+            $this->assertArrayHasKey('description', $properties);
+            $this->assertEquals(['STRING'], $properties['description']);
         });
     }
 
