@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4b14f99e02698894298ec982ee7dbe97",
-    "content-hash": "d53fa7e58eb54583a21fe03f3bf079f0",
+    "hash": "72e37c7e2a905dfd37f8d79ea9896704",
+    "content-hash": "bf92a77afafaf99b57db5ce4d7c549d3",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1387,16 +1387,16 @@
         },
         {
             "name": "google/cloud-tools",
-            "version": "v0.6.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "26f63e7d9434e6e27ef5e018281b44e6b6d64e01"
+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/26f63e7d9434e6e27ef5e018281b44e6b6d64e01",
-                "reference": "26f63e7d9434e6e27ef5e018281b44e6b6d64e01",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
                 "shasum": ""
             },
             "require": {
@@ -1433,7 +1433,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2016-11-29 22:26:00"
+            "time": "2016-12-08 21:36:15"
         },
         {
             "name": "myclabs/deep-copy",
