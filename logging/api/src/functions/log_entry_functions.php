@@ -32,13 +32,15 @@ use Google\Cloud\Logging\LoggingClient;
 function write_log($projectId, $loggerName, $message)
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
-    $logger = $logging->logger($loggerName);
-    $entry = $logger->entry($message, [
-        'type' => 'gcs_bucket',
-        'labels' => [
-            'bucket_name' => 'my_bucket'
+    $logger = $logging->logger($loggerName, [
+        'resource' => [
+            'type' => 'gcs_bucket',
+            'labels' => [
+                'bucket_name' => 'my_bucket'
+            ]
         ]
     ]);
+    $entry = $logger->entry($message);
     $logger->write($entry);
 }
 // [END write_log]
