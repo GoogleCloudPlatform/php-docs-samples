@@ -42,16 +42,12 @@ function rotate_encryption_key(
     $base64EncryptionKey,
     $newBase64EncryptionKey
 ) {
-    $encryptionKey = base64_decode($base64EncryptionKey);
-    $newEncryptionKey = base64_decode($newBase64EncryptionKey);
     $storage = new StorageClient();
     $object = $storage->bucket($bucketName)->object($objectName);
 
     $rewrittenObject = $object->rewrite($bucketName, [
-        'encryptionKey' => $encryptionKey,
-        'encryptionKeySHA256' => hash('SHA256', $encryptionKey, true),
-        'destinationEncryptionKey' => $newEncryptionKey,
-        'destinationEncryptionKeySHA256' => hash('SHA256', $newEncryptionKey, true),
+        'encryptionKey' => $base64EncryptionKey,
+        'destinationEncryptionKey' => $newBase64EncryptionKey,
     ]);
 
     printf('Rotated encryption key for object gs://%s/%s' . PHP_EOL,
