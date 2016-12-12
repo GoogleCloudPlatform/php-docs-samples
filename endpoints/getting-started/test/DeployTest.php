@@ -64,28 +64,6 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         file_put_contents($tmpDir . '/openapi.yaml', $swagger);
     }
 
-    /**
-     * Override the "deployApp" method in the trait so that we can
-     * use "gcloud beta app deploy" instead of "gcloud app deploy"
-     *
-     * @beforeClass
-     */
-    public static function deployApp()
-    {
-        $projectId = self::getProjectId();
-        $versionId = self::getVersionId();
-        self::$gcloudWrapper = new GcloudWrapper($projectId, $versionId);
-        self::beforeDeploy();
-        $cmd = sprintf('gcloud -q beta app deploy --project %s --version %s --no-promote',
-            $projectId,
-            $versionId);
-        $timeout = 60 * 60; // timeout is 1 hour
-        self::executeWithRetry($cmd, $timeout);
-        if ((int) $delay = getenv('GOOGLE_DEPLOYMENT_DELAY')) {
-            sleep($delay);
-        }
-    }
-
     public function testEcho()
     {
         $apiKey = getenv('GOOGLE_ENDPOINTS_APIKEY');
