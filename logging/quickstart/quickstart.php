@@ -40,9 +40,7 @@ $logger = $logging->logger($logName);
 $text = 'Hello, world!';
 
 # Creates the log entry
-$entry = $logger->entry($text, [
-    'type' => 'global'
-]);
+$entry = $logger->entry($text);
 
 # Writes the log entry
 $logger->write($entry);

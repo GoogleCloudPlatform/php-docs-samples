@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f75b529e9f42e9c698da7cbb22ae4f13",
-    "content-hash": "4c7836060be1fc699affa599c19eb06d",
+    "hash": "0011304e86c01566c47aa80707e9a648",
+    "content-hash": "21ec1e5bf9215dc8f9015d064fe4ade2",
     "packages": [
         {
             "name": "firebase/php-jwt",
-            "version": "v3.0.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1"
+                "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
-                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
+                "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
                 "shasum": ""
             },
             "require": {
@@ -48,24 +48,24 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2015-07-22 18:31:08"
+            "time": "2016-07-18 04:51:16"
         },
         {
             "name": "google/auth",
-            "version": "v0.10",
+            "version": "v0.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-auth-library-php.git",
-                "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8"
+                "reference": "a240674b08a09949fd5597f7590b3ed83663a12d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/760e3fbe4064c0525c22e27e5374eada3c103da8",
-                "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8",
+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/a240674b08a09949fd5597f7590b3ed83663a12d",
+                "reference": "a240674b08a09949fd5597f7590b3ed83663a12d",
                 "shasum": ""
             },
             "require": {
-                "firebase/php-jwt": "~2.0|~3.0",
+                "firebase/php-jwt": "~2.0|~3.0|~4.0",
                 "guzzlehttp/guzzle": "~5.3|~6.0",
                 "guzzlehttp/psr7": "~1.2",
                 "php": ">=5.4",
@@ -96,25 +96,25 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2016-08-02 22:00:48"
+            "time": "2016-11-02 14:59:14"
         },
         {
             "name": "google/cloud",
-            "version": "v0.10.0",
+            "version": "v0.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "ad867d788e855b3423fb8866b15ea23fbe844cbe"
+                "reference": "0a22f803246e64f398220df9abeb818f9183907f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/ad867d788e855b3423fb8866b15ea23fbe844cbe",
-                "reference": "ad867d788e855b3423fb8866b15ea23fbe844cbe",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/0a22f803246e64f398220df9abeb818f9183907f",
+                "reference": "0a22f803246e64f398220df9abeb818f9183907f",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "0.10",
-                "guzzlehttp/guzzle": "~5.2|~6.0",
+                "google/auth": "^0.11",
+                "guzzlehttp/guzzle": "^5.3|^6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "~1",
                 "php": ">=5.5",
@@ -123,6 +123,8 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
+                "google/gax": "^0.5",
+                "google/proto-client-php": "^0.6",
                 "james-heinrich/getid3": "^1.9",
                 "league/json-guard": "^0.3",
                 "phpdocumentor/reflection": "^3.0",
@@ -180,7 +182,7 @@
                 "translate",
                 "vision"
             ],
-            "time": "2016-10-05 15:18:51"
+            "time": "2016-12-08 23:50:49"
         },
         {
             "name": "guzzlehttp/guzzle",

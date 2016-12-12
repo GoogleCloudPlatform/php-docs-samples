@@ -6,7 +6,7 @@
         "symfony/css-selector": "^3.1"
     },
     "require-dev": {
-        "google/cloud-tools": "<=1.0",
+        "google/cloud-tools": "^0.6",
         "phpunit/phpunit": "~4"
     }
 }

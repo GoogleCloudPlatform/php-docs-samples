@@ -39,8 +39,7 @@ function pull_messages($projectId, $subscriptionName)
     ]);
     $subscription = $pubsub->subscription($subscriptionName);
     foreach ($subscription->pull() as $message) {
-        $messageData = $message['message']['data'];
-        printf('Message: %s' . PHP_EOL, base64_decode($messageData));
+        printf('Message: %s' . PHP_EOL, $message->data());
     }
 }
 # [END pull_message]

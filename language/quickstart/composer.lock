@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6a0691b683923964d4b454cc3f2bf786",
-    "content-hash": "f63d4801f3d59f30b520a74b9b4b5e5a",
+    "hash": "0011304e86c01566c47aa80707e9a648",
+    "content-hash": "21ec1e5bf9215dc8f9015d064fe4ade2",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -100,16 +100,16 @@
         },
         {
             "name": "google/cloud",
-            "version": "v0.13.2",
+            "version": "v0.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "d260ab913f5d3e1a7320ad7f71ddb5731e22f00e"
+                "reference": "0a22f803246e64f398220df9abeb818f9183907f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/d260ab913f5d3e1a7320ad7f71ddb5731e22f00e",
-                "reference": "d260ab913f5d3e1a7320ad7f71ddb5731e22f00e",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/0a22f803246e64f398220df9abeb818f9183907f",
+                "reference": "0a22f803246e64f398220df9abeb818f9183907f",
                 "shasum": ""
             },
             "require": {
@@ -123,7 +123,7 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
-                "google/gax": "^0.4",
+                "google/gax": "^0.5",
                 "google/proto-client-php": "^0.6",
                 "james-heinrich/getid3": "^1.9",
                 "league/json-guard": "^0.3",
@@ -182,7 +182,7 @@
                 "translate",
                 "vision"
             ],
-            "time": "2016-11-28 23:08:14"
+            "time": "2016-12-08 23:50:49"
         },
         {
             "name": "guzzlehttp/guzzle",

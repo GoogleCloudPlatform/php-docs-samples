@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b4337bf6de30d7d20dd74d2bb8663eed",
-    "content-hash": "2e89db4409067f22efadd1ce9eb6ceec",
+    "hash": "1ee6d29e0f73dca4c1b49498af51e79b",
+    "content-hash": "f4787618c943c64288b96139a3e659b8",
     "packages": [
         {
             "name": "consolidation/annotated-command",
@@ -1203,16 +1203,16 @@
         },
         {
             "name": "google/cloud-tools",
-            "version": "v0.5.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "79317583835061e4f4bf981376be84c41a4f4534"
+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/79317583835061e4f4bf981376be84c41a4f4534",
-                "reference": "79317583835061e4f4bf981376be84c41a4f4534",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
                 "shasum": ""
             },
             "require": {
@@ -1249,7 +1249,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2016-10-07 22:03:44"
+            "time": "2016-12-08 21:36:15"
         },
         {
             "name": "guzzlehttp/guzzle",

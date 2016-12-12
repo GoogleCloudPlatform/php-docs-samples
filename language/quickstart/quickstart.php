@@ -38,6 +38,6 @@ $annotation = $language->analyzeSentiment($text);
 $sentiment = $annotation->sentiment();
 
 echo 'Text: ' . $text . '
-Sentiment: ' . $sentiment['polarity'] . ', ' . $sentiment['magnitude'];
+Sentiment: ' . $sentiment['score'] . ', ' . $sentiment['magnitude'];
 # [END language_quickstart]
 return $sentiment;

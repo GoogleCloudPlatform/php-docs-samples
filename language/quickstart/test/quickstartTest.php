@@ -39,16 +39,18 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 
         // Make sure it looks correct
         $this->assertTrue(is_array($sentiment));
-        $this->assertArrayHasKey('polarity', $sentiment);
+        $this->assertArrayHasKey('score', $sentiment);
         $this->assertArrayHasKey('magnitude', $sentiment);
-        $this->assertEquals(1, $sentiment['polarity']);
+        $this->assertInternalType('double', $sentiment['score']);
+        $this->assertTrue(0.1 < $sentiment['score']);
+        $this->assertTrue($sentiment['score'] < 1.0);
         $this->assertTrue(0.1 < $sentiment['magnitude']);
         $this->assertTrue($sentiment['magnitude'] < 1.0);
 
         
         $expectedPatterns = array(
             '/Text: Hello, world!/',
-            '/Sentiment: \\d, \\d.\\d/',
+            '/Sentiment: \\d.\\d+, \\d.\\d+/',
         );
         foreach ($expectedPatterns as $pattern) {
             $this->assertRegExp($pattern, $output);
