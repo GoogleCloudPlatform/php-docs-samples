@@ -28,6 +28,7 @@ $app['twilio'] = function ($app) {
     );
 };
 
+# [START receive_call]
 /***
  * Answers a call and replies with a simple greeting.
  */
@@ -40,8 +41,10 @@ $app->post('/call/receive', function () use ($app) {
         ['Content-Type' => 'application/xml']
     );
 });
+# [END receive_call]
 
 
+# [START send_sms]
 /***
  * Send an sms.
  */
@@ -56,7 +59,9 @@ $app->post('/sms/send', function (Request $request) use ($app) {
 
     return sprintf('Message ID: %s, Message Body: %s', $sms->sid, $sms->body);
 });
+# [END send_sms]
 
+# [START receive_sms]
 /***
  * Receive an sms.
  */
@@ -73,5 +78,6 @@ $app->post('/sms/receive', function (Request $request) use ($app) {
         ['Content-Type' => 'application/xml']
     );
 });
+# [END receive_sms]
 
 return $app;
