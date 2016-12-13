@@ -25,6 +25,9 @@ class LocalTest extends WebTestCase
         if (!getenv('GCLOUD_PROJECT')) {
             $this->markTestSkipped('Must set GCLOUD_PROJECT');
         }
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            $this->markTestSkipped('Must set GOOGLE_APPLICATION_CREDENTIALS');
+        }
         parent::setUp();
         $this->client = $this->createClient();
     }
