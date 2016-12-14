@@ -1,8 +1,12 @@
 runtime: php
 env: flex
 
-beta_settings:
-  # Enable Google Cloud Endpoints API management.
-  use_endpoints_api_management: true
-  # Specify the Swagger API specification.
-  endpoints_swagger_spec_file: openapi.yaml
+endpoints_api_service:
+  # The following values are to be replaced by information from the output of
+  # 'gcloud service-management deploy openapi.yaml' command. If you have
+  # previously run the deploy command, you can list your existing configuration
+  # ids using the 'configs list' command as follows:
+  # 'gcloud service-management configs list --service=echo-api.endpoints.[PROJECT-ID].cloud.goog'
+  # where echo-api.endpoints.[PROJECT-ID].cloud.goog is your Endpoints service name.
+  name: ENDPOINTS SERVICE NAME
+  config_id: ENDPOINTS CONFIG ID
