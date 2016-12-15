@@ -28,11 +28,13 @@ $app['twig.path'] = [ __DIR__ ];
 $app->get('/', function (Application $app, Request $request) {
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
+    $trackingId = $app['GA_TRACKING_ID'];
+    # [START track_event]
     $baseUri = 'http://www.google-analytics.com/';
     $client = new GuzzleHttp\Client(['base_uri' => $baseUri]);
-    $form = [
+    $formData = [
         'v' => '1',  # API Version.
-        'tid' => $app['GA_TRACKING_ID'],  # Tracking ID / Property ID.
+        'tid' => $trackingId,  # Tracking ID / Property ID.
         # Anonymous Client Identifier. Ideally, this should be a UUID that
         # is associated with particular user, device, or browser instance.
         'cid' => '555',
@@ -42,7 +44,8 @@ $app->get('/', function (Application $app, Request $request) {
         'el' => 'Hearts',  # Event label.
         'ev' => 0,  # Event value, must be an integer
     ];
-    $response = $client->request('POST', 'collect', ['form_params' => $form]);
+    $response = $client->request('POST', 'collect', ['form_params' => $formData]);
+    # [END track_event]
     return $twig->render('index.html.twig', [
             'base_uri' => $baseUri,
             'response_code' => $response->getStatusCode(),
