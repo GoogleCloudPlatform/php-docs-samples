@@ -17,9 +17,9 @@
 
 // Install composer dependencies with "composer install"
 // @see http://getcomposer.org for more information.
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
-$app = require __DIR__ . '/../app.php';
+$app = require __DIR__ . '/app.php';
 
 // Run the app!
 // use "gcloud app deploy"
