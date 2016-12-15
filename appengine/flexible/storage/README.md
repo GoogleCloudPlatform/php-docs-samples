@@ -16,7 +16,7 @@ Before running this sample:
     ```
 
 - Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
-- [Initialize the SDK](https://cloud.google.com/sdk/docs/quickstart-mac-os-x#initialize_the_sdk)
+- Initialize the SDK by running `gcloud init`
 
 ## Run Locally
 
