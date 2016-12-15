@@ -1,0 +1,12 @@
+{
+    "require": {
+        "silex/silex": "^1.3",
+        "twig/twig": "~1.8|~2.0",
+        "symfony/twig-bridge": "~2.7|3.0.*",
+        "google/cloud": "^0.20"
+    },
+    "require-dev": {
+        "symfony/browser-kit": "^3.0",
+        "google/cloud-tools":"^0.6"
+    }
+}

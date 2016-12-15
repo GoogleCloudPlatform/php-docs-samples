@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Storage Example</title>
+  </head>
+
+  <body>
+    <h1>Storage Example</h1>
+
+    <div>
+        <h3>
+            Write
+            [<a href="https://cloud.google.com/appengine/docs/flexible/php/using-cloud-storage">docs</a>]:
+        </h3>
+        <form action="/write" method="post">
+            Some file content:<br />
+            <textarea name="content"></textarea><br />
+            <input type="submit" />
+        </form>
+
+        {% if content %}
+            <p><strong>Your content:</strong><p>
+            <p>{{ content }}</p>
+        {% endif %}
+    </div>
+</html>
