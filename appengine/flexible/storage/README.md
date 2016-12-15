@@ -1,6 +1,6 @@
 # Cloud Storage & Google App Engine
 
-This sample application demonstrates how to use [Cloud Storage with Google App Engine](https://cloud.google.com/appengine/docs/php/googlestorage/).
+This sample application demonstrates how to use [Cloud Storage with Google App Engine](https://cloud.google.com/appengine/docs/flexible/php/using-cloud-storage).
 
 ## Setup
 
@@ -11,43 +11,37 @@ Before running this sample:
 - Install [`composer`](https://getcomposer.org)
 - Install dependencies by running:
 
-```sh
-composer install
-```
-
-## Setup
-
-Before you can run or deploy the sample, you will need to do the following:
-
-1. Set `<your-bucket-name>` in `index.php` to the name of your Cloud Storage Bucket.
-
-## Deploy to App Engine
-
-**Prerequisites**
+    ```sh
+    composer install
+    ```
 
 - Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
+- [Initialize the SDK](https://cloud.google.com/sdk/docs/quickstart-mac-os-x#initialize_the_sdk)
 
-**Run Locally**
+## Run Locally
 
-Create a local directory for the Dev AppServer to use for Cloud Storage:
-
-```
-mkdir /tmp/gs
-```
-
-> Note: This directory can be wherever you like, as long as it's consistent with
-  the `--storage_path` option below.
-
-Run the sample with `dev_appserver.py`:
+Set the environment variables `GOOGLE_BUCKET_NAME` and ``GCLOUD_PROJECT` to the name of your storage bucket and project ID respectively.
 
 ```
-cd /path/to/php-docs-samples/appengine/standard/storage
-dev_appserver.py --php_executable=/usr/local/bin/php-cgi --storage_path=/tmp/gs .
+export GOOGLE_BUCKET_NAME=your-bucket-name
+export GCLOUD_PROJECT=your-project-id
+```
+
+Run the sample with the PHP built-in web server:
+
+```
+php -S localhost:8080
 ```
 
 > Note: Your PHP executable path may be different than the one above.
 
 Now browse to `http://localhost:8080` to view the sample.
+
+## Deploy to App Engine
+
+**Prerequisites**
+
+- Set `your-bucket-name` in `app.yaml` to the name of your Cloud Storage Bucket.
 
 **Deploy with gcloud**
 
