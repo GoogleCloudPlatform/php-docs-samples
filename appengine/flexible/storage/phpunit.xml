@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="test/bootstrap.php">
     <testsuites>
-        <testsuite name="AppEngine storage test">
+        <testsuite name="AppEngine Flex storage test">
             <directory>test</directory>
         </testsuite>
     </testsuites>

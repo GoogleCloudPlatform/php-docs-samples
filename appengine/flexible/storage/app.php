@@ -19,13 +19,10 @@
 use Google\Cloud\Storage\StorageClient;
 # [END import_client]
 use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 // create the Silex application
 $app = new Application();
-$app->register(new TwigServiceProvider());
-$app['twig.path'] = [ __DIR__ ];
 
 $app->get('/', function () use ($app) {
     /** @var Google\Cloud\StorageClient */
@@ -36,9 +33,19 @@ $app->get('/', function () use ($app) {
     $object = $bucket->object('hello.txt');
     $content = $object->exists() ? $object->downloadAsString() : '';
 
-    return $app['twig']->render('storage.html.twig', [
-        'content' => $content
-    ]);
+    $form = <<<EOF
+    <h1>Storage Example</h1>
+    <h3>Write [<a href="https://cloud.google.com/appengine/docs/flexible/php/using-cloud-storage">docs</a>]:</h3>
+    <form action="/write" method="post">
+        Some file content:<br />
+        <textarea name="content"></textarea><br />
+        <input type="submit" />
+    </form>
+EOF;
+    if ($content) {
+        $form .= "<p><strong>Your content:</strong><p><p>$content</p>";
+    }
+    return $form;
 });
 
 /**

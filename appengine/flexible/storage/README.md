@@ -20,7 +20,7 @@ Before running this sample:
 
 ## Run Locally
 
-Set the environment variables `GOOGLE_BUCKET_NAME` and ``GCLOUD_PROJECT` to the name of your storage bucket and project ID respectively.
+Set the environment variables `GOOGLE_BUCKET_NAME` and `GCLOUD_PROJECT` to the name of your storage bucket and project ID respectively.
 
 ```
 export GOOGLE_BUCKET_NAME=your-bucket-name
