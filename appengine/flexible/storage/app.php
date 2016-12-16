@@ -28,11 +28,10 @@ $app->get('/', function () use ($app) {
     /** @var Google\Cloud\StorageClient */
     $storage = $app['storage'];
     $bucketName = $app['bucket_name'];
-
+    $objectName = $app['object_name'];
     $bucket = $storage->bucket($bucketName);
-    $object = $bucket->object('hello.txt');
+    $object = $bucket->object($objectName);
     $content = $object->exists() ? $object->downloadAsString() : '';
-
     $form = <<<EOF
     <h1>Storage Example</h1>
     <h3>Write [<a href="https://cloud.google.com/appengine/docs/flexible/php/using-cloud-storage">docs</a>]:</h3>
@@ -56,11 +55,12 @@ $app->post('/write', function (Request $request) use ($app) {
     /** @var Google\Cloud\StorageClient */
     $storage = $app['storage'];
     $bucketName = $app['bucket_name'];
+    $objectName = $app['object_name'];
     $content = $request->get('content');
     # [START write]
     $metadata = ['contentType' => 'text/plain'];
     $storage->bucket($bucketName)->upload($content, [
-        'name' => 'hello.txt',
+        'name' => $objectName,
         'metadata' => $metadata,
     ]);
     # [END write]

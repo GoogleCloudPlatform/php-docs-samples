@@ -42,8 +42,9 @@ class LocalTest extends WebTestCase
         unset($app['exception_handler']);
 
         // the bucket name doesn't matter because we mock the stream wrapper
-        $app['bucket_name'] = getenv('GOOGLE_BUCKET_NAME');
         $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
+        $app['bucket_name'] = getenv('GOOGLE_BUCKET_NAME');
+        $app['object_name'] = 'hello_flex.txt';
 
         return $app;
     }

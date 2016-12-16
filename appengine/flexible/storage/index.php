@@ -24,6 +24,7 @@ $app = require __DIR__ . '/app.php';
 // change this to your bucket name!
 $app['bucket_name'] = getenv('GOOGLE_BUCKET_NAME') ?: 'your-bucket-name';
 $app['project_id'] = getenv('GCLOUD_PROJECT');
+$app['object_name'] = 'hello.txt';
 
 if ($app['bucket_name'] == 'your-bucket-name') {
     die('Replace <code>&lt;your-bucket-name&gt;</code> with the name of your '
