@@ -6,7 +6,19 @@ This sample application demonstrates how to use [Cloud Storage with Google App E
 
 Before running this sample:
 
-## Prerequisites
+### Register your application
+
+- Go to
+  [Google Developers Console](https://console.developers.google.com/project)
+  and create a new project. This will automatically enable an App
+  Engine application with the same ID as the project.
+
+- Go to
+  [Google Cloud Storage](https://console.cloud.google.com/storage/browser)
+  and create a new bucket. Optionally, use the default bucket for your project
+  (`YOUR_BUCKET.appspot.com`).
+
+### Prerequisites
 
 - Install [`composer`](https://getcomposer.org)
 - Install dependencies by running:

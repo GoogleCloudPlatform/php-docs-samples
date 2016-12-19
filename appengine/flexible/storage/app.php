@@ -32,6 +32,7 @@ $app->get('/', function () use ($app) {
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $content = $object->exists() ? $object->downloadAsString() : '';
+    $escapedContent = htmlspecialchars($content);
     $form = <<<EOF
     <h1>Storage Example</h1>
     <h3>Write [<a href="https://cloud.google.com/appengine/docs/flexible/php/using-cloud-storage">docs</a>]:</h3>
@@ -42,7 +43,7 @@ $app->get('/', function () use ($app) {
     </form>
 EOF;
     if ($content) {
-        $form .= "<p><strong>Your content:</strong><p><p>$content</p>";
+        $form .= "<p><strong>Your content:</strong><p><p>$escapedContent</p>";
     }
     return $form;
 });
