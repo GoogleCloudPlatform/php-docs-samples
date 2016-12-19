@@ -26,7 +26,6 @@ matrix:
 
 env:
   global:
-    - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
     - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
