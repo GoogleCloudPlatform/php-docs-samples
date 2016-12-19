@@ -22,9 +22,6 @@ class LocalTest extends WebTestCase
 {
     public function setUp()
     {
-        if (!getenv('GCLOUD_PROJECT')) {
-            $this->markTestSkipped('Must set GCLOUD_PROJECT');
-        }
         parent::setUp();
         $this->client = $this->createClient();
     }
@@ -32,7 +29,10 @@ class LocalTest extends WebTestCase
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
-        $app['google.dataset_id'] = getenv('GCLOUD_PROJECT');
+        if (!$projectId = getenv('GCLOUD_PROJECT')) {
+            $this->markTestSkipped('Must set GCLOUD_PROJECT');
+        }
+        $app['project_id'] = $projectId;
         return $app;
     }
 

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+use Google\Cloud\Datastore\DatastoreClient;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,22 +23,57 @@ use Symfony\Component\HttpFoundation\Response;
 // create the Silex application
 $app = new Application();
 
-$app['datastore'] = function () {
-    // Datastore API has intermittent failures, so we set the
-    // Google Client to retry in the event of a 503 Backend Error
-    $retryConfig = ['retries' => 2 ];
-    $client = new \Google_Client(['retry' => $retryConfig ]);
-    $client->setScopes([
-        Google_Service_Datastore::CLOUD_PLATFORM,
-        Google_Service_Datastore::DATASTORE,
+$app['datastore'] = function () use ($app) {
+    $projectId = $app['project_id'];
+    # [START create_client]
+    $datastore = new DatastoreClient([
+        'projectId' => $projectId
     ]);
-    $client->useApplicationDefaultCredentials();
-    return new \Google_Service_Datastore($client);
+    # [END create_client]
+    return $datastore;
 };
 
 $app->get('/', function (Application $app, Request $request) {
+    if (empty($app['project_id'])) {
+        return 'Set the GCLOUD_PROJECT environment variable to run locally';
+    }
     /** @var \Google_Service_Datastore $datastore */
     $datastore = $app['datastore'];
+
+    // determine the user's IP
+    $user_ip = get_user_ip($request);
+
+    # [START insert_entity]
+    // Create an entity to insert into datastore.
+    $key = $datastore->key('visit');
+    $entity = $datastore->entity($key, [
+        'user_ip' => $user_ip,
+        'timestamp' => new DateTime(),
+    ]);
+    $datastore->insert($entity);
+    # [END insert_entity]
+
+    # [START run_query]
+    // Query recent visits.
+    $query = $datastore->query()
+        ->kind('visit')
+        ->order('timestamp', 'DESCENDING')
+        ->limit(10);
+    $results = $datastore->runQuery($query);
+    $visits = [];
+    foreach ($results as $entity) {
+        $visits[] = sprintf('Time: %s Addr: %s',
+            $entity['timestamp']->format('Y-m-d H:i:s'),
+            $entity['user_ip']);
+    }
+    # [END run_query]
+    array_unshift($visits, "Last 10 visits:");
+    return new Response(implode("\n", $visits), 200,
+        ['Content-Type' => 'text/plain']);
+});
+
+function get_user_ip(Request $request)
+{
     $ip = $request->GetClientIp();
     // Keep only the first two octets of the IP address.
     $octets = explode($separator = ':', $ip);
@@ -52,60 +88,7 @@ $app->get('/', function (Application $app, Request $request) {
         return $x == '' ? '0' : $x;
     }, $octets);
     $user_ip = $octets[0] . $separator . $octets[1];
-    // Create an entity to insert into datastore.
-    $key = new \Google_Service_Datastore_Key(['path' => ['kind' => 'visit']]);
-    $date = new DateTime();
-    $date->setTimezone(new DateTimeZone('UTC'));
-    $properties = [
-        'user_ip' => ['stringValue' => $user_ip],
-        'timestamp' => ['timestampValue' => $date->format("Y-m-d\TH:i:s\Z")]
-    ];
-    $entity = new \Google_Service_Datastore_Entity([
-        'key' => $key,
-        'properties' => $properties
-    ]);
-
-    // Use "NON_TRANSACTIONAL" for simplicity.  However, it means that we may
-    // not see this result in the query below.
-    $request = new \Google_Service_Datastore_CommitRequest([
-        'mode' => 'NON_TRANSACTIONAL',
-        'mutations' => [
-            [
-                'insert' => $entity,
-            ]
-        ]
-    ]);
-    $dataset_id = $app['google.dataset_id'];
-    $datastore->projects->commit($dataset_id, $request);
-
-    $query = new \Google_Service_Datastore_Query([
-        'kind' => [
-            [
-                'name' => 'visit',
-            ],
-        ],
-        'order' => [
-            'property' => [
-                'name' => 'timestamp',
-            ],
-            'direction' => 'DESCENDING',
-        ],
-        'limit' => 10,
-    ]);
-    $request = new \Google_Service_Datastore_RunQueryRequest();
-    $request->setQuery($query);
-    $response = $datastore->projects->runQuery($dataset_id, $request);
-    /** @var \Google_Service_Datastore_QueryResultBatch $batch */
-    $batch = $response->getBatch();
-    $visits = ["Last 10 visits:"];
-    foreach ($batch->getEntityResults() as $entityResult) {
-        $properties = $entityResult->getEntity()->getProperties();
-        array_push($visits, sprintf('Time: %s Addr: %s',
-            $properties['timestamp']['timestampValue'],
-            $properties['user_ip']['stringValue']));
-    }
-    return new Response(implode("\n", $visits), 200,
-        ['Content-Type' => 'text/plain']);
-});
+    return $user_ip;
+}
 
 return $app;
