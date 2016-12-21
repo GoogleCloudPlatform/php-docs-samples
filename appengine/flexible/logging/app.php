@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
+use Google\Cloud\Logger\AppEngineFlexHandler;
 use Google\Cloud\Logging\LoggingClient;
-use Google\Cloud\Logging\AppEngineFlexHandler;
 use Silex\Application;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
