@@ -18,12 +18,10 @@ namespace Google\Cloud\Samples\AppEngine\Endpoints;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
-use Monolog\Logger;
 
 class DeployTest extends \PHPUnit_Framework_TestCase
 {
-    use AppEngineDeploymentTrait, ExecuteCommandTrait;
+    use AppEngineDeploymentTrait;
 
     public static function setUpBeforeClass()
     {
@@ -32,12 +30,9 @@ class DeployTest extends \PHPUnit_Framework_TestCase
                 'To run this test, set RUN_DEPLOYMENT_TESTS env to "true".'
             );
         }
-
         if (!getenv('GOOGLE_ENDPOINTS_APIKEY')) {
             return self::markTestSkipped('Set the GOOGLE_ENDPOINTS_APIKEY environment variable');
         }
-
-        self::$logger = new Logger('phpunit');
     }
 
     public static function beforeDeploy()
@@ -58,7 +53,6 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         // copy the source files to a temp directory
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         self::$gcloudWrapper->setDir($tmpDir);
-        self::setWorkingDirectory($tmpDir);
         chdir($tmpDir);
 
         // update the swagger file for our configuration
