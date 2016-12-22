@@ -18,7 +18,6 @@ namespace Google\Cloud\Samples\AppEngine\Endpoints;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
-use Google\Cloud\TestUtils\GcloudWrapper;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Monolog\Logger;
 
