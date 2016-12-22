@@ -19,6 +19,9 @@ env_variables:
   DB_PASSWORD: YOUR_DB_PASSWORD
   DB_SOCKET: /cloudsql/YOUR_CLOUDSQL_CONNECTION_NAME
 
+# required on some platforms so ".env" is not skipped
+skip_files: false
+
 beta_settings:
     # for Cloud SQL, uncomment and set this value to the Cloud SQL
     # connection name, e.g.
