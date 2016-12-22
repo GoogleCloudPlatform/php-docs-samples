@@ -113,9 +113,7 @@ EOF;
         $this->assertEquals(401, $response->getStatusCode());
         $json = json_decode((string) $response->getBody(), true);
         $this->assertArrayHasKey('message', $json);
-        $expectedString = 'Method doesn\'t allow unregistered callers ' .
-            '(callers without established identity). Please use API Key ' .
-            'or other form of API consumer identity to call this API.';
-        $this->assertEquals($expectedString, $json['message']);
+        $expectedString = 'unregistered callers';
+        $this->assertContains($expectedString, $json['message']);
     }
 }
