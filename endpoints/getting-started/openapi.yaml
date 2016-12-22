@@ -32,6 +32,8 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/echoMessage"
+      security:
+      - api_key: []
   "/auth/info/googlejwt":
     get:
       description: "Returns the requests' authentication information."
@@ -66,6 +68,7 @@ paths:
           # Your OAuth2 client's Client ID must be added here. You can add
           # multiple client IDs to accept tokens from multiple clients.
           - "YOUR-CLIENT-ID"
+
 definitions:
   echoMessage:
     properties:
@@ -77,9 +80,7 @@ definitions:
         type: "string"
       email:
         type: "string"
-# This section requires all requests to any path to require an API key.
-security:
-- api_key: []
+
 securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
