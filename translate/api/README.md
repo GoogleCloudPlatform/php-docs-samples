@@ -13,7 +13,7 @@ https://cloud.google.com/translate/).
 3.  **Clone the repo** and cd into this directory
 ```
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/vision/api
+    $ cd php-docs-samples/translate/api
 ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
