@@ -1,0 +1,17 @@
+<form action="/log" method="POST">
+    <input type="text" name="text" value="Text To Be Logged!" />
+    <input type="submit" value="Log It" />
+</form>
+
+<h2>Logs:</h2>
+
+<ul>
+{% for log in logs %}
+    <li>
+        <strong>{{ log.info.timestamp|split('.')[0]|date('M jS, H:i')}}</strong>:
+        {{ log.info.jsonPayload.message }}
+    </li>
+{% else %}
+    <li>No Logs!</li>
+{% endfor %}
+</ul>
