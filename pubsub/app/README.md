@@ -66,7 +66,16 @@ Then access the following URL:
 
 ## Deploy to App Engine Flexible
 
-See the instructions [here](../appengine/flexible/pubsub/README.md).
+- Change `YOUR_PROJECT_ID` in `app.yaml.flexible` to your project ID.
+
+Run the following gcloud command to deploy your app:
+
+```
+$ gcloud app deploy app.yaml.flexible
+```
+
+Then access the following URL:
+  https://{YOUR_PROJECT_NAME}.appspot.com/
 
 ## Run using Dev Appserver
 
