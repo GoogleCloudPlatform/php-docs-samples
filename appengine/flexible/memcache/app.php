@@ -27,25 +27,30 @@ $app->register(new TwigServiceProvider());
 $app['twig.path'] = [ __DIR__ ];
 $app['memcached'] = function () {
     if (getenv('USE_GAE_MEMCACHE')) {
-        $addr = getenv('GAE_MEMCACHE_HOST') ?: 'localhost';
+        $host = getenv('GAE_MEMCACHE_HOST') ?: 'localhost';
         $port = getenv('GAE_MEMCACHE_PORT') ?: '11211';
     } else {
         $server = getenv('MEMCACHE_SERVER') ?: 'localhost:11211';
-        list($addr, $port) = explode(':', $server);
+        list($host, $port) = explode(':', $server);
     }
     $username = getenv('MEMCACHE_USERNAME');
     $password = getenv('MEMCACHE_PASSWORD');
+    # [START memcached]
+    // $host = 'YOUR_MEMCACHE_HOST';
+    // $port = 'YOUR_MEMCACHE_PORT';
+    // $username = 'OPTIONAL_MEMCACHE_USERNAME';
+    // $password = 'OPTIONAL_MEMCACHE_PASSWORD';
     $memcached = new Memcached;
     if ($username && $password) {
         $memcached->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
         $memcached->setSaslAuthData($username, $password);
     }
-    if (!$memcached->addServer($addr, $port)) {
-        throw new Exception("Failed to add server $addr:$port");
+    if (!$memcached->addServer($host, $port)) {
+        throw new Exception("Failed to add server $host:$port");
     }
+    # [END memcached]
     return $memcached;
 };
-# [END memcached]
 
 $app->get('/vars', function () {
     $vars = array('MEMCACHE_PORT_11211_TCP_ADDR',
@@ -106,7 +111,6 @@ $app->post('/', function (Application $app, Request $request) {
     ]);
 });
 
-# [START memcached]
 $app->get('/memcached/{key}', function (Application $app, $key) {
     /** @var Memcached $memcached */
     $memcached = $app['memcached'];
@@ -119,6 +123,5 @@ $app->put('/memcached/{key}', function (Application $app, $key, Request $request
     $value = $request->getContent();
     return $memcached->set($key, $value, time() + 600); // 10 minutes expiration
 });
-# [END memcached]
 
 return $app;
