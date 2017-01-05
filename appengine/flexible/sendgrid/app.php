@@ -21,10 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 // create the Silex application
 $app = new Application();
 
-$app['sendgrid'] = function (Application $app) {
-    return new SendGrid($app['sendgrid.api_key']);
-};
-
 $app->get('/', function () use ($app) {
     return <<<EOF
 <!doctype html>
@@ -38,15 +34,22 @@ EOF;
 });
 
 $app->post('/', function (Request $request) use ($app) {
-    $mail = new SendGrid\Mail(
-        new SendGrid\Email(null, $app['sendgrid.sender']),
-        'This is a test email',
-        new SendGrid\Email(null, $request->get('recipient')),
-        new SendGrid\Content('text/plain', 'Example text body.')
-    );
-    /** @var SendGrid $sendgrid */
-    $sendgrid = $app['sendgrid'];
+    $sendgridSender = $app['sendgrid.sender'];
+    $sendgridApiKey = $app['sendgrid.api_key'];
+    $sendgridRecipient = $request->get('recipient');
+    # [START send_mail]
+    // $sendgridApiKey = 'YOUR_SENDGRID_API_KEY';
+    // $sendgridSender = 'an-email-to-send-from@example.com';
+    // $sendgridRecipient = 'some-recipient@example.com';
+    $sender = new SendGrid\Email(null, $sendgridSender);
+    $recipient = new SendGrid\Email(null, $sendgridRecipient);
+    $subject = 'This is a test email';
+    $body = new SendGrid\Content('text/plain', 'Example text body.');
+    $mail = new SendGrid\Mail($sender, $subject, $recipient, $body);
+    // send the email
+    $sendgrid = new SendGrid($sendgridApiKey);
     $response = $sendgrid->client->mail()->send()->post($mail);
+    # [END send_mail]
     if ($response->statusCode() < 200 || $response->statusCode() >= 300) {
         return new Response($response->body(), $response->statusCode());
     }
