@@ -36,6 +36,8 @@ $app->get('/', function () use ($app) {
 
 $app->get('/fetch_messages', function () use ($app) {
     // get PUSH pubsub messages
+    $projectId = $app['project_id'];
+    $subscriptionName = $app['subscription'];
     $datastore = $app['datastore'];
     $query = $datastore->query()->kind('PubSubPushMessage');
     $messages = [];
@@ -48,10 +50,12 @@ $app->get('/fetch_messages', function () use ($app) {
     if ($pushKeys) {
         $datastore->deleteBatch($pushKeys);
     }
-
+    # [START pull]
     // get PULL pubsub messages
-    $pubsub = $app['pubsub'];
-    $subscription = $pubsub->subscription($app['subscription']);
+    $pubsub = new PubSubClient([
+        'projectId' => $projectId,
+    ]);
+    $subscription = $pubsub->subscription($subscriptionName);
     $pullMessages = [];
     foreach ($subscription->pull(['returnImmediately' => true]) as $pullMessage) {
         $pullMessages[] = $pullMessage;
@@ -61,11 +65,12 @@ $app->get('/fetch_messages', function () use ($app) {
     if ($pullMessages) {
         $subscription->acknowledgeBatch($pullMessages);
     }
-
+    # [END pull]
     return new JsonResponse($messages);
 });
 
 $app->post('/receive_message', function () use ($app) {
+    # [START receive]
     // pull the message from the post body
     $json = $app['request']->getContent();
     $request = json_decode($json, true);
@@ -75,34 +80,35 @@ $app->post('/receive_message', function () use ($app) {
     ) {
         return new Response('', 400);
     }
+    # [END receive]
     // store the push message in datastore
     $datastore = $app['datastore'];
     $message = $datastore->entity('PubSubPushMessage', [
         'message' => $message
     ]);
     $datastore->insert($message);
-
     return new Response();
 });
 
 $app->post('/send_message', function () use ($app) {
+    $projectId = $app['project_id'];
+    $topicName = $app['topic'];
+    # [START send]
     if ($message = $app['request']->get('message')) {
-        $pubsub = $app['pubsub'];
-        $topic = $pubsub->topic($app['topic']);
+        // Publish the pubsub message to the topic
+        $pubsub = new PubSubClient([
+            'projectId' => $projectId,
+        ]);
+        $topic = $pubsub->topic($topicName);
         $response = $topic->publish(['data' => $message]);
         return new Response('', 204);
     }
+    # [END send]
     return new Response('', 400);
 });
 
 $app['datastore'] = function () use ($app) {
     return new DatastoreClient([
-        'projectId' => $app['project_id'],
-    ]);
-};
-
-$app['pubsub'] = function () use ($app) {
-    return new PubSubClient([
         'projectId' => $app['project_id'],
     ]);
 };

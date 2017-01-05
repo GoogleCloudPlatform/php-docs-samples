@@ -26,7 +26,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
     public function beforeDeploy()
     {
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        FileUtil::copyDir(__DIR__ . '/../../../appengine/flexible/pubsub', $tmpDir);
+        copy(__DIR__ . '/../app.yaml.flexible', $tmpDir . '/app.yaml');
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
     }
