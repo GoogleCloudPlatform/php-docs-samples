@@ -1,5 +1,5 @@
 runtime: php
-vm: true
+env: flex
 
 # [START env_variables]
 env_variables:
