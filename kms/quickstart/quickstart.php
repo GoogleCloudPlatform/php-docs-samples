@@ -25,6 +25,9 @@ $projectId = 'YOUR_PROJECT_ID';
 // Lists keys in the "global" location.
 $location = 'global';
 
+# The resource name of the location associated with the KeyRings
+$parent = sprintf('projects/%s/locations/%s', $projectId, $location);
+
 // Instantiate the client
 $client = new Google_Client();
 
@@ -43,7 +46,7 @@ $kms = new Google_Service_CloudKMS($client);
 // list all key rings for your project
 $keyRings = $kms->projects_locations_keyRings->listProjectsLocationsKeyRings(
     $projectId,
-    $location
+    array('parent' => $parent)
 );
 
 // Print the key rings
