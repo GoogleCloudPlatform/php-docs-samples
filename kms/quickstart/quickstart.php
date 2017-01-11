@@ -16,14 +16,14 @@
  */
 
 # [START kms_quickstart]
-# Includes the autoloader for libraries installed with composer
+// Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-# Your Google Cloud Platform project ID
+// Your Google Cloud Platform project ID
 $projectId = 'YOUR_PROJECT_ID';
 
-# The "global" zone will list all keys, can be a specific zone if desired
-$zone = 'global';
+// Lists keys in the "global" location.
+$location = 'global';
 
 // Instantiate the client
 $client = new Google_Client();
@@ -34,7 +34,6 @@ $client->useApplicationDefaultCredentials();
 
 // Set the required scopes to access the Key Management Service API
 $client->setScopes(array(
-    'https://www.googleapis.com/auth/cloudkms',
     'https://www.googleapis.com/auth/cloud-platform'
 ));
 
@@ -44,7 +43,7 @@ $kms = new Google_Service_CloudKMS($client);
 // list all key rings for your project
 $keyRings = $kms->projects_locations_keyRings->listProjectsLocationsKeyRings(
     $projectId,
-    $zone
+    $location
 );
 
 // Print the key rings
