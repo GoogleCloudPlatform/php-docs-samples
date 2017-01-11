@@ -25,7 +25,7 @@ $projectId = 'YOUR_PROJECT_ID';
 // Lists keys in the "global" location.
 $location = 'global';
 
-# The resource name of the location associated with the KeyRings
+// The resource name of the location associated with the KeyRings
 $parent = sprintf('projects/%s/locations/%s', $projectId, $location);
 
 // Instantiate the client
