@@ -24,7 +24,11 @@ $logger = $logging->logger($logName);
 $handlerFunction = function(Exception $e) use ($logger) {
     // Creates the log entry with the exception trace
     $entry = $logger->entry([
-        'message' => $e->getTraceAsString(),
+        'message' => sprintf('PHP Warning: %s', $e),
+        'serviceContext' => [
+            'service' => 'error_reporting_quickstart',
+            'version' => '1.0',
+        ]
     ]);
     // Writes the log entry
     $logger->write($entry);
