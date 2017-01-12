@@ -14,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+
 class quickstartTest extends PHPUnit_Framework_TestCase
 {
     public function testQuickstart()
@@ -22,11 +27,12 @@ class quickstartTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
 
+        $version = 'quickstart-tests-' . time();
         $file = sys_get_temp_dir() . '/error_reporting_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['YOUR_PROJECT_ID', '__DIR__'],
-            [$projectId, sprintf('"%s/.."', __DIR__)],
+            ['YOUR_PROJECT_ID', '1.0-dev', '__DIR__'],
+            [$projectId, $version, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);
@@ -41,5 +47,42 @@ class quickstartTest extends PHPUnit_Framework_TestCase
             'Exception logged to Stack Driver Error Reporting' . PHP_EOL,
             $output
         );
+
+        // Ensure the log actually showed up
+        sleep(1);
+
+        // create an authorized Google Client
+        $middleware = ApplicationDefaultCredentials::getMiddleware(
+            'https://www.googleapis.com/auth/cloud-platform'
+        );
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+        $baseUrl = 'https://clouderrorreporting.googleapis.com/v1beta1/projects/';
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => $baseUrl,
+            'auth' => 'google_auth', // authorize all requests
+            'query' => [
+                'serviceFilter.version' => $version,
+            ]
+        ]);
+
+        // call groupStats to get the latest logs per version
+        $url = sprintf('%s/groupStats', $projectId);
+        $res = $client->get($url);
+        $response = json_decode((string) $res->getBody(), true);
+
+        //
+        $this->assertArrayHasKey('errorGroupStats', $response);
+        $this->assertEquals(1, count($response['errorGroupStats']));
+        $this->assertArrayHasKey(
+            'representative',
+            $response['errorGroupStats'][0]
+        );
+        $this->assertContains(
+            'This will be logged to Stack Driver Error Reporting',
+            $response['errorGroupStats'][0]['representative']['message']
+        );
+
     }
 }

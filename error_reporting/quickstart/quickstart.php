@@ -27,7 +27,7 @@ $handlerFunction = function(Exception $e) use ($logger) {
         'message' => sprintf('PHP Warning: %s', $e),
         'serviceContext' => [
             'service' => 'error_reporting_quickstart',
-            'version' => '1.0',
+            'version' => '1.0-dev',
         ]
     ]);
     // Writes the log entry
