@@ -28,7 +28,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
 
-    public function beforeDeploy()
+    public static function beforeDeploy()
     {
         // verify and set environment variables
         self::verifyEnvironmentVariables();
@@ -54,7 +54,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         ];
         foreach ($envVars as $envVar) {
             if (false === getenv($envVar)) {
-                self::fail("Please set the ${envVar} environment variable");
+                self::markTestSkipped("Please set the ${envVar} environment variable");
             }
         }
     }
