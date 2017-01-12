@@ -18,9 +18,12 @@
 use Google\Auth\ApplicationDefaultCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 
 class quickstartTest extends PHPUnit_Framework_TestCase
 {
+    use EventuallyConsistentTestTrait;
+
     public function testQuickstart()
     {
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
@@ -48,8 +51,8 @@ class quickstartTest extends PHPUnit_Framework_TestCase
             $output
         );
 
-        // Ensure the log actually showed up
-        sleep(1);
+        // call groupStats to get the latest logs per version
+        $url = sprintf('/v1beta1/projects/%s/groupStats', $projectId);
 
         // create an authorized Google Client
         $middleware = ApplicationDefaultCredentials::getMiddleware(
@@ -57,31 +60,21 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         );
         $stack = HandlerStack::create();
         $stack->push($middleware);
-        $baseUrl = 'https://clouderrorreporting.googleapis.com/v1beta1/projects/';
         $client = new Client([
             'handler' => $stack,
-            'base_uri' => $baseUrl,
+            'base_uri' => 'https://clouderrorreporting.googleapis.com',
             'auth' => 'google_auth', // authorize all requests
             'query' => [
                 'serviceFilter.version' => $version,
             ]
         ]);
 
-        // call groupStats to get the latest logs per version
-        $url = sprintf('%s/groupStats', $projectId);
-        $res = $client->get($url);
-        $response = json_decode((string) $res->getBody(), true);
-
-        //
-        $this->assertArrayHasKey('errorGroupStats', $response);
-        $this->assertEquals(1, count($response['errorGroupStats']));
-        $this->assertArrayHasKey(
-            'representative',
-            $response['errorGroupStats'][0]
-        );
-        $this->assertContains(
-            'This will be logged to Stack Driver Error Reporting',
-            $response['errorGroupStats'][0]['representative']['message']
-        );
+        $this->runEventuallyConsistentTest(function () use ($client, $url) {
+            $res = $client->get($url);
+            $this->assertContains(
+                'This will be logged to Stack Driver Error Reporting',
+                (string) $res->getBody()
+            );
+        });
     }
 }
