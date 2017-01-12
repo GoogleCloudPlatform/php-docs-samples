@@ -21,7 +21,7 @@ $logName = 'my-log';
 // Selects the log to write to
 $logger = $logging->logger($logName);
 
-$handlerFunction = function(Exception $e) use ($logger) {
+$handlerFunction = function (Exception $e) use ($logger) {
     // Creates the log entry with the exception trace
     $entry = $logger->entry([
         'message' => sprintf('PHP Warning: %s', $e),

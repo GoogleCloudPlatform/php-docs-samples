@@ -83,6 +83,5 @@ class quickstartTest extends PHPUnit_Framework_TestCase
             'This will be logged to Stack Driver Error Reporting',
             $response['errorGroupStats'][0]['representative']['message']
         );
-
     }
 }
