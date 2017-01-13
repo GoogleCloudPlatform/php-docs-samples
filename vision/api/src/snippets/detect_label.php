@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Vision;
 # [START detect_labels]
 # [START import_libraries]
 use Google\Cloud\Vision\VisionClient;
+
 # [END import_libraries]
 
 // $projectId = 'YOUR_PROJECT_ID';
