@@ -15,20 +15,29 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Vision;
 
-// [START label_detection]
+# [START detect_labels]
+# [START import_libraries]
 use Google\Cloud\Vision\VisionClient;
 
-// $apiKey = 'YOUR-API-KEY';
+# [END import_libraries]
+
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
+# [START authenticate]
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
+# [END authenticate]
+
+# [START construct_request]
 $image = $vision->image(file_get_contents($path), ['LABEL_DETECTION']);
 $result = $vision->annotate($image);
+# [END construct_request]
+
+# [START parse_response]
 if (!isset($result->info()['labelAnnotations'])) {
     return;
 }
@@ -38,4 +47,5 @@ foreach ($result->info()['labelAnnotations'] as $annotation) {
     print("  description: $annotation[description]\n");
     print("  score: $annotation[score]\n");
 }
-// [END label_detection]
+# [END parse_response]
+# [END detect_labels]
