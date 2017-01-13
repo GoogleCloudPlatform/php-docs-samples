@@ -21,11 +21,11 @@ namespace Google\Cloud\Samples\Vision;
 // [START label_detection]
 use Google\Cloud\Vision\VisionClient;
 
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
 $image = $vision->image(file_get_contents($path), ['LABEL_DETECTION']);
 $result = $vision->annotate($image);

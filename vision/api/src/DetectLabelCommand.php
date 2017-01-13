@@ -49,16 +49,16 @@ EOF
                 'The image to examine.'
             )
             ->addOption(
-                'api-key',
-                'k',
+                'project',
+                'p',
                 InputOption::VALUE_REQUIRED,
-                'Your API key.'
+                'Your Project ID.'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
+        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
         require(__DIR__ . '/snippets/detect_label.php');
     }
