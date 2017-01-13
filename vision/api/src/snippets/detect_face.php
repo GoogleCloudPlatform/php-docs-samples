@@ -18,55 +18,59 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START face_detection]
+# [START face_detection]
+# [START get_vision_service]
 use Google\Cloud\Vision\VisionClient;
 
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
+# [END get_vision_service]
+# [START detect_face]
 $image = $vision->image(file_get_contents($path), ['FACE_DETECTION']);
 $result = $vision->annotate($image);
-if (!isset($result->info()['faceAnnotations'])) {
-    return;
+# [END detect_face]
+if (isset($result->info()['faceAnnotations'])) {
+    foreach ($result->info()['faceAnnotations'] as $annotation) {
+        print("FACE\n");
+        if (isset($annotation['boundingPoly'])) {
+            print("  BOUNDING POLY\n");
+            foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
+                $x = isset($vertex['x']) ? $vertex['x'] : '';
+                $y = isset($vertex['y']) ? $vertex['y'] : '';
+                print("    x:$x\ty:$y\n");
+            }
+        }
+        if (isset($annotation['landmarks'])) {
+            print("  LANDMARKS\n");
+            foreach ($annotation['landmarks'] as $landmark) {
+                $pos = $landmark['position'];
+                print("    $landmark[type]:\tx:$pos[x]\ty:$pos[y]\tz:$pos[z]\n");
+            }
+        }
+        $scalar_features = [
+            'rollAngle',
+            'panAngle',
+            'tiltAngle',
+            'detectionConfidence',
+            'landmarkingConfidence',
+            'joyLikelihood',
+            'sorrowLikelihood',
+            'angerLikelihood',
+            'surpriseLikelihood',
+            'underExposedLikelihood',
+            'blurredLikelihood',
+            'headwearLikelihood'
+        ];
+        foreach ($scalar_features as $feature) {
+            if (isset($annotation[$feature])) {
+                print("  $feature:\t$annotation[$feature]\n");
+            }
+        }
+    }
 }
-foreach ($result->info()['faceAnnotations'] as $annotation) {
-    print("FACE\n");
-    if (isset($annotation['boundingPoly'])) {
-        print("  BOUNDING POLY\n");
-        foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-            $x = isset($vertex['x']) ? $vertex['x'] : '';
-            $y = isset($vertex['y']) ? $vertex['y'] : '';
-            print("    x:$x\ty:$y\n");
-        }
-    }
-    if (isset($annotation['landmarks'])) {
-        print("  LANDMARKS\n");
-        foreach ($annotation['landmarks'] as $landmark) {
-            $pos = $landmark['position'];
-            print("    $landmark[type]:\tx:$pos[x]\ty:$pos[y]\tz:$pos[z]\n");
-        }
-    }
-    $scalar_features = [
-        'rollAngle',
-        'panAngle',
-        'tiltAngle',
-        'detectionConfidence',
-        'landmarkingConfidence',
-        'joyLikelihood',
-        'sorrowLikelihood',
-        'angerLikelihood',
-        'surpriseLikelihood',
-        'underExposedLikelihood',
-        'blurredLikelihood',
-        'headwearLikelihood'
-    ];
-    foreach ($scalar_features as $feature) {
-        if (isset($annotation[$feature])) {
-            print("  $feature:\t$annotation[$feature]\n");
-        }
-    }
-}
-// [END face_detection]
+# [END face_detection]
+return $result;

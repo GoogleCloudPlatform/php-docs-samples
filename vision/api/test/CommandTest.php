@@ -116,6 +116,45 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $display);
     }
 
+    public function testFaceCommandWithOutput()
+    {
+        $application = new Application();
+        $application->add(new DetectFaceCommand());
+        $commandTester = new CommandTester($application->get('face'));
+        $output = sys_get_temp_dir() . '/face.png';
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/face.png',
+                'output' => $output,
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('NOSE_TIP', $display);
+        $this->assertContains('angerLikelihood:', $display);
+        $this->assertContains('Output image written to ' . $output, $display);
+        $this->assertTrue(file_exists($output));
+    }
+
+    public function testFaceCommandWithImageLackingFacesAndOutput()
+    {
+        $application = new Application();
+        $application->add(new DetectFaceCommand());
+        $commandTester = new CommandTester($application->get('face'));
+        $output = sys_get_temp_dir() . '/face.png';
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/tower.jpg',
+                'output' => $output,
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertEquals('', $display);
+    }
+
     public function testLandmarkCommand()
     {
         $application = new Application();

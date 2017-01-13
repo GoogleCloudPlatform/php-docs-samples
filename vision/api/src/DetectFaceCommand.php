@@ -29,6 +29,22 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DetectFaceCommand extends Command
 {
+    private $imageCreateFunc = [
+        'png' => 'imagecreatefrompng',
+        'gd' => 'imagecreatefromgd',
+        'gif' => 'imagecreatefromgif',
+        'jpg' => 'imagecreatefromjpeg',
+        'jpeg' => 'imagecreatefromjpeg',
+    ];
+
+    private $imageWriteFunc = [
+        'png' => 'imagepng',
+        'gd' => 'imagegd',
+        'gif' => 'imagegif',
+        'jpg' => 'imagejpeg',
+        'jpeg' => 'imagejpeg',
+    ];
+
     protected function configure()
     {
         $this
@@ -48,19 +64,49 @@ EOF
                 InputArgument::REQUIRED,
                 'The image to examine.'
             )
+            ->addArgument(
+                'output',
+                InputArgument::OPTIONAL,
+                'The output image with bounding boxes.'
+            )
             ->addOption(
-                'api-key',
-                'k',
+                'project',
+                'p',
                 InputOption::VALUE_REQUIRED,
-                'Your API key.'
+                'Your Project ID.'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
+        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        require(__DIR__ . '/snippets/detect_face.php');
+        $result = require __DIR__ . '/snippets/detect_face.php';
+        if (
+            isset($result->info()['faceAnnotations'])
+            && $outFile = $input->getArgument('output')
+        ) {
+            copy($path, $outFile);
+            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            if (!in_array($ext, array_keys($this->imageCreateFunc))) {
+                throw new \Exception('Unsupported image extension');
+            }
+            $outputImage = call_user_func($this->imageCreateFunc[$ext], $outFile);
+            # [START highlight_image]
+            foreach ($result->info()['faceAnnotations'] as $annotation) {
+                if (isset($annotation['boundingPoly'])) {
+                    $verticies = $annotation['boundingPoly']['vertices'];
+                    $x1 = isset($verticies[0]['x']) ? $verticies[0]['x'] : 0;
+                    $y1 = isset($verticies[0]['y']) ? $verticies[0]['y'] : 0;
+                    $x2 = isset($verticies[2]['x']) ? $verticies[2]['x'] : 0;
+                    $y2 = isset($verticies[2]['y']) ? $verticies[2]['y'] : 0;
+                    imagerectangle($outputImage, $x1, $y1, $x2, $y2, 0x00ff00);
+                }
+            }
+            # [END highlight_image]
+            call_user_func($this->imageWriteFunc[$ext], $outputImage, $outFile);
+            printf('Output image written to %s' . PHP_EOL, $outFile);
+        }
     }
 }
