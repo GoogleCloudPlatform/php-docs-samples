@@ -17,6 +17,7 @@ $client = new Google_Client();
 $client->useApplicationDefaultCredentials();
 
 // Set the required scopes to access the Key Management Service API$client->setScopes([
+$client->setScopes([
     'https://www.googleapis.com/auth/cloud-platform'
 ]);
 
