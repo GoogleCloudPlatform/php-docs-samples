@@ -21,17 +21,16 @@ namespace Google\Cloud\Samples\Vision;
 // [START image_property_detection]
 use Google\Cloud\Vision\VisionClient;
 
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
 $image = $vision->image(file_get_contents($path), [
     'IMAGE_PROPERTIES'
 ]);
 $result = $vision->annotate($image);
-$annotation = $result->info()['imagePropertiesAnnotation'];
 print("Properties:\n");
 foreach ($result->imageProperties()->colors() as $color) {
     $rgb = $color['color'];

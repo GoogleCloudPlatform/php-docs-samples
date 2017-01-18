@@ -20,11 +20,11 @@
 use Google\Cloud\Vision\VisionClient;
 
 // [START get_vision_service]
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
 // [END get_vision_service]
 // [START construct_request]

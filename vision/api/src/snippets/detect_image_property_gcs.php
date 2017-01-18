@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,30 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-// [START logo_detection]
-use Google\Cloud\Vision\VisionClient;
+# [START image_property_detection_gcs]
+use Google\Cloud\ServiceBuilder;
 
 // $projectId = 'YOUR_PROJECT_ID';
-// $path = 'path/to/your/image.jpg'
+// $bucketName = 'your-bucket-name'
+// $objectName = 'your-object-name'
 
-$vision = new VisionClient([
+$builder = new ServiceBuilder([
     'projectId' => $projectId,
 ]);
-$image = $vision->image(file_get_contents($path), ['LOGO_DETECTION']);
+$vision = $builder->vision();
+$storage = $builder->storage();
+
+// fetch the storage object and annotate the image
+$object = $storage->bucket($bucketName)->object($objectName);
+$image = $vision->image($object, ['IMAGE_PROPERTIES']);
 $result = $vision->annotate($image);
-print("Logos:\n");
-foreach ((array) $result->logos() as $logo) {
-    print($logo->description() . PHP_EOL);
+
+// print the response
+print("Properties:\n");
+foreach ($result->imageProperties()->colors() as $color) {
+    $rgb = $color['color'];
+    printf("red:%s\n", $rgb['red']);
+    printf("green:%s\n", $rgb['green']);
+    printf("blue:%s\n\n", $rgb['blue']);
 }
-// [END logo_detection]
+# [END image_property_detection]

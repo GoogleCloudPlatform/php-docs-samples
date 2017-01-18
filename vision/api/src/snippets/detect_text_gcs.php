@@ -16,21 +16,27 @@
  */
 
 
-namespace Google\Cloud\Samples\Vision;
-
-// [START logo_detection]
-use Google\Cloud\Vision\VisionClient;
+// [START text_detection]
+use Google\Cloud\ServiceBuilder;
 
 // $projectId = 'YOUR_PROJECT_ID';
-// $path = 'path/to/your/image.jpg'
+// $bucketName = 'your-bucket-name'
+// $objectName = 'your-object-name'
 
-$vision = new VisionClient([
+$builder = new ServiceBuilder([
     'projectId' => $projectId,
 ]);
-$image = $vision->image(file_get_contents($path), ['LOGO_DETECTION']);
+$vision = $builder->vision();
+$storage = $builder->storage();
+
+// fetch the storage object and annotate the image
+$object = $storage->bucket($bucketName)->object($objectName);
+$image = $vision->image($object, ['TEXT_DETECTION']);
 $result = $vision->annotate($image);
-print("Logos:\n");
-foreach ((array) $result->logos() as $logo) {
-    print($logo->description() . PHP_EOL);
+
+// print the response
+print("Texts:\n");
+foreach ((array) $result->text() as $text) {
+    print($text->description() . PHP_EOL);
 }
-// [END logo_detection]
+// [END text_detection]
