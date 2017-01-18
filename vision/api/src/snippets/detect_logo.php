@@ -29,20 +29,8 @@ $vision = new VisionClient([
 ]);
 $image = $vision->image(file_get_contents($path), ['LOGO_DETECTION']);
 $result = $vision->annotate($image);
-if (isset($result->info()['logoAnnotations'])) {
-    foreach ($result->info()['logoAnnotations'] as $annotation) {
-        print("LOGO\n");
-        print("  mid: $annotation[mid]\n");
-        print("  description: $annotation[description]\n");
-        print("  score: $annotation[score]\n");
-        if (isset($annotation['boundingPoly'])) {
-            print("  BOUNDING POLY\n");
-            foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-                $x = isset($vertex['x']) ? $vertex['x'] : '';
-                $y = isset($vertex['y']) ? $vertex['y'] : '';
-                print("    x:$x\ty:$y\n");
-            }
-        }
-    }
+print("Logos:\n");
+foreach ((array) $result->logos() as $logo) {
+    print($logo->description() . PHP_EOL);
 }
 // [END logo_detection]

@@ -33,44 +33,11 @@ $vision = new VisionClient([
 $image = $vision->image(file_get_contents($path), ['FACE_DETECTION']);
 $result = $vision->annotate($image);
 # [END detect_face]
-if (isset($result->info()['faceAnnotations'])) {
-    foreach ($result->info()['faceAnnotations'] as $annotation) {
-        print("FACE\n");
-        if (isset($annotation['boundingPoly'])) {
-            print("  BOUNDING POLY\n");
-            foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-                $x = isset($vertex['x']) ? $vertex['x'] : '';
-                $y = isset($vertex['y']) ? $vertex['y'] : '';
-                print("    x:$x\ty:$y\n");
-            }
-        }
-        if (isset($annotation['landmarks'])) {
-            print("  LANDMARKS\n");
-            foreach ($annotation['landmarks'] as $landmark) {
-                $pos = $landmark['position'];
-                print("    $landmark[type]:\tx:$pos[x]\ty:$pos[y]\tz:$pos[z]\n");
-            }
-        }
-        $scalar_features = [
-            'rollAngle',
-            'panAngle',
-            'tiltAngle',
-            'detectionConfidence',
-            'landmarkingConfidence',
-            'joyLikelihood',
-            'sorrowLikelihood',
-            'angerLikelihood',
-            'surpriseLikelihood',
-            'underExposedLikelihood',
-            'blurredLikelihood',
-            'headwearLikelihood'
-        ];
-        foreach ($scalar_features as $feature) {
-            if (isset($annotation[$feature])) {
-                print("  $feature:\t$annotation[$feature]\n");
-            }
-        }
-    }
+print("Faces:\n");
+foreach ((array) $result->faces() as $face) {
+    printf("Anger: %s\n", $face->isAngry() ? 'yes' : 'no');
+    printf("Joy: %s\n", $face->isJoyful() ? 'yes' : 'no');
+    printf("Surprise: %s\n\n", $face->isSurprised() ? 'yes' : 'no');
 }
 # [END face_detection]
 return $result;

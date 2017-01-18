@@ -29,12 +29,9 @@ $image = $vision->image(file_get_contents($path), [
     'SAFE_SEARCH_DETECTION'
 ]);
 $result = $vision->annotate($image);
-$annotation = $result->info()['safeSearchAnnotation'];
-print("SAFE_SEARCH\n");
-$scalar_features = ['adult', 'spoof', 'medical', 'violence'];
-foreach ($scalar_features as $feature) {
-    if (isset($annotation[$feature])) {
-        print("  $feature:\t$annotation[$feature]\n");
-    }
-}
+$safe = $result->safeSearch();
+printf("Adult: %s\n", $safe->isAdult() ? 'yes' : 'no');
+printf("Spoof: %s\n", $safe->isSpoof() ? 'yes' : 'no');
+printf("Medical: %s\n", $safe->isMedical() ? 'yes' : 'no');
+printf("Violence: %s\n\n", $safe->isViolent() ? 'yes' : 'no');
 // [END safe_search_detection]

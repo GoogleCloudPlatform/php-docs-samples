@@ -38,14 +38,9 @@ $result = $vision->annotate($image);
 # [END construct_request]
 
 # [START parse_response]
-if (!isset($result->info()['labelAnnotations'])) {
-    return;
-}
-foreach ($result->info()['labelAnnotations'] as $annotation) {
-    print("LABEL\n");
-    print("  mid: $annotation[mid]\n");
-    print("  description: $annotation[description]\n");
-    print("  score: $annotation[score]\n");
+print("LABELS:\n");
+foreach ($result->labels() as $label) {
+    print($label->description() . PHP_EOL);
 }
 # [END parse_response]
 # [END detect_labels]

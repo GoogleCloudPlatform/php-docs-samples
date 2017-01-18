@@ -47,8 +47,8 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('description: cat', $display);
-        $this->assertContains('description: mammal', $display);
+        $this->assertContains('cat', $display);
+        $this->assertContains('mammal', $display);
     }
 
     public function testTextCommand()
@@ -80,7 +80,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Texts:\n", $display);
     }
 
     public function testFaceCommand()
@@ -96,8 +96,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('NOSE_TIP', $display);
-        $this->assertContains('angerLikelihood:', $display);
+        $this->assertContains('Anger: no', $display);
     }
 
     public function testFaceCommandWithImageLackingFaces()
@@ -113,7 +112,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Faces:\n", $display);
     }
 
     public function testFaceCommandWithOutput()
@@ -184,7 +183,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Landmarks:\n", $display);
     }
 
     public function testLogoCommand()
@@ -216,7 +215,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Logos:\n", $display);
     }
 
     public function testSafeSearchCommand()
@@ -232,7 +231,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('adult:', $display);
+        $this->assertContains('Adult:', $display);
     }
 
     public function testImagePropertyCommand()
