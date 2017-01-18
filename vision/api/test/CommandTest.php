@@ -138,7 +138,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('Anger: no', $display);
+        $this->assertContains('Anger: ', $display);
+        $this->assertContains('Joy: ', $display);
+        $this->assertContains('Surprise: ', $display);
     }
 
     public function testFaceCommandGcs()
@@ -157,7 +159,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('Anger: no', $display);
+        $this->assertContains('Anger: ', $display);
+        $this->assertContains('Joy: ', $display);
+        $this->assertContains('Surprise: ', $display);
     }
 
     public function testFaceCommandWithImageLackingFaces()
@@ -191,7 +195,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('Anger: no', $display);
+        $this->assertContains('Anger: ', $display);
+        $this->assertContains('Joy: ', $display);
+        $this->assertContains('Surprise: ', $display);
         $this->assertContains('Output image written to ' . $output, $display);
         $this->assertTrue(file_exists($output));
     }
