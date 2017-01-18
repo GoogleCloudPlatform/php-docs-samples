@@ -26,12 +26,15 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CommandTest extends \PHPUnit_Framework_TestCase
 {
+    private $bucketName;
+
     public function setUp()
     {
         if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
+        $this->bucketName = getenv('GCS_BUCKET_NAME');
     }
 
     public function testLabelCommand()
@@ -47,8 +50,28 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('description: cat', $display);
-        $this->assertContains('description: mammal', $display);
+        $this->assertContains('cat', $display);
+        $this->assertContains('mammal', $display);
+    }
+
+    public function testLabelCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectLabelCommand());
+        $commandTester = new CommandTester($application->get('label'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/cat.jpg",
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('cat', $display);
+        $this->assertContains('mammal', $display);
     }
 
     public function testTextCommand()
@@ -59,6 +82,25 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             [
                 'path' => __DIR__ . '/data/sabertooth.gif',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('extinct', $display);
+    }
+
+    public function testTextCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectTextCommand());
+        $commandTester = new CommandTester($application->get('text'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/sabertooth.gif",
             ],
             ['interactive' => false]
         );
@@ -80,7 +122,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Texts:\n", $display);
     }
 
     public function testFaceCommand()
@@ -96,8 +138,30 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('NOSE_TIP', $display);
-        $this->assertContains('angerLikelihood:', $display);
+        $this->assertContains('Anger: ', $display);
+        $this->assertContains('Joy: ', $display);
+        $this->assertContains('Surprise: ', $display);
+    }
+
+    public function testFaceCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectFaceCommand());
+        $commandTester = new CommandTester($application->get('face'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/face.png",
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Anger: ', $display);
+        $this->assertContains('Joy: ', $display);
+        $this->assertContains('Surprise: ', $display);
     }
 
     public function testFaceCommandWithImageLackingFaces()
@@ -113,7 +177,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Faces:\n", $display);
     }
 
     public function testFaceCommandWithOutput()
@@ -131,8 +195,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('NOSE_TIP', $display);
-        $this->assertContains('angerLikelihood:', $display);
+        $this->assertContains('Anger: ', $display);
+        $this->assertContains('Joy: ', $display);
+        $this->assertContains('Surprise: ', $display);
         $this->assertContains('Output image written to ' . $output, $display);
         $this->assertTrue(file_exists($output));
     }
@@ -152,7 +217,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Faces:\n", $display);
     }
 
     public function testLandmarkCommand()
@@ -163,6 +228,25 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             [
                 'path' => __DIR__ . '/data/tower.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Eiffel', $display);
+    }
+
+    public function testLandmarkCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectLandmarkCommand());
+        $commandTester = new CommandTester($application->get('landmark'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/tower.jpg",
             ],
             ['interactive' => false]
         );
@@ -184,7 +268,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Landmarks:\n", $display);
     }
 
     public function testLogoCommand()
@@ -195,6 +279,25 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             [
                 'path' => __DIR__ . '/data/logo.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Google', $display);
+    }
+
+    public function testLogoCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectLogoCommand());
+        $commandTester = new CommandTester($application->get('logo'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/logo.jpg",
             ],
             ['interactive' => false]
         );
@@ -216,7 +319,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertEquals('', $display);
+        $this->assertEquals("Logos:\n", $display);
     }
 
     public function testSafeSearchCommand()
@@ -232,7 +335,26 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
-        $this->assertContains('adult:', $display);
+        $this->assertContains('Adult:', $display);
+    }
+
+    public function testSafeSearchCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectSafeSearchCommand());
+        $commandTester = new CommandTester($application->get('safe-search'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/logo.jpg",
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Adult:', $display);
     }
 
     public function testImagePropertyCommand()
@@ -243,6 +365,27 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             [
                 'path' => __DIR__ . '/data/logo.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('red:', $display);
+        $this->assertContains('green:', $display);
+        $this->assertContains('blue:', $display);
+    }
+
+    public function testImagePropertyCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectImagePropertyCommand());
+        $commandTester = new CommandTester($application->get('property'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/logo.jpg",
             ],
             ['interactive' => false]
         );

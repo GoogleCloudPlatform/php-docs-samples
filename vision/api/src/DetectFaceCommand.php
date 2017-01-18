@@ -82,7 +82,12 @@ EOF
     {
         $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        $result = require __DIR__ . '/snippets/detect_face.php';
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
+            list($bucketName, $objectName) = array_slice($matches, 1);
+            $result = require __DIR__ . '/snippets/detect_face_gcs.php';
+        } else {
+            $result = require __DIR__ . '/snippets/detect_face.php';
+        }
         if (
             isset($result->info()['faceAnnotations'])
             && $outFile = $input->getArgument('output')

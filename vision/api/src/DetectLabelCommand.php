@@ -59,6 +59,11 @@ EOF
     {
         $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        require(__DIR__ . '/snippets/detect_label.php');
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
+            list($bucketName, $objectName) = array_slice($matches, 1);
+            $result = require __DIR__ . '/snippets/detect_label_gcs.php';
+        } else {
+            $result = require __DIR__ . '/snippets/detect_label.php';
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,30 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-# [START face_detection]
-# [START get_vision_service]
-use Google\Cloud\Vision\VisionClient;
+# [START face_detection_gcs]
+use Google\Cloud\ServiceBuilder;
 
 // $projectId = 'YOUR_PROJECT_ID';
-// $path = 'path/to/your/image.jpg'
+// $bucketName = 'your-bucket-name'
+// $objectName = 'your-object-name'
 
-$vision = new VisionClient([
+$builder = new ServiceBuilder([
     'projectId' => $projectId,
 ]);
-# [END get_vision_service]
-# [START detect_face]
-$image = $vision->image(file_get_contents($path), ['FACE_DETECTION']);
+$vision = $builder->vision();
+$storage = $builder->storage();
+
+// fetch the storage object and annotate the image
+$object = $storage->bucket($bucketName)->object($objectName);
+$image = $vision->image($object, ['FACE_DETECTION']);
 $result = $vision->annotate($image);
-# [END detect_face]
+
+// print the response
 print("Faces:\n");
 foreach ((array) $result->faces() as $face) {
     printf("Anger: %s\n", $face->isAngry() ? 'yes' : 'no');
     printf("Joy: %s\n", $face->isJoyful() ? 'yes' : 'no');
     printf("Surprise: %s\n\n", $face->isSurprised() ? 'yes' : 'no');
 }
-# [END face_detection]
+# [END face_detection_gcs]
 return $result;

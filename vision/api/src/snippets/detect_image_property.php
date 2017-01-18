@@ -21,24 +21,21 @@ namespace Google\Cloud\Samples\Vision;
 // [START image_property_detection]
 use Google\Cloud\Vision\VisionClient;
 
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
-$image = $vision->image(file_get_contents($path),
-    ['IMAGE_PROPERTIES']);
+$image = $vision->image(file_get_contents($path), [
+    'IMAGE_PROPERTIES'
+]);
 $result = $vision->annotate($image);
-if (isset($result->info()['imagePropertiesAnnotation'])) {
-    $annotation = $result->info()['imagePropertiesAnnotation'];
-    print("COLORS\n");
-    foreach ($annotation['dominantColors']['colors'] as $color) {
-        $rgb = $color['color'];
-        print("  COLOR\n");
-        print("  red:$rgb[red]\tgreen:$rgb[green]\tblue:$rgb[blue]\n");
-        print("  score:$color[score]\n");
-        print("  pixelFraction:$color[pixelFraction]\n");
-    }
+print("Properties:\n");
+foreach ($result->imageProperties()->colors() as $color) {
+    $rgb = $color['color'];
+    printf("red:%s\n", $rgb['red']);
+    printf("green:%s\n", $rgb['green']);
+    printf("blue:%s\n\n", $rgb['blue']);
 }
 // [END image_property_detection]

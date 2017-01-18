@@ -20,41 +20,19 @@
 use Google\Cloud\Vision\VisionClient;
 
 // [START get_vision_service]
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
 // [END get_vision_service]
 // [START construct_request]
 $image = $vision->image(file_get_contents($path), ['LANDMARK_DETECTION']);
 $result = $vision->annotate($image);
 // [END construct_request]
-if (!isset($result->info()['landmarkAnnotations'])) {
-    return;
-}
-foreach ($result->info()['landmarkAnnotations'] as $annotation) {
-    print("LANDMARK\n");
-    print("  mid: $annotation[mid]\n");
-    print("  description: $annotation[description]\n");
-    print("  score: $annotation[score]\n");
-    if (isset($annotation['boundingPoly'])) {
-        print("  BOUNDING POLY\n");
-        foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-            $x = isset($vertex['x']) ? $vertex['x'] : '';
-            $y = isset($vertex['y']) ? $vertex['y'] : '';
-            print("    x:$x\ty:$y\n");
-        }
-    }
-    if (isset($annotation['locations'])) {
-        foreach ($annotation['locations'] as $location) {
-            if (isset($location['latLng'])) {
-                $ll = $location['latLng'];
-                print("  LOCATION:\tlatitude:$ll[latitude]\t" .
-                    "longitude:$ll[longitude]\n");
-            }
-        }
-    }
+print("Landmarks:\n");
+foreach ((array) $result->landmarks() as $landmark) {
+    print($landmark->description() . PHP_EOL);
 }
 // [END landmark_detection]

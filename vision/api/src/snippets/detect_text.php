@@ -19,28 +19,16 @@
 // [START text_detection]
 use Google\Cloud\Vision\VisionClient;
 
-// $apiKey = 'YOUR-API-KEY';
+// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
 $vision = new VisionClient([
-    'key' => $apiKey,
+    'projectId' => $projectId,
 ]);
 $image = $vision->image(file_get_contents($path), ['TEXT_DETECTION']);
 $result = $vision->annotate($image);
-if (!isset($result->info()['textAnnotations'])) {
-    return;
-}
-foreach ($result->info()['textAnnotations'] as $annotation) {
-    print("TEXT\n");
-    if (isset($annotation['locale'])) {
-        print("  locale: $annotation[locale]\n");
-    }
-    print("  description: $annotation[description]\n");
-    if (isset($annotation['boundingPoly'])) {
-        print("  BOUNDING POLY\n");
-        foreach ($annotation['boundingPoly']['vertices'] as $vertex) {
-            print("    x:$vertex[x]\ty:$vertex[y]\n");
-        }
-    }
+print("Texts:\n");
+foreach ((array) $result->text() as $text) {
+    print($text->description() . PHP_EOL);
 }
 // [END text_detection]

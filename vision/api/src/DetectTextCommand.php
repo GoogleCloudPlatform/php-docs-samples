@@ -49,18 +49,23 @@ EOF
                 'The image to examine.'
             )
             ->addOption(
-                'api-key',
-                'k',
+                'project',
+                'p',
                 InputOption::VALUE_REQUIRED,
-                'Your API key.'
+                'Your Project ID.'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiKey = $input->getOption('api-key');
+        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        require(__DIR__ . '/snippets/detect_text.php');
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
+            list($bucketName, $objectName) = array_slice($matches, 1);
+            $result = require __DIR__ . '/snippets/detect_text_gcs.php';
+        } else {
+            $result = require __DIR__ . '/snippets/detect_text.php';
+        }
     }
 }
