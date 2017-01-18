@@ -25,7 +25,7 @@ $response = $kms->projects_locations_keyRings_cryptoKeys->decrypt(
     $request
 );
 
-# The plaintext response comes back base64 decoded.
+// The plaintext response comes back base64 decoded.
 $plaintext = base64_decode($response['plaintext'])
 # [END decrypt]
 

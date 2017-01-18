@@ -17,7 +17,7 @@ $client->setScopes([
 
 $kms = new Google_Service_CloudKMS($client);
 
-# This client library requires we base64 encode binary data.
+// This client library requires we base64 encode binary data.
 $encoded = base64_encode(file_get_contents($infile));
 
 $request = new Google_Service_CloudKMS_EncryptRequest();
