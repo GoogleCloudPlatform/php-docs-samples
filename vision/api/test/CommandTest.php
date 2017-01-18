@@ -151,7 +151,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($application->get('face'));
         $commandTester->execute(
             [
-                'path' => "gs://{$this->bucketName}/face.jpg",
+                'path' => "gs://{$this->bucketName}/face.png",
             ],
             ['interactive' => false]
         );
