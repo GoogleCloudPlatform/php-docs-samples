@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ class KmsTest extends \PHPUnit_Framework_TestCase
             return $this->markTestSkipped('Set the GOOGLE_KMS_KEYRING environment variable');
         }
         $name = 'test-crypto-key-' . time();
-        $process = $this->createProcess('create_crypto_key.php', [
+        $process = $this->createProcess('create_cryptokey.php', [
             $this->projectId,
             $keyRing,
             $name
@@ -70,7 +70,7 @@ class KmsTest extends \PHPUnit_Framework_TestCase
     public function testCreateKeyRing()
     {
         $name = 'test-key-ring-' . time();
-        $process = $this->createProcess('create_key_ring.php', [
+        $process = $this->createProcess('create_keyring.php', [
             $this->projectId,
             $name
         ]);

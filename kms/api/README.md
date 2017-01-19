@@ -2,8 +2,8 @@
 
 ## Description
 
-These samples show how to use the [Google Cloud KMS API](
-https://cloud.google.com/kms/).
+These samples show how to use the [Google Cloud KMS API]
+(https://cloud.google.com/kms/).
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the KMS API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)
@@ -20,10 +20,10 @@ https://cloud.google.com/kms/).
     (if composer is installed globally).
 5.  **Run**:
 ```sh
-$ php create_key_ring.php
-Usage: create_key_ring.php [project_id] [name]
-$ php create_crypto_key.php
-Usage: create_crypto_key.php [project_id] [keyring] [name]
+$ php create_keyring.php
+Usage: create_keyring.php [project_id] [name]
+$ php create_cryptokey.php
+Usage: create_cryptokey.php [project_id] [keyring] [name]
 $ php encrypt.php
 Usage: encrypt.php [key_name] [infile] [outfile]
 $ php decrypt.php
