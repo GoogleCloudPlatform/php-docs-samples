@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="test/bootstrap.php">
     <testsuites>
-        <testsuite name="Google Cloud KMS Quickstart Tests">
+        <testsuite name="Google Cloud KMS API Tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -25,7 +25,10 @@
     </logging>
     <filter>
         <whitelist>
-            <file>quickstart.php</file>
+            <file>create_key.php</file>
+            <file>create_key_ring.php</file>
+            <file>decrypt.php</file>
+            <file>encrypt.php</file>
         </whitelist>
     </filter>
 </phpunit>
