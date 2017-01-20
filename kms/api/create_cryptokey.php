@@ -18,7 +18,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 if (count($argv) < 4) {
-    die('usage: create_crypto_key.php [project_id] [keyring] [name]');
+    die('usage: create_cryptokey.php [project_id] [keyring] [name]');
 }
 
 list($projectId, $keyRing, $name) = array_slice($argv, 1);
