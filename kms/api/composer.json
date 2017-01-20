@@ -1,8 +1,12 @@
 {
     "require": {
-        "google/apiclient": "^2.1"
+        "google/apiclient": "^2.1",
+        "symfony/console": " ^3.0"
     },
-    "require-dev": {
-        "symfony/process": "^3.2"
+    "autoload": {
+        "psr-4": { "Google\\Cloud\\Samples\\Kms\\": "src" },
+        "files": [
+            "src/functions.php"
+        ]
     }
 }
