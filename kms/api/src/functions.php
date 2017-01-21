@@ -32,7 +32,7 @@ use Google_Service_CloudKMS_UpdateCryptoKeyPrimaryVersionRequest;
 
 # [START add_member_to_cryptokey_policy]
 /**
- * Add a member to a CryptoKey policy.
+ * Add a member to a CryptoKey IAM policy.
  *
  * @param string $projectId
  * @param string $ring
@@ -84,7 +84,7 @@ function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role,
 
 # [START add_member_to_keyring_policy]
 /**
- * Add a member to a KeyRing policy.
+ * Add a member to a KeyRing IAM policy.
  *
  * @param string $projectId
  * @param string $ring
@@ -134,7 +134,7 @@ function add_member_to_keyring_policy($projectId, $ring, $member, $role, $locati
 
 # [START create_cryptokey]
 /**
- * Create a KeyRing version.
+ * Create a CryptoKey.
  *
  * @param string $projectId
  * @param string $ring
@@ -430,7 +430,7 @@ function restore_cryptokey_version($projectId, $ring, $key, $version, $location 
 
 # [BEGIN disable_cryptokey_version]
 /**
- * Disable a CrytoKey version.
+ * Disable a CryptoKey version.
  *
  * @param string $projectId
  * @param string $ring
@@ -475,7 +475,7 @@ function disable_cryptokey_version($projectId, $ring, $key, $version, $location 
 
 # [BEGIN enable_cryptokey_version]
 /**
- * Enable a CrytoKey version.
+ * Enable a CryptoKey version.
  *
  * @param string $projectId
  * @param string $ring
@@ -520,7 +520,7 @@ function enable_cryptokey_version($projectId, $ring, $key, $version, $location =
 
 # [BEGIN get_cryptokey_policy]
 /**
- * Add a member to a KeyRing policy.
+ * Get the IAM policy for a CryptoKey.
  *
  * @param string $projectId
  * @param string $ring
@@ -559,7 +559,7 @@ function get_cryptokey_policy($projectId, $ring, $key, $location = 'global')
 
 # [START get_keyring_policy]
 /**
- * Add a member to a KeyRing policy.
+ * Get the IAM policy for a KeyRing.
  *
  * @param string $projectId
  * @param string $ring
@@ -596,7 +596,7 @@ function get_keyring_policy($projectId, $ring, $location = 'global')
 
 # [START remove_member_from_cryptokey_policy]
 /**
- * Remove a member from a KeyRing policy.
+ * Remove a member from a CryptoKey IAM policy.
  *
  * @param string $projectId
  * @param string $ring
@@ -656,7 +656,7 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
 
 # [BEGIN remove_member_from_keyring_policy]
 /**
- * Remove a member from a KeyRing policy.
+ * Remove a member from a KeyRing IAM policy.
  *
  * @param string $projectId
  * @param string $ring
