@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ The <info>%command.name%</info> command manages KMS encryption.
 
     <info>php %command.full_name% my-keyring my-cryptokey file.txt file.txt.encrypted</info>
 
-    <info>php %command.full_name% my-keyring my-cryptokey file.txt.encrypted file.txt.decrypted</info>
+    <info>php %command.full_name% my-keyring my-cryptokey file.txt.encrypted file.txt.decrypted --decrypt</info>
 
 EOF
             )
