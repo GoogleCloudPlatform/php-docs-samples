@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Google_Client;
-use Google_Service_CloudKMS;
-use Google_Service_CloudKMS_DecryptRequest;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
