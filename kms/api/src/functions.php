@@ -711,7 +711,7 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
 }
 # [END remove_member_from_keyring_policy]
 
-# [BEGIN set_primary_cryptokey_version]
+# [BEGIN set_cryptokey_primary_version]
 /**
  * Set a CryptoKey version as primary.
  *
@@ -722,7 +722,7 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
  * @param string $location [optional]
  * @return null
  */
-function set_primary_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+function set_cryptokey_primary_version($projectId, $ring, $key, $version, $location = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -750,4 +750,4 @@ function set_primary_cryptokey_version($projectId, $ring, $key, $version, $locat
 
     printf('Set %s as primary version for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
 }
-# [END set_primary_cryptokey_version]
+# [END set_cryptokey_primary_version]

@@ -135,7 +135,7 @@ EOF
             } elseif ($input->getOption('enable')) {
                 enable_cryptokey_version($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
             } elseif ($input->getOption('set-primary')) {
-                set_primary_cryptokey_version($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
+                set_cryptokey_primary_version($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
             } else {
                 $version = $this->getCryptoKeyVersion($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
                 $this->printCryptoKeyVersion($version);
