@@ -103,10 +103,10 @@ EOF
         $infile = $input->getArgument('infile');
         $outfile = $input->getArgument('outfile');
         $location = $input->getOption('location');
-        if (!$input->getOption('decrypt')) {
-            encrypt($projectId, $keyRing, $cryptoKey, $infile, $outfile, $location);
-        } else {
+        if ($input->getOption('decrypt')) {
             decrypt($projectId, $keyRing, $cryptoKey, $infile, $outfile, $location);
+        } else {
+            encrypt($projectId, $keyRing, $cryptoKey, $infile, $outfile, $location);
         }
     }
 }
