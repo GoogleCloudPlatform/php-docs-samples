@@ -40,11 +40,17 @@ class KeyRingCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages KMS keyrings.
 
+List all KeyRings for a project:
+
     <info>php %command.full_name%</info>
+
+Display information about a KeyRing:
 
     <info>php %command.full_name% my-keyring</info>
 
-    <info>php %command.full_name% my-keyring --create</info>
+Create a KeyRing:
+
+    <info>php %command.full_name% new-keyring --create</info>
 
 EOF
             )

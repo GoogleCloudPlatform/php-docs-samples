@@ -38,9 +38,17 @@ class VersionCommand extends Command
             ->setName('version')
             ->setDescription('Manage key versions for KMS')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command manages KMS keys.
+The <info>%command.name%</info> command manages KMS key versions.
+
+List all versions of a CryptoKey:
 
     <info>php %command.full_name% my-keyring my-cryptokey 1</info>
+
+Display information about a specific CryptoKey version:
+
+    <info>php %command.full_name% my-keyring my-cryptokey 1</info>
+
+Create a new CryptoKey version:
 
     <info>php %command.full_name% my-keyring my-cryptokey --create</info>
 

@@ -40,9 +40,24 @@ class IamCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages KMS IAM policies.
 
+List the IAM roles for a KeyRing:
+
     <info>php %command.full_name% my-keyring</info>
 
+List the IAM roles for a CryptoKey:
+
     <info>php %command.full_name% my-keyring my-cryptokey</info>
+
+Add a service account to a CryptoKey:
+
+    <info>php %command.full_name% my-keyring my-cryptokey \
+        --service-account-email=example@my-project.gserviceaccount.com</info>
+
+Add a service account to a CryptoKey for a specific role:
+
+    <info>php %command.full_name% my-keyring my-cryptokey \
+        --service-account-email=example@my-project.gserviceaccount.com \
+        --role=roles\cloudkms.admin</info>
 
 EOF
             )

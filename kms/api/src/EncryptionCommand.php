@@ -38,9 +38,13 @@ class EncryptionCommand extends Command
             ->setName('encryption')
             ->setDescription('Manage encryption for KMS')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command manages KMS encryption.
+The <info>%command.name%</info> command uses the KMS API to encrypt and decrypt text in files.
+
+Encrypt the text of a file using the specified CryptoKey:
 
     <info>php %command.full_name% my-keyring my-cryptokey file.txt file.txt.encrypted</info>
+
+Decrypt the text of a file using the specified CryptoKey:
 
     <info>php %command.full_name% my-keyring my-cryptokey file.txt.encrypted file.txt.decrypted --decrypt</info>
 

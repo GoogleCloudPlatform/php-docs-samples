@@ -40,9 +40,17 @@ class KeyCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages KMS keys.
 
+List all CrytoKeys for the supplied KeyRing:
+
     <info>php %command.full_name% my-keyring</info>
 
+Display information about a CrytoKey:
+
     <info>php %command.full_name% my-keyring my-cryptokey</info>
+
+Create a CrytoKey:
+
+    <info>php %command.full_name% my-keyring new-cryptokey --create</info>
 
 EOF
             )
@@ -55,11 +63,6 @@ EOF
                 'cryptokey',
                 InputArgument::OPTIONAL,
                 'The name of the cryptokey.'
-            )
-            ->addArgument(
-                'cryptokeyversion',
-                InputArgument::OPTIONAL,
-                'The version of the cryptokey.'
             )
             ->addOption(
                 'project',
