@@ -346,7 +346,7 @@ function decrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
 }
 # [END decrypt]
 
-# [BEGIN destroy_cryptokey_version]
+# [START destroy_cryptokey_version]
 /**
  * Destroy a CryptoKey version.
  *
@@ -387,7 +387,7 @@ function destroy_cryptokey_version($projectId, $ring, $key, $version, $location 
 }
 # [END destroy_cryptokey_version]
 
-# [BEGIN restore_cryptokey_version]
+# [START restore_cryptokey_version]
 /**
  * Restore a CryptoKey version.
  *
@@ -428,7 +428,7 @@ function restore_cryptokey_version($projectId, $ring, $key, $version, $location 
 }
 # [END restore_cryptokey_version]
 
-# [BEGIN disable_cryptokey_version]
+# [START disable_cryptokey_version]
 /**
  * Disable a CryptoKey version.
  *
@@ -473,7 +473,7 @@ function disable_cryptokey_version($projectId, $ring, $key, $version, $location 
 }
 # [END disable_cryptokey_version]
 
-# [BEGIN enable_cryptokey_version]
+# [START enable_cryptokey_version]
 /**
  * Enable a CryptoKey version.
  *
@@ -518,7 +518,7 @@ function enable_cryptokey_version($projectId, $ring, $key, $version, $location =
 }
 # [END enable_cryptokey_version]
 
-# [BEGIN get_cryptokey_policy]
+# [START get_cryptokey_policy]
 /**
  * Get the IAM policy for a CryptoKey.
  *
@@ -654,7 +654,7 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
 }
 # [END remove_member_from_cryptokey_policy]
 
-# [BEGIN remove_member_from_keyring_policy]
+# [START remove_member_from_keyring_policy]
 /**
  * Remove a member from a KeyRing IAM policy.
  *
@@ -711,7 +711,7 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
 }
 # [END remove_member_from_keyring_policy]
 
-# [BEGIN set_cryptokey_primary_version]
+# [START set_cryptokey_primary_version]
 /**
  * Set a CryptoKey version as primary.
  *
