@@ -25,10 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <file>create_key.php</file>
-            <file>create_key_ring.php</file>
-            <file>decrypt.php</file>
-            <file>encrypt.php</file>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
 </phpunit>
