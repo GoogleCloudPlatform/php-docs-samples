@@ -57,7 +57,7 @@ Add a service account to a CryptoKey for a specific role:
 
     <info>php %command.full_name% my-keyring my-cryptokey \
         --service-account-email=example@my-project.gserviceaccount.com \
-        --role=roles\cloudkms.admin</info>
+        --role=roles/cloudkms.admin</info>
 
 EOF
             )
