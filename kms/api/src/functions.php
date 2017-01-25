@@ -39,7 +39,7 @@ use Google_Service_CloudKMS_UpdateCryptoKeyPrimaryVersionRequest;
  * @param string $key
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
- * @param string $role Must b in the format "roles/$role",
+ * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
  * @param string $location [optional]
  * @return null
@@ -90,7 +90,7 @@ function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role,
  * @param string $ring
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
- * @param string $role Must b in the format "roles/$role",
+ * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
  * @param string $location [optional]
  * @return null
@@ -602,7 +602,7 @@ function get_keyring_policy($projectId, $ring, $location = 'global')
  * @param string $key
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
- * @param string $role Must b in the format "roles/$role",
+ * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
  * @param string $location [optional]
  * @return null
@@ -660,7 +660,7 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
  * @param string $ring
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
- * @param string $role Must b in the format "roles/$role",
+ * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
  * @param string $location [optional]
  * @return null
