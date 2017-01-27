@@ -1,0 +1,45 @@
+# Google App Engine Metadata
+
+This sample application demonstrates how to access [Compute Metadata](https://cloud.google.com/compute/docs/storing-retrieving-metadata) with Google App Engine.
+
+## Setup
+
+Before running this sample:
+
+### Register your application
+
+- Go to
+  [Google Developers Console](https://console.developers.google.com/project)
+  and create a new project. This will automatically enable an App
+  Engine application with the same ID as the project.
+
+
+### Prerequisites
+
+- Install [`composer`](https://getcomposer.org)
+- Install dependencies by running:
+
+    ```sh
+    composer install
+    ```
+
+- Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
+- Initialize the SDK by running `gcloud init`
+
+## Run Locally
+
+This sample is designed to run in App Engine flexible environment. This application
+will fail to reach the Metadata server if run locally.
+
+## Deploy to App Engine
+
+**Deploy with gcloud**
+
+```
+gcloud config set project YOUR_PROJECT_ID
+gcloud app deploy
+gcloud app browse
+```
+
+The last command will open `https://{YOUR_PROJECT_ID}.appspot.com/`
+in your browser.
