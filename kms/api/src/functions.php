@@ -30,7 +30,7 @@ use Google_Service_CloudKMS_RestoreCryptoKeyVersionRequest;
 use Google_Service_CloudKMS_SetIamPolicyRequest;
 use Google_Service_CloudKMS_UpdateCryptoKeyPrimaryVersionRequest;
 
-# [START add_member_to_cryptokey_policy]
+# [START kms_add_member_to_cryptokey_policy]
 /**
  * Add a member to a CryptoKey IAM policy.
  *
@@ -80,9 +80,9 @@ function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role,
 
     printf('Member %s added to policy for key %s in keyring %s' . PHP_EOL, $member, $key, $ring);
 }
-# [END add_member_to_cryptokey_policy]
+# [END kms_add_member_to_cryptokey_policy]
 
-# [START add_member_to_keyring_policy]
+# [START kms_add_member_to_keyring_policy]
 /**
  * Add a member to a KeyRing IAM policy.
  *
@@ -130,9 +130,9 @@ function add_member_to_keyring_policy($projectId, $ring, $member, $role, $locati
 
     printf('Member %s added to policy for keyring %s' . PHP_EOL, $member, $ring);
 }
-# [END add_member_to_keyring_policy]
+# [END kms_add_member_to_keyring_policy]
 
-# [START create_cryptokey]
+# [START kms_create_cryptokey]
 /**
  * Create a CryptoKey.
  *
@@ -174,9 +174,9 @@ function create_cryptokey($projectId, $ring, $key, $location = 'global')
 
     printf('Created key %s in keyring %s' . PHP_EOL, $key, $ring);
 }
-# [END create_cryptokey]
+# [END kms_create_cryptokey]
 
-# [START create_cryptokey_version]
+# [START kms_create_cryptokey_version]
 /**
  * Create a KeyRing version.
  *
@@ -215,9 +215,9 @@ function create_cryptokey_version($projectId, $ring, $key, $location = 'global')
     $number = substr($newVersion->name, strrpos($newVersion->name, '/') + 1);
     printf('Created version %s for key %s in keyring %s' . PHP_EOL, $number, $key, $ring);
 }
-# [END create_cryptokey_version]
+# [END kms_create_cryptokey_version]
 
-# [START create_keyring]
+# [START kms_create_keyring]
 /**
  * Create a KeyRing.
  *
@@ -252,9 +252,9 @@ function create_keyring($projectId, $ring, $location = 'global')
 
     printf('Created keyring %s' . PHP_EOL, $ring);
 }
-# [END create_keyring]
+# [END kms_create_keyring]
 
-# [START encrypt]
+# [START kms_encrypt]
 /**
  * Encrypt a text file.
  *
@@ -297,9 +297,9 @@ function encrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
     file_put_contents($outfile, $response['ciphertext']);
     printf('Saved encrypted text to %s' . PHP_EOL, $outfile);
 }
-# [END encrypt]
+# [END kms_encrypt]
 
-# [START decrypt]
+# [START kms_decrypt]
 /**
  * Decrypt a text file.
  *
@@ -343,9 +343,9 @@ function decrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
     file_put_contents($outfile, $plaintext);
     printf('Saved decrypted text to %s' . PHP_EOL, $outfile);
 }
-# [END decrypt]
+# [END kms_decrypt]
 
-# [START destroy_cryptokey_version]
+# [START kms_destroy_cryptokey_version]
 /**
  * Destroy a CryptoKey version.
  *
@@ -384,9 +384,9 @@ function destroy_cryptokey_version($projectId, $ring, $key, $version, $location 
 
     printf('Destroyed version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
 }
-# [END destroy_cryptokey_version]
+# [END kms_destroy_cryptokey_version]
 
-# [START restore_cryptokey_version]
+# [START kms_restore_cryptokey_version]
 /**
  * Restore a CryptoKey version.
  *
@@ -425,9 +425,9 @@ function restore_cryptokey_version($projectId, $ring, $key, $version, $location 
 
     printf('Restored version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
 }
-# [END restore_cryptokey_version]
+# [END kms_restore_cryptokey_version]
 
-# [START disable_cryptokey_version]
+# [START kms_disable_cryptokey_version]
 /**
  * Disable a CryptoKey version.
  *
@@ -470,9 +470,9 @@ function disable_cryptokey_version($projectId, $ring, $key, $version, $location 
 
     printf('Disabled version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
 }
-# [END disable_cryptokey_version]
+# [END kms_disable_cryptokey_version]
 
-# [START enable_cryptokey_version]
+# [START kms_enable_cryptokey_version]
 /**
  * Enable a CryptoKey version.
  *
@@ -515,9 +515,9 @@ function enable_cryptokey_version($projectId, $ring, $key, $version, $location =
 
     printf('Enabled version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
 }
-# [END enable_cryptokey_version]
+# [END kms_enable_cryptokey_version]
 
-# [START get_cryptokey_policy]
+# [START kms_get_cryptokey_policy]
 /**
  * Get the IAM policy for a CryptoKey.
  *
@@ -554,9 +554,9 @@ function get_cryptokey_policy($projectId, $ring, $key, $location = 'global')
         );
     }
 }
-# [END get_cryptokey_policy]
+# [END kms_get_cryptokey_policy]
 
-# [START get_keyring_policy]
+# [START kms_get_keyring_policy]
 /**
  * Get the IAM policy for a KeyRing.
  *
@@ -591,9 +591,9 @@ function get_keyring_policy($projectId, $ring, $location = 'global')
         );
     }
 }
-# [END get_keyring_policy]
+# [END kms_get_keyring_policy]
 
-# [START remove_member_from_cryptokey_policy]
+# [START kms_remove_member_from_cryptokey_policy]
 /**
  * Remove a member from a CryptoKey IAM policy.
  *
@@ -650,9 +650,9 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
         $key,
         $ring);
 }
-# [END remove_member_from_cryptokey_policy]
+# [END kms_remove_member_from_cryptokey_policy]
 
-# [START remove_member_from_keyring_policy]
+# [START kms_remove_member_from_keyring_policy]
 /**
  * Remove a member from a KeyRing IAM policy.
  *
@@ -707,9 +707,9 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
         $member,
         $ring);
 }
-# [END remove_member_from_keyring_policy]
+# [END kms_remove_member_from_keyring_policy]
 
-# [START set_cryptokey_primary_version]
+# [START kms_set_cryptokey_primary_version]
 /**
  * Set a CryptoKey version as primary.
  *
@@ -748,4 +748,4 @@ function set_cryptokey_primary_version($projectId, $ring, $key, $version, $locat
 
     printf('Set %s as primary version for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
 }
-# [END set_cryptokey_primary_version]
+# [END kms_set_cryptokey_primary_version]
