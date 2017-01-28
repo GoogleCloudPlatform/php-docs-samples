@@ -254,6 +254,240 @@ function create_keyring($projectId, $ring, $location = 'global')
 }
 # [END kms_create_keyring]
 
+# [START kms_get_keyring]
+/**
+ * Get a KeyRing.
+ *
+ * @param string $projectId
+ * @param string $ring
+ * @param string $location [optional]
+ * @return null
+ */
+function get_keyring($projectId, $ring, $location = 'global')
+{
+    // Instantiate the client, authenticate, and add scopes.
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+
+    // Create the Cloud KMS client.
+    $kms = new Google_Service_CloudKMS($client);
+
+    // The resource name of the CryptoKey.
+    $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
+        $projectId,
+        $location,
+        $ring
+    );
+
+    // Get the KeyRing and print it.
+    $keyRing = $kms->projects_locations_keyRings->get($parent);
+    printf("Name: %s\nCreate Time: %s\n",
+        $keyRing->getName(),
+        $keyRing->getCreateTime()
+    );
+}
+# [END kms_get_keyring]
+
+# [START kms_list_keyrings]
+/**
+ * List the KeyRings for a project and location.
+ *
+ * @param string $projectId
+ * @param string $ring
+ * @param string $location [optional]
+ * @return null
+ */
+function list_keyrings($projectId, $location = 'global')
+{
+    // Instantiate the client, authenticate, and add scopes.
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+
+    // Create the Cloud KMS client.
+    $kms = new Google_Service_CloudKMS($client);
+
+    // The resource name of the CryptoKey.
+    $parent = sprintf('projects/%s/locations/%s',
+        $projectId,
+        $location
+    );
+
+    // Get the CryptoKey versions and print them.
+    $rings = $kms->projects_locations_keyRings
+        ->listProjectsLocationsKeyRings($parent);
+    foreach ($rings as $keyRing) {
+        printf("Name: %s\nCreate Time: %s\n",
+            $keyRing->getName(),
+            $keyRing->getCreateTime()
+        );
+    }
+}
+# [END kms_list_keyrings]
+
+# [START kms_get_cryptokey]
+/**
+ * Get a CryptoKey.
+ *
+ * @param string $projectId
+ * @param string $ring
+ * @param string $key
+ * @param string $location [optional]
+ * @return null
+ */
+function get_cryptokey($projectId, $ring, $key, $location = 'global')
+{
+    // Instantiate the client, authenticate, and add scopes.
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+
+    // Create the Cloud KMS client.
+    $kms = new Google_Service_CloudKMS($client);
+
+    // The resource name of the CryptoKey.
+    $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
+        $projectId,
+        $location,
+        $ring,
+        $key
+    );
+
+    // Get the CryptoKey and print it.
+    $cryptoKey = $kms->projects_locations_keyRings_cryptoKeys
+        ->get($parent);
+    printf("Name: %s\nCreate Time: %s\nPurpose: %s\nPrimary Version: %s\n",
+        $cryptoKey->getName(),
+        $cryptoKey->getCreateTime(),
+        $cryptoKey->getPurpose(),
+        $cryptoKey->getPrimary()->getName()
+    );
+}
+# [END kms_get_cryptokey]
+
+# [START kms_list_cryptokeys]
+/**
+ * List the CryptoKeys for a KeyRing.
+ *
+ * @param string $projectId
+ * @param string $ring
+ * @param string $location [optional]
+ * @return null
+ */
+function list_cryptokeys($projectId, $ring, $location = 'global')
+{
+    // Instantiate the client, authenticate, and add scopes.
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+
+    // Create the Cloud KMS client.
+    $kms = new Google_Service_CloudKMS($client);
+
+    // The resource name of the CryptoKey.
+    $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
+        $projectId,
+        $location,
+        $ring
+    );
+
+    // Get the CryptoKey versions and print them.
+    $keys = $kms->projects_locations_keyRings_cryptoKeys
+        ->listProjectsLocationsKeyRingsCryptoKeys($parent);
+    foreach ($keys as $cryptoKey) {
+        printf("Name: %s\nCreate Time: %s\nPurpose: %s\nPrimary Version: %s\n\n",
+            $cryptoKey->getName(),
+            $cryptoKey->getCreateTime(),
+            $cryptoKey->getPurpose(),
+            $cryptoKey->getPrimary()->getName()
+        );
+    }
+}
+# [END kms_list_cryptokey_versions]
+
+# [START kms_get_cryptokey_version]
+/**
+ * Get the version for a CryptoKey.
+ *
+ * @param string $projectId
+ * @param string $ring
+ * @param string $key
+ * @param int $version
+ * @param string $location [optional]
+ * @return null
+ */
+function get_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+{
+    // Instantiate the client, authenticate, and add scopes.
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+
+    // Create the Cloud KMS client.
+    $kms = new Google_Service_CloudKMS($client);
+
+    // The resource name of the cryptokey version.
+    $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
+        $projectId,
+        $location,
+        $ring,
+        $key,
+        $version
+    );
+
+    // Get the CryptoKey version and print it.
+    $cryptoKeyVersion = $kms->projects_locations_keyRings_cryptoKeys_cryptoKeyVersions
+        ->get($parent);
+    printf("Name: %s\nCreate Time: %s\nState: %s\n",
+        $cryptoKeyVersion->getName(),
+        $cryptoKeyVersion->getCreateTime(),
+        $cryptoKeyVersion->getState()
+    );
+}
+# [END kms_get_cryptokey_version]
+
+# [START kms_list_cryptokey_versions]
+/**
+ * List the versions for a CryptoKey.
+ *
+ * @param string $projectId
+ * @param string $ring
+ * @param string $key
+ * @param string $location [optional]
+ * @return null
+ */
+function list_cryptokey_versions($projectId, $ring, $key, $location = 'global')
+{
+    // Instantiate the client, authenticate, and add scopes.
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+
+    // Create the Cloud KMS client.
+    $kms = new Google_Service_CloudKMS($client);
+
+    // The resource name of the CryptoKey.
+    $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
+        $projectId,
+        $location,
+        $ring,
+        $key
+    );
+
+    // Get the CryptoKey versions and print them.
+    $versions = $kms->projects_locations_keyRings_cryptoKeys_cryptoKeyVersions
+        ->listProjectsLocationsKeyRingsCryptoKeysCryptoKeyVersions($parent);
+    foreach ($versions as $cryptoKeyVersion) {
+        printf("Name: %s\nCreate Time: %s\nState: %s\n\n",
+            $cryptoKeyVersion->getName(),
+            $cryptoKeyVersion->getCreateTime(),
+            $cryptoKeyVersion->getState()
+        );
+    }
+}
+# [END kms_list_cryptokey_versions]
+
 # [START kms_encrypt]
 /**
  * Encrypt a text file.

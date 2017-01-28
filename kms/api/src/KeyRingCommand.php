@@ -93,49 +93,10 @@ EOF
             if ($input->getOption('create')) {
                 create_keyring($projectId, $ring, $location);
             } else {
-                $keyRing = $this->getKeyRing($projectId, $ring, $location);
-                $this->printKeyRing($keyRing);
+                get_keyring($projectId, $ring, $location);
             }
         } else {
-            foreach ($this->getKeyRings($projectId, $location) as $keyRing) {
-                $this->printKeyRing($keyRing);
-                print(PHP_EOL);
-            }
+            list_keyrings($projectId, $location);
         }
-    }
-
-    private function getKeyRing($projectId, $keyRing, $location = 'global')
-    {
-        // The resource name of the keyring.
-        $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
-            $projectId,
-            $location,
-            $keyRing
-        );
-
-        // Get the key ring.
-        $kms = $this->getKmsClient();
-        return $kms->projects_locations_keyRings->get($parent);
-    }
-
-    private function getKeyRings($projectId, $location = 'global')
-    {
-        // The resource name of the cryptokey version.
-        $parent = sprintf('projects/%s/locations/%s',
-            $projectId,
-            $location
-        );
-
-        // Get the crypto key version.
-        $kms = $this->getKmsClient();
-        return $kms->projects_locations_keyRings
-            ->listProjectsLocationsKeyRings($parent);
-    }
-
-    private function printKeyRing($keyRing)
-    {
-        // print the key ring.
-        printf('Name: %s' . PHP_EOL, $keyRing->getName());
-        printf('Create time: %s' . PHP_EOL, $keyRing->getCreateTime());
     }
 }
