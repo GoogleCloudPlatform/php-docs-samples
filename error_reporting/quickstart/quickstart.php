@@ -7,8 +7,11 @@ require __DIR__ . '/vendor/autoload.php';
 // Imports the Google Cloud client library
 use Google\Cloud\Logging\LoggingClient;
 
-// Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
+// These variables are set by the App Engine environment. To test locally,
+// ensure these are set or manually change their values.
+$projectId = getenv('GCLOUD_PROJECT') ?: 'YOUR_PROJECT_ID';
+$service = getenv('GAE_SERVICE') ?: 'error_reporting_quickstart';
+$version = getenv('GAE_VERSION') ?: '1.0-dev';
 
 // Instantiates a client
 $logging = new LoggingClient([
@@ -21,13 +24,13 @@ $logName = 'my-log';
 // Selects the log to write to
 $logger = $logging->logger($logName);
 
-$handlerFunction = function (Exception $e) use ($logger) {
+$handlerFunction = function (Exception $e) use ($logger, $service, $version) {
     // Creates the log entry with the exception trace
     $entry = $logger->entry([
         'message' => sprintf('PHP Warning: %s', $e),
         'serviceContext' => [
-            'service' => 'error_reporting_quickstart',
-            'version' => '1.0-dev',
+            'service' => $service,
+            'version' => $version,
         ]
     ]);
     // Writes the log entry
