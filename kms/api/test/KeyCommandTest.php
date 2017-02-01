@@ -22,8 +22,10 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class KeyCommandTest extends \PHPUnit_Framework_TestCase
 {
+    private $commandTester;
     private $projectId;
     private $ring;
+    private static $key;
 
     public function setUp()
     {
@@ -33,6 +35,25 @@ class KeyCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->projectId = $projectId;
         $this->ring = getenv('GOOGLE_KMS_KEYRING');
+        $application = new Application();
+        $application->add(new KeyCommand());
+        $this->commandTester = new CommandTester($application->get('key'));
+    }
+
+    public function testListCryptoKeys()
+    {
+        $this->commandTester->execute(
+            [
+                'keyring' => $this->ring,
+                '--project' => $this->projectId,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Name: /');
+        $this->expectOutputRegex('/Create Time: /');
+        $this->expectOutputRegex('/Purpose: /');
+        $this->expectOutputRegex('/Primary Version: /');
     }
 
     public function testCreateCryptoKey()
@@ -41,20 +62,40 @@ class KeyCommandTest extends \PHPUnit_Framework_TestCase
             return $this->markTestSkipped('Set the GOOGLE_KMS_KEYRING environment variable');
         }
 
-        $key = 'test-crypto-key-' . time();
-        $application = new Application();
-        $application->add(new KeyCommand());
-        $commandTester = new CommandTester($application->get('key'));
-        $commandTester->execute(
+        self::$key = 'test-crypto-key-' . time();
+        $this->commandTester->execute(
             [
                 'keyring' => $this->ring,
-                'cryptokey' => $key,
+                'cryptokey' => self::$key,
                 '--create' => true,
                 '--project' => $this->projectId,
             ],
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Created key %s in keyring %s' . PHP_EOL, $key, $this->ring));
+        $this->expectOutputString(sprintf('Created key %s in keyring %s' . PHP_EOL,
+            self::$key,
+            $this->ring
+        ));
+    }
+
+    /**
+     * @depends testCreateCryptoKey
+     */
+    public function testGetCryptoKey()
+    {
+        $this->commandTester->execute(
+            [
+                'keyring' => $this->ring,
+                'cryptokey' => self::$key,
+                '--project' => $this->projectId,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex(sprintf('/Name: %s/', self::$key));
+        $this->expectOutputRegex('/Create Time: /');
+        $this->expectOutputRegex('/Purpose: /');
+        $this->expectOutputRegex('/Primary Version: /');
     }
 }

@@ -145,56 +145,10 @@ EOF
             } elseif ($input->getOption('set-primary')) {
                 set_cryptokey_primary_version($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
             } else {
-                $version = $this->getCryptoKeyVersion($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
-                $this->printCryptoKeyVersion($version);
+                get_cryptokey_version($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location);
             }
         } else {
-            foreach ($this->getCryptoKeyVersions($projectId, $keyRing, $cryptoKey, $location) as $version) {
-                $this->printCryptoKeyVersion($version);
-                print(PHP_EOL);
-            }
+            list_cryptokey_versions($projectId, $keyRing, $cryptoKey, $location);
         }
-    }
-
-    private function getCryptoKeyVersion($projectId, $keyRing, $cryptoKey, $cryptoKeyVersion, $location = 'global')
-    {
-        // The resource name of the cryptokey version.
-        $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
-            $projectId,
-            $location,
-            $keyRing,
-            $cryptoKey,
-            $cryptoKeyVersion
-        );
-
-        // Get the crypto key version.
-        $kms = $this->getKmsClient();
-        return $kms->projects_locations_keyRings_cryptoKeys_cryptoKeyVersions->get($parent);
-    }
-
-    private function getCryptoKeyVersions($projectId, $keyRing, $cryptoKey, $location = 'global')
-    {
-        // The resource name of the cryptokey version.
-        $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
-            $projectId,
-            $location,
-            $keyRing,
-            $cryptoKey
-        );
-
-        // Get the crypto key version.
-        $kms = $this->getKmsClient();
-        return $kms->projects_locations_keyRings_cryptoKeys_cryptoKeyVersions
-            ->listProjectsLocationsKeyRingsCryptoKeysCryptoKeyVersions($parent);
-    }
-
-    private function printCryptoKeyVersion($cryptoKeyVersion)
-    {
-        // print the crypto key version
-        printf('Name: %s' . PHP_EOL, $cryptoKeyVersion->getName());
-        printf('Create Time: %s' . PHP_EOL, $cryptoKeyVersion->getCreateTime());
-        printf('State: %s' . PHP_EOL, $cryptoKeyVersion->getState());
-        printf('Destroy Event Time: %s' . PHP_EOL, $cryptoKeyVersion->getDestroyEventTime());
-        printf('Destroy Time: %s' . PHP_EOL, $cryptoKeyVersion->getDestroyEventTime());
     }
 }

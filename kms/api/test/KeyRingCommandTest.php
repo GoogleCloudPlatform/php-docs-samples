@@ -22,7 +22,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class KeyRingCommandTest extends \PHPUnit_Framework_TestCase
 {
+    private $commandTester;
     private $projectId;
+    private static $ring;
 
     public function setUp()
     {
@@ -31,23 +33,53 @@ class KeyRingCommandTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->projectId = $projectId;
+        $application = new Application();
+        $application->add(new KeyRingCommand());
+        $this->commandTester = new CommandTester($application->get('keyring'));
+    }
+
+    public function testListKeyRings()
+    {
+        $this->commandTester->execute(
+            [
+                '--project' => $this->projectId,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Name: /');
+        $this->expectOutputRegex('/Create Time: /');
     }
 
     public function testCreateKeyRing()
     {
-        $ring = 'test-key-ring-' . time();
-        $application = new Application();
-        $application->add(new KeyRingCommand());
-        $commandTester = new CommandTester($application->get('keyring'));
-        $commandTester->execute(
+        self::$ring = 'test-key-ring-' . time();
+        $this->commandTester->execute(
             [
-                'keyring' => $ring,
+                'keyring' => self::$ring,
                 '--create' => true,
                 '--project' => $this->projectId,
             ],
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Created keyring %s' . PHP_EOL, $ring));
+        $this->expectOutputString(sprintf('Created keyring %s' . PHP_EOL, self::$ring));
+    }
+
+    /**
+     * @depends testCreateKeyRing
+     */
+    public function testGetKeyRing()
+    {
+        $this->commandTester->execute(
+            [
+                'keyring' => self::$ring,
+                '--project' => $this->projectId,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex(sprintf('/Name: %s/', self::$ring));
+        $this->expectOutputRegex('/Create Time: /');
     }
 }

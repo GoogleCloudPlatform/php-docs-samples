@@ -93,61 +93,17 @@ EOF
             $projectId = $this->getProjectIdFromGcloud();
         }
         $keyRing = $input->getArgument('keyring');
-        $key = $input->getArgument('cryptokey');
+        $cryptoKey = $input->getArgument('cryptokey');
         $location = $input->getOption('location');
 
-        if ($key) {
+        if ($cryptoKey) {
             if ($input->getOption('create')) {
-                create_cryptokey($projectId, $keyRing, $key, $location);
+                create_cryptokey($projectId, $keyRing, $cryptoKey, $location);
             } else {
-                $cryptoKey = $this->getCryptoKey($projectId, $keyRing, $key, $location);
-                $this->printCryptoKey($cryptoKey);
+                get_cryptokey($projectId, $keyRing, $cryptoKey, $location);
             }
         } else {
-            foreach ($this->getCryptoKeys($projectId, $keyRing, $location) as $cryptoKey) {
-                $this->printCryptoKey($cryptoKey);
-                print(PHP_EOL);
-            }
+            list_cryptokeys($projectId, $keyRing, $location);
         }
-    }
-
-    private function getCryptoKey($projectId, $keyRing, $key, $location = 'global')
-    {
-        // The resource name of the cryptokey.
-        $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
-            $projectId,
-            $location,
-            $keyRing,
-            $key
-        );
-
-        // Get the crypto key.
-        $kms = $this->getKmsClient();
-        return $kms->projects_locations_keyRings_cryptoKeys->get($parent);
-    }
-
-    private function getCryptoKeys($projectId, $keyRing, $location = 'global')
-    {
-        // The resource name of the cryptokey version.
-        $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
-            $projectId,
-            $location,
-            $keyRing
-        );
-
-        // Get the crypto key version.
-        $kms = $this->getKmsClient();
-        return $kms->projects_locations_keyRings_cryptoKeys
-            ->listProjectsLocationsKeyRingsCryptoKeys($parent);
-    }
-
-    private function printCryptoKey($cryptoKey)
-    {
-        // print the crypto key
-        printf('Name: %s' . PHP_EOL, $cryptoKey->getName());
-        printf('Create Time: %s' . PHP_EOL, $cryptoKey->getCreateTime());
-        printf('Purpose: %s' . PHP_EOL, $cryptoKey->getPurpose());
-        printf('Primary Version: %s' . PHP_EOL, $cryptoKey->getPrimary()->getName());
-        printf('Rotation Period: %s' . PHP_EOL, $cryptoKey->getRotationPeriod());
     }
 }

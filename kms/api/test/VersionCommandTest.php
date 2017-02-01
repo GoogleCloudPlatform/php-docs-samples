@@ -49,6 +49,22 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester = new CommandTester($application->get('version'));
     }
 
+    public function testListCryptoKeyVersions()
+    {
+        $this->commandTester->execute(
+            [
+                'keyring' => $this->ring,
+                'cryptokey' => $this->key,
+                '--project' => $this->projectId,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Name: /');
+        $this->expectOutputRegex('/Create Time: /');
+        $this->expectOutputRegex('/State: /');
+    }
+
     public function testCreateCryptoKeyVersion()
     {
         ob_start();
@@ -68,6 +84,26 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
             $this->ring);
         $this->assertEquals(1, preg_match($regex, $output, $matches));
         self::$version = $matches[1];
+    }
+
+    /**
+     * @depends testCreateCryptoKeyVersion
+     */
+    public function testGetCryptoKeyVersions()
+    {
+        $this->commandTester->execute(
+            [
+                'keyring' => $this->ring,
+                'cryptokey' => $this->key,
+                'version' => self::$version,
+                '--project' => $this->projectId,
+            ],
+            ['interactive' => false]
+        );
+
+        $this->expectOutputRegex('/Name: /');
+        $this->expectOutputRegex('/Create Time: /');
+        $this->expectOutputRegex('/State: /');
     }
 
     /**
