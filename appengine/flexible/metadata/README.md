@@ -1,6 +1,8 @@
-# Google App Engine Metadata
+# Compute Metadata on App Engine Flexible Environment
 
-This sample application demonstrates how to access [Compute Metadata](https://cloud.google.com/compute/docs/storing-retrieving-metadata) with Google App Engine.
+This sample application demonstrates how to access
+[Compute Metadata](https://cloud.google.com/compute/docs/storing-retrieving-metadata)
+from App Engine flexible environment.
 
 ## Setup
 
@@ -10,9 +12,7 @@ Before running this sample:
 
 - Go to
   [Google Developers Console](https://console.developers.google.com/project)
-  and create a new project. This will automatically enable an App
-  Engine application with the same ID as the project.
-
+  and create a new project. 
 
 ### Prerequisites
 
@@ -28,8 +28,8 @@ Before running this sample:
 
 ## Run Locally
 
-This sample is designed to run in App Engine flexible environment. This application
-will fail to reach the Metadata server if run locally.
+This sample is designed to run in App Engine flexible environment.
+This application will fail to reach the Metadata server if run locally.
 
 ## Deploy to App Engine
 
