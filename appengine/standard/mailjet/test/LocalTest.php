@@ -16,7 +16,7 @@
  */
 use Silex\WebTestCase;
 
-class cloudsqlTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     public function createApplication()
     {
@@ -25,14 +25,18 @@ class cloudsqlTest extends WebTestCase
         // set some parameters for testing
         $app['session.test'] = true;
         $app['debug'] = true;
+        $projectId = getenv('GOOGLE_PROJECT_ID');
 
-        // skip if we are missing required env vars
-        $dsn = getenv('MYSQL_DSN');
-        $username = getenv('MYSQL_USERNAME');
-        $password = getenv('MYSQL_PASSWORD');
-        if (empty($dsn) || empty($username) || false === $password) {
-            $this->markTestSkipped('set the MYSQL_DSN, MYSQL_USER and MYSQL_PASSWORD environment variables');
+        // set your Mailjet API key and secret
+        $mailjetApiKey = getenv('MAILJET_APIKEY');
+        $mailjetSecret = getenv('MAILJET_SECRET');
+
+        if (empty($mailjetApiKey) || empty($mailjetSecret)) {
+            $this->markTestSkipped('set the MAILJET_APIKEY and MAILJET_SECRET environment variables');
         }
+
+        $app['mailjet.api_key'] = $mailjetApiKey;
+        $app['mailjet.secret'] = $mailjetSecret;
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);
@@ -49,31 +53,17 @@ class cloudsqlTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
-    public function testSignGuestbook()
+    public function testSendEmail()
     {
         $client = $this->createClient();
 
-        $time = date('Y-m-d H:i:s');
-        $crawler = $client->request('POST', '/', [
-            'name' => 'mr Skeltal',
-            'content' => sprintf('doot doot (%s)', $time),
+        $crawler = $client->request('POST', '/send', [
+            'recipient' => 'fake@example.com',
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(302, $response->getStatusCode());
-
-        $crawler = $client->followRedirect();
-        $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($time, $response->getContent());
-    }
-
-    public function testCreateTables()
-    {
-        $client = $this->createClient();
-
-        $crawler = $client->request('get', '/create_tables');
-
-        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertContains('"Sent"', $response->getContent());
+        $this->assertContains('"fake@example.com"', $response->getContent());
     }
 }

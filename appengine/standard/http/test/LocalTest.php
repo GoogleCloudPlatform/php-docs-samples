@@ -16,7 +16,7 @@
  */
 use Silex\WebTestCase;
 
-class httpTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     private $expected;
 

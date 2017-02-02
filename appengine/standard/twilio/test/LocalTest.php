@@ -17,7 +17,7 @@
 
 use Silex\WebTestCase;
 
-class twilioTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     public function createApplication()
     {

@@ -18,7 +18,7 @@ namespace Google\Cloud\Test;
 
 use GuzzleHttp\Client;
 
-class StdTest extends \PHPUnit_Framework_TestCase
+class DeployFlexTest extends \PHPUnit_Framework_TestCase
 {
     private $client;
 
@@ -28,7 +28,7 @@ class StdTest extends \PHPUnit_Framework_TestCase
 
     private static function getVersion()
     {
-        return "wp-std-" . getenv(self::VERSION_ENV);
+        return "wp-flex-" . getenv(self::VERSION_ENV);
     }
 
     private static function getTargetDir()
@@ -59,8 +59,8 @@ class StdTest extends \PHPUnit_Framework_TestCase
         $helper = __DIR__ . '/../wordpress-helper.php';
         $target = self::getTargetDir();
         $command = "php $helper setup -d $target "
-            . " -n -p $project_id --env=s "
-            . "--db_instance=wp-std --db_name=wp --db_user=root "
+            . " -n -p $project_id "
+            . "--db_instance=wp --db_name=wp --db_user=wp "
             . "--db_password=$db_password";
         $wp_url = getenv('WP_DOWNLOAD_URL');
         if ($wp_url !== false) {
@@ -127,5 +127,23 @@ class StdTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(
             'I am very glad that you are testing WordPress instalation.',
             $resp->getBody()->getContents());
+    }
+
+    public function testWpadmin()
+    {
+        // Access to '/wp-admin' and see if it's correctly redirected to
+        // /wp-admin/
+
+        // Suppresses following redirect here.
+        $resp = $this->client->request(
+            'GET', 'wp-admin', ['allow_redirects' => false]);
+        $this->assertEquals('301', $resp->getStatusCode(),
+                            'wp-admin status code');
+        $url = sprintf('https://%s-dot-%s.appspot.com/',
+                       self::getVersion(),
+                       getenv(self::PROJECT_ENV));
+        $this->assertEquals(
+            $url . 'wp-admin/',
+            $resp->getHeaderLine('location'));
     }
 }

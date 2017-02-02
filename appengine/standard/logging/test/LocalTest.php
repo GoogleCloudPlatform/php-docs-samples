@@ -17,7 +17,7 @@
 
 use google\appengine\api\log\LogService;
 
-class loggingTest extends PHPUnit_Framework_TestCase
+class LocalTest extends PHPUnit_Framework_TestCase
 {
     public function testNoLogs()
     {

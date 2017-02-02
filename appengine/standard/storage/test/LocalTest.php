@@ -17,7 +17,7 @@
 use Silex\WebTestCase;
 use google\appengine\api\cloud_storage\CloudStorageTools;
 
-class storageTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     public function createApplication()
     {
