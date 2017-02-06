@@ -13,6 +13,6 @@
     },
     "autoload": {
         "psr-4": { "Google\\Cloud\\Helper\\": "src/",
-                   "Google\\Cloud\\Test\\": "tests/"}
+                   "Google\\Cloud\\Test\\": "test/"}
     }
 }
