@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-class mailTest extends PHPUnit_Framework_TestCase
+class LocalTest extends PHPUnit_Framework_TestCase
 {
     public function testSendMail()
     {

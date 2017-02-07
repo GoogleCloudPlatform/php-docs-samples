@@ -16,7 +16,7 @@
  */
 use Silex\WebTestCase;
 
-class mailgunTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     private $recipient;
 

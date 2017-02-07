@@ -14,13 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="tests/bootstrap.php">
+<phpunit bootstrap="test/bootstrap.php">
     <php>
         <env name="LOCAL_TEST_TARGETS" value="app.yaml backend.yaml"/>
     </php>
     <testsuites>
         <testsuite name="PHP Modules API unit tests">
-            <directory>tests</directory>
+            <directory>test</directory>
         </testsuite>
     </testsuites>
     <logging>

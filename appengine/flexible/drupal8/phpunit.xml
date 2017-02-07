@@ -14,10 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="tests/bootstrap.php">
+<phpunit bootstrap="test/bootstrap.php">
     <testsuites>
         <testsuite name="Drupal deployment test">
-            <directory>tests</directory>
+            <directory>test</directory>
         </testsuite>
     </testsuites>
 </phpunit>
