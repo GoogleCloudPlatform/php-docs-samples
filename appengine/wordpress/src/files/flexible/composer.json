@@ -1,8 +1,8 @@
 {
     "require": {
-        "google/appengine-php-sdk": "^1.9"
+        "google/cloud": "~0.21"
     },
     "require-dev": {
-        "wp-cli/wp-cli": "^0.24.1"
+        "wp-cli/wp-cli": "~1.1"
     }
 }

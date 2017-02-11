@@ -36,6 +36,8 @@ class WordPressSetup extends Command
         'https://downloads.wordpress.org/plugin/memcached.3.0.1.zip';
     const LATEST_GAE_WP =
         'https://downloads.wordpress.org/plugin/google-app-engine.1.6.zip';
+    const LATEST_GCS_PLUGIN =
+        'https://github.com/GoogleCloudPlatform/wordpress-plugins/releases/download/gcs-0.1/gcs-0.1.zip';
 
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
@@ -297,34 +299,6 @@ class WordPressSetup extends Command
         if (!$this->report($output, $project)) {
             return self::DEFAULT_ERROR;
         }
-        $output->writeln('Downloading the Batcache plugin...');
-        $project->downloadArchive(
-            'Batcache plugin', self::LATEST_BATCACHE,
-            '/wordpress/wp-content/plugins'
-        );
-        if (!$this->report($output, $project)) {
-            return self::DEFAULT_ERROR;
-        }
-
-        $output->writeln('Downloading the Memcached plugin...');
-        $project->downloadArchive(
-            'Memcached plugin', self::LATEST_MEMCACHED,
-            '/wordpress/wp-content/plugins'
-        );
-        if (!$this->report($output, $project)) {
-            return self::DEFAULT_ERROR;
-        }
-
-        $output->writeln('Copying drop-ins...');
-        $dir = $project->getDir();
-        copy(
-            $dir . '/wordpress/wp-content/plugins/batcache/advanced-cache.php',
-            $dir . '/wordpress/wp-content/advanced-cache.php'
-        );
-        copy(
-            $dir . '/wordpress/wp-content/plugins/memcached/object-cache.php',
-            $dir . '/wordpress/wp-content/object-cache.php'
-        );
 
         $keys = array(
             'project_id' => '',
@@ -334,6 +308,34 @@ class WordPressSetup extends Command
             'db_password' => '',
         );
         if ($env === self::STANDARD_ENV) {
+            $output->writeln('Downloading the Batcache plugin...');
+            $project->downloadArchive(
+                'Batcache plugin', self::LATEST_BATCACHE,
+                '/wordpress/wp-content/plugins'
+            );
+            if (!$this->report($output, $project)) {
+                return self::DEFAULT_ERROR;
+            }
+
+            $output->writeln('Downloading the Memcached plugin...');
+            $project->downloadArchive(
+                'Memcached plugin', self::LATEST_MEMCACHED,
+                '/wordpress/wp-content/plugins'
+            );
+            if (!$this->report($output, $project)) {
+                return self::DEFAULT_ERROR;
+            }
+
+            $output->writeln('Copying drop-ins...');
+            $dir = $project->getDir();
+            copy(
+                $dir . '/wordpress/wp-content/plugins/batcache/advanced-cache.php',
+                $dir . '/wordpress/wp-content/advanced-cache.php'
+            );
+            copy(
+                $dir . '/wordpress/wp-content/plugins/memcached/object-cache.php',
+                $dir . '/wordpress/wp-content/object-cache.php'
+            );
             $copyFiles = array(
                 'app.yaml' => '/',
                 'cron.yaml' => '/',
@@ -351,11 +353,15 @@ class WordPressSetup extends Command
                 return self::DEFAULT_ERROR;
             }
         } else {
+            // Download gcs plugin
+            $project->downloadArchive(
+                'GCS plugin', self::LATEST_GCS_PLUGIN,
+                '/wordpress/wp-content/plugins'
+            );
             $copyFiles = array(
                 'app.yaml' => '/',
                 'cron.yaml' => '/',
                 'composer.json' => '/',
-                'gcs-media.php' => '/wordpress/wp-content/plugins/',
                 'nginx-app.conf' => '/',
                 'php.ini' => '/',
                 'wp-config.php' => '/wordpress/',

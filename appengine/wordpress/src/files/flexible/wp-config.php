@@ -19,34 +19,13 @@
  */
 
 // Register GCS stream wrapper
-set_include_path(__DIR__ . '/../vendor/google/appengine-php-sdk');
-require_once(__DIR__ . '/../vendor/autoload.php');
-stream_wrapper_register(
-    'gs',
-    '\google\appengine\ext\cloud_storage_streams\CloudStorageStreamWrapper',
-    0);
 
-// Bucket name for the media upload
-define('GOOGLE_CLOUD_STORAGE_BUCKET', '{{project_id}}.appspot.com');
+require_once(__DIR__ . '/../vendor/autoload.php');
+$storageClient = new Google\Cloud\Storage\StorageClient();
+$storageClient->registerStreamWrapper();
 
 // $onGae is true on production.
-$onGae = filter_var(getenv('GAE_VM'), FILTER_VALIDATE_BOOLEAN);
-
-// Cache settings
-define('WP_CACHE', $onGae);
-$batcache = [
-    'seconds' => 0,
-    'max_age' => 30 * 60, // 30 minutes
-    'debug' => false
-];
-if ($onGae) {
-    $memcached_servers = array(
-        'default' => array(
-            getenv('MEMCACHE_PORT_11211_TCP_ADDR')
-            . ':' . getenv('MEMCACHE_PORT_11211_TCP_PORT')
-        )
-    );
-}
+$onGae = (getenv('GAE_VERSION') !== false);
 
 // Disable pseudo cron behavior
 define('DISABLE_WP_CRON', true);
@@ -57,15 +36,12 @@ if (isset($_SERVER['HTTP_HOST'])) {
 } else {
     define('HTTP_HOST', 'localhost');
 }
-// Use https on MVMs.
+// Use https on production.
 define('WP_HOME', $onGae ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
 define('WP_SITEURL', $onGae ? 'https://' . HTTP_HOST : 'http://' . HTTP_HOST);
 
 // Force SSL for admin pages
 define('FORCE_SSL_ADMIN', $onGae);
-
-// Get HTTPS value from the App Engine specific header.
-$_SERVER['HTTPS'] = $onGae ? $_SERVER['HTTP_X_APPENGINE_HTTPS'] : false;
 
 // ** MySQL settings - You can get this info from your web host ** //
 if ($onGae) {
