@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\AppEngine\Datastore;
+namespace Google\Cloud\Samples\AppEngine\Metadata;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 
@@ -24,27 +24,23 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     public function testIndex()
     {
-        $client = $this->createClient();
+        $resp = $this->client->get('/');
 
-        $crawler = $client->request('GET', '/');
-
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertRegExp(
-            '/External IP: .*/',
-            $client->getResponse()->getBody()
-        );
+        $this->assertEquals(
+            '200',
+            $resp->getStatusCode(),
+            'Top page status code should be 200');
+        $this->assertRegExp('/External IP: .*/', (string) $resp->getBody());
     }
 
     public function testCurl()
     {
-        $client = $this->createClient();
+        $resp = $this->client->get('/curl');
 
-        $crawler = $client->request('GET', '/curl');
-
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertRegExp(
-            '/External IP: .*/',
-            $client->getResponse()->getBody()
-        );
+        $this->assertEquals(
+            '200',
+            $resp->getStatusCode(),
+            '/curl status code should be 200');
+        $this->assertRegExp('/External IP: .*/', (string) $resp->getBody());
     }
 }
