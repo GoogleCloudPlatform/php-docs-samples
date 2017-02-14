@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-# [START memcached]
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
