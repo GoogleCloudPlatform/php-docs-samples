@@ -89,17 +89,17 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
             $result = list_tasks(self::$datastore);
             $found = 0;
             foreach ($result as $task) {
-                $this->assertEquals('buy milk', $task['description']);
-                $this->assertInstanceOf(
-                    \DateTimeInterface::class,
-                    $task['created']
-                );
-                $this->assertEquals(false, $task['done']);
-                $this->assertEquals('buy milk', $task['description']);
-                $this->assertArrayHasKey('id', $task->key()->pathEnd());
-                $found += 1;
+                if ($task['description'] === 'buy milk') {
+                    $this->assertInstanceOf(
+                        \DateTimeInterface::class,
+                        $task['created']
+                    );
+                    $this->assertEquals(false, $task['done']);
+                    $this->assertArrayHasKey('id', $task->key()->pathEnd());
+                    $found += 1;
+                }
             }
-            $this->assertEquals(1, $found);
+            $this->assertEquals(1, $found, 'It should list a new task.');
         });
     }
 

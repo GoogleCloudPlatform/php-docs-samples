@@ -32,9 +32,11 @@ class KeyCommandTest extends \PHPUnit_Framework_TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable');
         }
-
+        if (!$ring = getenv('GOOGLE_KMS_KEYRING')) {
+            return $this->markTestSkipped('Set the GOOGLE_KMS_KEYRING environment variable');
+        }
         $this->projectId = $projectId;
-        $this->ring = getenv('GOOGLE_KMS_KEYRING');
+        $this->ring = $ring;
         $application = new Application();
         $application->add(new KeyCommand());
         $this->commandTester = new CommandTester($application->get('key'));
