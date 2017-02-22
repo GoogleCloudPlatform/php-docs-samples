@@ -52,6 +52,12 @@ EOF
                 InputOption::VALUE_REQUIRED,
                 'The ISO 639-1 code of language to translate to, eg. \'en\'.'
             )
+            ->addOption(
+                'model',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The model to use, "base" for standard and "nmt" for premium.'
+            )
         ;
     }
 
@@ -59,6 +65,12 @@ EOF
     {
         $text = $input->getArgument('text');
         $targetLanguage = $input->getOption('target-language');
-        require(__DIR__ . '/snippets/translate.php');
+        $model = $input->getOption('model');
+
+        if ($model) {
+            require(__DIR__ . '/snippets/translate_with_model.php');
+        } else {
+            require(__DIR__ . '/snippets/translate.php');
+        }
     }
 }
