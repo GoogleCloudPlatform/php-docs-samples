@@ -128,22 +128,4 @@ class DeployFlexTest extends \PHPUnit_Framework_TestCase
             'I am very glad that you are testing WordPress instalation.',
             $resp->getBody()->getContents());
     }
-
-    public function testWpadmin()
-    {
-        // Access to '/wp-admin' and see if it's correctly redirected to
-        // /wp-admin/
-
-        // Suppresses following redirect here.
-        $resp = $this->client->request(
-            'GET', 'wp-admin', ['allow_redirects' => false]);
-        $this->assertEquals('301', $resp->getStatusCode(),
-                            'wp-admin status code');
-        $url = sprintf('https://%s-dot-%s.appspot.com/',
-                       self::getVersion(),
-                       getenv(self::PROJECT_ENV));
-        $this->assertEquals(
-            $url . 'wp-admin/',
-            $resp->getHeaderLine('location'));
-    }
 }
