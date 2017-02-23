@@ -1,5 +1,5 @@
 runtime: php
-vm: true
+env: flex
 
 beta_settings:
   cloud_sql_instances: {{db_connection}}

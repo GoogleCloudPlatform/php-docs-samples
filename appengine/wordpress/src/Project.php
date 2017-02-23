@@ -89,7 +89,7 @@ class Project implements ReportInterface
             $output, $ret);
         $this->info = array_merge($this->info, $output);
         if ($ret !== 0) {
-            $this->info[] = 'Failed to run composer update in ' . $dir
+            $this->info[] = 'Failed to run composer update in ' . $this->dir
                 . '. Please run it by yourself before running WordPress.';
         }
     }

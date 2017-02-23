@@ -1,5 +1,5 @@
 {
     "require-dev": {
-        "wp-cli/wp-cli": "^0.24.1"
+        "wp-cli/wp-cli": "~1.1"
     }
 }
