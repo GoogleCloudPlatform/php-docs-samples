@@ -686,16 +686,16 @@
         },
         {
             "name": "google/cloud-tools",
-            "version": "v0.6.2",
+            "version": "v0.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "bed8a932652e504bb60610810a0ef1acca27b1fd"
+                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/bed8a932652e504bb60610810a0ef1acca27b1fd",
-                "reference": "bed8a932652e504bb60610810a0ef1acca27b1fd",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/90ecc5e371673078cf0fc71d442fd21415c277c3",
+                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3",
                 "shasum": ""
             },
             "require": {
@@ -732,7 +732,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2017-02-23 18:46:57"
+            "time": "2017-02-23 22:19:51"
         },
         {
             "name": "phpdocumentor/reflection-common",
