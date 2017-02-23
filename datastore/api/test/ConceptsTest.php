@@ -53,12 +53,11 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
+        self::$eventuallyConsistentRetryCount =
+                getenv('DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT') ?: 3;
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$datastore = new DatastoreClient(
-            array('namespaceId' => generateRandomString())
-        );
         self::$keys[] = self::$datastore->key('Task', 'sampleTask');
     }
 
@@ -70,6 +69,9 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
                 'No application credentials were found, also not using the '
                 . 'datastore emulator');
         }
+        self::$datastore = new DatastoreClient(
+            array('namespaceId' => generateRandomString())
+        );
         self::$keys = [];
     }
 
@@ -301,12 +303,10 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
         $key = self::$datastore->key('Task', generateRandomString());
         self::$keys[] = $key;
         $task = properties(self::$datastore, $key);
-        $now = new \DateTime();
         self::$datastore->upsert($task);
         $task = self::$datastore->lookup($key);
         $this->assertEquals('Personal', $task['category']);
         $this->assertInstanceOf(\DateTimeInterface::class, $task['created']);
-        $this->assertGreaterThanOrEqual($now, $task['created']);
         $this->assertGreaterThanOrEqual($task['created'], new \DateTime());
         $this->assertEquals(false, $task['done']);
         $this->assertEquals(10.0, $task['percent_complete']);
