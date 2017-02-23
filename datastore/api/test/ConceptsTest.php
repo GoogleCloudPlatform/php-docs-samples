@@ -53,16 +53,15 @@ class ConceptsTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$eventuallyConsistentRetryCount =
-                getenv('DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT') ?: 3;
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$keys[] = self::$datastore->key('Task', 'sampleTask');
     }
 
     public function setUp()
     {
+        $this->eventuallyConsistentRetryCount =
+                getenv('DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT') ?: 3;
         if (!self::$hasCredentials &&
             getenv('DATASTORE_EMULATOR_HOST') === false) {
             $this->markTestSkipped(
