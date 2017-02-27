@@ -37,7 +37,7 @@ class WordPressSetup extends Command
     const LATEST_GAE_WP =
         'https://downloads.wordpress.org/plugin/google-app-engine.1.6.zip';
     const LATEST_GCS_PLUGIN =
-        'https://downloads.wordpress.org/plugin/gcs.0.1.1.zip';
+        'https://downloads.wordpress.org/plugin/gcs.0.1.2.zip';
 
     const FLEXIBLE_ENV = 'Flexible Environment';
     const STANDARD_ENV = 'Standard Environment';
