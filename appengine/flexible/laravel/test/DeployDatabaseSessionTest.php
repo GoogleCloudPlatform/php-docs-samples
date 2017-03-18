@@ -23,13 +23,16 @@ use Google\Cloud\TestUtils\FileUtil;
 use Monolog\Logger;
 use GuzzleHttp\Client;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployDatabaseSessionTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
 
     public static function beforeDeploy()
     {
+        // verify and set environment variables
+        self::verifyEnvironmentVariables();
+
         // ensure logging output is displayed in phpunit
         self::$logger = new Logger('phpunit');
 
@@ -45,6 +48,21 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         chdir($tmpDir);
     }
 
+    private static function verifyEnvironmentVariables()
+    {
+        $envVars = [
+            'LARAVEL_CLOUDSQL_CONNECTION_NAME',
+            'LARAVEL_DB_DATABASE',
+            'LARAVEL_DB_USERNAME',
+            'LARAVEL_DB_PASSWORD',
+        ];
+        foreach ($envVars as $envVar) {
+            if (false === getenv($envVar)) {
+                self::fail("Please set the ${envVar} environment variable");
+            }
+        }
+    }
+
     private static function createLaravelProject($targetDir)
     {
         // install
@@ -54,8 +72,27 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $process->setTimeout(300); // 5 minutes
         self::executeProcess($process);
 
-        // copy in the app.yaml
-        copy(__DIR__ . '/../app.yaml', $targetDir . '/app.yaml');
+        // copy and set the proper env vars in app.yaml
+        $appYaml = str_replace([
+            'YOUR_CLOUDSQL_CONNECTION_NAME',
+            'YOUR_DB_DATABASE',
+            'YOUR_DB_USERNAME',
+            'YOUR_DB_PASSWORD',
+        ], [
+            getenv('LARAVEL_CLOUDSQL_CONNECTION_NAME'),
+            getenv('LARAVEL_DB_DATABASE'),
+            getenv('LARAVEL_DB_USERNAME'),
+            getenv('LARAVEL_DB_PASSWORD'),
+        ], file_get_contents(__DIR__ . '/../app-dbsessions.yaml'));
+        file_put_contents($targetDir . '/app.yaml', $appYaml);
+
+        // add "socket" to "config/database.php"
+        $databaseConfig = str_replace(
+            "'driver' => 'mysql',",
+            "'driver' => 'mysql',
+            'unix_socket' => env('DB_SOCKET', ''),",
+            file_get_contents($targetDir . '/config/database.php'));
+        file_put_contents($targetDir . '/config/database.php', $databaseConfig);
 
         // copy over the base .env file
         self::execute('cp .env.example .env');

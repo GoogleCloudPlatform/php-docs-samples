@@ -4,26 +4,12 @@ env: flex
 runtime_config:
   document_root: public
 
+# required on some platforms so ".env" is not skipped
+skip_files: false
+
 env_variables:
   # The values here will override those in ".env". This is useful for
   # production-specific configuration. However, Feel free to set these values
   # in ".env" instead if you prefer.
   APP_LOG: errorlog
-  CACHE_DRIVER: database
-  SESSION_DRIVER: database
   STORAGE_DIR: /tmp
-  ## Set these environment variables according to your CloudSQL configuration.
-  DB_HOST: localhost
-  DB_DATABASE: YOUR_DB_DATABASE
-  DB_USERNAME: YOUR_DB_USERNAME
-  DB_PASSWORD: YOUR_DB_PASSWORD
-  DB_SOCKET: /cloudsql/YOUR_CLOUDSQL_CONNECTION_NAME
-
-# required on some platforms so ".env" is not skipped
-skip_files: false
-
-beta_settings:
-    # for Cloud SQL, uncomment and set this value to the Cloud SQL
-    # connection name, e.g.
-    #   "project:region:cloudsql-instance"
-    cloud_sql_instances: "YOUR_CLOUDSQL_CONNECTION_NAME"
