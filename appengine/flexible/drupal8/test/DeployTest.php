@@ -39,18 +39,21 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         // download, install, and deploy
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
         self::downloadAndInstallDrupal($tmpDir);
+
+        // set the directory in gcloud
+        self::$gcloudWrapper->setDir($tmpDir);
     }
 
     private static function verifyEnvironmentVariables()
     {
         $envVars = [
             'GOOGLE_PROJECT_ID',
-            'DRUPAL_ADMIN_USERNAME',
-            'DRUPAL_ADMIN_PASSWORD',
-            'DRUPAL_DATABASE_HOST',
-            'DRUPAL_DATABASE_NAME',
-            'DRUPAL_DATABASE_USER',
-            'DRUPAL_DATABASE_PASS',
+            'DRUPAL8_ADMIN_USERNAME',
+            'DRUPAL8_ADMIN_PASSWORD',
+            'DRUPAL8_DATABASE_HOST',
+            'DRUPAL8_DATABASE_NAME',
+            'DRUPAL8_DATABASE_USER',
+            'DRUPAL8_DATABASE_PASS',
         ];
         foreach ($envVars as $envVar) {
             if (false === getenv($envVar)) {
@@ -64,10 +67,10 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $console = __DIR__ . '/../vendor/bin/drush';
 
         $dbUrl = sprintf('mysql://%s:%s@%s/%s',
-            getenv('DRUPAL_DATABASE_USER'),
-            getenv('DRUPAL_DATABASE_PASS'),
-            getenv('DRUPAL_DATABASE_HOST'),
-            getenv('DRUPAL_DATABASE_NAME')
+            getenv('DRUPAL8_DATABASE_USER'),
+            getenv('DRUPAL8_DATABASE_PASS'),
+            getenv('DRUPAL8_DATABASE_HOST'),
+            getenv('DRUPAL8_DATABASE_NAME')
         );
 
         // download
@@ -83,8 +86,8 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             '--db-url=%s --account-name=%s --account-pass=%s -y',
             $console,
             $dbUrl,
-            getenv('DRUPAL_ADMIN_USERNAME'),
-            getenv('DRUPAL_ADMIN_PASSWORD'));
+            getenv('DRUPAL8_ADMIN_USERNAME'),
+            getenv('DRUPAL8_ADMIN_PASSWORD'));
         $process = self::createProcess($installCmd);
         $process->setTimeout(null);
         self::executeProcess($process);
@@ -94,7 +97,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         self::execute('rm composer.*');
 
         // move the code for the sample to the new drupal installation
-        $files = ['app.yaml', 'php.ini'];
+        $files = ['app.yaml'];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
             $target = sprintf('%s/%s', $targetDir, $file);

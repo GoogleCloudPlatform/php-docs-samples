@@ -32,7 +32,7 @@ cd /path/to/drupal
 /path/to/drush dl drupal
 ```
 
-Alternatively, you can download a compressed file of Druapl 8 from the [Drupal Website][5].
+Alternatively, you can download a compressed file of Drupal 8 from the [Drupal Website][5].
 
 ### Installation
 
@@ -59,24 +59,16 @@ Alternatively, you can download a compressed file of Druapl 8 from the [Drupal W
 You will want to use the Cloud SQL credentials you created in the **Prerequisites** section as your
 Drupal backend.
 
-## Copy over App Engine files
+## Add app.yaml
 
-For your app to deploy on App Engine Flexible, you will need to copy over the files in this
-directory:
+Add a file `app.yaml` with the following contents to the root of your Drupal project:
 
-```sh
-# clone this repo somewhere
-git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
-cd /path/to/php-docs-samples/
-
-# copy the two files below to the root directory of your Drupal project
-cp appengine/flexible/drupal8/{app.yaml,php.ini} /path/to/drupal
+```yaml
+runtime: php
+env: flex
 ```
 
-The two files needed are as follows:
-
-  1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
-  1. [`php.ini`](php.ini) - Optional ini used to extend the runtime configuration.
+`app.yaml` is the App Engine configuration for your project.
 
 ## Disable CSS and JS Cache
 
