@@ -6,6 +6,7 @@
         "twig/twig": " ~1.8|~2.0"
     },
     "require-dev": {
-        "symfony/browser-kit": "^3.0"
+        "symfony/browser-kit": "^3.0",
+        "phpunit/phpunit": "~4"
     }
 }
