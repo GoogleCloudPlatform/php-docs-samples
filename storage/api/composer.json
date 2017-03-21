@@ -38,5 +38,8 @@
             "src/functions/upload_encrypted_object.php",
             "src/functions/upload_object.php"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4"
     }
 }

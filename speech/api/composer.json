@@ -11,5 +11,8 @@
             "src/functions/transcribe_async.php",
             "src/functions/transcribe_sync.php"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4"
     }
 }
