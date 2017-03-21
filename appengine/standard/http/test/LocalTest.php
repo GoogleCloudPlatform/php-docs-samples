@@ -18,44 +18,6 @@ use Silex\WebTestCase;
 
 class LocalTest extends WebTestCase
 {
-    private $expected;
-
-    public function setup()
-    {
-        parent::setup();
-
-        $this->expected = '{
-  "args": {
-    "query": "update"
-  },
-  "data": "",
-  "files": {},
-  "form": {
-    "data": "this",
-    "data2": "that"
-  },
-  "headers": {
-    "Accept": "*/*",
-    "Content-Length": "20",
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Custom-Header": "custom-value",
-    "Custom-Header-Two": "custom-value-2",
-    "Host": "httpbin.org"
-  },
-  "json": null,
-  "origin": "ORIGIN_IP_ADDRESS",
-  "url": "http://httpbin.org/post?query=update"
-}';
-        // fix issue where there are trailing spaces after the commas
-        $this->expected = str_replace(',', ', ', $this->expected);
-
-        // escape for regex
-        $this->expected = '#' . preg_quote(htmlspecialchars($this->expected), '#') . '#';
-
-        // allow for any IP address
-        $this->expected = str_replace('ORIGIN_IP_ADDRESS', '.*', $this->expected);
-    }
-
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
@@ -88,7 +50,7 @@ class LocalTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
 
         // test the regex exists
-        $this->assertRegExp($this->expected, (string) $client->getResponse());
+        $this->assertResponse((string) $client->getResponse());
     }
 
     public function testCurlRequest()
@@ -100,7 +62,7 @@ class LocalTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
 
         // test the regex exists
-        $this->assertRegExp($this->expected, (string) $client->getResponse());
+        $this->assertResponse((string) $client->getResponse());
     }
 
     public function testGuzzleRequest()
@@ -112,6 +74,26 @@ class LocalTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
 
         // test the regex exists
-        $this->assertRegExp($this->expected, (string) $client->getResponse());
+        $this->assertResponse((string) $client->getResponse());
+    }
+
+    private function assertResponse($response)
+    {
+        $regex = '/<pre>(.*)<\/pre>/m';
+        $response = preg_replace("/\r|\n/", '', $response);
+        $this->assertRegExp($regex, $response);
+        preg_match($regex, html_entity_decode($response), $matches);
+
+        $json = json_decode($matches[1], true);
+        $this->assertArrayHasKey('args', $json);
+        $this->assertArrayHasKey('data', $json);
+        $this->assertArrayHasKey('files', $json);
+        $this->assertArrayHasKey('headers', $json);
+        $this->assertArrayHasKey('json', $json);
+        $this->assertArrayHasKey('origin', $json);
+        $this->assertArrayHasKey('url', $json);
+
+        $this->assertArrayHasKey('Custom-Header', $json['headers']);
+        $this->assertEquals('custom-value', $json['headers']['Custom-Header']);
     }
 }
