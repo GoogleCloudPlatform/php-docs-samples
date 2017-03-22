@@ -59,6 +59,26 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testTranslateWithModel()
+    {
+        $application = new Application();
+        $application->add(new TranslateCommand());
+        $commandTester = new CommandTester($application->get('translate'));
+        $commandTester->execute(
+            [
+                'text' => 'Hello.',
+                '-t' => 'ja',
+                '--model' => 'nmt',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Source language: en', $display);
+        $this->assertContains('Translation:', $display);
+        $this->assertContains('Model: nmt', $display);
+    }
+
     public function testDetectLanguage()
     {
         $application = new Application();
