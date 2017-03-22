@@ -5,6 +5,7 @@
         "symfony/twig-bridge": "~2.7|3.0.*"
     },
     "require-dev": {
-        "symfony/browser-kit": "^3.0"
+        "symfony/browser-kit": "^3.0",
+        "phpunit/phpunit": "~4"
     }
 }
