@@ -28,7 +28,11 @@ do
         composer install
     fi
     echo "running phpunit in ${DIR}"
-    phpunit
+    if [ -f "vendor/bin/phpunit" ]; then
+        vendor/bin/phpunit
+    else
+        phpunit
+    fi
     if [ -f build/logs/clover.xml ]; then
         cp build/logs/clover.xml \
             ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
