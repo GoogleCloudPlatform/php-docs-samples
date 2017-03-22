@@ -86,14 +86,6 @@ class DeployDatabaseSessionTest extends \PHPUnit_Framework_TestCase
         ], file_get_contents(__DIR__ . '/../app-dbsessions.yaml'));
         file_put_contents($targetDir . '/app.yaml', $appYaml);
 
-        // add "socket" to "config/database.php"
-        $databaseConfig = str_replace(
-            "'driver' => 'mysql',",
-            "'driver' => 'mysql',
-            'unix_socket' => env('DB_SOCKET', ''),",
-            file_get_contents($targetDir . '/config/database.php'));
-        file_put_contents($targetDir . '/config/database.php', $databaseConfig);
-
         // copy over the base .env file
         self::execute('cp .env.example .env');
 
