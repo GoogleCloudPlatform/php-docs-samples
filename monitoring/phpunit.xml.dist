@@ -25,4 +25,7 @@
             <file>quickstart.php</file>
         </whitelist>
     </filter>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+    </php>
 </phpunit>
