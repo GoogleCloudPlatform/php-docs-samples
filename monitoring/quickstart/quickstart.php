@@ -33,8 +33,7 @@ use google\protobuf\Timestamp;
 try {
     $client = new MetricServiceClient();
 
-    //$projectId = 'YOUR_PROJECT_ID';
-    $projectId = 'tmatsuo-test';
+    $projectId = 'YOUR_PROJECT_ID';
 
     $formattedProjectName = MetricServiceClient::formatProjectName($projectId);
 
