@@ -25,7 +25,8 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
 # [START export_table]
-use Google\Cloud\Core\ServiceBuilder;
+use Google\Cloud\BigQuery\BigQueryClient;
+use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /**
@@ -38,14 +39,15 @@ use Google\Cloud\Core\ExponentialBackoff;
  */
 function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName, $format = 'csv')
 {
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigQuery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     // load the storage object
-    $storage = $builder->storage();
+    $storage = new StorageClient([
+        'projectId' => $projectId,
+    ]);
     $destinationObject = $storage->bucket($bucketName)->object($objectName);
     // create the import job
     $options = ['jobConfig' => ['destinationFormat' => $format]];

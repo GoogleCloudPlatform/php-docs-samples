@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START transcribe_sync]
-use Google\Cloud\Core\ServiceBuilder;
+use Google\Cloud\Speech\SpeechClient;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
@@ -39,8 +39,7 @@ use Google\Cloud\Core\ServiceBuilder;
  */
 function transcribe_sync($audioFile, $options = [])
 {
-    $builder = new ServiceBuilder();
-    $speech = $builder->speech();
+    $speech = new SpeechClient();
     $results = $speech->recognize(
         fopen($audioFile, 'r'),
         $options

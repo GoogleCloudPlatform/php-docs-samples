@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "70baada1b390312da3ab44bb93bf2039",
-    "content-hash": "09597ffcb94701d0ca971fecb87b3c70",
+    "hash": "216e754d8fdbbd0caab54f9951d86535",
+    "content-hash": "8e028fa26af35a90afc4776ca664be59",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -140,6 +140,44 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
+            "time": "2017-03-31 16:47:15"
+        },
+        {
+            "name": "google/cloud-storage",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-storage.git",
+                "reference": "459953f5879497fe61ffea2359bd06c801f60be1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-storage/zipball/459953f5879497fe61ffea2359bd06c801f60be1",
+                "reference": "459953f5879497fe61ffea2359bd06c801f60be1",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-core": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-storage",
+                    "target": "GoogleCloudPlatform/google-cloud-php-storage.git",
+                    "path": "src/Storage",
+                    "entry": "StorageClient.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\Storage\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Cloud Storage Client for PHP",
             "time": "2017-03-31 16:47:15"
         },
         {

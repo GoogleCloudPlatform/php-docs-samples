@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\Speech;
 
 use Exception;
 # [START transcribe_async]
-use Google\Cloud\Core\ServiceBuilder;
+use Google\Cloud\Speech\SpeechClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /**
@@ -41,8 +41,7 @@ use Google\Cloud\Core\ExponentialBackoff;
  */
 function transcribe_async($audioFile, $options = [])
 {
-    $builder = new ServiceBuilder();
-    $speech = $builder->speech();
+    $speech = new SpeechClient();
     $operation = $speech->beginRecognizeOperation(
         fopen($audioFile, 'r'),
         $options

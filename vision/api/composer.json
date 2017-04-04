@@ -3,6 +3,7 @@
     "type": "project",
     "require": {
         "google/cloud-vision": "^0.2",
+        "google/cloud-storage": "^1.0",
         "symfony/console": "^3.1"
     },
     "autoload": {
