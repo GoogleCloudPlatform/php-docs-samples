@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Speech;
 use Exception;
 # [START transcribe_async]
 use Google\Cloud\ServiceBuilder;
-use Google\Cloud\ExponentialBackoff;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API

@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\BigQuery;
 use Exception;
 # [START query_as_job]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\ExponentialBackoff;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Run a BigQuery query as a job.

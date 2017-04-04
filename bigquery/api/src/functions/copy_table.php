@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\BigQuery;
 use Exception;
 # [START copy_table]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\ExponentialBackoff;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * @param string $projectId             The Google project ID.
