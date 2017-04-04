@@ -43,7 +43,7 @@ function test_topic_permissions($projectId, $topicName)
         'pubsub.topics.publish',
         'pubsub.topics.update'
     ]);
-    foreach ($permissions['permissions'] as $permission) {
+    foreach ($permissions as $permission) {
         printf('Permission: %s' . PHP_EOL, $permission);
     }
 }

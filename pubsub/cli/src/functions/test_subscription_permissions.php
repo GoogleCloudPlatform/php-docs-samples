@@ -42,7 +42,7 @@ function test_subscription_permissions($projectId, $subscriptionName)
         'pubsub.subscriptions.consume',
         'pubsub.subscriptions.update'
     ]);
-    foreach ($permissions['permissions'] as $permission) {
+    foreach ($permissions as $permission) {
         printf('Permission: %s' . PHP_EOL, $permission);
     }
 }
