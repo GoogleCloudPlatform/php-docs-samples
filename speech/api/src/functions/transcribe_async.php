@@ -36,12 +36,17 @@ use Google\Cloud\Core\ExponentialBackoff;
  * ```.
  *
  * @param string $audioFile path to an audio file.
+ * @param string $languageCode The language of the content to
+ *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
+ * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_async($audioFile, $options = [])
+function transcribe_async($audioFile, $languageCode, $options = [])
 {
-    $speech = new SpeechClient();
+    $speech = new SpeechClient([
+        'languageCode' => $languageCode,
+    ]);
     $operation = $speech->beginRecognizeOperation(
         fopen($audioFile, 'r'),
         $options
