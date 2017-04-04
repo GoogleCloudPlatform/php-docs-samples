@@ -26,7 +26,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Exception\BadRequestException;
+use Google\Cloud\Core\Exception\BadRequestException;
 use InvalidArgumentException;
 use LogicException;
 

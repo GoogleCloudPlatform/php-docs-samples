@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Google\Cloud\Exception\BadRequestException;
+use Google\Cloud\Core\Exception\BadRequestException;
 use Exception;
 
 /**

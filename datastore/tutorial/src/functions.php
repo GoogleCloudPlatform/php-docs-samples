@@ -18,8 +18,7 @@
 namespace Google\Cloud\Samples\Datastore\Tasks;
 
 use DateTime;
-use Generator;
-use Google;
+use Google\Cloud\Datastore\EntityIterator;
 // [START build_service]
 use Google\Cloud\Datastore\DatastoreClient;
 
@@ -109,10 +108,10 @@ function delete_task(DatastoreClient $datastore, $taskId)
 
 // [START retrieve_entities]
 /**
- * Return a generator for all the tasks in ascending order of creation time.
+ * Return an iterator for all the tasks in ascending order of creation time.
  *
  * @param DatastoreClient $datastore
- * @return Generator<Google\Cloud\Datastore\Entity>
+ * @return EntityIterator<Google\Cloud\Datastore\Entity>
  */
 function list_tasks(DatastoreClient $datastore)
 {

@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Logging;
 
+use Google\Cloud\Core\Iterator\ItemIterator;
 // [START logging_use]
 use Google\Cloud\Logging\LoggingClient;
 
@@ -46,11 +47,11 @@ function write_log($projectId, $loggerName, $message)
 // [END write_log]
 
 // [START list_entries]
-/** Return a generator for listing log entries.
+/** Return an iterator for listing log entries.
  *
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
- * @return \Generator
+ * @return ItemIterator<Google\Cloud\Logging\Entry>
  */
 function list_entries($projectId, $loggerName)
 {
