@@ -46,7 +46,10 @@ do
     fi
     pushd ${DIR}
     if [ -f "composer.json" ]; then
+        # install composer dependencies
         composer install
+        # verify direct dependencies are up to date
+        composer outdated --direct --strict
     fi
     echo "running phpunit in ${DIR}"
     if [ -f "vendor/bin/phpunit" ]; then
