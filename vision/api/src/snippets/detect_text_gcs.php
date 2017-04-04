@@ -17,7 +17,7 @@
 
 
 // [START text_detection]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Core\ServiceBuilder;
 
 // $projectId = 'YOUR_PROJECT_ID';
 // $bucketName = 'your-bucket-name'

@@ -19,7 +19,7 @@
 namespace Google\Cloud\Samples\Vision;
 
 # [START face_detection_gcs]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Core\ServiceBuilder;
 
 // $projectId = 'YOUR_PROJECT_ID';
 // $bucketName = 'your-bucket-name'

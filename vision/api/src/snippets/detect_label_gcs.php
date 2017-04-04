@@ -18,7 +18,7 @@
 namespace Google\Cloud\Samples\Vision;
 
 # [START detect_labels_gcs]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Core\ServiceBuilder;
 
 // $projectId = 'YOUR_PROJECT_ID';
 // $bucketName = 'your-bucket-name'

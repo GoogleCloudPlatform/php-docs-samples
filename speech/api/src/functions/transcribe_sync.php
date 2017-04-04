@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START transcribe_sync]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Core\ServiceBuilder;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API

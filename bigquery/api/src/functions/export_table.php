@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
 # [START export_table]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Core\ServiceBuilder;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /**
