@@ -17,7 +17,7 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Exception\NotFoundException;
+use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Samples\Storage\ObjectAclCommand;
 use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
