@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-error-reporting": "^0.1"
+        "google/cloud-logging": "^1.0"
     },
     "require-dev": {
         "google/cloud-tools": "^0.6"
