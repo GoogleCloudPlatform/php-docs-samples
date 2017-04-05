@@ -48,8 +48,11 @@ do
     if [ -f "composer.json" ]; then
         # install composer dependencies
         composer install
-        # verify direct dependencies are up to date
-        composer outdated --direct --strict
+        # verify direct google dependencies are up to date
+        # only run for travis crons
+        if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
+            ! composer outdated --direct -m | grep -q 'google/'
+        fi
     fi
     echo "running phpunit in ${DIR}"
     if [ -f "vendor/bin/phpunit" ]; then
