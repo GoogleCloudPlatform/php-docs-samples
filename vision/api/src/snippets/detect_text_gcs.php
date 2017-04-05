@@ -17,17 +17,19 @@
 
 
 // [START text_detection]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Vision\VisionClient;
+use Google\Cloud\Storage\StorageClient;
 
 // $projectId = 'YOUR_PROJECT_ID';
 // $bucketName = 'your-bucket-name'
 // $objectName = 'your-object-name'
 
-$builder = new ServiceBuilder([
+$vision = new VisionClient([
     'projectId' => $projectId,
 ]);
-$vision = $builder->vision();
-$storage = $builder->storage();
+$storage = new StorageClient([
+    'projectId' => $projectId,
+]);
 
 // fetch the storage object and annotate the image
 $object = $storage->bucket($bucketName)->object($objectName);

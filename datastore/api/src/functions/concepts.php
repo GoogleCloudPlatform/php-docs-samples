@@ -18,11 +18,11 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use DateTime;
-use Generator;
 // [START datastore_use]
 use Google\Cloud\Datastore\DatastoreClient;
 // [END datastore_use]
 use Google\Cloud\Datastore\Entity;
+use Google\Cloud\Datastore\EntityIterator;
 use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\Query;
 
@@ -322,7 +322,7 @@ function basic_query(DatastoreClient $datastore)
  * Run a given query.
  *
  * @param DatastoreClient $datastore
- * @return Generator <Entity>
+ * @return EntityIterator<Entity>
  */
 function run_query(DatastoreClient $datastore, Query $query)
 {
@@ -864,7 +864,7 @@ function get_task_list_entities(DatastoreClient $datastore)
  * Create and run a query with readConsistency option.
  *
  * @param DatastoreClient $datastore
- * @return Generator
+ * @return EntityIterator<Entity>
  */
 function eventual_consistent_query(DatastoreClient $datastore)
 {

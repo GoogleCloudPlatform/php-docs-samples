@@ -27,7 +27,7 @@ use Exception;
 use InvalidArgumentException;
 # [START import_from_file]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\ExponentialBackoff;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * @param string $projectId The Google project ID.

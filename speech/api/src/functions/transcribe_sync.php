@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START transcribe_sync]
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Speech\SpeechClient;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
@@ -34,13 +34,17 @@ use Google\Cloud\ServiceBuilder;
  * ```.
  *
  * @param string $audioFile path to an audio file.
+ * @param string $languageCode The language of the content to
+ *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
+ * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_sync($audioFile, $options = [])
+function transcribe_sync($audioFile, $languageCode, $options = [])
 {
-    $builder = new ServiceBuilder();
-    $speech = $builder->speech();
+    $speech = new SpeechClient([
+        'languageCode' => $languageCode,
+    ]);
     $results = $speech->recognize(
         fopen($audioFile, 'r'),
         $options

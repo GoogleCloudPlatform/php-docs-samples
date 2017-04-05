@@ -25,8 +25,9 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
 # [START import_from_storage]
-use Google\Cloud\ServiceBuilder;
-use Google\Cloud\ExponentialBackoff;
+use Google\Cloud\BigQuery\BigQueryClient;
+use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * @param string $projectId  The Google project ID.
@@ -45,14 +46,15 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
         $options['jobConfig'] = ['sourceFormat' => 'NEWLINE_DELIMITED_JSON'];
     }
     // instantiate the bigquery table service
-    $builder = new ServiceBuilder([
+    $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $bigQuery = $builder->bigquery();
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     // load the storage object
-    $storage = $builder->storage();
+    $storage = new StorageClient([
+        'projectId' => $projectId,
+    ]);
     $object = $storage->bucket($bucketName)->object($objectName);
     // create the import job
     $job = $table->loadFromStorage($object, $options);

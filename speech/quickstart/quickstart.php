@@ -27,7 +27,8 @@ $projectId = 'YOUR_PROJECT_ID';
 
 # Instantiates a client
 $speech = new SpeechClient([
-    'projectId' => $projectId
+    'projectId' => $projectId,
+    'languageCode' => 'en-US',
 ]);
 
 # The name of the audio file to transcribe
@@ -36,7 +37,7 @@ $fileName = __DIR__ . '/resources/audio.raw';
 # The audio file's encoding and sample rate
 $options = [
     'encoding' => 'LINEAR16',
-    'sampleRate' => 16000,
+    'sampleRateHertz' => 16000,
 ];
 
 # Detects speech in the audio file

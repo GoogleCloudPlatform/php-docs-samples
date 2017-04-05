@@ -25,8 +25,8 @@ namespace Google\Cloud\Samples\Speech;
 
 use Exception;
 # [START transcribe_async]
-use Google\Cloud\ServiceBuilder;
-use Google\Cloud\ExponentialBackoff;
+use Google\Cloud\Speech\SpeechClient;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
@@ -36,13 +36,17 @@ use Google\Cloud\ExponentialBackoff;
  * ```.
  *
  * @param string $audioFile path to an audio file.
+ * @param string $languageCode The language of the content to
+ *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
+ * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_async($audioFile, $options = [])
+function transcribe_async($audioFile, $languageCode, $options = [])
 {
-    $builder = new ServiceBuilder();
-    $speech = $builder->speech();
+    $speech = new SpeechClient([
+        'languageCode' => $languageCode,
+    ]);
     $operation = $speech->beginRecognizeOperation(
         fopen($audioFile, 'r'),
         $options

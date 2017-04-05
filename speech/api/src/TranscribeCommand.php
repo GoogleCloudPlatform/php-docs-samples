@@ -62,6 +62,13 @@ EOF
                 'rate is unable to be determined. '
             )
             ->addOption(
+                'language-code',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The language code for the language used in the source file. ',
+                'en-US'
+            )
+            ->addOption(
                 'sync',
                 null,
                 InputOption::VALUE_NONE,
@@ -74,16 +81,17 @@ EOF
     {
         $encoding = $input->getOption('encoding');
         $sampleRate = $input->getOption('sample-rate');
+        $languageCode = $input->getOption('language-code');
         $audioFile = $input->getArgument('audio-file');
         $options = [
             'encoding' => $encoding,
-            'sampleRate' => $sampleRate,
+            'sampleRateHertz' => $sampleRate,
         ];
 
         if ($input->getOption('sync')) {
-            transcribe_sync($audioFile, $options);
+            transcribe_sync($audioFile, $languageCode, $options);
         } else {
-            transcribe_async($audioFile, $options);
+            transcribe_async($audioFile, $languageCode, $options);
         }
     }
 }

@@ -49,7 +49,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add(new TranslateCommand());
         $commandTester = new CommandTester($application->get('translate'));
-        $this->setExpectedException('Google\Cloud\Exception\BadRequestException');
+        $this->setExpectedException('Google\Cloud\Core\Exception\BadRequestException');
         $commandTester->execute(
             [
                 'text' => 'Hello.',

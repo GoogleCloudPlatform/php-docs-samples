@@ -22,7 +22,6 @@ use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 use Monolog\Logger;
-use GuzzleHttp\Client;
 
 class DeployTest extends \PHPUnit_Framework_TestCase
 {

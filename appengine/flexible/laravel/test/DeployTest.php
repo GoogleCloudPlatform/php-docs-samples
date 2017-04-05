@@ -21,7 +21,6 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Monolog\Logger;
-use GuzzleHttp\Client;
 
 class DeployTest extends \PHPUnit_Framework_TestCase
 {
