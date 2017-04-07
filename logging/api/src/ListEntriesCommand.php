@@ -43,11 +43,26 @@ class ListEntriesCommand extends BaseCommand
         $entries = list_entries($projectId, $loggerName);
         foreach ($entries as $entry) {
             /* @var $entry \Google\Cloud\Logging\Entry */
+            $entryInfo = $entry->info();
+            if (isset($entryInfo['textPayload'])) {
+                $entryText = $entryInfo['textPayload'];
+            } else {
+                $entryText = $this->formatJsonPayload($entryInfo['jsonPayload']);
+            }
             printf(
                 "%s : %s" . PHP_EOL,
-                $entry->info()['timestamp'],
-                $entry->info()['textPayload']
+                $entryInfo['timestamp'],
+                $entryText
             );
         }
+    }
+
+    private function formatJsonPayload(array $jsonPayload)
+    {
+        $entryPayload = [];
+        foreach ($jsonPayload as $key => $value) {
+            $entryPayload[] = "$key=$value";
+        }
+        return '{' . implode(', ', $entryPayload) . '}';
     }
 }
