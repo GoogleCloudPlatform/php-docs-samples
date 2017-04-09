@@ -42,7 +42,7 @@ use Google\Cloud\Core\ExponentialBackoff;
  *
  * @return string the text transcription
  */
-function transcribe_async($audioFile, $languageCode, $options = [])
+function transcribe_async($audioFile, $languageCode = 'en-US', $options = [])
 {
     $speech = new SpeechClient([
         'languageCode' => $languageCode,

@@ -23,14 +23,15 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START transcribe_sync]
+# [START transcribe_sync_gcs]
 use Google\Cloud\Speech\SpeechClient;
+use Google\Cloud\Storage\StorageClient;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_sync('/path/to/audiofile.wav');
+ * transcribe_sync_gcs('your-bucket-name', 'audiofile.wav');
  * ```.
  *
  * @param string $audioFile path to an audio file.
@@ -40,15 +41,18 @@ use Google\Cloud\Speech\SpeechClient;
  *
  * @return string the text transcription
  */
-function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
+function transcribe_sync_gcs($bucketName, $objectName, $languageCode = 'en-US', $options = [])
 {
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
+    $storage = new StorageClient();
+    // fetch the storage object
+    $object = $storage->bucket($bucketName)->object($objectName);
     $results = $speech->recognize(
-        fopen($audioFile, 'r'),
+        $object,
         $options
     );
     print_r($results);
 }
-# [END transcribe_sync]
+# [END transcribe_sync_gcs]

@@ -55,18 +55,18 @@ EOF
                 'unable to be determined. '
             )
             ->addOption(
-                'sample-rate',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'The sample rate of the audio file. This is required if the sample ' .
-                'rate is unable to be determined. '
-            )
-            ->addOption(
                 'language-code',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'The language code for the language used in the source file. ',
                 'en-US'
+            )
+            ->addOption(
+                'sample-rate',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The sample rate of the audio file in hertz. This is required ' .
+                'if the sample rate is unable to be determined. '
             )
             ->addOption(
                 'sync',
@@ -80,18 +80,29 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $encoding = $input->getOption('encoding');
-        $sampleRate = $input->getOption('sample-rate');
         $languageCode = $input->getOption('language-code');
+        $sampleRate = $input->getOption('sample-rate');
         $audioFile = $input->getArgument('audio-file');
         $options = [
             'encoding' => $encoding,
+            'languageCode' => $languageCode,
             'sampleRateHertz' => $sampleRate,
         ];
-
-        if ($input->getOption('sync')) {
-            transcribe_sync($audioFile, $languageCode, $options);
+        if ($isGcs = preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $audioFile, $matches)) {
+            list($bucketName, $objectName) = array_slice($matches, 1);
+        }
+        if ($isGcs) {
+            if ($input->getOption('sync')) {
+                transcribe_sync_gcs($bucketName, $objectName, $languageCode, $options);
+            } else {
+                transcribe_async_gcs($bucketName, $objectName, $languageCode, $options);
+            }
         } else {
-            transcribe_async($audioFile, $languageCode, $options);
+            if ($input->getOption('sync')) {
+                transcribe_sync($audioFile, $languageCode, $options);
+            } else {
+                transcribe_async($audioFile, $languageCode, $options);
+            }
         }
     }
 }

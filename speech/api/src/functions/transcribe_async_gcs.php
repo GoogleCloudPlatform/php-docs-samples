@@ -23,32 +23,53 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START transcribe_sync]
+use Exception;
+# [START transcribe_async_gcs]
 use Google\Cloud\Speech\SpeechClient;
+use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_sync('/path/to/audiofile.wav');
+ * transcribe_async_gcs('your-bucket-name', 'audiofile.wav');
  * ```.
  *
- * @param string $audioFile path to an audio file.
- * @param string $languageCode The language of the content to
+ * @param string $bucketName The Cloud Storage bucket name.
+ * @param string $objectName The Cloud Storage object name.
+ * @param string $languageCode The Cloud Storage
  *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
  * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
+function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US', $options = [])
 {
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
-    $results = $speech->recognize(
-        fopen($audioFile, 'r'),
+    $storage = new StorageClient();
+    // fetch the storage object
+    $object = $storage->bucket($bucketName)->object($objectName);
+    $operation = $speech->beginRecognizeOperation(
+        $object,
         $options
     );
-    print_r($results);
+    $backoff = new ExponentialBackoff(10);
+    $backoff->execute(function () use ($operation) {
+        print('Waiting for operation to complete' . PHP_EOL);
+        $operation->reload();
+        if (!$operation->isComplete()) {
+            throw new Exception('Job has not yet completed', 500);
+        }
+    });
+
+    if ($operation->isComplete()) {
+        if (empty($results = $operation->results())) {
+            $results = $operation->info();
+        }
+        print_r($results);
+    }
 }
-# [END transcribe_sync]
+# [END transcribe_async_gcs]
