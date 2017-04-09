@@ -86,6 +86,7 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
         return [
             [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
             [__DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
+            [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000', ['--stream' => true]],
             ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
             ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000', ['--async' => true]],
         ];

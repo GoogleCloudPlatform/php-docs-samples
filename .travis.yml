@@ -39,6 +39,7 @@ before_install:
   - travis_retry php-tools/scripts/install_test_deps.sh
   - popd
   - mkdir -p build/logs
+  - pecl install grpc
 
 script:
   - testing/run_test_suite.sh

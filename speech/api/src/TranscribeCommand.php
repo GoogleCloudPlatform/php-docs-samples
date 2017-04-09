@@ -75,6 +75,12 @@ EOF
                 InputOption::VALUE_NONE,
                 'Run the transcription asynchronously. '
             )
+            ->addOption(
+                'stream',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Stream the audio file. Supply an argument to stream from a mic.'
+            )
         ;
     }
 
@@ -93,6 +99,9 @@ EOF
             list($bucketName, $objectName) = array_slice($matches, 1);
         }
         if ($isGcs) {
+            if ($input->getOption('stream')) {
+                throw new LogicException('Cannot stream from a bucket!');
+            }
             if ($input->getOption('async')) {
                 transcribe_async_gcs($bucketName, $objectName, $languageCode, $options);
             } else {
@@ -101,6 +110,10 @@ EOF
         } else {
             if ($input->getOption('async')) {
                 throw new LogicException('Async requests require a GCS URI');
+            }
+            if ($input->getOption('stream')) {
+                $encodingInt = constant("google\cloud\speech\\v1\RecognitionConfig\AudioEncoding::$encoding");
+                streaming_recognize($audioFile, $languageCode, $encodingInt, $sampleRate);
             } else {
                 transcribe_sync($audioFile, $languageCode, $options);
             }
