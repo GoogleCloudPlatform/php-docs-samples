@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Speech;
 
+use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,10 +70,10 @@ EOF
                 'if the sample rate is unable to be determined. '
             )
             ->addOption(
-                'sync',
+                'async',
                 null,
                 InputOption::VALUE_NONE,
-                'Run the transcription synchronously. '
+                'Run the transcription asynchronously. '
             )
         ;
     }
@@ -92,16 +93,16 @@ EOF
             list($bucketName, $objectName) = array_slice($matches, 1);
         }
         if ($isGcs) {
-            if ($input->getOption('sync')) {
-                transcribe_sync_gcs($bucketName, $objectName, $languageCode, $options);
-            } else {
+            if ($input->getOption('async')) {
                 transcribe_async_gcs($bucketName, $objectName, $languageCode, $options);
+            } else {
+                transcribe_sync_gcs($bucketName, $objectName, $languageCode, $options);
             }
         } else {
-            if ($input->getOption('sync')) {
-                transcribe_sync($audioFile, $languageCode, $options);
+            if ($input->getOption('async')) {
+                throw new LogicException('Async requests require a GCS URI');
             } else {
-                transcribe_async($audioFile, $languageCode, $options);
+                transcribe_sync($audioFile, $languageCode, $options);
             }
         }
     }

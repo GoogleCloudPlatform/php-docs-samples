@@ -60,15 +60,34 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex("/how old is the Brooklyn Bridge/");
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Async requests require a GCS URI
+     */
+    public function testTranscribeAsyncThrowsException()
+    {
+        $application = new Application();
+        $application->add(new TranscribeCommand());
+        $commandTester = new CommandTester($application->get('transcribe'));
+        $commandTester->execute(
+            [
+                'audio-file' => __DIR__ . '/data/audio32KHz.raw',
+                '--encoding' => 'LINEAR16',
+                '--sample-rate' => '32000',
+                '--async' => true,
+            ],
+            ['interactive' => false]
+        );
+    }
+
     public function provideTranscribe()
     {
         self::$bucketName = getenv('GOOGLE_BUCKET_NAME');
         return [
             [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
             [__DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
-            [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000', ['--sync' => true]],
             ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
-            ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000', ['--sync' => true]],
+            ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000', ['--async' => true]],
         ];
     }
 }
