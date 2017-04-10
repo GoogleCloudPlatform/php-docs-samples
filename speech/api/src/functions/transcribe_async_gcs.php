@@ -24,31 +24,36 @@
 namespace Google\Cloud\Samples\Speech;
 
 use Exception;
-# [START transcribe_async]
+# [START transcribe_async_gcs]
 use Google\Cloud\Speech\SpeechClient;
+use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_async('/path/to/audiofile.wav');
+ * transcribe_async_gcs('your-bucket-name', 'audiofile.wav');
  * ```.
  *
- * @param string $audioFile path to an audio file.
- * @param string $languageCode The language of the content to
+ * @param string $bucketName The Cloud Storage bucket name.
+ * @param string $objectName The Cloud Storage object name.
+ * @param string $languageCode The Cloud Storage
  *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
  * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_async($audioFile, $languageCode, $options = [])
+function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US', $options = [])
 {
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
+    $storage = new StorageClient();
+    // fetch the storage object
+    $object = $storage->bucket($bucketName)->object($objectName);
     $operation = $speech->beginRecognizeOperation(
-        fopen($audioFile, 'r'),
+        $object,
         $options
     );
     $backoff = new ExponentialBackoff(10);
@@ -67,4 +72,4 @@ function transcribe_async($audioFile, $languageCode, $options = [])
         print_r($results);
     }
 }
-# [END transcribe_async]
+# [END transcribe_async_gcs]

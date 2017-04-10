@@ -57,8 +57,14 @@ function list_entries($projectId, $loggerName)
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $loggerFullName = sprintf('projects/%s/logs/%s', $projectId, $loggerName);
+    $oneDayAgo = date(\DateTime::RFC3339, strtotime('-24 hours'));
+    $filter = sprintf(
+        'logName = "%s" AND timestamp >= "%s"',
+        $loggerFullName,
+        $oneDayAgo
+    );
     $options = [
-        'filter' => sprintf('logName = "%s"', $loggerFullName)
+        'filter' => $filter,
     ];
     return $logging->entries($options);
 }

@@ -27,6 +27,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+    protected static $bucketName;
 
     public static function setUpBeforeClass()
     {
@@ -36,12 +37,14 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @dataProvider provideTranscribe */
-    public function testTranscribe($audioFile, $encoding, $sampleRate)
+    public function testTranscribe($audioFile, $encoding, $sampleRate, $options = [])
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-
+        if (!self::$bucketName && 0 === strpos($audioFile, 'gs://')) {
+            $this->markTestSkipped('You must set the GOOGLE_BUCKET_NAME environment variable.');
+        }
         $application = new Application();
         $application->add(new TranscribeCommand());
         $commandTester = new CommandTester($application->get('transcribe'));
@@ -50,18 +53,41 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
                 'audio-file' => $audioFile,
                 '--encoding' => $encoding,
                 '--sample-rate' => $sampleRate,
-            ],
+            ] + $options,
             ['interactive' => false]
         );
 
         $this->expectOutputRegex("/how old is the Brooklyn Bridge/");
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Async requests require a GCS URI
+     */
+    public function testTranscribeAsyncThrowsException()
+    {
+        $application = new Application();
+        $application->add(new TranscribeCommand());
+        $commandTester = new CommandTester($application->get('transcribe'));
+        $commandTester->execute(
+            [
+                'audio-file' => __DIR__ . '/data/audio32KHz.raw',
+                '--encoding' => 'LINEAR16',
+                '--sample-rate' => '32000',
+                '--async' => true,
+            ],
+            ['interactive' => false]
+        );
+    }
+
     public function provideTranscribe()
     {
+        self::$bucketName = getenv('GOOGLE_BUCKET_NAME');
         return [
             [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
             [__DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
+            ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
+            ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000', ['--async' => true]],
         ];
     }
 }

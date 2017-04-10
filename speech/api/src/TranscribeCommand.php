@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Speech;
 
+use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,13 +56,6 @@ EOF
                 'unable to be determined. '
             )
             ->addOption(
-                'sample-rate',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'The sample rate of the audio file. This is required if the sample ' .
-                'rate is unable to be determined. '
-            )
-            ->addOption(
                 'language-code',
                 null,
                 InputOption::VALUE_REQUIRED,
@@ -69,10 +63,17 @@ EOF
                 'en-US'
             )
             ->addOption(
-                'sync',
+                'sample-rate',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The sample rate of the audio file in hertz. This is required ' .
+                'if the sample rate is unable to be determined. '
+            )
+            ->addOption(
+                'async',
                 null,
                 InputOption::VALUE_NONE,
-                'Run the transcription synchronously. '
+                'Run the transcription asynchronously. '
             )
         ;
     }
@@ -80,18 +81,29 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $encoding = $input->getOption('encoding');
-        $sampleRate = $input->getOption('sample-rate');
         $languageCode = $input->getOption('language-code');
+        $sampleRate = $input->getOption('sample-rate');
         $audioFile = $input->getArgument('audio-file');
         $options = [
             'encoding' => $encoding,
+            'languageCode' => $languageCode,
             'sampleRateHertz' => $sampleRate,
         ];
-
-        if ($input->getOption('sync')) {
-            transcribe_sync($audioFile, $languageCode, $options);
+        if ($isGcs = preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $audioFile, $matches)) {
+            list($bucketName, $objectName) = array_slice($matches, 1);
+        }
+        if ($isGcs) {
+            if ($input->getOption('async')) {
+                transcribe_async_gcs($bucketName, $objectName, $languageCode, $options);
+            } else {
+                transcribe_sync_gcs($bucketName, $objectName, $languageCode, $options);
+            }
         } else {
-            transcribe_async($audioFile, $languageCode, $options);
+            if ($input->getOption('async')) {
+                throw new LogicException('Async requests require a GCS URI');
+            } else {
+                transcribe_sync($audioFile, $languageCode, $options);
+            }
         }
     }
 }
