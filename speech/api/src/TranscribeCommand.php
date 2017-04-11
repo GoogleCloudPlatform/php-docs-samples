@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -109,7 +108,7 @@ EOF
             }
         } else {
             if ($input->getOption('async')) {
-                throw new LogicException('Async requests require a GCS URI');
+                transcribe_async($audioFile, $languageCode, $options);
             }
             if ($input->getOption('stream')) {
                 $encodingInt = constant("google\cloud\speech\\v1\RecognitionConfig\AudioEncoding::$encoding");
