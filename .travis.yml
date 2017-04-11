@@ -18,7 +18,6 @@ branches:
 
 language: php
 sudo: required
-dist: trusty
 
 matrix:
   include:
