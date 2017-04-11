@@ -20,9 +20,30 @@ if [ "${RUN_CS_FIXER}" = "true" ]; then
     ${HOME}/php-cs-fixer fix --dry-run --diff
 fi
 
-# loop through all directories containing "phpunit.xml*" and run them
+# Determine all files changed on this branch
+# (will be empty if running from "master").
+FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
+
+# If any files outside the sample directires changed, or if we are not
+# on a Pull Request, run the whole test suite.
+if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
+    grep -qv \/ <<< "$FILES_CHANGED" || \
+    [ -e $TRAVIS_PULL_REQUEST_BRANCH ]; then
+    RUN_ALL_TESTS=1
+else
+    RUN_ALL_TESTS=0
+fi
+
+# Loop through all directories containing "phpunit.xml*" and run the test suites.
 find * -name 'phpunit.xml*' -not -path '*/vendor/*' -exec dirname {} \; | while read DIR
 do
+    # Only run tests for samples that have changed.
+    if [ "$RUN_ALL_TESTS" -ne "1" ]; then
+        if ! grep -q ^$DIR <<< "$FILES_CHANGED" ; then
+            echo "Skipping tests in $DIR\n"
+            continue
+        fi
+    fi
     pushd ${DIR}
     if [ -f "composer.json" ]; then
         composer install
