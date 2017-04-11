@@ -12,6 +12,7 @@
         },
         "files": [
             "src/functions/streaming_recognize.php",
+            "src/functions/transcribe_async.php",
             "src/functions/transcribe_async_gcs.php",
             "src/functions/transcribe_sync.php",
             "src/functions/transcribe_sync_gcs.php"
