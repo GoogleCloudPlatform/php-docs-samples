@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "98e3f82a1dc4b9f9efea814f4200223e",
+    "content-hash": "83e4d16f21e628534c8e2cee9737c25e",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -221,6 +221,128 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "time": "2017-03-31T16:47:15+00:00"
+        },
+        {
+            "name": "google/gax",
+            "version": "0.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/gax-php.git",
+                "reference": "e2351cb2ad949a7b76f6e9ea67f731f11c03900b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/e2351cb2ad949a7b76f6e9ea67f731f11c03900b",
+                "reference": "e2351cb2ad949a7b76f6e9ea67f731f11c03900b",
+                "shasum": ""
+            },
+            "require": {
+                "google/auth": "^0.11",
+                "grpc/grpc": "v1.0.*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*",
+                "phpunit/phpunit": "4.8.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\GAX\\": "src/",
+                    "Google\\GAX\\UnitTests\\": "tests/"
+                },
+                "classmap": [
+                    "src/generated",
+                    "src/generated/well-known-types"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Google API Extensions for PHP",
+            "homepage": "https://github.com/googleapis/gax-php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2017-03-02T19:00:55+00:00"
+        },
+        {
+            "name": "google/proto-client-php",
+            "version": "0.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/proto-client-php.git",
+                "reference": "85f051234c13021a72b9497d33a4bb54e8b59c9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/85f051234c13021a72b9497d33a4bb54e8b59c9f",
+                "reference": "85f051234c13021a72b9497d33a4bb54e8b59c9f",
+                "shasum": ""
+            },
+            "require": {
+                "grpc/grpc": "v1.0.*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2.9"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Generated proto and gRPC classes for Google Cloud Platform in PHP",
+            "homepage": "https://github.com/googleapis/proto-client-php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2017-03-31T01:01:44+00:00"
+        },
+        {
+            "name": "grpc/grpc",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/grpc/grpc.git",
+                "reference": "6040b471bcd1d6bb05b25c126b6545180a1d3528"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/grpc/grpc/zipball/6040b471bcd1d6bb05b25c126b6545180a1d3528",
+                "reference": "6040b471bcd1d6bb05b25c126b6545180a1d3528",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0",
+                "stanley-cheung/protobuf-php": "v0.6"
+            },
+            "require-dev": {
+                "google/auth": "v0.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grpc\\": "src/php/lib/Grpc/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "gRPC library for PHP",
+            "homepage": "http://grpc.io",
+            "keywords": [
+                "rpc"
+            ],
+            "time": "2016-10-27T22:05:26+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -664,6 +786,58 @@
                 "uri"
             ],
             "time": "2017-02-21T15:25:22+00:00"
+        },
+        {
+            "name": "stanley-cheung/protobuf-php",
+            "version": "v0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stanley-cheung/Protobuf-PHP.git",
+                "reference": "e5d3b55b1898233e36abb552281d2dd0ce86c5e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stanley-cheung/Protobuf-PHP/zipball/e5d3b55b1898233e36abb552281d2dd0ce86c5e7",
+                "reference": "e5d3b55b1898233e36abb552281d2dd0ce86c5e7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "bin": [
+                "protoc-gen-php.bat",
+                "protoc-gen-php.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "DrSlump": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Iván -DrSlump- Montes",
+                    "email": "drslump@pollinimini.net",
+                    "homepage": "https://github.com/drslump/Protobuf-PHP"
+                }
+            ],
+            "description": "PHP implementation of Google's Protocol Buffers",
+            "homepage": "https://github.com/stanley-cheung/Protobuf-PHP",
+            "keywords": [
+                "protobuf",
+                "protocol buffer",
+                "serializing"
+            ],
+            "time": "2016-07-22T02:12:15+00:00"
         },
         {
             "name": "symfony/console",
