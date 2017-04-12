@@ -20,24 +20,23 @@ Configure your project using [Application Default Credentials][adc]
 
     $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 
-## Audio Format
-
-For the best results, use [SoX][sox] to format audio files into raw format:
-
-```sh
-sox YourAudio.mp3 --rate 16k -encoding signed -bits 8 YourAudio.raw
-```
-
-See [Choosing an Audio Encoding][choose-encoding] for more information.
-
 ## Usage
 
 Once you have a speech sample in the proper format, send it through the speech
 API using the transcribe command:
 
 ```sh
-php speech.php transcribe YourAudio.raw --encoding LINEAR16 --sample-rate 16000
+php speech.php transcribe test/data/audio32KHz.raw --encoding LINEAR16 --sample-rate 32000
+php speech.php transcribe test/data/audio32KHz.flac --encoding FLAC --sample-rate 32000 --async
+
 ```
+## Troubleshooting
+
+If you have not set a timezone you may get an error from php. This can be resolved by:
+a) Finding where the php.ini is stored by running php -i | grep 'Configuration File'
+b) Finding out your timezone from the list on this page: http://php.net/manual/en/timezones.php
+c) Editing the php.ini file (or creating one if it doesn't exist)
+d) Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
 
 [speech-api]: http://cloud.google.com/speech
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php/
