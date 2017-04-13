@@ -79,7 +79,7 @@ The ID Token client demonstrates how to use user credentials to authenticate to 
 
 To use the client ID for authentication:
 
-1. Update the `/auth/info/googleidtoken`'s `audiences` in `openapi.yaml` with your client ID.
+1. Update `google_id_token: x-google-audiences` in `openapi.yaml` with your client ID.
 2. Redeploy your application.
 
 Now you can use the client ID to make requests to the API:
