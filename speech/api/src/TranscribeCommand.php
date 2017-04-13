@@ -77,8 +77,8 @@ EOF
             ->addOption(
                 'stream',
                 null,
-                InputOption::VALUE_OPTIONAL,
-                'Stream the audio file. Supply an argument to stream from a mic.'
+                InputOption::VALUE_NONE,
+                'Stream the audio file.'
             )
         ;
     }
@@ -109,8 +109,7 @@ EOF
         } else {
             if ($input->getOption('async')) {
                 transcribe_async($audioFile, $languageCode, $options);
-            }
-            if ($input->getOption('stream')) {
+            } elseif ($input->getOption('stream')) {
                 $encodingInt = constant("google\cloud\speech\\v1\RecognitionConfig\AudioEncoding::$encoding");
                 streaming_recognize($audioFile, $languageCode, $encodingInt, $sampleRate);
             } else {
