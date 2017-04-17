@@ -1,0 +1,6 @@
+{
+    "require": {
+        "mailgun/mailgun-php": "^1.8",
+        "silex/silex": "^1.3"
+    }
+}
