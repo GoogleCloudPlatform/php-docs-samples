@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use InvalidArgumentException;
 
 /**
  * Command line utility to manage Storage IAM.
@@ -39,9 +40,11 @@ class IamCommand extends Command
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Storage IAM policies.
 
-    <info>php %command.full_name% --role my-role</info>
+    <info>php %command.full_name% my-bucket</info>
 
-    <info>php %command.full_name% --member my-member</info>
+    <info>php %command.full_name% my-bucket --role my-role --add-member user/test@email.com</info>
+
+    <info>php %command.full_name% my-bucket --role my-role --remove-member user/test@email.com</info>
 
 EOF
             )
@@ -79,12 +82,12 @@ EOF
         $removeMember = $input->getOption('remove-member');
         if ($addMember) {
             if (!$role) {
-                throw new \Exception('Must provide role as an option.');
+                throw new \InvalidArgumentException('Must provide role as an option.');
             }
             add_bucket_iam_member($bucketName, $role, $addMember);
         } elseif($removeMember) {
             if (!$role) {
-                throw new \Exception('Must provide role as an option.');
+                throw new \InvalidArgumentException('Must provide role as an option.');
             }
             remove_bucket_iam_member($bucketName, $role, $removeMember);
         } else {

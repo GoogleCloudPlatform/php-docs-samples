@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Adds a new member / role IAM pair to a given Cloud Storage bucket.
+ * Removes a member / role IAM pair from a given Cloud Storage bucket.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  * @param string $role the role you want to remove a given member from.
@@ -51,7 +51,6 @@ function remove_bucket_iam_member($bucketName, $role, $member)
                     unset($policy['bindings'][$i]);
                     $policy['bindings'] = array_values($policy['bindings']);
                 }
-                var_dump($policy);
                 $bucket->iam()->setPolicy($policy);
                 printf('Removed %s from role %s for bucket %s.' . PHP_EOL, $member, $role, $bucketName);
                 return;
