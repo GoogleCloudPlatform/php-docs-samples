@@ -144,5 +144,4 @@ EOF;
         }
         $this->assertFalse($foundRoleMember);
     }
-
 }

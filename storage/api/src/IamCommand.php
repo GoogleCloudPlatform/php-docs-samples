@@ -31,7 +31,6 @@ use InvalidArgumentException;
  */
 class IamCommand extends Command
 {
-
     protected function configure()
     {
         $this
