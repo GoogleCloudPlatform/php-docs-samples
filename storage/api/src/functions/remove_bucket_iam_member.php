@@ -52,7 +52,7 @@ function remove_bucket_iam_member($bucketName, $role, $member)
                     $policy['bindings'] = array_values($policy['bindings']);
                 }
                 $bucket->iam()->setPolicy($policy);
-                printf('Removed %s from role %s for bucket %s.' . PHP_EOL, $member, $role, $bucketName);
+                printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
                 return;
             } else {
                 printf('Member %s not found for role %s for bucket %s.' . PHP_EOL, $member, $role, $bucketName);
