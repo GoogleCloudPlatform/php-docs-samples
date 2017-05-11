@@ -31,6 +31,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
     protected $commandTester;
     protected $storage;
     protected $user;
+    protected $bucket;
 
     public static function setUpBeforeClass()
     {
@@ -46,6 +47,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester = new CommandTester($application->get('iam'));
         $this->storage = new StorageClient();
         $this->user = getenv('GOOGLE_IAM_USER');
+        $this->bucket = getenv('GOOGLE_STORAGE_BUCKET');
     }
 
     public function testAddBucketIamMember()
@@ -54,7 +56,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
+        $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;
         $this->commandTester->execute(
@@ -92,7 +94,7 @@ EOF;
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
+        $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;
         $this->commandTester->execute(
@@ -116,7 +118,7 @@ EOF;
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
+        $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;
         $this->commandTester->execute(
