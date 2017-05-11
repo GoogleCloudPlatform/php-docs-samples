@@ -70,15 +70,12 @@ User $user added to role $role for bucket $bucket
 EOF;
         $this->expectOutputString($outputString);
 
-        $foundRoleMember = False;
+        $foundRoleMember = false;
         $policy = $this->storage->bucket($bucket)->iam()->policy();
         foreach ($policy['bindings'] as $binding) {
             if ($binding['role'] == $role) {
-                foreach ($binding['members'] as $member) {
-                    if ($member == $user) {
-                        $foundRoleMember = True;
-                    }
-                }
+                $foundRoleMember = in_array($user, $binding['members']);
+                break;
             }
         }
         $this->assertTrue($foundRoleMember);
@@ -91,8 +88,6 @@ EOF;
         }
 
         $bucket = getenv('GOOGLE_STORAGE_BUCKET');
-        $role = 'roles/storage.objectViewer';
-        $user = 'user:ryanmats@google.com';
         $this->commandTester->execute(
             [
                 'bucket' => $bucket,
@@ -131,11 +126,8 @@ EOF;
         $policy = $this->storage->bucket($bucket)->iam()->policy();
         foreach ($policy['bindings'] as $binding) {
             if ($binding['role'] == $role) {
-                foreach ($binding['members'] as $member) {
-                    if ($member == $user) {
-                        $foundRoleMember = true;
-                    }
-                }
+                $foundRoleMember = in_array($user, $binding['members']);
+                break;
             }
         }
         $this->assertFalse($foundRoleMember);
