@@ -30,6 +30,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
     protected static $hasCredentials;
     protected $commandTester;
     protected $storage;
+    protected $user;
 
     public static function setUpBeforeClass()
     {
@@ -44,6 +45,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new IamCommand());
         $this->commandTester = new CommandTester($application->get('iam'));
         $this->storage = new StorageClient();
+        $this->user = getenv('GOOGLE_IAM_USER');
     }
 
     public function testAddBucketIamMember()
@@ -54,7 +56,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
 
         $bucket = getenv('GOOGLE_STORAGE_BUCKET');
         $role = 'roles/storage.objectViewer';
-        $user = 'user:ryanmats@google.com';
+        $user = $this->user;
         $this->commandTester->execute(
             [
                 'bucket' => $bucket,
@@ -81,6 +83,9 @@ EOF;
         $this->assertTrue($foundRoleMember);
     }
 
+    /**
+     * @depends testAddBucketIamMember
+     */
     public function testListIamMembers()
     {
         if (!self::$hasCredentials) {
@@ -88,6 +93,8 @@ EOF;
         }
 
         $bucket = getenv('GOOGLE_STORAGE_BUCKET');
+        $role = 'roles/storage.objectViewer';
+        $user = $this->user;
         $this->commandTester->execute(
             [
                 'bucket' => $bucket,
@@ -96,8 +103,13 @@ EOF;
         );
 
         $this->expectOutputRegex("/Printing Bucket IAM members for Bucket: $bucket/");
+        $this->expectOutputRegex("/Role: $role/");
+        $this->expectOutputRegex("/$user/");
     }
 
+    /**
+     * @depends testAddBucketIamMember
+     */
     public function testRemoveBucketIamMember()
     {
         if (!self::$hasCredentials) {
@@ -106,12 +118,12 @@ EOF;
 
         $bucket = getenv('GOOGLE_STORAGE_BUCKET');
         $role = 'roles/storage.objectViewer';
-        $user = 'user:ryanmats@google.com';
+        $user = $this->user;
         $this->commandTester->execute(
             [
                 'bucket' => $bucket,
                 '--role' => 'roles/storage.objectViewer',
-                '--remove-member' => 'user:ryanmats@google.com',
+                '--remove-member' => $user,
             ],
             ['interactive' => false]
         );
