@@ -127,13 +127,13 @@ User $user removed from role $role for bucket $bucket
 EOF;
         $this->expectOutputString($outputString);
 
-        $foundRoleMember = False;
+        $foundRoleMember = false;
         $policy = $this->storage->bucket($bucket)->iam()->policy();
         foreach ($policy['bindings'] as $binding) {
             if ($binding['role'] == $role) {
                 foreach ($binding['members'] as $member) {
                     if ($member == $user) {
-                        $foundRoleMember = True;
+                        $foundRoleMember = true;
                     }
                 }
             }

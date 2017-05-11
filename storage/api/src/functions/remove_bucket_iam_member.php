@@ -59,6 +59,6 @@ function remove_bucket_iam_member($bucketName, $role, $member)
             }
         }
     }
-    printf('Role %s not found for bucket %s.' . PHP_EOL, $role, $bucketName);   
+    printf('Role %s not found for bucket %s.' . PHP_EOL, $role, $bucketName);
 }
 # [END remove_bucket_iam_member]

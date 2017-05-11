@@ -85,7 +85,7 @@ EOF
                 throw new InvalidArgumentException('Must provide role as an option.');
             }
             add_bucket_iam_member($bucketName, $role, $addMember);
-        } elseif($removeMember) {
+        } elseif ($removeMember) {
             if (!$role) {
                 throw new InvalidArgumentException('Must provide role as an option.');
             }
