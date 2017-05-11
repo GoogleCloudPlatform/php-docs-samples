@@ -35,18 +35,24 @@ env:
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
 
 before_install:
-  - pushd ${HOME}
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git
   - php php-tools/scripts/dump_credentials.php
   - travis_retry php-tools/scripts/install_test_deps.sh
-  - popd
   - mkdir -p build/logs
 
 before_script:
   - pecl install grpc
 
 script:
-  - testing/run_test_suite.sh
+  - # only run on PHP 5.6
+    if [ "${RUN_CS_FIXER}" = "true" ]; then
+      make cs-check;
+    fi
+  - make tests
+  - # only run for travis crons
+    if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
+      make dependency-check;
+    fi
 
 after_success:
   - composer require "satooshi/php-coveralls:^1.0"
