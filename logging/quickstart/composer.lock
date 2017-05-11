@@ -99,16 +99,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.0.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "7a209c6ff0cd92a5ef028c81589415c9e3e4d05b"
+                "reference": "3889bdfbcb7deb9fa353f66c418b0f12df4b629b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/7a209c6ff0cd92a5ef028c81589415c9e3e4d05b",
-                "reference": "7a209c6ff0cd92a5ef028c81589415c9e3e4d05b",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/3889bdfbcb7deb9fa353f66c418b0f12df4b629b",
+                "reference": "3889bdfbcb7deb9fa353f66c418b0f12df4b629b",
                 "shasum": ""
             },
             "require": {
@@ -139,20 +139,20 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2017-03-31T16:47:15+00:00"
+            "time": "2017-04-25T15:37:29+00:00"
         },
         {
             "name": "google/cloud-logging",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-logging.git",
-                "reference": "f137146547683944a4c48c84aa937daa9439ae1a"
+                "reference": "31cf4bd67bc423eaa6e3275315a9caa18e3c4ecc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-logging/zipball/f137146547683944a4c48c84aa937daa9439ae1a",
-                "reference": "f137146547683944a4c48c84aa937daa9439ae1a",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-logging/zipball/31cf4bd67bc423eaa6e3275315a9caa18e3c4ecc",
+                "reference": "31cf4bd67bc423eaa6e3275315a9caa18e3c4ecc",
                 "shasum": ""
             },
             "require": {
@@ -181,7 +181,7 @@
                 "Apache-2.0"
             ],
             "description": "Stackdriver Logging Client for PHP",
-            "time": "2017-03-31T16:47:15+00:00"
+            "time": "2017-04-25T15:37:29+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1641,16 +1641,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621"
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/62b4cdb99d52cb1ff253c465eb1532a80cebb621",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/acec26fcf7f3031e094e910b94b002fa53d4e4d6",
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6",
                 "shasum": ""
             },
             "require": {
@@ -1692,7 +1692,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-20T09:45:15+00:00"
+            "time": "2017-05-01T14:55:58+00:00"
         },
         {
             "name": "webmozart/assert",
