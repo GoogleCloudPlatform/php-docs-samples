@@ -57,7 +57,7 @@ class SyntaxCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        $this->assertRegExp('/0: Do you know the way/', $output);
+        $this->assertRegExp('/Do you know the way/', $output);
     }
 
     public function testSyntaxFromStorageObject()
@@ -75,6 +75,6 @@ class SyntaxCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        $this->assertRegExp('/0: Do you know the way/', $output);
+        $this->assertRegExp('/Do you know the way/', $output);
     }
 }

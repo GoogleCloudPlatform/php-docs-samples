@@ -40,7 +40,122 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
     <info>php %command.full_name% Text to analyze.</info>
 
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
-
+    
+Example:
+    <info>php %command.full_name% "John took a walk."</info>
+sentences:
+  -
+    text:
+      content: 'John took a walk.'
+      beginOffset: 0
+tokens:
+  -
+    text:
+      content: John
+      beginOffset: 0
+    partOfSpeech:
+      tag: NOUN
+      aspect: ASPECT_UNKNOWN
+      case: CASE_UNKNOWN
+      form: FORM_UNKNOWN
+      gender: GENDER_UNKNOWN
+      mood: MOOD_UNKNOWN
+      number: SINGULAR
+      person: PERSON_UNKNOWN
+      proper: PROPER
+      reciprocity: RECIPROCITY_UNKNOWN
+      tense: TENSE_UNKNOWN
+      voice: VOICE_UNKNOWN
+    dependencyEdge:
+      headTokenIndex: 1
+      label: NSUBJ
+    lemma: John
+  -
+    text:
+      content: took
+      beginOffset: 5
+    partOfSpeech:
+      tag: VERB
+      aspect: ASPECT_UNKNOWN
+      case: CASE_UNKNOWN
+      form: FORM_UNKNOWN
+      gender: GENDER_UNKNOWN
+      mood: INDICATIVE
+      number: NUMBER_UNKNOWN
+      person: PERSON_UNKNOWN
+      proper: PROPER_UNKNOWN
+      reciprocity: RECIPROCITY_UNKNOWN
+      tense: PAST
+      voice: VOICE_UNKNOWN
+    dependencyEdge:
+      headTokenIndex: 1
+      label: ROOT
+    lemma: take
+  -
+    text:
+      content: a
+      beginOffset: 10
+    partOfSpeech:
+      tag: DET
+      aspect: ASPECT_UNKNOWN
+      case: CASE_UNKNOWN
+      form: FORM_UNKNOWN
+      gender: GENDER_UNKNOWN
+      mood: MOOD_UNKNOWN
+      number: NUMBER_UNKNOWN
+      person: PERSON_UNKNOWN
+      proper: PROPER_UNKNOWN
+      reciprocity: RECIPROCITY_UNKNOWN
+      tense: TENSE_UNKNOWN
+      voice: VOICE_UNKNOWN
+    dependencyEdge:
+      headTokenIndex: 3
+      label: DET
+    lemma: a
+  -
+    text:
+      content: walk
+      beginOffset: 12
+    partOfSpeech:
+      tag: NOUN
+      aspect: ASPECT_UNKNOWN
+      case: CASE_UNKNOWN
+      form: FORM_UNKNOWN
+      gender: GENDER_UNKNOWN
+      mood: MOOD_UNKNOWN
+      number: SINGULAR
+      person: PERSON_UNKNOWN
+      proper: PROPER_UNKNOWN
+      reciprocity: RECIPROCITY_UNKNOWN
+      tense: TENSE_UNKNOWN
+      voice: VOICE_UNKNOWN
+    dependencyEdge:
+      headTokenIndex: 1
+      label: DOBJ
+    lemma: walk
+  -
+    text:
+      content: .
+      beginOffset: 16
+    partOfSpeech:
+      tag: PUNCT
+      aspect: ASPECT_UNKNOWN
+      case: CASE_UNKNOWN
+      form: FORM_UNKNOWN
+      gender: GENDER_UNKNOWN
+      mood: MOOD_UNKNOWN
+      number: NUMBER_UNKNOWN
+      person: PERSON_UNKNOWN
+      proper: PROPER_UNKNOWN
+      reciprocity: RECIPROCITY_UNKNOWN
+      tense: TENSE_UNKNOWN
+      voice: VOICE_UNKNOWN
+    dependencyEdge:
+      headTokenIndex: 1
+      label: P
+    lemma: .
+language: en
+entities: {  }
 EOF
             )
             ->addArgument(

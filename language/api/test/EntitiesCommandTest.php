@@ -57,7 +57,7 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        $this->assertRegExp('/San Jose: http:\/\/en.wikipedia.org/', $output);
+        $this->assertRegExp('/http:\/\/en.wikipedia.org/', $output);
     }
 
     public function testEntitiesFromStorageObject()
@@ -75,6 +75,6 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        $this->assertRegExp('/San Jose: http:\/\/en.wikipedia.org/', $output);
+        $this->assertRegExp('/http:\/\/en.wikipedia.org/', $output);
     }
 }
