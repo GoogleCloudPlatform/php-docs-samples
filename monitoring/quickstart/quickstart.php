@@ -20,51 +20,58 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
+use Google\Api\Metric;
+use Google\Api\MonitoredResource;
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use google\api\Metric;
-use google\api\MonitoredResource;
-use google\api\MonitoredResource\LabelsEntry;
-use google\monitoring\v3\Point;
-use google\monitoring\v3\TimeInterval;
-use google\monitoring\v3\TimeSeries;
-use google\monitoring\v3\TypedValue;
-use google\protobuf\Timestamp;
+use Google\Monitoring\V3\Point;
+use Google\Monitoring\V3\TimeInterval;
+use Google\Monitoring\V3\TimeSeries;
+use Google\Monitoring\V3\TypedValue;
+use Google\Protobuf\Timestamp;
+
+// These variables are set by the App Engine environment. To test locally,
+// ensure these are set or manually change their values.
+$projectId = getenv('GCLOUD_PROJECT') ?: 'YOUR_PROJECT_ID';
+$instanceId = '1234567890123456789';
+$zone = 'us-central1-f';
 
 try {
     $client = new MetricServiceClient();
-
-    $projectId = 'YOUR_PROJECT_ID';
-
     $formattedProjectName = MetricServiceClient::formatProjectName($projectId);
+    $labels = [
+        'instance_id' => $instanceId,
+        'zone' => $zone,
+    ];
 
-    $instanceIdLabel = new LabelsEntry();
-    $instanceIdLabel->setKey('instance_id')
-        ->setValue('1234567890123456789');
-    $zoneLabel = new LabelsEntry();
-    $zoneLabel->setKey('zone');
-    $zoneLabel->setValue('us-central1-f');
-    $r = new MonitoredResource();
-    $r->setType('gce_instance')
-        ->addLabels($instanceIdLabel)
-        ->addLabels($zoneLabel);
     $m = new Metric();
     $m->setType('custom.googleapis.com/my_metric');
-    $point = new Point();
+
+    $r = new MonitoredResource();
+    $r->setType('gce_instance');
+    $r->setLabels($labels);
+
     $value = new TypedValue();
     $value->setDoubleValue(3.14);
-    $interval = new TimeInterval();
+
     $timestamp = new Timestamp();
     $timestamp->setSeconds(time());
+
+    $interval = new TimeInterval();
     $interval->setStartTime($timestamp);
     $interval->setEndTime($timestamp);
-    $point->setValue($value)
-        ->setInterval($interval);
+
+    $point = new Point();
+    $point->setValue($value);
+    $point->setInterval($interval);
+    $points = [$point];
+
     $timeSeries = new TimeSeries();
-    $timeSeries->setMetric($m)
-        ->setResource($r)
-        ->setPoints($point);
+    $timeSeries->setMetric($m);
+    $timeSeries->setResource($r);
+    $timeSeries->setPoints($points);
+
     $client->createTimeSeries($formattedProjectName, [$timeSeries]);
-    echo 'Successfully submitted a time series' . PHP_EOL;
+    print('Successfully submitted a time series' . PHP_EOL);
 } finally {
     $client->close();
 }

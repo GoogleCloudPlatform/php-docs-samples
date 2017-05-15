@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d40dde6274c0304ccb423f42a510bc03",
+    "content-hash": "caaf746a5bd05eb7c19eb71b4670dd1a",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -98,17 +98,17 @@
             "time": "2016-11-02T14:59:14+00:00"
         },
         {
-            "name": "google/cloud-core",
-            "version": "v1.0.0",
+            "name": "google/cloud",
+            "version": "dev-proto3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "7a209c6ff0cd92a5ef028c81589415c9e3e4d05b"
+                "url": "https://github.com/michaelbausor/gcloud-php.git",
+                "reference": "d9a76b8ed574cdc18f5538ec4d2b7618ff0e51aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/7a209c6ff0cd92a5ef028c81589415c9e3e4d05b",
-                "reference": "7a209c6ff0cd92a5ef028c81589415c9e3e4d05b",
+                "url": "https://api.github.com/repos/michaelbausor/gcloud-php/zipball/d9a76b8ed574cdc18f5538ec4d2b7618ff0e51aa",
+                "reference": "d9a76b8ed574cdc18f5538ec4d2b7618ff0e51aa",
                 "shasum": ""
             },
             "require": {
@@ -120,84 +120,109 @@
                 "psr/http-message": "1.0.*",
                 "rize/uri-template": "~0.3"
             },
-            "type": "library",
-            "extra": {
-                "component": {
-                    "id": "cloud-core",
-                    "target": "GoogleCloudPlatform/google-cloud-php-core.git",
-                    "path": "src/Core",
-                    "entry": null
-                }
+            "require-dev": {
+                "erusev/parsedown": "^1.6",
+                "google/gax": "dev-proto3",
+                "google/proto-client-php": "dev-proto3",
+                "league/json-guard": "^0.3",
+                "phpdocumentor/reflection": "^3.0",
+                "phpunit/phpunit": "4.8.*",
+                "squizlabs/php_codesniffer": "2.*",
+                "symfony/console": "^3.0",
+                "vierbergenlars/php-semver": "^3.0"
             },
-            "autoload": {
-                "psr-4": {
-                    "Google\\Cloud\\Core\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2017-03-31T16:47:15+00:00"
-        },
-        {
-            "name": "google/cloud-monitoring",
-            "version": "v0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-monitoring.git",
-                "reference": "db6723c5b06eafa43af1e5ccb8767a3bd47a6364"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-monitoring/zipball/db6723c5b06eafa43af1e5ccb8767a3bd47a6364",
-                "reference": "db6723c5b06eafa43af1e5ccb8767a3bd47a6364",
-                "shasum": ""
-            },
-            "require": {
-                "google/cloud-core": "*",
-                "google/gax": "^0.8",
-                "google/proto-client-php": "^0.9"
+            "suggest": {
+                "google/gax": "Required to support gRPC",
+                "google/proto-client-php": "Required to support gRPC"
             },
             "type": "library",
             "extra": {
                 "component": {
-                    "id": "cloud-monitoring",
-                    "target": "GoogleCloudPlatform/google-cloud-php-monitoring.git",
-                    "path": "src/Monitoring",
-                    "entry": null
+                    "id": "google-cloud",
+                    "target": "git@github.com:jdpedrie-gcp/google-cloud-php.git",
+                    "path": "src",
+                    "entry": "ServiceBuilder.php"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Google\\Cloud\\Monitoring\\": ""
+                    "Google\\Cloud\\": "src",
+                    "": "src/proto"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Google\\Cloud\\Dev\\": "dev/src",
+                    "Google\\Cloud\\Tests\\System\\": "tests/system"
+                }
+            },
+            "scripts": {
+                "google-cloud": [
+                    "dev/google-cloud"
+                ]
+            },
             "license": [
                 "Apache-2.0"
             ],
-            "description": "Stackdriver Monitoring Client for PHP",
-            "time": "2017-03-10T22:41:54+00:00"
+            "authors": [
+                {
+                    "name": "Dave Supplee",
+                    "email": "dwsupplee@gmail.com"
+                },
+                {
+                    "name": "John Pedrie",
+                    "email": "john@pedrie.com"
+                }
+            ],
+            "description": "Google Cloud Client Library",
+            "homepage": "http://github.com/GoogleCloudPlatform/google-cloud-php",
+            "keywords": [
+                "big query",
+                "bigquery",
+                "cloud",
+                "datastore",
+                "gcs",
+                "google",
+                "google api",
+                "google api client",
+                "google apis",
+                "google apis client",
+                "google cloud",
+                "google cloud platform",
+                "language",
+                "natural language",
+                "pub sub",
+                "pubsub",
+                "speech",
+                "stackdriver logging",
+                "storage",
+                "translate",
+                "translation",
+                "vision"
+            ],
+            "support": {
+                "source": "https://github.com/michaelbausor/gcloud-php/tree/proto3"
+            },
+            "time": "2017-05-12 18:11:32"
         },
         {
             "name": "google/gax",
-            "version": "0.8.1",
+            "version": "dev-proto3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "e2351cb2ad949a7b76f6e9ea67f731f11c03900b"
+                "reference": "54208a005072781305a679fd0c09e42eb9e64e5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/e2351cb2ad949a7b76f6e9ea67f731f11c03900b",
-                "reference": "e2351cb2ad949a7b76f6e9ea67f731f11c03900b",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/54208a005072781305a679fd0c09e42eb9e64e5a",
+                "reference": "54208a005072781305a679fd0c09e42eb9e64e5a",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^0.11",
-                "grpc/grpc": "v1.0.*",
+                "google/proto-client-php": "dev-proto3",
+                "grpc/grpc": "^1.3.2",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -210,11 +235,7 @@
                 "psr-4": {
                     "Google\\GAX\\": "src/",
                     "Google\\GAX\\UnitTests\\": "tests/"
-                },
-                "classmap": [
-                    "src/generated",
-                    "src/generated/well-known-types"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -225,24 +246,24 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-03-02T19:00:55+00:00"
+            "time": "2017-05-12 17:39:31"
         },
         {
             "name": "google/proto-client-php",
-            "version": "0.9.0",
+            "version": "dev-proto3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "9dc521c05521f9a1a126c1146b954130183d877c"
+                "reference": "40a50a7acae3ad57336843a317dea82ad7e1484e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/9dc521c05521f9a1a126c1146b954130183d877c",
-                "reference": "9dc521c05521f9a1a126c1146b954130183d877c",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/40a50a7acae3ad57336843a317dea82ad7e1484e",
+                "reference": "40a50a7acae3ad57336843a317dea82ad7e1484e",
                 "shasum": ""
             },
             "require": {
-                "grpc/grpc": "v1.0.*",
+                "grpc/grpc": "*",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -250,9 +271,10 @@
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "src"
-                ]
+                "psr-4": {
+                    "Google\\": "src/Google/",
+                    "GPBMetadata\\": "src/GPBMetadata/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -263,25 +285,66 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-03-02T18:27:19+00:00"
+            "time": "2017-05-11 15:21:25"
         },
         {
-            "name": "grpc/grpc",
-            "version": "v1.0.1",
+            "name": "google/protobuf",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/grpc/grpc.git",
-                "reference": "6040b471bcd1d6bb05b25c126b6545180a1d3528"
+                "url": "https://github.com/google/protobuf.git",
+                "reference": "49a56da93ff3ab7d9a2252639344ad28db8cdff6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc/zipball/6040b471bcd1d6bb05b25c126b6545180a1d3528",
-                "reference": "6040b471bcd1d6bb05b25c126b6545180a1d3528",
+                "url": "https://api.github.com/repos/google/protobuf/zipball/49a56da93ff3ab7d9a2252639344ad28db8cdff6",
+                "reference": "49a56da93ff3ab7d9a2252639344ad28db8cdff6",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0",
-                "stanley-cheung/protobuf-php": "v0.6"
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\Protobuf\\Internal\\": "php/src/Google/Protobuf/Internal",
+                    "GPBMetadata\\Google\\Protobuf\\Internal\\": "php/src/GPBMetadata/Google/Protobuf/Internal"
+                },
+                "files": [
+                    "php/src/Google/Protobuf/descriptor.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "proto library for PHP",
+            "homepage": "https://developers.google.com/protocol-buffers/",
+            "keywords": [
+                "proto"
+            ],
+            "time": "2017-05-12T23:10:30+00:00"
+        },
+        {
+            "name": "grpc/grpc",
+            "version": "v1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/grpc/grpc.git",
+                "reference": "c80d3321d0f77bef8cfff8b32490a07c1e90a5ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/grpc/grpc/zipball/c80d3321d0f77bef8cfff8b32490a07c1e90a5ad",
+                "reference": "c80d3321d0f77bef8cfff8b32490a07c1e90a5ad",
+                "shasum": ""
+            },
+            "require": {
+                "google/protobuf": "^v3.1.0",
+                "php": ">=5.5.0"
             },
             "require-dev": {
                 "google/auth": "v0.9"
@@ -301,7 +364,7 @@
             "keywords": [
                 "rpc"
             ],
-            "time": "2016-10-27T22:05:26+00:00"
+            "time": "2017-05-11T17:18:56+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -745,58 +808,6 @@
                 "uri"
             ],
             "time": "2017-02-21T15:25:22+00:00"
-        },
-        {
-            "name": "stanley-cheung/protobuf-php",
-            "version": "v0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stanley-cheung/Protobuf-PHP.git",
-                "reference": "e5d3b55b1898233e36abb552281d2dd0ce86c5e7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stanley-cheung/Protobuf-PHP/zipball/e5d3b55b1898233e36abb552281d2dd0ce86c5e7",
-                "reference": "e5d3b55b1898233e36abb552281d2dd0ce86c5e7",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "bin": [
-                "protoc-gen-php.bat",
-                "protoc-gen-php.php"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "DrSlump": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Iván -DrSlump- Montes",
-                    "email": "drslump@pollinimini.net",
-                    "homepage": "https://github.com/drslump/Protobuf-PHP"
-                }
-            ],
-            "description": "PHP implementation of Google's Protocol Buffers",
-            "homepage": "https://github.com/stanley-cheung/Protobuf-PHP",
-            "keywords": [
-                "protobuf",
-                "protocol buffer",
-                "serializing"
-            ],
-            "time": "2016-07-22T02:12:15+00:00"
         }
     ],
     "packages-dev": [
@@ -1812,17 +1823,95 @@
             "time": "2015-06-21T13:59:46+00:00"
         },
         {
-            "name": "symfony/yaml",
-            "version": "v3.2.6",
+            "name": "squizlabs/php_codesniffer",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "093e416ad096355149e265ea2e4cc1f9ee40ab1a"
+                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
+                "reference": "f7dfecbee89d68ab475a6c9e17d22bc9b69aed97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/093e416ad096355149e265ea2e4cc1f9ee40ab1a",
-                "reference": "093e416ad096355149e265ea2e4cc1f9ee40ab1a",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/f7dfecbee89d68ab475a6c9e17d22bc9b69aed97",
+                "reference": "f7dfecbee89d68ab475a6c9e17d22bc9b69aed97",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": "*",
+                "ext-tokenizer": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.1.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "bin": [
+                "scripts/phpcs",
+                "scripts/phpcbf"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "CodeSniffer.php",
+                    "CodeSniffer/CLI.php",
+                    "CodeSniffer/Exception.php",
+                    "CodeSniffer/File.php",
+                    "CodeSniffer/Fixer.php",
+                    "CodeSniffer/Report.php",
+                    "CodeSniffer/Reporting.php",
+                    "CodeSniffer/Sniff.php",
+                    "CodeSniffer/Tokens.php",
+                    "CodeSniffer/Reports/",
+                    "CodeSniffer/Tokenizers/",
+                    "CodeSniffer/DocGenerators/",
+                    "CodeSniffer/Standards/AbstractPatternSniff.php",
+                    "CodeSniffer/Standards/AbstractScopeSniff.php",
+                    "CodeSniffer/Standards/AbstractVariableSniff.php",
+                    "CodeSniffer/Standards/IncorrectPatternException.php",
+                    "CodeSniffer/Standards/Generic/Sniffs/",
+                    "CodeSniffer/Standards/MySource/Sniffs/",
+                    "CodeSniffer/Standards/PEAR/Sniffs/",
+                    "CodeSniffer/Standards/PSR1/Sniffs/",
+                    "CodeSniffer/Standards/PSR2/Sniffs/",
+                    "CodeSniffer/Standards/Squiz/Sniffs/",
+                    "CodeSniffer/Standards/Zend/Sniffs/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Greg Sherwood",
+                    "role": "lead"
+                }
+            ],
+            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+            "homepage": "http://www.squizlabs.com/php-codesniffer",
+            "keywords": [
+                "phpcs",
+                "standards"
+            ],
+            "time": "2017-05-03T23:30:39+00:00"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "v3.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/acec26fcf7f3031e094e910b94b002fa53d4e4d6",
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6",
                 "shasum": ""
             },
             "require": {
@@ -1864,7 +1953,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-07T16:47:02+00:00"
+            "time": "2017-05-01T14:55:58+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -1919,7 +2008,11 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "google/cloud": 20,
+        "google/gax": 20,
+        "google/proto-client-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

@@ -1,8 +1,15 @@
 {
-    "require": {
-        "google/cloud-monitoring": "^0.1.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4"
-    }
+  "require": {
+    "google/cloud": "dev-proto3",
+    "google/gax": "dev-proto3",
+    "google/proto-client-php": "dev-proto3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*",
+    "squizlabs/php_codesniffer": "2.*"
+  },
+  "repositories": [{
+      "type": "vcs",
+      "url": "git@github.com:michaelbausor/gcloud-php.git"
+  }]
 }
