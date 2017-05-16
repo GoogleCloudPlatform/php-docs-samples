@@ -26,7 +26,7 @@ do
         if composer outdated --direct -m | grep -q 'google/' ; then
             # output out-of-date libraries
             echo "Some dependencies are out of date in \"$DIR\""
-            echo "run \"make dependency-update\" to update them"
+            echo "run \"testing/run_dependency_update.sh\" to update them"
             composer outdated --direct -m --strict
         fi
     fi

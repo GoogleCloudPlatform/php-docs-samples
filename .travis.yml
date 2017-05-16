@@ -46,12 +46,12 @@ before_script:
 script:
   - # only run on PHP 5.6
     if [ "${RUN_CS_FIXER}" = "true" ]; then
-      make cs-check;
+      testing/run_cs_check.sh;
     fi
-  - make tests
+  - testing/run_test_suite.sh;
   - # only run for travis crons
     if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
-      make dependency-check;
+      testing/run_dependency_check.sh;
     fi
 
 after_success:
