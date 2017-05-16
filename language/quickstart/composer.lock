@@ -180,6 +180,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Natural Language Client for PHP",
+            "abandoned": "google/cloud-language",
             "time": "2017-03-31T16:47:15+00:00"
         },
         {
