@@ -13,5 +13,5 @@ env_variables:
 #[START cloudsql_settings]
 # Use the connection name obtained when configuring your Cloud SQL instance.
 beta_settings:
-    cloud_sql_instances: "CONNECTION_NAME"
+    cloud_sql_instances: 'CONNECTION_NAME'
 #[END cloudsql_settings]
