@@ -21,7 +21,7 @@ namespace Google\Cloud\Samples\Translate;
 // [START translate_list_language_names]
 use Google\Cloud\Translate\TranslateClient;
 
-// $targetLanguage = 'en'; // Print the names of the languages in which language?
+$targetLanguage = 'en'; // Print the names of the languages in which language?
 
 $translate = new TranslateClient();
 $result = $translate->localizedLanguages([
