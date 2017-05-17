@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "98ebc550b6d6f09831f39f4323803a35",
+    "content-hash": "8d56e7cd883c41da308b757bbdd46f43",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -180,7 +180,6 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Natural Language Client for PHP",
-            "abandoned": "google/cloud-language",
             "time": "2017-03-31T16:47:15+00:00"
         },
         {
