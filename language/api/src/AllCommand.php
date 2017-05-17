@@ -60,103 +60,12 @@ tokens:
       tag: NOUN
       aspect: ASPECT_UNKNOWN
       case: CASE_UNKNOWN
-      form: FORM_UNKNOWN
-      gender: GENDER_UNKNOWN
-      mood: MOOD_UNKNOWN
-      number: SINGULAR
-      person: PERSON_UNKNOWN
-      proper: PROPER
-      reciprocity: RECIPROCITY_UNKNOWN
-      tense: TENSE_UNKNOWN
-      voice: VOICE_UNKNOWN
+      ...
     dependencyEdge:
       headTokenIndex: 1
       label: NSUBJ
     lemma: John
-  -
-    text:
-      content: took
-      beginOffset: 5
-    partOfSpeech:
-      tag: VERB
-      aspect: ASPECT_UNKNOWN
-      case: CASE_UNKNOWN
-      form: FORM_UNKNOWN
-      gender: GENDER_UNKNOWN
-      mood: INDICATIVE
-      number: NUMBER_UNKNOWN
-      person: PERSON_UNKNOWN
-      proper: PROPER_UNKNOWN
-      reciprocity: RECIPROCITY_UNKNOWN
-      tense: PAST
-      voice: VOICE_UNKNOWN
-    dependencyEdge:
-      headTokenIndex: 1
-      label: ROOT
-    lemma: take
-  -
-    text:
-      content: a
-      beginOffset: 10
-    partOfSpeech:
-      tag: DET
-      aspect: ASPECT_UNKNOWN
-      case: CASE_UNKNOWN
-      form: FORM_UNKNOWN
-      gender: GENDER_UNKNOWN
-      mood: MOOD_UNKNOWN
-      number: NUMBER_UNKNOWN
-      person: PERSON_UNKNOWN
-      proper: PROPER_UNKNOWN
-      reciprocity: RECIPROCITY_UNKNOWN
-      tense: TENSE_UNKNOWN
-      voice: VOICE_UNKNOWN
-    dependencyEdge:
-      headTokenIndex: 3
-      label: DET
-    lemma: a
-  -
-    text:
-      content: walk
-      beginOffset: 12
-    partOfSpeech:
-      tag: NOUN
-      aspect: ASPECT_UNKNOWN
-      case: CASE_UNKNOWN
-      form: FORM_UNKNOWN
-      gender: GENDER_UNKNOWN
-      mood: MOOD_UNKNOWN
-      number: SINGULAR
-      person: PERSON_UNKNOWN
-      proper: PROPER_UNKNOWN
-      reciprocity: RECIPROCITY_UNKNOWN
-      tense: TENSE_UNKNOWN
-      voice: VOICE_UNKNOWN
-    dependencyEdge:
-      headTokenIndex: 1
-      label: DOBJ
-    lemma: walk
-  -
-    text:
-      content: .
-      beginOffset: 16
-    partOfSpeech:
-      tag: PUNCT
-      aspect: ASPECT_UNKNOWN
-      case: CASE_UNKNOWN
-      form: FORM_UNKNOWN
-      gender: GENDER_UNKNOWN
-      mood: MOOD_UNKNOWN
-      number: NUMBER_UNKNOWN
-      person: PERSON_UNKNOWN
-      proper: PROPER_UNKNOWN
-      reciprocity: RECIPROCITY_UNKNOWN
-      tense: TENSE_UNKNOWN
-      voice: VOICE_UNKNOWN
-    dependencyEdge:
-      headTokenIndex: 1
-      label: P
-    lemma: .
+    ...
 entities:
   -
     name: John
@@ -169,17 +78,7 @@ entities:
           content: John
           beginOffset: 0
         type: PROPER
-  -
-    name: walk
-    type: EVENT
-    metadata: {  }
-    salience: 0.3247361
-    mentions:
-      -
-        text:
-          content: walk
-          beginOffset: 12
-        type: COMMON
+      ...
 documentSentiment:
   magnitude: 0
   score: 0
