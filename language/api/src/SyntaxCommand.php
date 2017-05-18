@@ -40,7 +40,33 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
     <info>php %command.full_name% Text to analyze.</info>
 
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
-
+    
+Example:
+    <info>php %command.full_name% "John took a walk."</info>
+sentences:
+  -
+    text:
+      content: 'John took a walk.'
+      beginOffset: 0
+tokens:
+  -
+    text:
+      content: John
+      beginOffset: 0
+    partOfSpeech:
+      tag: NOUN
+      aspect: ASPECT_UNKNOWN
+      case: CASE_UNKNOWN
+      form: FORM_UNKNOWN
+      ...
+    dependencyEdge:
+      headTokenIndex: 1
+      label: NSUBJ
+    lemma: John
+  -
+    ...
+language: en
+entities: {  }
 EOF
             )
             ->addArgument(

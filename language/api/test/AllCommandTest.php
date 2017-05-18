@@ -47,23 +47,8 @@ class AllCommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new AllCommand());
         $this->commandTester = new CommandTester($application->get('all'));
         $this->expectedPatterns = array(
-            '/language: en/',
-            '/sentiment/',
-            '/sentences:/',
-            '/0: Do you know the way to San Jose\\?/',
-            '/tokens:/',
-            '/Do: VERB/',
-            '/you: PRON/',
-            '/know: VERB/',
-            '/the: DET/',
-            '/way: NOUN/',
-            '/to: ADP/',
-            '/San: NOUN/',
-            '/Jose: NOUN/',
-            '/\\?: PUNCT/',
-            '/entities:/',
-            '/San Jose: http:\\/\\/en.wikipedia.org\\/wiki\\/San_Jose,'
-            . '_California/',
+            '/content: know/',
+            '/http:\/\/en.wikipedia.org\/wiki\/San_Jose,_California/'
         );
     }
 

@@ -41,6 +41,32 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
 
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
+Example:
+    <info>php %command.full_name% "John took a walk."</info>
+entities:
+  -
+    name: John
+    type: PERSON
+    metadata: {  }
+    salience: 0.67526394
+    mentions:
+      -
+        text:
+          content: John
+          beginOffset: 0
+        type: PROPER
+  -
+    name: walk
+    type: EVENT
+    metadata: {  }
+    salience: 0.3247361
+    mentions:
+      -
+        text:
+          content: walk
+          beginOffset: 12
+        type: COMMON
+language: en
 EOF
             )
             ->addArgument(
