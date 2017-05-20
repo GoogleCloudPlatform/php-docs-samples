@@ -47,7 +47,7 @@ function add_column($instanceId, $databaseId)
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->result();
+    $operation->pollUntilComplete();
 
     printf('Added the MarketingBudget column.' . PHP_EOL);
 }

@@ -56,7 +56,7 @@ function create_storing_index($instanceId, $databaseId)
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->result();
+    $operation->pollUntilComplete();
 
     printf('Added the AlbumsByAlbumTitle2 index.' . PHP_EOL);
 }

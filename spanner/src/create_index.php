@@ -47,7 +47,7 @@ function create_index($instanceId, $databaseId)
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->result();
+    $operation->pollUntilComplete();
 
     printf('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
 }

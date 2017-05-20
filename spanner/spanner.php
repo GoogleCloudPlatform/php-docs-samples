@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-$application = new Application();
+$application = new Application('Cloud Spanner');
 
 $inputDefinition = new InputDefinition([
     new InputArgument('instance_id', InputArgument::REQUIRED, 'The instance id'),
@@ -75,18 +75,6 @@ $application->add((new Command('read-data'))
     ->setDescription('Reads sample data from the database.')
     ->setCode(function($input, $output) {
         read_data(
-            $input->getArgument('instance_id'),
-            $input->getArgument('database_id')
-        );
-    })
-);
-
-// Query data with new column command
-$application->add((new Command('query-data-with-new-column'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Queries sample data from the database using SQL.')
-    ->setCode(function($input, $output) {
-        query_data_with_new_column(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -163,6 +151,18 @@ $application->add((new Command('add-column'))
     ->setDescription('Adds a new column to the Albums table in the example database.')
     ->setCode(function($input, $output) {
         add_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with new column command
+$application->add((new Command('query-data-with-new-column'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from the database using SQL.')
+    ->setCode(function($input, $output) {
+        query_data_with_new_column(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
