@@ -1,13 +1,16 @@
 Google Cloud Spanner PHP Samples
 ================================
 
-This directory contains samples for Google Cloud Spanner. [Google Cloud Spanner][spanner] is a highly scalable, transactional, managed, NewSQL database service. Cloud Spanner solves the need for a horizontally-scaling database with consistent global transactions and SQL semantics.
+This directory contains samples for Google Cloud Spanner.
+[Google Cloud Spanner][spanner] is a highly scalable, transactional, managed,
+[NewSQL][newsql] database service. Cloud Spanner solves the need for a
+horizontally-scaling database with consistent global transactions and SQL
+semantics.
 
 [spanner]: https://cloud.google.com/spanner/docs
-
+[newsql]: https://en.wikipedia.org/wiki/NewSQL
 
 ## Setup
-
 
 ### Authentication
 
@@ -36,6 +39,8 @@ authentication:
 [service_account_key_file]: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
 
 ## Install Dependencies
+
+1. [Enable the Cloud Spanner API](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com).
 
 1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
