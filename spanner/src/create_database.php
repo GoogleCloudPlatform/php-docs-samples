@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START create_database]
+// [START create_database]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -66,4 +66,4 @@ function create_database($instanceId, $databaseId)
     printf('Created database %s on instance %s' . PHP_EOL,
         $databaseId, $instanceId);
 }
-# [END create_database]
+// [END create_database]

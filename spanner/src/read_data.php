@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START read_data]
+// [START read_data]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -54,4 +54,4 @@ function read_data($instanceId, $databaseId)
             $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
     }
 }
-# [END read_data]
+// [END read_data]

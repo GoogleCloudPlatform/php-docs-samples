@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START spanner_quickstart]
+// [START spanner_quickstart]
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
@@ -48,5 +48,5 @@ $results = $database->execute('SELECT "Hello World" as test');
 foreach ($results as $row) {
     print($row['test'] . PHP_EOL);
 }
-# [END spanner_quickstart]
+// [END spanner_quickstart]
 return $results;

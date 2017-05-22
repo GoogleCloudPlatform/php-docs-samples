@@ -27,7 +27,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START read_data_with_storing_index]
+// [START read_data_with_storing_index]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -68,4 +68,4 @@ function read_data_with_storing_index($instanceId, $databaseId)
             $row['AlbumId'], $row['AlbumTitle'], $row['MarketingBudget']);
     }
 }
-# [END read_data_with_storing_index]
+// [END read_data_with_storing_index]

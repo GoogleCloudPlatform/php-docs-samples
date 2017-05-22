@@ -27,7 +27,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START create_storing_index]
+// [START create_storing_index]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -63,4 +63,4 @@ function create_storing_index($instanceId, $databaseId)
 
     printf('Added the AlbumsByAlbumTitle2 index.' . PHP_EOL);
 }
-# [END create_storing_index]
+// [END create_storing_index]
