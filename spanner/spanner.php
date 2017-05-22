@@ -37,7 +37,7 @@ $inputDefinition = new InputDefinition([
 $application->add((new Command('create-database'))
     ->setDefinition($inputDefinition)
     ->setDescription('Creates a database and tables for sample data.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         create_database(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -49,7 +49,7 @@ $application->add((new Command('create-database'))
 $application->add((new Command('insert-data'))
     ->setDefinition($inputDefinition)
     ->setDescription('Inserts sample data into the given database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         insert_data(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -61,7 +61,7 @@ $application->add((new Command('insert-data'))
 $application->add((new Command('query-data'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data from the database using SQL.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         query_data(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -73,7 +73,7 @@ $application->add((new Command('query-data'))
 $application->add((new Command('read-data'))
     ->setDefinition($inputDefinition)
     ->setDescription('Reads sample data from the database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         read_data(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -85,7 +85,7 @@ $application->add((new Command('read-data'))
 $application->add((new Command('create-index'))
     ->setDefinition($inputDefinition)
     ->setDescription('Adds a simple index to the example database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         create_index(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -99,7 +99,7 @@ $application->add((new Command('query-data-with-index'))
     ->addOption('start_title', null, InputOption::VALUE_REQUIRED, 'The start of the title index.', 'Aardvark')
     ->addOption('end_title', null, InputOption::VALUE_REQUIRED, 'The end of the title index.', 'Goo')
     ->setDescription('Queries sample data from the database using SQL and an index.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         query_data_with_index(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id'),
@@ -113,7 +113,7 @@ $application->add((new Command('query-data-with-index'))
 $application->add((new Command('read-data-with-index'))
     ->setDefinition($inputDefinition)
     ->setDescription('Reads sample data from the database using an index.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         read_data_with_index(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -125,7 +125,7 @@ $application->add((new Command('read-data-with-index'))
 $application->add((new Command('create-storing-index'))
     ->setDefinition($inputDefinition)
     ->setDescription('Adds an storing index to the example database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         create_storing_index(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -137,7 +137,7 @@ $application->add((new Command('create-storing-index'))
 $application->add((new Command('read-data-with-storing-index'))
     ->setDefinition($inputDefinition)
     ->setDescription('Reads sample data from the database using an index with a storing clause.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         read_data_with_storing_index(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -149,7 +149,7 @@ $application->add((new Command('read-data-with-storing-index'))
 $application->add((new Command('add-column'))
     ->setDefinition($inputDefinition)
     ->setDescription('Adds a new column to the Albums table in the example database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         add_column(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -161,7 +161,7 @@ $application->add((new Command('add-column'))
 $application->add((new Command('query-data-with-new-column'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data from the database using SQL.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         query_data_with_new_column(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -173,7 +173,7 @@ $application->add((new Command('query-data-with-new-column'))
 $application->add((new Command('update-data'))
     ->setDefinition($inputDefinition)
     ->setDescription('Updates sample data in the database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         update_data(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -185,7 +185,7 @@ $application->add((new Command('update-data'))
 $application->add((new Command('read-write-transaction'))
     ->setDefinition($inputDefinition)
     ->setDescription('Performs a read-write transaction to update two sample records in the database.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         read_write_transaction(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
@@ -197,7 +197,7 @@ $application->add((new Command('read-write-transaction'))
 $application->add((new Command('read-only-transaction'))
     ->setDefinition($inputDefinition)
     ->setDescription('Reads data inside of a read-only transaction.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         read_only_transaction(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')

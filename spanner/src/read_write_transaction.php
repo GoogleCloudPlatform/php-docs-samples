@@ -52,7 +52,7 @@ function read_write_transaction($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function(Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) use ($spanner) {
         // Read the second album's budget.
         $secondAlbumKey = [2,2];
         $secondAlbumKeySet = $spanner->keySet(['keys' => [$secondAlbumKey]]);
