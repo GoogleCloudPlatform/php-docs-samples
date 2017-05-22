@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START spanner_query_data_with_new_column]
+# [START query_data_with_new_column]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -57,4 +57,4 @@ function query_data_with_new_column($instanceId, $databaseId)
             $row['SingerId'], $row['AlbumId'], $row['MarketingBudget']);
     }
 }
-# [END spanner_query_data_with_new_column]
+# [END query_data_with_new_column]

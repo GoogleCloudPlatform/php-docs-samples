@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START spanner_insert_data]
+# [START insert_data]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -64,4 +64,4 @@ function insert_data($instanceId, $databaseId)
 
     print('Inserted data.' . PHP_EOL);
 }
-# [END spanner_insert_data]
+# [END insert_data]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START spanner_read_write_transaction]
+# [START read_write_transaction]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Transaction;
 use UnexpectedValueException;
@@ -104,4 +104,4 @@ function read_write_transaction($instanceId, $databaseId)
 
     print('Transaction complete.' . PHP_EOL);
 }
-# [END spanner_read_write_transaction]
+# [END read_write_transaction]

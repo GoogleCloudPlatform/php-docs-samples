@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START spanner_read_only_transaction]
+# [START read_only_transaction]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -71,4 +71,4 @@ function read_only_transaction($instanceId, $databaseId)
             $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
     }
 }
-# [END spanner_read_only_transaction]
+# [END read_only_transaction]

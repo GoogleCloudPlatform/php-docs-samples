@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START spanner_update_data]
+# [START update_data]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -58,4 +58,4 @@ function update_data($instanceId, $databaseId)
 
     print('Updated data.' . PHP_EOL);
 }
-# [END spanner_update_data]
+# [END update_data]

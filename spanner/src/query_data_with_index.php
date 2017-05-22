@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-# [START spanner_query_data_with_index]
+# [START query_data_with_index]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -68,4 +68,4 @@ function query_data_with_index($instanceId, $databaseId, $startTitle, $endTitle)
             $row['AlbumId'], $row['AlbumTitle']);
     }
 }
-# [END spanner_query_data_with_index]
+# [END query_data_with_index]
