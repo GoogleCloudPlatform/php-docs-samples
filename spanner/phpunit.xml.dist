@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="test/bootstrap.php">
+<phpunit bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="Google Spanner Tests">
             <directory>test</directory>
@@ -25,7 +25,11 @@
     </logging>
     <filter>
         <whitelist>
+            <directory suffix=".php">src</directory>
             <file>quickstart.php</file>
         </whitelist>
     </filter>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+    </php>
 </phpunit>

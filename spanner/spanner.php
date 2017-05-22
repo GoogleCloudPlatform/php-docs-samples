@@ -205,4 +205,9 @@ $application->add((new Command('read-only-transaction'))
     })
 );
 
+// for testing
+if (getenv('PHPUNIT_TESTS') === '1') {
+    return $application;
+}
+
 $application->run();

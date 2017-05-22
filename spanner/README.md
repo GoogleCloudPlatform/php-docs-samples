@@ -37,8 +37,6 @@ authentication:
 
 ## Install Dependencies
 
-1. [Enable the Cloud Spanner API](https://console.cloud.google.com/flows/enableapi?apiid=datastore.googleapis.com).
-
 1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).

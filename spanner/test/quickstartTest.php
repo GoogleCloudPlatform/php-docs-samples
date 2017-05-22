@@ -19,7 +19,11 @@ namespace Google\Cloud\Samples\Spanner;
 
 class quickstartTest extends \PHPUnit_Framework_TestCase
 {
-    public function testQuickstart()
+    protected static $file;
+
+    protected static $tempFile;
+
+    public function setUp()
     {
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
@@ -31,18 +35,29 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('GOOGLE_SPANNER_DATABASE_ID must be set.');
         }
 
-        $file = sys_get_temp_dir() . '/spanner_quickstart.php';
+        self::$tempFile = sys_get_temp_dir() . '/spanner_quickstart.php';
+        self::$file = __DIR__ . '/../quickstart.php';
+        copy(self::$file, self::$tempFile);
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
             ['YOUR_PROJECT_ID', 'my-instance-id', 'my-database-id', '__DIR__'],
             [$projectId, $instanceId, $databaseId, sprintf('"%s/.."', __DIR__)],
             $contents
         );
-        file_put_contents($file, $contents);
+        file_put_contents(self::$file, $contents);
+    }
 
+    public function testQuickstart()
+    {
         // Invoke quickstart.php
-        $results = include $file;
+        $results = include self::$file;
 
         $this->expectOutputString('Hello World' . PHP_EOL);
+    }
+
+    public function tearDown()
+    {
+        copy(self::$tempFile, self::$file);
+        unlink(self::$tempFile);
     }
 }

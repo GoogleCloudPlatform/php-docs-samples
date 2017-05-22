@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -86,7 +86,7 @@ function read_write_transaction($instanceId, $databaseId)
         $firstAlbumBudget = $firstRow['MarketingBudget'];
 
         // Update the budgets.
-        $transferAmmount = 20000;
+        $transferAmmount = 200000;
         $secondAlbumBudget -= $transferAmmount;
         $firstAlbumBudget += $transferAmmount;
         printf('Setting first album\'s budget to %s and the second album\'s ' .

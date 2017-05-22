@@ -18,7 +18,11 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ *
+ * For more information on this function:
+ *
+ * @see https://cloud.google.com/spanner/docs/secondary-indexes#storing_clause
  */
 
 namespace Google\Cloud\Samples\Spanner;
