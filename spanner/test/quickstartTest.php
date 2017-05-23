@@ -40,7 +40,7 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
         copy(self::$file, self::$tempFile);
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['YOUR_PROJECT_ID', 'my-instance-id', 'my-database-id', '__DIR__'],
+            ['YOUR_PROJECT_ID', 'your-instance-id', 'your-database-id', '__DIR__'],
             [$projectId, $instanceId, $databaseId, sprintf('"%s/.."', __DIR__)],
             $contents
         );

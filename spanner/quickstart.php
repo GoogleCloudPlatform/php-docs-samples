@@ -31,13 +31,13 @@ $spanner = new SpannerClient([
 ]);
 
 # Your Cloud Spanner instance ID.
-$instanceId = 'my-instance-id';
+$instanceId = 'your-instance-id';
 
 # Get a Cloud Spanner instance by ID.
 $instance = $spanner->instance($instanceId);
 
 # Your Cloud Spanner database ID.
-$databaseId = 'my-database-id';
+$databaseId = 'your-database-id';
 
 # Get a Cloud Spanner database by ID.
 $database = $instance->database($databaseId);

@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * clause.
  *
  * The index must exist before running this sample. You can add the index
- * by running the `add_soring_index` sample or by running this DDL statement
+ * by running the `add_storing_index` sample or by running this DDL statement
  * against your database:
  *
  *     CREATE INDEX AlbumsByAlbumTitle2 ON Albums(AlbumTitle)
