@@ -66,9 +66,9 @@ class spannerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateDatabase()
     {
-        $this->runCommand('create-database');
-        $this->expectOutputRegex('/Waiting for operation to complete.../');
-        $this->expectOutputRegex('/Created database test-/');
+        $output = $this->runCommand('create-database');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Created database test-', $output);
     }
 
     /**
@@ -76,8 +76,8 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInsertData()
     {
-        $this->runCommand('insert-data');
-        $this->expectOutputRegex('/Inserted data./');
+        $output = $this->runCommand('insert-data');
+        $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
 
     /**
@@ -85,12 +85,12 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testQueryData()
     {
-        $this->runCommand('query-data');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go/');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 1, AlbumTitle: Green/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 3, AlbumTitle: Terrified/');
+        $output = $this->runCommand('query-data');
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
@@ -98,12 +98,12 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadData()
     {
-        $this->runCommand('read-data');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go/');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 1, AlbumTitle: Green/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 3, AlbumTitle: Terrified/');
+        $output = $this->runCommand('read-data');
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
@@ -111,9 +111,9 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateIndex()
     {
-        $this->runCommand('create-index');
-        $this->expectOutputRegex('/Waiting for operation to complete.../');
-        $this->expectOutputRegex('/Added the AlbumsByAlbumTitle index./');
+        $output = $this->runCommand('create-index');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Added the AlbumsByAlbumTitle index.', $output);
     }
 
     /**
@@ -121,9 +121,9 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testQueryDataWithIndex()
     {
-        $this->runCommand('query-data-with-index');
-        $this->expectOutputRegex('/AlbumId: 2, AlbumTitle: Forever Hold Your Peace/');
-        $this->expectOutputRegex('/AlbumId: 1, AlbumTitle: Go, Go, Go/');
+        $output = $this->runCommand('query-data-with-index');
+        $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
     }
 
     /**
@@ -131,13 +131,13 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadDataWithIndex()
     {
-        $this->runCommand('read-data-with-index');
+        $output = $this->runCommand('read-data-with-index');
 
-        $this->expectOutputRegex('/AlbumId: 1, AlbumTitle: Go, Go, Go/');
-        $this->expectOutputRegex('/AlbumId: 2, AlbumTitle: Total Junk/');
-        $this->expectOutputRegex('/AlbumId: 1, AlbumTitle: Green/');
-        $this->expectOutputRegex('/AlbumId: 2, AlbumTitle: Forever Hold Your Peace/');
-        $this->expectOutputRegex('/AlbumId: 3, AlbumTitle: Terrified/');
+        $this->assertContains('AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertContains('AlbumId: 3, AlbumTitle: Terrified', $output);
+        $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
     }
 
     /**
@@ -145,9 +145,9 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddColumn()
     {
-        $this->runCommand('add-column');
-        $this->expectOutputRegex('/Waiting for operation to complete.../');
-        $this->expectOutputRegex('/Added the MarketingBudget column./');
+        $output = $this->runCommand('add-column');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Added the MarketingBudget column.', $output);
     }
 
     /**
@@ -155,12 +155,12 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testQueryDataWithNewColumn()
     {
-        $this->runCommand('query-data-with-new-column');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 1, MarketingBudget:/');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 2, MarketingBudget:/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 1, MarketingBudget:/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 2, MarketingBudget:/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 3, MarketingBudget:/');
+        $output = $this->runCommand('query-data-with-new-column');
+        $this->assertContains('SingerId: 1, AlbumId: 1, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget:', $output);
     }
 
     /**
@@ -168,9 +168,9 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateStoringIndex()
     {
-        $this->runCommand('create-storing-index');
-        $this->expectOutputRegex('/Waiting for operation to complete.../');
-        $this->expectOutputRegex('/Added the AlbumsByAlbumTitle2 index./');
+        $output = $this->runCommand('create-storing-index');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Added the AlbumsByAlbumTitle2 index.', $output);
     }
 
     /**
@@ -178,13 +178,12 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadDataWithStoringIndex()
     {
-        $this->runCommand('read-data-with-storing-index');
-
-        $this->expectOutputRegex('/AlbumId: 2, AlbumTitle: Forever Hold Your Peace, MarketingBudget:/');
-        $this->expectOutputRegex('/AlbumId: 1, AlbumTitle: Go, Go, Go, MarketingBudget:/');
-        $this->expectOutputRegex('/AlbumId: 1, AlbumTitle: Green, MarketingBudget:/');
-        $this->expectOutputRegex('/AlbumId: 3, AlbumTitle: Terrified, MarketingBudget:/');
-        $this->expectOutputRegex('/AlbumId: 2, AlbumTitle: Total Junk, MarketingBudget:/');
+        $output = $this->runCommand('read-data-with-storing-index');
+        $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace, MarketingBudget:', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Go, Go, Go, MarketingBudget:', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Green, MarketingBudget:', $output);
+        $this->assertContains('AlbumId: 3, AlbumTitle: Terrified, MarketingBudget:', $output);
+        $this->assertContains('AlbumId: 2, AlbumTitle: Total Junk, MarketingBudget:', $output);
     }
 
     /**
@@ -192,8 +191,8 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateData()
     {
-        $this->runCommand('update-data');
-        $this->expectOutputRegex('/Updated data./');
+        $output = $this->runCommand('update-data');
+        $this->assertEquals('Updated data.' . PHP_EOL, $output);
     }
 
     /**
@@ -201,12 +200,12 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadOnlyTransaction()
     {
-        $this->runCommand('read-only-transaction');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go/');
-        $this->expectOutputRegex('/SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 1, AlbumTitle: Green/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace/');
-        $this->expectOutputRegex('/SingerId: 2, AlbumId: 3, AlbumTitle: Terrified/');
+        $output = $this->runCommand('read-only-transaction');
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
@@ -214,9 +213,9 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadWriteTransaction()
     {
-        $this->runCommand('read-write-transaction');
-        $this->expectOutputRegex('/Setting first album\'s budget to 120000 and the second album\'s budget to 480000/');
-        $this->expectOutputRegex('/Transaction complete./');
+        $output = $this->runCommand('read-write-transaction');
+        $this->assertContains('Setting first album\'s budget to 120000 and the second album\'s budget to 480000', $output);
+        $this->assertContains('Transaction complete.', $output);
     }
 
     private function runCommand($commandName)
@@ -225,12 +224,15 @@ class spannerTest extends \PHPUnit_Framework_TestCase
         $command = $application->get($commandName);
         $commandTester = new CommandTester($command);
 
+        ob_start();
         $commandTester->execute([
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId,
         ], [
             'interactive' => false
         ]);
+
+        return ob_get_clean();
     }
 
     public static function tearDownAfterClass()
