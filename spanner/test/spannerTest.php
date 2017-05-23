@@ -214,7 +214,7 @@ class spannerTest extends \PHPUnit_Framework_TestCase
     public function testReadWriteTransaction()
     {
         $output = $this->runCommand('read-write-transaction');
-        $this->assertContains('Setting first album\'s budget to 120000 and the second album\'s budget to 480000', $output);
+        $this->assertContains('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
         $this->assertContains('Transaction complete.', $output);
     }
 
