@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Vision;
+namespace Google\Cloud\Samples\VideoIntelligence;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -30,7 +30,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        putenv('PHPUNIT_TESTS=1');
         self::$application = require __DIR__ . '/../video.php';
     }
 

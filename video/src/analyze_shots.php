@@ -24,8 +24,8 @@ use google\cloud\videointelligence\v1beta1\Feature;
 /**
  * Finds shot changes in the video.
  *
- * @param string $uri The cloud storage object to analyze.  Must be formatted like
- *                    gs://bucketname/objectname
+ * @param string $uri The cloud storage object to analyze. Must be formatted
+ *                    like gs://bucketname/objectname
  */
 function analyze_shots($uri)
 {
@@ -33,7 +33,7 @@ function analyze_shots($uri)
     $features = [Feature::SHOT_CHANGE_DETECTION];
     $operationResponse = $video->annotateVideo($uri, $features);
     $operationResponse->pollUntilComplete();
-    $textFormat = new  \DrSlump\Protobuf\Codec\TextFormat();
+    $textFormat = new \DrSlump\Protobuf\Codec\TextFormat();
     if ($operationResponse->operationSucceeded()) {
         print $operationResponse->getResult()->serialize($textFormat);
     } else {
