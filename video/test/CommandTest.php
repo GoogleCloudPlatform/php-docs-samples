@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -14,8 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 namespace Google\Cloud\Samples\Vision;
 
 use Symfony\Component\Console\Application;
@@ -32,13 +31,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         putenv('PHPUNIT_TESTS=1');
-        self::$application = require __DIR__ . '/../video.php';
+        self::$application = require __DIR__.'/../video.php';
     }
 
     public function setUp()
     {
         if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
+            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS '.
                 'environment variable');
         }
     }

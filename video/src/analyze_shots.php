@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -14,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace Google\Cloud\Samples\Video;
 
 // [START analyze_shots]
@@ -41,3 +41,4 @@ function analyze_shots($uri)
     }
 }
 // [END analyze_shots]
+

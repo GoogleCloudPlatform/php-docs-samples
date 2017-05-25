@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -14,15 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace Google\Cloud\Samples\Video;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,7 +29,7 @@ $application = new Application();
 
 $application->add(new Command('shots'))
     ->setDescription('Detect shot changes in video using '
-        . 'Google Cloud Video Intelligence API')
+        .'Google Cloud Video Intelligence API')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command finds shot changes in a video using the 
 Google Cloud Video Intelligence API.
