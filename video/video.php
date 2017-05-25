@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -29,7 +29,7 @@ $application = new Application();
 
 $application->add(new Command('shots'))
     ->setDescription('Detect shot changes in video using '
-        .'Google Cloud Video Intelligence API')
+        . 'Google Cloud Video Intelligence API')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command finds shot changes in a video using the 
 Google Cloud Video Intelligence API.

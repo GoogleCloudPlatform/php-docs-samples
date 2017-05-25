@@ -41,4 +41,3 @@ function analyze_shots($uri)
     }
 }
 // [END analyze_shots]
-
