@@ -23,11 +23,32 @@ Video Intelligence API from PHP.
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 5.  Run `php video.php`. The following commands are available:
-```
-  help   Displays help for a command
-  list   Lists commands
-  shots  Detect shot changes in video using Google Cloud Video Intelligence API
-```
+
+    ```
+    help   Displays help for a command
+    list   Lists commands
+    shots  Detect shot changes in video using Google Cloud Video Intelligence API
+    ```
+
+    Example:
+
+    ```
+    $ php video.php shots gs://cloudmleap/video/next/fox-snatched.mp4
+    annotation_results {
+        input_uri: "\/cloudmleap\/video\/next\/fox-snatched.mp4"
+        shot_annotations {
+            start_time_offset: 41729
+            end_time_offset: 1000984
+        }
+        shot_annotations {
+            start_time_offset: 1042713
+            end_time_offset: 6006032
+        }
+        ...
+    }
+    ```
+
+
 6. Run `php video.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes
