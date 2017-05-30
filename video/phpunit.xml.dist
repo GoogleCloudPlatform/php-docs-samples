@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHP vision test">
+        <testsuite name="PHP Video Intelligence test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
