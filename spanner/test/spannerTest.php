@@ -109,6 +109,48 @@ class spannerTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testInsertData
      */
+    public function testAddColumn()
+    {
+        $output = $this->runCommand('add-column');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Added the MarketingBudget column.', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testUpdateData()
+    {
+        $output = $this->runCommand('update-data');
+        $this->assertEquals('Updated data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testQueryDataWithNewColumn()
+    {
+        $output = $this->runCommand('query-data-with-new-column');
+        $this->assertContains('SingerId: 1, AlbumId: 1, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, MarketingBudget:', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget:', $output);
+    }
+
+    /**
+     * @depends testUpdateData
+     */
+    public function testReadWriteTransaction()
+    {
+        $output = $this->runCommand('read-write-transaction');
+        $this->assertContains('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
+        $this->assertContains('Transaction complete.', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
     public function testCreateIndex()
     {
         $output = $this->runCommand('create-index');
@@ -141,30 +183,7 @@ class spannerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @depends testInsertData
-     */
-    public function testAddColumn()
-    {
-        $output = $this->runCommand('add-column');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Added the MarketingBudget column.', $output);
-    }
-
-    /**
-     * @depends testAddColumn
-     */
-    public function testQueryDataWithNewColumn()
-    {
-        $output = $this->runCommand('query-data-with-new-column');
-        $this->assertContains('SingerId: 1, AlbumId: 1, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget:', $output);
-    }
-
-    /**
-     * @depends testAddColumn
+     * @depends testCreateIndex
      */
     public function testCreateStoringIndex()
     {
@@ -187,15 +206,6 @@ class spannerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @depends testCreateStoringIndex
-     */
-    public function testUpdateData()
-    {
-        $output = $this->runCommand('update-data');
-        $this->assertEquals('Updated data.' . PHP_EOL, $output);
-    }
-
-    /**
      * @depends testUpdateData
      */
     public function testReadOnlyTransaction()
@@ -206,16 +216,6 @@ class spannerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
         $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
-    }
-
-    /**
-     * @depends testUpdateData
-     */
-    public function testReadWriteTransaction()
-    {
-        $output = $this->runCommand('read-write-transaction');
-        $this->assertContains('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
-        $this->assertContains('Transaction complete.', $output);
     }
 
     private function runCommand($commandName)

@@ -57,15 +57,15 @@ function query_data_with_index($instanceId, $databaseId, $startTitle, $endTitle)
     ];
 
     $results = $database->execute(
-        'SELECT AlbumId, AlbumTitle ' .
+        'SELECT AlbumId, AlbumTitle, MarketingBudget ' .
         'FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} ' .
         'WHERE AlbumTitle >= @startTitle AND AlbumTitle < @endTitle',
         ['parameters' => $parameters]
     );
 
     foreach ($results as $row) {
-        printf('AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
-            $row['AlbumId'], $row['AlbumTitle']);
+        printf('AlbumId: %s, AlbumTitle: %s, MarketingBudget: %d' . PHP_EOL,
+            $row['AlbumId'], $row['AlbumTitle'], $row['MarketingBudget']);
     }
 }
 // [END query_data_with_index]
