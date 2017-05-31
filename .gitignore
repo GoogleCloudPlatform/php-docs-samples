@@ -7,3 +7,4 @@ credentials.*
 **/vendor/
 **/build/
 .php_cs.cache
+.vscode/
