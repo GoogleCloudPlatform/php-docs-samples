@@ -44,15 +44,7 @@ before_script:
   - pecl install grpc
 
 script:
-  - # only run on PHP 5.6
-    if [ "${RUN_CS_FIXER}" = "true" ]; then
-      testing/run_cs_check.sh;
-    fi
-  - testing/run_test_suite.sh;
-  - # only run for travis crons
-    if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
-      testing/run_dependency_check.sh;
-    fi
+  - testing/run_all_tests.sh
 
 after_success:
   - composer require "satooshi/php-coveralls:^1.0"
