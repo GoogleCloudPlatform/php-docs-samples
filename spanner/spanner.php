@@ -81,6 +81,54 @@ $application->add((new Command('read-data'))
     })
 );
 
+// Add column command
+$application->add((new Command('add-column'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Adds a new column to the Albums table in the example database.')
+    ->setCode(function ($input, $output) {
+        add_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update data command
+$application->add((new Command('update-data'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates sample data in the database.')
+    ->setCode(function ($input, $output) {
+        update_data(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with new column command
+$application->add((new Command('query-data-with-new-column'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from the database using SQL.')
+    ->setCode(function ($input, $output) {
+        query_data_with_new_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Read-write transaction command
+$application->add((new Command('read-write-transaction'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Performs a read-write transaction to update two sample records in the database.')
+    ->setCode(function ($input, $output) {
+        read_write_transaction(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // Create index command
 $application->add((new Command('create-index'))
     ->setDefinition($inputDefinition)
@@ -139,54 +187,6 @@ $application->add((new Command('read-data-with-storing-index'))
     ->setDescription('Reads sample data from the database using an index with a storing clause.')
     ->setCode(function ($input, $output) {
         read_data_with_storing_index(
-            $input->getArgument('instance_id'),
-            $input->getArgument('database_id')
-        );
-    })
-);
-
-// Add column command
-$application->add((new Command('add-column'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Adds a new column to the Albums table in the example database.')
-    ->setCode(function ($input, $output) {
-        add_column(
-            $input->getArgument('instance_id'),
-            $input->getArgument('database_id')
-        );
-    })
-);
-
-// Query data with new column command
-$application->add((new Command('query-data-with-new-column'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Queries sample data from the database using SQL.')
-    ->setCode(function ($input, $output) {
-        query_data_with_new_column(
-            $input->getArgument('instance_id'),
-            $input->getArgument('database_id')
-        );
-    })
-);
-
-// Update data command
-$application->add((new Command('update-data'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Updates sample data in the database.')
-    ->setCode(function ($input, $output) {
-        update_data(
-            $input->getArgument('instance_id'),
-            $input->getArgument('database_id')
-        );
-    })
-);
-
-// Read-write transaction command
-$application->add((new Command('read-write-transaction'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Performs a read-write transaction to update two sample records in the database.')
-    ->setCode(function ($input, $output) {
-        read_write_transaction(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
