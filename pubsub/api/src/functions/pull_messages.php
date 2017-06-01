@@ -40,6 +40,7 @@ function pull_messages($projectId, $subscriptionName)
     $subscription = $pubsub->subscription($subscriptionName);
     foreach ($subscription->pull() as $message) {
         printf('Message: %s' . PHP_EOL, $message->data());
+        $subscription->acknowledge($message);
     }
 }
 # [END pull_message]
