@@ -40,6 +40,7 @@ authentication:
 
 ## Install Dependencies
 
+1. Ensure the [gRPC PHP Extension][php_grpc] is installed and enabled on your machine.
 1. [Enable the Cloud Spanner API](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com).
 
 1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
@@ -99,6 +100,7 @@ This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
 
+[grpc_php]: http://cloud.google.com/php/grpc
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
