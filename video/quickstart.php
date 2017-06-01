@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
+# Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
 # [START videointelligence_quickstart]
+# Import a convenient way to print the response.
+use DrSlump\Protobuf\Codec\TextFormat;
 # Imports the Google Cloud client library
 use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
 use google\cloud\videointelligence\v1beta1\Feature;
@@ -26,17 +29,17 @@ use google\cloud\videointelligence\v1beta1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
-$operationResponse = $video->annotateVideo(
+$operation = $video->annotateVideo(
     'gs://demomaker/cat.mp4',
     [Feature::LABEL_DETECTION]
 );
 # Wait for the request to complete.
-$operationResponse->pollUntilComplete();
+$operation->pollUntilComplete();
 # Print the result.
-$textFormat = new \DrSlump\Protobuf\Codec\TextFormat();
-if ($operationResponse->operationSucceeded()) {
-    print $operationResponse->getResult()->serialize($textFormat);
+$format = new TextFormat();
+if ($operation->operationSucceeded()) {
+    print $operation->getResult()->serialize($format);
 } else {
-    print $operationResponse->getError()->serialize($textFormat);
+    print $operation->getError()->serialize($format);
 }
 # [END videointelligence_quickstart]
