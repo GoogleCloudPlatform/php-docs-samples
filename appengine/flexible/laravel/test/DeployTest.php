@@ -53,14 +53,13 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         $process->setTimeout(300); // 5 minutes
         self::executeProcess($process);
 
-        // copy in the app.yaml
-        copy(__DIR__ . '/../app.yaml', $targetDir . '/app.yaml');
-
-        // copy over the base .env file
-        self::execute('cp .env.example .env');
-
-        // generate the secret
-        self::execute('php artisan key:generate');
+        // copy in the app.yaml and add the app key.
+        $appYaml = str_replace([
+            'YOUR_APP_KEY',
+        ], [
+            self::execute('php artisan key:generate --show --no-ansi'),
+        ], file_get_contents(__DIR__ . '/../app.yaml'));
+        file_put_contents($targetDir . '/app.yaml', $appYaml);
     }
 
     private static function addPostDeployCommands($targetDir)
