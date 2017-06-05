@@ -83,11 +83,11 @@ To run the Natural Language Samples:
       sentiment  Analyze sentiment in text.
       syntax     Analyze syntax in text.
 
-### Run Analyse Entities
+### Run Analyze Entities
 
-To run the Analyse Entities sample:
+To run the Analyze Entities sample:
 
-    $ php language.php entities 'I know the way to San Jose'
+    $ php language.php entities 'I know the way to San Jose. Do You?'
     entities:
         -
             name: way
@@ -115,11 +115,11 @@ To run the Analyse Entities sample:
                     type: PROPER
     language: en
 
-### Run Analyse Sentiment
+### Run Analyze Sentiment
 
-To run the Analyse Sentiment sample:
+To run the Analyze Sentiment sample:
 
-    $ php language.php sentiment 'I know the way to San Jose'
+    $ php language.php sentiment 'I know the way to San Jose. Do you?'
     documentSentiment:
         magnitude: 0.3
         score: 0.3
@@ -132,30 +132,69 @@ To run the Analyse Sentiment sample:
             sentiment:
                 magnitude: 0.3
                 score: 0.3
+        -
+            text:
+                content: 'Do you?'
+                beginOffset: 28
+            sentiment:
+                magnitude: 0.1
+                score: -0.1
 
-### Run Analyse Syntax
+### Run Analyze Syntax
 
-To run the Analyse Syntax sample:
+To run the Analyze Syntax sample:
 
-    $ php language.php sentiment 'I know the way to San Jose'
-    documentSentiment:
-        magnitude: 0.3
-        score: 0.3
-    language: en
+    $ php language.php syntax 'I know the way to San Jose. Do you?'
     sentences:
         -
             text:
-                content: 'I know the way to San Jose'
+                content: 'I know the way to San Jose.'
                 beginOffset: 0
-            sentiment:
-                magnitude: 0.3
-                score: 0.3
+        -
+            text:
+                content: 'Do you?'
+                beginOffset: 28
+    tokens:
+        -
+            text:
+                content: I
+                beginOffset: 0
+            partOfSpeech:
+                tag: PRON
+                aspect: ASPECT_UNKNOWN
+                case: NOMINATIVE
+                form: FORM_UNKNOWN
+                gender: GENDER_UNKNOWN
+                mood: MOOD_UNKNOWN
+                number: SINGULAR
+                person: FIRST
+                proper: PROPER_UNKNOWN
+                reciprocity: RECIPROCITY_UNKNOWN
+                tense: TENSE_UNKNOWN
+                voice: VOICE_UNKNOWN
+            dependencyEdge:
+                headTokenIndex: 1
+                label: NSUBJ
+            lemma: I
+                    score: 0.3
+        ...
+    language: en
+    entities: {  }
 
 ## The client library
 
 This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
+
+## Troubleshooting
+
+If you have not set a timezone you may get an error from php. This can be resolved by:
+
+  1. Finding where the php.ini is stored by running php -i | grep 'Configuration File'
+  1. Finding out your timezone from the list on this page: http://php.net/manual/en/timezones.php
+  1. Editing the php.ini file (or creating one if it doesn't exist)
+  1. Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
 
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
