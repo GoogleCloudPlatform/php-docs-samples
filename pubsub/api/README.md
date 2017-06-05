@@ -15,7 +15,7 @@ This simple command-line application demonstrates how to invoke Google Pub\Sub f
 
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/pubsub/cli
+    $ cd php-docs-samples/pubsub/api
 ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
