@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="test/bootstrap.php">
+<phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
         <testsuite name="Google PubSub Quickstart Tests">
             <directory>test</directory>
