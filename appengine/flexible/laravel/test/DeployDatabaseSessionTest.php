@@ -73,23 +73,19 @@ class DeployDatabaseSessionTest extends \PHPUnit_Framework_TestCase
 
         // copy and set the proper env vars in app.yaml
         $appYaml = str_replace([
+            'YOUR_APP_KEY',
             'YOUR_CLOUDSQL_CONNECTION_NAME',
             'YOUR_DB_DATABASE',
             'YOUR_DB_USERNAME',
             'YOUR_DB_PASSWORD',
         ], [
+            self::execute('php artisan key:generate --show --no-ansi'),
             getenv('LARAVEL_CLOUDSQL_CONNECTION_NAME'),
             getenv('LARAVEL_DB_DATABASE'),
             getenv('LARAVEL_DB_USERNAME'),
             getenv('LARAVEL_DB_PASSWORD'),
         ], file_get_contents(__DIR__ . '/../app-dbsessions.yaml'));
         file_put_contents($targetDir . '/app.yaml', $appYaml);
-
-        // copy over the base .env file
-        self::execute('cp .env.example .env');
-
-        // generate the secret
-        self::execute('php artisan key:generate');
     }
 
     private static function addPostDeployCommands($targetDir)
