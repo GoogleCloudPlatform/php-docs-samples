@@ -33,10 +33,6 @@ class spannerTest extends \PHPUnit_Framework_TestCase
     /* @var $instance Instance */
     protected static $instance;
 
-    /* @var $application Application */
-    protected static $application;
-
-
     public static function setUpBeforeClass()
     {
         if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
@@ -60,8 +56,6 @@ class spannerTest extends \PHPUnit_Framework_TestCase
         $operation->result();
 
         self::$instance = $instance;
-
-        self::$application = require __DIR__ . '/../spanner.php';
     }
 
     public function testCreateDatabase()

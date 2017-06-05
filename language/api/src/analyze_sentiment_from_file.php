@@ -23,23 +23,24 @@
 
 namespace Google\Cloud\Samples\Language;
 
-# [START analyze_syntax_from_file]
-use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
-use Google\Cloud\NaturalLanguage\Annotation;
+# [START analyze_sentiment_from_file]
+use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\Annotation;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Find the syntax in text stored in a Cloud Storage bucket.
+ * Find the sentiment in text stored in a Cloud Storage bucket.
  * ```
- * analyze_syntax_from_file('my-bucket', 'file_with_text.txt');
+ * analyze_sentiment_from_file('my-bucket', 'file_with_text.txt');
  * ```
  *
  * @param string $bucketName The Cloud Storage bucket.
  * @param string $objectName The Cloud Storage object with text.
+ * @param string $projectId (optional) Your Google Cloud Project ID
  *
  * @return Annotation
  */
-function analyze_syntax_from_file($bucketName, $objectName, $options = [])
+function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null)
 {
     // Create the Cloud Storage object
     $storage = new StorageClient();
@@ -47,8 +48,10 @@ function analyze_syntax_from_file($bucketName, $objectName, $options = [])
     $storageObject = $bucket->object($objectName);
 
     // Call the Natural Language client
-    $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeSyntax($storageObject, $options);
+    $language = new LanguageClient([
+        'projectId' => $projectId,
+    ]);
+    $annotation = $language->analyzeSentiment($storageObject);
     return $annotation;
 }
-# [END analyze_syntax_from_file]
+# [END analyze_sentiment_from_file]

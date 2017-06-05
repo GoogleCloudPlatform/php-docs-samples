@@ -24,8 +24,8 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START analyze_entities]
-use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
-use Google\Cloud\NaturalLanguage\Annotation;
+use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\Annotation;
 
 /**
  * Find the entities in text.
@@ -34,13 +34,18 @@ use Google\Cloud\NaturalLanguage\Annotation;
  * ```
  *
  * @param string $text The text to analyze.
+ * @param string $projectId (optional) Your Google Cloud Project ID
  *
  * @return Annotation
  */
-function analyze_entities($text, $options = [])
+function analyze_entities($text, $projectId = null)
 {
-    $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeEntities($text, $options);
+    // Create the Natural Language client
+    $language = new LanguageClient([
+        'projectId' => $projectId,
+    ]);
+    // Call the analyzeEntities function
+    $annotation = $language->analyzeEntities($text);
     return $annotation;
 }
 # [END analyze_entities]

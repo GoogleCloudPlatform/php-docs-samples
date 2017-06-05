@@ -24,8 +24,8 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START analyze_entities_from_file]
-use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
-use Google\Cloud\NaturalLanguage\Annotation;
+use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\Annotation;
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -36,10 +36,11 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The Cloud Storage bucket.
  * @param string $objectName The Cloud Storage object with text.
+ * @param string $projectId (optional) Your Google Cloud Project ID
  *
  * @return Annotation
  */
-function analyze_entities_from_file($bucketName, $objectName, $options = [])
+function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
 {
     // Create the Cloud Storage object
     $storage = new StorageClient();
@@ -47,8 +48,10 @@ function analyze_entities_from_file($bucketName, $objectName, $options = [])
     $storageObject = $bucket->object($objectName);
 
     // Call the Natural Language client
-    $language = new NaturalLanguageClient();
-    $annotation = $language->analyzeEntities($storageObject, $options);
+    $language = new LanguageClient([
+        'projectId' => $projectId,
+    ]);
+    $annotation = $language->analyzeEntities($storageObject);
     return $annotation;
 }
 # [END analyze_entities_from_file]
