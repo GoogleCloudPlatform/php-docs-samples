@@ -191,10 +191,10 @@ to [browse the source][google-cloud-php-source] and  [report issues][google-clou
 
 If you have not set a timezone you may get an error from php. This can be resolved by:
 
-  1. Finding where the php.ini is stored by running php -i | grep 'Configuration File'
+  1. Finding where the php.ini is stored by running `php -i | grep 'Configuration File'`
   1. Finding out your timezone from the list on this page: http://php.net/manual/en/timezones.php
-  1. Editing the php.ini file (or creating one if it doesn't exist)
-  1. Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
+  1. Editing the `php.ini` file (or creating one if it doesn't exist)
+  1. Adding the timezone to the php.ini file e.g., adding the following line: `date.timezone = "America/Los_Angeles"`
 
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
