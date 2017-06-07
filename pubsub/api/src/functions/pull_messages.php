@@ -40,6 +40,8 @@ function pull_messages($projectId, $subscriptionName)
     $subscription = $pubsub->subscription($subscriptionName);
     foreach ($subscription->pull() as $message) {
         printf('Message: %s' . PHP_EOL, $message->data());
+        // Acknowledge the Pub/Sub message has been received, so it will not be pulled multiple times.
+        $subscription->acknowledge($message);
     }
 }
 # [END pull_message]
