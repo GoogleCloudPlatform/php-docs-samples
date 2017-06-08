@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHP vision test">
+        <testsuite name="AppEngine http test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -25,7 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <directory suffix=".php">./src</directory>
+            <file>app.php</file>
         </whitelist>
     </filter>
 </phpunit>

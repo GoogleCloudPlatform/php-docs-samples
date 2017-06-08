@@ -14,18 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="test/bootstrap.php">
+<phpunit bootstrap="./vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="PHP cloudsql test">
+        <testsuite name="PHP static content test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
-    <filter>
-        <whitelist>
-            <file>app.php</file>
-        </whitelist>
-    </filter>
 </phpunit>
