@@ -30,7 +30,7 @@ trait ProjectIdTrait
             return array_pop($output);
         }
 
-        throw new Exception('Could not derive a project ID from gcloud. ' .
+        throw new \Exception('Could not derive a project ID from gcloud. ' .
             'You must supply a project ID using --project');
     }
 }
