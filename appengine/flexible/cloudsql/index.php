@@ -24,7 +24,7 @@ $app = require __DIR__ . '/app.php';
 // Run the app!
 // use "gcloud app deploy"
 $app['debug'] = true;
-$app['mysql.dsn'] = getenv('MYSQL_DSN');
-$app['mysql.user'] = getenv('MYSQL_USER');
-$app['mysql.password'] = getenv('MYSQL_PASSWORD');
+$app['cloudsql.dsn'] = getenv('CLOUDSQL_DSN');
+$app['cloudsql.user'] = getenv('CLOUDSQL_USER');
+$app['cloudsql.password'] = getenv('CLOUDSQL_PASSWORD');
 $app->run();
