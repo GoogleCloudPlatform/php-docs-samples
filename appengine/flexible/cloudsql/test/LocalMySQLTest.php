@@ -18,7 +18,7 @@ namespace Google\Cloud\Test;
 
 use Silex\WebTestCase;
 
-class LocalTest extends WebTestCase
+class LocalMySQLTest extends WebTestCase
 {
     public function setUp()
     {
@@ -29,13 +29,13 @@ class LocalTest extends WebTestCase
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
-        $app['mysql.dsn'] = getenv('MYSQL_DSN');
-        $app['mysql.user'] = getenv('MYSQL_USER');
-        $app['mysql.password'] = getenv('MYSQL_PASSWORD');
-        if ($app['mysql.dsn'] === false ||
-            $app['mysql.user'] === false ||
-            $app['mysql.password'] === false) {
-            $this->markTestSkipped('set the MYSQL_DSN, MYSQL_USER and MYSQL_PASSWORD environment variables');
+        $app['cloudsql.dsn'] = getenv('CLOUDSQL_DSN');
+        $app['cloudsql.user'] = getenv('CLOUDSQL_USER');
+        $app['cloudsql.password'] = getenv('CLOUDSQL_PASSWORD');
+        if ($app['cloudsql.dsn'] === false ||
+            $app['cloudsql.user'] === false ||
+            $app['cloudsql.password'] === false) {
+            $this->markTestSkipped('set the CLOUDSQL_DSN, CLOUDSQL_USER and CLOUDSQL_PASSWORD environment variables');
         }
         return $app;
     }

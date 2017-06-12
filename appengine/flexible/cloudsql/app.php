@@ -25,9 +25,9 @@ $app = new Application();
 
 $app['pdo'] = function ($app) {
     $pdo = new PDO(
-        $app['mysql.dsn'],
-        $app['mysql.user'],
-        $app['mysql.password']
+        $app['cloudsql.dsn'],
+        $app['cloudsql.user'],
+        $app['cloudsql.password']
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->query('CREATE TABLE IF NOT EXISTS visits ' .
