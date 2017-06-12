@@ -20,13 +20,13 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\NaturalLanguage\NaturalLanguageClient;
+use Google\Cloud\Language\LanguageClient;
 
 # Your Google Cloud Platform project ID
 $projectId = 'YOUR_PROJECT_ID';
 
 # Instantiates a client
-$language = new NaturalLanguageClient([
+$language = new LanguageClient([
     'projectId' => $projectId
 ]);
 
