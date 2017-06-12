@@ -23,7 +23,7 @@ class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
-    public function beforeDeploy()
+    public static function beforeDeploy()
     {
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         copy(__DIR__ . '/../app.yaml.flexible', $tmpDir . '/app.yaml');
