@@ -17,10 +17,11 @@ set -ex
 
 # Loop through all directories containing "composer.json".
 # Update composer if a sample has a new major version that matches our requirements.
-find * -name "phpunit.xml*" -not -path '*/vendor/*' -exec dirname {} \; | while read DIR; do
+find * -name "phpunit.xml*" -not -path '*vendor/*' -exec dirname {} \; | while read DIR; do
     pushd $DIR
     composer install
-    if composer outdated --direct -m | grep -q 'google/' ; then
+    if composer outdated --direct -m | grep -q 'google/' ||
+        ! composer validate --no-check-publish ; then
         composer update
     fi
     popd

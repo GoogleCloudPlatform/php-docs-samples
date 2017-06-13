@@ -37,13 +37,17 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         // Make sure it looks correct
         $this->assertTrue(is_array($results));
         $this->assertEquals(1, count($results));
-        $this->assertArrayHasKey('transcript', $results[0]);
-        $this->assertArrayHasKey('confidence', $results[0]);
-        $this->assertEquals('how old is the Brooklyn Bridge', $results[0]['transcript']);
-        $this->assertTrue($results[0]['confidence'] > .9);
+        $alternatives = $results[0]->alternatives();
+        $this->assertTrue(is_array($alternatives));
+        $this->assertEquals(1, count($alternatives));
+        $this->assertArrayHasKey('transcript', $alternatives[0]);
+        $this->assertArrayHasKey('confidence', $alternatives[0]);
+        $this->assertEquals('how old is the Brooklyn Bridge', $alternatives[0]['transcript']);
+        $this->assertTrue($alternatives[0]['confidence'] > .9);
 
         $expectedOutput = <<<EOF
 Transcription: how old is the Brooklyn Bridge
+
 EOF;
 
         $this->expectOutputString($expectedOutput);
