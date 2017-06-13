@@ -22,4 +22,6 @@ if [ -f "vendor/bin/php-cs-fixer" ]; then
 elif [ -f "./php-cs-fixer" ]; then
     PHP_CS_FIXER="./php-cs-fixer"
 fi
-$PHP_CS_FIXER fix --dry-run --diff
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+$PHP_CS_FIXER fix --dry-run --diff --config="$DIR/../.php_cs.dist" .
