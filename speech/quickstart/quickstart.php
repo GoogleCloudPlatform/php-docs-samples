@@ -43,6 +43,9 @@ $options = [
 # Detects speech in the audio file
 $results = $speech->recognize(fopen($fileName, 'r'), $options);
 
-echo 'Transcription: ' . $results[0]['transcript'];
+foreach ($results[0]->alternatives() as $alternative) {
+    echo 'Transcription: ' . $alternative['transcript'] . PHP_EOL;
+}
+
 # [END speech_quickstart]
 return $results;
