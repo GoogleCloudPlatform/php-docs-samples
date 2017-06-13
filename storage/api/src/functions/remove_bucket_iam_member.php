@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Storage;
 
 # [START remove_bucket_iam_member]
+use Google\Cloud\Core\Iam\PolicyBuilder;
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -39,26 +40,11 @@ function remove_bucket_iam_member($bucketName, $role, $member)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-
     $policy = $bucket->iam()->policy();
+    $policyBuilder = new PolicyBuilder($policy);
+    $policyBuilder->removeBinding($role, [$member]);
 
-    foreach ($policy['bindings'] as $i => &$binding) {
-        if ($binding['role'] == $role) {
-            if (false !== $j = array_search($member, $binding['members'])) {
-                unset($binding['members'][$j]);
-                $binding['members'] = array_values($binding['members']);
-                if (empty($binding['members'])) {
-                    unset($policy['bindings'][$i]);
-                    $policy['bindings'] = array_values($policy['bindings']);
-                }
-                $bucket->iam()->setPolicy($policy);
-                printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
-                return;
-            } else {
-                printf('Member %s not found for role %s for bucket %s.' . PHP_EOL, $member, $role, $bucketName);
-            }
-        }
-    }
-    printf('Role %s not found for bucket %s.' . PHP_EOL, $role, $bucketName);
+    $bucket->iam()->setPolicy($policyBuilder->result());
+    printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
 }
 # [END remove_bucket_iam_member]
