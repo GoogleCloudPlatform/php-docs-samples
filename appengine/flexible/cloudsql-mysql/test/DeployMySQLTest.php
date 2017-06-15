@@ -20,7 +20,7 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 
-class DeployPostgresTest extends \PHPUnit_Framework_TestCase
+class DeployMySQLTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
@@ -38,25 +38,21 @@ class DeployPostgresTest extends \PHPUnit_Framework_TestCase
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
-        $user = getenv('CLOUDSQL_USER');
-        $database = getenv('CLOUDSQL_DATABASE');
-        $password = getenv('CLOUDSQL_PASSWORD');
+        $connectionName = getenv('MYSQL_CONNECTION_NAME');
+        $user = getenv('MYSQL_USER');
+        $database = getenv('MYSQL_DATABASE');
+        $password = getenv('MYSQL_PASSWORD');
 
-        $appYamlContents = str_replace(
-            '# CLOUDSQL_DSN: pgsql:',
-            'CLOUDSQL_DSN: pgsql:',
-            file_get_contents('app.yaml')
-        );
+        $appYamlContents = file_get_contents('app.yaml');        
 
         $appYaml = Yaml::parse($appYamlContents);
-        $appYaml['env_variables']['CLOUDSQL_USER'] = $user;
-        $appYaml['env_variables']['CLOUDSQL_PASSWORD'] = $password;
+        $appYaml['env_variables']['MYSQL_USER'] = $user;
+        $appYaml['env_variables']['MYSQL_PASSWORD'] = $password;
         $appYaml['beta_settings']['cloud_sql_instances'] = $connectionName;
-        $appYaml['env_variables']['CLOUDSQL_DSN'] = str_replace(
+        $appYaml['env_variables']['MYSQL_DSN'] = str_replace(
             ['DATABASE', 'CONNECTION_NAME'],
             [$database, $connectionName],
-            $appYaml['env_variables']['CLOUDSQL_DSN']
+            $appYaml['env_variables']['MYSQL_DSN']
         );
 
         file_put_contents('app.yaml', Yaml::dump($appYaml));

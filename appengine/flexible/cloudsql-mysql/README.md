@@ -73,15 +73,15 @@ in your browser.
 
     ```sh
     # set local mysql connection parameters
-    export CLOUDSQL_DSN="mysql:host=127.0.0.1;dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME"
-    export CLOUDSQL_USERNAME=USER
-    export CLOUDSQL_PASSWORD=PASSWORD
+    export MYSQL_DSN="mysql:host=127.0.0.1;dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME"
+    export MYSQL_USER=USER
+    export MYSQL_PASSWORD=PASSWORD
     ```
 
 1.  Run the application
 
     ```sh
-    cd php-docs-samples/appengine/standard/cloudsql
+    cd php-docs-samples/appengine/flexible/cloudsql
     php -S localhost:8080
     ```
 
