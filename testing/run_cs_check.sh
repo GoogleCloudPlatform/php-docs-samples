@@ -24,4 +24,4 @@ elif [ -f "./php-cs-fixer" ]; then
 fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-$PHP_CS_FIXER fix --dry-run --diff --config="$DIR/../.php_cs.dist" .
+$PHP_CS_FIXER fix --dry-run --diff --config="$DIR/../.php_cs.dist" --path-mode=intersection .
