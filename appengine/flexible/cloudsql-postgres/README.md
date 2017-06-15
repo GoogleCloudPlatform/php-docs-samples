@@ -73,7 +73,7 @@ in your browser.
 
     ```sh
     # set local mysql connection parameters
-    export POSTGRES_DSN="pgsql:dbname=DATABASE;host=127.0.0.1;port=5432"
+    export POSTGRES_DSN="pgsql:host=127.0.0.1;port=5432;dbname=DATABASE"
     export POSTGRES_USER=USER
     export POSTGRES_PASSWORD=PASSWORD
     ```

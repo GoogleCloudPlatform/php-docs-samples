@@ -24,7 +24,4 @@ $app = require __DIR__ . '/app.php';
 // Run the app!
 // use "gcloud app deploy"
 $app['debug'] = true;
-$app['pgsql.dsn'] = getenv('POSTGRES_DSN');
-$app['pgsql.user'] = getenv('POSTGRES_USER');
-$app['pgsql.password'] = getenv('POSTGRES_PASSWORD');
 $app->run();

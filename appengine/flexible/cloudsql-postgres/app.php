@@ -23,17 +23,19 @@ use Symfony\Component\HttpFoundation\Response;
 // create the Silex application
 $app = new Application();
 
-$app['pdo'] = function ($app) {
-    $pdo = new PDO(
-        $app['pgsql.dsn'],
-        $app['pgsql.user'],
-        $app['pgsql.password']
-    );
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->query('CREATE TABLE IF NOT EXISTS visits ' .
-        '(time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, user_ip CHAR(64))');
-    return $pdo;
-};
+// Create the PDO object for CloudSQL Postgres.
+$dsn = getenv('POSTGRES_DSN');
+$user = getenv('POSTGRES_USER');
+$password = getenv('POSTGRES_PASSWORD');
+$pdo = new PDO($dsn, $user, $password);
+
+// Create the database if it doesn't exist
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$pdo->query('CREATE TABLE IF NOT EXISTS visits ' .
+    '(time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, user_ip CHAR(64))');
+
+// Add the PDO object to our Silex application.
+$app['pdo'] = $pdo;
 
 $app->get('/', function (Application $app, Request $request) {
     $ip = $request->GetClientIp();

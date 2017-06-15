@@ -18,7 +18,7 @@ namespace Google\Cloud\Test;
 
 use Silex\WebTestCase;
 
-class LocalPostgresTest extends WebTestCase
+class LocalTest extends WebTestCase
 {
     public function setUp()
     {
@@ -29,12 +29,9 @@ class LocalPostgresTest extends WebTestCase
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
-        $app['pgsql.dsn'] = getenv('POSTGRES_DSN');
-        $app['pgsql.user'] = getenv('POSTGRES_USER');
-        $app['pgsql.password'] = getenv('POSTGRES_PASSWORD');
-        if ($app['pgsql.dsn'] === false ||
-            $app['pgsql.user'] === false ||
-            $app['pgsql.password'] === false) {
+        if (getenv('POSTGRES_DSN') === false ||
+            getenv('POSTGRES_USER') === false ||
+            getenv('POSTGRES_PASSWORD') === false) {
             $this->markTestSkipped('set the POSTGRES_DSN, POSTGRES_USER and POSTGRES_PASSWORD environment variables');
         }
         return $app;

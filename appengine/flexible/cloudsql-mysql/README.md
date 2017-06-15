@@ -73,7 +73,7 @@ in your browser.
 
     ```sh
     # set local mysql connection parameters
-    export MYSQL_DSN="mysql:host=127.0.0.1;dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME"
+    export MYSQL_DSN="mysql:host=127.0.0.1;port=3306;dbname=DATABASE"
     export MYSQL_USER=USER
     export MYSQL_PASSWORD=PASSWORD
     ```

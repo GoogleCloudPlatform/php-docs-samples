@@ -20,7 +20,7 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 
-class DeployMySQLTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use AppEngineDeploymentTrait;
 
@@ -38,12 +38,12 @@ class DeployMySQLTest extends \PHPUnit_Framework_TestCase
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $connectionName = getenv('MYSQL_CONNECTION_NAME');
+        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
         $user = getenv('MYSQL_USER');
         $database = getenv('MYSQL_DATABASE');
         $password = getenv('MYSQL_PASSWORD');
 
-        $appYamlContents = file_get_contents('app.yaml');        
+        $appYamlContents = file_get_contents('app.yaml');
 
         $appYaml = Yaml::parse($appYamlContents);
         $appYaml['env_variables']['MYSQL_USER'] = $user;
