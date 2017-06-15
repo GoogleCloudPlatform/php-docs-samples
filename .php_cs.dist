@@ -10,6 +10,6 @@ return PhpCsFixer\Config::create()
         PhpCsFixer\Finder::create()
             ->notPath('appengine/wordpress/src/files/flexible/wp-config.php')
             ->notPath('appengine/wordpress/src/files/standard/wp-config.php')
-            ->in(__DIR__)
+            ->in(getcwd())
     )
 ;
