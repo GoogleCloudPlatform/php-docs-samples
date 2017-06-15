@@ -15,12 +15,13 @@
 
 set -ex
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # only run when explicitly set
 if [ "${RUN_CS_FIXER}" = "true" ]; then
-  testing/run_cs_check.sh;
+  $DIR/run_cs_check.sh;
 fi
-testing/run_test_suite.sh;
+$DIR/run_test_suite.sh;
 # only run for travis crons
 if [ "${TRAVIS_EVENT_TYPE}" != "pull_request" ]; then
-  testing/run_dependency_check.sh;
+  $DIR/run_dependency_check.sh;
 fi
