@@ -29,8 +29,12 @@ else
     RUN_ALL_TESTS=0
 fi
 
+if [ "${TEST_DIRECTORIES}" = "" ]; then
+  TEST_DIRECTORIES="*"
+fi
+
 # Loop through all directories containing "phpunit.xml*" and run the test suites.
-find * -name 'phpunit.xml*' -not -path '*/vendor/*' -exec dirname {} \; | while read DIR
+find $TEST_DIRECTORIES -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \; | while read DIR
 do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
