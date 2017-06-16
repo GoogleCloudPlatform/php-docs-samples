@@ -38,7 +38,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $user = getenv('MYSQL_USER');
         $database = getenv('MYSQL_DATABASE');
         $password = getenv('MYSQL_PASSWORD');

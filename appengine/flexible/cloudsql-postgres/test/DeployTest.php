@@ -38,7 +38,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
         $user = getenv('POSTGRES_USER');
         $database = getenv('POSTGRES_DATABASE');
         $password = getenv('POSTGRES_PASSWORD');
