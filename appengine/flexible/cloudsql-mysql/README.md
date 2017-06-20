@@ -36,7 +36,6 @@ Before you can run or deploy the sample, you will need to do the following:
 
         $ mysql -h 127.0.0.1 -u root -p -e "CREATE DATABASE <YOUR_DATABASE_NAME>;"
 
-
 ## Deploy to App Engine
 
 **Prerequisites**
@@ -70,19 +69,19 @@ in your browser.
     installed and running.
 
 1.  Set the following environment variables with the configuration values for
-    `USER`, `PASSWORD`, and `DATABASE` you used during setup:
+    `USER`, `PASSWORD`, `DATABASE`, and `CONNECTION_NAME` you used during setup:
 
     ```sh
     # set local mysql connection parameters
     export MYSQL_DSN="mysql:host=127.0.0.1;port=3306;dbname=DATABASE"
-    export MYSQL_USERNAME=USER
+    export MYSQL_USER=USER
     export MYSQL_PASSWORD=PASSWORD
     ```
 
 1.  Run the application
 
     ```sh
-    cd php-docs-samples/appengine/standard/cloudsql
+    cd php-docs-samples/appengine/flexible/cloudsql
     php -S localhost:8080
     ```
 

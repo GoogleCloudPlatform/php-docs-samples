@@ -5,9 +5,9 @@ env: flex
 env_variables:
     # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
     # values obtained when configuring your Cloud SQL instance.
-    MYSQL_DSN: mysql:dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME
-    MYSQL_USER: USER
-    MYSQL_PASSWORD: PASSWORD
+    POSTGRES_USER: USER
+    POSTGRES_PASSWORD: PASSWORD
+    POSTGRES_DSN: pgsql:dbname=DATABASE;host=/cloudsql/CONNECTION_NAME
 #[END env]
 
 #[START cloudsql_settings]
