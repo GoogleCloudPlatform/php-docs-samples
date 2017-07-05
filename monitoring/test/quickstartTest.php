@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class monitoringTest extends PHPUnit_Framework_TestCase
+
+namespace Google\Cloud\Samples\Monitoring;
+
+class quickstartTest extends \PHPUnit_Framework_TestCase
 {
     public function testMonitoringQuickstart()
     {
