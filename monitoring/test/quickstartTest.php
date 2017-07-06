@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class quickstartTest extends PHPUnit_Framework_TestCase
+
+namespace Google\Cloud\Samples\Monitoring;
+
+class quickstartTest extends \PHPUnit_Framework_TestCase
 {
-    public function testQuickstart()
+    public function testMonitoringQuickstart()
     {
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
-
-        $file = sys_get_temp_dir() . '/vision_quickstart.php';
+        $file = sys_get_temp_dir() . '/monitoring_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
             ['YOUR_PROJECT_ID', '__DIR__'],
@@ -30,14 +32,11 @@ class quickstartTest extends PHPUnit_Framework_TestCase
             $contents
         );
         file_put_contents($file, $contents);
-
         // Invoke quickstart.php
-        $labels = include $file;
-
-        // Make sure it looks correct
-        $this->assertTrue(is_array($labels));
-        $this->assertEquals(5, count($labels));
-
-        $this->expectOutputRegex('/cat/');
+        ob_start();
+        include $file;
+        $output = ob_get_contents();
+        ob_end_clean();
+        $this->assertContains('Successfully submitted a time series', $output);
     }
 }

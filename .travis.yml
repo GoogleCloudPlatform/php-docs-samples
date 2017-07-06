@@ -35,9 +35,9 @@ env:
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
 
 before_install:
-  - git clone https://github.com/GoogleCloudPlatform/php-tools.git
-  - php php-tools/scripts/dump_credentials.php
-  - travis_retry php-tools/scripts/install_test_deps.sh
+  - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
+  - php ${HOME}/php-tools/scripts/dump_credentials.php
+  - travis_retry ${HOME}/php-tools/scripts/install_test_deps.sh
   - mkdir -p build/logs
 
 before_script:
