@@ -45,6 +45,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(self::$metricId, $output);
 
         // ensure the metric gets created
+        $this->eventuallyConsistentRetryCount = 10;
         $this->runEventuallyConsistentTest(function () {
             $output = $this->runCommand('get-descriptor', [
                 'metric_id' => self::$metricId,
