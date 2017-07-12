@@ -99,6 +99,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('read-timeseries-fields');
         $this->assertContains('Found data points', $output);
+        $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
     }
 
     /** @depends testWriteTimeseries */
@@ -114,6 +115,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('read-timeseries-simple');
         $this->assertContains('CPU UTILIZATION', $output);
+        $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
     }
 
     private function runCommand($commandName, $args = [])
