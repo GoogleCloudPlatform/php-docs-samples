@@ -3,11 +3,13 @@
     "type": "project",
     "require": {
         "symfony/console": "^3.1",
-        "google/cloud-videointelligence": "^0.2.0",
-        "stanley-cheung/protobuf-php": "^0.6.0"
+        "google/cloud-videointelligence": "^0.3.0"
     },
     "autoload": {
         "files": [
+            "src/analyze_faces.php",
+            "src/analyze_labels.php",
+            "src/analyze_safe_search.php",
             "src/analyze_shots.php"
         ]
     },

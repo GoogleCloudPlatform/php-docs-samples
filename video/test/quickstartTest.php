@@ -24,12 +24,11 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
                 'environment variable');
         }
     }
-    
+
     public function testQuickstart()
     {
         // Invoke quickstart.php
-        $results = include __DIR__ . '/../quickstart.php';
-        $display = $this->getActualOutput();
-        $this->assertContains('label_annotations', $display);
+        include __DIR__ . '/../quickstart.php';
+        $this->expectOutputRegex('/Cat/');
     }
 }

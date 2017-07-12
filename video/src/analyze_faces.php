@@ -17,17 +17,17 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_shots]
+// [START analyze_faces]
 use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
 use Google\Cloud\Videointelligence\V1beta1\Feature;
 
 /**
- * Finds shot changes in the video.
+ * Finds faces in the video.
  *
  * @param string $uri The cloud storage object to analyze. Must be formatted
  *                    like gs://bucketname/objectname
  */
-function analyze_shots($uri)
+function analyze_faces($uri)
 {
     # Instantiate a client.
     $video = new VideoIntelligenceServiceClient();
@@ -35,7 +35,7 @@ function analyze_shots($uri)
     # Execute a request.
     $operation = $video->annotateVideo(
         $uri,
-        [Feature::SHOT_CHANGE_DETECTION]);
+        [Feature::FACE_DETECTION]);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();
@@ -43,13 +43,21 @@ function analyze_shots($uri)
     # Print the result.
     if ($operation->operationSucceeded()) {
         $results = $operation->getResult()->getAnnotationResults()[0];
-        foreach ($results->getShotAnnotations() as $shot) {
-            printf('%ss to %ss' . PHP_EOL,
-                $shot->getStartTimeOffset() / 1000000,
-                $shot->getEndTimeOffset() / 1000000);
+        foreach ($results->getFaceAnnotations() as $face) {
+            foreach ($face->getLocations() as $location) {
+                if (!$box = $location->getBoundingBox()) {
+                    continue;
+                }
+                printf('At %ss:' . PHP_EOL,
+                    $location->getTimeOffset() / 1000000);
+                printf('  left: %s' . PHP_EOL, $box->getLeft());
+                printf('  right: %s' . PHP_EOL, $box->getRight());
+                printf('  bottom: %s' . PHP_EOL, $box->getBottom());
+                printf('  top: %s' . PHP_EOL, $box->getTop());
+            }
         }
     } else {
         print_r($operation->getError());
     }
 }
-// [END analyze_shots]
+// [END analyze_faces]

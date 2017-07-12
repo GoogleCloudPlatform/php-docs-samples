@@ -22,46 +22,57 @@ require __DIR__ . '/vendor/autoload.php';
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
 
-$application = new Application();
+$application = new Application('Cloud Video Intelligence');
 
-$application->add(new Command('shots'))
-    ->setDescription('Detect shot changes in video using '
-        . 'Google Cloud Video Intelligence API')
-    ->setHelp(<<<EOF
-The <info>%command.name%</info> command finds shot changes in a video using the 
-Google Cloud Video Intelligence API.
-
-    <info>php %command.full_name% gs://cloudmleap/video/next/fox-snatched.mp4</info>
-
-Example:
-    <info>php %command.full_name% gs://cloudmleap/video/next/fox-snatched.mp4</info>
-annotation_results {
-  input_uri: "\/cloudmleap\/video\/next\/fox-snatched.mp4"
-  shot_annotations {
-    start_time_offset: 41729
-    end_time_offset: 1000984
-  }
-  shot_annotations {
-    start_time_offset: 1042713
-    end_time_offset: 6006032
-  }
-}
-EOF
-    )->addArgument(
+$inputDefinition = new InputDefinition([
+    new InputArgument(
         'uri',
         InputArgument::REQUIRED,
-        'Uri pointing to a video.'
-    )
-    ->setCode(function (InputInterface $input, OutputInterface $output) {
-        $uri = $input->getArgument('uri');
-        analyze_shots($uri);
+        'Google Cloud Storage URI pointing to a video.'
+    ),
+]);
+
+$application->add(new Command('faces'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect faces changes in video using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_faces(
+            $input->getArgument('uri')
+        );
+    });
+
+$application->add(new Command('labels'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect labels in video using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_labels(
+            $input->getArgument('uri')
+        );
+    });
+
+$application->add(new Command('safe-search'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect safe search in video using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_safe_search(
+            $input->getArgument('uri')
+        );
+    });
+
+$application->add(new Command('shots'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect shots in video using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_shots(
+            $input->getArgument('uri')
+        );
     });
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
 }
+
 $application->run();
