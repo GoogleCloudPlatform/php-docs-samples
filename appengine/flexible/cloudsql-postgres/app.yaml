@@ -1,6 +1,9 @@
 runtime: php
 env: flex
 
+runtime_config:
+  document_root: .
+
 #[START env]
 env_variables:
     # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
