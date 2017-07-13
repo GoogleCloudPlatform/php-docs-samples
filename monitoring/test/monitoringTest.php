@@ -46,7 +46,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(self::$metricId, $output);
 
         // ensure the metric gets created
-        $this->eventuallyConsistentRetryCount = 10;
+        $this->eventuallyConsistentRetryCount = 20;
         $this->runEventuallyConsistentTest(function () {
             $output = $this->runCommand('get-descriptor', [
                 'metric_id' => self::$metricId,
@@ -114,7 +114,6 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
             '--minutes-ago' => self::$minutesAgo
         ]);
         $this->assertContains('Last 10 minutes', $output);
-        $this->assertContains('10-20 minutes ago', $output);
     }
 
     /** @depends testWriteTimeseries */
