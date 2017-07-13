@@ -17,17 +17,17 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_shots]
+// [START analyze_safe_search]
 use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
 use Google\Cloud\Videointelligence\V1beta1\Feature;
 
 /**
- * Finds shot changes in the video.
+ * Analyze safe search in the video.
  *
  * @param string $uri The cloud storage object to analyze. Must be formatted
  *                    like gs://bucketname/objectname
  */
-function analyze_shots($uri)
+function analyze_safe_search($uri)
 {
     # Instantiate a client.
     $video = new VideoIntelligenceServiceClient();
@@ -35,21 +35,26 @@ function analyze_shots($uri)
     # Execute a request.
     $operation = $video->annotateVideo(
         $uri,
-        [Feature::SHOT_CHANGE_DETECTION]);
+        [Feature::SAFE_SEARCH_DETECTION]);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();
 
     # Print the result.
     if ($operation->operationSucceeded()) {
+        $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
+                        'Likely', 'Very likely'];
         $results = $operation->getResult()->getAnnotationResults()[0];
-        foreach ($results->getShotAnnotations() as $shot) {
-            printf('%ss to %ss' . PHP_EOL,
-                $shot->getStartTimeOffset() / 1000000,
-                $shot->getEndTimeOffset() / 1000000);
+        foreach ($results->getSafeSearchAnnotations() as $safeSearch) {
+            printf('At %ss:' . PHP_EOL, $safeSearch->getTimeOffset() / 1000000);
+            print('  adult: ' . $likelihoods[$safeSearch->getAdult()] . PHP_EOL);
+            print('  spoof: ' . $likelihoods[$safeSearch->getSpoof()] . PHP_EOL);
+            print('  medical: ' . $likelihoods[$safeSearch->getMedical()] . PHP_EOL);
+            print('  racy: ' . $likelihoods[$safeSearch->getRacy()] . PHP_EOL);
+            print('  violent: ' . $likelihoods[$safeSearch->getViolent()] . PHP_EOL);
         }
     } else {
         print_r($operation->getError());
     }
 }
-// [END analyze_shots]
+// [END analyze_safe_search]

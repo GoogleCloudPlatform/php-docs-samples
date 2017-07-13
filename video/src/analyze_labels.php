@@ -17,17 +17,17 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_shots]
+// [START analyze_labels]
 use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
 use Google\Cloud\Videointelligence\V1beta1\Feature;
 
 /**
- * Finds shot changes in the video.
+ * Finds labels in the video.
  *
  * @param string $uri The cloud storage object to analyze. Must be formatted
  *                    like gs://bucketname/objectname
  */
-function analyze_shots($uri)
+function analyze_labels($uri)
 {
     # Instantiate a client.
     $video = new VideoIntelligenceServiceClient();
@@ -35,7 +35,7 @@ function analyze_shots($uri)
     # Execute a request.
     $operation = $video->annotateVideo(
         $uri,
-        [Feature::SHOT_CHANGE_DETECTION]);
+        [Feature::LABEL_DETECTION]);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();
@@ -43,13 +43,16 @@ function analyze_shots($uri)
     # Print the result.
     if ($operation->operationSucceeded()) {
         $results = $operation->getResult()->getAnnotationResults()[0];
-        foreach ($results->getShotAnnotations() as $shot) {
-            printf('%ss to %ss' . PHP_EOL,
-                $shot->getStartTimeOffset() / 1000000,
-                $shot->getEndTimeOffset() / 1000000);
+        foreach ($results->getLabelAnnotations() as $label) {
+            printf($label->getDescription() . PHP_EOL);
+            foreach ($label->getLocations() as $location) {
+                printf('  %ss to %ss' . PHP_EOL,
+                    $location->getSegment()->getStartTimeOffset() / 1000000,
+                    $location->getSegment()->getEndTimeOffset() / 1000000);
+            }
         }
     } else {
         print_r($operation->getError());
     }
 }
-// [END analyze_shots]
+// [END analyze_labels]

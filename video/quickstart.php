@@ -19,11 +19,8 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # [START videointelligence_quickstart]
-# Import a convenient way to print the response.
-use DrSlump\Protobuf\Codec\TextFormat;
-# Imports the Google Cloud client library
 use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
-use google\cloud\videointelligence\v1beta1\Feature;
+use Google\Cloud\Videointelligence\V1beta1\Feature;
 
 # Instantiate a client.
 $video = new VideoIntelligenceServiceClient();
@@ -35,11 +32,20 @@ $operation = $video->annotateVideo(
 );
 # Wait for the request to complete.
 $operation->pollUntilComplete();
+
 # Print the result.
-$format = new TextFormat();
-if ($operation->operationSucceeded()) {
-    print $operation->getResult()->serialize($format);
-} else {
-    print $operation->getError()->serialize($format);
+if (!$operation->operationSucceeded()) {
+    print_r($operation->getError());
+    die;
+}
+
+$results = $operation->getResult()->getAnnotationResults()[0];
+foreach ($results->getLabelAnnotations() as $label) {
+    printf($label->getDescription() . PHP_EOL);
+    foreach ($label->getLocations() as $location) {
+        printf('  %ss to %ss' . PHP_EOL,
+            $location->getSegment()->getStartTimeOffset() / 1000000,
+            $location->getSegment()->getEndTimeOffset() / 1000000);
+    }
 }
 # [END videointelligence_quickstart]
