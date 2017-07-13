@@ -1,6 +1,9 @@
 runtime: php
 env: flex
 
+runtime_config:
+  document_root: .
+
 # [START env_variables]
 env_variables:
   SENDGRID_API_KEY: your-sendgrid-api-key
