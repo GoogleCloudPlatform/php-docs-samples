@@ -42,7 +42,7 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_reduce($projectId)
+function read_timeseries_reduce($projectId, $minutesAgo = 20)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
@@ -52,7 +52,7 @@ function read_timeseries_reduce($projectId)
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();
-    $startTime->setSeconds(time() - (60 * 20));
+    $startTime->setSeconds(time() - (60 * $minutesAgo));
     $endTime = new Timestamp();
     $endTime->setSeconds(time());
 
@@ -76,11 +76,11 @@ function read_timeseries_reduce($projectId)
         $view,
         ['aggregation' => $aggregation]);
 
-    foreach ($result->iterateAllElements() as $timeSeries) {
-        $reductions = $timeSeries->getPoints();
-        printf('Average CPU utilization across all GCE instances:' . PHP_EOL);
-        printf('  Last 10 minutes: ');
-        printf($reductions[0]->getValue()->getDoubleValue() . PHP_EOL);
+    $reductions = $result->iterateAllElements()->current()->getPoints();
+    printf('Average CPU utilization across all GCE instances:' . PHP_EOL);
+    printf('  Last 10 minutes: ');
+    printf($reductions[0]->getValue()->getDoubleValue() . PHP_EOL);
+    if (count($reductions) > 1) {
         printf('  10-20 minutes ago: ');
         printf($reductions[1]->getValue()->getDoubleValue() . PHP_EOL);
     }

@@ -41,7 +41,7 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_align($projectId)
+function read_timeseries_align($projectId, $minutesAgo = 20)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
@@ -51,7 +51,7 @@ function read_timeseries_align($projectId)
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();
-    $startTime->setSeconds(time() - (60 * 20));
+    $startTime->setSeconds(time() - (60 * $minutesAgo));
     $endTime = new Timestamp();
     $endTime->setSeconds(time());
 
@@ -74,12 +74,15 @@ function read_timeseries_align($projectId)
         $view,
         ['aggregation' => $aggregation]);
 
+    printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {
         printf($timeSeries->getMetric()->getLabels()['instance_name'] . PHP_EOL);
         printf('  Now: ');
         printf($timeSeries->getPoints()[0]->getValue()->getDoubleValue() . PHP_EOL);
-        printf('  10 minutes ago: ');
-        printf($timeSeries->getPoints()[1]->getValue()->getDoubleValue() . PHP_EOL);
+        if (count($timeSeries->getPoints()) > 1) {
+            printf('  10 minutes ago: ');
+            printf($timeSeries->getPoints()[1]->getValue()->getDoubleValue() . PHP_EOL);
+        }
     }
 }
 // [END monitoring_read_timeseries_align]

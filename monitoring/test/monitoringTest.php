@@ -27,6 +27,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
 
     private static $projectId;
     private static $metricId = 'custom.googleapis.com/stores/daily_sales';
+    private static $minutesAgo = 720;
 
     public static function setUpBeforeClass()
     {
@@ -89,7 +90,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     /** @depends testWriteTimeseries */
     public function testReadTimeseriesAlign()
     {
-        $output = $this->runCommand('read-timeseries-align');
+        $output = $this->runCommand('read-timeseries-align', [
+            '--minutes-ago' => self::$minutesAgo
+        ]);
         $this->assertContains('Now', $output);
         $this->assertContains('10 minutes ago', $output);
     }
@@ -97,7 +100,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     /** @depends testWriteTimeseries */
     public function testReadTimeseriesFields()
     {
-        $output = $this->runCommand('read-timeseries-fields');
+        $output = $this->runCommand('read-timeseries-fields', [
+            '--minutes-ago' => self::$minutesAgo
+        ]);
         $this->assertContains('Found data points', $output);
         $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
     }
@@ -105,7 +110,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     /** @depends testWriteTimeseries */
     public function testReadTimeseriesReduce()
     {
-        $output = $this->runCommand('read-timeseries-reduce');
+        $output = $this->runCommand('read-timeseries-reduce', [
+            '--minutes-ago' => self::$minutesAgo
+        ]);
         $this->assertContains('Last 10 minutes', $output);
         $this->assertContains('10-20 minutes ago', $output);
     }
@@ -113,8 +120,10 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     /** @depends testWriteTimeseries */
     public function testReadTimeseriesSimple()
     {
-        $output = $this->runCommand('read-timeseries-simple');
-        $this->assertContains('CPU UTILIZATION', $output);
+        $output = $this->runCommand('read-timeseries-simple', [
+            '--minutes-ago' => self::$minutesAgo
+        ]);
+        $this->assertContains('CPU utilization:', $output);
         $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
     }
 

@@ -38,7 +38,7 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_simple($projectId)
+function read_timeseries_simple($projectId, $minutesAgo = 20)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
@@ -49,7 +49,7 @@ function read_timeseries_simple($projectId)
 
     // Limit results to the last 20 minutes
     $startTime = new Timestamp();
-    $startTime->setSeconds(time() - (60 * 20));
+    $startTime->setSeconds(time() - (60 * $minutesAgo));
     $endTime = new Timestamp();
     $endTime->setSeconds(time());
 
@@ -65,7 +65,7 @@ function read_timeseries_simple($projectId)
         $interval,
         $view);
 
-    printf('CPU UTILIZATION:' . PHP_EOL);
+    printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {
         $instanceName = $timeSeries->getMetric()->getLabels()['instance_name'];
         printf($instanceName . ':' . PHP_EOL);

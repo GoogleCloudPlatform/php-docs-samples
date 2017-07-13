@@ -38,7 +38,7 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_fields($projectId)
+function read_timeseries_fields($projectId, $minutesAgo = 20)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
@@ -48,7 +48,7 @@ function read_timeseries_fields($projectId)
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();
-    $startTime->setSeconds(time() - (60 * 20));
+    $startTime->setSeconds(time() - (60 * $minutesAgo));
     $endTime = new Timestamp();
     $endTime->setSeconds(time());
 
