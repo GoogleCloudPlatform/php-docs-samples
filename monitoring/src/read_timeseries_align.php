@@ -74,7 +74,6 @@ function read_timeseries_align($projectId)
         $view,
         ['aggregation' => $aggregation]);
 
-    printf('CPU UTILIZATION:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {
         printf($timeSeries->getMetric()->getLabels()['instance_name'] . PHP_EOL);
         printf('  Now: ');
