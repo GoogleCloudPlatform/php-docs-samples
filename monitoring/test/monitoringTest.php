@@ -94,7 +94,6 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
             '--minutes-ago' => self::$minutesAgo
         ]);
         $this->assertContains('Now', $output);
-        $this->assertContains('10 minutes ago', $output);
     }
 
     /** @depends testWriteTimeseries */
