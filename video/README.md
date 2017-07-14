@@ -2,14 +2,14 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google 
+This simple command-line application demonstrates how to invoke Google
 Video Intelligence API from PHP.
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the Video Intelligence API](
     https://console.cloud.google.com/flows/enableapi?apiid=videointelligence.googleapis.com)
     and create a new project or select an existing project.
-2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click 
+2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click
     "New Credentials"
     and select "Service Account Key". Create a new service account, use the JSON key type, and
     select "Create". Once downloaded, set the environment variable `GOOGLE_APPLICATION_CREDENTIALS`
@@ -25,27 +25,20 @@ Video Intelligence API from PHP.
 5.  Run `php video.php`. The following commands are available:
 
     ```
-    help   Displays help for a command
-    list   Lists commands
-    shots  Detect shot changes in video using Google Cloud Video Intelligence API
+    faces           Detect faces changes in video using the Video Intelligence API
+    help            Displays help for a command
+    labels          Detect labels in video using the Video Intelligence API
+    labels-in-file  Detect labels in a file using the Video Intelligence API
+    list            Lists commands
+    safe-search     Detect safe search in video using the Video Intelligence API
+    shots           Detect shots in video using the Video Intelligence API
     ```
 
     Example:
 
     ```
-    $ php video.php shots gs://cloudmleap/video/next/fox-snatched.mp4
-    annotation_results {
-        input_uri: "\/cloudmleap\/video\/next\/fox-snatched.mp4"
-        shot_annotations {
-            start_time_offset: 41729
-            end_time_offset: 1000984
-        }
-        shot_annotations {
-            start_time_offset: 1042713
-            end_time_offset: 6006032
-        }
-        ...
-    }
+    $ php video.php shots gs://demomaker/cat.mp4
+    0s to 14.833664s
     ```
 
 

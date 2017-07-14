@@ -8,7 +8,7 @@
     "autoload": {
         "files": [
             "src/analyze_faces.php",
-            "src/analyze_labels.php",
+            "src/analyze_labels_file.php",
             "src/analyze_safe_search.php",
             "src/analyze_shots.php"
         ]

@@ -52,6 +52,16 @@ $application->add(new Command('labels'))
         );
     });
 
+$application->add(new Command('labels-in-file'))
+    ->addArgument('file', InputArgument::REQUIRED,
+        'Path to a local video file.')
+    ->setDescription('Detect labels in a file using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_labels_file(
+            $input->getArgument('file')
+        );
+    });
+
 $application->add(new Command('safe-search'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect safe search in video using the Video Intelligence API')
