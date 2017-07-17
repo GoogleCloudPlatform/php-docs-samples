@@ -24,6 +24,8 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class videoTest extends \PHPUnit_Framework_TestCase
 {
+    private static $gcsUri = 'gs://demomaker/cat.mp4';
+
     public function setUp()
     {
         if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
@@ -34,29 +36,37 @@ class videoTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyzeFaces()
     {
-        $output = $this->runCommand('faces');
+        $output = $this->runCommand('faces', ['uri' => self::$gcsUri]);
         $this->assertContains('left:', $output);
     }
 
     public function testAnalyzeLabels()
     {
-        $output = $this->runCommand('labels');
+        $output = $this->runCommand('labels', ['uri' => self::$gcsUri]);
+        $this->assertContains('Cat', $output);
+    }
+
+    public function testAnalyzeLabelsInFile()
+    {
+        $output = $this->runCommand('labels-in-file', [
+            'file' => __DIR__ . '/data/cat_shortened.mp4'
+        ]);
         $this->assertContains('Cat', $output);
     }
 
     public function testAnalyzeSafeSearch()
     {
-        $output = $this->runCommand('safe-search');
+        $output = $this->runCommand('safe-search', ['uri' => self::$gcsUri]);
         $this->assertContains('adult:', $output);
     }
 
     public function testAnalyzeShots()
     {
-        $output = $this->runCommand('shots');
+        $output = $this->runCommand('shots', ['uri' => self::$gcsUri]);
         $this->assertContains(' to ', $output);
     }
 
-    private function runCommand($commandName)
+    private function runCommand($commandName, $args)
     {
         $application = require __DIR__ . '/../video.php';
         $command = $application->get($commandName);
@@ -64,7 +74,7 @@ class videoTest extends \PHPUnit_Framework_TestCase
 
         ob_start();
         $commandTester->execute(
-            ['uri' => 'gs://demomaker/cat.mp4'],
+            $args,
             ['interactive' => false]);
 
         return ob_get_clean();
