@@ -35,7 +35,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     public function testInspectDatastore()
     {
         $output = $this->runCommand('inspect-datastore', [
-            'kind' => 'Book'
+            'kind' => 'Book',
+            'project' => getenv('GOOGLE_PROJECT_ID'),
         ]);
         $this->assertContains('US_MALE_NAME', $output);
         $this->assertContains('Very likely', $output);

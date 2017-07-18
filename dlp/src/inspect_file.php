@@ -44,7 +44,7 @@ function inspect_file(
     $usFemaleNameInfoType->setName('US_FEMALE_NAME');
     $infoTypes = [$usMaleNameInfoType, $usFemaleNameInfoType];
 
-    // Whether to include the matching string
+    // Whether to include the matching string in the response
     $includeQuote = true;
 
     // Create the configuration object

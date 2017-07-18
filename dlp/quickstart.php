@@ -44,7 +44,7 @@ $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 // Limit the number of findings, 0 for no limit
 $maxFindings = 0;
 
-// Whether to include the matching string
+// Whether to include the matching string in the response
 $includeQuote = true;
 
 // Create the configuration object
