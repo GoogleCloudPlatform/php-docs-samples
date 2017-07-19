@@ -120,52 +120,60 @@ if ($client->getAccessToken()) {
    * Google Compute Engine API request to retrieve the list of instances in your
    * Google Compute Engine project.
    */
-  $instances = $computeService->instances->listInstances(DEFAULT_PROJECT,
-    DEFAULT_ZONE_NAME);
-    $instancesListMarkup = generateMarkup('List Instances', $instances);
+    $instances = $computeService->instances->listInstances(
+        DEFAULT_PROJECT,
+        DEFAULT_ZONE_NAME
+    );
 
-  /**
-   * Google Compute Engine API request to retrieve the list of all data center
-   * locations associated with your Google Compute Engine project.
-   */
-  $zones = $computeService->zones->listZones(DEFAULT_PROJECT);
+    $instancesListMarkup = generateMarkup(
+        'List Instances',
+        $instances
+    );
+
+    /**
+     * Google Compute Engine API request to retrieve the list of all data center
+     * locations associated with your Google Compute Engine project.
+     */
+    $zones = $computeService->zones->listZones(DEFAULT_PROJECT);
     $zonesListMarkup = generateMarkup('List Zones', $zones);
 
-  /**
-   * Google Compute Engine API request to retrieve the list of all machine types
-   * associated associated with your Google Compute Engine project.
-   */
-  $machineTypes = $computeService->machineTypes->listMachineTypes(DEFAULT_PROJECT);
-    $machineTypesListMarkup = generateMarkup('List Machine Types',
-    $machineTypes);
+    /**
+     * Google Compute Engine API request to retrieve the list of all machine types
+     * associated associated with your Google Compute Engine project.
+     */
+    $machineTypes = $computeService->machineTypes->listMachineTypes(DEFAULT_PROJECT);
+    $machineTypesListMarkup = generateMarkup(
+        'List Machine Types',
+        $machineTypes
+    );
 
-  /**
-   * Google Compute Engine API request to retrieve the list of all image types
-   * associated associated with your Google Compute Engine project.
-   */
-  $images = $computeService->images->listImages(GOOGLE_PROJECT);
+    /**
+     * Google Compute Engine API request to retrieve the list of all image types
+     * associated associated with your Google Compute Engine project.
+     */
+    $images = $computeService->images->listImages(GOOGLE_PROJECT);
     $imagesListMarkup = generateMarkup('List Images', $images);
 
-  /**
-   * Google Compute Engine API request to retrieve the list of all firewalls
-   * associated associated with your Google Compute Engine project.
-   */
-  $firewalls = $computeService->firewalls->listFirewalls(DEFAULT_PROJECT);
+    /**
+     * Google Compute Engine API request to retrieve the list of all firewalls
+     * associated associated with your Google Compute Engine project.
+     */
+    $firewalls = $computeService->firewalls->listFirewalls(DEFAULT_PROJECT);
     $firewallsListMarkup = generateMarkup('List Firewalls', $firewalls);
 
-  /**
-   * Google Compute Engine API request to retrieve the list of all networks
-   * associated associated with your Google Compute Engine project.
-   */
-  $networks = $computeService->networks->listNetworks(DEFAULT_PROJECT);
+    /**
+     * Google Compute Engine API request to retrieve the list of all networks
+     * associated associated with your Google Compute Engine project.
+     */
+    $networks = $computeService->networks->listNetworks(DEFAULT_PROJECT);
     $networksListMarkup = generateMarkup('List Networks', $networks);
     ;
 
-  /**
-   * Google Compute Engine API request to insert a new instance into your Google
-   * Compute Engine project.
-   */
-  $name = DEFAULT_NAME;
+    /**
+     * Google Compute Engine API request to insert a new instance into your Google
+     * Compute Engine project.
+     */
+    $name = DEFAULT_NAME;
     $machineType = DEFAULT_MACHINE_TYPE;
     $zone = DEFAULT_ZONE_NAME;
     $image = DEFAULT_IMAGE;
@@ -184,11 +192,11 @@ if ($client->getAccessToken()) {
     $zone, $new_instance);
     $insertInstanceMarkup = generateMarkup('Insert Instance', $insertInstance);
 
-  /**
-   * Google Compute Engine API request to insert a new instance (with metadata)
-   * into your Google Compute Engine project.
-   */
-  $name = DEFAULT_NAME_WITH_METADATA;
+    /**
+     * Google Compute Engine API request to insert a new instance (with metadata)
+     * into your Google Compute Engine project.
+     */
+    $name = DEFAULT_NAME_WITH_METADATA;
     $machineType = DEFAULT_MACHINE_TYPE;
     $zone = DEFAULT_ZONE_NAME;
     $image = DEFAULT_IMAGE;
@@ -212,53 +220,85 @@ if ($client->getAccessToken()) {
     $new_instance->setMetadata($metadata);
 
     $insertInstanceWithMetadata = $computeService->instances->insert(
-    DEFAULT_PROJECT, $zone, $new_instance);
-    $insertInstanceWithMetadataMarkup = generateMarkup(
-    'Insert Instance With Metadata', $insertInstanceWithMetadata);
+        DEFAULT_PROJECT,
+        $zone,
+        $new_instance
+    );
 
-  /**
-   * Google Compute Engine API request to get an instance matching the outlined
-   * parameters from your Google Compute Engine project.
-   */
-  $getInstance = $computeService->instances->get(DEFAULT_PROJECT,
-    DEFAULT_ZONE_NAME, DEFAULT_NAME);
+    $insertInstanceWithMetadataMarkup = generateMarkup(
+        'Insert Instance With Metadata',
+        $insertInstanceWithMetadata
+    );
+
+    /**
+     * Google Compute Engine API request to get an instance matching the outlined
+     * parameters from your Google Compute Engine project.
+     */
+    $getInstance = $computeService->instances->get(
+        DEFAULT_PROJECT,
+        DEFAULT_ZONE_NAME,
+        DEFAULT_NAME
+    );
+
     $getInstanceMarkup = generateMarkup('Get Instance', $getInstance);
 
-  /**
-   * Google Compute Engine API request to get an instance matching the outlined
-   * parameters from your Google Compute Engine project.
-   */
-  $getInstanceWithMetadata = $computeService->instances->get(DEFAULT_PROJECT,
-    DEFAULT_ZONE_NAME, DEFAULT_NAME_WITH_METADATA);
-    $getInstanceWithMetadataMarkup = generateMarkup('Get Instance With Metadata',
-    $getInstanceWithMetadata);
+    /**
+     * Google Compute Engine API request to get an instance matching the outlined
+     * parameters from your Google Compute Engine project.
+     */
+    $getInstanceWithMetadata = $computeService->instances->get(
+        DEFAULT_PROJECT,
+        DEFAULT_ZONE_NAME,
+        DEFAULT_NAME_WITH_METADATA
+    );
 
-  /**
-   * Google Compute Engine API request to delete an instance matching the
-   * outlined parameters from your Google Compute Engine project.
-   */
-  $deleteInstance = $computeService->instances->delete(DEFAULT_PROJECT,
-    DEFAULT_ZONE_NAME, DEFAULT_NAME);
+    $getInstanceWithMetadataMarkup = generateMarkup(
+        'Get Instance With Metadata',
+        $getInstanceWithMetadata
+    );
+
+    /**
+     * Google Compute Engine API request to delete an instance matching the
+     * outlined parameters from your Google Compute Engine project.
+     */
+    $deleteInstance = $computeService->instances->delete(
+        DEFAULT_PROJECT,
+        DEFAULT_ZONE_NAME,
+        DEFAULT_NAME
+    );
+
     $deleteInstanceMarkup = generateMarkup('Delete Instance', $deleteInstance);
 
-  /**
-   * Google Compute Engine API request to delete an instance matching the
-   * outlined parameters from your Google Compute Engine project.
-   */
-  $deleteInstanceWithMetadata = $computeService->instances->delete(DEFAULT_PROJECT,
-    DEFAULT_ZONE_NAME, DEFAULT_NAME_WITH_METADATA);
+    /**
+     * Google Compute Engine API request to delete an instance matching the
+     * outlined parameters from your Google Compute Engine project.
+     */
+    $deleteInstanceWithMetadata = $computeService->instances->delete(
+        DEFAULT_PROJECT,
+        DEFAULT_ZONE_NAME,
+        DEFAULT_NAME_WITH_METADATA
+    );
+
     $deleteInstanceWithMetadataMarkup = generateMarkup(
-    'Delete Instance With Metadata', $deleteInstanceWithMetadata);
+        'Delete Instance With Metadata',
+        $deleteInstanceWithMetadata
+    );
 
-  /**
-   * Google Compute Engine API request to retrieve the list of all global
-   * operations associated with your Google Compute Engine project.
-   */
-  $globalOperations = $computeService->globalOperations->listGlobalOperations(DEFAULT_PROJECT);
-    $operationsListMarkup = generateMarkup('List Global Operations', $globalOperations);
+    /**
+     * Google Compute Engine API request to retrieve the list of all global
+     * operations associated with your Google Compute Engine project.
+     */
+    $globalOperations = $computeService->globalOperations->listGlobalOperations(
+        DEFAULT_PROJECT
+    );
 
-  // The access token may have been updated lazily.
-  $_SESSION['access_token'] = $client->getAccessToken();
+    $operationsListMarkup = generateMarkup(
+        'List Global Operations',
+        $globalOperations
+    );
+
+    // The access token may have been updated lazily.
+    $_SESSION['access_token'] = $client->getAccessToken();
 } else {
     $authUrl = $client->createAuthUrl();
 }
