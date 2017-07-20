@@ -51,10 +51,19 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
         if (!$this->projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('No project ID');
         }
+
+        // up the default retry count
+        $this->eventuallyConsistentRetryCount = 5;
+    }
+
+    public function testListEntries()
+    {
         $application = new Application();
         $application->add(new WriteCommand());
-        $commandTester = new CommandTester($application->get('write'));
-        $commandTester->execute(
+        $application->add(new ListEntriesCommand());
+
+        $writeCommandTester = new CommandTester($application->get('write'));
+        $writeCommandTester->execute(
             [
                 '--project' => $this->projectId,
                 '--logger' => 'my_test_logger',
@@ -62,12 +71,7 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-    }
 
-    public function testListEntries()
-    {
-        $application = new Application();
-        $application->add(new ListEntriesCommand());
         $commandTester = new CommandTester($application->get('list-entries'));
         $this->runEventuallyConsistentTest(function () use ($commandTester) {
             ob_start();
