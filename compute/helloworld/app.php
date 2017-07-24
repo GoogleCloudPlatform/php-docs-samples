@@ -139,7 +139,7 @@ if ($client->getAccessToken()) {
 
     /**
      * Google Compute Engine API request to retrieve the list of all machine types
-     * associated associated with your Google Compute Engine project.
+     * associated with your Google Compute Engine project.
      */
     $machineTypes = $computeService->machineTypes->listMachineTypes(DEFAULT_PROJECT);
     $machineTypesListMarkup = generateMarkup(
@@ -149,21 +149,21 @@ if ($client->getAccessToken()) {
 
     /**
      * Google Compute Engine API request to retrieve the list of all image types
-     * associated associated with your Google Compute Engine project.
+     * associated with your Google Compute Engine project.
      */
     $images = $computeService->images->listImages(GOOGLE_PROJECT);
     $imagesListMarkup = generateMarkup('List Images', $images);
 
     /**
      * Google Compute Engine API request to retrieve the list of all firewalls
-     * associated associated with your Google Compute Engine project.
+     * associated with your Google Compute Engine project.
      */
     $firewalls = $computeService->firewalls->listFirewalls(DEFAULT_PROJECT);
     $firewallsListMarkup = generateMarkup('List Firewalls', $firewalls);
 
     /**
      * Google Compute Engine API request to retrieve the list of all networks
-     * associated associated with your Google Compute Engine project.
+     * associated with your Google Compute Engine project.
      */
     $networks = $computeService->networks->listNetworks(DEFAULT_PROJECT);
     $networksListMarkup = generateMarkup('List Networks', $networks);
