@@ -1,0 +1,20 @@
+runtime: php
+env: flex
+
+runtime_config:
+  document_root: .
+
+#[START env]
+env_variables:
+    # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
+    # values obtained when configuring your Cloud SQL instance.
+    POSTGRES_USER: USER
+    POSTGRES_PASSWORD: PASSWORD
+    POSTGRES_DSN: pgsql:dbname=DATABASE;host=/cloudsql/CONNECTION_NAME
+#[END env]
+
+#[START cloudsql_settings]
+# Use the connection name obtained when configuring your Cloud SQL instance.
+beta_settings:
+    cloud_sql_instances: "CONNECTION_NAME"
+#[END cloudsql_settings]

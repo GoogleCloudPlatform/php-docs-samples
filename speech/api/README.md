@@ -33,10 +33,11 @@ php speech.php transcribe test/data/audio32KHz.flac --encoding FLAC --sample-rat
 ## Troubleshooting
 
 If you have not set a timezone you may get an error from php. This can be resolved by:
-a) Finding where the php.ini is stored by running php -i | grep 'Configuration File'
-b) Finding out your timezone from the list on this page: http://php.net/manual/en/timezones.php
-c) Editing the php.ini file (or creating one if it doesn't exist)
-d) Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
+
+  1. Finding where the php.ini is stored by running php -i | grep 'Configuration File'
+  1. Finding out your timezone from the list on this page: http://php.net/manual/en/timezones.php
+  1. Editing the php.ini file (or creating one if it doesn't exist)
+  1. Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
 
 [speech-api]: http://cloud.google.com/speech
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php/

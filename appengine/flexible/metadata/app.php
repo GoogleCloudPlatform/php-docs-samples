@@ -20,7 +20,7 @@ use Silex\Application;
 # [START metadata]
 function get_external_ip_using_google_cloud()
 {
-    $metadata = new Google\Cloud\Compute\Metadata();
+    $metadata = new Google\Cloud\Core\Compute\Metadata();
     $externalIp = $metadata->get(
         'instance/network-interfaces/0/access-configs/0/external-ip');
 

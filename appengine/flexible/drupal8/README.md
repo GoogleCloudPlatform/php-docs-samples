@@ -80,10 +80,10 @@ Alternatively, you can use [Drush][4] to change this config setting:
 
 ```sh
 # this command must be run inside the root directory of a drupal project
-$ cd /path/to/drupal
-$ /path/to/drush pm-enable config -y
-$ /path/to/drush config-set system.performance css.preprocess 0
-$ /path/to/drush config-set system.performance js.preprocess 0
+cd /path/to/drupal
+/path/to/drush pm-enable config -y
+/path/to/drush config-set system.performance css.preprocess 0
+/path/to/drush config-set system.performance js.preprocess 0
 ```
 
 This will change the values `preprocess` under `css` and `js` to `false`.

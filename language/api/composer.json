@@ -1,8 +1,9 @@
 {
     "require": {
-        "google/cloud-natural-language": "^0.2",
+        "google/cloud-language": "^0.3",
         "symfony/console": "^3.0",
-        "google/cloud-storage": "^1.0"
+        "google/cloud-storage": "^1.0",
+        "symfony/yaml": "^3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
@@ -12,15 +13,14 @@
             "Google\\Cloud\\Samples\\Language\\": "src/"
         },
         "files": [
-            "src/functions/analyze_all.php",
-            "src/functions/analyze_all_from_file.php",
-            "src/functions/analyze_entities.php",
-            "src/functions/analyze_entities_from_file.php",
-            "src/functions/analyze_sentiment.php",
-            "src/functions/analyze_sentiment_from_file.php",
-            "src/functions/analyze_syntax.php",
-            "src/functions/analyze_syntax_from_file.php",
-            "src/functions/annotation_to_string.php"
+            "src/analyze_all.php",
+            "src/analyze_all_from_file.php",
+            "src/analyze_entities.php",
+            "src/analyze_entities_from_file.php",
+            "src/analyze_sentiment.php",
+            "src/analyze_sentiment_from_file.php",
+            "src/analyze_syntax.php",
+            "src/analyze_syntax_from_file.php"
         ]
     }
 }

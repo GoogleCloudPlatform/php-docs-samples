@@ -1,0 +1,23 @@
+{
+    "require": {
+        "google/cloud-monitoring": "^0.4",
+        "symfony/console": "^3.3"
+    },
+    "autoload": {
+        "files": [
+            "src/create_metric.php",
+            "src/delete_metric.php",
+            "src/get_descriptor.php",
+            "src/list_descriptors.php",
+            "src/read_timeseries_align.php",
+            "src/read_timeseries_fields.php",
+            "src/read_timeseries_reduce.php",
+            "src/read_timeseries_simple.php",
+            "src/write_timeseries.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4",
+        "google/cloud-tools": "^0.6"
+    }
+}

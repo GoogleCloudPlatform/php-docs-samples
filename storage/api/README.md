@@ -20,7 +20,7 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
     $ cd php-docs-samples/storage/cli
-```
+    ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
@@ -33,7 +33,7 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
     encryption          Upload and download Cloud Storage objects with encryption
     object-acl          Manage the ACL for Cloud Storage objects
     objects             Manage Cloud Storage objects
-```
+    ```
 6. Run `php storage.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes

@@ -1,0 +1,11 @@
+{
+    "require": {
+        "silex/silex": "^1.3",
+        "google/apiclient": "^2.0"
+    },
+    "require-dev": {
+        "google/cloud-tools": "^0.6",
+        "paragonie/random_compat": "^2.0",
+        "phpunit/phpunit": "~4"
+    }
+}

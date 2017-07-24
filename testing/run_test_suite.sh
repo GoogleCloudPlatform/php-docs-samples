@@ -15,16 +15,11 @@
 
 set -ex
 
-# run php-cs-fixer
-if [ "${RUN_CS_FIXER}" = "true" ]; then
-    ${HOME}/php-cs-fixer fix --dry-run --diff
-fi
-
 # Determine all files changed on this branch
 # (will be empty if running from "master").
 FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 
-# If any files outside the sample directires changed, or if we are not
+# If any files outside the sample directories changed, or if we are not
 # on a Pull Request, run the whole test suite.
 if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
     grep -qv \/ <<< "$FILES_CHANGED" || \
@@ -34,8 +29,12 @@ else
     RUN_ALL_TESTS=0
 fi
 
+if [ "${TEST_DIRECTORIES}" = "" ]; then
+  TEST_DIRECTORIES="*"
+fi
+
 # Loop through all directories containing "phpunit.xml*" and run the test suites.
-find * -name 'phpunit.xml*' -not -path '*/vendor/*' -exec dirname {} \; | while read DIR
+find $TEST_DIRECTORIES -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \; | while read DIR
 do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
@@ -48,15 +47,6 @@ do
     if [ -f "composer.json" ]; then
         # install composer dependencies
         composer install
-        # verify direct google dependencies are up to date
-        # only run for travis crons
-        if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
-            if composer outdated --direct -m | grep -q 'google/' ; then
-                # output out-of-date libraries
-                echo "Some dependencies are out of date"
-                composer outdated --direct -m --strict
-            fi
-        fi
     fi
     echo "running phpunit in ${DIR}"
     if [ -f "vendor/bin/phpunit" ]; then
@@ -64,7 +54,7 @@ do
     else
         phpunit
     fi
-    if [ -f build/logs/clover.xml ]; then
+    if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
         cp build/logs/clover.xml \
             ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
     fi

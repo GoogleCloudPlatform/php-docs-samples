@@ -38,16 +38,6 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($labels));
         $this->assertEquals(5, count($labels));
 
-        $expectedOutput = <<<EOF
-Labels:
-cat
-mammal
-whiskers
-small to medium sized cats
-cat like mammal
-
-EOF;
-
-        $this->expectOutputString($expectedOutput);
+        $this->expectOutputRegex('/cat/');
     }
 }
