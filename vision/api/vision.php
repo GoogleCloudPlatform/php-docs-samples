@@ -28,4 +28,5 @@ $application->add(new Google\Cloud\Samples\Vision\DetectLogoCommand());
 $application->add(new Google\Cloud\Samples\Vision\DetectSafeSearchCommand());
 $application->add(new Google\Cloud\Samples\Vision\DetectImagePropertyCommand());
 $application->add(new Google\Cloud\Samples\Vision\DetectCropHintsCommand());
+$application->add(new Google\Cloud\Samples\Vision\DetectDocumentTextCommand());
 $application->run();
