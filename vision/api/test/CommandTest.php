@@ -36,7 +36,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         }
         $this->bucketName = getenv('GCS_BUCKET_NAME');
     }
-/*
+
     public function testLabelCommand()
     {
         $application = new Application();
@@ -395,7 +395,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('green:', $display);
         $this->assertContains('blue:', $display);
     }
-*/
+
     # Tests for Vision 1.1 Features
     public function testCropHintsCommand()
     {
