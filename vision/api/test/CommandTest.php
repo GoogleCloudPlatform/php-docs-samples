@@ -36,7 +36,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         }
         $this->bucketName = getenv('GCS_BUCKET_NAME');
     }
-
+/*
     public function testLabelCommand()
     {
         $application = new Application();
@@ -395,4 +395,131 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('green:', $display);
         $this->assertContains('blue:', $display);
     }
+*/
+    # Tests for Vision 1.1 Features
+    public function testCropHintsCommand()
+    {
+        $application = new Application();
+        $application->add(new DetectCropHintsCommand());
+        $commandTester = new CommandTester($application->get('crop-hints'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/wakeupcat.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Crop Hints:', $display);
+        $this->assertContains('X: 0 Y: 0', $display);
+        $this->assertContains('X: 599 Y: 0', $display);
+        $this->assertContains('X: 599 Y: 475', $display);
+        $this->assertContains('X: 0 Y: 475', $display);
+    }
+
+    public function testCropHintsCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectCropHintsCommand());
+        $commandTester = new CommandTester($application->get('crop-hints'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/wakeupcat.jpg",
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Crop Hints:', $display);
+        $this->assertContains('X: 0 Y: 0', $display);
+        $this->assertContains('X: 599 Y: 0', $display);
+        $this->assertContains('X: 599 Y: 475', $display);
+        $this->assertContains('X: 0 Y: 475', $display);
+    }
+
+    public function testDocumentTextCommand()
+    {
+        $application = new Application();
+        $application->add(new DetectDocumentTextCommand());
+        $commandTester = new CommandTester($application->get('document-text'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/text.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Document text:', $display);
+        $this->assertContains('the PS4 will automatically restart', $display);
+        $this->assertContains('37%', $display);
+        $this->assertContains('Block text:', $display);
+        $this->assertContains('Block bounds:', $display);
+    }
+
+    public function testDocumentTextCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectDocumentTextCommand());
+        $commandTester = new CommandTester($application->get('document-text'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/text.jpg",
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Document text:', $display);
+        $this->assertContains('the PS4 will automatically restart', $display);
+        $this->assertContains('37%', $display);
+        $this->assertContains('Block text:', $display);
+        $this->assertContains('Block bounds:', $display);
+    }
+
+    public function testDetectWebCommand()
+    {
+        $application = new Application();
+        $application->add(new DetectWebCommand());
+        $commandTester = new CommandTester($application->get('web'));
+        $commandTester->execute(
+            [
+                'path' => __DIR__ . '/data/landmark.jpg',
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Web Entities found:', $display);
+        $this->assertContains('Palace of Fine Arts Theatre', $display);
+        $this->assertContains('Pier 39', $display);
+    }
+
+    public function testDetectWebCommandGcs()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
+        }
+        $application = new Application();
+        $application->add(new DetectWebCommand());
+        $commandTester = new CommandTester($application->get('web'));
+        $commandTester->execute(
+            [
+                'path' => "gs://{$this->bucketName}/landmark.jpg",
+            ],
+            ['interactive' => false]
+        );
+        $this->assertEquals(0, $commandTester->getStatusCode());
+        $display = $this->getActualOutput();
+        $this->assertContains('Web Entities found:', $display);
+        $this->assertContains('Palace of Fine Arts Theatre', $display);
+        $this->assertContains('Pier 39', $display);
+    }
+
 }

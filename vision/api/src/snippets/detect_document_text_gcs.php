@@ -32,15 +32,15 @@ $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
 
-// fetch the storage object and annotate the image
+# Fetch the storage object and annotate the image
 $object = $storage->bucket($bucketName)->object($objectName);
 $image = $vision->image($object, ['DOCUMENT_TEXT_DETECTION']);
 $annotation = $vision->annotate($image);
-$document = $annotation->fullText();
 
-# Print out unstructured document text
+# Print out document text
+$document = $annotation->fullText();
 $text = $document->text();
-print('Document text: ' . $text . PHP_EOL);
+printf('Document text: %s' . PHP_EOL, $text);
 
 # Print out more detailed and structured information about document text
 foreach ($document->pages() as $page) {
@@ -49,16 +49,18 @@ foreach ($document->pages() as $page) {
         foreach ($block['paragraphs'] as $paragraph) {
             foreach ($paragraph['words'] as $word) {
                 foreach ($word['symbols'] as $symbol) {
-                    $block_text = $block_text . $symbol['text'];
+                    $block_text .= $symbol['text'];
                 }
+                $block_text .= ' ';
             }
+            $block_text .= "\n";
         }
-        print('Block text: ' . $block_text . PHP_EOL);
-        print('Block bounds:' . PHP_EOL);
+        printf('Block text: %s' . PHP_EOL, $block_text);
+        printf('Block bounds:' . PHP_EOL);
         foreach ($block['boundingBox']['vertices'] as $vertice) {
-            print('X: ' . $vertice['x'] . ' Y: ' . $vertice['y'] . PHP_EOL);
+            printf('X: %s Y: %s' . PHP_EOL, $vertice['x'], $vertice['y']);
         }
-        print(PHP_EOL);
+        printf(PHP_EOL);
     }
 }
 # [END vision_fulltext_detection_gcs]
