@@ -303,5 +303,4 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
         return ob_get_clean();
     }
-
 }

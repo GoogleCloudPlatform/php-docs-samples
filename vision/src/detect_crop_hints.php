@@ -39,8 +39,12 @@ function detect_crop_hints($projectId, $path)
         $boundingPoly = $hint->boundingPoly();
         $vertices = $boundingPoly['vertices'];
         foreach ((array) $vertices as $vertice) {
-            if (!isset($vertice['x'])) $vertice['x'] = 0;
-            if (!isset($vertice['y'])) $vertice['y'] = 0;
+            if (!isset($vertice['x'])) {
+                $vertice['x'] = 0;
+            }
+            if (!isset($vertice['y'])) {
+                $vertice['y'] = 0;
+            }
             printf('X: %s Y: %s' . PHP_EOL, $vertice['x'], $vertice['y']);
         }
     }
