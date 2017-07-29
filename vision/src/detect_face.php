@@ -43,5 +43,3 @@ function detect_face($projectId, $path)
     return $result;
 }
 # [END face_detection]
-
-

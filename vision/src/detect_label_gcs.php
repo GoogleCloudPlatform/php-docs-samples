@@ -45,11 +45,3 @@ function detect_label_gcs($projectId, $bucketName, $objectName)
     }
 }
 # [END detect_labels_gcs]
-
-
-
-
-
-
-
-# [END detect_labels_gcs]

@@ -49,5 +49,3 @@ function detect_face_gcs($projectId, $bucketName, $objectName)
     return $result;
 }
 # [END face_detection_gcs]
-
-
