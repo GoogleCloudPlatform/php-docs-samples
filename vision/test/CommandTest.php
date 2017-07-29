@@ -18,7 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
