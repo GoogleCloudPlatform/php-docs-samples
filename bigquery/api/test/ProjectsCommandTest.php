@@ -50,7 +50,7 @@ class ProjectsCommandTest extends \PHPUnit_Framework_TestCase
         $application->add(new ProjectsCommand());
         $commandTester = new CommandTester($application->get('projects'));
         $commandTester->execute(
-            [],
+            ['--max-results' => 1000],
             ['interactive' => false]
         );
 
