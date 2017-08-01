@@ -28,7 +28,7 @@ use Google\Auth\CredentialsLoader;
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\BigQuery\Connection\Rest;
 
-function list_projects()
+function list_projects($maxResults = null)
 {
     $keyFile = CredentialsLoader::fromWellKnownFile();
     $scopes = BigQueryClient::SCOPE;
@@ -36,7 +36,9 @@ function list_projects()
         'scopes' => $scopes,
         'keyFile' => $keyFile,
     ]);
-    $result = $connection->send('projects', 'list');
+    $result = $connection->send('projects', 'list', [
+        'maxResults' => $maxResults,
+    ]);
     foreach ($result['projects'] as $project) {
         print($project['id'] . PHP_EOL);
     }

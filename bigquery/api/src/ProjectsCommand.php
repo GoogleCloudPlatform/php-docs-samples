@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Google\Auth\CredentialsLoader;
 use Exception;
@@ -42,6 +43,13 @@ The <info>%command.name%</info> command lists all the projects associated with B
 
 EOF
             )
+            ->addOption(
+                'max-results',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The maximum number of projects to list.',
+                50
+            )
         ;
     }
 
@@ -50,7 +58,7 @@ EOF
         if (!$keyFile = CredentialsLoader::fromWellKnownFile()) {
             throw new Exception('Could not derive a key file. Run "gcloud auth login".');
         }
-        list_projects();
+        list_projects($input->getOption('max-results'));
     }
 
     private function getAccessTokenFromGcloud()
