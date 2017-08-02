@@ -25,15 +25,15 @@ namespace Google\Cloud\Samples\Speech;
 
 # [START streaming_recognize]
 use Google\Cloud\Speech\V1\SpeechClient;
-use google\cloud\speech\v1\RecognitionConfig;
-use google\cloud\speech\v1\StreamingRecognitionConfig;
-use google\cloud\speech\v1\StreamingRecognizeRequest;
+use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
+use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * $audoEncoding =  google\cloud\speech\v1\RecognitionConfig\AudioEncoding::WAV
+ * $audoEncoding =  Google\Cloud\Speech\V1\RecognitionConfig_AudioEncoding::WAV
  * streaming_recognize('/path/to/audiofile.wav', 'en-US');
  * ```.
  *
@@ -51,9 +51,9 @@ function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHe
         throw new \Exception('Install the grpc extension ' .
             '(pecl install grpc)');
     }
-    if (!class_exists('google\cloud\speech\v1\SpeechGrpcClient')) {
+    if (!class_exists('Google\Cloud\Speech\V1\SpeechGrpcClient')) {
         throw new \Exception('Install the proto client PHP library ' .
-            '(composer require google/proto-client-php)');
+            '(composer require google/proto-client)');
     }
     if (!class_exists('Google\GAX\GrpcConstants')) {
         throw new \Exception('Install the GAX library ' .

@@ -17,14 +17,9 @@
 
 namespace Google\Cloud\Samples\Speech\Tests;
 
-use Google\Cloud\Samples\Speech\TranscribeCommand;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-/**
- * Unit Tests for TablesCommand.
- */
-class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
+class speechTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected static $bucketName;
@@ -36,6 +31,16 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
             filesize($path) > 0;
     }
 
+    public function testBase64Audio()
+    {
+        $audioFile = __DIR__ . '/data/audio32KHz.raw';
+
+        $base64Audio = require __DIR__ . '/../src/base64_encode_audio.php';
+
+        $audioFileResource = fopen($audioFile, 'r');
+        $this->assertEquals(base64_decode($base64Audio), stream_get_contents($audioFileResource));
+    }
+
     /** @dataProvider provideTranscribe */
     public function testTranscribe($audioFile, $encoding, $sampleRate, $options = [])
     {
@@ -45,19 +50,18 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$bucketName && 0 === strpos($audioFile, 'gs://')) {
             $this->markTestSkipped('You must set the GOOGLE_BUCKET_NAME environment variable.');
         }
-        $application = new Application();
-        $application->add(new TranscribeCommand());
-        $commandTester = new CommandTester($application->get('transcribe'));
-        $commandTester->execute(
-            [
-                'audio-file' => $audioFile,
-                '--encoding' => $encoding,
-                '--sample-rate' => $sampleRate,
-            ] + $options,
-            ['interactive' => false]
-        );
+        $output = $this->runCommand('transcribe', [
+            'audio-file' => $audioFile,
+            '--encoding' => $encoding,
+            '--sample-rate' => $sampleRate,
+        ] + $options);
 
-        $this->expectOutputRegex("/how old is the Brooklyn Bridge/");
+        $this->assertContains('how old is the Brooklyn Bridge', $output);
+
+        // Check for the word time offsets
+        if (isset($options['--async'])) {
+            $this->assertRegexp('/start: .*s, end: .*s/', $output);
+        }
     }
 
     public function provideTranscribe()
@@ -71,5 +75,19 @@ class TranscribeCommandTest extends \PHPUnit_Framework_TestCase
             ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
             ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000', ['--async' => true]],
         ];
+    }
+
+    private function runCommand($commandName, $args = [])
+    {
+        $application = require __DIR__ . '/../speech.php';
+        $command = $application->get($commandName);
+        $commandTester = new CommandTester($command);
+
+        ob_start();
+        $commandTester->execute(
+            $args,
+            ['interactive' => false]);
+
+        return ob_get_clean();
     }
 }

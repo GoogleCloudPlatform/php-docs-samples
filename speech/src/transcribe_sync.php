@@ -42,13 +42,25 @@ use Google\Cloud\Speech\SpeechClient;
  */
 function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
 {
+    // Create the speech client
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
+
+    // When true, time offsets for every word will be included in the response.
+    $options['enableWordTimeOffsets'] = false;
+
+    // Make the API call
     $results = $speech->recognize(
         fopen($audioFile, 'r'),
         $options
     );
-    print_r($results);
+
+    // Print the results
+    $alternatives = $results[0]->alternatives();
+    foreach ($alternatives as $alternative) {
+        printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
+        printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
+    }
 }
 # [END transcribe_sync]
