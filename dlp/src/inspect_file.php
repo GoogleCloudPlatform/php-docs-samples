@@ -56,9 +56,7 @@ function inspect_file(
 
     // Construct file data to inspect
     $content = new ContentItem();
-    // $content->setType('image/png');
-    $content->setType(
-        mime_content_type($path) ?: 'application/octet-stream');
+    $content->setType(mime_content_type($path) ?: 'application/octet-stream');
     $content->setData(file_get_contents($path));
 
     // Run request
