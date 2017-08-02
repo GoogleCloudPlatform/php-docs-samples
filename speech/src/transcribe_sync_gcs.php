@@ -23,53 +23,49 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-use Exception;
-# [START transcribe_async_gcs]
+# [START transcribe_sync_gcs]
 use Google\Cloud\Speech\SpeechClient;
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_async_gcs('your-bucket-name', 'audiofile.wav');
+ * transcribe_sync_gcs('your-bucket-name', 'audiofile.wav');
  * ```.
  *
- * @param string $bucketName The Cloud Storage bucket name.
- * @param string $objectName The Cloud Storage object name.
- * @param string $languageCode The Cloud Storage
+ * @param string $audioFile path to an audio file.
+ * @param string $languageCode The language of the content to
  *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
  * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US', $options = [])
+function transcribe_sync_gcs($bucketName, $objectName, $languageCode = 'en-US', $options = [])
 {
+    // Create the speech client
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
+
+    // Fetch the storage object
     $storage = new StorageClient();
-    // fetch the storage object
     $object = $storage->bucket($bucketName)->object($objectName);
-    $operation = $speech->beginRecognizeOperation(
+
+    // When true, time offsets for every word will be included in the response.
+    $options['enableWordTimeOffsets'] = true;
+
+    // Make the API call
+    $results = $speech->recognize(
         $object,
         $options
     );
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($operation) {
-        print('Waiting for operation to complete' . PHP_EOL);
-        $operation->reload();
-        if (!$operation->isComplete()) {
-            throw new Exception('Job has not yet completed', 500);
-        }
-    });
 
-    if ($operation->isComplete()) {
-        if (empty($results = $operation->results())) {
-            $results = $operation->info();
-        }
-        print_r($results);
+    // Print the results
+    $alternatives = $results[0]->alternatives();
+    foreach ($alternatives as $alternative) {
+        printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
+        printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
     }
 }
-# [END transcribe_async_gcs]
+# [END transcribe_sync_gcs]
