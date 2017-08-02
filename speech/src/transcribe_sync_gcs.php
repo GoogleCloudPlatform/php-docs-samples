@@ -53,7 +53,7 @@ function transcribe_sync_gcs($bucketName, $objectName, $languageCode = 'en-US', 
     $object = $storage->bucket($bucketName)->object($objectName);
 
     // When true, time offsets for every word will be included in the response.
-    $options['enableWordTimeOffsets'] = true;
+    $options['enableWordTimeOffsets'] = false;
 
     // Make the API call
     $results = $speech->recognize(
