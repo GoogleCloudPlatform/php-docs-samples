@@ -41,7 +41,7 @@ before_install:
   - mkdir -p build/logs
 
 before_script:
-  - pecl install grpc
+  - travis_retry pecl install grpc
 
 script:
   - testing/run_all_tests.sh
