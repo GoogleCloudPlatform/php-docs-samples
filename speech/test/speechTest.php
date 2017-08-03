@@ -42,24 +42,24 @@ class speechTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @dataProvider provideTranscribe */
-    public function testTranscribe($audioFile, $encoding, $sampleRate, $options = [])
+    public function testTranscribe($command, $audioFile, $encoding, $sampleRate)
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!self::$bucketName && 0 === strpos($audioFile, 'gs://')) {
+        if (!self::$bucketName && in_array($command, ['transcribe-gcs', 'transcribe-async-gcs'])) {
             $this->markTestSkipped('You must set the GOOGLE_BUCKET_NAME environment variable.');
         }
-        $output = $this->runCommand('transcribe', [
+        $output = $this->runCommand($command, [
             'audio-file' => $audioFile,
             '--encoding' => $encoding,
             '--sample-rate' => $sampleRate,
-        ] + $options);
+        ]);
 
         $this->assertContains('how old is the Brooklyn Bridge', $output);
 
         // Check for the word time offsets
-        if (isset($options['--async'])) {
+        if (in_array($command, ['transcribe-words', 'transcribe-async-words'])) {
             $this->assertRegexp('/start: .*s, end: .*s/', $output);
         }
     }
@@ -68,12 +68,13 @@ class speechTest extends \PHPUnit_Framework_TestCase
     {
         self::$bucketName = getenv('GOOGLE_BUCKET_NAME');
         return [
-            [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
-            [__DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
-            [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000', ['--stream' => true]],
-            [__DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000', ['--async' => true]],
-            ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
-            ['gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000', ['--async' => true]],
+            ['transcribe', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
+            ['transcribe', __DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
+            ['transcribe-gcs', 'gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
+            ['transcribe-async-gcs', 'gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
+            ['transcribe-words', __DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
+            ['transcribe-async-words', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
+            ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
         ];
     }
 
