@@ -187,12 +187,10 @@ the Google Cloud Speech API.
 EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
-        $encoding = $input->getOption('encoding');
-        $encodingEnum = constant("Google\Cloud\Speech\V1\RecognitionConfig_AudioEncoding::$encoding");
         streaming_recognize(
             $input->getArgument('audio-file'),
             $input->getOption('language-code'),
-            $encodingEnum,
+            $input->getOption('encoding'),
             $input->getOption('sample-rate')
         );
     });
