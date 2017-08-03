@@ -46,7 +46,6 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(self::$metricId, $output);
 
         // ensure the metric gets created
-        $this->eventuallyConsistentRetryCount = 20;
         $this->runEventuallyConsistentTest(function () {
             $output = $this->runCommand('get-descriptor', [
                 'metric_id' => self::$metricId,
@@ -64,14 +63,14 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(self::$metricId, $output);
     }
 
-    /** @depends testCreateMetric */
+    /** @depends testGetDescriptor */
     public function testListDescriptors()
     {
         $output = $this->runCommand('list-descriptors');
         $this->assertContains(self::$metricId, $output);
     }
 
-    /** @depends testCreateMetric */
+    /** @depends testListDescriptors */
     public function testDeleteMetric()
     {
         $output = $this->runCommand('delete-metric', [
@@ -132,10 +131,15 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($command);
 
         ob_start();
-        $commandTester->execute(
-            ['project_id' => self::$projectId] + $args,
-            ['interactive' => false]);
-
+        try {
+            $commandTester->execute(
+                ['project_id' => self::$projectId] + $args,
+                ['interactive' => false]);
+        } catch (\Google\GAX\Exception $e) {
+            // if the command throws an error cast it as a string (as this would be the output)
+            $application->renderException($e, $commandTester->getOutput());
+            return $commandTester->getDisplay();
+        }
         return ob_get_clean();
     }
 }
