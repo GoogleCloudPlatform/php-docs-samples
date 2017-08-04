@@ -93,6 +93,14 @@ To run the Spanner Samples:
       update-data                   Updates sample data in the database.
 
 
+## Troubleshooting
+
+If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:
+
+```
+[Google\Cloud\Core\Exception\GoogleException]
+No project ID was provided, and we were unable to detect a default project ID.
+```
 
 ## The client library
 
