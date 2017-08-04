@@ -19,9 +19,7 @@ namespace Google\Cloud\Samples\Auth;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
@@ -46,6 +44,7 @@ EOF
 
 // Create auth-cloud-explicit Command.
 $application->add((new Command('auth-cloud-explicit'))
+    ->addArgument('serviceAccountPath', InputArgument::REQUIRED, 'Path to your service account.')
     ->setDescription('Authenticate to a cloud client library using a service account explicitly.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command authenticates to a cloud client library
@@ -56,7 +55,41 @@ using a service account explicitly.
 EOF
     )
     ->setCode(function ($input, $output) {
-        auth_cloud_explicit();
+        auth_cloud_explicit($input->getArgument('serviceAccountPath'));
+    })
+);
+
+// Create auth-cloud-explicit-compute-engine Command.
+$application->add((new Command('auth-cloud-explicit-compute-engine'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->setDescription('Authenticate to a cloud client library using Compute Engine credentials explicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud client library
+using Compute Engine credentials explicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        auth_cloud_explicit_compute_engine($input->getArgument('projectId'));
+    })
+);
+
+// Create auth-cloud-explicit-app-engine Command.
+$application->add((new Command('auth-cloud-explicit-app-engine'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->setDescription('Authenticate to a cloud client library using App Engine Standard credentials explicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud client library
+using App Engine Standard credentials explicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        auth_cloud_explicit_app_engine($input->getArgument('projectId'));
     })
 );
 

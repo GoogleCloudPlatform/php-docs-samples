@@ -12,7 +12,9 @@
         },
         "files": [
             "src/auth_cloud_implicit.php",
-            "src/auth_cloud_explicit.php"
+            "src/auth_cloud_explicit.php",
+            "src/auth_cloud_explicit_compute_engine.php",
+            "src/auth_cloud_explicit_app_engine.php"
         ]
     },
     "require-dev": {

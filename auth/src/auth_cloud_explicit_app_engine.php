@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,45 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
+ */
 
 # [START auth_cloud_explicit_app_engine]
+namespace Google\Cloud\Samples\Auth;
+
+// Imports AppIdentityCredentials and the Google Cloud Storage client library.
 use Google\Auth\Credentials\AppIdentityCredentials;
 use Google\Cloud\Storage\StorageClient;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
 
-// create the Silex application
-$app = new Application();
-
-$app->get('/', function () use ($app) {
-    # Explicitly use service account credentials by using App Engine credentials.
+function auth_cloud_explicit_app_engine($projectId)
+{
     # Learn more about scopes at https://cloud.google.com/storage/docs/authentication#oauth-scopes
-    $projectId = $app['project_id'];
     $scope = 'https://www.googleapis.com/auth/devstorage.read_only';
-    $gae = new AppIdentityCredentials($scope);
+    $gae_credentials = new AppIdentityCredentials($scope);
     $config = [
         'projectId' => $projectId,
-        'credentialsFetcher' => $gae,
+        'credentialsFetcher' => $gae_credentials,
     ];
     $storage = new StorageClient($config);
 
     # Make an authenticated API request (listing storage buckets)
-    $buckets = $storage->buckets();
-    # [END auth_cloud_explicit_compute_engine]
-
-    $content = '';
-    foreach ($buckets as $bucket) {
-        $content .= $bucket->name();
-        $content .= ', ';
+    foreach ($storage->buckets() as $bucket) {
+        printf('Bucket: %s' . PHP_EOL, $bucket->name());
     }
-    $content = substr($content, 0, -2);
-    $escapedContent = htmlspecialchars($content);
-    $html = "<h1>Storage Buckets</h1>";
-    if ($content) {
-        $html .= "<p><strong>Your Cloud Storage buckets:</strong><p><p>$escapedContent</p>";
-    }
-    return $html;
-});
-
-return $app;
-
+}
+# [END auth_cloud_explicit_app_engine]
