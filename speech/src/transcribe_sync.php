@@ -47,9 +47,6 @@ function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
         'languageCode' => $languageCode,
     ]);
 
-    // When true, time offsets for every word will be included in the response.
-    $options['enableWordTimeOffsets'] = false;
-
     // Make the API call
     $results = $speech->recognize(
         fopen($audioFile, 'r'),

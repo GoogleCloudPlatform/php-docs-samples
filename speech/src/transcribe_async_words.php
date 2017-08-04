@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 use Exception;
-# [START transcribe_async]
+# [START transcribe_async_words]
 use Google\Cloud\Speech\SpeechClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
@@ -32,7 +32,7 @@ use Google\Cloud\Core\ExponentialBackoff;
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_async('/path/to/audiofile.wav');
+ * transcribe_async_words('/path/to/audiofile.wav');
  * ```.
  *
  * @param string $audioFile path to an audio file.
@@ -42,12 +42,15 @@ use Google\Cloud\Core\ExponentialBackoff;
  *
  * @return string the text transcription
  */
-function transcribe_async($audioFile, $languageCode = 'en-US', $options = [])
+function transcribe_async_words($audioFile, $languageCode = 'en-US', $options = [])
 {
     // Create the speech client
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
+
+    // When true, time offsets for every word will be included in the response.
+    $options['enableWordTimeOffsets'] = true;
 
     // Create the asyncronous recognize operation
     $operation = $speech->beginRecognizeOperation(
@@ -71,7 +74,13 @@ function transcribe_async($audioFile, $languageCode = 'en-US', $options = [])
         foreach ($alternatives as $alternative) {
             printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
             printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
+            foreach ($alternative['words'] as $wordInfo) {
+                printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
+                    $wordInfo['word'],
+                    $wordInfo['startTime'],
+                    $wordInfo['endTime']);
+            }
         }
     }
 }
-# [END transcribe_async]
+# [END transcribe_async_words]

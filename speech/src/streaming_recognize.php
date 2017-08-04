@@ -28,6 +28,7 @@ use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
+use Google\Cloud\Speech\V1\RecognitionConfig_AudioEncoding;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
@@ -64,8 +65,10 @@ function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHe
     try {
         $config = new RecognitionConfig();
         $config->setLanguageCode($languageCode);
-        $config->setEncoding($encoding);
         $config->setSampleRateHertz($sampleRateHertz);
+        // encoding must be an enum, convert from string
+        $encodingEnum = constant(RecognitionConfig_AudioEncoding::class . '::' . $encoding);
+        $config->setEncoding($encodingEnum);
 
         $strmConfig = new StreamingRecognitionConfig();
         $strmConfig->setConfig($config);

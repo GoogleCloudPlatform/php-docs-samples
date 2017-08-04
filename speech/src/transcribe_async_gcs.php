@@ -55,9 +55,6 @@ function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US',
     $storage = new StorageClient();
     $object = $storage->bucket($bucketName)->object($objectName);
 
-    // When true, time offsets for every word will be included in the response.
-    $options['enableWordTimeOffsets'] = true;
-
     // Create the asyncronous recognize operation
     $operation = $speech->beginRecognizeOperation(
         $object,
@@ -80,12 +77,6 @@ function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US',
         foreach ($alternatives as $alternative) {
             printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
             printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
-            foreach ($alternative['words'] as $wordInfo) {
-                printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
-                    $wordInfo['word'],
-                    $wordInfo['startTime'],
-                    $wordInfo['endTime']);
-            }
         }
     }
 }

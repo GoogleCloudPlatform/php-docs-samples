@@ -14,8 +14,10 @@
             "src/streaming_recognize.php",
             "src/transcribe_async.php",
             "src/transcribe_async_gcs.php",
+            "src/transcribe_async_words.php",
             "src/transcribe_sync.php",
-            "src/transcribe_sync_gcs.php"
+            "src/transcribe_sync_gcs.php",
+            "src/transcribe_sync_words.php"
         ]
     },
     "require-dev": {
