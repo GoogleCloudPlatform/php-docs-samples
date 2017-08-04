@@ -13,7 +13,7 @@ complex) [GRPC][grpc] API. The GRPC API also allows streaming requests.
 
 Install the dependencies for this library via [composer](https://getcomposer.org)
 
-    $ cd /path/to/php-docs-samples/speech/api
+    $ cd /path/to/php-docs-samples/speech
     $ composer install
 
 Configure your project using [Application Default Credentials][adc]
