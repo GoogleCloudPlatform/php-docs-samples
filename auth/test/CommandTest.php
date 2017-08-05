@@ -51,16 +51,18 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthCloudExplicitComputeEngineCommand()
     {
-        $this->setExpectedException('Google\Cloud\Core\Exception\ServiceException');
+        #$this->setExpectedException('Google\Cloud\Core\Exception\ServiceException');
         $output = $this->runCommand(
             'auth-cloud-explicit-compute-engine', null, $this->projectId);
+        $this->assertContains('Undefined index: access_token', $output);
     }
 
     public function testAuthCloudExplicitAppEngineCommand()
     {
-        $this->setExpectedException('Google\Cloud\Core\Exception\ServiceException');
+        #$this->setExpectedException('Google\Cloud\Core\Exception\ServiceException');
         $output = $this->runCommand(
             'auth-cloud-explicit-app-engine', null, $this->projectId);
+        $this->assertContains('Undefined index: access_token', $output);
     }
 
     private function runCommand($commandName, $serviceAccountPath=null, $projectId=null)
@@ -78,12 +80,18 @@ class CommandTest extends \PHPUnit_Framework_TestCase
                 ['interactive' => false]
             );
         } else if ($projectId) {
-            $commandTester->execute(
-                [
-                    'projectId'=> $projectId
-                ],
-                ['interactive' => false]
-            );
+            try {
+                $commandTester->execute(
+                    [
+                        'projectId'=> $projectId
+                    ],
+                    ['interactive' => false]
+                );
+            } catch (\Google\Cloud\Core\Exception\ServiceException $e) {
+                ob_get_clean();
+                $application->renderException($e, $commandTester->getOutput());
+                return $commandTester->getDisplay();
+            }
         } else {
             $commandTester->execute([], ['interactive' => false]);
         }
