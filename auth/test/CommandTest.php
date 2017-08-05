@@ -51,7 +51,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthCloudExplicitComputeEngineCommand()
     {
-        #$this->setExpectedException('Google\Cloud\Core\Exception\ServiceException');
         $output = $this->runCommand(
             'auth-cloud-explicit-compute-engine', null, $this->projectId);
         $this->assertContains('Undefined index: access_token', $output);
@@ -59,7 +58,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthCloudExplicitAppEngineCommand()
     {
-        #$this->setExpectedException('Google\Cloud\Core\Exception\ServiceException');
         $output = $this->runCommand(
             'auth-cloud-explicit-app-engine', null, $this->projectId);
         $this->assertContains('Undefined index: access_token', $output);
