@@ -48,7 +48,7 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
 
         $expectedPatterns = [
             '/content: know/',
-            '/http:\/\/en.wikipedia.org\/wiki\/San_Jose,_California/'
+            '/type: PROPER/'
         ];
 
         foreach ($expectedPatterns as $expectedPattern) {
@@ -66,7 +66,7 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
 
         $expectedPatterns = [
             '/content: know/',
-            '/http:\/\/en.wikipedia.org\/wiki\/San_Jose,_California/'
+            '/type: PROPER/'
         ];
 
         foreach ($expectedPatterns as $expectedPattern) {
@@ -78,7 +78,7 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('entities', 'Do you know the way to San Jose?');
 
-        $this->assertRegExp('/http:\/\/en.wikipedia.org/', $output);
+        $this->assertRegExp('/type: PROPER/', $output);
     }
 
     public function testEntitiesFromStorageObject()
@@ -89,7 +89,7 @@ class EntitiesCommandTest extends \PHPUnit_Framework_TestCase
 
         $output = $this->runCommand('entities', $gcsFile);
 
-        $this->assertRegExp('/http:\/\/en.wikipedia.org/', $output);
+        $this->assertRegExp('/type: PROPER/', $output);
     }
 
     public function testSentiment()
