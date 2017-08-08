@@ -135,7 +135,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
             $commandTester->execute(
                 ['project_id' => self::$projectId] + $args,
                 ['interactive' => false]);
-        } catch (\Google\GAX\Exception $e) {
+        } catch (\Google\GAX\ApiException $e) {
             // if the command throws an error cast it as a string (as this would be the output)
             $application->renderException($e, $commandTester->getOutput());
             return $commandTester->getDisplay();
