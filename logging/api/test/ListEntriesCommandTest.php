@@ -84,6 +84,6 @@ class ListEntriesCommandTest extends \PHPUnit_Framework_TestCase
             );
             $output = ob_get_clean();
             $this->assertRegexp('/: Test Message/', $output);
-        });
+        }, 10);
     }
 }
