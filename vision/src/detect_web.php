@@ -62,7 +62,9 @@ function detect_web($projectId, $path)
         printf('%d Web Entities found:' . PHP_EOL, count($web->entities()));
         foreach ($web->entities() as $entity) {
             printf('Score: %f' . PHP_EOL, $entity->score());
-            printf('Description: %s' . PHP_EOL, $entity->description());
+            if (isset($entity->info()['description'])) {
+                printf('Description: %s' . PHP_EOL, $entity->description());
+            }
             printf(PHP_EOL);
         }
     }
