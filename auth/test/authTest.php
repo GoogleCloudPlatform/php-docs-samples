@@ -23,7 +23,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Unit Tests for transcribe commands.
  */
-class CommandTest extends \PHPUnit_Framework_TestCase
+class authTest extends \PHPUnit_Framework_TestCase
 {
 
     public function setUp()
@@ -63,6 +63,33 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Undefined index: access_token', $output);
     }
 
+    public function testAuthApiImplicitCommand()
+    {
+        $output = $this->runCommand('auth-api-implicit', null, $this->projectId);
+        $this->assertContains($this->bucketName, $output);
+    }
+
+    public function testAuthApiExplicitCommand()
+    {
+        $serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+        $output = $this->runCommand('auth-api-explicit', $serviceAccountPath, $this->projectId);
+        $this->assertContains($this->bucketName, $output);
+    }
+
+    public function testAuthApiExplicitComputeEngineCommand()
+    {
+        $output = $this->runCommand(
+            'auth-api-explicit-compute-engine', null, $this->projectId);
+        $this->assertContains('Invalid Credentials', $output);
+    }
+
+    public function testAuthApiExplicitAppEngineCommand()
+    {
+        $output = $this->runCommand(
+            'auth-api-explicit-app-engine', null, $this->projectId);
+        $this->assertContains('Invalid Credentials', $output);
+    }
+
     private function runCommand($commandName, $serviceAccountPath=null, $projectId=null)
     {
         $application = require __DIR__ . '/../auth.php';
@@ -70,7 +97,21 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($command);
 
         ob_start();
-        if ($serviceAccountPath) {
+        if ($serviceAccountPath and $projectId) {
+            try {
+                $commandTester->execute(
+                    [
+                        'serviceAccountPath'=> $serviceAccountPath,
+                        'projectId'=> $projectId   
+                    ],
+                    ['interactive' => false]
+                );
+            } catch (\Google\Cloud\Core\Exception\ServiceException $e) {
+                ob_get_clean();
+                $application->renderException($e, $commandTester->getOutput());
+                return $commandTester->getDisplay();
+            }
+        } else if ($serviceAccountPath) {
             $commandTester->execute(
                 [
                     'serviceAccountPath'=> $serviceAccountPath
@@ -86,6 +127,10 @@ class CommandTest extends \PHPUnit_Framework_TestCase
                     ['interactive' => false]
                 );
             } catch (\Google\Cloud\Core\Exception\ServiceException $e) {
+                ob_get_clean();
+                $application->renderException($e, $commandTester->getOutput());
+                return $commandTester->getDisplay();
+            } catch (\Google_Service_Exception $e) {
                 ob_get_clean();
                 $application->renderException($e, $commandTester->getOutput());
                 return $commandTester->getDisplay();

@@ -1,0 +1,10 @@
+runtime: php55
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: index.php
+
+env_variables:
+  GCLOUD_PROJECT: your-project-id

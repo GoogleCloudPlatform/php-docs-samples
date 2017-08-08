@@ -93,6 +93,79 @@ EOF
     })
 );
 
+// Create auth-api-implicit Command.
+$application->add((new Command('auth-api-implicit'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->setDescription('Authenticate to a cloud API using a service account implicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud API using a
+service account implicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        auth_api_implicit($input->getArgument('projectId'));
+    })
+);
+
+// Create auth-api-explicit Command.
+$application->add((new Command('auth-api-explicit'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->addArgument('serviceAccountPath', InputArgument::REQUIRED, 'Path to your service account.')
+    ->setDescription('Authenticate to a cloud API using a service account explicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud API using a
+service account implicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        $serviceAccountPath = $input->getArgument('serviceAccountPath');
+        auth_api_explicit($projectId, $serviceAccountPath);
+    })
+);
+
+// Create auth-api-explicit-compute-engine Command.
+$application->add((new Command('auth-api-explicit-compute-engine'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->setDescription('Authenticate to a cloud API using Compute Engine credentials explicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud API using
+Compute Engine credentials explicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        auth_api_explicit_compute_engine($projectId);
+    })
+);
+
+// Create auth-api-explicit-app-engine Command.
+$application->add((new Command('auth-api-explicit-app-engine'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->setDescription('Authenticate to a cloud API using App Engine Standard credentials explicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud API using
+Compute Engine credentials explicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        auth_api_explicit_compute_engine($projectId);
+    })
+);
+
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
 }
