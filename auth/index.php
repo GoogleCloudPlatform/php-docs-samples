@@ -38,6 +38,3 @@ if (GCECredentials::onGce()) {
     auth_api_explicit_app_engine(getenv('GCLOUD_PROJECT'));
 }
 print('</pre>');
-
-
-

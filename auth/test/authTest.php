@@ -32,20 +32,20 @@ class authTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-        $this->bucketName = getenv('GCS_BUCKET_NAME');
+        $this->bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         $this->projectId = getenv('GCLOUD_PROJECT');
     }
 
     public function testAuthCloudImplicitCommand()
     {
-        $output = $this->runCommand('auth-cloud-implicit');
+        $output = $this->runCommand('auth-cloud-implicit', null, $this->projectId);
         $this->assertContains($this->bucketName, $output);
     }
 
     public function testAuthCloudExplicitCommand()
     {
         $serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        $output = $this->runCommand('auth-cloud-explicit', $serviceAccountPath);
+        $output = $this->runCommand('auth-cloud-explicit', $serviceAccountPath, $this->projectId);
         $this->assertContains($this->bucketName, $output);
     }
 
@@ -97,7 +97,7 @@ class authTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($command);
 
         ob_start();
-        if ($serviceAccountPath and $projectId) {
+        if ($serviceAccountPath) {
             try {
                 $commandTester->execute(
                     [
@@ -111,13 +111,6 @@ class authTest extends \PHPUnit_Framework_TestCase
                 $application->renderException($e, $commandTester->getOutput());
                 return $commandTester->getDisplay();
             }
-        } else if ($serviceAccountPath) {
-            $commandTester->execute(
-                [
-                    'serviceAccountPath'=> $serviceAccountPath
-                ],
-                ['interactive' => false]
-            );
         } else if ($projectId) {
             try {
                 $commandTester->execute(

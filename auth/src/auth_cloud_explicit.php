@@ -26,12 +26,13 @@ namespace Google\Cloud\Samples\Auth;
 // Imports the Google Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
-function auth_cloud_explicit($serviceAccountPath)
+function auth_cloud_explicit($projectId, $serviceAccountPath)
 {
     # Explicitly use service account credentials by specifying the private key
     # file.
     $config = [
         'keyFilePath' => $serviceAccountPath,
+        'projectId' => $projectId,
     ];
     $storage = new StorageClient($config);
 

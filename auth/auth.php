@@ -28,6 +28,7 @@ $application = new Application('Auth');
 
 // Create auth-cloud-implicit Command.
 $application->add((new Command('auth-cloud-implicit'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
     ->setDescription('Authenticate to a cloud client library using a service account implicitly.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command authenticates to a cloud client library
@@ -38,13 +39,14 @@ using a service account implicitly.
 EOF
     )
     ->setCode(function ($input, $output) {
-        auth_cloud_implicit();
+        auth_cloud_implicit($input->getArgument('projectId'));
     })
 );
 
 // Create auth-cloud-explicit Command.
 $application->add((new Command('auth-cloud-explicit'))
     ->addArgument('serviceAccountPath', InputArgument::REQUIRED, 'Path to your service account.')
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
     ->setDescription('Authenticate to a cloud client library using a service account explicitly.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command authenticates to a cloud client library
@@ -55,7 +57,7 @@ using a service account explicitly.
 EOF
     )
     ->setCode(function ($input, $output) {
-        auth_cloud_explicit($input->getArgument('serviceAccountPath'));
+        auth_cloud_explicit($input->getArgument('projectId'), $input->getArgument('serviceAccountPath'));
     })
 );
 

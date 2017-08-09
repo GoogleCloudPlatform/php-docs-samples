@@ -22,6 +22,7 @@
 
 # [START auth_api_explicit_compute_engine]
 namespace Google\Cloud\Samples\Auth;
+
 use Google\Auth\Credentials\GCECredentials;
 use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
