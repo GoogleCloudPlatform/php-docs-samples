@@ -25,7 +25,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class authTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
