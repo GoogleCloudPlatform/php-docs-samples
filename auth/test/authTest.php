@@ -48,20 +48,6 @@ class authTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($this->bucketName, $output);
     }
 
-    public function testAuthCloudExplicitComputeEngineCommand()
-    {
-        $output = $this->runCommand(
-            'auth-cloud-explicit-compute-engine', $this->projectId);
-        $this->assertContains('Undefined index: access_token', $output);
-    }
-
-    public function testAuthCloudExplicitAppEngineCommand()
-    {
-        $output = $this->runCommand(
-            'auth-cloud-explicit-app-engine', $this->projectId);
-        $this->assertContains('Undefined index: access_token', $output);
-    }
-
     public function testAuthApiImplicitCommand()
     {
         $output = $this->runCommand('auth-api-implicit', $this->projectId);
@@ -75,20 +61,6 @@ class authTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($this->bucketName, $output);
     }
 
-    public function testAuthApiExplicitComputeEngineCommand()
-    {
-        $output = $this->runCommand(
-            'auth-api-explicit-compute-engine', $this->projectId);
-        $this->assertContains('Invalid Credentials', $output);
-    }
-
-    public function testAuthApiExplicitAppEngineCommand()
-    {
-        $output = $this->runCommand(
-            'auth-api-explicit-app-engine', $this->projectId);
-        $this->assertContains('Invalid Credentials', $output);
-    }
-
     private function runCommand($commandName, $projectId = null, $serviceAccountPath=null)
     {
         $application = require __DIR__ . '/../auth.php';
@@ -100,20 +72,11 @@ class authTest extends \PHPUnit_Framework_TestCase
         ]);
 
         ob_start();
-        try {
-            $commandTester->execute(
-                $args,
-                ['interactive' => false]
-            );
-        } catch (\Google\Cloud\Core\Exception\ServiceException $e) {
-            ob_get_clean();
-            $application->renderException($e, $commandTester->getOutput());
-            return $commandTester->getDisplay();
-        } catch (\Google_Service_exception $e) {
-            ob_get_clean();
-            $application->renderException($e, $commandTester->getOutput());
-            return $commandTester->getDisplay();
-        }
+        $commandTester->execute(
+            $args,
+            ['interactive' => false]
+        );
+        
         return ob_get_clean();
     }
 }
