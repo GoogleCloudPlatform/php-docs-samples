@@ -18,23 +18,30 @@
 namespace Google\Cloud\Samples\Auth;
 
 use Google\Auth\Credentials\GCECredentials;
+use google\appengine\api\app_identity\AppIdentityService;
 
-// Install composer dependencies with "composer install"
-// @see http://getcomposer.org for more information.
 require __DIR__ . '/vendor/autoload.php';
 
-print('<pre>');
-if (GCECredentials::onGce()) {
-    printf("Buckets retrieved using the cloud client library:\n");
-    auth_cloud_explicit_compute_engine(getenv('GCLOUD_PROJECT'));
-    printf("\n");
-    printf("Buckets retrieved using the api client:\n");
-    auth_api_explicit_compute_engine(getenv('GCLOUD_PROJECT'));
-} else {
-    printf("Buckets retrieved using the cloud client library:\n");
-    auth_cloud_explicit_app_engine(getenv('GCLOUD_PROJECT'));
-    printf("\n");
-    printf("Buckets retrieved using the api client:\n");
-    auth_api_explicit_app_engine(getenv('GCLOUD_PROJECT'));
-}
-print('</pre>');
+$onGce = GCECredentials::onGce();
+$projectId = $onGce
+   ? getenv('GCLOUD_PROJECT')
+   : AppIdentityService::getApplicationId();
+?>
+
+<h1>Buckets retrieved using the cloud client library:</h1>
+<pre>
+<?php if ($onGce): ?>
+<?php auth_cloud_explicit_compute_engine($projectId) ?>
+<?php else: ?>
+<?php auth_cloud_explicit_app_engine($projectId) ?>
+<?php endif ?>
+</pre>
+
+<h1>Buckets retrieved using the api client:</h1>
+<pre>
+<?php if ($onGce): ?>
+<?php auth_api_explicit_compute_engine($projectId) ?>
+<?php else: ?>
+<?php auth_api_explicit_app_engine($projectId) ?>
+<?php endif ?>
+</pre>

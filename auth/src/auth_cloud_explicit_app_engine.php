@@ -31,10 +31,10 @@ function auth_cloud_explicit_app_engine($projectId)
 {
     # Learn more about scopes at https://cloud.google.com/storage/docs/authentication#oauth-scopes
     $scope = 'https://www.googleapis.com/auth/devstorage.read_only';
-    $gae_credentials = new AppIdentityCredentials($scope);
+    $gaeCredentials = new AppIdentityCredentials($scope);
     $config = [
         'projectId' => $projectId,
-        'credentialsFetcher' => $gae_credentials,
+        'credentialsFetcher' => $gaeCredentials,
     ];
     $storage = new StorageClient($config);
 

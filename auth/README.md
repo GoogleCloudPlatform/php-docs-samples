@@ -19,7 +19,7 @@ methods will work on any Google Cloud API.
     $ cd php-docs-samples/auth
 ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
-    Run `php composer.phar install` (if composer is installed locally) or `composer install`
+    Run `php composer.phar install --no-dev` (if composer is installed locally) or `composer install --no-dev`
     (if composer is installed globally).
 5.  Run `php auth.php`. The following commands are available and work on command line:
 ```
@@ -41,9 +41,8 @@ method only works on App Engine Standard.
 7. You can test the samples that use Compute Engine / App Engine credentials by
 deploying to either App Engine Flexible (which allows usage of Compute Engine
 credentials since App Engine Flexible apps run on Compute Engine instances) or
-App Engine Standard. If you are deploying to App Engine Standard, first open
-`app-standard.yaml` and set the value of `GCLOUD_PROJECT` to your project ID.
-Run either `gcloud app deploy app-standard.yaml` or `gcloud app deploy app-flex.yaml`.
+App Engine Standard. Run either `gcloud app deploy app-standard.yaml` or
+`gcloud app deploy app-flex.yaml`.
 
 8. Run `php auth.php COMMAND --help` to print information about the usage of each command.
 

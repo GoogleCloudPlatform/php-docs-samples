@@ -36,8 +36,8 @@ function auth_api_explicit_app_engine($projectId)
 {
     # Learn more about scopes at https://cloud.google.com/storage/docs/authentication#oauth-scopes
     $scope = 'https://www.googleapis.com/auth/devstorage.read_only';
-    $gae_credentials = new AppIdentityCredentials($scope);
-    $middleware = new AuthTokenMiddleware($gae_credentials);
+    $gaeCredentials = new AppIdentityCredentials($scope);
+    $middleware = new AuthTokenMiddleware($gaeCredentials);
     $stack = HandlerStack::create();
     $stack->push($middleware);
     $http_client = new Client([

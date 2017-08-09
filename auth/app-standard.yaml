@@ -5,6 +5,3 @@ threadsafe: true
 handlers:
 - url: /.*
   script: index.php
-
-env_variables:
-  GCLOUD_PROJECT: your-project-id

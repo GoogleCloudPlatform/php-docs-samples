@@ -29,10 +29,10 @@ use Google\Cloud\Storage\StorageClient;
 
 function auth_cloud_explicit_compute_engine($projectId)
 {
-    $gce_credentials = new GCECredentials();
+    $gceCredentials = new GCECredentials();
     $config = [
         'projectId' => $projectId,
-        'credentialsFetcher' => $gce_credentials,
+        'credentialsFetcher' => $gceCredentials,
     ];
     $storage = new StorageClient($config);
 

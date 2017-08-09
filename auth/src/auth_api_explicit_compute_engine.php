@@ -34,8 +34,8 @@ use Google_Service_Storage;
 
 function auth_api_explicit_compute_engine($projectId)
 {
-    $gce_credentials = new GCECredentials();
-    $middleware = new AuthTokenMiddleware($gce_credentials);
+    $gceCredentials = new GCECredentials();
+    $middleware = new AuthTokenMiddleware($gceCredentials);
     $stack = HandlerStack::create();
     $stack->push($middleware);
     $http_client = new Client([
