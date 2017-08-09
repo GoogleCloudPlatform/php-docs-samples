@@ -95,16 +95,10 @@ class authTest extends \PHPUnit_Framework_TestCase
         $application = require __DIR__ . '/../auth.php';
         $command = $application->get($commandName);
         $commandTester = new CommandTester($command);
-        if ($serviceAccountPath) {
-            $args = array_filter([
-                'projectId' => $projectId,
-                'serviceAccountPath' => $serviceAccountPath,
-            ]);
-        } else {
-            $args = array_filter([
-                'projectId' => $projectId,
-            ]);
-        }
+        $args = array_filter([
+            'projectId' => $projectId,
+            'serviceAccountPath' => $serviceAccountPath,
+        ]);
 
         ob_start();
         try {
