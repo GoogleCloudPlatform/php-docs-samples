@@ -102,7 +102,7 @@ class authTest extends \PHPUnit_Framework_TestCase
                 $commandTester->execute(
                     [
                         'serviceAccountPath'=> $serviceAccountPath,
-                        'projectId'=> $projectId   
+                        'projectId'=> $projectId
                     ],
                     ['interactive' => false]
                 );
@@ -111,7 +111,7 @@ class authTest extends \PHPUnit_Framework_TestCase
                 $application->renderException($e, $commandTester->getOutput());
                 return $commandTester->getDisplay();
             }
-        } else if ($projectId) {
+        } elseif ($projectId) {
             try {
                 $commandTester->execute(
                     [
