@@ -20,6 +20,8 @@ namespace Google\Cloud\Samples\Auth;
 use Google\Auth\Credentials\GCECredentials;
 use google\appengine\api\app_identity\AppIdentityService;
 
+// Install composer dependencies with "composer install --no-dev"
+// @see http://getcomposer.org for more information.
 require __DIR__ . '/vendor/autoload.php';
 
 $onGce = GCECredentials::onGce();
