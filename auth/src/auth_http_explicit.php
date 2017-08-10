@@ -48,8 +48,11 @@ function auth_http_explicit($projectId, $serviceAccountPath)
     ]);
 
     # Make an authenticated API request (listing storage buckets)
-    $response = $http_client->request('GET', 'b', ['query' =>['project'=>$projectId]]);
-    $body_content = json_decode($response->getBody());
+    $query = ['project' => $projectId];
+    $response = $http_client->request('GET', 'b', [
+        'query' => $query
+    ]);
+    $body_content = json_decode((string) $response->getBody());
     foreach ($body_content->items as $item) {
         $bucket = $item->id;
         printf('Bucket: %s' . PHP_EOL, $bucket);
