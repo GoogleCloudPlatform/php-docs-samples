@@ -27,6 +27,8 @@ methods will work on any Google Cloud API.
   auth-cloud-explicit                      Authenticate to a cloud client library using a service account explicitly.
   auth-api-implicit                        Authenticate to a cloud API using a service account implicitly.
   auth-api-explicit                        Authenticate to a cloud API using a service account explicitly.
+  auth-http-implicit                       Authenticate to a cloud API with HTTP using a service account implicitly.
+  auth-http-explicit                       Authenticate to a cloud API with HTTP using a service account explicitly.
 ```
 6. The following commands are available but will throw a ServiceException when
 run from command-line. The Compute Engine method only works on Compute Engine,

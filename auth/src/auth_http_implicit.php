@@ -23,11 +23,8 @@
 # [START auth_http_implicit]
 namespace Google\Cloud\Samples\Auth;
 
-// Imports the Google Cloud Storage client library, Auth libraries, and Guzzle
-// HTTP libraries.
-use Google\Cloud\Storage\StorageClient;
+# Imports Auth libraries and Guzzle HTTP libraries.
 use Google\Auth\ApplicationDefaultCredentials;
-use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
