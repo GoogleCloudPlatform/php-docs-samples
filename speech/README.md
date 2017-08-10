@@ -13,7 +13,7 @@ complex) [GRPC][grpc] API. The GRPC API also allows streaming requests.
 
 Install the dependencies for this library via [composer](https://getcomposer.org)
 
-    $ cd /path/to/php-docs-samples/speech/api
+    $ cd /path/to/php-docs-samples/speech
     $ composer install
 
 Configure your project using [Application Default Credentials][adc]
@@ -22,15 +22,52 @@ Configure your project using [Application Default Credentials][adc]
 
 ## Usage
 
+To run the Speech Samples:
+
+    $ php speech.php
+
+    Cloud Speech
+
+    Usage:
+      command [options] [arguments]
+
+    Options:
+      -h, --help            Display this help message
+      -q, --quiet           Do not output any message
+      -V, --version         Display this application version
+          --ansi            Force ANSI output
+          --no-ansi         Disable ANSI output
+      -n, --no-interaction  Do not ask any interactive question
+      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+    Available commands:
+      help                    Displays help for a command
+      list                    Lists commands
+      transcribe              Transcribe an audio file using Google Cloud Speech API
+      transcribe-async        Transcribe an audio file asynchronously using Google Cloud Speech API
+      transcribe-async-gcs    Transcribe audio asynchronously from a Storage Object using Google Cloud Speech API
+      transcribe-async-words  Transcribe an audio file asynchronously and print word time offsets using Google Cloud Speech API
+      transcribe-gcs          Transcribe audio from a Storage Object using Google Cloud Speech API
+      transcribe-stream       Transcribe a stream of audio using Google Cloud Speech API
+      transcribe-words        Transcribe an audio file and print word time offsets using Google Cloud Speech API
+
 Once you have a speech sample in the proper format, send it through the speech
 API using the transcribe command:
 
 ```sh
 php speech.php transcribe test/data/audio32KHz.raw --encoding LINEAR16 --sample-rate 32000
-php speech.php transcribe test/data/audio32KHz.flac --encoding FLAC --sample-rate 32000 --async
+php speech.php transcribe-async test/data/audio32KHz.flac --encoding FLAC --sample-rate 32000
+php speech.php transcribe-words test/data/audio32KHz.flac --encoding FLAC --sample-rate 32000
 
 ```
 ## Troubleshooting
+
+If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:
+
+```
+[Google\Cloud\Core\Exception\GoogleException]
+No project ID was provided, and we were unable to detect a default project ID.
+```
 
 If you have not set a timezone you may get an error from php. This can be resolved by:
 

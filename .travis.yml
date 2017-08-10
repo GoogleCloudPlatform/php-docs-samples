@@ -41,11 +41,18 @@ before_install:
   - mkdir -p build/logs
 
 before_script:
-  - pecl install grpc
+  - travis_retry pecl install grpc-1.4.1
 
 script:
   - testing/run_all_tests.sh
 
 after_success:
-  - composer require "satooshi/php-coveralls:^1.0"
-  - travis_retry php vendor/bin/coveralls -v
+  - |
+    # if we are running all the tests, run coveralls
+    FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
+    if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
+      grep -qv \/ <<< "$FILES_CHANGED" || \
+      [ -e $TRAVIS_PULL_REQUEST_BRANCH ]; then
+      composer require "satooshi/php-coveralls:^1.0"
+      travis_retry php vendor/bin/coveralls -v
+    fi

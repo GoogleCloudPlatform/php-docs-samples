@@ -23,15 +23,14 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START transcribe_sync_gcs]
+# [START transcribe_sync_words]
 use Google\Cloud\Speech\SpeechClient;
-use Google\Cloud\Storage\StorageClient;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * transcribe_sync_gcs('your-bucket-name', 'audiofile.wav');
+ * transcribe_sync_words('/path/to/audiofile.wav');
  * ```.
  *
  * @param string $audioFile path to an audio file.
@@ -41,20 +40,19 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @return string the text transcription
  */
-function transcribe_sync_gcs($bucketName, $objectName, $languageCode = 'en-US', $options = [])
+function transcribe_sync_words($audioFile, $languageCode = 'en-US', $options = [])
 {
     // Create the speech client
     $speech = new SpeechClient([
         'languageCode' => $languageCode,
     ]);
 
-    // Fetch the storage object
-    $storage = new StorageClient();
-    $object = $storage->bucket($bucketName)->object($objectName);
+    // When true, time offsets for every word will be included in the response.
+    $options['enableWordTimeOffsets'] = true;
 
     // Make the API call
     $results = $speech->recognize(
-        $object,
+        fopen($audioFile, 'r'),
         $options
     );
 
@@ -63,6 +61,12 @@ function transcribe_sync_gcs($bucketName, $objectName, $languageCode = 'en-US', 
     foreach ($alternatives as $alternative) {
         printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
         printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
+        foreach ($alternative['words'] as $wordInfo) {
+            printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
+                $wordInfo['word'],
+                $wordInfo['startTime'],
+                $wordInfo['endTime']);
+        }
     }
 }
-# [END transcribe_sync_gcs]
+# [END transcribe_sync_words]

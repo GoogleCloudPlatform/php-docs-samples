@@ -189,6 +189,13 @@ to [browse the source][google-cloud-php-source] and  [report issues][google-clou
 
 ## Troubleshooting
 
+If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:
+
+```
+[Google\Cloud\Core\Exception\GoogleException]
+No project ID was provided, and we were unable to detect a default project ID.
+```
+
 If you have not set a timezone you may get an error from php. This can be resolved by:
 
   1. Finding where the php.ini is stored by running php -i | grep 'Configuration File'

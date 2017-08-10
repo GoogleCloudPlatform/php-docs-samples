@@ -21,9 +21,9 @@ namespace Google\Cloud\Samples\Vision;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for transcribe commands.
+ * Unit Tests for vision commands.
  */
-class CommandTest extends \PHPUnit_Framework_TestCase
+class visionTest extends \PHPUnit_Framework_TestCase
 {
     private $bucketName;
 
