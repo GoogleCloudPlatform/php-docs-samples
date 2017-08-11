@@ -61,6 +61,19 @@ class authTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($this->bucketName, $output);
     }
 
+    public function testAuthHttpImplicitCommand()
+    {
+        $output = $this->runCommand('auth-http-implicit', $this->projectId);
+        $this->assertContains($this->bucketName, $output);
+    }
+
+    public function testAuthHttpExplicitCommand()
+    {
+        $serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+        $output = $this->runCommand('auth-http-explicit', $this->projectId, $serviceAccountPath);
+        $this->assertContains($this->bucketName, $output);
+    }
+
     private function runCommand($commandName, $projectId = null, $serviceAccountPath=null)
     {
         $application = require __DIR__ . '/../auth.php';

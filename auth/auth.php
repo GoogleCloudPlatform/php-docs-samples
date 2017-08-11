@@ -168,6 +168,43 @@ EOF
     })
 );
 
+// Create auth-http-implicit Command.
+$application->add((new Command('auth-http-implicit'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->setDescription('Authenticate to a cloud API with HTTP using a service account implicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud API with HTTP
+using a service account implicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        auth_http_implicit($input->getArgument('projectId'));
+    })
+);
+
+// Create auth-http-explicit Command.
+$application->add((new Command('auth-http-explicit'))
+    ->addArgument('projectId', InputArgument::REQUIRED, 'Your project ID')
+    ->addArgument('serviceAccountPath', InputArgument::REQUIRED, 'Path to your service account.')
+    ->setDescription('Authenticate to a cloud API with HTTP using a service account explicitly.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command authenticates to a cloud API with HTTP
+using a service account explicitly.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        $serviceAccountPath = $input->getArgument('serviceAccountPath');
+        auth_http_explicit($projectId, $serviceAccountPath);
+    })
+);
+
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
 }
