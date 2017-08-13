@@ -49,7 +49,7 @@ function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName
         'projectId' => $projectId,
     ]);
     $destinationObject = $storage->bucket($bucketName)->object($objectName);
-    // create the import job
+    // create the export job
     $options = ['jobConfig' => ['destinationFormat' => $format]];
     $job = $table->export($destinationObject, $options);
     // poll the job until it is complete
