@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,47 +50,28 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
 Example:
-    <info>php %command.full_name% "John took a walk."</info>
-sentences:
-  -
-    text:
-      content: 'John took a walk.'
-      beginOffset: 0
-    sentiment:
-      magnitude: 0
-      score: 0
-tokens:
-  -
-    text:
-      content: John
-      beginOffset: 0
-    partOfSpeech:
-      tag: NOUN
-      aspect: ASPECT_UNKNOWN
-      case: CASE_UNKNOWN
-      ...
-    dependencyEdge:
-      headTokenIndex: 1
-      label: NSUBJ
-    lemma: John
-    ...
-entities:
-  -
-    name: John
-    type: PERSON
-    metadata: {  }
-    salience: 0.67526394
-    mentions:
-      -
-        text:
-          content: John
-          beginOffset: 0
-        type: PROPER
-      ...
-documentSentiment:
-  magnitude: 0
-  score: 0
-language: en
+    <info>php %command.full_name% "Barack Obama lives in Washington D.C."</info>
+Name: Barack Obama
+Type: PERSON
+Salience: 0.676553
+Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama
+Knowledge Graph MID: /m/02mjmr
+Mentions:
+  Begin Offset: 0
+  Content: Barack Obama
+  Mention Type: PROPER
+
+
+Name: Washington D.C.
+Type: LOCATION
+Salience: 0.323447
+Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.
+Knowledge Graph MID: /m/0rh6k
+Mentions:
+  Begin Offset: 22
+  Content: Washington D.C.
+  Mention Type: PROPER
+...
 EOF
     )
     ->setCode(function ($input, $output) {
@@ -99,11 +80,10 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
-            $annotation = analyze_all_from_file($matches[1], $matches[2], $projectId);
+            analyze_all_from_file($matches[1], $matches[2], $projectId);
         } else {
-            $annotation = analyze_all($content, $projectId);
+            analyze_all($content, $projectId);
         }
-        $output->write(Yaml::dump($annotation->info(), 6));
     })
 );
 
@@ -119,21 +99,27 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
 Example:
-    <info>php %command.full_name% "John took a walk."</info>
-entities:
-  -
-    name: John
-    type: PERSON
-    metadata: {  }
-    salience: 0.67526394
-    mentions:
-      -
-        text:
-          content: John
-          beginOffset: 0
-        type: PROPER
-  ...
-language: en
+    <info>php %command.full_name% "Barack Obama lives in Washington D.C."</info>
+Name: Barack Obama
+Type: PERSON
+Salience: 0.676553
+Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama
+Knowledge Graph MID: /m/02mjmr
+Mentions:
+  Begin Offset: 0
+  Content: Barack Obama
+  Mention Type: PROPER
+
+
+Name: Washington D.C.
+Type: LOCATION
+Salience: 0.323447
+Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.
+Knowledge Graph MID: /m/0rh6k
+Mentions:
+  Begin Offset: 22
+  Content: Washington D.C.
+  Mention Type: PROPER
 EOF
     )
     ->setCode(function ($input, $output) {
@@ -142,11 +128,10 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
-            $annotation = analyze_entities_from_file($matches[1], $matches[2], $projectId);
+            analyze_entities_from_file($matches[1], $matches[2], $projectId);
         } else {
-            $annotation = analyze_entities($content, $projectId);
+            analyze_entities($content, $projectId);
         }
-        $output->write(Yaml::dump($annotation->info(), 6));
     })
 );
 
@@ -162,19 +147,20 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
 Example:
-    <info>php %command.full_name% "John took a walk."</info>
-documentSentiment:
-  magnitude: 0
-  score: 0
-language: en
-sentences:
-  -
-    text:
-      content: 'John took a walk.'
-      beginOffset: 0
-    sentiment:
-      magnitude: 0
-      score: 0
+    <info>php %command.full_name% "I like burgers. I dislike fish."</info>
+Document Sentiment:
+  Magnitude: 1.3
+  Score: 0
+
+Sentence: I like burgers.
+Sentence Sentiment:
+  Magnitude: 0.6
+  Score: 0.6
+
+Sentence: I dislike fish.
+Sentence Sentiment:
+  Magnitude: 0.6
+  Score: -0.6
 EOF
     )
     ->setCode(function ($input, $output) {
@@ -183,11 +169,10 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
-            $annotation = analyze_sentiment_from_file($matches[1], $matches[2], $projectId);
+            analyze_sentiment_from_file($matches[1], $matches[2], $projectId);
         } else {
-            $annotation = analyze_sentiment($content, $projectId);
+            analyze_sentiment($content, $projectId);
         }
-        $output->write(Yaml::dump($annotation->info(), 6));
     })
 );
 
@@ -203,31 +188,24 @@ The <info>%command.name%</info> command analyzes text using the Google Cloud Nat
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
 Example:
-    <info>php %command.full_name% "John took a walk."</info>
-sentences:
-  -
-    text:
-      content: 'John took a walk.'
-      beginOffset: 0
-tokens:
-  -
-    text:
-      content: John
-      beginOffset: 0
-    partOfSpeech:
-      tag: NOUN
-      aspect: ASPECT_UNKNOWN
-      case: CASE_UNKNOWN
-      form: FORM_UNKNOWN
-      ...
-    dependencyEdge:
-      headTokenIndex: 1
-      label: NSUBJ
-    lemma: John
-  -
-    ...
-language: en
-entities: {  }
+    <info>php %command.full_name% "Barack Obama lives in Washington D.C."</info>
+Token text: Barack
+Token part of speech: NOUN
+
+Token text: Obama
+Token part of speech: NOUN
+
+Token text: lives
+Token part of speech: VERB
+
+Token text: in
+Token part of speech: ADP
+
+Token text: Washington
+Token part of speech: NOUN
+
+Token text: D.C.
+Token part of speech: NOUN
 EOF
     )
     ->setCode(function ($input, $output) {
@@ -236,11 +214,56 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
-            $annotation = analyze_syntax_from_file($matches[1], $matches[2], $projectId);
+            analyze_syntax_from_file($matches[1], $matches[2], $projectId);
         } else {
-            $annotation = analyze_syntax($content, $projectId);
+            analyze_syntax($content, $projectId);
         }
-        $output->write(Yaml::dump($annotation->info(), 6));
+    })
+);
+
+// Analyze Entity Sentiment command
+$application->add((new Command('entity-sentiment'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Analyze entity sentiment in text.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command analyzes text using the Google Cloud Natural Language API.
+
+    <info>php %command.full_name% Text to analyze.</info>
+
+    <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
+
+Example:
+    <info>php %command.full_name% "New York is great. New York is good."</info>
+Entity Name: New York
+Entity Type: LOCATION
+Entity Salience: 1
+Entity Magnitude: 1.7999999523163
+Entity Score: 0
+
+Mentions: 
+  Begin Offset: 0
+  Content: New York
+  Mention Type: PROPER
+  Mention Magnitude: 0.89999997615814
+  Mention Score: 0.89999997615814
+
+  Begin Offset: 17
+  Content: New York
+  Mention Type: PROPER
+  Mention Magnitude: 0.80000001192093
+  Mention Score: -0.80000001192093
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getOption('project');
+        $content = implode(' ', (array) $input->getArgument('content'));
+        // Regex to match a Cloud Storage path as the first argument
+        // e.g "gs://my-bucket/file_with_text.txt"
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
+            analyze_entity_sentiment_from_file($content, $projectId);
+        } else {
+            analyze_entity_sentiment($content, $projectId);
+        }
     })
 );
 

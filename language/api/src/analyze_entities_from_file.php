@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
+# [START analyze_entities_from_file]
 namespace Google\Cloud\Samples\Language;
 
-# [START analyze_entities_from_file]
 use Google\Cloud\Language\LanguageClient;
 use Google\Cloud\Language\Annotation;
 use Google\Cloud\Storage\StorageClient;
@@ -38,7 +38,6 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The Cloud Storage object with text.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
- * @return Annotation
  */
 function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
 {
@@ -47,11 +46,34 @@ function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
     $bucket = $storage->bucket($bucketName);
     $storageObject = $bucket->object($objectName);
 
-    // Call the Natural Language client
+    // Create the Natural Language client
     $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
+
+    // Call the analyzeEntities function
     $annotation = $language->analyzeEntities($storageObject);
-    return $annotation;
+
+    // Print out information about each entity
+    $entities = $annotation->entities();
+    foreach ($entities as $entity) {
+        printf('Name: %s' . PHP_EOL, $entity['name']);
+        printf('Type: %s' . PHP_EOL, $entity['type']);
+        printf('Salience: %s' . PHP_EOL, $entity['salience']);
+        if (array_key_exists('wikipedia_url', $entity['metadata'])) {
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity['metadata']['wikipedia_url']);
+        }
+        if (array_key_exists('mid', $entity['metadata'])) {
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
+        }
+        printf('Mentions:' . PHP_EOL);
+        foreach ($entity['mentions'] as $mention) {
+            printf('  Begin Offset: %s' . PHP_EOL, $mention['text']['beginOffset']);
+            printf('  Content: %s' . PHP_EOL, $mention['text']['content']);
+            printf('  Mention Type: %s' . PHP_EOL, $mention['type']);
+            printf(PHP_EOL);
+        } 
+    printf(PHP_EOL);
+    }
 }
 # [END analyze_entities_from_file]

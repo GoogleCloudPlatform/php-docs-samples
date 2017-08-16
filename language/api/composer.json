@@ -3,7 +3,11 @@
         "google/cloud-language": "^0.4",
         "symfony/console": "^3.0",
         "google/cloud-storage": "^1.0",
-        "symfony/yaml": "^3.2"
+        "symfony/yaml": "^3.2",
+        "google/gax": "^0.21.2",
+        "grpc/grpc": "^v1.1.0",
+        "google/protobuf": "^v3.3.0",
+        "google/proto-client": "^0.22.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
@@ -20,7 +24,9 @@
             "src/analyze_sentiment.php",
             "src/analyze_sentiment_from_file.php",
             "src/analyze_syntax.php",
-            "src/analyze_syntax_from_file.php"
+            "src/analyze_syntax_from_file.php",
+            "src/analyze_entity_sentiment.php",
+            "src/analyze_entity_sentiment_from_file.php"
         ]
     }
 }

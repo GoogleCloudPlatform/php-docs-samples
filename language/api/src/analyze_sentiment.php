@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
+# [START analyze_sentiment]
 namespace Google\Cloud\Samples\Language;
 
-# [START analyze_sentiment]
 use Google\Cloud\Language\LanguageClient;
 use Google\Cloud\Language\Annotation;
 
@@ -36,7 +36,6 @@ use Google\Cloud\Language\Annotation;
  * @param string $text The text to analyze.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
- * @return Annotation
  */
 function analyze_sentiment($text, $projectId = null)
 {
@@ -44,8 +43,22 @@ function analyze_sentiment($text, $projectId = null)
     $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
+
     // Call the analyzeSentiment function
     $annotation = $language->analyzeSentiment($text);
-    return $annotation;
+
+    // Print document and sentence sentiment information
+    $sentiment = $annotation->sentiment();
+    printf('Document Sentiment:' . PHP_EOL);
+    printf('  Magnitude: %s' . PHP_EOL, $sentiment['magnitude']);
+    printf('  Score: %s' . PHP_EOL, $sentiment['score']);
+    printf(PHP_EOL);
+    foreach ($annotation->sentences() as $sentence) {
+        printf('Sentence: %s' . PHP_EOL, $sentence['text']['content']);
+        printf('Sentence Sentiment:' . PHP_EOL);
+        printf('  Magnitude: %s' . PHP_EOL, $sentence['sentiment']['magnitude']);
+        printf('  Score: %s' . PHP_EOL, $sentence['sentiment']['score']);
+        printf(PHP_EOL);
+    }
 }
 # [END analyze_sentiment]
