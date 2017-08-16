@@ -25,7 +25,6 @@
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
-use Google\Cloud\Language\Annotation;
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -74,8 +73,8 @@ function analyze_all_from_file($bucketName, $objectName, $projectId = null)
             printf('  Content: %s' . PHP_EOL, $mention['text']['content']);
             printf('  Mention Type: %s' . PHP_EOL, $mention['type']);
             printf(PHP_EOL);
-        } 
-    printf(PHP_EOL);
+        }
+        printf(PHP_EOL);
     }
 
     // Print document and sentence sentiment information

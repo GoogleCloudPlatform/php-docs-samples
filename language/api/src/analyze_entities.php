@@ -25,7 +25,6 @@
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
-use Google\Cloud\Language\Annotation;
 
 /**
  * Find the entities in text.
@@ -65,8 +64,8 @@ function analyze_entities($text, $projectId = null)
             printf('  Content: %s' . PHP_EOL, $mention['text']['content']);
             printf('  Mention Type: %s' . PHP_EOL, $mention['type']);
             printf(PHP_EOL);
-        } 
-    printf(PHP_EOL);
+        }
+        printf(PHP_EOL);
     }
 }
 # [END analyze_entities]

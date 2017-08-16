@@ -25,7 +25,6 @@
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
-use Google\Cloud\Language\Annotation;
 use Google\Cloud\Storage\StorageClient;
 
 /**
