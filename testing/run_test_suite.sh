@@ -34,7 +34,7 @@ if [ "${TEST_DIRECTORIES}" = "" ]; then
 fi
 
 # Loop through all directories containing "phpunit.xml*" and run the test suites.
-find $TEST_DIRECTORIES -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \; | while read DIR
+find $TEST_DIRECTORIES -name 'phpunit.xml*' -not -path '*vendor/*' -not -path '*appengine/flexible/*' -exec dirname {} \; | while read DIR
 do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
@@ -50,7 +50,7 @@ do
     fi
     echo "running phpunit in ${DIR}"
     if [ -f "vendor/bin/phpunit" ]; then
-        vendor/bin/phpunit
+        vendor/bin/phpunit -v
     else
         phpunit
     fi
