@@ -81,6 +81,17 @@ $application->add((new Command('read-data'))
     })
 );
 
+// Read stale data command
+$application->add((new Command('read-stale-data'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Reads sample data from the database, with a maximum staleness of 3 seconds.')
+    ->setCode(function ($input, $output) {
+        read_stale_data(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
 // Add column command
 $application->add((new Command('add-column'))
     ->setDefinition($inputDefinition)
