@@ -58,13 +58,6 @@ function analyze_entities($text, $projectId = null)
         if (array_key_exists('mid', $entity['metadata'])) {
             printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
         }
-        printf('Mentions:' . PHP_EOL);
-        foreach ($entity['mentions'] as $mention) {
-            printf('  Begin Offset: %s' . PHP_EOL, $mention['text']['beginOffset']);
-            printf('  Content: %s' . PHP_EOL, $mention['text']['content']);
-            printf('  Mention Type: %s' . PHP_EOL, $mention['type']);
-            printf(PHP_EOL);
-        }
         printf(PHP_EOL);
     }
 }

@@ -57,7 +57,6 @@ function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = nul
 
     $entity_types = array('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT',
         'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER');
-    $mention_types = array('TYPE_UNKNOWN', 'PROPER', 'COMMON');
 
     // Print out information about each entity
     foreach ($entities as $entity) {
@@ -66,15 +65,7 @@ function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = nul
         printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
         printf('Entity Magnitude: %s' . PHP_EOL, $entity->getSentiment()->getMagnitude());
         printf('Entity Score: %s' . PHP_EOL, $entity->getSentiment()->getScore());
-        printf('Mentions: ' . PHP_EOL);
-        foreach ($entity->getMentions() as $mention) {
-            printf('  Begin Offset: %s' . PHP_EOL, $mention->getText()->getBeginOffset());
-            printf('  Content: %s' . PHP_EOL, $mention->getText()->getContent());
-            printf('  Mention Type: %s' . PHP_EOL, $mention_types[$mention->getType()]);
-            printf('  Mention Magnitude: %s' . PHP_EOL, $mention->getSentiment()->getMagnitude());
-            printf('  Mention Score: %s' . PHP_EOL, $mention->getSentiment()->getScore());
-            printf(PHP_EOL);
-        }
+        printf(PHP_EOL);
     }
 }
 # [END analyze_entity_sentiment_from_file]

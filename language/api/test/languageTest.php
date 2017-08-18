@@ -49,13 +49,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
-        $this->assertContains('Mentions:', $output);
-        $this->assertContains('Begin Offset: 0', $output);
-        $this->assertContains('Content: Barack Obama', $output);
-        $this->assertContains('Mention Type: PROPER', $output);
         $this->assertContains('Name: Washington D.C.', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
-        $this->assertContains('Begin Offset: 22', $output);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -88,13 +83,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
-        $this->assertContains('Mentions:', $output);
-        $this->assertContains('Begin Offset: 0', $output);
-        $this->assertContains('Content: Barack Obama', $output);
-        $this->assertContains('Mention Type: PROPER', $output);
         $this->assertContains('Name: Washington D.C.', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
-        $this->assertContains('Begin Offset: 22', $output);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -124,13 +114,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
-        $this->assertContains('Mentions:', $output);
-        $this->assertContains('Begin Offset: 0', $output);
-        $this->assertContains('Content: Barack Obama', $output);
-        $this->assertContains('Mention Type: PROPER', $output);
         $this->assertContains('Name: Washington D.C.', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
-        $this->assertContains('Begin Offset: 22', $output);
     }
 
 
@@ -145,13 +130,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
-        $this->assertContains('Mentions:', $output);
-        $this->assertContains('Begin Offset: 0', $output);
-        $this->assertContains('Content: Barack Obama', $output);
-        $this->assertContains('Mention Type: PROPER', $output);
         $this->assertContains('Name: Washington D.C.', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
-        $this->assertContains('Begin Offset: 22', $output);
     }
 
     public function testSentiment()
@@ -227,15 +207,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Entity Salience:', $output);
         $this->assertContains('Entity Magnitude:', $output);
         $this->assertContains('Entity Score:', $output);
-        $this->assertContains('Mentions:', $output);
-        $this->assertContains('Begin Offset: 0', $output);
-        $this->assertContains('Content: Barack Obama', $output);
-        $this->assertContains('Mention Type: PROPER', $output);
-        $this->assertContains('Mention Magnitude:', $output);
-        $this->assertContains('Mention Score:', $output);
         $this->assertContains('Entity Name: Washington D.C.', $output);
         $this->assertContains('Entity Type: LOCATION', $output);
-        $this->assertContains('Begin Offset: 22', $output);
     }
 
     public function testEntitySentimentFromStorageObject()
@@ -249,15 +222,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Entity Salience:', $output);
         $this->assertContains('Entity Magnitude:', $output);
         $this->assertContains('Entity Score:', $output);
-        $this->assertContains('Mentions:', $output);
-        $this->assertContains('Begin Offset: 0', $output);
-        $this->assertContains('Content: Barack Obama', $output);
-        $this->assertContains('Mention Type: PROPER', $output);
-        $this->assertContains('Mention Magnitude:', $output);
-        $this->assertContains('Mention Score:', $output);
         $this->assertContains('Entity Name: Washington D.C.', $output);
         $this->assertContains('Entity Type: LOCATION', $output);
-        $this->assertContains('Begin Offset: 22', $output);
     }
 
     private function runCommand($commandName, $content)
