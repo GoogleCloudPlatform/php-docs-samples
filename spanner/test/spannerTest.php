@@ -212,6 +212,19 @@ class spannerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
+    /**
+     * @depends testUpdateData
+     */
+    public function testReadStaleData()
+    {
+        $output = $this->runCommand('read-stale-data');
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
+    }
+
     private function runCommand($commandName)
     {
         $application = require __DIR__ . '/../spanner.php';
