@@ -28,7 +28,6 @@ use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 use Google\Cloud\Language\V1beta2\Document;
 use Google\Cloud\Language\V1beta2\Document_Type;
 use Google\Cloud\Language\V1beta2\EncodingType;
-use Google\GAX\AgentHeaderDescriptor;
 
 /**
  * Find the entities in text.
