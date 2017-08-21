@@ -3,6 +3,7 @@
         "google/cloud-language": "^0.4",
         "symfony/console": "^3.0",
         "google/cloud-storage": "^1.0",
+        "google/gax": "^0.21.2",
         "google/proto-client": "^0.22.0"
     },
     "require-dev": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b35ce0d276376d94f1af5ab88a965d5",
+    "content-hash": "a2007804cb057547667f37a092dcbe3b",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -235,6 +235,50 @@
             "time": "2017-07-12T18:33:11+00:00"
         },
         {
+            "name": "google/gax",
+            "version": "0.21.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/gax-php.git",
+                "reference": "74e33a8c8532d27e80018d48b133d1caacf151fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/74e33a8c8532d27e80018d48b133d1caacf151fc",
+                "reference": "74e33a8c8532d27e80018d48b133d1caacf151fc",
+                "shasum": ""
+            },
+            "require": {
+                "google/auth": "~0.9|^1.0",
+                "google/protobuf": "^3.3.2",
+                "grpc/grpc": "^1.4",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\GAX\\": "src/",
+                    "Google\\GAX\\UnitTests\\": "tests/",
+                    "Google\\": "src/generated/Google/",
+                    "GPBMetadata\\": "src/generated/GPBMetadata/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Google API Extensions for PHP",
+            "homepage": "https://github.com/googleapis/gax-php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2017-07-17T20:12:04+00:00"
+        },
+        {
             "name": "google/proto-client",
             "version": "0.22.0",
             "source": {
@@ -314,6 +358,47 @@
                 "proto"
             ],
             "time": "2017-08-15T23:39:12+00:00"
+        },
+        {
+            "name": "grpc/grpc",
+            "version": "v1.4.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/grpc/grpc.git",
+                "reference": "d006cbc2edcc9d5d33ed229162adb6cfcaf327e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/grpc/grpc/zipball/d006cbc2edcc9d5d33ed229162adb6cfcaf327e6",
+                "reference": "d006cbc2edcc9d5d33ed229162adb6cfcaf327e6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "google/auth": "v0.9"
+            },
+            "suggest": {
+                "ext-protobuf": "For better performance, install the protobuf C extension.",
+                "google/protobuf": "To get started using grpc quickly, install the native protobuf library."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grpc\\": "src/php/lib/Grpc/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "gRPC library for PHP",
+            "homepage": "http://grpc.io",
+            "keywords": [
+                "rpc"
+            ],
+            "time": "2017-08-17T01:17:06+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
