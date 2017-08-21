@@ -42,23 +42,23 @@ $app->post('/send', function () use ($app) {
     $recipient = $request->get('recipient');
     # [START send_email]
     $body = [
-    'Messages' => [
-        [
-            'From' => [
-                'Email' => "pilot@mailjet.com",
-                'Name' => "Mailjet Pilot"
-            ],
-            'To' => [
-                [
-                    'Email' => $recipient
-                ]
-            ],
-            'Subject' => "Your email flight plan!",
-            'TextPart' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!",
-            'HTMLPart' => "<h3>Dear passenger, welcome to Mailjet!</h3><br />May the delivery force be with you!"
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => "pilot@mailjet.com",
+                    'Name' => "Mailjet Pilot"
+                ],
+                'To' => [
+                    [
+                        'Email' => $recipient
+                    ]
+                ],
+                'Subject' => "Your email flight plan!",
+                'TextPart' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!",
+                'HTMLPart' => "<h3>Dear passenger, welcome to Mailjet!</h3><br />May the delivery force be with you!"
+            ]
         ]
-    ]
-];
+    ];
     // trigger the API call
     $response = $mailjet->post(Mailjet\Resources::$Email, ['body' => $body], ['version' => 'v3']);
     if ($response->success()) {
