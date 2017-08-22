@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
+# [START analyze_sentiment_from_file]
 namespace Google\Cloud\Samples\Language;
 
-# [START analyze_sentiment_from_file]
 use Google\Cloud\Language\LanguageClient;
-use Google\Cloud\Language\Annotation;
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -38,7 +37,6 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The Cloud Storage object with text.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
- * @return Annotation
  */
 function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null)
 {
@@ -47,11 +45,26 @@ function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null
     $bucket = $storage->bucket($bucketName);
     $storageObject = $bucket->object($objectName);
 
-    // Call the Natural Language client
+    // Create the Natural Language client
     $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
+
+    // Call the analyzeSentiment function
     $annotation = $language->analyzeSentiment($storageObject);
-    return $annotation;
+
+    // Print document and sentence sentiment information
+    $sentiment = $annotation->sentiment();
+    printf('Document Sentiment:' . PHP_EOL);
+    printf('  Magnitude: %s' . PHP_EOL, $sentiment['magnitude']);
+    printf('  Score: %s' . PHP_EOL, $sentiment['score']);
+    printf(PHP_EOL);
+    foreach ($annotation->sentences() as $sentence) {
+        printf('Sentence: %s' . PHP_EOL, $sentence['text']['content']);
+        printf('Sentence Sentiment:' . PHP_EOL);
+        printf('  Magnitude: %s' . PHP_EOL, $sentence['sentiment']['magnitude']);
+        printf('  Score: %s' . PHP_EOL, $sentence['sentiment']['score']);
+        printf(PHP_EOL);
+    }
 }
 # [END analyze_sentiment_from_file]
