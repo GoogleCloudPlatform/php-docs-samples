@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
-use Google\Cloud\Spanner\Timestamp;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
