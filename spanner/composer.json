@@ -21,7 +21,8 @@
       "src/read_data_with_storing_index.php",
       "src/create_storing_index.php",
       "src/query_data_with_new_column.php",
-      "src/read_only_transaction.php"
+      "src/read_only_transaction.php",
+      "src/read_stale_data.php"
     ]
   }
 }
