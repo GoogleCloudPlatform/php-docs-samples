@@ -19,19 +19,23 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\Spanner\Timestamp;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class spannerTest extends \PHPUnit_Framework_TestCase
 {
-    /* @var string instanceId */
+    /** @var string instanceId */
     protected static $instanceId;
 
-    /* @var string databaseId */
+    /** @var string databaseId */
     protected static $databaseId;
 
-    /* @var $instance Instance */
+    /** @var $instance Instance */
     protected static $instance;
+
+    /** @var $lastUpdateData int */
+    protected static $lastUpdateDataTimestamp;
 
     public static function setUpBeforeClass()
     {
@@ -116,6 +120,7 @@ class spannerTest extends \PHPUnit_Framework_TestCase
     public function testUpdateData()
     {
         $output = $this->runCommand('update-data');
+        self::$lastUpdateDataTimestamp = time();
         $this->assertEquals('Updated data.' . PHP_EOL, $output);
     }
 
@@ -217,6 +222,12 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadStaleData()
     {
+        // read-stale-data reads data that is exactly 10 seconds old.  So, make sure 10 seconds
+        // have elapsed since testUpdateData().
+        $elapsed = time() - self::$lastUpdateDataTimestamp;
+        if ($elapsed < 11) {
+            sleep(11 - $elapsed);
+        }
         $output = $this->runCommand('read-stale-data');
         $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
         $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);

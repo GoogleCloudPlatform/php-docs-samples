@@ -28,8 +28,7 @@ use Google\Cloud\Spanner\Duration;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Reads sample data from the database.  The data is not necessarily stale, but may be
- * up to 3 seconds stale.
+ * Reads sample data from the database.  The data is exactly 10 seconds stale.
  * Example:
  * ```
  * read_stale_data
@@ -51,7 +50,7 @@ function read_stale_data($instanceId, $databaseId)
         'Albums',
         $keySet,
         ['SingerId', 'AlbumId', 'AlbumTitle'],
-        ['maxStaleness' => new Duration(3)]
+        ['exactStaleness' => new Duration(10)]
     );
 
     foreach ($results->rows() as $row) {
