@@ -46,7 +46,7 @@ do
     pushd ${DIR}
     if [ -f "composer.json" ]; then
         # install composer dependencies
-        composer install
+        composer install -q
     fi
     echo "running phpunit in ${DIR}"
     if [ -f "vendor/bin/phpunit" ]; then
