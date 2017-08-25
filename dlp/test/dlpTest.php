@@ -100,7 +100,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertContains('US_DEA_NUMBER', $output);
-        $this->assertNotContains('AMERICAN_BANKERS_CUSIP_ID', $output);
+        $this->assertNotContains('IBAN_CODE', $output);
     }
 
     public function testRedactString()
