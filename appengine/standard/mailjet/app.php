@@ -60,7 +60,7 @@ $app->post('/send', function () use ($app) {
         ]
     ];
     // trigger the API call
-    $response = $mailjet->post(Mailjet\Resources::$Email, ['body' => $body], ['version' => 'v3']);
+    $response = $mailjet->post(Mailjet\Resources::$Email, ['body' => $body], ['version' => 'v3.1']);
     if ($response->success()) {
         // if the call succed, data will go here
         return sprintf(
