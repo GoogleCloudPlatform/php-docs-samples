@@ -8,6 +8,7 @@
     "autoload": {
         "files": [
              "src/inspect_datastore.php",
+             "src/inspect_bigquery.php",
              "src/inspect_file.php",
              "src/inspect_string.php",
              "src/list_categories.php",
