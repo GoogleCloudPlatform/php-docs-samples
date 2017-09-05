@@ -73,8 +73,9 @@ function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US',
 
     // Print the results
     if ($operation->isComplete()) {
-        $alternatives = $operation->results()[0]->alternatives();
-        foreach ($alternatives as $alternative) {
+        $results = $operation->results();
+        foreach ($results as $result) {
+            $alternative = $result->alternatives()[0];
             printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
             printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
         }

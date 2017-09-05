@@ -54,8 +54,8 @@ function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
     );
 
     // Print the results
-    $alternatives = $results[0]->alternatives();
-    foreach ($alternatives as $alternative) {
+    foreach ($results as $result) {
+        $alternative = $result->alternatives()[0];
         printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
         printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
     }
