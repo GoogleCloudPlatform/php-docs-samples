@@ -23,7 +23,7 @@ use Google\Privacy\Dlp\V2beta1\BigQueryOptions;
 use Google\Privacy\Dlp\V2beta1\InfoType;
 use Google\Privacy\Dlp\V2beta1\InspectConfig;
 use Google\Privacy\Dlp\V2beta1\StorageConfig;
-use Google\Privacy\Dlp\V2beta1\TableReference;
+use Google\Privacy\Dlp\V2beta1\BigQueryTable;
 use Google\Privacy\Dlp\V2beta1\Likelihood;
 
 /**
@@ -56,7 +56,7 @@ function inspect_bigquery(
     $inspectConfig->setMaxFindings($maxFindings);
     $inspectConfig->setInfoTypes($infoTypes);
 
-    $tableReference = new TableReference();
+    $tableReference = new BigQueryTable();
     $tableReference->setProjectId($projectId);
     $tableReference->setDatasetId($datasetId);
     $tableReference->setTableId($tableId);
@@ -86,7 +86,6 @@ function inspect_bigquery(
 
         // Print the results
         $findings = $response->getResult()->getFindings();
-        print_r($findings);
         if (count($findings) == 0) {
             print('No findings.' . PHP_EOL);
         } else {

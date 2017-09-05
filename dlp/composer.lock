@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "23c4e23017e68d9b7352b4fc1a90e276",
+    "content-hash": "99ceb3aa1d6f17df3808dcd9b52254ed",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -102,22 +102,22 @@
         },
         {
             "name": "google/cloud-dlp",
-            "version": "v0.1.1",
+            "version": "v0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-dlp.git",
-                "reference": "3e5ed7146eb51e22d942e02032bc8fe537654681"
+                "reference": "a2a4a71f1c68f740d073dacccbf5045fa8bbde49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dlp/zipball/3e5ed7146eb51e22d942e02032bc8fe537654681",
-                "reference": "3e5ed7146eb51e22d942e02032bc8fe537654681",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dlp/zipball/a2a4a71f1c68f740d073dacccbf5045fa8bbde49",
+                "reference": "a2a4a71f1c68f740d073dacccbf5045fa8bbde49",
                 "shasum": ""
             },
             "require": {
                 "ext-grpc": "*",
-                "google/gax": "^0.22.1",
-                "google/proto-client": "^0.22.0"
+                "google/gax": "^0.23.0",
+                "google/proto-client": "^0.23.0"
             },
             "type": "library",
             "extra": {
@@ -138,20 +138,20 @@
                 "Apache-2.0"
             ],
             "description": "Data Loss Prevention Client for PHP",
-            "time": "2017-08-25T20:44:18+00:00"
+            "time": "2017-09-05T20:40:19+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.22.1",
+            "version": "0.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "ade59481388159085d9607046d6511716803024a"
+                "reference": "e09f219ed50ea1f6162d1945156d2ea6af6cd1f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/ade59481388159085d9607046d6511716803024a",
-                "reference": "ade59481388159085d9607046d6511716803024a",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/e09f219ed50ea1f6162d1945156d2ea6af6cd1f9",
+                "reference": "e09f219ed50ea1f6162d1945156d2ea6af6cd1f9",
                 "shasum": ""
             },
             "require": {
@@ -182,20 +182,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-08-17T21:01:53+00:00"
+            "time": "2017-08-31T21:40:57+00:00"
         },
         {
             "name": "google/proto-client",
-            "version": "0.22.0",
+            "version": "0.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "a0b9515c8321c03a8e43293c41f76e1a7418570a"
+                "reference": "b159f408b6acdba55bf727c3639d03bb0117fc27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/a0b9515c8321c03a8e43293c41f76e1a7418570a",
-                "reference": "a0b9515c8321c03a8e43293c41f76e1a7418570a",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/b159f408b6acdba55bf727c3639d03bb0117fc27",
+                "reference": "b159f408b6acdba55bf727c3639d03bb0117fc27",
                 "shasum": ""
             },
             "require": {
@@ -222,7 +222,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-07-28T16:22:59+00:00"
+            "time": "2017-09-01T22:33:04+00:00"
         },
         {
             "name": "google/protobuf",
@@ -1017,22 +1017,22 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.7.0",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073"
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/93d39f1f7f9326d746203c7c056f300f7f126073",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
+                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
                 "sebastian/comparator": "^1.1|^2.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
@@ -1043,7 +1043,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -1076,7 +1076,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02T20:05:34+00:00"
+            "time": "2017-09-04T11:05:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

@@ -45,7 +45,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     public function testInspectBigquery()
     {
         $output = $this->runCommand('inspect-bigquery', [
-            'dataset' => 'integration_tests_instance_dlp',
+            'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
             'project' => getenv('GOOGLE_PROJECT_ID'),
         ]);
