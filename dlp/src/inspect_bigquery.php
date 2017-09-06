@@ -62,7 +62,7 @@ function inspect_bigquery(
     $table->setTableId($tableId);
 
     $bigQueryOptions = new BigQueryOptions();
-    $bigQueryOptions->setTableReference($tableReference);
+    $bigQueryOptions->setTableReference($table);
 
     $storageConfig = new StorageConfig();
     $storageConfig->setBigQueryOptions($bigQueryOptions);
