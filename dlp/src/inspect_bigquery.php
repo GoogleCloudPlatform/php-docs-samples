@@ -50,16 +50,16 @@ function inspect_bigquery(
     $creditCardNumberInfoType->setName('CREDIT_CARD_NUMBER');
     $infoTypes = [$emailAddressInfoType, $creditCardNumberInfoType];
 
-    // Create the configuration object
+    // Create the required configuration objects
     $inspectConfig = new InspectConfig();
     $inspectConfig->setMinLikelihood($minLikelihood);
     $inspectConfig->setMaxFindings($maxFindings);
     $inspectConfig->setInfoTypes($infoTypes);
 
-    $tableReference = new BigQueryTable();
-    $tableReference->setProjectId($projectId);
-    $tableReference->setDatasetId($datasetId);
-    $tableReference->setTableId($tableId);
+    $table = new BigQueryTable();
+    $table->setProjectId($projectId);
+    $table->setDatasetId($datasetId);
+    $table->setTableId($tableId);
 
     $bigQueryOptions = new BigQueryOptions();
     $bigQueryOptions->setTableReference($tableReference);
@@ -70,10 +70,7 @@ function inspect_bigquery(
     $outputConfig = null;
 
     // Run request
-    $operation = $dlp->createInspectOperation(
-        $inspectConfig,
-        $storageConfig,
-        $outputConfig);
+    $operation = $dlp->createInspectOperation($inspectConfig, $storageConfig, $outputConfig);
 
     $operation->pollUntilComplete();
 
