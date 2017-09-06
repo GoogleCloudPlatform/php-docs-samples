@@ -40,27 +40,23 @@ $app->post('/send', function () use ($app) {
     /** @var Mailjet\Client $mailjet */
     $mailjet = $app['mailjet'];
     $recipient = $request->get('recipient');
+
     # [START send_email]
     $body = [
-        'Messages' => [
+        'FromEmail' => "test@example.com",
+        'FromName' => "Testing Mailjet",
+        'Subject' => "Your email flight plan!",
+        'Text-part' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!",
+        'Html-part' => "<h3>Dear passenger, welcome to Mailjet!</h3><br/>May the delivery force be with you!",
+        'Recipients' => [
             [
-                'From' => [
-                    'Email' => "pilot@mailjet.com",
-                    'Name' => "Mailjet Pilot"
-                ],
-                'To' => [
-                    [
-                        'Email' => $recipient
-                    ]
-                ],
-                'Subject' => "Your email flight plan!",
-                'TextPart' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!",
-                'HTMLPart' => "<h3>Dear passenger, welcome to Mailjet!</h3><br />May the delivery force be with you!"
+                'Email' => $recipient,
             ]
         ]
     ];
+
     // trigger the API call
-    $response = $mailjet->post(Mailjet\Resources::$Email, ['body' => $body], ['version' => 'v3.1']);
+    $response = $mailjet->post(Mailjet\Resources::$Email, ['body' => $body]);
     if ($response->success()) {
         // if the call succed, data will go here
         return sprintf(
@@ -68,6 +64,7 @@ $app->post('/send', function () use ($app) {
             json_encode($response->getData(), JSON_PRETTY_PRINT)
         );
     }
+
     return 'Error: ' . print_r($response->getStatus(), true);
     # [END send_email]
 });
