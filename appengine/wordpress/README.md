@@ -11,7 +11,7 @@ working WordPress project for
 * Install [Composer][composer]
 * Create a new Cloud Project on [Developers Console][dev-console]
 * Enable Billing on that project
-* [Enable Cloud SQL API][cloud-sql-api-enable] (For App Engine flexible environment)
+* [Enable Cloud SQL API][cloud-sql-api-enable]
 * Create App Engine default bucket at [App Engine Setting Page][app-engine-setting]
 * Install [Google Cloud SDK][gcloud-sdk]
 
@@ -23,10 +23,10 @@ working WordPress project for
 Configure Google Cloud SDK with your account and the Project.
 
 ```
-$ gcloud auth login
+$ gcloud init
 ...
 ...
-$ gcloud config set project YOUR_PROJECT_ID
+$ gcloud app create
 ```
 
 Then configure the App Engine default GCS bucket for later use. The
@@ -142,7 +142,7 @@ running):
 
 ```
 $ cd my-wordpress-project
-$ vendor/bin/wp(.bat) server --path=wordpress
+$ vendor/bin/wp server --path=wordpress
 ```
 
 Then access http://localhost:8080/. Follow the installation steps,
