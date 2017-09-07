@@ -243,10 +243,10 @@ function create_keyring($projectId, $keyRingId, $locationId = 'global')
     );
 
     // Create the KeyRing for your project.
-    $keyRingId = new Google_Service_CloudKMS_KeyRing();
+    $keyRing = new Google_Service_CloudKMS_KeyRing();
     $kms->projects_locations_keyRings->create(
         $parent,
-        $keyRingId,
+        $keyRing,
         ['keyRingId' => $keyRingId]
     );
 

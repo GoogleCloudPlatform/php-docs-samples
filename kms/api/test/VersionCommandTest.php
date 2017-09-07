@@ -79,7 +79,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         );
         $output = ob_get_clean();
 
-        $regex = sprintf('/Created version (\d+) for key %s in keyring %s/' . PHP_EOL,
+        $regex = sprintf('/Created version (\d+) for cryptoKey %s in keyRing %s/' . PHP_EOL,
             $this->key,
             $this->ring);
         $this->assertEquals(1, preg_match($regex, $output, $matches));
