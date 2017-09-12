@@ -96,7 +96,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
         // list info types by category
         $output = $this->runCommand('list-info-types', [
-            'category' => 'PII'
+            'category' => 'GOVERNMENT'
         ]);
 
         $this->assertContains('US_DEA_NUMBER', $output);

@@ -29,6 +29,6 @@ class quickstartTest extends \PHPUnit_Framework_TestCase
     {
         // Invoke quickstart.php
         include __DIR__ . '/../quickstart.php';
-        $this->expectOutputRegex('/Cat/');
+        $this->expectOutputRegex('/cat/');
     }
 }
