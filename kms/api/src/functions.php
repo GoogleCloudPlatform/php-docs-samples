@@ -35,16 +35,16 @@ use Google_Service_CloudKMS_UpdateCryptoKeyPrimaryVersionRequest;
  * Add a member to a CryptoKey IAM policy.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
  * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role, $location = 'global')
+function add_member_to_cryptokey_policy($projectId, $keyRingId, $cryptoKeyId, $member, $role, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -57,9 +57,9 @@ function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role,
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Get the current IAM policy and add the new account to it.
@@ -78,7 +78,7 @@ function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role,
         $request
     );
 
-    printf('Member %s added to policy for key %s in keyring %s' . PHP_EOL, $member, $key, $ring);
+    printf('Member %s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL, $member, $cryptoKeyId, $keyRingId);
 }
 # [END kms_add_member_to_cryptokey_policy]
 
@@ -87,15 +87,15 @@ function add_member_to_cryptokey_policy($projectId, $ring, $key, $member, $role,
  * Add a member to a KeyRing IAM policy.
  *
  * @param string $projectId
- * @param string $ring
+ * @param string $keyRingId
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
  * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function add_member_to_keyring_policy($projectId, $ring, $member, $role, $location = 'global')
+function add_member_to_keyring_policy($projectId, $keyRingId, $member, $role, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -108,8 +108,8 @@ function add_member_to_keyring_policy($projectId, $ring, $member, $role, $locati
     // The resource name of the KeyRing.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
         $projectId,
-        $location,
-        $ring
+        $locationId,
+        $keyRingId
     );
 
     // Get the current IAM policy and add the new account to it.
@@ -128,7 +128,7 @@ function add_member_to_keyring_policy($projectId, $ring, $member, $role, $locati
         $request
     );
 
-    printf('Member %s added to policy for keyring %s' . PHP_EOL, $member, $ring);
+    printf('Member %s added to policy for keyRing %s' . PHP_EOL, $member, $keyRingId);
 }
 # [END kms_add_member_to_keyring_policy]
 
@@ -137,12 +137,12 @@ function add_member_to_keyring_policy($projectId, $ring, $member, $role, $locati
  * Create a CryptoKey.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $locationId [optional]
  * @return Google_Service_CloudKMS_CryptoKey
  */
-function create_cryptokey($projectId, $ring, $key, $location = 'global')
+function create_cryptokey($projectId, $keyRingId, $cryptoKeyId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -158,8 +158,8 @@ function create_cryptokey($projectId, $ring, $key, $location = 'global')
     // The resource name of the KeyRing associated with the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
         $projectId,
-        $location,
-        $ring
+        $locationId,
+        $keyRingId
     );
 
     $cryptoKey = new Google_Service_CloudKMS_CryptoKey();
@@ -169,10 +169,10 @@ function create_cryptokey($projectId, $ring, $key, $location = 'global')
     $newKey = $kms->projects_locations_keyRings_cryptoKeys->create(
         $parent,
         $cryptoKey,
-        ['cryptoKeyId' => $key]
+        ['cryptoKeyId' => $cryptoKeyId]
     );
 
-    printf('Created key %s in keyring %s' . PHP_EOL, $key, $ring);
+    printf('Created cryptoKey %s in keyRing %s' . PHP_EOL, $cryptoKeyId, $keyRingId);
 }
 # [END kms_create_cryptokey]
 
@@ -181,12 +181,12 @@ function create_cryptokey($projectId, $ring, $key, $location = 'global')
  * Create a KeyRing version.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $locationId [optional]
  * @return null
  */
-function create_cryptokey_version($projectId, $ring, $key, $location = 'global')
+function create_cryptokey_version($projectId, $keyRingId, $cryptoKeyId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -202,9 +202,9 @@ function create_cryptokey_version($projectId, $ring, $key, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Create the CryptoKey version for your project.
@@ -213,7 +213,7 @@ function create_cryptokey_version($projectId, $ring, $key, $location = 'global')
         ->create($parent, $cryptoKeyVersion);
 
     $number = substr($newVersion->name, strrpos($newVersion->name, '/') + 1);
-    printf('Created version %s for key %s in keyring %s' . PHP_EOL, $number, $key, $ring);
+    printf('Created version %s for cryptoKey %s in keyRing %s' . PHP_EOL, $number, $cryptoKeyId, $keyRingId);
 }
 # [END kms_create_cryptokey_version]
 
@@ -222,11 +222,11 @@ function create_cryptokey_version($projectId, $ring, $key, $location = 'global')
  * Create a KeyRing.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $locationId [optional]
  * @return null
  */
-function create_keyring($projectId, $ring, $location = 'global')
+function create_keyring($projectId, $keyRingId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -239,7 +239,7 @@ function create_keyring($projectId, $ring, $location = 'global')
     // The resource name of the location associated with the KeyRing.
     $parent = sprintf('projects/%s/locations/%s',
         $projectId,
-        $location
+        $locationId
     );
 
     // Create the KeyRing for your project.
@@ -247,10 +247,10 @@ function create_keyring($projectId, $ring, $location = 'global')
     $kms->projects_locations_keyRings->create(
         $parent,
         $keyRing,
-        ['keyRingId' => $ring]
+        ['keyRingId' => $keyRingId]
     );
 
-    printf('Created keyring %s' . PHP_EOL, $ring);
+    printf('Created keyRing %s' . PHP_EOL, $keyRingId);
 }
 # [END kms_create_keyring]
 
@@ -259,11 +259,11 @@ function create_keyring($projectId, $ring, $location = 'global')
  * Get a KeyRing.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $locationId [optional]
  * @return null
  */
-function get_keyring($projectId, $ring, $location = 'global')
+function get_keyring($projectId, $keyRingId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -276,8 +276,8 @@ function get_keyring($projectId, $ring, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
         $projectId,
-        $location,
-        $ring
+        $locationId,
+        $keyRingId
     );
 
     // Get the KeyRing and print it.
@@ -294,11 +294,10 @@ function get_keyring($projectId, $ring, $location = 'global')
  * List the KeyRings for a project and location.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function list_keyrings($projectId, $location = 'global')
+function list_keyrings($projectId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -311,13 +310,13 @@ function list_keyrings($projectId, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s',
         $projectId,
-        $location
+        $locationId
     );
 
     // Get the CryptoKey versions and print them.
-    $rings = $kms->projects_locations_keyRings
+    $keyRings = $kms->projects_locations_keyRings
         ->listProjectsLocationsKeyRings($parent);
-    foreach ($rings as $keyRing) {
+    foreach ($keyRings as $keyRing) {
         printf("Name: %s\nCreate Time: %s\n",
             $keyRing->getName(),
             $keyRing->getCreateTime()
@@ -331,12 +330,12 @@ function list_keyrings($projectId, $location = 'global')
  * Get a CryptoKey.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $locationId [optional]
  * @return null
  */
-function get_cryptokey($projectId, $ring, $key, $location = 'global')
+function get_cryptokey($projectId, $keyRingId, $cryptoKeyId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -349,9 +348,9 @@ function get_cryptokey($projectId, $ring, $key, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Get the CryptoKey and print it.
@@ -371,11 +370,11 @@ function get_cryptokey($projectId, $ring, $key, $location = 'global')
  * List the CryptoKeys for a KeyRing.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $locationId [optional]
  * @return null
  */
-function list_cryptokeys($projectId, $ring, $location = 'global')
+function list_cryptokeys($projectId, $keyRingId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -388,14 +387,14 @@ function list_cryptokeys($projectId, $ring, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
         $projectId,
-        $location,
-        $ring
+        $locationId,
+        $keyRingId
     );
 
     // Get the CryptoKey versions and print them.
-    $keys = $kms->projects_locations_keyRings_cryptoKeys
+    $cryptoKeys = $kms->projects_locations_keyRings_cryptoKeys
         ->listProjectsLocationsKeyRingsCryptoKeys($parent);
-    foreach ($keys as $cryptoKey) {
+    foreach ($cryptoKeys as $cryptoKey) {
         printf("Name: %s\nCreate Time: %s\nPurpose: %s\nPrimary Version: %s\n\n",
             $cryptoKey->getName(),
             $cryptoKey->getCreateTime(),
@@ -411,13 +410,13 @@ function list_cryptokeys($projectId, $ring, $location = 'global')
  * Get the version for a CryptoKey.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param int $version
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function get_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+function get_cryptokey_version($projectId, $keyRingId, $cryptoKeyId, $version, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -430,9 +429,9 @@ function get_cryptokey_version($projectId, $ring, $key, $version, $location = 'g
     // The resource name of the cryptokey version.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
         $projectId,
-        $location,
-        $ring,
-        $key,
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId,
         $version
     );
 
@@ -452,12 +451,12 @@ function get_cryptokey_version($projectId, $ring, $key, $version, $location = 'g
  * List the versions for a CryptoKey.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $locationId [optional]
  * @return null
  */
-function list_cryptokey_versions($projectId, $ring, $key, $location = 'global')
+function list_cryptokey_versions($projectId, $keyRingId, $cryptoKeyId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -470,9 +469,9 @@ function list_cryptokey_versions($projectId, $ring, $key, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Get the CryptoKey versions and print them.
@@ -493,14 +492,14 @@ function list_cryptokey_versions($projectId, $ring, $key, $location = 'global')
  * Encrypt a text file.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $infile The path to a text file.
- * @param string $outfile The path to write the encrypted file.
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $plaintextFileName The path to the file containing plaintext to encrypt.
+ * @param string $ciphertextFileName The path to write the ciphertext.
+ * @param string $locationId [optional]
  * @return null
  */
-function encrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global')
+function encrypt($projectId, $keyRingId, $cryptoKeyId, $plaintextFileName, $ciphertextFileName, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -513,13 +512,13 @@ function encrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
     // The resource name of the cryptokey.
     $name = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Use the KMS API to encrypt the text.
-    $encoded = base64_encode(file_get_contents($infile));
+    $encoded = base64_encode(file_get_contents($plaintextFileName));
     $request = new Google_Service_CloudKMS_EncryptRequest();
     $request->setPlaintext($encoded);
     $response = $kms->projects_locations_keyRings_cryptoKeys->encrypt(
@@ -528,8 +527,8 @@ function encrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
     );
 
     // Write the encrypted text to a file.
-    file_put_contents($outfile, $response['ciphertext']);
-    printf('Saved encrypted text to %s' . PHP_EOL, $outfile);
+    file_put_contents($ciphertextFileName, base64_decode($response['ciphertext']));
+    printf('Saved encrypted text to %s' . PHP_EOL, $ciphertextFileName);
 }
 # [END kms_encrypt]
 
@@ -538,14 +537,14 @@ function encrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
  * Decrypt a text file.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $infile The path to an encrypted file.
- * @param string $outfile The path to write the decrypted file.
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $ciphertextFileName The path to the ciphertext file to decrypt.
+ * @param string $plaintextFileName The path to write the decrypted plaintext file.
+ * @param string $locationId [optional]
  * @return null
  */
-function decrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global')
+function decrypt($projectId, $keyRingId, $cryptoKeyId, $ciphertextFileName, $plaintextFileName, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -558,13 +557,13 @@ function decrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
     // The resource name of the cryptokey.
     $name = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Use the KMS API to decrypt the text.
-    $ciphertext = file_get_contents($infile);
+    $ciphertext = base64_encode(file_get_contents($ciphertextFileName));
     $request = new Google_Service_CloudKMS_DecryptRequest();
     $request->setCiphertext($ciphertext);
     $response = $kms->projects_locations_keyRings_cryptoKeys->decrypt(
@@ -573,9 +572,8 @@ function decrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
     );
 
     // Write the decrypted text to a file.
-    $plaintext = base64_decode($response['plaintext']);
-    file_put_contents($outfile, $plaintext);
-    printf('Saved decrypted text to %s' . PHP_EOL, $outfile);
+    file_put_contents($plaintextFileName, base64_decode($response['plaintext']));
+    printf('Saved decrypted text to %s' . PHP_EOL, $plaintextFileName);
 }
 # [END kms_decrypt]
 
@@ -584,13 +582,13 @@ function decrypt($projectId, $ring, $key, $infile, $outfile, $location = 'global
  * Destroy a CryptoKey version.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param string $version
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return Google_Service_CloudKMS_CryptoKeyVersion
  */
-function destroy_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+function destroy_cryptokey_version($projectId, $keyRingId, $cryptoKeyId, $version, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -603,9 +601,9 @@ function destroy_cryptokey_version($projectId, $ring, $key, $version, $location 
     // The resource name of the CryptoKey version.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
         $projectId,
-        $location,
-        $ring,
-        $key,
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId,
         $version
     );
 
@@ -616,7 +614,7 @@ function destroy_cryptokey_version($projectId, $ring, $key, $version, $location 
         $request
     );
 
-    printf('Destroyed version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
+    printf('Destroyed version %s for cryptoKey %s in keyRing %s' . PHP_EOL, $version, $cryptoKeyId, $keyRingId);
 }
 # [END kms_destroy_cryptokey_version]
 
@@ -625,13 +623,13 @@ function destroy_cryptokey_version($projectId, $ring, $key, $version, $location 
  * Restore a CryptoKey version.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param string $version
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return Google_Service_CloudKMS_CryptoKeyVersion
  */
-function restore_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+function restore_cryptokey_version($projectId, $keyRingId, $cryptoKeyId, $version, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -644,9 +642,9 @@ function restore_cryptokey_version($projectId, $ring, $key, $version, $location 
     // The resource name of the CryptoKey version.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
         $projectId,
-        $location,
-        $ring,
-        $key,
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId,
         $version
     );
 
@@ -657,7 +655,7 @@ function restore_cryptokey_version($projectId, $ring, $key, $version, $location 
         $request
     );
 
-    printf('Restored version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
+    printf('Restored version %s for cryptoKey %s in keyRing %s' . PHP_EOL, $version, $cryptoKeyId, $keyRingId);
 }
 # [END kms_restore_cryptokey_version]
 
@@ -666,13 +664,13 @@ function restore_cryptokey_version($projectId, $ring, $key, $version, $location 
  * Disable a CryptoKey version.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param int $version
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function disable_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+function disable_cryptokey_version($projectId, $keyRingId, $cryptoKeyId, $version, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -685,9 +683,9 @@ function disable_cryptokey_version($projectId, $ring, $key, $version, $location 
     // The resource name of the KeyRing associated with the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
         $projectId,
-        $location,
-        $ring,
-        $key,
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId,
         $version
     );
 
@@ -702,7 +700,7 @@ function disable_cryptokey_version($projectId, $ring, $key, $version, $location 
         ['updateMask' => 'state']
     );
 
-    printf('Disabled version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
+    printf('Disabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL, $version, $cryptoKeyId, $keyRingId);
 }
 # [END kms_disable_cryptokey_version]
 
@@ -711,13 +709,13 @@ function disable_cryptokey_version($projectId, $ring, $key, $version, $location 
  * Enable a CryptoKey version.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param int $version
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function enable_cryptokey_version($projectId, $ring, $key, $version, $location = 'global')
+function enable_cryptokey_version($projectId, $keyRingId, $cryptoKeyId, $version, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -730,9 +728,9 @@ function enable_cryptokey_version($projectId, $ring, $key, $version, $location =
     // The resource name of the KeyRing associated with the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s/cryptoKeyVersions/%s',
         $projectId,
-        $location,
-        $ring,
-        $key,
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId,
         $version
     );
 
@@ -747,7 +745,7 @@ function enable_cryptokey_version($projectId, $ring, $key, $version, $location =
         ['updateMask' => 'state']
     );
 
-    printf('Enabled version %s for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
+    printf('Enabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL, $version, $cryptoKeyId, $keyRingId);
 }
 # [END kms_enable_cryptokey_version]
 
@@ -756,12 +754,12 @@ function enable_cryptokey_version($projectId, $ring, $key, $version, $location =
  * Get the IAM policy for a CryptoKey.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
+ * @param string $locationId [optional]
  * @return null
  */
-function get_cryptokey_policy($projectId, $ring, $key, $location = 'global')
+function get_cryptokey_policy($projectId, $keyRingId, $cryptoKeyId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -774,9 +772,9 @@ function get_cryptokey_policy($projectId, $ring, $key, $location = 'global')
     // The resource name of the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Get the current IAM policy and print it.
@@ -795,11 +793,11 @@ function get_cryptokey_policy($projectId, $ring, $key, $location = 'global')
  * Get the IAM policy for a KeyRing.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $location [optional]
+ * @param string $keyRingId
+ * @param string $locationId [optional]
  * @return null
  */
-function get_keyring_policy($projectId, $ring, $location = 'global')
+function get_keyring_policy($projectId, $keyRingId, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -812,8 +810,8 @@ function get_keyring_policy($projectId, $ring, $location = 'global')
     // The resource name of the location associated with the key rings.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
         $projectId,
-        $location,
-        $ring
+        $locationId,
+        $keyRingId
     );
 
     // Get the current IAM policy and print it.
@@ -832,16 +830,16 @@ function get_keyring_policy($projectId, $ring, $location = 'global')
  * Remove a member from a CryptoKey IAM policy.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
  * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $role, $location = 'global')
+function remove_member_from_cryptokey_policy($projectId, $keyRingId, $cryptoKeyId, $member, $role, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -854,9 +852,9 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
     // The resource name of the KeyRing associated with the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Get the current IAM policy and remove the member from it.
@@ -879,10 +877,10 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
         $request
     );
 
-    printf('Member %s removed from policy for key %s in keyring %s' . PHP_EOL,
+    printf('Member %s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
         $member,
-        $key,
-        $ring);
+        $cryptoKeyId,
+        $keyRingId);
 }
 # [END kms_remove_member_from_cryptokey_policy]
 
@@ -891,15 +889,15 @@ function remove_member_from_cryptokey_policy($projectId, $ring, $key, $member, $
  * Remove a member from a KeyRing IAM policy.
  *
  * @param string $projectId
- * @param string $ring
+ * @param string $keyRingId
  * @param string $member Must be in the format "user:$userEmail" or
  *        "serviceAccount:$serviceAccountEmail"
  * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $location = 'global')
+function remove_member_from_keyring_policy($projectId, $keyRingId, $member, $role, $locationId = 'global')
 {
     // Instantiate the client, authenticate using Application Default Credentials,
     // and add the scopes.
@@ -913,8 +911,8 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
     // The resource name of the location associated with the KeyRing.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s',
         $projectId,
-        $location,
-        $ring
+        $locationId,
+        $keyRingId
     );
 
     // Get the current IAM policy and remove the member from it.
@@ -937,9 +935,9 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
         $request
     );
 
-    printf('Member %s removed from policy for keyring %s' . PHP_EOL,
+    printf('Member %s removed from policy for keyRing %s' . PHP_EOL,
         $member,
-        $ring);
+        $keyRingId);
 }
 # [END kms_remove_member_from_keyring_policy]
 
@@ -948,13 +946,13 @@ function remove_member_from_keyring_policy($projectId, $ring, $member, $role, $l
  * Set a CryptoKey version as primary.
  *
  * @param string $projectId
- * @param string $ring
- * @param string $key
+ * @param string $keyRingId
+ * @param string $cryptoKeyId
  * @param int $version
- * @param string $location [optional]
+ * @param string $locationId [optional]
  * @return null
  */
-function set_cryptokey_primary_version($projectId, $ring, $key, $version, $location = 'global')
+function set_cryptokey_primary_version($projectId, $keyRingId, $cryptoKeyId, $version, $locationId = 'global')
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -967,9 +965,9 @@ function set_cryptokey_primary_version($projectId, $ring, $key, $version, $locat
     // The resource name of the KeyRing associated with the CryptoKey.
     $parent = sprintf('projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s',
         $projectId,
-        $location,
-        $ring,
-        $key
+        $locationId,
+        $keyRingId,
+        $cryptoKeyId
     );
 
     // Update the CryptoKey primary version.
@@ -980,6 +978,6 @@ function set_cryptokey_primary_version($projectId, $ring, $key, $version, $locat
         $request
     );
 
-    printf('Set %s as primary version for key %s in keyring %s' . PHP_EOL, $version, $key, $ring);
+    printf('Set %s as primary version for cryptoKey %s in keyRing %s' . PHP_EOL, $version, $cryptoKeyId, $keyRingId);
 }
 # [END kms_set_cryptokey_primary_version]

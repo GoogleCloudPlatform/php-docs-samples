@@ -43,7 +43,7 @@ class videoTest extends \PHPUnit_Framework_TestCase
     public function testAnalyzeLabels()
     {
         $output = $this->runCommand('labels', ['uri' => self::$gcsUri]);
-        $this->assertContains('Cat', $output);
+        $this->assertContains('cat', $output);
     }
 
     public function testAnalyzeLabelsInFile()
@@ -51,7 +51,7 @@ class videoTest extends \PHPUnit_Framework_TestCase
         $output = $this->runCommand('labels-in-file', [
             'file' => __DIR__ . '/data/cat_shortened.mp4'
         ]);
-        $this->assertContains('Cat', $output);
+        $this->assertContains('cat', $output);
     }
 
     public function testAnalyzeSafeSearch()

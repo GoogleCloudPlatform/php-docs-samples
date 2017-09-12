@@ -79,7 +79,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         );
         $output = ob_get_clean();
 
-        $regex = sprintf('/Created version (\d+) for key %s in keyring %s/' . PHP_EOL,
+        $regex = sprintf('/Created version (\d+) for cryptoKey %s in keyRing %s/' . PHP_EOL,
             $this->key,
             $this->ring);
         $this->assertEquals(1, preg_match($regex, $output, $matches));
@@ -122,7 +122,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Disabled version %s for key %s in keyring %s' . PHP_EOL,
+        $this->expectOutputString(sprintf('Disabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$version,
             $this->key,
             $this->ring
@@ -145,7 +145,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Enabled version %s for key %s in keyring %s' . PHP_EOL,
+        $this->expectOutputString(sprintf('Enabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$version,
             $this->key,
             $this->ring
@@ -168,7 +168,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Destroyed version %s for key %s in keyring %s' . PHP_EOL,
+        $this->expectOutputString(sprintf('Destroyed version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$version,
             $this->key,
             $this->ring
@@ -191,7 +191,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Restored version %s for key %s in keyring %s' . PHP_EOL,
+        $this->expectOutputString(sprintf('Restored version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$version,
             $this->key,
             $this->ring
@@ -214,7 +214,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Set %s as primary version for key %s in keyring %s' . PHP_EOL,
+        $this->expectOutputString(sprintf('Set %s as primary version for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$version,
             $this->key,
             $this->ring

@@ -36,8 +36,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 
         // Make sure it looks correct
         $this->assertTrue(is_array($labels));
-        $this->assertEquals(5, count($labels));
-
+        $this->assertTrue(count($labels) > 0);
         $this->expectOutputRegex('/cat/');
     }
 }

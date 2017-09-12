@@ -83,8 +83,8 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         $kms = new Google_Service_CloudKMS($client);
         // create the decrypt request
         $request = new Google_Service_CloudKMS_DecryptRequest([
-            'ciphertext' => file_get_contents($outfile)]
-        );
+            'ciphertext' => base64_encode(file_get_contents($outfile))
+        ]);
         $response = $kms->projects_locations_keyRings_cryptoKeys->decrypt(
             $parent,
             $request

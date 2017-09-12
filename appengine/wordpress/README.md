@@ -11,14 +11,12 @@ working WordPress project for
 * Install [Composer][composer]
 * Create a new Cloud Project on [Developers Console][dev-console]
 * Enable Billing on that project
+* [Enable Cloud SQL API][cloud-sql-api-enable] (For App Engine flexible environment)
 * Create App Engine default bucket at [App Engine Setting Page][app-engine-setting]
 * Install [Google Cloud SDK][gcloud-sdk]
 
-## Prerequisites for standard environment
+## Prerequisites for standard environment only
 * Install mysql
-
-## Prerequisites for flexible environment
-* [Enable Cloud SQL API][cloud-sql-api-enable] (For App Engine flexible environment)
 
 ## Project preparation
 
