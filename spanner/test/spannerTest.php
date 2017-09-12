@@ -56,7 +56,10 @@ class spannerTest extends \PHPUnit_Framework_TestCase
         $instance = $spanner->instance(self::$instanceId);
 
         $operation = $instance->create($configuration);
-        $operation->pollUntilComplete();
+        // $operation->pollUntilComplete();
+        if (!$operation->pollUntilComplete()) {
+            throw new \Exception($operation->error()['message']);
+        }
 
         self::$instance = $instance;
     }
