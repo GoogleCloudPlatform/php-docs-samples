@@ -42,6 +42,17 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Very likely', $output);
     }
 
+    public function testInspectBigquery()
+    {
+        $output = $this->runCommand('inspect-bigquery', [
+            'dataset' => 'integration_tests_dlp',
+            'table' => 'harmful',
+            'project' => getenv('GOOGLE_PROJECT_ID'),
+        ]);
+        $this->assertContains('CREDIT_CARD_NUMBER', $output);
+        $this->assertContains('Very likely', $output);
+    }
+
     public function testInspectFile()
     {
         // inspect a text file with results

@@ -56,6 +56,19 @@ $application->add(new Command('inspect-datastore'))
         );
     });
 
+$application->add(new Command('inspect-bigquery'))
+    ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
+    ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
+    ->addArgument('project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under')
+    ->setDescription('Inspect a BigQuery table using the Data Loss Prevention (DLP) API.')
+    ->setCode(function ($input, $output) {
+        inspect_bigquery(
+            $input->getArgument('dataset'),
+            $input->getArgument('table'),
+            $input->getArgument('project')
+        );
+    });
+
 $application->add(new Command('list-info-types'))
     ->addArgument('category',
         InputArgument::OPTIONAL,
