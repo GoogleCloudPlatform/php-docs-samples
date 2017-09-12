@@ -271,7 +271,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $output = $this->runCommand('web', $path);
         $this->assertContains('Web Entities found:', $output);
         $this->assertContains('Palace of Fine Arts Theatre', $output);
-        $this->assertContains('Pier 39', $output);
     }
 
     public function testDetectWebCommandGcs()
@@ -283,7 +282,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $output = $this->runCommand('web', $path);
         $this->assertContains('Web Entities found:', $output);
         $this->assertContains('Palace of Fine Arts Theatre', $output);
-        $this->assertContains('Pier 39', $output);
     }
 
     private function runCommand($commandName, $path, $output=null)
