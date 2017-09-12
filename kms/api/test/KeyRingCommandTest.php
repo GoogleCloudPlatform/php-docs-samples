@@ -63,7 +63,7 @@ class KeyRingCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Created keyring %s' . PHP_EOL, self::$ring));
+        $this->expectOutputString(sprintf('Created keyRing %s' . PHP_EOL, self::$ring));
     }
 
     /**
