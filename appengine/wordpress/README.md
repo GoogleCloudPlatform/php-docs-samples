@@ -67,8 +67,10 @@ client on your local machine and make it executable.
 
 If you haven’t created a service account for the project, please
 create it on [the Credentials section][credentials-section] in the
-Console (Choose a new service account). For the role, select Project > Owner.
-Download the JSON key file and save it in a secure place.
+Console. Click 'Create credentials' and then click 'Service account key.' For
+the Service account, select 'App Engine app default service account.' Then
+click 'Create' to create and download the JSON service account key to your
+local machine. Save it to a safe place.
 
 Run the proxy by the following command:
 
