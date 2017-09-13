@@ -12,7 +12,6 @@ working WordPress project for
 * Create a new Cloud Project on [Developers Console][dev-console]
 * Enable Billing on that project
 * [Enable Cloud SQL API][cloud-sql-api-enable]
-* Create App Engine default bucket at [App Engine Setting Page][app-engine-setting]
 * Install [Google Cloud SDK][gcloud-sdk]
 
 ## Prerequisites for standard environment only
@@ -20,12 +19,15 @@ working WordPress project for
 
 ## Project preparation
 
-Configure Google Cloud SDK with your account and the Project.
+Configure Google Cloud SDK with your account and the appropriate project ID:
 
 ```
 $ gcloud init
-...
-...
+```
+
+Create an App Engine application within your new project:
+
+```
 $ gcloud app create
 ```
 
@@ -38,27 +40,10 @@ follows:
 $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
 ```
 
-## Create and configure a Cloud SQL instance
+### Create and configure a Cloud SQL 2nd generation instance
 
-If you will use App Engine flexible environment, create a Cloud SQL
-2nd generation instance, and if you will use App Engine standard
-environment, create a Cloud SQL 1st generation instance.
-
-In this guide, we use `wp` for various resource names; the instance
+Note: In this guide, we use `wp` for various resource names; the instance
 name, the database name, and the user name.
-
-### Create and configure a Cloud SQL 1st generation instance(for standard environment)
-
-Go to the [SQL settings in the Cloud Console][sql-settings] and create
-an instance `wp` and database named `wp`. Go to the Access Control ->
-Users, then change the password for `root@localhost`. You will use
-this password for accessing from App Engine application.
-
-Also create the `wp` database in the local mysql server. The local
-mysql instance is required to run `wp-cli` tool for
-installing/upgrading plugins and themes.
-
-### Create and configure a Cloud SQL 2nd generation instance(for flexible environment)
 
 You can create a new Cloud SQL Second Generation instance with the
 following command:
