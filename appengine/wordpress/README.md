@@ -57,8 +57,8 @@ $ gcloud sql instances create wp \
 Then change the root password for your instance:
 
 ```
-$ gcloud sql instances set-root-password wp \
-  --password YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
+$ gcloud sql users set-password root % \
+  --instance wp --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
 
 To access this MySQL instance, we’ll use Cloud SQL Proxy. Follow
