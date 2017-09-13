@@ -58,7 +58,7 @@ function transcribe_sync_words($audioFile, $languageCode = 'en-US', $options = [
 
     // Print the results
     foreach ($results as $result) {
-        $alternative = $result->alternatives();
+        $alternative = $result->alternatives()[0];
         printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
         printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
         foreach ($alternative['words'] as $wordInfo) {
