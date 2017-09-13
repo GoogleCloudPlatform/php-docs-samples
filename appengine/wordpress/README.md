@@ -61,14 +61,14 @@ $ gcloud sql instances set-root-password wp \
   --password YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
 
-To access this MySQL instance, we’ll use Cloud SQL Proxy. Please
-download an appropriate binary from
-[the download page][cloud-sql-proxy-download], make it executable.
+To access this MySQL instance, we’ll use Cloud SQL Proxy. Follow
+[these instructions][cloud-sql-proxy-download] to install the Cloud SQL Proxy
+client on your local machine and make it executable.
 
 If you haven’t created a service account for the project, please
 create it on [the Credentials section][credentials-section] in the
-Console (Choose a new service account). Download the JSON key file and
-save it in a secure place.
+Console (Choose a new service account). For the role, select Project > Owner.
+Download the JSON key file and save it in a secure place.
 
 Run the proxy by the following command:
 
@@ -220,6 +220,6 @@ Enjoy your WordPress installation!
 [cloud-sql-api-enable]: https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
 [app-engine-setting]: https://console.cloud.google.com/appengine/settings
 [gcloud-sdk]: https://cloud.google.com/sdk/
-[cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/external#appaccess
+[cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
 [credentials-section]: https://console.cloud.google.com/apis/credentials/
 [php-docker]: https://github.com/googlecloudplatform/php-docker
