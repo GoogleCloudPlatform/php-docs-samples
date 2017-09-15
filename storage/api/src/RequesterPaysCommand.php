@@ -92,12 +92,12 @@ EOF
             if ($destination = $input->getArgument('download-to')) {
                 download_file_requester_pays($projectId, $bucketName, $objectName, $destination);
             }
-        } else if ($input->getOption('enable')) {
+        } elseif ($input->getOption('enable')) {
             enable_requester_pays($projectId, $bucketName);
-        } else if ($input->getOption('disable')) {
+        } elseif ($input->getOption('disable')) {
             disable_requester_pays($projectId, $bucketName);
-        } else if ($input->getOption('check-status')) {
-           get_requester_pays_status($projectId, $bucketName);
+        } elseif ($input->getOption('check-status')) {
+            get_requester_pays_status($projectId, $bucketName);
         }
     }
 }

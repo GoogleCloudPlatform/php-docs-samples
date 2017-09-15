@@ -42,7 +42,7 @@ function enable_requester_pays($projectId, $bucketName)
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'billing' => [
-            'requesterPays' => True
+            'requesterPays' => true
         ]
     ]);
     printf('Requester pays has been enabled for %s' . PHP_EOL, $bucketName);

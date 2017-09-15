@@ -42,7 +42,7 @@ function disable_requester_pays($projectId, $bucketName)
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'billing' => [
-            'requesterPays' => False
+            'requesterPays' => false
         ]
     ]);
     printf('Requester pays has been disabled for %s' . PHP_EOL, $bucketName);

@@ -25,7 +25,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Unit Tests for RequesterPaysCommand.
  */
-class BucketsCommandTest extends \PHPUnit_Framework_TestCase
+class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
@@ -70,6 +70,7 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex("/Requester pays has been enabled/");
     }
 
+    /** @depends testEnableRequesterPays */
     public function testDisableRequesterPays()
     {
         if (!self::$hasCredentials) {
@@ -94,6 +95,7 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex("/Requester pays has been disabled/");
     }
 
+    /** depends testDisableRequesterPays */
     public function testGetRequesterPaysStatus()
     {
         if (!self::$hasCredentials) {
@@ -144,9 +146,6 @@ class BucketsCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-
-        $this->expectOutputRegex("/Downloaded/");
         $this->expectOutputRegex("/using requester-pays requests/");
     }
-
 }
