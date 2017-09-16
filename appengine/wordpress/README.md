@@ -47,7 +47,7 @@ environment, create a Cloud SQL 1st generation instance.
 In this guide, we use `wp` for various resource names: the instance
 name, the database name, and the user name.
 
-### Create and configure a Cloud SQL 1st generation instance(for standard environment)
+### Create and configure a Cloud SQL 1st generation instance (for the standard environment)
 
 Go to the [SQL settings in the Cloud Console][sql-settings] and create
 an instance `wp` and database named `wp`. Go to the Access Control ->
