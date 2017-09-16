@@ -9,7 +9,7 @@ working WordPress project for the
 ## Common Prerequisites
 
 * Install [Composer][composer]
-* Create a new Cloud Project on [Developers Console][dev-console]
+* Create a new Cloud Project on the [Cloud Console][cloud-console]
 * Enable Billing on that project
 * [Enable Cloud SQL API][cloud-sql-api-enable] (For App Engine flexible environment)
 * Create App Engine default bucket at [App Engine Setting Page][app-engine-setting]
@@ -229,7 +229,7 @@ Enjoy your WordPress installation!
 [sql-settings]: https://console.cloud.google.com/sql/instances
 [memcache-dashboard]: https://console.cloud.google.com/appengine/memcache
 [composer]: https://getcomposer.org/
-[dev-console]: https://console.cloud.google.com/
+[cloud-console]: https://console.cloud.google.com/
 [cloud-sql-api-enable]: https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
 [app-engine-setting]: https://console.cloud.google.com/appengine/settings
 [gcloud-sdk]: https://cloud.google.com/sdk/
