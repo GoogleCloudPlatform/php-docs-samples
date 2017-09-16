@@ -2,8 +2,8 @@
 
 This is a small command line tool for downloading and configuring
 WordPress for Google Cloud Platform. The script allows you to create a
-working WordPress project for
-[App Engine standard environment][appengine-standard] or
+working WordPress project for the
+[App Engine standard environment][appengine-standard] or the
 [App Engine flexible environment][appengine-flexible].
 
 ## Common Prerequisites
@@ -40,11 +40,11 @@ $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
 
 ## Create and configure a Cloud SQL instance
 
-If you will use App Engine flexible environment, create a Cloud SQL
-2nd generation instance, and if you will use App Engine standard
+If you will use the App Engine flexible environment, create a Cloud SQL
+2nd generation instance, and if you will use the App Engine standard
 environment, create a Cloud SQL 1st generation instance.
 
-In this guide, we use `wp` for various resource names; the instance
+In this guide, we use `wp` for various resource names: the instance
 name, the database name, and the user name.
 
 ### Create and configure a Cloud SQL 1st generation instance(for standard environment)
@@ -52,13 +52,13 @@ name, the database name, and the user name.
 Go to the [SQL settings in the Cloud Console][sql-settings] and create
 an instance `wp` and database named `wp`. Go to the Access Control ->
 Users, then change the password for `root@localhost`. You will use
-this password for accessing from App Engine application.
+this password for accessing Cloud SQL from your App Engine application.
 
 Also create the `wp` database in the local mysql server. The local
-mysql instance is required to run `wp-cli` tool for
+mysql instance is required to run the `wp-cli` tool for
 installing/upgrading plugins and themes.
 
-### Create and configure a Cloud SQL 2nd generation instance(for flexible environment)
+### Create and configure a Cloud SQL 2nd generation instance (for the flexible environment)
 
 You can create a new Cloud SQL Second Generation instance with the
 following command:
@@ -76,11 +76,11 @@ $ gcloud sql instances set-root-password wp \
   --password YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
 
-To access this MySQL instance, we’ll use Cloud SQL Proxy. Please
-download an appropriate binary from
-[the download page][cloud-sql-proxy-download], make it executable.
+To access this MySQL instance, use Cloud SQL Proxy. 
+Download an appropriate binary from
+[the download page][cloud-sql-proxy-download] and make it executable.
 
-If you haven’t created a service account for the project, please
+If you haven’t created a service account for the project, 
 create it on [the Credentials section][credentials-section] in the
 Console (Choose a new service account). Download the JSON key file and
 save it in a secure place.
@@ -94,8 +94,8 @@ $ cloud_sql_proxy \
       -credential_file=PATH_TO_YOUR_SERVICE_ACCOUNT_JSON
 ```
 
-Now you can access to the Cloud SQL instance with the normal MySQL
-client. Please create a new database and a user as follows:
+Now you can access the Cloud SQL instance with the normal MySQL
+client. Create a new database and a user as follows:
 
 ```
 $ mysql -h 127.0.0.1 -u root -p
@@ -105,8 +105,6 @@ mysql> grant all on wp.* to 'wp'@'%';
 mysql> exit
 Bye
 ```
-
-In the above example, I created a new database wp and a new user wp.
 
 ## How to use
 
@@ -147,7 +145,7 @@ $ vendor/bin/wp(.bat) server --path=wordpress
 
 Then access http://localhost:8080/. Follow the installation steps,
 create the admin user and its password. Login to the Dashboard and
-update if any of the plugins have update.
+update if any of the plugins have updates.
 
 Now it’s ready for the first deployment.
 
@@ -163,15 +161,15 @@ $ gcloud app deploy \
 Then access your site, and continue the installation step. The URL is:
 https://PROJECT_ID.appspot.com/
 
-Go to the Dashboard, and in the Plugins page, activate the following
+Go to the Dashboard. On the Plugins page, activate the following
 plugins:
 
 
-- For standard environment
+- For the standard environment
   - App Engine WordPress plugin (also set the e-mail address in its
-    setting page)
+    settings page)
   - Batcache Manager
-- For flexible environment
+- For the flexible environment
   - Batcache Manager
   - GCS media plugin
 
@@ -220,8 +218,8 @@ update the config file manually in that case.
 
 ### Update the base image
 
-We sometimes release the security update for
-[the php-docker image][php-docker]. Then you’ll have to re-deploy your
+We sometimes release a security update for
+[the php-docker image][php-docker]. You have to re-deploy your
 WordPress instance to get the security update.
 
 Enjoy your WordPress installation!
