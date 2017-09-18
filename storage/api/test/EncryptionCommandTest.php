@@ -204,7 +204,7 @@ EOF;
         }
 
         $this->assertContains(
-            'CustomerEncryptionKeyIsIncorrect',
+            'The provided encryption key is incorrect',
             $e->getMessage()
         );
     }

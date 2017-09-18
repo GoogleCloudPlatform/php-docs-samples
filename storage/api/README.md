@@ -33,6 +33,7 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
     encryption          Upload and download Cloud Storage objects with encryption
     object-acl          Manage the ACL for Cloud Storage objects
     objects             Manage Cloud Storage objects
+    requester-pays      Manage Cloud Storage requester pays buckets and objects
     ```
 6. Run `php storage.php COMMAND --help` to print information about the usage of each command.
 
