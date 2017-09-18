@@ -152,16 +152,16 @@
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.1.4",
+            "version": "v1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-storage.git",
-                "reference": "7da20034e11feb1abb5408e7155464e8ca0466f0"
+                "reference": "0bc0db9258ed551d25384667c1a7f2dcb3801118"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-storage/zipball/7da20034e11feb1abb5408e7155464e8ca0466f0",
-                "reference": "7da20034e11feb1abb5408e7155464e8ca0466f0",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-storage/zipball/0bc0db9258ed551d25384667c1a7f2dcb3801118",
+                "reference": "0bc0db9258ed551d25384667c1a7f2dcb3801118",
                 "shasum": ""
             },
             "require": {
@@ -189,7 +189,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Storage Client for PHP",
-            "time": "2017-08-25T20:44:18+00:00"
+            "time": "2017-09-18T15:09:56+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
