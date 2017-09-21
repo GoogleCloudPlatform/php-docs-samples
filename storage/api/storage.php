@@ -23,6 +23,7 @@ use Google\Cloud\Samples\Storage\BucketsCommand;
 use Google\Cloud\Samples\Storage\EncryptionCommand;
 use Google\Cloud\Samples\Storage\IamCommand;
 use Google\Cloud\Samples\Storage\ObjectsCommand;
+use Google\Cloud\Samples\Storage\RequesterPaysCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
@@ -33,4 +34,5 @@ $application->add(new EncryptionCommand());
 $application->add(new IamCommand());
 $application->add(new ObjectAclCommand());
 $application->add(new ObjectsCommand());
+$application->add(new RequesterPaysCommand());
 $application->run();

@@ -2,12 +2,13 @@
     "name": "google/dlp-sample",
     "type": "project",
     "require": {
-        "google/cloud-dlp": "^0.1.0",
+        "google/cloud-dlp": "^0.1.2",
         "symfony/console": "^3.3"
     },
     "autoload": {
         "files": [
              "src/inspect_datastore.php",
+             "src/inspect_bigquery.php",
              "src/inspect_file.php",
              "src/inspect_string.php",
              "src/list_categories.php",

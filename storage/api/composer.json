@@ -39,7 +39,11 @@
             "src/functions/rotate_encryption_key.php",
             "src/functions/upload_encrypted_object.php",
             "src/functions/upload_object.php",
-            "src/functions/view_bucket_iam_members.php"
+            "src/functions/view_bucket_iam_members.php",
+            "src/functions/enable_requester_pays.php",
+            "src/functions/disable_requester_pays.php",
+            "src/functions/get_requester_pays_status.php",
+            "src/functions/download_file_requester_pays.php"
         ]
     },
     "require-dev": {
