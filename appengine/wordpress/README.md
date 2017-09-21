@@ -163,8 +163,9 @@ and confirm the image is uploaded to the GCS bucket by visiting the
 
 ## Check if the Batcache plugin is working
 
-On the plugin page in the WordPress dashboard, click on the Drop-ins tab. You
-should see 2 drop-ins are activated: `advanced-cache.php` and `object-cache.php`.
+On the plugin page in the WordPress dashboard, click on the Drop-ins tab near
+the top. You should see 2 drop-ins are activated: `advanced-cache.php` and
+`object-cache.php`.
 
 To make sure it’s really working, you can open an incognito window and
 visit the site because the cache plugin only serves from cache to
