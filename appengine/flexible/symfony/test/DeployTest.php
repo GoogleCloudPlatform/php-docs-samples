@@ -28,7 +28,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
 
-    public function beforeDeploy()
+    public static function beforeDeploy()
     {
         // verify and set environment variables
         self::verifyEnvironmentVariables();
@@ -102,7 +102,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
     {
         $contents = file_get_contents($targetDir . '/composer.json');
         $json = json_decode($contents, true);
-        $json['scripts']['post-deploy-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
+        $json['scripts']['post-install-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
         file_put_contents($targetDir . '/composer.json', json_encode($json, JSON_PRETTY_PRINT));
     }
 

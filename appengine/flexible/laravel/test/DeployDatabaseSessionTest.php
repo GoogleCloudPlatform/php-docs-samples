@@ -92,7 +92,7 @@ class DeployDatabaseSessionTest extends \PHPUnit_Framework_TestCase
     {
         $contents = file_get_contents($targetDir . '/composer.json');
         $json = json_decode($contents, true);
-        $json['scripts']['post-deploy-cmd'] = [
+        $json['scripts']['post-install-cmd'] = [
             'chmod -R 755 bootstrap\/cache',
             'php artisan cache:clear',
         ];
