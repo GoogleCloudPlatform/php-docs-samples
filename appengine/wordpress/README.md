@@ -13,7 +13,7 @@ working WordPress project for the
 * Enable Billing on that project
 * [Enable Cloud SQL API][cloud-sql-api-enable]
 * Install [Google Cloud SDK][gcloud-sdk]
-* [Install mysql-client][mysql-client]
+* Install the [mysql-client][mysql-client] command line tool
 * [Install Memcache][memcache-installation]
 
 ## Project preparation
@@ -31,7 +31,7 @@ $ gcloud app create
 ```
 
 Then configure the App Engine default GCS bucket for later use. The default App
-Engine bucket looks like YOUR_PROJECT_ID.appspot.com. Change the default Access
+Engine bucket is named YOUR_PROJECT_ID.appspot.com. Change the default Access
 Control List (ACL) of that bucket as follows:
 
 ```
@@ -59,9 +59,8 @@ $ gcloud sql users set-password root % \
   --instance wp --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
 
-To access this MySQL instance, use Cloud SQL Proxy. 
-Download an appropriate binary from
-[the download page][cloud-sql-proxy-download] and make it executable.
+To access this MySQL instance, use Cloud SQL Proxy. [Download][cloud-sql-proxy-download]
+it to your local computer and make it executable.
 
 If you haven’t created a service account for the project, 
 create it on [the Credentials section][credentials-section] in the
@@ -79,8 +78,8 @@ $ cloud_sql_proxy \
       -credential_file=PATH_TO_YOUR_SERVICE_ACCOUNT_JSON_FILE
 ```
 
-Now you can access the Cloud SQL instance with the MySQL client. Create a new
-database and a user as follows:
+Now you can access the Cloud SQL instance with the MySQL client in a separate
+command line tab. Create a new database and a user as follows:
 
 ```
 $ mysql -h 127.0.0.1 -u root -p
