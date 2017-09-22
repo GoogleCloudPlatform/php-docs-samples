@@ -112,8 +112,8 @@ current directory.
 
 ## Deployment
 
-CD into your WordPress project directory and run the following command
-to run deploy:
+CD into your WordPress project directory and run the following command to
+deploy:
 
 ```
 $ cd my-wordpress-project
