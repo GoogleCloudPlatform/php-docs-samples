@@ -110,33 +110,13 @@ The command asks you several questions, please answer them. Then you'll have a
 new WordPress project. By default it will create `my-wordpress-project` in the
 current directory.
 
-## Run WordPress locally and create a new user (for standard environment)
-
-If you chose the flexible environment, skip this step.
-
-This step will create a basic database setup in your local mysql
-server. This is required to use `wp-cli` tool.
+## Deployment
 
 CD into your WordPress project directory and run the following command
-to run WordPress locally (be sure to keep the cloud SQL proxy
-running):
+to run deploy:
 
 ```
 $ cd my-wordpress-project
-$ vendor/bin/wp server --path=wordpress
-```
-
-Then access http://localhost:8080/. Follow the installation steps,
-create the admin user and its password. Login to the Dashboard and
-update if any of the plugins have updates.
-
-Now it’s ready for the first deployment.
-
-## Deployment
-
-You can deploy your WordPress project by the following command.
-
-```
 $ gcloud app deploy \
     --promote --stop-previous-version app.yaml cron.yaml
 ```
