@@ -173,6 +173,9 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         }, 10);
     }
 
+    /**
+     * @depends testWrite
+     */
     public function testDeleteLogger()
     {
         $output = $this->runCommand('delete-logger', [

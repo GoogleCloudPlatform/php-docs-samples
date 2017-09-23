@@ -40,5 +40,6 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello, world!', $info['textPayload']);
         $this->assertContains('my-log', $info['logName']);
         $this->assertEquals('global', $info['resource']['type']);
+        $this->expectOutputString('Logged Hello, world!');
     }
 }
