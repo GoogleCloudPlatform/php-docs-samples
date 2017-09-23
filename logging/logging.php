@@ -47,7 +47,7 @@ $inputDefinition = new InputDefinition([
 
 // Create Sink command
 $application->add(new Command('create-sink'))
-    ->setDefinition($inputDefinition)
+    ->setDefinition(clone $inputDefinition)
     ->setDescription('Creates a Logging sink')
     ->addOption('sink',
         null,
@@ -97,7 +97,7 @@ $application->add(new Command('delete-logger'))
     });
 
 $application->add(new Command('delete-sink'))
-    ->setDefinition($inputDefinition)
+    ->setDefinition(clone $inputDefinition)
     ->setDescription('Deletes a Logging sink')
     ->addOption(
         'sink',
@@ -129,7 +129,7 @@ $application->add(new Command('list-sinks'))
     });
 
 $application->add(new Command('update-sink'))
-    ->setDefinition($inputDefinition)
+    ->setDefinition(clone $inputDefinition)
     ->setDescription('Updates a Logging sink')
     ->addOption(
         'sink',
@@ -161,19 +161,43 @@ $application->add(new Command('update-sink'))
     });
 
 $application->add(new Command('write'))
-    ->setDefinition($inputDefinition)
+    ->setDefinition(clone $inputDefinition)
     ->setDescription('Writes log entries to the given logger')
-            ->addArgument(
-                "message",
-                InputArgument::OPTIONAL,
-                "The log message to write",
-                "Hello"
-            )
+    ->addArgument(
+        'message',
+        InputArgument::OPTIONAL,
+        'The log message to write',
+        'Hello'
+    )
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $message = $input->getArgument('message');
         $loggerName = $input->getOption('logger');
         write_log($projectId, $loggerName, $message);
+    });
+
+$application->add(new Command('write-psr'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('Writes log entries using a PSR logger')
+    ->addArgument(
+        'message',
+        InputArgument::OPTIONAL,
+        'The log message to write',
+        'Hello'
+    )
+    ->addOption(
+        'level',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The log level for the PSR logger',
+        \Psr\Log\LogLevel::WARNING
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        $message = $input->getArgument('message');
+        $loggerName = $input->getOption('logger');
+        $level = $input->getOption('level');
+        write_psr_log($projectId, $loggerName, $message, $level);
     });
 
 // for testing

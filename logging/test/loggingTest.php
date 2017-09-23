@@ -187,6 +187,20 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testWritePsr()
+    {
+        $message = 'Test Message';
+        $output = $this->runCommand('write-psr', [
+            '--logger' => self::$loggerName,
+            '--level' => 'emergency',
+            'message' => $message,
+        ]);
+        $this->assertEquals(
+            sprintf("Wrote to logger '%s' at level 'emergency'.\n", self::$loggerName),
+            $output
+        );
+    }
+
     public function runCommand($commandName, $additionalArgs = [])
     {
         $application = require __DIR__ . '/../logging.php';

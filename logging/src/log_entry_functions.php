@@ -77,7 +77,7 @@ function list_entries($projectId, $loggerName)
             $entryText = $entryInfo['textPayload'];
         } else {
             $entryPayload = [];
-            foreach ($jsonPayload as $key => $value) {
+            foreach ($entryInfo['jsonPayload'] as $key => $value) {
                 $entryPayload[] = "$key=$value";
             }
             $entryText = '{' . implode(', ', $entryPayload) . '}';
