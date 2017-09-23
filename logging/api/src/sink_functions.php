@@ -39,6 +39,7 @@ function create_sink($projectId, $sinkName, $destination, $filterString)
         $destination,
         ['filter' => $filterString]
     );
+    printf("Created a sink '%s'." . PHP_EOL, $sinkName);
 }
 // [END create_sink]
 
@@ -52,6 +53,7 @@ function delete_sink($projectId, $sinkName)
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logging->sink($sinkName)->delete();
+    printf("Deleted a sink '%s'." . PHP_EOL, $sinkName);
 }
 // [END delete_sink]
 
@@ -65,7 +67,14 @@ function delete_sink($projectId, $sinkName)
 function list_sinks($projectId)
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
-    return $logging->sinks();
+    $sinks = $logging->sinks();
+    foreach ($sinks as $sink) {
+        /* @var $sink \Google\Cloud\Logging\Sink */
+        foreach ($sink->info() as $key => $value) {
+            print "$key:$value\n";
+        }
+        print PHP_EOL;
+    }
 }
 // [END list_sinks]
 
@@ -83,5 +92,6 @@ function update_sink($projectId, $sinkName, $filterString)
     $logging = new LoggingClient(['projectId' => $projectId]);
     $sink = $logging->sink($sinkName);
     $sink->update(['filter' => $filterString]);
+    printf("Updated a sink '%s'." . PHP_EOL, $sinkName);
 }
 // [END update_sink]

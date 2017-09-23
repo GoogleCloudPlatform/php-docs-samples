@@ -8,10 +8,9 @@
         "google/cloud-tools": "^0.6"
     },
     "autoload": {
-        "psr-4": { "Google\\Cloud\\Samples\\Logging\\": "src" },
         "files": [
-            "src/functions/log_entry_functions.php",
-            "src/functions/sink_functions.php"
+            "src/log_entry_functions.php",
+            "src/sink_functions.php"
         ]
     }
 }

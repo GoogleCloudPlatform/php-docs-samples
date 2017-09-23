@@ -43,6 +43,7 @@ function write_log($projectId, $loggerName, $message)
     ]);
     $entry = $logger->entry($message);
     $logger->write($entry);
+    printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
 }
 // [END write_log]
 
@@ -66,7 +67,23 @@ function list_entries($projectId, $loggerName)
     $options = [
         'filter' => $filter,
     ];
-    return $logging->entries($options);
+    $entries = $logging->entries($options);
+
+    // Print the entries
+    foreach ($entries as $entry) {
+        /* @var $entry \Google\Cloud\Logging\Entry */
+        $entryInfo = $entry->info();
+        if (isset($entryInfo['textPayload'])) {
+            $entryText = $entryInfo['textPayload'];
+        } else {
+            $entryPayload = [];
+            foreach ($jsonPayload as $key => $value) {
+                $entryPayload[] = "$key=$value";
+            }
+            $entryText = '{' . implode(', ', $entryPayload) . '}';
+        }
+        printf("%s : %s" . PHP_EOL, $entryInfo['timestamp'], $entryText);
+    }
 }
 // [END list_entries]
 
@@ -81,5 +98,6 @@ function delete_logger($projectId, $loggerName)
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logger = $logging->logger($loggerName);
     $logger->delete();
+    printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
 }
 // [END delete_logger]
