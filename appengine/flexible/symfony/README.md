@@ -45,7 +45,7 @@ Add the following scripts to your project's `composer.json`:
 ```json
 {
     "scripts": {
-        "post-deploy-cmd": [
+        "post-install-cmd": [
             "chmod -R ug+w $APP_DIR/var"
         ]
     }
