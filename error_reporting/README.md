@@ -7,11 +7,14 @@ exception to Stackdriver Error Reporting.
 
 1. To use this sample, you must first [enable the Stackdriver Error Reporting API][0]
 1. Next, **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
-    Run `php composer.phar install` (if composer is installed locally) or `composer install`
+    1. Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-    1. If the [gRPC PHP Extension][php_grpc] is not installed and enabled on your machine,
-    You will need to run this with the `--ignore-platform-reqs` flag. Note that this will
+    1. If the [gRPC PHP Extension][php_grpc] is not enabled for your version of PHP,
+    install your dependencies with the `--ignore-platform-reqs` flag. **Note** this will
     only work for `quickstart.php`, as `error_reporting.php` requires gRPC.
+    ```
+    composer install --ignore-platform-reqs
+    ```
 1. Create a service account at the [Service account section in the Cloud Console][2]
 1. Download the json key file of the service account.
 1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
@@ -38,8 +41,8 @@ Follow the instructions to install and enable the [gRPC PHP Extension][php_grpc]
 Run the samples:
 
 ```sh
-php error_reporting.php YOUR_PROJECT_ID
-Logged an error to Stackdriver
+$ php error_reporting.php report YOUR_PROJECT_ID
+Reported an error to Stackdriver
 ```
 
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * Copyright 2017 Google Inc. All Rights Reserved.
@@ -35,14 +34,14 @@ $inputDefinition = new InputDefinition([
     new InputOption('user', '', InputOption::VALUE_REQUIRED, 'The user attributed to the error.', 'test@user.com'),
 ]);
 
-$application->add(new Command('manual'))
+$application->add(new Command('report'))
     ->setDefinition($inputDefinition)
     ->setDescription('Logs an error message with context data.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project_id');
         $message = $input->getArgument('message');
         $user = $input->getOption('user');
-        report_error_manually($projectId, $message, $user);
+        report_error($projectId, $message, $user);
     });
 
 // for testing
