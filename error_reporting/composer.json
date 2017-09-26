@@ -1,7 +1,6 @@
 {
     "require": {
         "google/cloud-logging": "^1.0",
-        "google/cloud-storage": "^1.0",
         "google/cloud-error-reporting": "^0.4.3",
         "symfony/console": " ^3.0"
     },

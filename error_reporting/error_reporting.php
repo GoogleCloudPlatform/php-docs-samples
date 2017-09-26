@@ -31,14 +31,18 @@ $application = new Application('Stackdriver Error Reporting');
 
 $inputDefinition = new InputDefinition([
     new InputArgument('project_id', InputArgument::REQUIRED, 'The project id'),
+    new InputArgument('message', InputArgument::OPTIONAL, 'The message to log id', 'My Error Message'),
+    new InputOption('user', '', InputOption::VALUE_REQUIRED, 'The user attributed to the error.', 'test@user.com'),
 ]);
 
 $application->add(new Command('manual'))
     ->setDefinition($inputDefinition)
-    ->setDescription('Creates a logging metric.')
+    ->setDescription('Logs an error message with context data.')
     ->setCode(function ($input, $output) {
-    	$projectId = $input->getArgument('project_id');
-        report_error_manually($projectId);
+        $projectId = $input->getArgument('project_id');
+        $message = $input->getArgument('message');
+        $user = $input->getOption('user');
+        report_error_manually($projectId, $message, $user);
     });
 
 // for testing

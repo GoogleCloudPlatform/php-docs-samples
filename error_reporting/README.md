@@ -3,13 +3,20 @@
 `quickstart.php` is a simple command-line program to demonstrate logging an
 exception to Stackdriver Error Reporting.
 
-To use this sample, you must first [enable the Stackdriver Error Reporting API][0]
+# Installation
 
-# Running locally
+1. To use this sample, you must first [enable the Stackdriver Error Reporting API][0]
+1. Next, **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
+    Run `php composer.phar install` (if composer is installed locally) or `composer install`
+    (if composer is installed globally).
+    1. If the [gRPC PHP Extension][php_grpc] is not installed and enabled on your machine,
+    You will need to run this with the `--ignore-platform-reqs` flag. Note that this will
+    only work for `quickstart.php`, as `error_reporting.php` requires gRPC.
+1. Create a service account at the [Service account section in the Cloud Console][2]
+1. Download the json key file of the service account.
+1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
 
-Use the [Cloud SDK](https://cloud.google.com/sdk) to provide authentication:
-
-    gcloud beta auth application-default login
+# Running quickstart.php
 
 Open `quickstart.php` in a text editor and replace the text `YOUR_PROJECT_ID`
 with your Project ID.
@@ -21,8 +28,22 @@ php quickstart.php
 Exception logged to Stack Driver Error Reporting
 ```
 
-View [Stackdriver Error Reporting][0] in the Cloud Console to see the logged
+View [Stackdriver Error Reporting][1] in the Cloud Console to see the logged
 exception.
+
+# Running error_reporting.php
+
+For more granular control over your error reporting, see the examples in `error_reporting.php`
+Follow the instructions to install and enable the [gRPC PHP Extension][php_grpc].
+Run the samples:
+
+```sh
+php error_reporting.php YOUR_PROJECT_ID
+Logged an error to Stackdriver
+```
+
 
 [0]: https://console.cloud.google.com/flows/enableapi?apiid=clouderrorreporting.googleapis.com
 [1]: https://console.cloud.google.com/errors
+[2]: https://console.cloud.google.com/iam-admin/serviceaccounts/
+[php_grpc]: http://cloud.google.com/php/grpc
