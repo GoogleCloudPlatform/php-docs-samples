@@ -23,13 +23,13 @@ use Google\Devtools\Clouderrorreporting\V1beta1\ErrorContext;
 use Google\Devtools\Clouderrorreporting\V1beta1\ReportedErrorEvent;
 use Google\Devtools\Clouderrorreporting\V1beta1\SourceLocation;
 
-function report_error($projectId, $message = 'My Error Message', $user = 'some@user.com')
+function report_error_manually($projectId, $message = 'My Error Message', $user = 'some@user.com')
 {
     $errors = new ReportErrorsServiceClient();
-    $formattedProjectName = ReportErrorsServiceClient::formatProjectName($projectId);
+    $projectName = $errors->formatProjectName($projectId);
 
     $location = new SourceLocation();
-    $location->setFunctionName('report_error_manually');
+    $location->setFunctionName('report_simple_error');
 
     $context = new ErrorContext();
     $context->setUser($user);
@@ -39,7 +39,7 @@ function report_error($projectId, $message = 'My Error Message', $user = 'some@u
     $event->setMessage($message);
     $event->setContext($context);
 
-    $errors->reportErrorEvent($formattedProjectName, $event);
+    $errors->reportErrorEvent($projectName, $event);
     print('Reported an error to Stackdriver' . PHP_EOL);
 }
 # [END error_reporting_manual]

@@ -39,9 +39,9 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testReportError()
+    public function testReportErrorManually()
     {
-        $message = sprintf('Test Error Reporting (%s)', date('Y-m-d H:i:s'));
+        $message = sprintf('Test Report Error Manually (%s)', date('Y-m-d H:i:s'));
         $output = $this->runCommand('report', [
             'message' => $message,
             '--user' => 'unittests@google.com',
@@ -76,6 +76,74 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testReportException()
+    {
+        $message = sprintf('Test Report Exception (%s)', date('Y-m-d H:i:s'));
+        $output = $this->runCommand('report-exception', [
+            'message' => $message
+        ]);
+        $this->assertEquals('Reported an exception to Stackdriver' . PHP_EOL, $output);
+
+        $errorStats = new ErrorStatsServiceClient();
+        $projectName = $errorStats->formatProjectName(self::$projectId);
+        $timeRange = new QueryTimeRange();
+
+        // Iterate through all elements
+        $this->runEventuallyConsistentTest(function () use (
+            $errorStats,
+            $projectName,
+            $timeRange,
+            $message
+        ) {
+            $messages = [];
+            $response = $errorStats->listGroupStats($projectName, $timeRange);
+            foreach ($response->iterateAllElements() as $groupStat) {
+                $response = $errorStats->listEvents(
+                    $projectName,
+                    $groupStat->getGroup()->getGroupId()
+                );
+                foreach($response->iterateAllElements() as $event) {
+                    $messages[] = $event->getMessage();
+                }
+            }
+            $this->assertContains($message, implode("\n", $messages));
+        });
+    }
+
+    public function testReportExceptionWithLoggingApi()
+    {
+        $message = sprintf('Test Report Error With Logging (%s)', date('Y-m-d H:i:s'));
+        $output = $this->runCommand('report-with-logging-api', [
+            'message' => $message
+        ]);
+        $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
+
+        $errorStats = new ErrorStatsServiceClient();
+        $projectName = $errorStats->formatProjectName(self::$projectId);
+        $timeRange = new QueryTimeRange();
+
+        // Iterate through all elements
+        $this->runEventuallyConsistentTest(function () use (
+            $errorStats,
+            $projectName,
+            $timeRange,
+            $message
+        ) {
+            $messages = [];
+            $response = $errorStats->listGroupStats($projectName, $timeRange);
+            foreach ($response->iterateAllElements() as $groupStat) {
+                $response = $errorStats->listEvents(
+                    $projectName,
+                    $groupStat->getGroup()->getGroupId()
+                );
+                foreach($response->iterateAllElements() as $event) {
+                    $messages[] = $event->getMessage();
+                }
+            }
+            $this->assertContains($message, implode("\n", $messages));
+        });
+    }
+
     private function runCommand($commandName, $args = [])
     {
         $application = require __DIR__ . '/../error_reporting.php';
@@ -87,7 +155,7 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
             $commandTester->execute(
                 ['project_id' => self::$projectId] + $args,
                 ['interactive' => false]);
-        } catch (\Google\GAX\ApiException $e) {
+        } catch (\Google\Cloud\ApiException $e) {
             // if the command throws an error cast it as a string (as this would be the output)
             $application->renderException($e, $commandTester->getOutput());
             return $commandTester->getDisplay();

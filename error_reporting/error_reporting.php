@@ -19,9 +19,12 @@ namespace Google\Cloud\Samples\ErrorReporting;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Event\ConsoleErrorEvent;
+use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
@@ -31,17 +34,65 @@ $application = new Application('Stackdriver Error Reporting');
 $inputDefinition = new InputDefinition([
     new InputArgument('project_id', InputArgument::REQUIRED, 'The project id'),
     new InputArgument('message', InputArgument::OPTIONAL, 'The message to log id', 'My Error Message'),
-    new InputOption('user', '', InputOption::VALUE_REQUIRED, 'The user attributed to the error.', 'test@user.com'),
 ]);
 
 $application->add(new Command('report'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Logs an error message with context data.')
+    ->setDefinition(clone $inputDefinition)
+    ->addOption(
+        'user',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'The user attributed to the error.',
+        'test@user.com'
+    )
+    ->setDescription('Reports an error message with context and user data.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project_id');
         $message = $input->getArgument('message');
         $user = $input->getOption('user');
-        report_error($projectId, $message, $user);
+        report_error_manually($projectId, $message, $user);
+    });
+
+$application->add(new Command('report-exception'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('Reports an error message from an exception and stack trace.')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project_id');
+        $message = $input->getArgument('message');
+        $e = new \Exception($message);
+        report_exception($projectId, $e);
+    });
+
+$application->add(new Command('report-with-logging-api'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('Reports an error message with the logging API.')
+    ->addOption(
+        'user',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'The user attributed to the error.',
+        'test@user.com'
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project_id');
+        $message = $input->getArgument('message');
+        $user = $input->getOption('user');
+        report_error_with_logging_api($projectId, $message, $user);
+    });
+
+$application->add(new Command('test-exception-handler'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('Reports an exception using an exception handler.')
+    ->setCode(function ($input, $output) use ($application) {
+        $projectId = $input->getArgument('project_id');
+        $message = $input->getArgument('message');
+        register_exception_handler($projectId);
+
+        // disable Console Application exception handlers
+        $application->setCatchExceptions(false);
+
+        // throw a test exception to trigger our exception handler
+        throw new \Exception($message);
     });
 
 // for testing
