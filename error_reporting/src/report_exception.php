@@ -20,9 +20,7 @@ namespace Google\Cloud\Samples\ErrorReporting;
 # [START error_reporting_exception]
 use Exception;
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
-use Google\Devtools\Clouderrorreporting\V1beta1\ErrorContext;
 use Google\Devtools\Clouderrorreporting\V1beta1\ReportedErrorEvent;
-use Google\Devtools\Clouderrorreporting\V1beta1\SourceLocation;
 
 /**
  * @param string $projectId
@@ -40,22 +38,3 @@ function report_exception($projectId, Exception $e)
     print('Reported an exception to Stackdriver' . PHP_EOL);
 }
 # [END error_reporting_exception]
-
-# [START register_exception_handler]
-/**
- * All PHP exceptions will be logged to stackdriver
- * @param string $projectId
- */
-function register_exception_handler($projectId)
-{
-    $handlerFunction = function (\Exception $e) use ($projectId) {
-        // Format the exception for Stackdriver Error Reporting
-        // @see __DIR__/report_exception.php
-        $prev = report_exception($projectId, $e);
-        printf('Caught Exception "%s"' . PHP_EOL, $e->getMessage());
-    };
-
-    // Sets PHP's default exception handler
-    set_exception_handler($handlerFunction);
-}
-# [END register_exception_handler]

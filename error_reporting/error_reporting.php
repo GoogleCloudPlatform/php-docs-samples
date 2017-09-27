@@ -83,16 +83,35 @@ $application->add(new Command('report-with-logging-api'))
 $application->add(new Command('test-exception-handler'))
     ->setDefinition(clone $inputDefinition)
     ->setDescription('Reports an exception using an exception handler.')
+    ->addOption(
+        'type',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'Type of error to test: "exception", "error", or "fatal".',
+        'exception'
+    )
     ->setCode(function ($input, $output) use ($application) {
+        $errorType = $input->getOption('type');
+        if (!in_array($errorType, ['exception', 'error', 'fatal'])) {
+            throw new \InvalidArgumentException('Invalid error type provided, '
+                . 'must be one one of "exception", "error", or "fatal".');
+        }
         $projectId = $input->getArgument('project_id');
-        $message = $input->getArgument('message');
-        register_exception_handler($projectId);
+        require_once __DIR__ . '/src/register_exception_handler.php';
 
         // disable Console Application exception handlers
         $application->setCatchExceptions(false);
 
         // throw a test exception to trigger our exception handler
-        throw new \Exception($message);
+        $message = $input->getArgument('message');
+        switch ($input->getOption('type')) {
+            case 'exception':
+                throw new \Exception($message);
+            case 'fatal':
+                eval('syntax-error');
+            case 'error':
+                trigger_error($message);
+        }
     });
 
 // for testing
