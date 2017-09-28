@@ -65,7 +65,7 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
             $response = $errorStats->listGroupStats($projectName, $timeRange);
             foreach ($response->iterateAllElements() as $groupStat) {
                 $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
-                foreach($response->iterateAllElements() as $event) {
+                foreach ($response->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }
             }
@@ -103,7 +103,7 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
             $response = $errorStats->listGroupStats($projectName, $timeRange);
             foreach ($response->iterateAllElements() as $groupStat) {
                 $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
-                foreach($response->iterateAllElements() as $event) {
+                foreach ($response->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }
             }

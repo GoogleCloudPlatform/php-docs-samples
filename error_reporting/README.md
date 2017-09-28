@@ -1,23 +1,26 @@
 # Stackdriver Error Reporting
 
-`quickstart.php` is a simple command-line program to demonstrate logging an
-exception to Stackdriver Error Reporting.
+`quickstart.php` and `error_reporting.php` are simple command-line programs to demonstrate logging
+exceptions, errors, and PHP fatral errors to Stackdriver Error Reporting.
 
 # Installation
 
 1. To use this sample, you must first [enable the Stackdriver Error Reporting API][0]
-1. Next, **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
-    1. Run `php composer.phar install` (if composer is installed locally) or `composer install`
+1. Next, **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md):
+    1. Run `php composer.phar install --ignore-platform-reqs` (if composer is installed locally) or `composer install --ignore-platform-reqs`
     (if composer is installed globally).
-    1. If the [gRPC PHP Extension][php_grpc] is not enabled for your version of PHP,
-    install your dependencies with the `--ignore-platform-reqs` flag. **Note** this will
-    some samples in `error_reporting.php` require gRPC.
-    ```
+    ```sh
     composer install --ignore-platform-reqs
     ```
-1. Create a service account at the [Service account section in the Cloud Console][2]
-1. Download the json key file of the service account.
-1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
+    1. If the [gRPC PHP Extension][php_grpc] is enabled for your version of PHP,
+    install your dependencies without the `--ignore-platform-reqs` flag. **Note**
+    some samples in `error_reporting.php` require gRPC.
+1. Create a service account in the [Service Account section of the Cloud Console][2]
+1. Download the JSON key file of the service account.
+1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to that file.
+	```sh
+	export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account_credentials.json
+	```
 
 # Running quickstart.php
 

@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
-use Exception;
 # [START register_exception_handler]
 use Google\Cloud\ErrorReporting\Bootstrap;
 use Google\Cloud\Logging\LoggingClient;
