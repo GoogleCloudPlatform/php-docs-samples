@@ -40,6 +40,42 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testReportErrorSimple()
+    {
+        $message = sprintf('Test Report Error Simple (%s)', date('Y-m-d H:i:s'));
+        $output = $this->runCommand('report-simple', [
+            'message' => $message,
+        ]);
+        $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
+
+        $errorStats = new ErrorStatsServiceClient();
+        $projectName = $errorStats->formatProjectName(self::$projectId);
+        $timeRange = (new QueryTimeRange())
+            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
+
+        // Iterate through all elements
+        $this->runEventuallyConsistentTest(function () use (
+            $errorStats,
+            $projectName,
+            $timeRange,
+            $message
+        ) {
+            $messages = [];
+            $response = $errorStats->listGroupStats($projectName, $timeRange);
+            foreach ($response->iterateAllElements() as $groupStat) {
+                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
+                foreach ($response->iterateAllElements() as $event) {
+                    $messages[] = $event->getMessage();
+                }
+            }
+
+            $this->assertContains(
+                $message,
+                implode("\n", $messages)
+            );
+        });
+    }
+
     public function testReportErrorManually()
     {
         $message = sprintf('Test Report Error Manually (%s)', date('Y-m-d H:i:s'));
@@ -75,7 +111,6 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
                 implode("\n", $messages)
             );
         });
-
     }
 
     public function testReportErrorGrpc()

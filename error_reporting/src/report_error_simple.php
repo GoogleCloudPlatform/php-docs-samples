@@ -39,7 +39,7 @@ $logger->error($message, [
     ],
     'context' => [
         'reportLocation' => [
-            'functionName' => __FUNCTION__,
+            'functionName' => 'global',
         ]
     ]
 ]);

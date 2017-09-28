@@ -47,7 +47,7 @@ $entry = $logger->entry([
     ],
     'context' => [
         'reportLocation' => [
-            'functionName' => __FUNCTION__,
+            'functionName' => 'global',
         ],
         'user' => $user
     ]

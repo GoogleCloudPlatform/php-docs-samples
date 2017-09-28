@@ -17,14 +17,12 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
+use Exception;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleErrorEvent;
-use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
@@ -88,11 +86,21 @@ $application->add(new Command('report-grpc'))
         'The user attributed to the error.',
         'test@user.com'
     )
+    ->addOption(
+        'with-stacktrace',
+        '',
+        InputOption::VALUE_NONE,
+        'Include a stack trace in the error.'
+    )
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project_id');
         $message = $input->getArgument('message');
         $user = $input->getOption('user');
-        // $e = new \Exception($message);
+        if ($input->getOption('with-stacktrace')) {
+            # [START message-to-exception]
+            $message = (string) new Exception($message);
+            # [END message-to-exception]
+        }
         require_once __DIR__ . '/src/report_error_grpc.php';
     });
 
@@ -152,6 +160,7 @@ $application->add(new Command('test-exception-handler'))
             case 'fatal':
                 print('Triggering a PHP Fatal Error by eval-ing a syntax error...' . PHP_EOL);
                 eval('syntax-error');
+                break;
             case 'error':
                 print('Triggering a PHP Error' . PHP_EOL);
                 trigger_error($message ?: 'This is from "trigger_error()"', E_USER_ERROR);

@@ -35,14 +35,14 @@ $errors = new ReportErrorsServiceClient();
 $projectName = $errors->formatProjectName($projectId);
 
 $location = (new SourceLocation())
-    ->setFunctionName(__FUNCTION__);
+    ->setFunctionName('global');
 
 $context = (new ErrorContext())
     ->setReportLocation($location)
     ->setUser($user);
 
 $event = (new ReportedErrorEvent())
-    ->setMessage(sprintf(new Exception($message)))
+    ->setMessage($message)
     ->setContext($context);
 
 $errors->reportErrorEvent($projectName, $event);
