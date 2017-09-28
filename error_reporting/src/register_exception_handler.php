@@ -22,29 +22,16 @@ use Exception;
 use Google\Cloud\ErrorReporting\Bootstrap;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Core\Report\SimpleMetadataProvider;
-// use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
-// use Google\Devtools\Clouderrorreporting\V1beta1\ReportedErrorEvent;
 
-// Uncomment this line and replace with your project ID:
+/**
+ * Uncomment these line and replace with your project ID, service, and version. The service and
+ * version are arbitrary, but are required for the logs to be flagged in Error Reporting.
+ */
 // $projectId = 'YOUR_PROJECT_ID';
+// $service = 'ARBITRARY_SERVICE_NAME';
+// $version = 'ARBITRARY_VERSION';
 
-// Sets PHP's default exception handler
-// set_exception_handler(function (Exception $e) use ($projectId) {
-//     // Format the Exception for Stackdriver Error Reporting
-//     $event = new ReportedErrorEvent();
-//     $event->setMessage(sprintf('PHP Warning: %s', $e));
-
-//     // Report the event to stackdriver
-//     $errors = new ReportErrorsServiceClient();
-//     $errors->reportErrorEvent(
-//         $errors->formatProjectName($projectId),
-//         $event
-//     );
-//     print('An error has occurred.' . PHP_EOL);
-// });
-$service = 'error_reporting_quickstart';
-$version = '1.0-dev';
-$metadata = new SimpleMetadataProvider(null, $projectId, $service, $version);
+$metadata = new SimpleMetadataProvider([], $projectId, $service, $version);
 $logging = new LoggingClient([
     'projectId' => $projectId,
 ]);

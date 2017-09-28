@@ -11,7 +11,7 @@ exception to Stackdriver Error Reporting.
     (if composer is installed globally).
     1. If the [gRPC PHP Extension][php_grpc] is not enabled for your version of PHP,
     install your dependencies with the `--ignore-platform-reqs` flag. **Note** this will
-    only work for `quickstart.php`, as `error_reporting.php` requires gRPC.
+    some samples in `error_reporting.php` require gRPC.
     ```
     composer install --ignore-platform-reqs
     ```
@@ -36,15 +36,31 @@ exception.
 
 # Running error_reporting.php
 
-For more granular control over your error reporting, see the examples in `error_reporting.php`
-Follow the instructions to install and enable the [gRPC PHP Extension][php_grpc].
-Run the samples:
+Run the sample:
 
 ```sh
 $ php error_reporting.php report YOUR_PROJECT_ID
 Reported an error to Stackdriver
 ```
 
+For an example of how to register the Stackdriver exception handler in your custom application, see
+[src/register_exception_handler.php](src/register_exception_handler.php). You can test this out
+using the samples:
+
+```sh
+# Test registering an exception handler and then throwing a PHP Fatal Error
+$ php error_reporting.php test-exception-handler YOUR_PROJECT_ID --fatal
+Triggering a PHP Fatal Error by eval-ing a syntax error...
+```
+
+For more granular control over your error reporting, and better performance, you can use the gRPC
+library to throw errors. Follow the instructions to install and enable the
+[gRPC PHP Extension][php_grpc]. Now run the gRPC example in `error_reporting.php`:
+
+```sh
+$ php error_reporting.php report-grpc YOUR_PROJECT_ID
+Reported an error to Stackdriver
+```
 
 [0]: https://console.cloud.google.com/flows/enableapi?apiid=clouderrorreporting.googleapis.com
 [1]: https://console.cloud.google.com/errors

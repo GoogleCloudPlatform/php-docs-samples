@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Monitoring;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Devtools\Clouderrorreporting\V1beta1\QueryTimeRange;
+use Google\Devtools\Clouderrorreporting\V1beta1\QueryTimeRange_Period;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -50,7 +51,8 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
 
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->formatProjectName(self::$projectId);
-        $timeRange = new QueryTimeRange();
+        $timeRange = (new QueryTimeRange())
+            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
 
         // Iterate through all elements
         $this->runEventuallyConsistentTest(function () use (
@@ -70,23 +72,25 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
 
             $this->assertContains(
                 $message,
-                $messages
+                implode("\n", $messages)
             );
         });
 
     }
 
-    public function testReportException()
+    public function testReportErrorGrpc()
     {
-        $message = sprintf('Test Report Exception (%s)', date('Y-m-d H:i:s'));
-        $output = $this->runCommand('report-exception', [
-            'message' => $message
+        $message = sprintf('Test Report Error gRPC (%s)', date('Y-m-d H:i:s'));
+        $output = $this->runCommand('report-grpc', [
+            'message' => $message,
+            '--user' => 'unittests@google.com',
         ]);
-        $this->assertEquals('Reported an exception to Stackdriver' . PHP_EOL, $output);
+        $this->assertEquals('Reported an exception to Stackdriver using gRPC' . PHP_EOL, $output);
 
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->formatProjectName(self::$projectId);
-        $timeRange = new QueryTimeRange();
+        $timeRange = (new QueryTimeRange())
+            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
 
         // Iterate through all elements
         $this->runEventuallyConsistentTest(function () use (
@@ -98,49 +102,16 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
             $messages = [];
             $response = $errorStats->listGroupStats($projectName, $timeRange);
             foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents(
-                    $projectName,
-                    $groupStat->getGroup()->getGroupId()
-                );
+                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
                 foreach($response->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }
             }
-            $this->assertContains($message, implode("\n", $messages));
-        });
-    }
 
-    public function testReportExceptionWithLoggingApi()
-    {
-        $message = sprintf('Test Report Error With Logging (%s)', date('Y-m-d H:i:s'));
-        $output = $this->runCommand('report-with-logging-api', [
-            'message' => $message
-        ]);
-        $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
-
-        $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->formatProjectName(self::$projectId);
-        $timeRange = new QueryTimeRange();
-
-        // Iterate through all elements
-        $this->runEventuallyConsistentTest(function () use (
-            $errorStats,
-            $projectName,
-            $timeRange,
-            $message
-        ) {
-            $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange);
-            foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents(
-                    $projectName,
-                    $groupStat->getGroup()->getGroupId()
-                );
-                foreach($response->iterateAllElements() as $event) {
-                    $messages[] = $event->getMessage();
-                }
-            }
-            $this->assertContains($message, implode("\n", $messages));
+            $this->assertContains(
+                $message,
+                implode("\n", $messages)
+            );
         });
     }
 

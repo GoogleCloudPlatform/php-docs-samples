@@ -17,24 +17,35 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
-# [START error_reporting_exception]
+# [START report_error_grpc]
 use Exception;
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
+use Google\Devtools\Clouderrorreporting\V1beta1\ErrorContext;
 use Google\Devtools\Clouderrorreporting\V1beta1\ReportedErrorEvent;
+use Google\Devtools\Clouderrorreporting\V1beta1\SourceLocation;
 
 /**
  * @param string $projectId
- * @param Exception $e The exception to log to stackdriver
+ * @param string $message The optional error message
+ * @param string $user optional user identifier to attach to the error.
  */
-function report_exception($projectId, Exception $e)
+function report_error_grpc($projectId, $message = 'My Error Message', $user = 'some@user.com')
 {
     $errors = new ReportErrorsServiceClient();
     $projectName = $errors->formatProjectName($projectId);
 
-    $event = new ReportedErrorEvent();
-    $event->setMessage(sprintf('PHP Warning: %s', $e));
+    $location = (new SourceLocation())
+        ->setFunctionName(__FUNCTION__);
+
+    $context = (new ErrorContext())
+        ->setReportLocation($location)
+        ->setUser($user);
+
+    $event = (new ReportedErrorEvent())
+        ->setMessage(sprintf($message))
+        ->setContext($context);
 
     $errors->reportErrorEvent($projectName, $event);
-    print('Reported an exception to Stackdriver' . PHP_EOL);
+    print('Reported an exception to Stackdriver using gRPC' . PHP_EOL);
 }
-# [END error_reporting_exception]
+# [END report_error_grpc]

@@ -33,7 +33,7 @@ $application = new Application('Stackdriver Error Reporting');
 
 $inputDefinition = new InputDefinition([
     new InputArgument('project_id', InputArgument::REQUIRED, 'The project id'),
-    new InputArgument('message', InputArgument::OPTIONAL, 'The message to log id', 'My Error Message'),
+    new InputArgument('message', InputArgument::OPTIONAL, 'The error message', 'My Error Message'),
 ]);
 
 $application->add(new Command('report'))
@@ -53,19 +53,9 @@ $application->add(new Command('report'))
         report_error_manually($projectId, $message, $user);
     });
 
-$application->add(new Command('report-exception'))
+$application->add(new Command('report-grpc'))
     ->setDefinition(clone $inputDefinition)
-    ->setDescription('Reports an error message from an exception and stack trace.')
-    ->setCode(function ($input, $output) {
-        $projectId = $input->getArgument('project_id');
-        $message = $input->getArgument('message');
-        $e = new \Exception($message);
-        report_exception($projectId, $e);
-    });
-
-$application->add(new Command('report-with-logging-api'))
-    ->setDefinition(clone $inputDefinition)
-    ->setDescription('Reports an error message with the logging API.')
+    ->setDescription('Reports a custom error object using gRPC.')
     ->addOption(
         'user',
         '',
@@ -76,19 +66,42 @@ $application->add(new Command('report-with-logging-api'))
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project_id');
         $message = $input->getArgument('message');
-        $user = $input->getOption('user');
-        report_error_with_logging_api($projectId, $message, $user);
+        $e = new \Exception($message);
+        report_error_grpc($projectId, $e);
     });
 
 $application->add(new Command('test-exception-handler'))
-    ->setDefinition(clone $inputDefinition)
     ->setDescription('Reports an exception using an exception handler.')
+    ->addArgument(
+        'project_id',
+        InputArgument::REQUIRED,
+        'Type of error to test: "exception", "error", or "fatal".'
+    )
+    ->addArgument(
+        'message',
+        InputArgument::OPTIONAL,
+        'The error message.'
+    )
     ->addOption(
         'type',
         '',
         InputOption::VALUE_REQUIRED,
         'Type of error to test: "exception", "error", or "fatal".',
         'exception'
+    )
+    ->addOption(
+        'service',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'The service where the error occurred.',
+        'service'
+    )
+    ->addOption(
+        'app-version',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'The version for which the error occurred.',
+        'version'
     )
     ->setCode(function ($input, $output) use ($application) {
         $errorType = $input->getOption('type');
@@ -97,6 +110,8 @@ $application->add(new Command('test-exception-handler'))
                 . 'must be one one of "exception", "error", or "fatal".');
         }
         $projectId = $input->getArgument('project_id');
+        $service = $input->getOption('service');
+        $version = $input->getOption('app-version');
         require_once __DIR__ . '/src/register_exception_handler.php';
 
         // disable Console Application exception handlers
@@ -104,13 +119,16 @@ $application->add(new Command('test-exception-handler'))
 
         // throw a test exception to trigger our exception handler
         $message = $input->getArgument('message');
-        switch ($input->getOption('type')) {
+        switch ($errorType) {
             case 'exception':
-                throw new \Exception($message);
+                print('Throwing a PHP Exception...' . PHP_EOL);
+                throw new \Exception($message ?: 'This is from "throw new Exception()"');
             case 'fatal':
+                print('Triggering a PHP Fatal Error by eval-ing a syntax error...' . PHP_EOL);
                 eval('syntax-error');
             case 'error':
-                trigger_error($message);
+                print('Triggering a PHP Error' . PHP_EOL);
+                trigger_error($message ?: 'This is from "trigger_error()"', E_USER_ERROR);
         }
     });
 

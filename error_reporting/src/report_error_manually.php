@@ -18,28 +18,38 @@
 namespace Google\Cloud\Samples\ErrorReporting;
 
 # [START error_reporting_manual]
-use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
-use Google\Devtools\Clouderrorreporting\V1beta1\ErrorContext;
-use Google\Devtools\Clouderrorreporting\V1beta1\ReportedErrorEvent;
-use Google\Devtools\Clouderrorreporting\V1beta1\SourceLocation;
+use Google\Cloud\Logging\LoggingClient;
 
 function report_error_manually($projectId, $message = 'My Error Message', $user = 'some@user.com')
 {
-    $errors = new ReportErrorsServiceClient();
-    $projectName = $errors->formatProjectName($projectId);
+    $logging = new LoggingClient([
+        'projectId' => $projectId
+    ]);
 
-    $location = new SourceLocation();
-    $location->setFunctionName('report_simple_error');
+    // The name of the log to write to
+    $logName = 'my-log';
 
-    $context = new ErrorContext();
-    $context->setUser($user);
-    $context->setReportLocation($location);
+    // Selects the log to write to
+    $logger = $logging->logger($logName);
 
-    $event = new ReportedErrorEvent();
-    $event->setMessage($message);
-    $event->setContext($context);
+    // Log a custom error entry by populating "reportLocation.functionName", "serviceContext.module"
+    // and "serviceContext.version"
+    $entry = $logger->entry([
+        'message' => $message,
+        'serviceContext' => [
+            'service' => 'service',
+            'version' => 'version'
+        ],
+        'context' => [
+            'reportLocation' => [
+                'functionName' => __FUNCTION__,
+            ],
+            'user' => $user
+        ]
+    ]);
 
-    $errors->reportErrorEvent($projectName, $event);
+    // Writes the log entry
+    $logger->write($entry);
     print('Reported an error to Stackdriver' . PHP_EOL);
 }
 # [END error_reporting_manual]

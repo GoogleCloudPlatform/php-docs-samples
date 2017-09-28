@@ -10,9 +10,8 @@
     },
     "autoload": {
         "files": [
-            "src/report_error_manually.php",
-            "src/report_error_with_logging_api.php",
-            "src/report_exception.php"
+            "src/report_error_grpc.php",
+            "src/report_error_manually.php"
         ]
     }
 }
