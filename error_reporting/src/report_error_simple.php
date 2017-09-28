@@ -17,43 +17,31 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
-# [START report_error_manually]
+# [START report_error_simple]
 use Google\Cloud\Logging\LoggingClient;
 
 /**
- * Uncomment these line and replace with your project ID, message, and user.
- * User is optional. Service and version are not optional, but can be any string.
+ * Uncomment these line and replace with your project ID and message
  */
 // $projectId = 'YOUR_PROJECT_ID';
 // $message = 'This is the error message to report!';
-// $user = 'optional@user.com';
-// $service = 'ARBITRARY_SERVICE_NAME';
-// $version = 'ARBITRARY_VERSION';
 
 $logging = new LoggingClient([
     'projectId' => $projectId
 ]);
 
-// Selects the log to write to. The log name "error-log" can be any string.
-$logger = $logging->logger('error-log');
-
-// Log a custom error entry by populating "reportLocation.functionName", "serviceContext.module"
-// and "serviceContext.version"
-$entry = $logger->entry([
-    'message' => $message,
+// Selects the log to write to
+$logger = $logging->psrLogger('error-log');
+$logger->error($message, [
     'serviceContext' => [
-        'service' => $service,
-        'version' => $version,
+        'service' => 'service',
+        'version' => 'version'
     ],
     'context' => [
         'reportLocation' => [
             'functionName' => __FUNCTION__,
-        ],
-        'user' => $user
+        ]
     ]
 ]);
-
-// Writes the log entry
-$logger->write($entry);
-# [END report_error_manually]
+# [END report_error_simple]
 print('Reported an error to Stackdriver' . PHP_EOL);

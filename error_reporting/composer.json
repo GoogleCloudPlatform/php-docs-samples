@@ -7,11 +7,5 @@
     },
     "require-dev": {
         "google/cloud-tools": "^0.6"
-    },
-    "autoload": {
-        "files": [
-            "src/report_error_grpc.php",
-            "src/report_error_manually.php"
-        ]
     }
 }

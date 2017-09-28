@@ -36,6 +36,15 @@ $inputDefinition = new InputDefinition([
     new InputArgument('message', InputArgument::OPTIONAL, 'The error message', 'My Error Message'),
 ]);
 
+$application->add(new Command('report-simple'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('Reports a simple error message.')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project_id');
+        $message = $input->getArgument('message');
+        require_once __DIR__ . '/src/report_error_simple.php';
+    });
+
 $application->add(new Command('report'))
     ->setDefinition(clone $inputDefinition)
     ->addOption(
@@ -45,12 +54,28 @@ $application->add(new Command('report'))
         'The user attributed to the error.',
         'test@user.com'
     )
+    ->addOption(
+        'service',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'The service where the error occurred.',
+        'service'
+    )
+    ->addOption(
+        'app-version',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'The version for which the error occurred.',
+        'version'
+    )
     ->setDescription('Reports an error message with context and user data.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project_id');
         $message = $input->getArgument('message');
         $user = $input->getOption('user');
-        report_error_manually($projectId, $message, $user);
+        $service = $input->getOption('service');
+        $version = $input->getOption('app-version');
+        require_once __DIR__ . '/src/report_error_manually.php';
     });
 
 $application->add(new Command('report-grpc'))
@@ -66,8 +91,9 @@ $application->add(new Command('report-grpc'))
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project_id');
         $message = $input->getArgument('message');
-        $e = new \Exception($message);
-        report_error_grpc($projectId, $e);
+        $user = $input->getOption('user');
+        // $e = new \Exception($message);
+        require_once __DIR__ . '/src/report_error_grpc.php';
     });
 
 $application->add(new Command('test-exception-handler'))
