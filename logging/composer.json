@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-logging": "dev-master as 1.0",
+        "google/cloud-logging": "^1.0",
         "symfony/console": "^3.0",
         "monolog/monolog": "^1.23"
     },
