@@ -196,7 +196,21 @@ class loggingTest extends \PHPUnit_Framework_TestCase
             'message' => $message,
         ]);
         $this->assertEquals(
-            sprintf("Wrote to logger '%s' at level 'emergency'.\n", self::$loggerName),
+            sprintf("Wrote to PSR logger '%s' at level 'emergency'.\n", self::$loggerName),
+            $output
+        );
+    }
+
+    public function testWriteMonolog()
+    {
+        $message = 'Test Message';
+        $output = $this->runCommand('write-monolog', [
+            '--logger' => self::$loggerName,
+            '--level' => 'emergency',
+            'message' => $message,
+        ]);
+        $this->assertEquals(
+            sprintf("Wrote to Monolog logger '%s' at level 'emergency'.\n", self::$loggerName),
             $output
         );
     }

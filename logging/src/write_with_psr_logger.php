@@ -17,7 +17,7 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START write_psr_log]
+// [START write_with_psr_logger]
 use Google\Cloud\Logging\LoggingClient;
 use Psr\Log\LogLevel;
 
@@ -27,11 +27,11 @@ use Psr\Log\LogLevel;
  * @param string $loggerName The name of the logger.
  * @param string $message The log message.
  */
-function write_psr_log($projectId, $loggerName, $message, $level = LogLevel::WARNING)
+function write_with_psr_logger($projectId, $loggerName, $message, $level = LogLevel::WARNING)
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logger = $logging->psrLogger($loggerName);
     $logger->log($level, $message);
-    printf("Wrote to logger '%s' at level '%s'." . PHP_EOL, $loggerName, $level);
+    printf("Wrote to PSR logger '%s' at level '%s'." . PHP_EOL, $loggerName, $level);
 }
-// [END write_psr_log]
+// [END write_with_psr_logger]

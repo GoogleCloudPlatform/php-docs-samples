@@ -197,7 +197,31 @@ $application->add(new Command('write-psr'))
         $message = $input->getArgument('message');
         $loggerName = $input->getOption('logger');
         $level = $input->getOption('level');
-        write_psr_log($projectId, $loggerName, $message, $level);
+        write_with_psr_logger($projectId, $loggerName, $message, $level);
+    });
+
+$application->add(new Command('write-monolog'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('Writes log entries using a Monolog logger')
+    ->addArgument(
+        'message',
+        InputArgument::OPTIONAL,
+        'The log message to write',
+        'Hello'
+    )
+    ->addOption(
+        'level',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The log level for the PSR logger',
+        \Psr\Log\LogLevel::WARNING
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        $message = $input->getArgument('message');
+        $loggerName = $input->getOption('logger');
+        $level = $input->getOption('level');
+        write_with_monolog_logger($projectId, $loggerName, $message, $level);
     });
 
 // for testing

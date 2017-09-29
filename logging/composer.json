@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-logging": "^1.0",
+        "google/cloud-logging": "dev-master as 1.0",
         "symfony/console": "^3.0",
         "monolog/monolog": "^1.23"
     },
@@ -11,7 +11,8 @@
     "autoload": {
         "files": [
             "src/log_entry_functions.php",
-            "src/psr_logger.php",
+            "src/write_with_psr_logger.php",
+            "src/write_with_monolog_logger.php",
             "src/sink_functions.php"
         ]
     }
