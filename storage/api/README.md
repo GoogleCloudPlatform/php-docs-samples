@@ -29,6 +29,7 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
     ```sh
     bucket-acl          Manage the ACL for Cloud Storage buckets.
     bucket-default-acl  Manage the default ACL for Cloud Storage buckets.
+    bucket-labels       Manage Cloud Storage bucket labels
     buckets             Manage Cloud Storage buckets
     encryption          Upload and download Cloud Storage objects with encryption
     object-acl          Manage the ACL for Cloud Storage objects
