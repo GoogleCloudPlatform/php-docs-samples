@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Logging;
 // [START write_with_monolog_logger]
 use Google\Cloud\Logging\LoggingClient;
 use Monolog\Handler\PsrHandler;
-use Monolog\Logger;
+use Monolog\Logger as MonologLogger;
 use Psr\Log\LogLevel;
 
 /** Write a log message via the Stackdriver Logging API.
@@ -38,7 +38,7 @@ function write_with_monolog_logger($projectId, $loggerName, $message, $level = L
 
     // Create a Monolog logger
     // NOTE: You can use an existing monolog client, i.e. when using Laravel or Symfony.
-    $monolog = new MonologLogger();
+    $monolog = new MonologLogger($loggerName);
 
     // Push the Psr logger onto the logger using a Monolog PsrHandler.
     $handler = new PsrHandler($logger);

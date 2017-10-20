@@ -136,7 +136,6 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     public function testDeleteSink()
     {
         $output = $this->runCommand('delete-sink', [
-            // '--logger' => self::$loggerName,
             '--sink' => self::$sinkName,
         ]);
         $this->assertEquals(
@@ -210,7 +209,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
             'message' => $message,
         ]);
         $this->assertEquals(
-            sprintf("Wrote to Monolog logger '%s' at level 'emergency'.\n", self::$loggerName),
+            sprintf("Wrote to monolog logger '%s' at level 'emergency'.\n", self::$loggerName),
             $output
         );
     }
