@@ -85,6 +85,6 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
 
     # Make an authenticated HTTP Request
     $response = $http_client->request('GET', '/', []);
-    return (string) $response->getBody();
+    return $response;
 }
 # [END make_iap_request]
