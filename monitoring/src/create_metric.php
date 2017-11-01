@@ -46,7 +46,7 @@ function create_metric($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->formatProjectName($projectId);
+    $projectName = $metrics->projectName($projectId);
 
     $descriptor = new MetricDescriptor();
     $descriptor->setDescription('Daily sales records from all branch stores.');

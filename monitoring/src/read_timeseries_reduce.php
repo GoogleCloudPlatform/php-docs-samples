@@ -48,7 +48,7 @@ function read_timeseries_reduce($projectId, $minutesAgo = 20)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->formatProjectName($projectId);
+    $projectName = $metrics->projectName($projectId);
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();

@@ -48,7 +48,7 @@ function write_timeseries($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->formatProjectName($projectId);
+    $projectName = $metrics->projectName($projectId);
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $endTime = new Timestamp();
