@@ -41,7 +41,7 @@ function list_descriptors($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->formatProjectName($projectId);
+    $projectName = $metrics->projectName($projectId);
     $descriptors = $metrics->listMetricDescriptors($projectName);
 
     printf('Metric Descriptors:' . PHP_EOL);

@@ -42,7 +42,7 @@ function delete_metric($projectId, $metricId)
         'projectId' => $projectId,
     ]);
 
-    $metricPath = $metrics->formatMetricDescriptorName($projectId, $metricId);
+    $metricPath = $metrics->metricDescriptorName($projectId, $metricId);
     $ret = $metrics->deleteMetricDescriptor($metricPath);
 
     printf('Deleted a metric: ' . $metricPath . PHP_EOL);

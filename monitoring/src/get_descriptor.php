@@ -42,7 +42,7 @@ function get_descriptor($projectId, $metricId)
         'projectId' => $projectId,
     ]);
 
-    $metricName = $metrics->formatMetricDescriptorName($projectId, $metricId);
+    $metricName = $metrics->metricDescriptorName($projectId, $metricId);
     $descriptor = $metrics->getMetricDescriptor($metricName);
 
     printf('Name: ' . $descriptor->getDisplayName() . PHP_EOL);
