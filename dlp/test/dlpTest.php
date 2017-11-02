@@ -39,7 +39,6 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'project' => getenv('GOOGLE_PROJECT_ID'),
         ]);
         $this->assertContains('US_MALE_NAME', $output);
-        $this->assertContains('Very likely', $output);
     }
 
     public function testInspectBigquery()
@@ -50,7 +49,6 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'project' => getenv('GOOGLE_PROJECT_ID'),
         ]);
         $this->assertContains('CREDIT_CARD_NUMBER', $output);
-        $this->assertContains('Very likely', $output);
     }
 
     public function testInspectFile()
