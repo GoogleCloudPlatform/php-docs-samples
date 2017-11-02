@@ -17,17 +17,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
  */
 
 # [START make_iap_request]
 namespace Google\Cloud\Samples\Iap;
 
 # Imports Auth libraries and Guzzle HTTP libraries.
-use Google\Auth\ApplicationDefaultCredentials;
-use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\Auth\OAuth2;
-use Google\Auth\Middleware\AuthTokenMiddleware;
 use Google\Auth\Middleware\ScopedAccessTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
@@ -47,21 +44,18 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
     $iam_scope = 'https://www.googleapis.com/auth/iam';
 
     # Create an OAuth object using the service account key
-    $oauth = new OAuth2([]);
-    $oauth->setGrantType(OAuth2::JWT_URN);
-    $oauth->setSigningKey($serviceAccountKey['private_key']);
-    $oauth->setSigningAlgorithm('RS256');
-    $oauth->setAudience($oauth_token_uri);
-    $oauth->setAdditionalClaims([
-        'target_audience' => $clientId,
+    $oauth = new OAuth2([
+        'audience' => $oauth_token_uri,
+        'issuer' => $serviceAccountKey['client_email'],
+        'signingAlgorithm' => 'RS256',
+        'signingKey' => $serviceAccountKey['private_key'],
+        'tokenCredentialUri' => $oauth_token_uri,
     ]);
-    $oauth->setTokenCredentialUri($oauth_token_uri);
-    $oauth->setIssuer($serviceAccountKey['client_email']);
+    $oauth->setGrantType(OAuth2::JWT_URN);
+    $oauth->setAdditionalClaims(['target_audience' => $clientId]);
 
     # Obtain an OpenID Connect token, which is a JWT signed by Google.
-    $guzzle = new Client();
-    $httpHandler = \Google\Auth\HttpHandler\HttpHandlerFactory::build($guzzle);
-    $token = $oauth->fetchAuthToken($httpHandler);
+    $token = $oauth->fetchAuthToken();
     $idToken = $oauth->getIdToken();
 
     # Construct a ScopedAccessTokenMiddleware with the ID token.
@@ -80,7 +74,7 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
         'handler' => $stack,
         'base_uri' => $url,
         'auth' => 'scoped',
-        'verify' => false
+        'verify' => true
     ]);
 
     # Make an authenticated HTTP Request

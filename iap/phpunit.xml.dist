@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHP auth test">
+        <testsuite name="PHP IAP Test">
             <directory>test</directory>
         </testsuite>
     </testsuites>

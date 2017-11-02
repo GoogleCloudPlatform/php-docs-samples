@@ -33,11 +33,11 @@ require __DIR__ . '/vendor/autoload.php';
 # environment app that does this.
 # The project must have the service account used by this test added as a
 # member of the project.
-$HOSTNAME = 'YOUR_HOSTNAME';
-$IAP_CLIENT_ID = ('YOUR_CLIENT_ID');
+$HOSTNAME = 'https://pennapps-vision.appspot.com/';
+$IAP_CLIENT_ID = '719644213702-iijfskm6a8iecv491dlp2kj2gb33jblb.apps.googleusercontent.com';
 $SERVICE_ACCOUNT_PATH = 'service-account.json';
-$PROJECT_NUMBER = 1;
-$PROJECT_ID = 'YOUR_PROJECT_ID';
+$PROJECT_NUMBER = 719644213702;
+$PROJECT_ID = 'pennapps-vision';
 
 
 # JWTs are obtained by IAP-protected applications whenever an
@@ -46,4 +46,6 @@ $PROJECT_ID = 'YOUR_PROJECT_ID';
 # exercises both make_iap_request and validate_jwt.
 $response = make_iap_request($HOSTNAME, $IAP_CLIENT_ID, $SERVICE_ACCOUNT_PATH);
 $iap_jwt = explode(': ', (string)$response->getBody())[1];
-validate_jwt_from_app_engine($iap_jwt, $PROJECT_NUMBER, $PROJECT_ID);
+$subAndEmail = validate_jwt_from_app_engine($iap_jwt, $PROJECT_NUMBER, $PROJECT_ID);
+printf('sub: %s' . PHP_EOL, $subAndEmail['sub']);
+printf('email: %s' . PHP_EOL, $subAndEmail['email']);

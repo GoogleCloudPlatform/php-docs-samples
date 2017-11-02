@@ -1,9 +1,9 @@
 {
     "require": {
-        "symfony/console": " ^3.0",
+        "symfony/console": "^2.8",
         "google/auth":"dev-additional-claims as v1.0.1",
-        "firebase/php-jwt": "^5.0",
-        "lcobucci/jwt": "^3.2"
+        "lcobucci/jwt": "^3.2",
+        "mdanter/ecc":"0.3.2"
     },
     "autoload": {
         "psr-4": {
