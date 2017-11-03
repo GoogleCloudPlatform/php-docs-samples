@@ -60,7 +60,7 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
 
     # Construct a ScopedAccessTokenMiddleware with the ID token.
     $middleware = new ScopedAccessTokenMiddleware(
-        function() use ($idToken) {
+        function () use ($idToken) {
             return $idToken;
         },
         $iam_scope

@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 namespace Google\Cloud\Samples\Iap\Tests;
-use Symfony\Component\Console\Application;
+
 use Symfony\Component\Console\Tester\CommandTester;
+
 /**
  * Unit Tests for IAP commands.
  */
@@ -35,9 +36,9 @@ class iapTest extends \PHPUnit_Framework_TestCase
     {
         if (!$url = getenv('IAP_URL')) {
             $this->markTestSkipped('No IAP protected resource URL found.');
-        } else if (!$clientId = getenv('IAP_CLIENT_ID')) {
+        } elseif (!$clientId = getenv('IAP_CLIENT_ID')) {
             $this->markTestSkipped('No OAuth client ID found.');
-        } else if (!$serviceAccountPath = getenv('IAP_SERVICE_ACCOUNT')) {
+        } elseif (!$serviceAccountPath = getenv('IAP_SERVICE_ACCOUNT')) {
             $this->markTestSkipped('No IAP service account found.');
         }
         $output = $this->runRequestCommand($url, $clientId, $serviceAccountPath);
@@ -48,13 +49,13 @@ class iapTest extends \PHPUnit_Framework_TestCase
     {
         if (!$url = getenv('IAP_URL')) {
             $this->markTestSkipped('No IAP protected resource URL found.');
-        } else if (!$clientId = getenv('IAP_CLIENT_ID')) {
+        } elseif (!$clientId = getenv('IAP_CLIENT_ID')) {
             $this->markTestSkipped('No OAuth client ID found.');
-        } else if (!$serviceAccountPath = getenv('IAP_SERVICE_ACCOUNT')) {
+        } elseif (!$serviceAccountPath = getenv('IAP_SERVICE_ACCOUNT')) {
             $this->markTestSkipped('No IAP service account found.');
-        } else if (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
+        } elseif (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
             $this->markTestSkipped('No IAP project number found.');
-        } else if (!$projectId = getenv('IAP_PROJECT_ID')) {
+        } elseif (!$projectId = getenv('IAP_PROJECT_ID')) {
             $this->markTestSkipped('No IAP project ID found.');
         }
         $output = $this->runValidateCommand($url, $clientId, $serviceAccountPath, $projectNumber, $projectId);
