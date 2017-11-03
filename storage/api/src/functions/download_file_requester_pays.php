@@ -41,8 +41,8 @@ function download_file_requester_pays($projectId, $bucketName, $objectName, $des
     $storage = new StorageClient([
         'projectId' => $projectId
     ]);
-    $requesterPays = true;
-    $bucket = $storage->bucket($bucketName, $requesterPays);
+    $userProject = true;
+    $bucket = $storage->bucket($bucketName, $userProject);
     $object = $bucket->object($objectName);
     $object->downloadToFile($destination);
     printf('Downloaded gs://%s/%s to %s using requester-pays requests.' . PHP_EOL,
