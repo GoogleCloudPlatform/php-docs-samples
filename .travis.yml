@@ -39,6 +39,7 @@ env:
 before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
   - php ${HOME}/php-tools/scripts/dump_credentials.php
+  - php testing/iap_service_account.php
   - travis_retry ${HOME}/php-tools/scripts/install_test_deps.sh
   - mkdir -p build/logs
 
