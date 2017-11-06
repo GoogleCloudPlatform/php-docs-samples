@@ -40,6 +40,11 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function setUp()
+    {
+        $this->eventuallyConsistentRetryCount = 10;
+    }
+
     public function testReportErrorSimple()
     {
         $message = sprintf('Test Report Error Simple (%s)', date('Y-m-d H:i:s'));
