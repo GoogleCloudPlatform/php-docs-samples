@@ -38,7 +38,7 @@ class iapTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No IAP protected resource URL found.');
         } elseif (!$clientId = getenv('IAP_CLIENT_ID')) {
             $this->markTestSkipped('No OAuth client ID found.');
-        } elseif (!$serviceAccountPath = getenv('IAP_SERVICE_ACCOUNT')) {
+        } elseif (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('No IAP service account found.');
         }
         $output = $this->runRequestCommand($url, $clientId, $serviceAccountPath);
@@ -51,7 +51,7 @@ class iapTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No IAP protected resource URL found.');
         } elseif (!$clientId = getenv('IAP_CLIENT_ID')) {
             $this->markTestSkipped('No OAuth client ID found.');
-        } elseif (!$serviceAccountPath = getenv('IAP_SERVICE_ACCOUNT')) {
+        } elseif (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('No IAP service account found.');
         } elseif (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
             $this->markTestSkipped('No IAP project number found.');

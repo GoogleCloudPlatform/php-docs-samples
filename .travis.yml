@@ -30,7 +30,6 @@ matrix:
 env:
   global:
     - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
-    - IAP_SERVICE_ACCOUNT=$TRAVIS_BUILD_DIR/iap_credentials.json
     - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
     - PATH="${HOME}/google-cloud-sdk/bin:${PATH}"
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
@@ -39,7 +38,6 @@ env:
 before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
   - php ${HOME}/php-tools/scripts/dump_credentials.php
-  - php testing/iap_service_account.php
   - travis_retry ${HOME}/php-tools/scripts/install_test_deps.sh
   - mkdir -p build/logs
 
