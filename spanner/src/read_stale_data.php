@@ -43,7 +43,6 @@ function read_stale_data($instanceId, $databaseId)
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    // maxStaleness and minReadTimestamp are only available in single-use transactions.
     $snapshot = $database->snapshot();
     $keySet = $spanner->keySet(['all' => true]);
     $results = $snapshot->read(
