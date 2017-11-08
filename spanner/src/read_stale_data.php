@@ -43,9 +43,8 @@ function read_stale_data($instanceId, $databaseId)
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $snapshot = $database->snapshot();
     $keySet = $spanner->keySet(['all' => true]);
-    $results = $snapshot->read(
+    $results = $database->read(
         'Albums',
         $keySet,
         ['SingerId', 'AlbumId', 'AlbumTitle'],
