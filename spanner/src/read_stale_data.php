@@ -48,7 +48,7 @@ function read_stale_data($instanceId, $databaseId)
         'Albums',
         $keySet,
         ['SingerId', 'AlbumId', 'AlbumTitle'],
-        ['exactStaleness' => new Duration(10)]
+        ['exactStaleness' => new Duration(15)]
     );
 
     foreach ($results->rows() as $row) {
