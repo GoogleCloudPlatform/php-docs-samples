@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2007804cb057547667f37a092dcbe3b",
+    "content-hash": "09c343cf90bbc98e4bf1304d71f13c7b",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -54,16 +54,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-auth-library-php.git",
-                "reference": "db8e3022a308cb0e988026d38e67b91a42b41622"
+                "reference": "548d27d670f0236dc5258fa4cdde6e7b63464cfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/db8e3022a308cb0e988026d38e67b91a42b41622",
-                "reference": "db8e3022a308cb0e988026d38e67b91a42b41622",
+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/548d27d670f0236dc5258fa4cdde6e7b63464cfd",
+                "reference": "548d27d670f0236dc5258fa4cdde6e7b63464cfd",
                 "shasum": ""
             },
             "require": {
@@ -80,9 +80,6 @@
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "src/"
-                ],
                 "psr-4": {
                     "Google\\Auth\\": "src"
                 }
@@ -98,20 +95,20 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2017-07-31T16:34:40+00:00"
+            "time": "2017-10-10T17:01:45+00:00"
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.8.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "b8250068469ebd067872c8d774fbc6ad7e74e5c5"
+                "reference": "b4baea5587fd85fc349caacaaa5d203536b40c31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/b8250068469ebd067872c8d774fbc6ad7e74e5c5",
-                "reference": "b8250068469ebd067872c8d774fbc6ad7e74e5c5",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/b4baea5587fd85fc349caacaaa5d203536b40c31",
+                "reference": "b4baea5587fd85fc349caacaaa5d203536b40c31",
                 "shasum": ""
             },
             "require": {
@@ -135,7 +132,7 @@
                     "id": "cloud-core",
                     "target": "GoogleCloudPlatform/google-cloud-php-core.git",
                     "path": "src/Core",
-                    "entry": null
+                    "entry": "ServiceBuilder.php"
                 }
             },
             "autoload": {
@@ -148,29 +145,29 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2017-08-02T20:02:30+00:00"
+            "time": "2017-11-01T19:10:21+00:00"
         },
         {
             "name": "google/cloud-language",
-            "version": "v0.4.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-language.git",
-                "reference": "161d47a8a65687900273e04e4649cb1018ef9454"
+                "reference": "dcfc5c6be82200da16eaa50663557ff444f1fe07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-language/zipball/161d47a8a65687900273e04e4649cb1018ef9454",
-                "reference": "161d47a8a65687900273e04e4649cb1018ef9454",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-language/zipball/dcfc5c6be82200da16eaa50663557ff444f1fe07",
+                "reference": "dcfc5c6be82200da16eaa50663557ff444f1fe07",
                 "shasum": ""
             },
             "require": {
-                "google/cloud-core": "^1.0"
+                "google/cloud-core": "^1.0",
+                "google/gax": "^0.25",
+                "google/proto-client": "^0.25"
             },
             "suggest": {
-                "google/cloud-storage": "Analyze documents stored in Google Cloud Storage",
-                "google/gax": "Required to support gRPC",
-                "google/proto-client": "Required to support gRPC"
+                "google/cloud-storage": "Analyze documents stored in Google Cloud Storage"
             },
             "type": "library",
             "extra": {
@@ -191,26 +188,27 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Natural Language Client for PHP",
-            "time": "2017-06-30T22:46:26+00:00"
+            "time": "2017-11-08T16:10:03+00:00"
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.1.3",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-storage.git",
-                "reference": "b1adf92a54c6c72a19809ae0ab767f317035eb19"
+                "reference": "48a7bcbe0d360b53f0b1f7e25f2284ae274f8a37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-storage/zipball/b1adf92a54c6c72a19809ae0ab767f317035eb19",
-                "reference": "b1adf92a54c6c72a19809ae0ab767f317035eb19",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-storage/zipball/48a7bcbe0d360b53f0b1f7e25f2284ae274f8a37",
+                "reference": "48a7bcbe0d360b53f0b1f7e25f2284ae274f8a37",
                 "shasum": ""
             },
             "require": {
                 "google/cloud-core": "^1.0"
             },
             "suggest": {
+                "google/cloud-pubsub": "May be used to register a topic to receive bucket notifications.",
                 "phpseclib/phpseclib": "May be used in place of OpenSSL for creating signed Cloud Storage URLs. Please require version ^2."
             },
             "type": "library",
@@ -232,25 +230,25 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Storage Client for PHP",
-            "time": "2017-07-12T18:33:11+00:00"
+            "time": "2017-10-17T17:11:46+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.21.2",
+            "version": "0.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "74e33a8c8532d27e80018d48b133d1caacf151fc"
+                "reference": "bca9e3de6fe537761c89db5115f45878243c11ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/74e33a8c8532d27e80018d48b133d1caacf151fc",
-                "reference": "74e33a8c8532d27e80018d48b133d1caacf151fc",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/bca9e3de6fe537761c89db5115f45878243c11ba",
+                "reference": "bca9e3de6fe537761c89db5115f45878243c11ba",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "~0.9|^1.0",
-                "google/protobuf": "^3.3.2",
+                "google/protobuf": "^3.4",
                 "grpc/grpc": "^1.4",
                 "php": ">=5.5"
             },
@@ -276,28 +274,28 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-07-17T20:12:04+00:00"
+            "time": "2017-10-30T16:05:52+00:00"
         },
         {
             "name": "google/proto-client",
-            "version": "0.22.0",
+            "version": "0.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "a0b9515c8321c03a8e43293c41f76e1a7418570a"
+                "reference": "fb7f1f7bf750ed0121df6ffcb39add0c8639713a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/a0b9515c8321c03a8e43293c41f76e1a7418570a",
-                "reference": "a0b9515c8321c03a8e43293c41f76e1a7418570a",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/fb7f1f7bf750ed0121df6ffcb39add0c8639713a",
+                "reference": "fb7f1f7bf750ed0121df6ffcb39add0c8639713a",
                 "shasum": ""
             },
             "require": {
-                "google/protobuf": "^3.3.2",
+                "google/protobuf": "^3.4",
                 "php": ">=5.5"
             },
             "require-dev": {
-                "google/gax": ">=0.20.0",
+                "google/gax": ">=0.25.0",
                 "phpunit/phpunit": "4.8.*"
             },
             "type": "library",
@@ -316,20 +314,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-07-28T16:22:59+00:00"
+            "time": "2017-10-30T23:07:46+00:00"
         },
         {
             "name": "google/protobuf",
-            "version": "v3.4.0",
+            "version": "v3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/protobuf.git",
-                "reference": "80a37e0782d2d702d52234b62dd4b9ec74fd2c95"
+                "reference": "b04e5cba356212e4e8c66c61bbe0c3a20537c5b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/protobuf/zipball/80a37e0782d2d702d52234b62dd4b9ec74fd2c95",
-                "reference": "80a37e0782d2d702d52234b62dd4b9ec74fd2c95",
+                "url": "https://api.github.com/repos/google/protobuf/zipball/b04e5cba356212e4e8c66c61bbe0c3a20537c5b9",
+                "reference": "b04e5cba356212e4e8c66c61bbe0c3a20537c5b9",
                 "shasum": ""
             },
             "require": {
@@ -357,20 +355,20 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2017-08-15T23:39:12+00:00"
+            "time": "2017-09-14T19:24:28+00:00"
         },
         {
             "name": "grpc/grpc",
-            "version": "v1.4.6",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/grpc/grpc.git",
-                "reference": "d006cbc2edcc9d5d33ed229162adb6cfcaf327e6"
+                "url": "https://github.com/grpc/grpc-php.git",
+                "reference": "8d190d91ddb9d980f685d9caf79bca62d7edc1e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc/zipball/d006cbc2edcc9d5d33ed229162adb6cfcaf327e6",
-                "reference": "d006cbc2edcc9d5d33ed229162adb6cfcaf327e6",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/8d190d91ddb9d980f685d9caf79bca62d7edc1e6",
+                "reference": "8d190d91ddb9d980f685d9caf79bca62d7edc1e6",
                 "shasum": ""
             },
             "require": {
@@ -386,19 +384,19 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Grpc\\": "src/php/lib/Grpc/"
+                    "Grpc\\": "src/lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "Apache-2.0"
             ],
             "description": "gRPC library for PHP",
-            "homepage": "http://grpc.io",
+            "homepage": "https://grpc.io",
             "keywords": [
                 "rpc"
             ],
-            "time": "2017-08-17T01:17:06+00:00"
+            "time": "2017-09-11T20:50:39+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -848,20 +846,20 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.3.6",
+            "version": "v3.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "b0878233cb5c4391347e5495089c7af11b8e6201"
+                "reference": "116bc56e45a8e5572e51eb43ab58c769a352366c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/b0878233cb5c4391347e5495089c7af11b8e6201",
-                "reference": "b0878233cb5c4391347e5495089c7af11b8e6201",
+                "url": "https://api.github.com/repos/symfony/console/zipball/116bc56e45a8e5572e51eb43ab58c769a352366c",
+                "reference": "116bc56e45a8e5572e51eb43ab58c769a352366c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^5.5.9|>=7.0.8",
                 "symfony/debug": "~2.8|~3.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
@@ -874,7 +872,6 @@
                 "symfony/dependency-injection": "~3.3",
                 "symfony/event-dispatcher": "~2.8|~3.0",
                 "symfony/filesystem": "~2.8|~3.0",
-                "symfony/http-kernel": "~2.8|~3.0",
                 "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
@@ -913,24 +910,24 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29T21:27:59+00:00"
+            "time": "2017-10-02T06:42:24+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.3.6",
+            "version": "v3.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "7c13ae8ce1e2adbbd574fc39de7be498e1284e13"
+                "reference": "eb95d9ce8f18dcc1b3dfff00cb624c402be78ffd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/7c13ae8ce1e2adbbd574fc39de7be498e1284e13",
-                "reference": "7c13ae8ce1e2adbbd574fc39de7be498e1284e13",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/eb95d9ce8f18dcc1b3dfff00cb624c402be78ffd",
+                "reference": "eb95d9ce8f18dcc1b3dfff00cb624c402be78ffd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^5.5.9|>=7.0.8",
                 "psr/log": "~1.0"
             },
             "conflict": {
@@ -969,20 +966,20 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-28T15:27:31+00:00"
+            "time": "2017-10-02T06:42:24+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.5.0",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "7c8fae0ac1d216eb54349e6a8baa57d515fe8803"
+                "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/7c8fae0ac1d216eb54349e6a8baa57d515fe8803",
-                "reference": "7c8fae0ac1d216eb54349e6a8baa57d515fe8803",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
+                "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
                 "shasum": ""
             },
             "require": {
@@ -994,7 +991,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.6-dev"
                 }
             },
             "autoload": {
@@ -1028,7 +1025,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-14T15:44:48+00:00"
+            "time": "2017-10-11T12:05:26+00:00"
         }
     ],
     "packages-dev": [
@@ -1088,16 +1085,16 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c"
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
                 "shasum": ""
             },
             "require": {
@@ -1138,7 +1135,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2017-09-11T18:02:19+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1234,22 +1231,22 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.7.0",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073"
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/93d39f1f7f9326d746203c7c056f300f7f126073",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
+                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
                 "sebastian/comparator": "^1.1|^2.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
@@ -1260,7 +1257,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -1293,7 +1290,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02T20:05:34+00:00"
+            "time": "2017-09-04T11:05:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2045,20 +2042,20 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.6",
+            "version": "v3.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "ddc23324e6cfe066f3dd34a37ff494fa80b617ed"
+                "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/ddc23324e6cfe066f3dd34a37ff494fa80b617ed",
-                "reference": "ddc23324e6cfe066f3dd34a37ff494fa80b617ed",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
+                "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "require-dev": {
                 "symfony/console": "~2.8|~3.0"
@@ -2096,7 +2093,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-23T12:43:26+00:00"
+            "time": "2017-10-05T14:43:42+00:00"
         },
         {
             "name": "webmozart/assert",

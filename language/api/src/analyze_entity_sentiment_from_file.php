@@ -52,7 +52,7 @@ function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = nul
     $encodingType = EncodingType::UTF16;
 
     // Call the analyzeEntitySentiment function
-    $response = $language->analyzeEntitySentiment($document, $encodingType);
+    $response = $language->analyzeEntitySentiment($document, ['encodingType' => $encodingType]);
     $entities = $response->getEntities();
 
     $entity_types = array('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT',

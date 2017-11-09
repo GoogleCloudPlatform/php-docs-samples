@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_entity_sentiment]
+# [START language_classify_string]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\V1beta2\LanguageServiceClient;
@@ -30,9 +30,9 @@ use Google\Cloud\Language\V1beta2\Document_Type;
 use Google\Cloud\Language\V1beta2\EncodingType;
 
 /**
- * Find the entities in text.
+ * Find the entities in text. The text needs to be 20+ words to call classifyText.
  * ```
- * analyze_entity_sentiment('Do you know the way to San Jose?');
+ * classify_text('The first two gubernatorial elections since President Donald Trump took office went in favor of Democratic candidates in Virginia and New Jersey.');
  * ```
  *
  * @param string $text The text to analyze.
@@ -40,8 +40,14 @@ use Google\Cloud\Language\V1beta2\EncodingType;
  *
  */
 
-function analyze_entity_sentiment($text, $projectId = null)
+function classify_text($text, $projectId = null)
 {
+    // Make sure we have enough words (20+) to call classifyText
+    if (str_word_count($text) < 20) {
+        printf('20+ words are required to call classifyText.' . PHP_EOL);
+        return;
+    }
+
     // Create the Natural Language client
     $language = new LanguageServiceClient([
         'projectId' => $projectId,
@@ -51,21 +57,15 @@ function analyze_entity_sentiment($text, $projectId = null)
     $document->setContent($text);
     $encodingType = EncodingType::UTF16;
 
-    // Call the analyzeEntitySentiment function
-    $response = $language->analyzeEntitySentiment($document, ['encodingType' => $encodingType]);
-    $entities = $response->getEntities();
+    // Call the classifyText function
+    $response = $language->classifyText($document, ['encodingType' => $encodingType]);
+    $categories = $response->getCategories();
 
-    $entity_types = array('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT',
-        'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER');
-
-    // Print out information about each entity
-    foreach ($entities as $entity) {
-        printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-        printf('Entity Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
-        printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
-        printf('Entity Magnitude: %s' . PHP_EOL, $entity->getSentiment()->getMagnitude());
-        printf('Entity Score: %s' . PHP_EOL, $entity->getSentiment()->getScore());
+    // Print out information about each category
+    foreach ($categories as $category) {
+        printf('Category Name: %s' . PHP_EOL, $category->getName());
+        printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
         printf(PHP_EOL);
     }
 }
-# [END analyze_entity_sentiment]
+# [END language_classify_string]
