@@ -223,11 +223,11 @@ class spannerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadStaleData()
     {
-        // read-stale-data reads data that is exactly 10 seconds old.  So, make sure 10 seconds
+        // read-stale-data reads data that is exactly 15 seconds old.  So, make sure 15 seconds
         // have elapsed since testUpdateData().
         $elapsed = time() - self::$lastUpdateDataTimestamp;
-        if ($elapsed < 11) {
-            sleep(11 - $elapsed);
+        if ($elapsed < 16) {
+            sleep(16 - $elapsed);
         }
         $output = $this->runCommand('read-stale-data');
         $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
