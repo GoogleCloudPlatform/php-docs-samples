@@ -228,7 +228,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testClassifyText()
     {
-        $output = $this->runCommand('classify', 'The first two gubernatorial elections since President Donald Trump took office went in favor of Democratic candidates in Virginia and New Jersey.');
+        $output = $this->runCommand(
+            'classify', 'The first two gubernatorial elections since ' .
+            'President Donald Trump took office went in favor of Democratic ' .
+            'candidates in Virginia and New Jersey.');
         $this->assertContains('Category Name: /News/Politics', $output);
         $this->assertContains('Confidence:', $output);
     }

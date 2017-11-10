@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
  */
 
 # [START language_classify_file]
@@ -30,14 +30,13 @@ use Google\Cloud\Language\V1beta2\Document_Type;
 use Google\Cloud\Language\V1beta2\EncodingType;
 
 /**
- * Find the entities in text. The text needs to be 20+ words to call classifyText.
+ * Classify text (20+ words) into categories.
  * ```
  * classify_text_from_file('gs://storage-bucket/file-name');
  * ```
  *
  * @param string $cloud_storage_uri Your Cloud Storage bucket URI
  * @param string $projectId (optional) Your Google Cloud Project ID
- *
  */
 
 function classify_text_from_file($cloud_storage_uri, $projectId = null)

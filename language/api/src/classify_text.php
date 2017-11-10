@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
  */
 
 # [START language_classify_string]
@@ -30,21 +30,24 @@ use Google\Cloud\Language\V1beta2\Document_Type;
 use Google\Cloud\Language\V1beta2\EncodingType;
 
 /**
- * Find the entities in text. The text needs to be 20+ words to call classifyText.
+ * Classify text (20+ words) into categories.
  * ```
- * classify_text('The first two gubernatorial elections since President Donald Trump took office went in favor of Democratic candidates in Virginia and New Jersey.');
+ * classify_text(
+ *     'The first two gubernatorial elections since President Donald Trump ' .
+ *     'took office went in favor of Democratic candidates in Virginia and ' .
+ *     'New Jersey.'
+ * );
  * ```
  *
  * @param string $text The text to analyze.
  * @param string $projectId (optional) Your Google Cloud Project ID
- *
  */
 
 function classify_text($text, $projectId = null)
 {
     // Make sure we have enough words (20+) to call classifyText
     if (str_word_count($text) < 20) {
-        printf('20+ words are required to call classifyText.' . PHP_EOL);
+        printf('20+ words are required to classify text.' . PHP_EOL);
         return;
     }
 

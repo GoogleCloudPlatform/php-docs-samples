@@ -56,6 +56,10 @@ authentication:
 
 1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
 
+1. If you are using the Analyze Entity Sentiment or Classify Text features, you will need to install and enable the [gRPC extension for PHP][grpc].
+
+[grpc]: https://cloud.google.com/php/grpc
+
 ## Samples
 
 To run the Natural Language Samples:
@@ -181,11 +185,46 @@ To run the Analyze Syntax sample:
     language: en
     entities: {  }
 
+
+### Run Analyze Entity Sentiment
+
+To run the Analyze Entity Sentiment sample:
+
+    $ php language.php entity-sentiment 'New York is great. New York is good.'
+    Entity Name: New York
+    Entity Type: LOCATION
+    Entity Salience: 1
+    Entity Magnitude: 1.7999999523163
+    Entity Score: 0
+
+    Mentions: 
+      Begin Offset: 0
+      Content: New York
+      Mention Type: PROPER
+      Mention Magnitude: 0.89999997615814
+      Mention Score: 0.89999997615814
+
+    Begin Offset: 17
+      Content: New York
+      Mention Type: PROPER
+      Mention Magnitude: 0.80000001192093
+      Mention Score: -0.80000001192093
+
+### Run Classify Text
+
+To run the Classify Text sample:
+
+    $ php language.php classify 'The first two gubernatorial elections since
+    President Donald Trump took office went in favor of Democratic candidates
+    in Virginia and New Jersey.'
+    Category Name: /News/Politics
+    Confidence: 0.99000000953674
+
 ## The client library
 
 This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
 You can read the documentation for more details on API usage and use GitHub
-to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
+to [browse the source][google-cloud-php-source] and [report issues][google-cloud-php-issues].
 
 ## Troubleshooting
 

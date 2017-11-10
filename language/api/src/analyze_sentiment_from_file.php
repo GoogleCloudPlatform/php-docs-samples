@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
  */
 
 # [START analyze_sentiment_from_file]
