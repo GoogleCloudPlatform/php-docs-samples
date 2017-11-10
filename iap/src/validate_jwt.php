@@ -42,7 +42,11 @@ use Lcobucci\JWT\Signer\Ecdsa\Sha256;
  */
 function validate_jwt_from_app_engine($iap_jwt, $cloud_project_number, $cloud_project_id)
 {
-    $expected_audience = sprintf('/projects/%s/apps/%s', $cloud_project_number, $cloud_project_id);
+    $expected_audience = sprintf(
+        '/projects/%s/apps/%s',
+        $cloud_project_number,
+        $cloud_project_id
+    );
     return validate_jwt($iap_jwt, $expected_audience);
 }
 
@@ -61,7 +65,11 @@ function validate_jwt_from_app_engine($iap_jwt, $cloud_project_number, $cloud_pr
  */
 function validate_jwt_from_compute_engine($iap_jwt, $cloud_project_number, $backend_service_id)
 {
-    $expected_audience = sprintf('/projects/%s/global/backendServices/%s', $cloud_project_number, $backend_service_id);
+    $expected_audience = sprintf(
+        '/projects/%s/global/backendServices/%s',
+        $cloud_project_number,
+        $backend_service_id
+    );
     return validate_jwt($iap_jwt, $expected_audience);
 }
 

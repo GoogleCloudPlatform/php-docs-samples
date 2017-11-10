@@ -23,79 +23,56 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class iapTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $hasCredentials;
-    public static function setUpBeforeClass()
-    {
-    }
+    private $url;
+    private $clientId;
+    private $serviceAccountPath;
 
     public function setUp()
     {
+        if (!$this->url = getenv('IAP_URL')) {
+            $this->markTestSkipped('No IAP protected resource URL found.');
+        } elseif (!$this->clientId = getenv('IAP_CLIENT_ID')) {
+            $this->markTestSkipped('No OAuth client ID found.');
+        } elseif (!$this->serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            $this->markTestSkipped('No IAP service account found.');
+        }
     }
 
     public function testRequest()
     {
-        if (!$url = getenv('IAP_URL')) {
-            $this->markTestSkipped('No IAP protected resource URL found.');
-        } elseif (!$clientId = getenv('IAP_CLIENT_ID')) {
-            $this->markTestSkipped('No OAuth client ID found.');
-        } elseif (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('No IAP service account found.');
-        }
-        $output = $this->runRequestCommand($url, $clientId, $serviceAccountPath);
+        $output = $this->runCommand('request');
         $this->assertContains('x-goog-authenticated-user-jwt:', $output);
     }
 
     public function testValidate()
     {
-        if (!$url = getenv('IAP_URL')) {
-            $this->markTestSkipped('No IAP protected resource URL found.');
-        } elseif (!$clientId = getenv('IAP_CLIENT_ID')) {
-            $this->markTestSkipped('No OAuth client ID found.');
-        } elseif (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('No IAP service account found.');
-        } elseif (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
+        if (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
             $this->markTestSkipped('No IAP project number found.');
         } elseif (!$projectId = getenv('IAP_PROJECT_ID')) {
             $this->markTestSkipped('No IAP project ID found.');
         }
-        $output = $this->runValidateCommand($url, $clientId, $serviceAccountPath, $projectNumber, $projectId);
-        $this->assertContains('Printing out user identity information from ID token payload:', $output);
+        $output = $this->runCommand('validate', [
+            'projectNumber' => $projectNumber,
+            'projectId' => $projectId
+        ]);
+        $this->assertContains('Printing user identity information from ID token payload:', $output);
         $this->assertContains('sub: accounts.google.com', $output);
         $this->assertContains('email:', $output);
         $this->assertContains($projectId, $output);
     }
 
-    private function runRequestCommand($url, $clientId, $serviceAccountPath)
+    private function runCommand($name, $options = [])
     {
         $application = require __DIR__ . '/../iap.php';
-        $command = $application->get('request');
+        $command = $application->get($name);
         $commandTester = new CommandTester($command);
-        ob_start();
         $commandTester->execute([
-            'url' => $url,
-            'clientId' => $clientId,
-            'serviceAccountPath' => $serviceAccountPath,
-        ], [
+            'url' => $this->url,
+            'clientId' => $this->clientId,
+            'serviceAccountPath' => $this->serviceAccountPath
+        ] + $options, [
             'interactive' => false
         ]);
-        return ob_get_clean();
-    }
-
-    private function runValidateCommand($url, $clientId, $serviceAccountPath, $projectNumber, $projectId)
-    {
-        $application = require __DIR__ . '/../iap.php';
-        $command = $application->get('validate');
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute([
-            'url' => $url,
-            'clientId' => $clientId,
-            'serviceAccountPath' => $serviceAccountPath,
-            'projectNumber' => $projectNumber,
-            'projectId' => $projectId,
-        ], [
-            'interactive' => false
-        ]);
-        return ob_get_clean();
+        return $commandTester->getDisplay();
     }
 }

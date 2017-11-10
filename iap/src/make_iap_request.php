@@ -73,8 +73,7 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
     $http_client = new Client([
         'handler' => $stack,
         'base_uri' => $url,
-        'auth' => 'scoped',
-        'verify' => true
+        'auth' => 'scoped'
     ]);
 
     # Make an authenticated HTTP Request
