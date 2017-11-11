@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-language": "^0.8",
+        "google/cloud-language": "^0.9",
         "symfony/console": "^3.0",
         "google/cloud-storage": "^1.0"
     },

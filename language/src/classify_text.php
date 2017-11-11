@@ -24,10 +24,7 @@
 # [START language_classify_string]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\Document_Type;
-use Google\Cloud\Language\V1beta2\EncodingType;
+use Google\Cloud\Language\LanguageClient;
 
 /**
  * Classify text (20+ words) into categories.
@@ -52,22 +49,18 @@ function classify_text($text, $projectId = null)
     }
 
     // Create the Natural Language client
-    $language = new LanguageServiceClient([
+    $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
-    $document = new Document();
-    $document->setType(Document_Type::PLAIN_TEXT);
-    $document->setContent($text);
-    $encodingType = EncodingType::UTF16;
 
     // Call the classifyText function
-    $response = $language->classifyText($document, ['encodingType' => $encodingType]);
-    $categories = $response->getCategories();
+    $response = $language->classifyText($text);
+    $categories = $response->categories();
 
     // Print out information about each category
     foreach ($categories as $category) {
-        printf('Category Name: %s' . PHP_EOL, $category->getName());
-        printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
+        printf('Category Name: %s' . PHP_EOL, $category['name']);
+        printf('Confidence: %s' . PHP_EOL, $category['confidence']);
         printf(PHP_EOL);
     }
 }

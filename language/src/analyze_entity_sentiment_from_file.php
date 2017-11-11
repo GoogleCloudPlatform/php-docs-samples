@@ -24,15 +24,12 @@
 # [START analyze_entity_sentiment_from_file]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\Document_Type;
-use Google\Cloud\Language\V1beta2\EncodingType;
+use Google\Cloud\Language\LanguageClient;
 
 /**
  * Find the entities in text.
  * ```
- * analyze_entity_sentiment_from_file('gs://storage-bucket/file-name);
+ * analyze_entity_sentiment_from_file('gs://storage-bucket/file-name');
  * ```
  *
  * @param string $cloud_storage_uri Your Cloud Storage bucket URI
@@ -42,29 +39,26 @@ use Google\Cloud\Language\V1beta2\EncodingType;
 
 function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = null)
 {
-    // Create the Natural Language client
-    $language = new LanguageServiceClient([
+   // Create the Natural Language client
+    $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
-    $document = new Document();
-    $document->setType(Document_Type::PLAIN_TEXT);
-    $document->setGcsContentUri($cloud_storage_uri);
-    $encodingType = EncodingType::UTF16;
 
     // Call the analyzeEntitySentiment function
-    $response = $language->analyzeEntitySentiment($document, ['encodingType' => $encodingType]);
-    $entities = $response->getEntities();
+    $response = $language->analyzeEntitySentiment($cloud_storage_uri);
+    $info = $response->info();
+    $entities = $info['entities'];
 
     $entity_types = array('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT',
         'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER');
 
     // Print out information about each entity
     foreach ($entities as $entity) {
-        printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-        printf('Entity Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
-        printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
-        printf('Entity Magnitude: %s' . PHP_EOL, $entity->getSentiment()->getMagnitude());
-        printf('Entity Score: %s' . PHP_EOL, $entity->getSentiment()->getScore());
+        printf('Entity Name: %s' . PHP_EOL, $entity['name']);
+        printf('Entity Type: %s' . PHP_EOL, $entity['type']);
+        printf('Entity Salience: %s' . PHP_EOL, $entity['salience']);
+        printf('Entity Magnitude: %s' . PHP_EOL, $entity['sentiment']['magnitude']);
+        printf('Entity Score: %s' . PHP_EOL, $entity['sentiment']['score']);
         printf(PHP_EOL);
     }
 }
