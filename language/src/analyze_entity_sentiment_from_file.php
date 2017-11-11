@@ -39,7 +39,7 @@ use Google\Cloud\Language\LanguageClient;
 
 function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = null)
 {
-   // Create the Natural Language client
+    // Create the Natural Language client
     $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
