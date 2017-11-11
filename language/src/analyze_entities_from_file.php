@@ -18,19 +18,19 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_syntax_from_file]
+# [START analyze_entities_from_file]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Find the syntax in text stored in a Cloud Storage bucket.
+ * Find the entities in text stored in a Cloud Storage bucket.
  * ```
- * analyze_syntax_from_file('my-bucket', 'file_with_text.txt');
+ * analyze_entities_from_file('my-bucket', 'file_with_text.txt');
  * ```
  *
  * @param string $bucketName The Cloud Storage bucket.
@@ -38,7 +38,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_syntax_from_file($bucketName, $objectName, $projectId = null)
+function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
 {
     // Create the Cloud Storage object
     $storage = new StorageClient();
@@ -50,16 +50,22 @@ function analyze_syntax_from_file($bucketName, $objectName, $projectId = null)
         'projectId' => $projectId,
     ]);
 
-    // Call the analyzeSyntax function
-    $annotation = $language->analyzeSyntax($storageObject);
+    // Call the analyzeEntities function
+    $annotation = $language->analyzeEntities($storageObject);
 
-    // Print syntax information. See https://cloud.google.com/natural-language/docs/reference/rest/v1/Token
-    // to learn about more information you can extract from Token objects.
-    $tokens = $annotation->tokens();
-    foreach ($tokens as $token) {
-        printf('Token text: %s' . PHP_EOL, $token['text']['content']);
-        printf('Token part of speech: %s' . PHP_EOL, $token['partOfSpeech']['tag']);
+    // Print out information about each entity
+    $entities = $annotation->entities();
+    foreach ($entities as $entity) {
+        printf('Name: %s' . PHP_EOL, $entity['name']);
+        printf('Type: %s' . PHP_EOL, $entity['type']);
+        printf('Salience: %s' . PHP_EOL, $entity['salience']);
+        if (array_key_exists('wikipedia_url', $entity['metadata'])) {
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity['metadata']['wikipedia_url']);
+        }
+        if (array_key_exists('mid', $entity['metadata'])) {
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
+        }
         printf(PHP_EOL);
     }
 }
-# [END analyze_syntax_from_file]
+# [END analyze_entities_from_file]

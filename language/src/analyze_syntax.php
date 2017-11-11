@@ -18,46 +18,41 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_sentiment]
+# [START analyze_syntax]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
 
 /**
- * Find the sentiment in text.
+ * Find the syntax in text.
  * ```
- * analyze_sentiment('Do you know the way to San Jose?');
+ * analyze_syntax('Do you know the way to San Jose?');
  * ```
  *
  * @param string $text The text to analyze.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_sentiment($text, $projectId = null)
+function analyze_syntax($text, $projectId = null)
 {
     // Create the Natural Language client
     $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
 
-    // Call the analyzeSentiment function
-    $annotation = $language->analyzeSentiment($text);
+    // Call the analyzeSyntax function
+    $annotation = $language->analyzeSyntax($text);
 
-    // Print document and sentence sentiment information
-    $sentiment = $annotation->sentiment();
-    printf('Document Sentiment:' . PHP_EOL);
-    printf('  Magnitude: %s' . PHP_EOL, $sentiment['magnitude']);
-    printf('  Score: %s' . PHP_EOL, $sentiment['score']);
-    printf(PHP_EOL);
-    foreach ($annotation->sentences() as $sentence) {
-        printf('Sentence: %s' . PHP_EOL, $sentence['text']['content']);
-        printf('Sentence Sentiment:' . PHP_EOL);
-        printf('  Magnitude: %s' . PHP_EOL, $sentence['sentiment']['magnitude']);
-        printf('  Score: %s' . PHP_EOL, $sentence['sentiment']['score']);
+    // Print syntax information. See https://cloud.google.com/natural-language/docs/reference/rest/v1/Token
+    // to learn about more information you can extract from Token objects.
+    $tokens = $annotation->tokens();
+    foreach ($tokens as $token) {
+        printf('Token text: %s' . PHP_EOL, $token['text']['content']);
+        printf('Token part of speech: %s' . PHP_EOL, $token['partOfSpeech']['tag']);
         printf(PHP_EOL);
     }
 }
-# [END analyze_sentiment]
+# [END analyze_syntax]

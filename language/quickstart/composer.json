@@ -1,9 +1,0 @@
-{
-    "require": {
-        "php": ">=5.4",
-        "google/cloud-language": "^0.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4"
-    }
-}

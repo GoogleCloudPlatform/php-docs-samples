@@ -18,19 +18,19 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_sentiment_from_file]
+# [START analyze_syntax_from_file]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Find the sentiment in text stored in a Cloud Storage bucket.
+ * Find the syntax in text stored in a Cloud Storage bucket.
  * ```
- * analyze_sentiment_from_file('my-bucket', 'file_with_text.txt');
+ * analyze_syntax_from_file('my-bucket', 'file_with_text.txt');
  * ```
  *
  * @param string $bucketName The Cloud Storage bucket.
@@ -38,7 +38,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null)
+function analyze_syntax_from_file($bucketName, $objectName, $projectId = null)
 {
     // Create the Cloud Storage object
     $storage = new StorageClient();
@@ -50,21 +50,16 @@ function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null
         'projectId' => $projectId,
     ]);
 
-    // Call the analyzeSentiment function
-    $annotation = $language->analyzeSentiment($storageObject);
+    // Call the analyzeSyntax function
+    $annotation = $language->analyzeSyntax($storageObject);
 
-    // Print document and sentence sentiment information
-    $sentiment = $annotation->sentiment();
-    printf('Document Sentiment:' . PHP_EOL);
-    printf('  Magnitude: %s' . PHP_EOL, $sentiment['magnitude']);
-    printf('  Score: %s' . PHP_EOL, $sentiment['score']);
-    printf(PHP_EOL);
-    foreach ($annotation->sentences() as $sentence) {
-        printf('Sentence: %s' . PHP_EOL, $sentence['text']['content']);
-        printf('Sentence Sentiment:' . PHP_EOL);
-        printf('  Magnitude: %s' . PHP_EOL, $sentence['sentiment']['magnitude']);
-        printf('  Score: %s' . PHP_EOL, $sentence['sentiment']['score']);
+    // Print syntax information. See https://cloud.google.com/natural-language/docs/reference/rest/v1/Token
+    // to learn about more information you can extract from Token objects.
+    $tokens = $annotation->tokens();
+    foreach ($tokens as $token) {
+        printf('Token text: %s' . PHP_EOL, $token['text']['content']);
+        printf('Token part of speech: %s' . PHP_EOL, $token['partOfSpeech']['tag']);
         printf(PHP_EOL);
     }
 }
-# [END analyze_sentiment_from_file]
+# [END analyze_syntax_from_file]

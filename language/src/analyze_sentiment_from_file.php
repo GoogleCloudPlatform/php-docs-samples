@@ -18,19 +18,19 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_entities_from_file]
+# [START analyze_sentiment_from_file]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Find the entities in text stored in a Cloud Storage bucket.
+ * Find the sentiment in text stored in a Cloud Storage bucket.
  * ```
- * analyze_entities_from_file('my-bucket', 'file_with_text.txt');
+ * analyze_sentiment_from_file('my-bucket', 'file_with_text.txt');
  * ```
  *
  * @param string $bucketName The Cloud Storage bucket.
@@ -38,7 +38,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
+function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null)
 {
     // Create the Cloud Storage object
     $storage = new StorageClient();
@@ -50,22 +50,21 @@ function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
         'projectId' => $projectId,
     ]);
 
-    // Call the analyzeEntities function
-    $annotation = $language->analyzeEntities($storageObject);
+    // Call the analyzeSentiment function
+    $annotation = $language->analyzeSentiment($storageObject);
 
-    // Print out information about each entity
-    $entities = $annotation->entities();
-    foreach ($entities as $entity) {
-        printf('Name: %s' . PHP_EOL, $entity['name']);
-        printf('Type: %s' . PHP_EOL, $entity['type']);
-        printf('Salience: %s' . PHP_EOL, $entity['salience']);
-        if (array_key_exists('wikipedia_url', $entity['metadata'])) {
-            printf('Wikipedia URL: %s' . PHP_EOL, $entity['metadata']['wikipedia_url']);
-        }
-        if (array_key_exists('mid', $entity['metadata'])) {
-            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
-        }
+    // Print document and sentence sentiment information
+    $sentiment = $annotation->sentiment();
+    printf('Document Sentiment:' . PHP_EOL);
+    printf('  Magnitude: %s' . PHP_EOL, $sentiment['magnitude']);
+    printf('  Score: %s' . PHP_EOL, $sentiment['score']);
+    printf(PHP_EOL);
+    foreach ($annotation->sentences() as $sentence) {
+        printf('Sentence: %s' . PHP_EOL, $sentence['text']['content']);
+        printf('Sentence Sentiment:' . PHP_EOL);
+        printf('  Magnitude: %s' . PHP_EOL, $sentence['sentiment']['magnitude']);
+        printf('  Score: %s' . PHP_EOL, $sentence['sentiment']['score']);
         printf(PHP_EOL);
     }
 }
-# [END analyze_entities_from_file]
+# [END analyze_sentiment_from_file]

@@ -18,10 +18,10 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_classify_string]
+# [START language_classify_file]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\V1beta2\LanguageServiceClient;
@@ -32,32 +32,22 @@ use Google\Cloud\Language\V1beta2\EncodingType;
 /**
  * Classify text (20+ words) into categories.
  * ```
- * classify_text(
- *     'The first two gubernatorial elections since President Donald Trump ' .
- *     'took office went in favor of Democratic candidates in Virginia and ' .
- *     'New Jersey.'
- * );
+ * classify_text_from_file('gs://storage-bucket/file-name');
  * ```
  *
- * @param string $text The text to analyze.
+ * @param string $cloud_storage_uri Your Cloud Storage bucket URI
  * @param string $projectId (optional) Your Google Cloud Project ID
  */
 
-function classify_text($text, $projectId = null)
+function classify_text_from_file($cloud_storage_uri, $projectId = null)
 {
-    // Make sure we have enough words (20+) to call classifyText
-    if (str_word_count($text) < 20) {
-        printf('20+ words are required to classify text.' . PHP_EOL);
-        return;
-    }
-
     // Create the Natural Language client
     $language = new LanguageServiceClient([
         'projectId' => $projectId,
     ]);
     $document = new Document();
     $document->setType(Document_Type::PLAIN_TEXT);
-    $document->setContent($text);
+    $document->setGcsContentUri($cloud_storage_uri);
     $encodingType = EncodingType::UTF16;
 
     // Call the classifyText function
@@ -71,4 +61,4 @@ function classify_text($text, $projectId = null)
         printf(PHP_EOL);
     }
 }
-# [END language_classify_string]
+# [END language_classify_file]

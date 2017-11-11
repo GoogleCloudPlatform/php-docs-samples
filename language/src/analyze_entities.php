@@ -18,41 +18,47 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_syntax]
+# [START analyze_entities]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
 
 /**
- * Find the syntax in text.
+ * Find the entities in text.
  * ```
- * analyze_syntax('Do you know the way to San Jose?');
+ * analyze_entities('Do you know the way to San Jose?');
  * ```
  *
  * @param string $text The text to analyze.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_syntax($text, $projectId = null)
+function analyze_entities($text, $projectId = null)
 {
     // Create the Natural Language client
     $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
 
-    // Call the analyzeSyntax function
-    $annotation = $language->analyzeSyntax($text);
+    // Call the analyzeEntities function
+    $annotation = $language->analyzeEntities($text);
 
-    // Print syntax information. See https://cloud.google.com/natural-language/docs/reference/rest/v1/Token
-    // to learn about more information you can extract from Token objects.
-    $tokens = $annotation->tokens();
-    foreach ($tokens as $token) {
-        printf('Token text: %s' . PHP_EOL, $token['text']['content']);
-        printf('Token part of speech: %s' . PHP_EOL, $token['partOfSpeech']['tag']);
+    // Print out information about each entity
+    $entities = $annotation->entities();
+    foreach ($entities as $entity) {
+        printf('Name: %s' . PHP_EOL, $entity['name']);
+        printf('Type: %s' . PHP_EOL, $entity['type']);
+        printf('Salience: %s' . PHP_EOL, $entity['salience']);
+        if (array_key_exists('wikipedia_url', $entity['metadata'])) {
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity['metadata']['wikipedia_url']);
+        }
+        if (array_key_exists('mid', $entity['metadata'])) {
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
+        }
         printf(PHP_EOL);
     }
 }
-# [END analyze_syntax]
+# [END analyze_entities]

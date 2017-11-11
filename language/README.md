@@ -80,12 +80,14 @@ To run the Natural Language Samples:
       -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
     Available commands:
-      all        Analyze syntax, sentiment and entities in text.
-      entities   Analyze entities in text.
-      help       Displays help for a command
-      list       Lists commands
-      sentiment  Analyze sentiment in text.
-      syntax     Analyze syntax in text.
+      all               Analyze syntax, sentiment and entities in text.
+      entities          Analyze entities in text.
+      help              Displays help for a command
+      list              Lists commands
+      sentiment         Analyze sentiment in text.
+      syntax            Analyze syntax in text.
+      entity-sentiment  Analyze sentiment of entities in text.
+      classify          Classify text into categories.
 
 ### Run Analyze Entities
 

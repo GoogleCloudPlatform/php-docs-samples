@@ -273,7 +273,7 @@ $application->add((new Command('classify'))
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command classifies text into categories using the Google Cloud Natural Language API.
 
-    <info>php %command.full_name% Text to analyze.</info>
+    <info>php %command.full_name% Text to classify.</info>
 
     <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
 
