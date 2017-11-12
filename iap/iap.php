@@ -50,8 +50,6 @@ EOF
 );
 
 // Create a validate Command.
-/* 
-*/
 $application->add((new Command('validate'))
     ->addArgument('url', InputArgument::REQUIRED, 'The Identity-Aware Proxy-protected URL to fetch.')
     ->addArgument('clientId', InputArgument::REQUIRED, 'The client ID used by Identity-Aware Proxy.')
