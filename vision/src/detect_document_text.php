@@ -55,7 +55,10 @@ function detect_document_text($projectId, $path)
             printf('Block text: %s' . PHP_EOL, $block_text);
             printf('Block bounds:' . PHP_EOL);
             foreach ($block['boundingBox']['vertices'] as $vertice) {
-                printf('X: %s Y: %s' . PHP_EOL, $vertice['x'], $vertice['y']);
+                printf('X: %s Y: %s' . PHP_EOL,
+                    isset($vertice['x']) ? $vertice['x'] : 'N/A',
+                    isset($vertice['y']) ? $vertice['y'] : 'N/A'
+                );
             }
             printf(PHP_EOL);
         }
