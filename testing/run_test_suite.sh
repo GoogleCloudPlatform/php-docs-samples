@@ -23,7 +23,7 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 # on a Pull Request, run the whole test suite.
 if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
     grep -qv \/ <<< "$FILES_CHANGED" || \
-    [ -e $TRAVIS_PULL_REQUEST_BRANCH ]; then
+    [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then
     RUN_ALL_TESTS=1
 else
     RUN_ALL_TESTS=0

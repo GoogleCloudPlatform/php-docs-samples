@@ -24,6 +24,11 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 {
     use EventuallyConsistentTestTrait;
 
+    public function setUp()
+    {
+        $this->eventuallyConsistentRetryCount = 10;
+    }
+
     public function testQuickstart()
     {
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
