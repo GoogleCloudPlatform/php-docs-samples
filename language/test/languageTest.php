@@ -226,6 +226,26 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Entity Type: LOCATION', $output);
     }
 
+    public function testClassifyText()
+    {
+        $output = $this->runCommand(
+            'classify', 'The first two gubernatorial elections since ' .
+            'President Donald Trump took office went in favor of Democratic ' .
+            'candidates in Virginia and New Jersey.');
+        $this->assertContains('Category Name: /News/Politics', $output);
+        $this->assertContains('Confidence:', $output);
+    }
+
+    public function testClassifyTextFromStorageObject()
+    {
+        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
+            $this->markTestSkipped('No GCS file.');
+        }
+        $output = $this->runCommand('classify', $gcsFile);
+        $this->assertContains('Category Name: /News/Politics', $output);
+        $this->assertContains('Confidence:', $output);
+    }
+
     private function runCommand($commandName, $content)
     {
         $application = require __DIR__ . '/../language.php';

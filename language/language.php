@@ -266,6 +266,37 @@ EOF
     })
 );
 
+// Classify Text command
+$application->add((new Command('classify'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Classify text into categories.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command classifies text into categories using the Google Cloud Natural Language API.
+
+    <info>php %command.full_name% Text to classify.</info>
+
+    <info>php %command.full_name% gs://my_bucket/file_with_text.txt</info>
+
+Example:
+    <info>php %command.full_name% "The first two gubernatorial elections since President Donald Trump took office went in favor of Democratic candidates in Virginia and New Jersey."</info>
+Category Name: /News/Politics
+Confidence: 0.99000000953674
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getOption('project');
+        $content = implode(' ', (array) $input->getArgument('content'));
+        // Regex to match a Cloud Storage path as the first argument
+        // e.g "gs://my-bucket/file_with_text.txt"
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
+            classify_text_from_file($content, $projectId);
+        } else {
+            classify_text($content, $projectId);
+        }
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

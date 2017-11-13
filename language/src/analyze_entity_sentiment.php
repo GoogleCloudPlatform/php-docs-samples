@@ -21,51 +21,45 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_entity_sentiment_from_file]
+# [START analyze_entity_sentiment]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\Document_Type;
-use Google\Cloud\Language\V1beta2\EncodingType;
+use Google\Cloud\Language\LanguageClient;
 
 /**
  * Find the entities in text.
  * ```
- * analyze_entity_sentiment_from_file('gs://storage-bucket/file-name);
+ * analyze_entity_sentiment('Do you know the way to San Jose?');
  * ```
  *
- * @param string $cloud_storage_uri Your Cloud Storage bucket URI
+ * @param string $text The text to analyze.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
 
-function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = null)
+function analyze_entity_sentiment($text, $projectId = null)
 {
     // Create the Natural Language client
-    $language = new LanguageServiceClient([
+    $language = new LanguageClient([
         'projectId' => $projectId,
     ]);
-    $document = new Document();
-    $document->setType(Document_Type::PLAIN_TEXT);
-    $document->setGcsContentUri($cloud_storage_uri);
-    $encodingType = EncodingType::UTF16;
 
     // Call the analyzeEntitySentiment function
-    $response = $language->analyzeEntitySentiment($document, $encodingType);
-    $entities = $response->getEntities();
+    $response = $language->analyzeEntitySentiment($text);
+    $info = $response->info();
+    $entities = $info['entities'];
 
     $entity_types = array('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT',
         'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER');
 
     // Print out information about each entity
     foreach ($entities as $entity) {
-        printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-        printf('Entity Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
-        printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
-        printf('Entity Magnitude: %s' . PHP_EOL, $entity->getSentiment()->getMagnitude());
-        printf('Entity Score: %s' . PHP_EOL, $entity->getSentiment()->getScore());
+        printf('Entity Name: %s' . PHP_EOL, $entity['name']);
+        printf('Entity Type: %s' . PHP_EOL, $entity['type']);
+        printf('Entity Salience: %s' . PHP_EOL, $entity['salience']);
+        printf('Entity Magnitude: %s' . PHP_EOL, $entity['sentiment']['magnitude']);
+        printf('Entity Score: %s' . PHP_EOL, $entity['sentiment']['score']);
         printf(PHP_EOL);
     }
 }
-# [END analyze_entity_sentiment_from_file]
+# [END analyze_entity_sentiment]
