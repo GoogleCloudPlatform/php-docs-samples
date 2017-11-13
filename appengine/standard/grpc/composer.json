@@ -1,0 +1,10 @@
+{
+    "require": {
+        "google/cloud-spanner": "^0.8.0",
+        "google/cloud-monitoring": "^0.6.0"
+    },
+    "require-dev": {
+        "google/cloud-tools": "^0.6.7",
+        "phpunit/phpunit": "~4"
+    }
+}
