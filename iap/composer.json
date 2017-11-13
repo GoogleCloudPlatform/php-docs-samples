@@ -1,0 +1,20 @@
+{
+    "require": {
+        "symfony/console": "^2.8",
+        "google/auth":"dev-additional-claims as v1.0.1",
+        "lcobucci/jwt": "^3.2",
+        "mdanter/ecc":"0.3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Auth\\": "src/"
+        },
+        "files": [
+            "src/make_iap_request.php",
+            "src/validate_jwt.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4"
+    }
+}
