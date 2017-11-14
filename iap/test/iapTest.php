@@ -58,7 +58,6 @@ class iapTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Printing user identity information from ID token payload:', $output);
         $this->assertContains('sub: accounts.google.com', $output);
         $this->assertContains('email:', $output);
-        $this->assertContains($projectId, $output);
     }
 
     private function runCommand($name, $options = [])
