@@ -28,6 +28,18 @@ use Symfony\Component\HttpFoundation\Request;
 // create the Silex application
 $app = new Application();
 
+$app->get('/', function () use ($app) {
+    // Simple echo service.
+    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/endpoints/getting-started/README.md';
+
+    $welcome = sprintf(
+        '<h1>Welcome to the Endpoints getting started tutorial!</h1>' .
+        '<p>Please see the <a href="%s">README</a> for instructions</p>',
+        $url
+    );
+    return $welcome;
+});
+
 $app->post('/echo', function () use ($app) {
     // Simple echo service.
     $message = $app['request']->get('message');

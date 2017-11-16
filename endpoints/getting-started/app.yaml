@@ -1,6 +1,9 @@
 runtime: php
 env: flex
 
+runtime_config:
+  document_root: .
+
 endpoints_api_service:
   # The following values are to be replaced by information from the output of
   # 'gcloud service-management deploy openapi.yaml' command. If you have
