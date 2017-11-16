@@ -66,7 +66,9 @@ echo client section) and a service account. To create a service account:
 
 To use the service account for authentication:
 
-1. Update `YOUR-SERVICE-ACCOUNT-EMAIL` in `openapi.yaml` with your service account's email address:
+1. Update `YOUR-SERVICE-ACCOUNT-EMAIL` with your service account's email address
+   in `openapi.yaml` (if you're using GKE or GCE) or `openapi-appengine.yaml`
+   (if you're using App Engine Flex).
 
         google_jwt:
           # Update this with your service account's email address.
@@ -93,7 +95,9 @@ The ID Token client demonstrates how to use user credentials to authenticate to 
 
 To use the client ID for authentication:
 
-1. Update `YOUR-CLIENT-ID` in `openapi.yaml` with your client ID:
+1. Update `YOUR-CLIENT-ID` in with your client ID in `openapi.yaml` (if you're
+   using GKE or GCE) or `openapi-appengine.yaml` (if you're using App Engine
+   Flex).
 
         google_id_token:
           # Your OAuth2 client's Client ID must be added here. You can add
@@ -107,6 +111,13 @@ To use the client ID for authentication:
 Now you can use the client ID to make requests to the API:
 
     $ php endpoints.php make-request https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-secrets.json
+
+
+If you experience any issues, try running `gcloud endpoints configs describe` to
+debug the service:
+
+    gcloud endpoints configs describe YOUR-CONFIG-ID --service=YOUR-PROJECT-ID.appspot.com
+
 
 ## Viewing the Endpoints graphs
 
