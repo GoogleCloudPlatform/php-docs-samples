@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,10 +54,10 @@ class videoTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('cat', $output);
     }
 
-    public function testAnalyzeSafeSearch()
+    public function testAnalyzeExplicitContent()
     {
-        $output = $this->runCommand('safe-search', ['uri' => self::$gcsUri]);
-        $this->assertContains('adult:', $output);
+        $output = $this->runCommand('explicit-content', ['uri' => self::$gcsUri]);
+        $this->assertContains('pornography:', $output);
     }
 
     public function testAnalyzeShots()

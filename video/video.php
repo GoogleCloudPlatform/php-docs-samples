@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,11 +62,11 @@ $application->add(new Command('labels-in-file'))
         );
     });
 
-$application->add(new Command('safe-search'))
+$application->add(new Command('explicit-content'))
     ->setDefinition($inputDefinition)
-    ->setDescription('Detect safe search in video using the Video Intelligence API')
+    ->setDescription('Detect explicit content in video using the Video Intelligence API')
     ->setCode(function ($input, $output) {
-        analyze_safe_search(
+        analyze_explicit_content(
             $input->getArgument('uri')
         );
     });

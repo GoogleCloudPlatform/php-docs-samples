@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,24 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_safe_search]
-use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1beta1\Feature;
+// [START analyze_explicit_content]
+use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\Videointelligence\V1\Feature;
 
 /**
- * Analyze safe search in the video.
+ * Analyze explicit content in the video.
  *
  * @param string $uri The cloud storage object to analyze. Must be formatted
  *                    like gs://bucketname/objectname
  */
-function analyze_safe_search($uri)
+function analyze_explicit_content($uri)
 {
     # Instantiate a client.
     $video = new VideoIntelligenceServiceClient();
 
     # Execute a request.
-    $operation = $video->annotateVideo(
-        $uri,
-        [Feature::SAFE_SEARCH_DETECTION]);
+    $options = ['inputUri'=>$uri, 'features'=>[Feature::EXPLICIT_CONTENT_DETECTION]];
+    $operation = $video->annotateVideo($options);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();
@@ -45,16 +44,17 @@ function analyze_safe_search($uri)
         $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
                         'Likely', 'Very likely'];
         $results = $operation->getResult()->getAnnotationResults()[0];
-        foreach ($results->getSafeSearchAnnotations() as $safeSearch) {
-            printf('At %ss:' . PHP_EOL, $safeSearch->getTimeOffset() / 1000000);
-            print('  adult: ' . $likelihoods[$safeSearch->getAdult()] . PHP_EOL);
-            print('  spoof: ' . $likelihoods[$safeSearch->getSpoof()] . PHP_EOL);
-            print('  medical: ' . $likelihoods[$safeSearch->getMedical()] . PHP_EOL);
-            print('  racy: ' . $likelihoods[$safeSearch->getRacy()] . PHP_EOL);
-            print('  violent: ' . $likelihoods[$safeSearch->getViolent()] . PHP_EOL);
+        $explicitAnnotation = $results->getExplicitAnnotation();
+        foreach ($explicitAnnotation->getFrames() as $frame) {
+            $timeOffset = $frame->getTimeOffset();
+            $seconds = $timeOffset->getSeconds();
+            $nanoseconds = floatval($timeOffset->getNanos())/1000000000.00;
+            $time = $seconds + $nanoseconds;
+            printf('At %ss:' . PHP_EOL, $time);
+            printf('  pornography: ' . $likelihoods[$frame->getPornographyLikelihood()] . PHP_EOL);
         }
     } else {
         print_r($operation->getError());
     }
 }
-// [END analyze_safe_search]
+// [END analyze_explicit_content]

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 namespace Google\Cloud\Samples\Video;
 
 // [START analyze_shots]
-use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1beta1\Feature;
+use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\Videointelligence\V1\Feature;
 
 /**
  * Finds shot changes in the video.
@@ -33,9 +33,8 @@ function analyze_shots($uri)
     $video = new VideoIntelligenceServiceClient();
 
     # Execute a request.
-    $operation = $video->annotateVideo(
-        $uri,
-        [Feature::SHOT_CHANGE_DETECTION]);
+    $options = ['inputUri'=>$uri, 'features'=>[Feature::SHOT_CHANGE_DETECTION]];
+    $operation = $video->annotateVideo($options);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();
@@ -44,9 +43,15 @@ function analyze_shots($uri)
     if ($operation->operationSucceeded()) {
         $results = $operation->getResult()->getAnnotationResults()[0];
         foreach ($results->getShotAnnotations() as $shot) {
-            printf('%ss to %ss' . PHP_EOL,
-                $shot->getStartTimeOffset() / 1000000,
-                $shot->getEndTimeOffset() / 1000000);
+            $startTimeOffset = $shot->getStartTimeOffset();
+            $startSeconds = $startTimeOffset->getSeconds();
+            $startNanoseconds = floatval($startTimeOffset->getNanos())/1000000000.00;
+            $startTime = $startSeconds + $startNanoseconds;
+            $endTimeOffset = $shot->getEndTimeOffset();
+            $endSeconds = $endTimeOffset->getSeconds();
+            $endNanoseconds = floatval($endTimeOffset->getNanos())/1000000000.00;
+            $endTime = $endSeconds + $endNanoseconds;
+            printf('Shot: %ss to %ss' . PHP_EOL, $startTime, $endTime);
         }
     } else {
         print_r($operation->getError());
