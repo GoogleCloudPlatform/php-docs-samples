@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ function analyze_labels($uri)
                 printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
             }
         }
-        printf("\n");
+        print(PHP_EOLF);
 
         # Process shot level label annotations
         foreach ($results->getShotLabelAnnotations() as $label) {
@@ -83,7 +83,7 @@ function analyze_labels($uri)
                 printf('  Confidence: %f' . PHP_EOL, $shot->getConfidence());
             }
         }
-        printf("\n");
+        print(PHP_EOLF);
     } else {
         print_r($operation->getError());
     }

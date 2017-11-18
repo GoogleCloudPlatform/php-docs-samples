@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,12 @@ class videoTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('labels', ['uri' => self::$gcsUri]);
         $this->assertContains('cat', $output);
+        $this->assertContains('Video label description', $output);
+        $this->assertContains('Shot label description', $output);
+        $this->assertContains('Category', $output);
+        $this->assertContains('Segment', $output);
+        $this->assertContains('Shot', $output);
+        $this->assertContains('Confidence', $output);
     }
 
     public function testAnalyzeLabelsInFile()
@@ -52,6 +58,12 @@ class videoTest extends \PHPUnit_Framework_TestCase
             'file' => __DIR__ . '/data/cat_shortened.mp4'
         ]);
         $this->assertContains('cat', $output);
+        $this->assertContains('Video label description:', $output);
+        $this->assertContains('Shot label description:', $output);
+        $this->assertContains('Category:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Shot:', $output);
+        $this->assertContains('Confidence:', $output);
     }
 
     public function testAnalyzeExplicitContent()
@@ -63,6 +75,7 @@ class videoTest extends \PHPUnit_Framework_TestCase
     public function testAnalyzeShots()
     {
         $output = $this->runCommand('shots', ['uri' => self::$gcsUri]);
+        $this->assertContains('Shot:', $output);
         $this->assertContains(' to ', $output);
     }
 
