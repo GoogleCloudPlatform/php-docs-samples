@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,33 +19,42 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # [START videointelligence_quickstart]
-use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1beta1\Feature;
+use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\Videointelligence\V1\Feature;
 
 # Instantiate a client.
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
-$operation = $video->annotateVideo(
-    'gs://demomaker/cat.mp4',
-    [Feature::LABEL_DETECTION]
-);
+$options = ['inputUri'=>'gs://demomaker/cat.mp4', 'features'=>[Feature::LABEL_DETECTION]];
+$operation = $video->annotateVideo($options);
+
 # Wait for the request to complete.
 $operation->pollUntilComplete();
 
 # Print the result.
-if (!$operation->operationSucceeded()) {
-    print_r($operation->getError());
-    die;
-}
-
-$results = $operation->getResult()->getAnnotationResults()[0];
-foreach ($results->getLabelAnnotations() as $label) {
-    printf($label->getDescription() . PHP_EOL);
-    foreach ($label->getLocations() as $location) {
-        printf('  %ss to %ss' . PHP_EOL,
-            $location->getSegment()->getStartTimeOffset() / 1000000,
-            $location->getSegment()->getEndTimeOffset() / 1000000);
+if ($operation->operationSucceeded()) {
+    $results = $operation->getResult()->getAnnotationResults()[0];
+    # Process video/segment level label annotations
+    foreach ($results->getSegmentLabelAnnotations() as $label) {
+        printf('Video label description: %s' . PHP_EOL, $label->getEntity()->getDescription());
+        foreach ($label->getCategoryEntities() as $categoryEntity) {
+            printf('  Category: %s' . PHP_EOL, $categoryEntity->getDescription());
+        }
+        foreach ($label->getSegments() as $segment) {
+            $startTimeOffset = $segment->getSegment()->getStartTimeOffset();
+            $startSeconds = $startTimeOffset->getSeconds();
+            $startNanoseconds = floatval($startTimeOffset->getNanos())/1000000000.00;
+            $startTime = $startSeconds + $startNanoseconds;
+            $endTimeOffset = $segment->getSegment()->getEndTimeOffset();
+            $endSeconds = $endTimeOffset->getSeconds();
+            $endNanoseconds = floatval($endTimeOffset->getNanos())/1000000000.00;
+            $endTime = $endSeconds + $endNanoseconds;
+            printf('  Segment: %ss to %ss' . PHP_EOL, $startTime, $endTime);
+            printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
+        }
     }
+} else {
+    print_r($operation->getError());
 }
 # [END videointelligence_quickstart]

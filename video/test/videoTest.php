@@ -44,6 +44,12 @@ class videoTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('labels', ['uri' => self::$gcsUri]);
         $this->assertContains('cat', $output);
+        $this->assertContains('Video label description', $output);
+        $this->assertContains('Shot label description', $output);
+        $this->assertContains('Category', $output);
+        $this->assertContains('Segment', $output);
+        $this->assertContains('Shot', $output);
+        $this->assertContains('Confidence', $output);
     }
 
     public function testAnalyzeLabelsInFile()
@@ -52,17 +58,24 @@ class videoTest extends \PHPUnit_Framework_TestCase
             'file' => __DIR__ . '/data/cat_shortened.mp4'
         ]);
         $this->assertContains('cat', $output);
+        $this->assertContains('Video label description:', $output);
+        $this->assertContains('Shot label description:', $output);
+        $this->assertContains('Category:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Shot:', $output);
+        $this->assertContains('Confidence:', $output);
     }
 
-    public function testAnalyzeSafeSearch()
+    public function testAnalyzeExplicitContent()
     {
-        $output = $this->runCommand('safe-search', ['uri' => self::$gcsUri]);
-        $this->assertContains('adult:', $output);
+        $output = $this->runCommand('explicit-content', ['uri' => self::$gcsUri]);
+        $this->assertContains('pornography:', $output);
     }
 
     public function testAnalyzeShots()
     {
         $output = $this->runCommand('shots', ['uri' => self::$gcsUri]);
+        $this->assertContains('Shot:', $output);
         $this->assertContains(' to ', $output);
     }
 
