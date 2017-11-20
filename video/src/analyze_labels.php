@@ -62,7 +62,7 @@ function analyze_labels($uri)
                 printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
             }
         }
-        print(PHP_EOLF);
+        print(PHP_EOL);
 
         # Process shot level label annotations
         foreach ($results->getShotLabelAnnotations() as $label) {
@@ -83,7 +83,7 @@ function analyze_labels($uri)
                 printf('  Confidence: %f' . PHP_EOL, $shot->getConfidence());
             }
         }
-        print(PHP_EOLF);
+        print(PHP_EOL);
     } else {
         print_r($operation->getError());
     }
