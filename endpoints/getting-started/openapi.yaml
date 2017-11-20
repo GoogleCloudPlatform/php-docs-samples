@@ -83,13 +83,13 @@ securityDefinitions:
   # to sign a json web token. This is mostly used for server-to-server
   # communication.
   google_jwt:
+    # Update this with your service account's email address.
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
     authorizationUrl: ""
     flow: "implicit"
     type: "oauth2"
     # This must match the 'iss' field in the JWT.
     x-google-issuer: "jwt-client.endpoints.sample.google.com"
-    # Update this with your service account's email address.
-    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
     # This must match the "aud" field in the JWT. You can add multiple
     # audiences to accept JWTs from multiple clients.
     x-google-audiences: "echo.endpoints.sample.google.com"
@@ -97,11 +97,11 @@ securityDefinitions:
   # ID Tokens can be obtained using OAuth2 clients, and can be used to access
   # your API on behalf of a particular user.
   google_id_token:
+    # Your OAuth2 client's Client ID must be added here. You can add
+    # multiple client IDs to accept tokens from multiple clients.
+    x-google-audiences: "YOUR-CLIENT-ID"
     authorizationUrl: ""
     flow: "implicit"
     type: "oauth2"
     x-google-issuer: "https://accounts.google.com"
     x-google-jwks_uri: "https://www.googleapis.com/oauth2/v3/certs"
-    # Your OAuth2 client's Client ID must be added here. You can add
-    # multiple client IDs to accept tokens from multiple clients.
-    x-google-audiences: "YOUR-CLIENT-ID"
