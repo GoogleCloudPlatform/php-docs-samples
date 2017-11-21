@@ -62,8 +62,7 @@ $ gcloud sql users set-password root % \
 To access this MySQL instance, use Cloud SQL Proxy. [Download][cloud-sql-proxy-download]
 it to your local computer and make it executable.
 
-If you haven’t created a service account for the project, 
-create it on [the Credentials section][credentials-section] in the
+Go to the [the Credentials section][credentials-section] of your project in the
 Console. Click 'Create credentials' and then click 'Service account key.' For
 the Service account, select 'App Engine app default service account.' Then
 click 'Create' to create and download the JSON service account key to your
