@@ -29,7 +29,7 @@ class WordPressSetup extends Command
 {
     const DEFAULT_DIR = 'my-wordpress-project';
     const DEFAULT_ERROR = 1;
-    const LATEST_WP = 'https://wordpress.org/latest.zip';
+    const LATEST_WP = 'https://wordpress.org/latest.tar.gz';
     const LATEST_BATCACHE =
         'https://downloads.wordpress.org/plugin/batcache.1.4.zip';
     const LATEST_MEMCACHED =
