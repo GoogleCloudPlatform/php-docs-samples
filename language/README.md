@@ -1,5 +1,10 @@
 # Google Cloud Natural Language API Samples
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=language&open_in_editor=README.md
+
 These samples show how to use the [Google Cloud Natural Language API][language-api]
 to analyze text.
 
@@ -192,7 +197,7 @@ To run the Analyze Entity Sentiment sample:
     Entity Magnitude: 1.7999999523163
     Entity Score: 0
 
-    Mentions: 
+    Mentions:
       Begin Offset: 0
       Content: New York
       Mention Type: PROPER

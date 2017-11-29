@@ -1,5 +1,10 @@
 # Stackdriver Logging v2 API Samples
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=logging&open_in_editor=README.md
+
 `logging.php` is a simple command-line program to demonstrate writing to a log,
 listing its entries, deleting it, interacting with sinks to export logs to
 Google Cloud Storage.
@@ -11,7 +16,7 @@ To use logging sinks, you will also need a Google Cloud Storage Bucket.
 You must add Cloud Logging as an owner to the bucket. To do so, add
 `cloud-logs@google.com` as an owner to the bucket. See the
 [exportings logs](https://cloud.google.com/logging/docs/export/configure_export#configuring_log_sinks)
-docs for complete details. 
+docs for complete details.
 
 # Running locally
 
