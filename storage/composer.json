@@ -5,9 +5,6 @@
         "symfony/console": " ^3.0"
     },
     "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Storage\\": "src/"
-        },
         "files": [
             "src/add_bucket_acl.php",
             "src/add_bucket_default_acl.php",
