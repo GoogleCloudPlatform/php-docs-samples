@@ -20,7 +20,7 @@ https://cloud.google.com/translate/).
     (if composer is installed globally).
 5.  **Run**:
 ```
-$ php translate.php 
+$ php translate.php
 Console Tool
 
 Usage:
@@ -36,12 +36,12 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
 Available commands:
-  detect      Detect which language text was written in using Google Cloud Translate API
-  help        Displays help for a command
-  list        Lists commands
-  list-codes  List all the language codes in the Google Cloud Translate API
-  list-langs  List language codes and names in the Google Cloud Translate API
-  translate   Translate text using Google Cloud Translate API
+  detect-language   Detect which language text was written in using Google Cloud Translate API
+  help              Displays help for a command
+  list              Lists commands
+  list-codes        List all the language codes in the Google Cloud Translate API
+  list-langs        List language codes and names in the Google Cloud Translate API
+  translate         Translate text using Google Cloud Translate API
 ```
 
 6. Run `php translate.php COMMAND --help` to print information about the usage of each command.
