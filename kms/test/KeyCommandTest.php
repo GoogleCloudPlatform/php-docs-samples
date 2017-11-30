@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class KeyCommandTest extends \PHPUnit_Framework_TestCase
@@ -75,7 +74,8 @@ class KeyCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Created cryptoKey %s in keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Created cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$key,
             $this->ring
         ));

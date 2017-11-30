@@ -28,10 +28,6 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-use Google\Cloud\Samples\Kms\KeyCommand;
-use Google\Cloud\Samples\Kms\KeyRingCommand;
-use Google\Cloud\Samples\Kms\VersionCommand;
-
 $application = new Application('Google Cloud Key Management Store (KMS)');
 $application->setDispatcher($dispatcher = new EventDispatcher());
 $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event) {

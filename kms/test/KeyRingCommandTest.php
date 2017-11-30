@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class KeyRingCommandTest extends \PHPUnit_Framework_TestCase
