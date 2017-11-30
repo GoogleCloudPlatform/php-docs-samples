@@ -17,16 +17,15 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Core\Exception\NotFoundException;
-use Google\Cloud\Samples\Storage\BucketDefaultAclCommand;
+use Google\Cloud\Samples\Storage\BucketsCommand;
 use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for BucketDefaultAclCommand.
+ * Unit Tests for BucketsCommand.
  */
-class BucketDefaultAclCommandTest extends \PHPUnit_Framework_TestCase
+class BucketsCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
@@ -41,85 +40,60 @@ class BucketDefaultAclCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new BucketDefaultAclCommand());
-        $this->commandTester = new CommandTester($application->get('bucket-default-acl'));
+        $application = require __DIR__ . '/../storage.php';
+        $this->commandTester = new CommandTester($application->get('buckets'));
         $this->storage = new StorageClient();
     }
 
-    public function testBucketDefaultAcl()
+    public function testListBuckets()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
 
         $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-            ],
+            [],
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex("/: OWNER/");
+        $this->expectOutputRegex("/Bucket:/");
     }
 
-    public function testManageBucketDefaultAcl()
+    public function testCreateAndDeleteBuckets()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
 
+        $bucketName = 'test-bucket-' . time();
         $bucket = $this->storage->bucket($bucketName);
-        $acl = $bucket->defaultAcl();
+
+        $this->assertFalse($bucket->exists());
 
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
-                '--entity' => 'allAuthenticatedUsers',
-                '--create' => true
+                '--create' => true,
             ],
             ['interactive' => false]
         );
 
-        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
-        $this->assertArrayHasKey('role', $aclInfo);
-        $this->assertEquals('READER', $aclInfo['role']);
+        $bucket->reload();
+        $this->assertTrue($bucket->exists());
 
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
-                '--entity' => 'allAuthenticatedUsers'
+                '--delete' => true,
             ],
             ['interactive' => false]
         );
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                '--entity' => 'allAuthenticatedUsers',
-                '--delete' => true
-            ],
-            ['interactive' => false]
-        );
+        $this->assertFalse($bucket->exists());
 
-        try {
-            $acl->get(['entity' => 'allAuthenticatedUsers']);
-            $this->fail();
-        } catch (NotFoundException $e) {
-            $this->assertTrue(true);
-        }
-
-        $bucketUrl = sprintf('gs://%s', $bucketName);
         $outputString = <<<EOF
-Added allAuthenticatedUsers (READER) to $bucketUrl default ACL
-allAuthenticatedUsers: READER
-Deleted allAuthenticatedUsers from $bucketUrl default ACL
+Bucket created: $bucketName
+Bucket deleted: $bucketName
 
 EOF;
         $this->expectOutputString($outputString);

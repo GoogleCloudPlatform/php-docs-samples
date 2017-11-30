@@ -41,8 +41,7 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new ObjectAclCommand());
+        $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('object-acl'));
         $this->storage = new StorageClient();
     }

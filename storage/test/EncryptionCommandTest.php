@@ -38,8 +38,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new EncryptionCommand());
+        $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('encryption'));
     }
 

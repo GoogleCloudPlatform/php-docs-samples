@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
-        <testsuite name="Google Storage Quickstart Tests">
+        <testsuite name="PHP storage test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -25,7 +25,10 @@
     </logging>
     <filter>
         <whitelist>
-            <file>quickstart.php</file>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+    </php>
 </phpunit>

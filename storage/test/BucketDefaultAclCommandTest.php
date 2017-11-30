@@ -18,15 +18,15 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Core\Exception\NotFoundException;
-use Google\Cloud\Samples\Storage\BucketAclCommand;
+use Google\Cloud\Samples\Storage\BucketDefaultAclCommand;
 use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for BucketAclCommand.
+ * Unit Tests for BucketDefaultAclCommand.
  */
-class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
+class BucketDefaultAclCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
     protected $commandTester;
@@ -41,13 +41,12 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new BucketAclCommand());
-        $this->commandTester = new CommandTester($application->get('bucket-acl'));
+        $application = require __DIR__ . '/../storage.php';
+        $this->commandTester = new CommandTester($application->get('bucket-default-acl'));
         $this->storage = new StorageClient();
     }
 
-    public function testBucketAcl()
+    public function testBucketDefaultAcl()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -66,7 +65,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputRegex("/: OWNER/");
     }
 
-    public function testManageBucketAcl()
+    public function testManageBucketDefaultAcl()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -76,13 +75,13 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
         }
 
         $bucket = $this->storage->bucket($bucketName);
-        $acl = $bucket->acl();
+        $acl = $bucket->defaultAcl();
 
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
                 '--entity' => 'allAuthenticatedUsers',
-                '--create' => true,
+                '--create' => true
             ],
             ['interactive' => false]
         );
@@ -94,7 +93,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
-                '--entity' => 'allAuthenticatedUsers',
+                '--entity' => 'allAuthenticatedUsers'
             ],
             ['interactive' => false]
         );
@@ -103,7 +102,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             [
                 'bucket' => $bucketName,
                 '--entity' => 'allAuthenticatedUsers',
-                '--delete' => true,
+                '--delete' => true
             ],
             ['interactive' => false]
         );
@@ -117,9 +116,9 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 
         $bucketUrl = sprintf('gs://%s', $bucketName);
         $outputString = <<<EOF
-Added allAuthenticatedUsers (READER) to $bucketUrl ACL
+Added allAuthenticatedUsers (READER) to $bucketUrl default ACL
 allAuthenticatedUsers: READER
-Deleted allAuthenticatedUsers from $bucketUrl ACL
+Deleted allAuthenticatedUsers from $bucketUrl default ACL
 
 EOF;
         $this->expectOutputString($outputString);

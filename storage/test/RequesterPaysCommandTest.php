@@ -40,8 +40,7 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new RequesterPaysCommand());
+        $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('requester-pays'));
         $this->storage = new StorageClient();
     }

@@ -40,8 +40,7 @@ class BucketLabelsCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new BucketLabelsCommand());
+        $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('bucket-labels'));
         $this->storage = new StorageClient();
     }
