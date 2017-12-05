@@ -42,8 +42,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new IamCommand());
+        $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('iam'));
         $this->storage = new StorageClient();
         $this->user = getenv('GOOGLE_IAM_USER');

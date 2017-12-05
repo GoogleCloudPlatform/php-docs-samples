@@ -40,8 +40,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $application = new Application();
-        $application->add(new ObjectsCommand());
+        $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('objects'));
         $this->storage = new StorageClient();
     }
