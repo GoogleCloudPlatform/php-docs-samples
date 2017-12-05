@@ -13,7 +13,7 @@ These samples show how to use the [Google Cloud KMS API]
 
     ```
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/kms/api
+    $ cd php-docs-samples/kms
 ```
 5.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
