@@ -18,7 +18,6 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -26,11 +25,16 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CommandTest extends \PHPUnit_Framework_TestCase
 {
+    private $application;
+
+    public function setUp()
+    {
+        $this->application = require __DIR__ . '/../translate.php';
+    }
+
     public function testTranslate()
     {
-        $application = new Application();
-        $application->add(new TranslateCommand());
-        $commandTester = new CommandTester($application->get('translate'));
+        $commandTester = new CommandTester($this->application->get('translate'));
         $commandTester->execute(
             [
                 'text' => 'Hello.',
@@ -46,9 +50,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslateBadLanguage()
     {
-        $application = new Application();
-        $application->add(new TranslateCommand());
-        $commandTester = new CommandTester($application->get('translate'));
+        $commandTester = new CommandTester($this->application->get('translate'));
         $this->setExpectedException('Google\Cloud\Core\Exception\BadRequestException');
         $commandTester->execute(
             [
@@ -61,9 +63,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslateWithModel()
     {
-        $application = new Application();
-        $application->add(new TranslateCommand());
-        $commandTester = new CommandTester($application->get('translate'));
+        $commandTester = new CommandTester($this->application->get('translate'));
         $commandTester->execute(
             [
                 'text' => 'Hello.',
@@ -81,9 +81,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectLanguage()
     {
-        $application = new Application();
-        $application->add(new DetectLanguageCommand());
-        $commandTester = new CommandTester($application->get('detect'));
+        $commandTester = new CommandTester($this->application->get('detect-language'));
         $commandTester->execute(
             [
                 'text' => 'Hello.',
@@ -98,9 +96,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testListCodes()
     {
-        $application = new Application();
-        $application->add(new ListCodesCommand());
-        $commandTester = new CommandTester($application->get('list-codes'));
+        $commandTester = new CommandTester($this->application->get('list-codes'));
         $commandTester->execute([], ['interactive' => false]);
         $this->assertEquals(0, $commandTester->getStatusCode());
         $display = $this->getActualOutput();
@@ -110,9 +106,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testListLanguagesInEnglish()
     {
-        $application = new Application();
-        $application->add(new ListLanguagesCommand());
-        $commandTester = new CommandTester($application->get('list-langs'));
+        $commandTester = new CommandTester($this->application->get('list-langs'));
         $commandTester->execute(
             ['-t' => 'en'],
             ['interactive' => false]
@@ -124,9 +118,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testListLanguagesInJapanese()
     {
-        $application = new Application();
-        $application->add(new ListLanguagesCommand());
-        $commandTester = new CommandTester($application->get('list-langs'));
+        $commandTester = new CommandTester($this->application->get('list-langs'));
         $commandTester->execute(
             ['-t' => 'ja'],
             ['interactive' => false]
