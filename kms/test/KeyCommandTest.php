@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class KeyCommandTest extends \PHPUnit_Framework_TestCase
@@ -37,8 +36,8 @@ class KeyCommandTest extends \PHPUnit_Framework_TestCase
         }
         $this->projectId = $projectId;
         $this->ring = $ring;
-        $application = new Application();
-        $application->add(new KeyCommand());
+
+        $application = require __DIR__ . '/../kms.php';
         $this->commandTester = new CommandTester($application->get('key'));
     }
 
@@ -75,7 +74,8 @@ class KeyCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Created cryptoKey %s in keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Created cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$key,
             $this->ring
         ));

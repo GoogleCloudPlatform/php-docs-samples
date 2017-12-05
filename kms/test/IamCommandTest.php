@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class IamCommandTest extends \PHPUnit_Framework_TestCase
@@ -43,8 +42,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
         $this->ring = $ring;
         $this->key = $key;
 
-        $application = new Application();
-        $application->add(new IamCommand());
+        $application = require __DIR__ . '/../kms.php';
         $this->commandTester = new CommandTester($application->get('iam'));
     }
 
@@ -61,9 +59,11 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member user:%s added to policy for keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member user:%s added to policy for keyRing %s' . PHP_EOL,
             $userEmail,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     /**
@@ -83,9 +83,11 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member user:%s removed from policy for keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member user:%s removed from policy for keyRing %s' . PHP_EOL,
             $userEmail,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     public function testAddUserToCryptoKey()
@@ -102,10 +104,12 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member user:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member user:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $userEmail,
             $this->key,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     /**
@@ -126,10 +130,12 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member user:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member user:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $userEmail,
             $this->key,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     public function testAddServiceAccountToCryptoKey()
@@ -148,10 +154,12 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member serviceAccount:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member serviceAccount:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
             $this->key,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     /**
@@ -174,10 +182,12 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member serviceAccount:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member serviceAccount:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
             $this->key,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     public function testAddServiceAccountToKeyRing()
@@ -195,9 +205,11 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member serviceAccount:%s added to policy for keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member serviceAccount:%s added to policy for keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
-            $this->ring));
+            $this->ring
+        ));
     }
 
     /**
@@ -219,8 +231,10 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputString(sprintf('Member serviceAccount:%s removed from policy for keyRing %s' . PHP_EOL,
+        $this->expectOutputString(sprintf(
+            'Member serviceAccount:%s removed from policy for keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
-            $this->ring));
+            $this->ring
+        ));
     }
 }

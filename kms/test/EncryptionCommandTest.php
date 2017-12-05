@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Kms;
 use Google_Client;
 use Google_Service_CloudKMS;
 use Google_Service_CloudKMS_DecryptRequest;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
@@ -46,8 +45,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         $this->ring = $ring;
         $this->key = $key;
 
-        $application = new Application();
-        $application->add(new EncryptionCommand());
+        $application = require __DIR__ . '/../kms.php';
         $this->commandTester = new CommandTester($application->get('encryption'));
     }
 

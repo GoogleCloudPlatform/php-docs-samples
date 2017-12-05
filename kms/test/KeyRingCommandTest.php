@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class KeyRingCommandTest extends \PHPUnit_Framework_TestCase
@@ -33,8 +32,8 @@ class KeyRingCommandTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->projectId = $projectId;
-        $application = new Application();
-        $application->add(new KeyRingCommand());
+
+        $application = require __DIR__ . '/../kms.php';
         $this->commandTester = new CommandTester($application->get('keyring'));
     }
 
