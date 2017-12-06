@@ -1,0 +1,24 @@
+{
+    "name": "google/dlp-sample",
+    "type": "project",
+    "require": {
+        "php": ">= 7.0",
+        "google/cloud-debugger": "^0.1.0",
+        "silex/silex": "~2.0",
+        "twig/twig": "^2.3"
+    },
+    "autoload": {
+        "files": [
+             "src/inspect_datastore.php",
+             "src/inspect_bigquery.php",
+             "src/inspect_file.php",
+             "src/inspect_string.php",
+             "src/list_categories.php",
+             "src/list_info_types.php",
+             "src/redact_string.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4"
+    }
+}
