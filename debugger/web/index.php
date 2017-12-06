@@ -3,11 +3,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-# [START list_info_types]
+# [START debugger_agent]
 use Google\Cloud\Debugger\Agent;
 
 $agent = new Agent(['sourceRoot' => realpath('../')]);
-# [END list_info_types]
+# [END debugger_agent]
 $app = new Silex\Application();
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(

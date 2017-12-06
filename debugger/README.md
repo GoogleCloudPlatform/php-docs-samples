@@ -7,27 +7,27 @@ install and run the Stackdriver Debugger Agent for PHP.
 
 ## Build and Run
 
-1. Add the Stackdriver Debugger composer package to your `composer.json`
+1. Add the Stackdriver Debugger composer package to your `composer.json`:
 ```
     $ composer require google/cloud-debugger:^0.1\
 ```
-2. Install the composer package
+2. Install the composer package:
 ```
     $ composer install
 ```
-3. Install the PHP extension from [PECL](https://pecl.php.net/)
+3. Install the PHP extension from [PECL](https://pecl.php.net/):
 ```
     $ pecl install stackdriver_debugger-alpha
 ```
-4. Run the Stackdriver Debugger daemon
+4. Run the Stackdriver Debugger daemon:
 ```
     $ vendor/bin/google-cloud-debugger .
 ```
-5. Run the AsyncBatchDaemon daemon
+5. Run the AsyncBatchDaemon daemon:
 ```
     $ vendor/bin/google-cloud-batch daemon
 ```
-6. Run the application
+6. Run the application:
 ```
     $ IS_BATCH_DAEMON_RUNNING=true php -S localhost:8000 -t web/
 ```
