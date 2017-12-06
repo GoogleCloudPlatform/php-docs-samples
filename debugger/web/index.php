@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ # [START debugger_agent]
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-# [START debugger_agent]
 use Google\Cloud\Debugger\Agent;
 
 $agent = new Agent(['sourceRoot' => realpath('../')]);
