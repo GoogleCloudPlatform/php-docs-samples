@@ -9,7 +9,7 @@ install and run the Stackdriver Debugger Agent for PHP.
 
 1. Add the Stackdriver Debugger composer package to your `composer.json`:
 ```
-    $ composer require google/cloud-debugger:^0.1\
+    $ composer require google/cloud-debugger:^0.1
 ```
 2. Install the composer package:
 ```
