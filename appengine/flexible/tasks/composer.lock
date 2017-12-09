@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0ff0c8306407633d61b45af7cda7f0b",
+    "content-hash": "e57845820905cd69931ffade4dc465e8",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -284,6 +284,46 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Natural Language Client for PHP",
+            "time": "2017-11-15T15:11:19+00:00"
+        },
+        {
+            "name": "google/cloud-logging",
+            "version": "v1.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-logging.git",
+                "reference": "ac186c6d98f55be24e1cf7c097af8ce7da2cd760"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-logging/zipball/ac186c6d98f55be24e1cf7c097af8ce7da2cd760",
+                "reference": "ac186c6d98f55be24e1cf7c097af8ce7da2cd760",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-core": "^1.0",
+                "google/gax": "^0.26",
+                "google/proto-client": "^0.26"
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-logging",
+                    "target": "GoogleCloudPlatform/google-cloud-php-logging.git",
+                    "path": "src/Logging",
+                    "entry": "LoggingClient.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\Logging\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Stackdriver Logging Client for PHP",
             "time": "2017-11-15T15:11:19+00:00"
         },
         {

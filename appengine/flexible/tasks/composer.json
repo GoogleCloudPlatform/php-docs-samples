@@ -3,7 +3,8 @@
         "google/cloud-language": "^0.9",
         "symfony/console": "^3.0",
         "silex/silex": "^1.3",
-        "google/apiclient": "^2.1"
+        "google/apiclient": "^2.1",
+        "google/cloud-logging": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
