@@ -26,6 +26,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 # [START bigquery_simple_app_deps]
 use Google\Cloud\BigQuery\BigQueryClient;
+
 # [END bigquery_simple_app_deps]
 
 // get the project ID as the first argument
