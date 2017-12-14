@@ -176,8 +176,8 @@ If you're using App Engine Standard, You may get the following error:
 Failed opening required 'google/appengine/api/urlfetch_service_pb.php'
 ```
 
-You can set an `WP_CLI_PHP_ARGS` environment variable to add an
-`include_path` PHP configuration for wp-cli execution.
+You can set a `WP_CLI_PHP_ARGS` environment variable to add
+`include_path` PHP configuration for wp-cli.
 
 ```
 $ export WP_CLI_PHP_ARGS='-d include_path=vendor/google/appengine-php-sdk'
