@@ -30,8 +30,8 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * Run a BigQuery query.
  * Example:
  * ```
- * $query = 'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
- *          'FROM [publicdata:samples.shakespeare]';
+ * $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`' .
+ *          'WHERE tags like \'%google-bigquery%\' ORDER BY view_count DESC';
  * run_query($projectId, $query, true);
  * ```.
  *
@@ -48,25 +48,19 @@ function run_query($projectId, $query, $useLegacySql)
     ]);
     # [END build_service]
     # [START run_query]
-    $queryResults = $bigQuery->runQuery(
-        $query,
-        ['useLegacySql' => $useLegacySql]);
+    $jobConfig = $bigQuery->query($query)->useLegacySql($useLegacySql);
+    $queryResults = $bigQuery->runQuery($jobConfig);
     # [END run_query]
 
     # [START print_results]
-    if ($queryResults->isComplete()) {
-        $i = 0;
-        $rows = $queryResults->rows();
-        foreach ($rows as $row) {
-            printf('--- Row %s ---' . PHP_EOL, ++$i);
-            foreach ($row as $column => $value) {
-                printf('%s: %s' . PHP_EOL, $column, $value);
-            }
+    $i = 0;
+    foreach ($queryResults as $row) {
+        printf('--- Row %s ---' . PHP_EOL, ++$i);
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, $value);
         }
-        printf('Found %s row(s)' . PHP_EOL, $i);
-    } else {
-        throw new Exception('The query failed to complete');
     }
+    printf('Found %s row(s)' . PHP_EOL, $i);
     # [END print_results]
 }
 # [END all]

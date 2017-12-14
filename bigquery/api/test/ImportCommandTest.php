@@ -219,7 +219,7 @@ class ImportCommandTest extends \PHPUnit_Framework_TestCase
         $testFunction = function () use ($commandTester, $tableId) {
             ob_start();
             $commandTester->execute([
-                'query' => sprintf('SELECT * FROM [%s.%s]', $this->datasetId, $tableId),
+                'query' => sprintf('SELECT * FROM `%s.%s`', $this->datasetId, $tableId),
                 '--project' => $this->projectId,
             ], ['interactive' => false]);
             $output = ob_get_clean();
