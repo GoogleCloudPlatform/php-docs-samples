@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class shakespeareTest extends PHPUnit_Framework_TestCase
+class stackoverflowTest extends PHPUnit_Framework_TestCase
 {
-    public function testShakespeare()
+    public function testStackoverflow()
     {
         global $argv;
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
@@ -24,45 +24,11 @@ class shakespeareTest extends PHPUnit_Framework_TestCase
         }
         $argv[1] = $projectId;
 
-        $outputString = <<<EOF
---- Row 1 ---
-title: hamlet
-unique_words: 5318
---- Row 2 ---
-title: kinghenryv
-unique_words: 5104
---- Row 3 ---
-title: cymbeline
-unique_words: 4875
---- Row 4 ---
-title: troilusandcressida
-unique_words: 4795
---- Row 5 ---
-title: kinglear
-unique_words: 4784
---- Row 6 ---
-title: kingrichardiii
-unique_words: 4713
---- Row 7 ---
-title: 2kinghenryvi
-unique_words: 4683
---- Row 8 ---
-title: coriolanus
-unique_words: 4653
---- Row 9 ---
-title: 2kinghenryiv
-unique_words: 4605
---- Row 10 ---
-title: antonyandcleopatra
-unique_words: 4582
-Found 10 row(s)
-
-EOF;
-
-        // Invoke shakespeare.php
-        include __DIR__ . '/../shakespeare.php';
+        // Invoke stackoverflow.php
+        include __DIR__ . '/../stackoverflow.php';
 
         // Make sure it looks correct
-        $this->expectOutputString($outputString);
+        $this->expectOutputRegex('/stackoverflow\.com/');
+        $this->expectOutputRegex('/views/');
     }
 }
