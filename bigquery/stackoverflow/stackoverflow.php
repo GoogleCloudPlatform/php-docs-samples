@@ -21,43 +21,53 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-# [START all]
+# [START bigquery_simple_app_all]
 require __DIR__ . '/vendor/autoload.php';
 
+# [START bigquery_simple_app_deps]
 use Google\Cloud\BigQuery\BigQueryClient;
+
+# [END bigquery_simple_app_deps]
 
 // get the project ID as the first argument
 if (2 != count($argv)) {
-    die("Usage: php shakespeare.php YOUR_PROJECT_ID\n");
+    die("Usage: php stackoverflow.php YOUR_PROJECT_ID\n");
 }
 
 $projectId = $argv[1];
 
-# [START build_service]
+# [START bigquery_simple_app_client]
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
-# [END build_service]
-# [START run_query]
-$query = 'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
-         'FROM [publicdata:samples.shakespeare]';
-$options = ['useLegacySql' => true];
-$queryResults = $bigQuery->runQuery($query, $options);
-# [END run_query]
+# [END bigquery_simple_app_client]
+# [START bigquery_simple_app_query]
+$query = <<<ENDSQL
+SELECT
+  CONCAT(
+    'https://stackoverflow.com/questions/',
+    CAST(id as STRING)) as url,
+  view_count
+FROM `bigquery-public-data.stackoverflow.posts_questions`
+WHERE tags like '%google-bigquery%'
+ORDER BY view_count DESC
+LIMIT 10;
+ENDSQL;
+$queryJobConfig = $bigQuery->query($query);
+$queryResults = $bigQuery->runQuery($queryJobConfig);
+# [END bigquery_simple_app_query]
 
-# [START print_results]
+# [START bigquery_simple_app_print]
 if ($queryResults->isComplete()) {
     $i = 0;
     $rows = $queryResults->rows();
     foreach ($rows as $row) {
         printf('--- Row %s ---' . PHP_EOL, ++$i);
-        foreach ($row as $column => $value) {
-            printf('%s: %s' . PHP_EOL, $column, $value);
-        }
+        printf('url: %s, %s views' . PHP_EOL, $row['url'], $row['view_count']);
     }
     printf('Found %s row(s)' . PHP_EOL, $i);
 } else {
     throw new Exception('The query failed to complete');
 }
-# [END print_results]
-# [END all]
+# [END bigquery_simple_app_print]
+# [END bigquery_simple_app_all]
