@@ -1,7 +1,7 @@
 {
     "require": {
-        "google/cloud-spanner": "^0.8.0",
-        "google/cloud-monitoring": "^0.6.0"
+        "google/cloud-spanner": "^0.10",
+        "google/cloud-monitoring": "^0.7"
     },
     "require-dev": {
         "google/cloud-tools": "^0.6.7",
