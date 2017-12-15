@@ -54,7 +54,8 @@ function import_from_file($projectId, $datasetId, $tableId, $source)
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     // create the import job
-    $job = $table->load(fopen($source, 'r'), $options);
+    $jobConfig = $table->load(fopen($source, 'r'), $options);
+    $job = $table->startJob($jobConfig);
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
