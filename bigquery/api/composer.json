@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-bigquery": "^0.2",
+        "google/cloud-bigquery": "^0.3",
         "google/cloud-storage": "^1.0",
         "symfony/console": "^3.0"
     },

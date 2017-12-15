@@ -57,7 +57,8 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
     ]);
     $object = $storage->bucket($bucketName)->object($objectName);
     // create the import job
-    $job = $table->loadFromStorage($object, $options);
+    $jobConfig = $table->loadFromStorage($object, $options);
+    $job = $table->startJob($jobConfig);
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {

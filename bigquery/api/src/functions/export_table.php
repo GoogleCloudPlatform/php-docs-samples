@@ -50,8 +50,9 @@ function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName
     ]);
     $destinationObject = $storage->bucket($bucketName)->object($objectName);
     // create the export job
-    $options = ['jobConfig' => ['destinationFormat' => $format]];
-    $job = $table->export($destinationObject, $options);
+    $jobConfig = $table->extract($destinationObject);
+    $jobConfig->destinationFormat($format);
+    $job = $table->startJob($jobConfig);
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
