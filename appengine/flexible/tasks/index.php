@@ -30,13 +30,14 @@ $app->get('/', function () use ($app) {
 });
 
 $app->post('/log_payload', function (Request $request) use ($app) {
-    #$content = json_decode($request->get('content'));
+    $content = $request->getContent();
     $logging = new LoggingClient();
     $logName = 'my-log';
     $logger = $logging->logger($logName);
-    $logging_text = sprintf('Received task with payload: TESTING');
+    $logging_text = sprintf('Received task with payload: %s', $content);
     $entry = $logger->entry($logging_text);
     $logger->write($entry);
+    return 'Testing';
 });
 
 $app['debug'] = true;
