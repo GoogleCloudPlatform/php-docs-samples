@@ -45,11 +45,11 @@ class tasksTest extends \PHPUnit_Framework_TestCase
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
-        } else if (!self::$project) {
+        } elseif (!self::$project) {
             $this->markTestSkipped('No project ID was found.');
-        } else if (!self::$queue) {
+        } elseif (!self::$queue) {
             $this->markTestSkipped('No App Engine Queue was found.');
-        } else if (!self::$location) {
+        } elseif (!self::$location) {
             $this->markTestSkipped('No location was found.');
         }
     }

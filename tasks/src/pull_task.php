@@ -26,8 +26,6 @@ namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
 use Google_Service_CloudTasks;
-use Google_Service_CloudTasks_PullMessage;
-use Google_Service_CloudTasks_Task;
 use Google_Service_CloudTasks_PullTasksRequest;
 
 /**
