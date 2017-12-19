@@ -55,7 +55,7 @@ EOF
             create_task($project, $queue, $location, $payload);
         } else {
             create_task($project, $queue, $location);
-        }     
+        }  
     })
 );
 

@@ -52,9 +52,12 @@ EOF
         $project = $input->getArgument('project');
         $queue = $input->getArgument('queue');
         $location = $input->getArgument('location');
-        $payload = $input->getOption('payload');
         $seconds = $input->getOption('seconds');
-        create_task($project, $queue, $location, $payload, $seconds);
+        if ($payload = $input->getOption('payload')) {
+            create_task($project, $queue, $location, $payload, $seconds);
+        } else {
+            create_task($project, $queue, $location, 'testing', $seconds);
+        }
     })
 );
 

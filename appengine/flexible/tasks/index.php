@@ -37,9 +37,15 @@ $app->post('/log_payload', function (Request $request) use ($app) {
     $logging_text = sprintf('Received task with payload: %s', $content);
     $entry = $logger->entry($logging_text);
     $logger->write($entry);
-    return 'Testing';
+    return sprintf('Received task with payload: %s', $content);
 });
 
 $app['debug'] = true;
+
+// for testing
+if (getenv('PHPUNIT_TESTS') === '1') {
+    return $app;
+}
+
 $app->run();
 // [END log_payload]

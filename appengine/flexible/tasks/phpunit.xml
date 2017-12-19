@@ -25,7 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <file>app.php</file>
+            <file>index.php</file>
         </whitelist>
     </filter>
 </phpunit>
