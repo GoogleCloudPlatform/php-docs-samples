@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- # [START debugger_agent]
+# [START debugger_agent]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Debugger\Agent;
