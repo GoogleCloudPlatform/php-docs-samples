@@ -49,8 +49,15 @@ command:
 ```
 $ gcloud sql instances create wp \
   --activation-policy=ALWAYS \
-    --tier=db-g1-small
+    --tier=db-n1-standard-1
 ```
+
+Note: you can choose `db-f1-micro` or `db-g1-small` instead of
+`db-n1-standard-1` for the Cloud SQL machine type, especially for the
+development or testing purpose. However, those machine types are not
+recommended for production use and are not eligible for Cloud SQL SLA
+coverage. See our [Cloud SQL SLA](https://cloud.google.com/sql/sla)
+for more details.
 
 Then change the root password for your instance:
 
