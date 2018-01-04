@@ -50,7 +50,7 @@ class LocalTest extends WebTestCase
     public function testLogPayload()
     {
         $client = $this->createClient();
-        $crawler = $client->request('POST', '/log_payload', [], [], [], 'google');
+        $crawler = $client->request('POST', '/example_task_handler', [], [], [], 'google');
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains(sprintf('Received task with payload: google'), $response->getContent());

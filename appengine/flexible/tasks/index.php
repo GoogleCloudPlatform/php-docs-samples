@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-// [START log_payload]
+// [START example_task_handler]
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
@@ -28,15 +28,14 @@ $app->get('/', function () use ($app) {
     return 'Hello World';
 });
 
-$app->post('/log_payload', function (Request $request) use ($app) {
-    $content = $request->getContent();
+$app->post('/example_task_handler', function (Request $request) use ($app) {
     $logging = new LoggingClient();
     $logName = 'my-log';
     $logger = $logging->logger($logName);
-    $logging_text = sprintf('Received task with payload: %s', $content);
-    $entry = $logger->entry($logging_text);
+    $loggingText = sprintf('Received task with payload: %s', $request->getContent());
+    $entry = $logger->entry($loggingText);
     $logger->write($entry);
-    return sprintf('Received task with payload: %s', $content);
+    return $loggingText;
 });
 
 $app['debug'] = true;
@@ -47,4 +46,4 @@ if (getenv('PHPUNIT_TESTS') === '1') {
 }
 
 $app->run();
-// [END log_payload]
+// [END example_task_handler]

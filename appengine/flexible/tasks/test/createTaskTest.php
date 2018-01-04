@@ -44,19 +44,23 @@ class tasksTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
+            $this->markTestSkipped('No application credentials were found. Please set the GOOGLE_APPLICATION_CREDENTIALS environment variable.');
         } elseif (!self::$project) {
-            $this->markTestSkipped('No project ID was found.');
+            $this->markTestSkipped('No project ID was found. Please set the GOOGLE_CLOUD_PROJECT environment variable.');
         } elseif (!self::$queue) {
-            $this->markTestSkipped('No App Engine Queue was found.');
+            $this->markTestSkipped('No App Engine Queue was found. Please set the CLOUD_TASKS_APPENGINE_QUEUE environment variable.');
         } elseif (!self::$location) {
-            $this->markTestSkipped('No location was found.');
+            $this->markTestSkipped('No location was found. Please set the CLOUD_TASKS_LOCATION environment variable.');
         }
     }
 
     public function testCreateTask()
     {
-        $output = $this->runCommand('create-task', ['project' => self::$project, 'queue' => self::$queue, 'location' => self::$location]);
+        $output = $this->runCommand('create-task', [
+            'project' => self::$project,
+            'queue' => self::$queue,
+            'location' => self::$location
+        ]);
         $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
             self::$project,
             self::$location,

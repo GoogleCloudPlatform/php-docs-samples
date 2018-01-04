@@ -21,13 +21,13 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/tasks/README.md
  */
 
-# [START pull_task]
 namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
 use Google_Service_CloudTasks;
 use Google_Service_CloudTasks_PullTasksRequest;
 
+# [START pull_task]
 /**
  * Pull a task from a given Pull Queue
  * ```

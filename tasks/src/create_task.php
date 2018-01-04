@@ -21,7 +21,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/tasks/README.md
  */
 
-# [START create_task]
 namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
@@ -30,6 +29,7 @@ use Google_Service_CloudTasks_PullMessage;
 use Google_Service_CloudTasks_Task;
 use Google_Service_CloudTasks_CreateTaskRequest;
 
+# [START create_task]
 /**
  * Create a task for a given App Engine queue
  * ```

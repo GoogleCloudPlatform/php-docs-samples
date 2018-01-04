@@ -21,7 +21,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/flexible/tasks/README.md
  */
 
-# [START create_task]
 namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
@@ -30,6 +29,7 @@ use Google_Service_CloudTasks_AppEngineHttpRequest;
 use Google_Service_CloudTasks_Task;
 use Google_Service_CloudTasks_CreateTaskRequest;
 
+# [START create_task]
 /**
  * Create a task for a given App Engine queue
  * ```
@@ -40,10 +40,10 @@ use Google_Service_CloudTasks_CreateTaskRequest;
  * @param string $queueID ID (short name) of the queue to add the task to.
  * @param string $location Location of the queue to add the task to.
  * @param string $payload Optional payload to attach to the App Engine HTTP request.
- * @param integer $in_seconds The number of seconds from now to schedule task attempt.
+ * @param integer $inSeconds The number of seconds from now to schedule task attempt.
  *
  */
-function create_task($projectId, $queueId, $location, $payload = 'helloworld', $in_seconds = null)
+function create_task($projectId, $queueId, $location, $payload = 'helloworld', $inSeconds = null)
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
@@ -51,24 +51,24 @@ function create_task($projectId, $queueId, $location, $payload = 'helloworld', $
     $client->addScope('https://www.googleapis.com/auth/cloud-platform');
 
     // Create the Cloud Tasks client.
-    $tasks_client = new Google_Service_CloudTasks($client);
+    $tasksClient = new Google_Service_CloudTasks($client);
 
     // Create an App Engine HTTP Request object.
     $appEngineHttpRequest = new Google_Service_CloudTasks_AppEngineHttpRequest();
     $appEngineHttpRequest->setHttpMethod('POST');
     $appEngineHttpRequest->setPayload(base64_encode($payload));
-    $appEngineHttpRequest->setRelativeUrl('/log_payload');
+    $appEngineHttpRequest->setRelativeUrl('/example_task_handler');
 
     // Create a Cloud Task object.
     $task = new Google_Service_CloudTasks_Task();
     $task->setAppEngineHttpRequest($appEngineHttpRequest);
 
     // If in_seconds variable is set, set the future time for when the task will be attempted.
-    if ($in_seconds != null) {
-        $seconds_string = sprintf('+%s seconds', $in_seconds);
-        $future_time = date(\DateTime::RFC3339, strtotime($seconds_string));
-        printf('Future time is: %s' . PHP_EOL, $future_time);
-        $task->setScheduleTime($future_time);
+    if ($inSeconds != null) {
+        $secondsString = sprintf('+%s seconds', $inSeconds);
+        $futureTime = date(\DateTime::RFC3339, strtotime($secondsString));
+        printf('Future time is: %s' . PHP_EOL, $futureTime);
+        $task->setScheduleTime($futureTime);
     }
 
     // Create a Create Task Request object.
@@ -76,15 +76,15 @@ function create_task($projectId, $queueId, $location, $payload = 'helloworld', $
     $createTaskRequest->setTask($task);
 
     // Create queue name using queue ID passed in by user.
-    $queue_name = sprintf('projects/%s/locations/%s/queues/%s',
+    $queueName = sprintf('projects/%s/locations/%s/queues/%s',
         $projectId,
         $location,
         $queueId
     );
 
     // Send request and print the task name.
-    $response = $tasks_client->projects_locations_queues_tasks->create(
-        $queue_name,
+    $response = $tasksClient->projects_locations_queues_tasks->create(
+        $queueName,
         $createTaskRequest
     );
     printf('Created task %s' . PHP_EOL, $response['name']);

@@ -21,7 +21,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/tasks/README.md
  */
 
-# [START acknowledge_task]
 namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
@@ -29,6 +28,7 @@ use Google_Service_CloudTasks;
 use Google_Service_CloudTasks_Task;
 use Google_Service_CloudTasks_AcknowledgeTaskRequest;
 
+# [START acknowledge_task]
 /**
  * Acknowledge a task from a given Pull Queue
  * ```
