@@ -144,16 +144,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.14.0",
+            "version": "v1.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "5cde1a5362c8b576ccb07705aa296993f9099ea3"
+                "reference": "3fc680b3cd190a10e9f03fcc9318445f5ada81a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/5cde1a5362c8b576ccb07705aa296993f9099ea3",
-                "reference": "5cde1a5362c8b576ccb07705aa296993f9099ea3",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/3fc680b3cd190a10e9f03fcc9318445f5ada81a2",
+                "reference": "3fc680b3cd190a10e9f03fcc9318445f5ada81a2",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2017-12-02T00:32:15+00:00"
+            "time": "2018-01-05T19:34:54+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1789,16 +1789,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.1",
+            "version": "v3.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "f6a99b95b338799645fe9f7880d7d4ca1bf79cc1"
+                "reference": "25c192f25721a74084272671f658797d9e0e0146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/f6a99b95b338799645fe9f7880d7d4ca1bf79cc1",
-                "reference": "f6a99b95b338799645fe9f7880d7d4ca1bf79cc1",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/25c192f25721a74084272671f658797d9e0e0146",
+                "reference": "25c192f25721a74084272671f658797d9e0e0146",
                 "shasum": ""
             },
             "require": {
@@ -1843,7 +1843,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-12-04T18:15:22+00:00"
+            "time": "2018-01-03T07:37:34+00:00"
         },
         {
             "name": "webmozart/assert",
