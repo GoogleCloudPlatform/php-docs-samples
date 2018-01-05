@@ -69,7 +69,11 @@ function redact_string(
     }
 
     // Run request
-    $response = $dlp->redactContent($inspectConfig, [$content], $redactConfigs);
+    $response = $dlp->redactContent(
+        $inspectConfig,
+        [$content],
+        ['replaceConfigs' => $redactConfigs]
+    );
     $content = $response->getItems()[0];
 
     // Print the results
