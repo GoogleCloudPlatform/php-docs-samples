@@ -27,6 +27,10 @@ gcloud kms decrypt \
 
 if [ -f ${DIR}/export-secrets.sh ]; then
     source ${DIR}/export-secrets.sh
+else
+    # We don't have secrets, need to unset the e2e flags
+    unset RUN_DEPLOYMENT_TESTS
+    unset RUN_DEVSERVER_TESTS
 fi
 
 # only run when explicitly set
