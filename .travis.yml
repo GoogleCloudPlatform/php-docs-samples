@@ -23,9 +23,10 @@ dist: trusty
 matrix:
   include:
     - php: 5.6
-      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
-    - php: 7.0.8
+    - php: 7.0
     - php: 7.1
+    - php: 7.2
+      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
 
 env:
   global:
@@ -39,7 +40,6 @@ before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
   - php ${HOME}/php-tools/scripts/dump_credentials.php
   - travis_retry ${HOME}/php-tools/scripts/install_test_deps.sh
-  - gcloud kms decrypt --location=global --keyring=ci --key=ci --ciphertext-file=testing/export-secrets.sh.enc --plaintext-file=testing/export-secrets.sh
   - mkdir -p build/logs
   - sudo apt-get update && sudo apt-get install -y python-ipaddr
 

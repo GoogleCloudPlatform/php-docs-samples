@@ -18,7 +18,16 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # export the secrets
-source ${DIR}/export-secrets.sh
+gcloud kms decrypt \
+       --location=global \
+       --keyring=ci \
+       --key=ci \
+       --ciphertext-file=${DIR}/export-secrets.sh.enc \
+       --plaintext-file=${DIR}/export-secrets.sh || echo 'Decrypting the secret failed, some secrets will not be available'
+
+if [ -f ${DIR}/export-secrets.sh ]; then
+    source ${DIR}/export-secrets.sh
+fi
 
 # only run when explicitly set
 if [ "${RUN_CS_FIXER}" = "true" ]; then
