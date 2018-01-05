@@ -39,6 +39,7 @@ before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
   - php ${HOME}/php-tools/scripts/dump_credentials.php
   - travis_retry ${HOME}/php-tools/scripts/install_test_deps.sh
+  - gcloud kms decrypt --location=global --keyring=ci --key=ci --ciphertext-file=testing/export-secrets.sh.enc --plaintext-file=testing/export-secrets.sh
   - mkdir -p build/logs
   - sudo apt-get update && sudo apt-get install -y python-ipaddr
 

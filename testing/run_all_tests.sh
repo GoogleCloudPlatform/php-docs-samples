@@ -13,9 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# export the secrets
+source ${DIR}/export-secrets.sh
+
 # only run when explicitly set
 if [ "${RUN_CS_FIXER}" = "true" ]; then
   $DIR/run_cs_check.sh;
