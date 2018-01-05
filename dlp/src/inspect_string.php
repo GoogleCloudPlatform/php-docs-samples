@@ -19,10 +19,10 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START inspect_string]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Privacy\Dlp\V2beta1\ContentItem;
-use Google\Privacy\Dlp\V2beta1\InfoType;
-use Google\Privacy\Dlp\V2beta1\InspectConfig;
-use Google\Privacy\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2beta1\ContentItem;
+use Google\Cloud\Dlp\V2beta1\InfoType;
+use Google\Cloud\Dlp\V2beta1\InspectConfig;
+use Google\Cloud\Dlp\V2beta1\Likelihood;
 
 /**
  * Inspect a string using the Data Loss Prevention (DLP) API.
