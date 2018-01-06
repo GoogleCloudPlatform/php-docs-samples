@@ -28,7 +28,7 @@ php:
 matrix:
   include:
     - php: 5.6
-      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
+      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true COMPOSER_COMMAND='composer -q update'
   allow_failures:
     - php: 7.2
 
@@ -39,6 +39,7 @@ env:
     - PATH="${HOME}/google-cloud-sdk/bin:${PATH}"
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
+    - COMPOSER_COMMAND='composer -q install'
 
 before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
