@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../../../../testing/FileUtil.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 if (!class_exists('\PHPUnit\Framework\TestCase', true)) {
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');

@@ -5,7 +5,6 @@
     },
     "require-dev": {
         "satooshi/php-coveralls": "^1.0",
-        "symfony/browser-kit": "^3.0",
-        "phpunit/phpunit": "~4"
+        "symfony/browser-kit": "^3.0"
     }
 }

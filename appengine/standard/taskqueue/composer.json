@@ -4,7 +4,6 @@
     },
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",
-        "phpunit/phpunit": "~4",
         "symfony/browser-kit": "~3",
         "symfony/process": "~3"
     },
