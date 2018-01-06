@@ -105,6 +105,35 @@ $application->add(new Command('redact-string'))
         );
     });
 
+$application->add(new Command('deidentify-masking'))
+    ->addArgument('string', InputArgument::REQUIRED, 'The string to deidentify')
+    ->addArgument('replace-string',
+        InputArgument::OPTIONAL,
+        'The text to replace the sensitive content with',
+        'xxx')
+    ->setDescription('Deidentify a string by masking sensitive information with a character using the Data Loss Prevention (DLP) API.')
+    ->setCode(function ($input, $output) {
+        deidentify_masking(
+            $input->getArgument('string'),
+            $input->getArgument('replace-string')
+        );
+    });
+
+$application->add(new Command('deidentify-fpe'))
+    ->addArgument('string', InputArgument::REQUIRED, 'The string to deidentify')
+    ->addArgument('alphabet', InputArgument::REQUIRED, 'The set of characters to use when encrypting the input. For more information, see cloud.google.com/dlp/docs/reference/rest/v2beta1/content/deidentify')
+    ->addArgument('keyName', InputArgument::REQUIRED, 'The name of the Cloud KMS key to use when decrypting the wrapped key.')
+    ->addArgument('wrappedKey', InputArgument::REQUIRED, 'The encrypted (or "wrapped") AES-256 encryption key.')
+    ->setDescription('Deidentify a string with format preserving encryption using the Data Loss Prevention (DLP) API.')
+    ->setCode(function ($input, $output) {
+        deidentify_fpe(
+            $input->getArgument('string'),
+            $input->getArgument('alphabet'),
+            $input->getArgument('keyName'),
+            $input->getArgument('wrappedKey')
+        );
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

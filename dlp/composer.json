@@ -2,7 +2,7 @@
     "name": "google/dlp-sample",
     "type": "project",
     "require": {
-        "google/cloud-dlp": "^0.1.2",
+        "google/cloud-dlp": "^0.3",
         "symfony/console": "^3.3"
     },
     "autoload": {
@@ -13,7 +13,9 @@
              "src/inspect_string.php",
              "src/list_categories.php",
              "src/list_info_types.php",
-             "src/redact_string.php"
+             "src/redact_string.php",
+             "src/deidentify_masking.php",
+             "src/deidentify_fpe.php"
         ]
     },
     "require-dev": {
