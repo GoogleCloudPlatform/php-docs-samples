@@ -26,6 +26,7 @@ matrix:
       env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
     - php: 7.0.8
     - php: 7.1
+    - php: 7.2
 
 env:
   global:
