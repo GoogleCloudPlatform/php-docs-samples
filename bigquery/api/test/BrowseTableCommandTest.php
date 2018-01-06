@@ -62,6 +62,6 @@ class BrowseTableCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex('/Found 1 row\(s\)/');
+        $this->expectOutputRegex('/Found \d+ row\(s\)/');
     }
 }
