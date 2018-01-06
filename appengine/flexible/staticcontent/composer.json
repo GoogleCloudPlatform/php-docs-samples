@@ -5,7 +5,6 @@
     },
     "require-dev": {
         "google/cloud-tools": "^0.6",
-        "guzzlehttp/guzzle": "^6.3",
-        "phpunit/phpunit": "~4"
+        "guzzlehttp/guzzle": "^6.3"
     }
 }

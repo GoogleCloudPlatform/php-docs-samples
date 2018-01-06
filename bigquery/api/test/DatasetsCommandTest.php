@@ -19,12 +19,13 @@ namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery\DatasetsCommand;
 use Symfony\Component\Console\Application;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for DatasetsCommand.
  */
-class DatasetsCommandTest extends \PHPUnit_Framework_TestCase
+class DatasetsCommandTest extends TestCase
 {
     protected static $hasCredentials;
 

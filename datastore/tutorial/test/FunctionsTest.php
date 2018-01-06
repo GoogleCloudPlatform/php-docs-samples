@@ -19,8 +19,9 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use PHPUnit\Framework\TestCase;
 
-class FunctionsTest extends \PHPUnit_Framework_TestCase
+class FunctionsTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 

@@ -18,13 +18,14 @@
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery\QueryCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for QueryCommand.
  */
-class QueryCommandTest extends \PHPUnit_Framework_TestCase
+class QueryCommandTest extends TestCase
 {
     protected static $hasCredentials;
 

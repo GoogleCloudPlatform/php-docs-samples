@@ -20,11 +20,12 @@ namespace Google\Cloud\Samples\BigQuery\Tests;
 use Google\Cloud\Samples\BigQuery;
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\BigQuery\Table;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for BrowseTableCommand.
  */
-class FunctionsTest extends \PHPUnit_Framework_TestCase
+class FunctionsTest extends TestCase
 {
     public function testBigQueryClient()
     {
