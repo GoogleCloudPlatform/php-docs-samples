@@ -28,7 +28,6 @@ class quickstartTest extends TestCase
     public function setUp()
     {
         $this->eventuallyConsistentRetryCount = 10;
-        $this->catchAllExceptions = true;
     }
 
     public function testQuickstart()

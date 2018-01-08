@@ -44,8 +44,6 @@ class error_reportingTest extends TestCase
     public function setUp()
     {
         $this->eventuallyConsistentRetryCount = 10;
-        // TODO: Fix php-testutils
-        $this->catchAllExceptions = true;
     }
 
     public function testReportErrorSimple()
