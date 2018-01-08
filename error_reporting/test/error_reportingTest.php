@@ -19,12 +19,13 @@ namespace Google\Cloud\Samples\Monitoring;
 
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
-use Google\Devtools\Clouderrorreporting\V1beta1\QueryTimeRange;
-use Google\Devtools\Clouderrorreporting\V1beta1\QueryTimeRange_Period;
+use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
+use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange_Period;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class error_reportingTest extends \PHPUnit_Framework_TestCase
+class error_reportingTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 
@@ -43,6 +44,8 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->eventuallyConsistentRetryCount = 10;
+        // TODO: Fix php-testutils
+        $this->catchAllExceptions = true;
     }
 
     public function testReportErrorSimple()
@@ -54,7 +57,7 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
 
         $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->formatProjectName(self::$projectId);
+        $projectName = $errorStats->projectName(self::$projectId);
         $timeRange = (new QueryTimeRange())
             ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
 
@@ -73,7 +76,6 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
                     $messages[] = $event->getMessage();
                 }
             }
-
             $this->assertContains(
                 $message,
                 implode("\n", $messages)
@@ -91,7 +93,7 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
 
         $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->formatProjectName(self::$projectId);
+        $projectName = $errorStats->projectName(self::$projectId);
         $timeRange = (new QueryTimeRange())
             ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
 
@@ -128,7 +130,7 @@ class error_reportingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Reported an exception to Stackdriver using gRPC' . PHP_EOL, $output);
 
         $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->formatProjectName(self::$projectId);
+        $projectName = $errorStats->projectName(self::$projectId);
         $timeRange = (new QueryTimeRange())
             ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
 

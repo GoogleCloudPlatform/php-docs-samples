@@ -1,7 +1,8 @@
 {
     "require": {
         "google/cloud-logging": "^1.0",
-        "google/cloud-error-reporting": "^0.4.3",
+        "google/cloud-error-reporting": "^0.7.3",
+        "google/proto-client": "^0.29",
         "symfony/console": " ^3.3",
         "symfony/event-dispatcher": "^3.3"
     },
