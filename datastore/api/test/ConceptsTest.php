@@ -63,6 +63,7 @@ class ConceptsTest extends TestCase
     {
         $this->eventuallyConsistentRetryCount =
                 getenv('DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT') ?: 3;
+        $this->catchAllExceptions = true;
         if (!self::$hasCredentials &&
             getenv('DATASTORE_EMULATOR_HOST') === false) {
             $this->markTestSkipped(
