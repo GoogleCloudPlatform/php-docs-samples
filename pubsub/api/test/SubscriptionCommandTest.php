@@ -185,8 +185,7 @@ class SubscriptionCommandTest extends TestCase
 
         $application->add(new SubscriptionCommand());
         $commandTester = new CommandTester($application->get('subscription'));
-        $this->runEventuallyConsistentTest(function () use
-            ($commandTester, $subscription, $projectId) {
+        $this->runEventuallyConsistentTest(function () use ($commandTester, $subscription, $projectId) {
             $commandTester->execute(
                 [
                     'subscription' => $subscription,
