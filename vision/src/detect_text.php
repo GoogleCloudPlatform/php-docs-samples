@@ -21,7 +21,7 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\Vision\VisionClient;
 
 // $projectId = 'YOUR_PROJECT_ID';
-// $path = 'path/to/your/image.jpg'
+// $path = 'path/to/your/image.jpg';
 
 function detect_text($projectId, $path)
 {
