@@ -17,7 +17,9 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-class quickstartTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class quickstartTest extends TestCase
 {
     protected static $file;
 
