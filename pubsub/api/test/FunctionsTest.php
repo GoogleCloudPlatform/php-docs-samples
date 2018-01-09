@@ -18,11 +18,12 @@
 namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Google\Cloud\PubSub\PubSubClient;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for BrowseTableCommand.
  */
-class FunctionsTest extends \PHPUnit_Framework_TestCase
+class FunctionsTest extends TestCase
 {
     public function testPubSubClient()
     {

@@ -18,13 +18,14 @@
 namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Google\Cloud\Samples\PubSub\IamCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for IamCommand.
  */
-class IamCommandTest extends \PHPUnit_Framework_TestCase
+class IamCommandTest extends TestCase
 {
     protected static $hasCredentials;
 

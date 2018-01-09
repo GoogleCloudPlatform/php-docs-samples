@@ -19,14 +19,18 @@ namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Google\Cloud\Samples\PubSub\SubscriptionCommand;
 use Google\Cloud\Samples\PubSub\TopicCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 
 /**
  * Unit Tests for SubscriptionCommand.
  */
-class SubscriptionCommandTest extends \PHPUnit_Framework_TestCase
+class SubscriptionCommandTest extends TestCase
 {
+    use EventuallyConsistentTestTrait;
+
     protected static $hasCredentials;
 
     public static function setUpBeforeClass()
@@ -34,6 +38,11 @@ class SubscriptionCommandTest extends \PHPUnit_Framework_TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
+    }
+
+    public function setUp()
+    {
+        $this->eventuallyConsistentRetryCount = 3;
     }
 
     public function testListSubscriptions()
@@ -176,14 +185,19 @@ class SubscriptionCommandTest extends \PHPUnit_Framework_TestCase
 
         $application->add(new SubscriptionCommand());
         $commandTester = new CommandTester($application->get('subscription'));
-        $commandTester->execute(
-            [
-                'subscription' => $subscription,
-                '--project' => $projectId,
-            ],
-            ['interactive' => false]
-        );
-
-        $this->expectOutputRegex('/This is a test message/');
+        $this->runEventuallyConsistentTest(function () use
+            ($commandTester, $subscription, $projectId) {
+            $commandTester->execute(
+                [
+                    'subscription' => $subscription,
+                    '--project' => $projectId,
+                ],
+                ['interactive' => false]
+            );
+            // We can not use expectOutputRegex with
+            // runEventuallyConsistentTest.
+            $output = $this->getActualOutput();
+            $this->assertRegExp('/This is a test message/', $output);
+        });
     }
 }
