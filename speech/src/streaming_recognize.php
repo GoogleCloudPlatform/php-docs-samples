@@ -52,14 +52,6 @@ function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHe
         throw new \Exception('Install the grpc extension ' .
             '(pecl install grpc)');
     }
-    if (!class_exists('Google\Cloud\Speech\V1\SpeechGrpcClient')) {
-        throw new \Exception('Install the proto client PHP library ' .
-            '(composer require google/proto-client)');
-    }
-    if (!class_exists('Google\GAX\GrpcConstants')) {
-        throw new \Exception('Install the GAX library ' .
-            '(composer require google/gax)');
-    }
 
     $speechClient = new SpeechClient();
     try {
