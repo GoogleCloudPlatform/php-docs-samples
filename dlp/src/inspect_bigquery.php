@@ -19,12 +19,12 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START inspect_bigquery]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Privacy\Dlp\V2beta1\BigQueryOptions;
-use Google\Privacy\Dlp\V2beta1\InfoType;
-use Google\Privacy\Dlp\V2beta1\InspectConfig;
-use Google\Privacy\Dlp\V2beta1\StorageConfig;
-use Google\Privacy\Dlp\V2beta1\BigQueryTable;
-use Google\Privacy\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2beta1\BigQueryOptions;
+use Google\Cloud\Dlp\V2beta1\InfoType;
+use Google\Cloud\Dlp\V2beta1\InspectConfig;
+use Google\Cloud\Dlp\V2beta1\StorageConfig;
+use Google\Cloud\Dlp\V2beta1\BigQueryTable;
+use Google\Cloud\Dlp\V2beta1\Likelihood;
 
 /**
  * Inspect a BigQuery table using the Data Loss Prevention (DLP) API.

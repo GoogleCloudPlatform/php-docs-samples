@@ -23,6 +23,7 @@ use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\Query\Query;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @param int $length
@@ -38,7 +39,7 @@ function generateRandomString($length = 10)
     return $ret;
 }
 
-class ConceptsTest extends \PHPUnit_Framework_TestCase
+class ConceptsTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 

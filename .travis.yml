@@ -20,12 +20,17 @@ language: php
 sudo: required
 dist: trusty
 
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+
 matrix:
   include:
     - php: 5.6
-      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
-    - php: 7.0.8
-    - php: 7.1
+      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true COMPOSER_COMMAND='composer -q update'
+  allow_failures:
+    - php: 7.2
 
 env:
   global:
@@ -34,12 +39,14 @@ env:
     - PATH="${HOME}/google-cloud-sdk/bin:${PATH}"
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
+    - COMPOSER_COMMAND='composer -q install'
 
 before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
   - php ${HOME}/php-tools/scripts/dump_credentials.php
   - travis_retry ${HOME}/php-tools/scripts/install_test_deps.sh
   - mkdir -p build/logs
+  - sudo apt-get update && sudo apt-get install -y python-ipaddr
 
 before_script:
   - travis_retry pecl install grpc

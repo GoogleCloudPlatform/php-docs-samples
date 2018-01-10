@@ -1,6 +1,6 @@
 {
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^6.3",
         "monolog/monolog": "^1.19",
         "symfony/console": " ~2.6.0",
         "symfony/process": "^3.0",

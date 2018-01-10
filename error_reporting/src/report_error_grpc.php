@@ -17,12 +17,14 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use Exception;
 # [START report_error_grpc]
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
-use Google\Devtools\Clouderrorreporting\V1beta1\ErrorContext;
-use Google\Devtools\Clouderrorreporting\V1beta1\ReportedErrorEvent;
-use Google\Devtools\Clouderrorreporting\V1beta1\SourceLocation;
+use Google\Cloud\ErrorReporting\V1beta1\ErrorContext;
+use Google\Cloud\ErrorReporting\V1beta1\ReportedErrorEvent;
+use Google\Cloud\ErrorReporting\V1beta1\SourceLocation;
 
 /**
  * Uncomment these line and replace with your project ID, message, and user.
@@ -32,7 +34,7 @@ use Google\Devtools\Clouderrorreporting\V1beta1\SourceLocation;
 // $user = 'optional@user.com';
 
 $errors = new ReportErrorsServiceClient();
-$projectName = $errors->formatProjectName($projectId);
+$projectName = $errors->projectName($projectId);
 
 $location = (new SourceLocation())
     ->setFunctionName('global');

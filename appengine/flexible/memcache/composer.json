@@ -7,8 +7,7 @@
         "gecko-packages/gecko-memcache-mock": "^2.0",
         "google/cloud-tools": "^0.6",
         "paragonie/random_compat": "^2.0",
-        "guzzlehttp/guzzle": "^6.2",
-        "monolog/monolog": "^1.19",
-        "phpunit/phpunit": "~4"
+        "guzzlehttp/guzzle": "^6.3",
+        "monolog/monolog": "^1.19"
     }
 }

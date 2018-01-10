@@ -19,13 +19,14 @@ namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery\ExportCommand;
 use Google\Cloud\Storage\StorageClient;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for ExportCommand.
  */
-class ExportCommandTest extends \PHPUnit_Framework_TestCase
+class ExportCommandTest extends TestCase
 {
     protected static $hasCredentials;
     protected static $gcsBucket;

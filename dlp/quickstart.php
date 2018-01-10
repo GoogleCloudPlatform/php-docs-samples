@@ -20,10 +20,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 # [START dlp_quickstart]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Privacy\Dlp\V2beta1\ContentItem;
-use Google\Privacy\Dlp\V2beta1\InfoType;
-use Google\Privacy\Dlp\V2beta1\InspectConfig;
-use Google\Privacy\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2beta1\ContentItem;
+use Google\Cloud\Dlp\V2beta1\InfoType;
+use Google\Cloud\Dlp\V2beta1\InspectConfig;
+use Google\Cloud\Dlp\V2beta1\Likelihood;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();

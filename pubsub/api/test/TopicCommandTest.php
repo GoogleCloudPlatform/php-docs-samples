@@ -18,13 +18,14 @@
 namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Google\Cloud\Samples\PubSub\TopicCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for TopicCommand.
  */
-class TopicCommandTest extends \PHPUnit_Framework_TestCase
+class TopicCommandTest extends TestCase
 {
     protected static $hasCredentials;
 
@@ -56,7 +57,6 @@ class TopicCommandTest extends \PHPUnit_Framework_TestCase
             ],
             ['interactive' => false]
         );
-
         $this->expectOutputRegex(sprintf('/%s/', $topic));
     }
 

@@ -4,6 +4,7 @@
         "google/cloud-storage": "^1.0"
     },
     "require-dev": {
+        "guzzlehttp/guzzle": "^6.3",
         "symfony/browser-kit": "^3.0",
         "google/cloud-tools":"^0.6"
     }

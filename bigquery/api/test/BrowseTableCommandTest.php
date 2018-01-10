@@ -18,13 +18,14 @@
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery\BrowseTableCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for BrowseTableCommand.
  */
-class BrowseTableCommandTest extends \PHPUnit_Framework_TestCase
+class BrowseTableCommandTest extends TestCase
 {
     protected static $hasCredentials;
 
@@ -62,6 +63,6 @@ class BrowseTableCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
 
-        $this->expectOutputRegex('/Found 1 row\(s\)/');
+        $this->expectOutputRegex('/Found \d+ row\(s\)/');
     }
 }

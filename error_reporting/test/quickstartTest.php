@@ -19,8 +19,9 @@ use Google\Auth\ApplicationDefaultCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use PHPUnit\Framework\TestCase;
 
-class quickstartTest extends PHPUnit_Framework_TestCase
+class quickstartTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 

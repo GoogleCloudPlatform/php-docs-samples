@@ -18,3 +18,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/unit/mocks/PushTask.php';
 require_once __DIR__ . '/unit/mocks/PushQueue.php';
+
+use Google\Cloud\TestUtils\PHPUnit4To6Shim;
+
+PHPUnit4To6Shim::install();

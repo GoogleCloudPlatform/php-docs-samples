@@ -21,13 +21,14 @@ use Google\Cloud\Samples\BigQuery\CopyTableCommand;
 use Google\Cloud\Samples\BigQuery\QueryCommand;
 use Google\Cloud\Samples\BigQuery\SchemaCommand;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for CopyTableCommand.
  */
-class CopyTableCommandTest extends \PHPUnit_Framework_TestCase
+class CopyTableCommandTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 

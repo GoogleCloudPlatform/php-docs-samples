@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="./vendor/autoload.php">
+<phpunit bootstrap="test/bootstrap.php">
     <testsuites>
         <testsuite name="PHP twilio test">
             <directory>test</directory>

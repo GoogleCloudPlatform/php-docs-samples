@@ -19,3 +19,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/unit/mocks/Functions.php';
 require_once __DIR__ . '/unit/mocks/ModulesService.php';
 require_once __DIR__ . '/e2e/ModulesTestTrait.php';
+
+use Google\Cloud\TestUtils\PHPUnit4To6Shim;
+
+PHPUnit4To6Shim::install();

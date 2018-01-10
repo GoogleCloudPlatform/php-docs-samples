@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
+<phpunit bootstrap="test/bootstrap.php" colors="true">
     <php>
         <env name="GA_TRACKING_ID" value="UA-78971600-1"/>
     </php>

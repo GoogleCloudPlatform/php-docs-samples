@@ -19,11 +19,11 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START redact_string]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Privacy\Dlp\V2beta1\ContentItem;
-use Google\Privacy\Dlp\V2beta1\InfoType;
-use Google\Privacy\Dlp\V2beta1\InspectConfig;
-use Google\Privacy\Dlp\V2beta1\RedactContentRequest_ReplaceConfig;
-use Google\Privacy\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2beta1\ContentItem;
+use Google\Cloud\Dlp\V2beta1\InfoType;
+use Google\Cloud\Dlp\V2beta1\InspectConfig;
+use Google\Cloud\Dlp\V2beta1\RedactContentRequest_ReplaceConfig;
+use Google\Cloud\Dlp\V2beta1\Likelihood;
 
 /**
  * Redact a sensitive string using the Data Loss Prevention (DLP) API.
@@ -69,7 +69,11 @@ function redact_string(
     }
 
     // Run request
-    $response = $dlp->redactContent($inspectConfig, [$content], $redactConfigs);
+    $response = $dlp->redactContent(
+        $inspectConfig,
+        [$content],
+        ['replaceConfigs' => $redactConfigs]
+    );
     $content = $response->getItems()[0];
 
     // Print the results

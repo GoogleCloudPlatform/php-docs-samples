@@ -19,13 +19,13 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START inspect_datastore]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Privacy\Dlp\V2beta1\DatastoreOptions;
-use Google\Privacy\Dlp\V2beta1\InfoType;
-use Google\Privacy\Dlp\V2beta1\InspectConfig;
-use Google\Privacy\Dlp\V2beta1\KindExpression;
-use Google\Privacy\Dlp\V2beta1\PartitionId;
-use Google\Privacy\Dlp\V2beta1\StorageConfig;
-use Google\Privacy\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2beta1\DatastoreOptions;
+use Google\Cloud\Dlp\V2beta1\InfoType;
+use Google\Cloud\Dlp\V2beta1\InspectConfig;
+use Google\Cloud\Dlp\V2beta1\KindExpression;
+use Google\Cloud\Dlp\V2beta1\PartitionId;
+use Google\Cloud\Dlp\V2beta1\StorageConfig;
+use Google\Cloud\Dlp\V2beta1\Likelihood;
 
 /**
  * Inspect Datastore using the Data Loss Prevention (DLP) API.

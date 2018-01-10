@@ -28,12 +28,13 @@ class LocalTest extends WebTestCase
 
     public function createApplication()
     {
-        $app = require __DIR__ . '/../app.php';
         if (getenv('POSTGRES_DSN') === false ||
             getenv('POSTGRES_USER') === false ||
             getenv('POSTGRES_PASSWORD') === false) {
             $this->markTestSkipped('set the POSTGRES_DSN, POSTGRES_USER and POSTGRES_PASSWORD environment variables');
+            return;
         }
+        $app = require __DIR__ . '/../app.php';
         return $app;
     }
 

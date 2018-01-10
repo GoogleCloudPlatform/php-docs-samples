@@ -1,28 +1,29 @@
 {
-  "require": {
-    "google/cloud-spanner": "^0.4",
-    "symfony/console": "^3.2"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^4"
-  },
-  "autoload": {
-    "files": [
-      "src/add_column.php",
-      "src/insert_data.php",
-      "src/read_data.php",
-      "src/read_write_transaction.php",
-      "src/create_database.php",
-      "src/query_data.php",
-      "src/read_data_with_index.php",
-      "src/update_data.php",
-      "src/create_index.php",
-      "src/query_data_with_index.php",
-      "src/read_data_with_storing_index.php",
-      "src/create_storing_index.php",
-      "src/query_data_with_new_column.php",
-      "src/read_only_transaction.php",
-      "src/read_stale_data.php"
-    ]
-  }
+    "require": {
+        "google/cloud-spanner": "^1.0.1",
+        "google/proto-client": "^0.29",
+        "symfony/console": "^3.2"
+    },
+    "require-dev": {
+        "google/cloud-tools": "^0.6"
+    },
+    "autoload": {
+        "files": [
+            "src/add_column.php",
+            "src/insert_data.php",
+            "src/read_data.php",
+            "src/read_write_transaction.php",
+            "src/create_database.php",
+            "src/query_data.php",
+            "src/read_data_with_index.php",
+            "src/update_data.php",
+            "src/create_index.php",
+            "src/query_data_with_index.php",
+            "src/read_data_with_storing_index.php",
+            "src/create_storing_index.php",
+            "src/query_data_with_new_column.php",
+            "src/read_only_transaction.php",
+            "src/read_stale_data.php"
+        ]
+    }
 }

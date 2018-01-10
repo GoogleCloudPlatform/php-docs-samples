@@ -17,9 +17,10 @@
 
 namespace Google\Cloud\Samples\Speech\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class speechTest extends \PHPUnit_Framework_TestCase
+class speechTest extends TestCase
 {
     protected static $hasCredentials;
     protected static $bucketName;

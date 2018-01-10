@@ -18,13 +18,14 @@
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Cloud\Samples\BigQuery\SchemaCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for SchemaCommand.
  */
-class SchemaCommandTest extends \PHPUnit_Framework_TestCase
+class SchemaCommandTest extends TestCase
 {
     protected static $hasCredentials;
 

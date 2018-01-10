@@ -28,12 +28,13 @@ class LocalTest extends WebTestCase
 
     public function createApplication()
     {
-        $app = require __DIR__ . '/../app.php';
         if (getenv('MYSQL_DSN') === false ||
             getenv('MYSQL_USER') === false ||
             getenv('MYSQL_PASSWORD') === false) {
             $this->markTestSkipped('set the MYSQL_DSN, MYSQL_USER and MYSQL_PASSWORD environment variables');
+            return;
         }
+        $app = require __DIR__ . '/../app.php';
         return $app;
     }
 

@@ -16,3 +16,7 @@
  */
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../../testing/FileUtil.php';
+
+use Google\Cloud\TestUtils\PHPUnit4To6Shim;
+
+PHPUnit4To6Shim::install();

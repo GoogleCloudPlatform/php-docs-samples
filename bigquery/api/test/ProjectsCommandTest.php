@@ -19,13 +19,14 @@ namespace Google\Cloud\Samples\BigQuery\Tests;
 
 use Google\Auth\CredentialsLoader;
 use Google\Cloud\Samples\BigQuery\ProjectsCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for ProjectsCommand.
  */
-class ProjectsCommandTest extends \PHPUnit_Framework_TestCase
+class ProjectsCommandTest extends TestCase
 {
     public function testProjects()
     {

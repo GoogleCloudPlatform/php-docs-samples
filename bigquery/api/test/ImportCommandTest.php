@@ -21,13 +21,14 @@ use Google\Cloud\Samples\BigQuery\ImportCommand;
 use Google\Cloud\Samples\BigQuery\QueryCommand;
 use Google\Cloud\Samples\BigQuery\SchemaCommand;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for ImportCommand.
  */
-class ImportCommandTest extends \PHPUnit_Framework_TestCase
+class ImportCommandTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 

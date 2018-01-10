@@ -17,7 +17,9 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-class quickstartTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class quickstartTest extends TestCase
 {
     public function testQuickstart()
     {

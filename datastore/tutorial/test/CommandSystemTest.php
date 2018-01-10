@@ -19,10 +19,11 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Key;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class CommandSystemTest extends \PHPUnit_Framework_TestCase
+class CommandSystemTest extends TestCase
 {
     /* @var $keys array<Key> */
     private $keys;

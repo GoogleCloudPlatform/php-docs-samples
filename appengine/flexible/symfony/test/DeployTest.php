@@ -22,8 +22,9 @@ use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
