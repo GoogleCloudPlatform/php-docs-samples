@@ -57,9 +57,9 @@ Verify the index page is serving:
 
 The App Engine app serves as a target for the push requests. It has an
 endpoint `/example_task_handler` that reads the payload (i.e., the request
-body) of the HTTP POST request and logs it. The log output can be viewed with:
+body) of the HTTP POST request and logs it to the `my-log` log. The log output can be viewed with:
 
-    gcloud app logs read
+    gcloud logging read my-log
 
 ## Running the Samples
 
@@ -88,7 +88,7 @@ Create a task, targeted at the `example_task_handler` endpoint, with a payload s
 
 Now view that the payload was received and verify the payload:
 
-    gcloud app logs read
+    gcloud logging read my-log
 
 Create a task that will be scheduled for a time in the future using the
 `--seconds` flag:

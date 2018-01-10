@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
 use Google_Service_CloudTasks;
-use Google_Service_CloudTasks_PullTasksRequest;
+use Google_Service_CloudTasks_LeaseTasksRequest;
 
 # [START pull_task]
 /**
@@ -49,11 +49,11 @@ function pull_task($projectId, $queueId, $location)
     // Create the Cloud Tasks client.
     $tasksClient = new Google_Service_CloudTasks($client);
 
-    // Create a Pull Tasks Request object.
-    $pullTasksRequest = new Google_Service_CloudTasks_PullTasksRequest();
-    $pullTasksRequest->setMaxTasks(1);
-    $pullTasksRequest->setLeaseDuration('60s');
-    $pullTasksRequest->setResponseView('FULL');
+    // Create a Lease Tasks Request object.
+    $leaseTasksRequest = new Google_Service_CloudTasks_LeaseTasksRequest();
+    $leaseTasksRequest->setMaxTasks(1);
+    $leaseTasksRequest->setLeaseDuration('60s');
+    $leaseTasksRequest->setResponseView('FULL');
 
     // Create queue name using queue ID passed in by user.
     $queueName = sprintf('projects/%s/locations/%s/queues/%s',
@@ -63,9 +63,9 @@ function pull_task($projectId, $queueId, $location)
     );
 
     // Send request and return the task to the caller.
-    $response = $tasksClient->projects_locations_queues_tasks->pull(
+    $response = $tasksClient->projects_locations_queues_tasks->lease(
         $queueName,
-        $pullTasksRequest
+        $leaseTasksRequest
     );
     printf('Pulled task %s' . PHP_EOL, $response->getTasks()[0]->getName());
     return $response->getTasks()[0];

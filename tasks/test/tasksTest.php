@@ -74,7 +74,7 @@ class tasksTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('pull-and-acknowledge-task', [
             'project' => self::$project,
-            'queue' => self:$queue,
+            'queue' => self::$queue,
             'location' => self::$location
         ]);
 
