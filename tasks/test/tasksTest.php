@@ -19,11 +19,12 @@ namespace Google\Cloud\Samples\Tasks\Tests;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for tasks commands.
  */
-class tasksTest extends \PHPUnit_Framework_TestCase
+class tasksTest extends TestCase
 {
     protected static $hasCredentials;
     protected static $project;
