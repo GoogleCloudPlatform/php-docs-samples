@@ -71,7 +71,6 @@ do
     else
         phpunit
     fi
-    set -e
     if [ $? == 0 ]; then
         echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"
     else
@@ -81,6 +80,7 @@ do
             echo "${DIR}: failed" >> "${FAILED_FILE}"
         fi
     fi
+    set -e
     if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
         cp build/logs/clover.xml \
             ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
