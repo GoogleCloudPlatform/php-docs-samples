@@ -86,25 +86,25 @@ done
 
 # Show the summary report
 
-if [ -f "${SUCCEEDED_FILE" ]; then
+if [ -f "${SUCCEEDED_FILE}" ]; then
     echo "--------- Succeeded tests -----------"
     cat "${SUCCEEDED_FILE}"
     echo "-------------------------------------"
 fi
 
-if [ -f "${FAILED_FILE" ]; then
+if [ -f "${FAILED_FILE}" ]; then
     echo "--------- Failed tests --------------"
     cat "${FAILED_FILE}"
     echo "-------------------------------------"
 fi
 
-if [ -f "${FAILED_FLAKY_FILE" ]; then
+if [ -f "${FAILED_FLAKY_FILE}" ]; then
     echo "-------- Failed flaky tests ---------"
     cat "${FAILED_FLAKY_FILE}"
     echo "-------------------------------------"
 fi
 
 # Finally report failure if any tests failed
-if [ -f "${FAILED_FILE" ]; then
+if [ -f "${FAILED_FILE}" ]; then
     exit 1
 fi
