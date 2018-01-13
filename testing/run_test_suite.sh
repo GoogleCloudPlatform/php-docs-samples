@@ -55,13 +55,17 @@ do
         fi
     fi
     pushd ${DIR}
+    # Temporarily allowing error
+    set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
         ${COMPOSER_COMMAND}
     fi
+    if [ $? != 0 ]; then
+        echo "${DIR}: failed" >> "${FAILED_FILE}"
+        continue
+    fi
     echo "running phpunit in ${DIR}"
-    # Temporarily allowing error
-    set +e
     if [ -f "vendor/bin/phpunit" ]; then
         vendor/bin/phpunit
     else
@@ -85,6 +89,7 @@ do
 done
 
 # Show the summary report
+set +x
 
 if [ -f "${SUCCEEDED_FILE}" ]; then
     echo "--------- Succeeded tests -----------"
