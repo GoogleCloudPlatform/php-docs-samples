@@ -82,7 +82,6 @@ class ConceptsTest extends TestCase
         $this->assertEquals(false, $task['done']);
         $this->assertEquals(4, $task['priority']);
         $this->assertEquals('Learn Cloud Datastore', $task['description']);
-        $this->fail('Intentional failure');
     }
 
     public function testUpsert()
