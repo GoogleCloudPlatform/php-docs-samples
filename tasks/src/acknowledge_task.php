@@ -38,7 +38,7 @@ use Google_Service_CloudTasks_AcknowledgeTaskRequest;
  * @param Google_Service_CloudTasks_Task $task A task that was pulled from a Pull Queue.
  *
  */
-function acknowledge_task($task)
+function acknowledge_task(Google_Service_CloudTasks_Task $task)
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
