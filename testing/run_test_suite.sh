@@ -15,6 +15,17 @@
 
 set -ex
 
+# directories known as flaky tests
+FLAKES=(
+    datastore/api
+)
+
+TMP_REPORT_DIR=$(mktemp -d)
+
+SUCCEEDED_FILE=${TMP_REPORT_DIR}/succeeded
+FAILED_FILE=${TMP_REPORT_DIR}/failed
+FAILED_FLAKY_FILE=${TMP_REPORT_DIR}/failed_flaky
+
 # Determine all files changed on this branch
 # (will be empty if running from "master").
 FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
@@ -44,9 +55,15 @@ do
         fi
     fi
     pushd ${DIR}
+    # Temporarily allowing error
+    set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
         ${COMPOSER_COMMAND}
+    fi
+    if [ $? != 0 ]; then
+        echo "${DIR}: failed" >> "${FAILED_FILE}"
+        continue
     fi
     echo "running phpunit in ${DIR}"
     if [ -f "vendor/bin/phpunit" ]; then
@@ -54,9 +71,45 @@ do
     else
         phpunit
     fi
+    if [ $? == 0 ]; then
+        echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"
+    else
+        if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
+            echo "${DIR}: failed" >> "${FAILED_FLAKY_FILE}"
+        else
+            echo "${DIR}: failed" >> "${FAILED_FILE}"
+        fi
+    fi
+    set -e
     if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
         cp build/logs/clover.xml \
             ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
     fi
     popd
 done
+
+# Show the summary report
+set +x
+
+if [ -f "${SUCCEEDED_FILE}" ]; then
+    echo "--------- Succeeded tests -----------"
+    cat "${SUCCEEDED_FILE}"
+    echo "-------------------------------------"
+fi
+
+if [ -f "${FAILED_FILE}" ]; then
+    echo "--------- Failed tests --------------"
+    cat "${FAILED_FILE}"
+    echo "-------------------------------------"
+fi
+
+if [ -f "${FAILED_FLAKY_FILE}" ]; then
+    echo "-------- Failed flaky tests ---------"
+    cat "${FAILED_FLAKY_FILE}"
+    echo "-------------------------------------"
+fi
+
+# Finally report failure if any tests failed
+if [ -f "${FAILED_FILE}" ]; then
+    exit 1
+fi
