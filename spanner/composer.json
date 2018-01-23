@@ -1,11 +1,10 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.0.1",
-        "google/proto-client": "^0.29",
+        "google/cloud-spanner": "^1.1",
         "symfony/console": "^3.2"
     },
     "require-dev": {
-        "google/cloud-tools": "^0.6"
+        "phpunit/phpunit": "^4"
     },
     "autoload": {
         "files": [

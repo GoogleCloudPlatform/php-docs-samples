@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "31562e3437c0e707c237b88888f3d6b5",
+    "content-hash": "abc24636fd7ede962f82b7d759fe864c",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -101,22 +101,21 @@
         },
         {
             "name": "google/cloud-dlp",
-            "version": "v0.4.3",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-dlp.git",
-                "reference": "f5e7a2f59156e37c7e152668262497ae446bba7f"
+                "reference": "66e119cc792ff50b95e3b423c05b58038b194c3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dlp/zipball/f5e7a2f59156e37c7e152668262497ae446bba7f",
-                "reference": "f5e7a2f59156e37c7e152668262497ae446bba7f",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dlp/zipball/66e119cc792ff50b95e3b423c05b58038b194c3a",
+                "reference": "66e119cc792ff50b95e3b423c05b58038b194c3a",
                 "shasum": ""
             },
             "require": {
-                "ext-grpc": "*",
-                "google/gax": "^0.29",
-                "google/proto-client": "^0.29"
+                "google/gax": "^0.30",
+                "google/proto-client": "^0.31"
             },
             "suggest": {
                 "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions."
@@ -140,26 +139,28 @@
                 "Apache-2.0"
             ],
             "description": "Data Loss Prevention Client for PHP",
-            "time": "2017-12-29T19:04:28+00:00"
+            "time": "2018-01-23T20:20:20+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.29.0",
+            "version": "0.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "eb4787747f6c90cbe760a31801ef224ccf3a9b36"
+                "reference": "c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/eb4787747f6c90cbe760a31801ef224ccf3a9b36",
-                "reference": "eb4787747f6c90cbe760a31801ef224ccf3a9b36",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121",
+                "reference": "c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "~0.9|^1.0",
+                "google/auth": "^1.2.0",
                 "google/protobuf": "^3.5.1",
                 "grpc/grpc": "^1.4",
+                "guzzlehttp/promises": "^1.3",
+                "guzzlehttp/psr7": "^1.2",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -169,7 +170,14 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Google\\": "src",
+                    "Google\\Api\\": "src/Api",
+                    "Google\\ApiCore\\": "src/ApiCore",
+                    "Google\\Cloud\\": "src/Cloud",
+                    "Google\\Iam\\": "src/Iam",
+                    "Google\\Jison\\": "src/Jison",
+                    "Google\\LongRunning\\": "src/LongRunning",
+                    "Google\\Rpc\\": "src/Rpc",
+                    "Google\\Type\\": "src/Type",
                     "GPBMetadata\\Google\\": "metadata"
                 }
             },
@@ -182,20 +190,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-12-28T17:31:08+00:00"
+            "time": "2018-01-22T21:49:54+00:00"
         },
         {
             "name": "google/proto-client",
-            "version": "0.29.0",
+            "version": "0.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "47e52e5819426edff97c2831efe022b0141c44f1"
+                "reference": "786e591a2aa28de571cfb95db33fb1ae21afbd0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/47e52e5819426edff97c2831efe022b0141c44f1",
-                "reference": "47e52e5819426edff97c2831efe022b0141c44f1",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/786e591a2aa28de571cfb95db33fb1ae21afbd0a",
+                "reference": "786e591a2aa28de571cfb95db33fb1ae21afbd0a",
                 "shasum": ""
             },
             "require": {
@@ -222,7 +230,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-12-21T21:59:33+00:00"
+            "time": "2018-01-22T20:04:52+00:00"
         },
         {
             "name": "google/protobuf",

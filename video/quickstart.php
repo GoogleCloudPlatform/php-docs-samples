@@ -20,7 +20,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 # [START videointelligence_quickstart]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1\Feature;
+use Google\Cloud\VideoIntelligence\V1\Feature;
 
 # Instantiate a client.
 $video = new VideoIntelligenceServiceClient();

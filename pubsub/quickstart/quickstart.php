@@ -23,7 +23,7 @@ require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\PubSub\PubSubClient;
 
 # Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
+$projectId = 'cloud-samples-tests-php';
 
 # Instantiates a client
 $pubsub = new PubSubClient([
@@ -31,7 +31,7 @@ $pubsub = new PubSubClient([
 ]);
 
 # The name for the new topic
-$topicName = 'my-new-topic';
+$topicName = 'my-new-topic-2';
 
 # Creates the new topic
 $topic = $pubsub->createTopic($topicName);

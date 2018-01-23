@@ -25,14 +25,27 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class authTest extends \PHPUnit_Framework_TestCase
 {
+    private $serviceAccountPath;
+    private $bucketName;
+    private $projectId;
+
     public function setUp()
     {
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+        if (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-        $this->bucketName = getenv('GOOGLE_STORAGE_BUCKET');
-        $this->projectId = getenv('GCLOUD_PROJECT');
+        if (!$bucketName = getenv('GOOGLE_BUCKET_NAME')) {
+            $this->markTestSkipped('Set the GOOGLE_BUCKET_NAME ' .
+                'environment variable');
+        }
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
+                'environment variable');
+        }
+        $this->serviceAccountPath = $serviceAccountPath;
+        $this->bucketName = $bucketName;
+        $this->projectId = $projectId;
     }
 
     public function testAuthCloudImplicitCommand()
@@ -43,8 +56,7 @@ class authTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthCloudExplicitCommand()
     {
-        $serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        $output = $this->runCommand('auth-cloud-explicit', $this->projectId, $serviceAccountPath);
+        $output = $this->runCommand('auth-cloud-explicit', $this->projectId, $this->serviceAccountPath);
         $this->assertContains($this->bucketName, $output);
     }
 
@@ -56,8 +68,7 @@ class authTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthApiExplicitCommand()
     {
-        $serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        $output = $this->runCommand('auth-api-explicit', $this->projectId, $serviceAccountPath);
+        $output = $this->runCommand('auth-api-explicit', $this->projectId, $this->serviceAccountPath);
         $this->assertContains($this->bucketName, $output);
     }
 
@@ -69,8 +80,7 @@ class authTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthHttpExplicitCommand()
     {
-        $serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        $output = $this->runCommand('auth-http-explicit', $this->projectId, $serviceAccountPath);
+        $output = $this->runCommand('auth-http-explicit', $this->projectId, $this->serviceAccountPath);
         $this->assertContains($this->bucketName, $output);
     }
 
@@ -89,7 +99,7 @@ class authTest extends \PHPUnit_Framework_TestCase
             $args,
             ['interactive' => false]
         );
-        
+
         return ob_get_clean();
     }
 }

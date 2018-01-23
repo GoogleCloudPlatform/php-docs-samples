@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "115dc66a7f6c41032feeb4d0c5709dfc",
+    "content-hash": "618c6765ce305bd4d2acf2378baa0722",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -101,20 +101,20 @@
         },
         {
             "name": "google/cloud-bigquery",
-            "version": "v0.3.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-bigquery.git",
-                "reference": "9582223f789b68e7cf3f4761bbe63e29f0c48e03"
+                "reference": "a289bf006e88248637e342605867a03a490e2a94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-bigquery/zipball/9582223f789b68e7cf3f4761bbe63e29f0c48e03",
-                "reference": "9582223f789b68e7cf3f4761bbe63e29f0c48e03",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-bigquery/zipball/a289bf006e88248637e342605867a03a490e2a94",
+                "reference": "a289bf006e88248637e342605867a03a490e2a94",
                 "shasum": ""
             },
             "require": {
-                "google/cloud-core": "^1.0",
+                "google/cloud-core": "^1.14",
                 "ramsey/uuid": "~3"
             },
             "suggest": {
@@ -140,24 +140,24 @@
                 "Apache-2.0"
             ],
             "description": "BigQuery Client for PHP",
-            "time": "2017-11-11T01:52:19+00:00"
+            "time": "2018-01-23T14:54:53+00:00"
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.14.1",
+            "version": "v1.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "87c2b9120588196758352d5cd19f408cc91c8c13"
+                "reference": "55f83e78da1c40e6198e306a5c66fbb37757d8fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/87c2b9120588196758352d5cd19f408cc91c8c13",
-                "reference": "87c2b9120588196758352d5cd19f408cc91c8c13",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/55f83e78da1c40e6198e306a5c66fbb37757d8fd",
+                "reference": "55f83e78da1c40e6198e306a5c66fbb37757d8fd",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "~0.9|^1.0",
+                "google/auth": "^1.2",
                 "guzzlehttp/guzzle": "^5.3|^6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "~1",
@@ -190,7 +190,7 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2017-12-15T23:37:58+00:00"
+            "time": "2018-01-23T14:54:53+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -644,16 +644,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.7.1",
+            "version": "3.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334"
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/45cffe822057a09e05f7bd09ec5fb88eeecd2334",
-                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
                 "shasum": ""
             },
             "require": {
@@ -664,17 +664,15 @@
                 "rhumsaa/uuid": "self.version"
             },
             "require-dev": {
-                "apigen/apigen": "^4.1",
-                "codeception/aspect-mock": "^1.0 | ^2.0",
+                "codeception/aspect-mock": "^1.0 | ~2.0.0",
                 "doctrine/annotations": "~1.2.0",
                 "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ^2.1",
                 "ircmaxell/random-lib": "^1.1",
                 "jakub-onderka/php-parallel-lint": "^0.9.0",
-                "mockery/mockery": "^0.9.4",
+                "mockery/mockery": "^0.9.9",
                 "moontoast/math": "^1.1",
                 "php-mock/php-mock-phpunit": "^0.3|^1.1",
-                "phpunit/phpunit": "^4.7|>=5.0 <5.4",
-                "satooshi/php-coveralls": "^0.6.1",
+                "phpunit/phpunit": "^4.7|^5.0",
                 "squizlabs/php_codesniffer": "^2.3"
             },
             "suggest": {
@@ -722,7 +720,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-09-22T20:46:04+00:00"
+            "time": "2018-01-20T00:28:24+00:00"
         },
         {
             "name": "rize/uri-template",
@@ -1783,16 +1781,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.2",
+            "version": "v3.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "afe0cd38486505c9703707707d91450cfc1bd536"
+                "reference": "25c192f25721a74084272671f658797d9e0e0146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/afe0cd38486505c9703707707d91450cfc1bd536",
-                "reference": "afe0cd38486505c9703707707d91450cfc1bd536",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/25c192f25721a74084272671f658797d9e0e0146",
+                "reference": "25c192f25721a74084272671f658797d9e0e0146",
                 "shasum": ""
             },
             "require": {
@@ -1837,7 +1835,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-12-11T20:38:23+00:00"
+            "time": "2018-01-03T07:37:34+00:00"
         },
         {
             "name": "webmozart/assert",

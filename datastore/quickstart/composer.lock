@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb15a36642f364558e7b913a002832b4",
+    "content-hash": "8de991b728bffdf2272c0d1dbee7e28c",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -101,20 +101,20 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.15.1",
+            "version": "v1.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "3fc680b3cd190a10e9f03fcc9318445f5ada81a2"
+                "reference": "55f83e78da1c40e6198e306a5c66fbb37757d8fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/3fc680b3cd190a10e9f03fcc9318445f5ada81a2",
-                "reference": "3fc680b3cd190a10e9f03fcc9318445f5ada81a2",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/55f83e78da1c40e6198e306a5c66fbb37757d8fd",
+                "reference": "55f83e78da1c40e6198e306a5c66fbb37757d8fd",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "~0.9|^1.0",
+                "google/auth": "^1.2",
                 "guzzlehttp/guzzle": "^5.3|^6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "~1",
@@ -147,20 +147,20 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2018-01-05T19:34:54+00:00"
+            "time": "2018-01-23T14:54:53+00:00"
         },
         {
             "name": "google/cloud-datastore",
-            "version": "v1.2.0",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-datastore.git",
-                "reference": "1d155f961c56320d142ed743cf9b62884fd611b8"
+                "reference": "416e5c098c09bce0bfe8332e5e5c50b8cf684b6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-datastore/zipball/1d155f961c56320d142ed743cf9b62884fd611b8",
-                "reference": "1d155f961c56320d142ed743cf9b62884fd611b8",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-datastore/zipball/416e5c098c09bce0bfe8332e5e5c50b8cf684b6c",
+                "reference": "416e5c098c09bce0bfe8332e5e5c50b8cf684b6c",
                 "shasum": ""
             },
             "require": {
@@ -185,7 +185,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Datastore Client for PHP",
-            "time": "2017-12-15T23:37:58+00:00"
+            "time": "2018-01-23T14:54:53+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

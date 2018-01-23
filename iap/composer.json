@@ -1,7 +1,7 @@
 {
     "require": {
         "symfony/console": "^2.8",
-        "google/auth":"dev-additional-claims as v1.0.1",
+        "google/auth":"^1.2",
         "lcobucci/jwt": "^3.2",
         "mdanter/ecc":"0.3.2"
     },

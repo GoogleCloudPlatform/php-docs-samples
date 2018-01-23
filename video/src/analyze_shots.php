@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Video;
 
 // [START analyze_shots]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1\Feature;
+use Google\Cloud\VideoIntelligence\V1\Feature;
 
 /**
  * Finds shot changes in the video.

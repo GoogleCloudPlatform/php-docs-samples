@@ -33,7 +33,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-        $this->bucketName = getenv('GCS_BUCKET_NAME');
+        $this->bucketName = getenv('GOOGLE_BUCKET_NAME');
     }
 
     public function testLabelCommand()
@@ -46,9 +46,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testLabelCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/cat.jpg';
         $output = $this->runCommand('label', $path);
         $this->assertContains('cat', $output);
@@ -64,9 +63,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testTextCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/sabertooth.gif';
         $output = $this->runCommand('text', $path);
         $this->assertContains('extinct', $output);
@@ -90,9 +88,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testFaceCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/face.png';
         $output = $this->runCommand('face', $path);
         $this->assertContains('Anger: ', $output);
@@ -137,9 +134,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testLandmarkCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/tower.jpg';
         $output = $this->runCommand('landmark', $path);
         $this->assertContains('Eiffel', $output);
@@ -161,9 +157,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testLogoCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/logo.jpg';
         $output = $this->runCommand('logo', $path);
         $this->assertContains('Google', $output);
@@ -185,9 +180,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testSafeSearchCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/logo.jpg';
         $output = $this->runCommand('safe-search', $path);
         $this->assertContains('Adult:', $output);
@@ -204,9 +198,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testImagePropertyCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/logo.jpg';
         $output = $this->runCommand('property', $path);
         $this->assertContains('red:', $output);
@@ -228,9 +221,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testCropHintsCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', $path);
         $this->assertContains('Crop Hints:', $output);
@@ -253,9 +245,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testDocumentTextCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/text.jpg';
         $output = $this->runCommand('document-text', $path);
         $this->assertContains('Document text:', $output);
@@ -275,9 +266,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectWebCommandGcs()
     {
-        if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GCS_BUCKET_NAME environment variable');
-        }
+        $this->requireCloudStorage();
+
         $path = 'gs://' . $this->bucketName . '/landmark.jpg';
         $output = $this->runCommand('web', $path);
         $this->assertContains('Web Entities found:', $output);
@@ -299,5 +289,12 @@ class visionTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
         return ob_get_clean();
+    }
+
+    private function requireCloudStorage()
+    {
+        if (!$this->bucketName) {
+            $this->markTestSkipped('Set the GOOGLE_BUCKET_NAME environment variable');
+        }
     }
 }

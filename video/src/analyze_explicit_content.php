@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Video;
 
 // [START analyze_explicit_content]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1\Feature;
+use Google\Cloud\VideoIntelligence\V1\Feature;
 
 /**
  * Analyze explicit content in the video.

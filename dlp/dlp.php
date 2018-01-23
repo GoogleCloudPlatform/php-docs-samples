@@ -51,8 +51,8 @@ $application->add(new Command('inspect-datastore'))
     ->setCode(function ($input, $output) {
         inspect_datastore(
             $input->getArgument('kind'),
-            $input->getArgument('namespace'),
-            $input->getArgument('project')
+            (string) $input->getArgument('namespace'),
+            (string) $input->getArgument('project')
         );
     });
 

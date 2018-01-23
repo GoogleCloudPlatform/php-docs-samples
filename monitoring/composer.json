@@ -1,7 +1,7 @@
 {
     "require": {
         "symfony/console": "^3.3",
-        "google/cloud-monitoring": "^0.6.0"
+        "google/cloud-monitoring": "^0.8"
     },
     "autoload": {
         "files": [

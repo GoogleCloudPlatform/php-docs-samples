@@ -92,17 +92,19 @@ EOF
         }
 
         try {
-          if (!$input->getOption('as-job')) {
-            run_query(
-                $projectId,
-                $query,
-                !!$input->getOption('legacy-sql'));
-          } else {
-            run_query_as_job(
-                $projectId,
-                $query,
-                !!$input->getOption('legacy-sql'));
-          }
+            if (!$input->getOption('as-job')) {
+                run_query(
+                    $projectId,
+                    $query,
+                    $input->getOption('legacy-sql')
+                );
+            } else {
+                run_query_as_job(
+                    $projectId,
+                    $query,
+                    $input->getOption('legacy-sql')
+                );
+            }
         } catch (BadRequestException $e) {
             $response = $e->getServiceException()->getResponse();
             $errorJson = json_decode((string) $response->getBody(), true);
