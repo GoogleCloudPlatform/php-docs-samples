@@ -38,13 +38,6 @@ use Google\Cloud\Core\ExponentialBackoff;
  */
 function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $objectName)
 {
-    // determine the import options from the object name
-    $options = [];
-    if ('.backup_info' === substr($objectName, -12)) {
-        $options['jobConfig'] = ['sourceFormat' => 'DATASTORE_BACKUP'];
-    } elseif ('.json' === substr($objectName, -5)) {
-        $options['jobConfig'] = ['sourceFormat' => 'NEWLINE_DELIMITED_JSON'];
-    }
     // instantiate the bigquery table service
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
@@ -57,7 +50,14 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
     ]);
     $object = $storage->bucket($bucketName)->object($objectName);
     // create the import job
-    $job = $table->loadFromStorage($object, $options);
+    $loadConfig = $table->loadFromStorage($object);
+    // determine the source format from the object name
+    if ('.backup_info' === substr($objectName, -12)) {
+        $loadConfig->sourceFormat('DATASTORE_BACKUP');
+    } elseif ('.json' === substr($objectName, -5)) {
+        $loadConfig->sourceFormat('NEWLINE_DELIMITED_JSON');
+    }
+    $job = $table->runJob($loadConfig);
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {

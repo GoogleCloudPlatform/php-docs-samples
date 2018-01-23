@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
-# [START export_table]
+# [START extract_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
@@ -35,9 +35,9 @@ use Google\Cloud\Core\ExponentialBackoff;
  * @param string $tableId    The BigQuery table ID.
  * @param string $bucketName The Cloud Storage bucket Name.
  * @param string $objectName The Cloud Storage object Name.
- * @param string $format     The export format, either CSV or JSON.
+ * @param string $format     The extract format, either CSV or JSON.
  */
-function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName, $format = 'csv')
+function extract_table($projectId, $datasetId, $tableId, $bucketName, $objectName, $format = 'csv')
 {
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
@@ -49,9 +49,10 @@ function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName
         'projectId' => $projectId,
     ]);
     $destinationObject = $storage->bucket($bucketName)->object($objectName);
-    // create the export job
-    $options = ['jobConfig' => ['destinationFormat' => $format]];
-    $job = $table->export($destinationObject, $options);
+    // create the extract job
+    $options = ['destinationFormat' => $format];
+    $extractConfig = $table->extract($destinationObject, $options);
+    $job = $table->runJob($extractConfig);
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
@@ -66,7 +67,7 @@ function export_table($projectId, $datasetId, $tableId, $bucketName, $objectName
         $error = $job->info()['status']['errorResult']['message'];
         printf('Error running job: %s' . PHP_EOL, $error);
     } else {
-        print('Data exported successfully' . PHP_EOL);
+        print('Data extracted successfully' . PHP_EOL);
     }
 }
-# [END export_table]
+# [END extract_table]

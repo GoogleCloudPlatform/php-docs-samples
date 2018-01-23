@@ -49,7 +49,7 @@ class QueryCommandTest extends TestCase
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
         $commandTester->execute(
-            ['query' => $query, '--project' => $projectId],
+            ['query' => $query, '--project' => $projectId, '--legacy-sql' => true],
             ['interactive' => false]
         );
 
@@ -71,7 +71,7 @@ class QueryCommandTest extends TestCase
         $application->add(new QueryCommand());
         $commandTester = new CommandTester($application->get('query'));
         $commandTester->execute(
-            ['query' => $query, '--project' => $projectId],
+            ['query' => $query, '--project' => $projectId, '--legacy-sql' => true],
             ['interactive' => false]
         );
 
@@ -93,7 +93,7 @@ class QueryCommandTest extends TestCase
             $this->markTestSkipped('No bigquery table name');
         }
 
-        $query = sprintf('SELECT * FROM [%s.%s] LIMIT 1', $datasetId, $tableId);
+        $query = sprintf('SELECT * FROM `%s.%s` LIMIT 1', $datasetId, $tableId);
 
         $application = new Application();
         $application->add(new QueryCommand());
@@ -106,7 +106,7 @@ class QueryCommandTest extends TestCase
         $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 
-    public function testQueryStandardSql()
+    public function testQueryLegacySql()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -121,7 +121,7 @@ class QueryCommandTest extends TestCase
             $this->markTestSkipped('No bigquery table name');
         }
 
-        $query = sprintf('SELECT * FROM `%s.%s` LIMIT 1', $datasetId, $tableId);
+        $query = sprintf('SELECT * FROM [%s.%s] LIMIT 1', $datasetId, $tableId);
 
         $application = new Application();
         $application->add(new QueryCommand());
@@ -131,7 +131,7 @@ class QueryCommandTest extends TestCase
               'query' => $query,
               '--project' => $projectId,
               '--sync',
-              '--standard-sql' => true
+              '--legacy-sql' => true
             ],
             ['interactive' => false]
         );
@@ -154,7 +154,7 @@ class QueryCommandTest extends TestCase
             $this->markTestSkipped('No bigquery table name');
         }
 
-        $query = sprintf('SELECT * FROM [%s.%s] LIMIT 1', $datasetId, $tableId);
+        $query = sprintf('SELECT * FROM `%s.%s` LIMIT 1', $datasetId, $tableId);
 
         $application = new Application();
         $application->add(new QueryCommand());
@@ -167,7 +167,7 @@ class QueryCommandTest extends TestCase
         $this->expectOutputRegex('/Found 1 row\(s\)/');
     }
 
-    public function testQueryAsJobStandardSql()
+    public function testQueryAsJobLegacySql()
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -182,7 +182,7 @@ class QueryCommandTest extends TestCase
             $this->markTestSkipped('No bigquery table name');
         }
 
-        $query = sprintf('SELECT * FROM `%s.%s` LIMIT 1', $datasetId, $tableId);
+        $query = sprintf('SELECT * FROM [%s.%s] LIMIT 1', $datasetId, $tableId);
 
         $application = new Application();
         $application->add(new QueryCommand());
@@ -191,7 +191,7 @@ class QueryCommandTest extends TestCase
             [
                 'query' => $query,
                 '--project' => $projectId,
-                '--standard-sql' => true
+                '--legacy-sql' => true
             ],
             ['interactive' => false]
         );

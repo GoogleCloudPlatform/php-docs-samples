@@ -47,9 +47,9 @@ function run_query_as_job($projectId, $query, $useLegacySql)
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    $job = $bigQuery->runQueryAsJob(
-        $query,
-        ['jobConfig' => ['useLegacySql' => $useLegacySql]]);
+    $jobConfig = $bigQuery->query($query)->useLegacySql($useLegacySql);
+    $job = $bigQuery->startQuery($jobConfig);
+
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {
         print('Waiting for job to complete' . PHP_EOL);
@@ -60,18 +60,13 @@ function run_query_as_job($projectId, $query, $useLegacySql)
     });
     $queryResults = $job->queryResults();
 
-    if ($queryResults->isComplete()) {
-        $i = 0;
-        $rows = $queryResults->rows();
-        foreach ($rows as $row) {
-            printf('--- Row %s ---' . PHP_EOL, ++$i);
-            foreach ($row as $column => $value) {
-                printf('%s: %s' . PHP_EOL, $column, $value);
-            }
+    $i = 0;
+    foreach ($queryResults as $row) {
+        printf('--- Row %s ---' . PHP_EOL, ++$i);
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, json_encode($value));
         }
-        printf('Found %s row(s)' . PHP_EOL, $i);
-    } else {
-        throw new Exception('The query failed to complete');
     }
+    printf('Found %s row(s)' . PHP_EOL, $i);
 }
 # [END query_as_job]
