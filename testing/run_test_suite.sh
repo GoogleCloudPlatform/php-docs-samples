@@ -63,27 +63,27 @@ do
     fi
     if [ $? != 0 ]; then
         echo "${DIR}: failed" >> "${FAILED_FILE}"
-        continue
-    fi
-    echo "running phpunit in ${DIR}"
-    if [ -f "vendor/bin/phpunit" ]; then
-        vendor/bin/phpunit
     else
-        phpunit
-    fi
-    if [ $? == 0 ]; then
-        echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"
-    else
-        if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
-            echo "${DIR}: failed" >> "${FAILED_FLAKY_FILE}"
+        echo "running phpunit in ${DIR}"
+        if [ -f "vendor/bin/phpunit" ]; then
+            vendor/bin/phpunit
         else
-            echo "${DIR}: failed" >> "${FAILED_FILE}"
+            phpunit
         fi
-    fi
-    set -e
-    if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
-        cp build/logs/clover.xml \
-            ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
+        if [ $? == 0 ]; then
+            echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"
+        else
+            if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
+                echo "${DIR}: failed" >> "${FAILED_FLAKY_FILE}"
+            else
+                echo "${DIR}: failed" >> "${FAILED_FILE}"
+            fi
+        fi
+        set -e
+        if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
+            cp build/logs/clover.xml \
+                ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
+        fi
     fi
     popd
 done
