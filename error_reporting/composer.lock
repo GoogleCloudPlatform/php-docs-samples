@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea5dac7fc73a57ad7adb00952fc07a74",
+    "content-hash": "6ebb6f85931294c3814a6d1addbb3b6b",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -1161,16 +1161,16 @@
         },
         {
             "name": "google/cloud-tools",
-            "version": "v0.6.8",
+            "version": "v0.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "cebb2588ce42a253f20380eac5708b867571708d"
+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/cebb2588ce42a253f20380eac5708b867571708d",
-                "reference": "cebb2588ce42a253f20380eac5708b867571708d",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/449025ca42977fd4911ec97df5d44b28377126b5",
+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5",
                 "shasum": ""
             },
             "require": {
@@ -1210,7 +1210,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-01-08T23:34:16+00:00"
+            "time": "2018-01-24T00:40:23+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",

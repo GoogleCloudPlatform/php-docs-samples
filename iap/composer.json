@@ -3,7 +3,7 @@
         "symfony/console": "^2.8",
         "google/auth":"^1.2",
         "lcobucci/jwt": "^3.2",
-        "mdanter/ecc":"0.3.2"
+        "mdanter/ecc":"^0.3.2"
     },
     "autoload": {
         "psr-4": {

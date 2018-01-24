@@ -28,4 +28,7 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+    </php>
 </phpunit>

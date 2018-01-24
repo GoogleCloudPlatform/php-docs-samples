@@ -23,6 +23,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class monitoringTest extends \PHPUnit_Framework_TestCase
 {
+    const RETRY_COUNT = 5;
+
     use EventuallyConsistentTestTrait;
 
     private static $projectId;
@@ -51,7 +53,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
                 'metric_id' => self::$metricId,
             ]);
             $this->assertContains(self::$metricId, $output);
-        }, 10);
+        }, self::RETRY_COUNT, true);
     }
 
     /** @depends testCreateMetric */

@@ -62,6 +62,8 @@ do
         ${COMPOSER_COMMAND}
     fi
     if [ $? != 0 ]; then
+        # Run composer without "-q"
+        composer install
         echo "${DIR}: failed" >> "${FAILED_FILE}"
     else
         echo "running phpunit in ${DIR}"

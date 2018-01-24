@@ -23,12 +23,9 @@ use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
-    use EventuallyConsistentTestTrait;
+    const RETRY_COUNT = 5;
 
-    public function setUp()
-    {
-        $this->eventuallyConsistentRetryCount = 10;
-    }
+    use EventuallyConsistentTestTrait;
 
     public function testQuickstart()
     {
@@ -81,6 +78,6 @@ class quickstartTest extends TestCase
                 'This will be logged to Stack Driver Error Reporting',
                 (string) $res->getBody()
             );
-        });
+        }, self::RETRY_COUNT, true);
     }
 }
