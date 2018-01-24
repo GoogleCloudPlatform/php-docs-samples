@@ -35,7 +35,9 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
+        ob_start();
         $this->dataset = include $file;
+        $output = ob_get_clean();
 
         // Make sure it looks correct
         $this->assertInstanceOf('Google\Cloud\BigQuery\Dataset', $this->dataset);

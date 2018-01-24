@@ -37,7 +37,9 @@ class quickstartTest extends TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
+        ob_start();
         $entity = include $file;
+        $output = ob_get_clean();
 
         // Make sure it looks correct
         $this->assertInstanceOf('Google\Cloud\Datastore\Entity', $entity);

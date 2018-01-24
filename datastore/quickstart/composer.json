@@ -4,6 +4,7 @@
         "google/cloud-datastore": "^1.2"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "phpunit/phpunit": "~4.8"
     }
 }

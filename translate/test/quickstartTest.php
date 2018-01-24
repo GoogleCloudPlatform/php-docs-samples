@@ -32,7 +32,9 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
+        ob_start();
         $translation = include $file;
+        $output = ob_get_clean();
 
         // Make sure it looks correct
         $this->assertTrue(is_array($translation));
