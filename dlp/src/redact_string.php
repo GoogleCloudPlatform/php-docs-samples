@@ -60,19 +60,19 @@ function redact_string(
     $content->setType('text/plain');
     $content->setValue($string);
 
-    $redactConfigs = [];
+    $replaceConfigs = [];
     foreach ($infoTypes as $infoType) {
-        $redactConfig = new RedactContentRequest_ReplaceConfig();
-        $redactConfig->setInfoType($infoType);
-        $redactConfig->setReplaceWith($replaceString);
-        $redactConfigs[] = $redactConfig;
+        $replaceConfig = new RedactContentRequest_ReplaceConfig();
+        $replaceConfig->setInfoType($infoType);
+        $replaceConfig->setReplaceWith($replaceString);
+        $replaceConfigs[] = $replaceConfig;
     }
 
     // Run request
     $response = $dlp->redactContent(
         $inspectConfig,
         [$content],
-        ['replaceConfigs' => $redactConfigs]
+        ['replaceConfigs' => $replaceConfigs]
     );
     $content = $response->getItems()[0];
 

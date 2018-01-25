@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab101bed4e9a2532a0d70f2bfa22a233",
+    "content-hash": "9fbde1ffcbda0ff3a3781e613647af89",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -54,16 +54,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-auth-library-php.git",
-                "reference": "f3fc99fd621f339ee3d4de01bd6a709ed1396116"
+                "reference": "da0062d279c9459350808a4fb63dbc08b90d6b90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/f3fc99fd621f339ee3d4de01bd6a709ed1396116",
-                "reference": "f3fc99fd621f339ee3d4de01bd6a709ed1396116",
+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/da0062d279c9459350808a4fb63dbc08b90d6b90",
+                "reference": "da0062d279c9459350808a4fb63dbc08b90d6b90",
                 "shasum": ""
             },
             "require": {
@@ -77,7 +77,7 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^1.11",
                 "guzzlehttp/promises": "0.1.1|^1.3",
-                "phpunit/phpunit": "^4.8.36",
+                "phpunit/phpunit": "^4.8.36|^5.7",
                 "sebastian/comparator": ">=1.2.3"
             },
             "type": "library",
@@ -97,26 +97,28 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2017-12-06T21:27:53+00:00"
+            "time": "2018-01-24T18:28:42+00:00"
         },
         {
             "name": "google/cloud-monitoring",
-            "version": "v0.6.1",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-monitoring.git",
-                "reference": "57a1cfdc9033789b32392aa9aebc7829bf46ded9"
+                "reference": "0913e88f273965b9653c2031bd12277d2a8a6a92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-monitoring/zipball/57a1cfdc9033789b32392aa9aebc7829bf46ded9",
-                "reference": "57a1cfdc9033789b32392aa9aebc7829bf46ded9",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-monitoring/zipball/0913e88f273965b9653c2031bd12277d2a8a6a92",
+                "reference": "0913e88f273965b9653c2031bd12277d2a8a6a92",
                 "shasum": ""
             },
             "require": {
-                "ext-grpc": "*",
-                "google/gax": "^0.26",
-                "google/proto-client": "^0.26"
+                "google/gax": "^0.30",
+                "google/proto-client": "^0.31"
+            },
+            "suggest": {
+                "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions."
             },
             "type": "library",
             "extra": {
@@ -137,26 +139,28 @@
                 "Apache-2.0"
             ],
             "description": "Stackdriver Monitoring Client for PHP",
-            "time": "2017-11-15T15:11:19+00:00"
+            "time": "2018-01-23T14:54:53+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.26.0",
+            "version": "0.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "dda2b0fb91dc8d0135010468b09a5f03b8cbde9a"
+                "reference": "c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/dda2b0fb91dc8d0135010468b09a5f03b8cbde9a",
-                "reference": "dda2b0fb91dc8d0135010468b09a5f03b8cbde9a",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121",
+                "reference": "c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "~0.9|^1.0",
-                "google/protobuf": "3.4.*",
+                "google/auth": "^1.2.0",
+                "google/protobuf": "^3.5.1",
                 "grpc/grpc": "^1.4",
+                "guzzlehttp/promises": "^1.3",
+                "guzzlehttp/psr7": "^1.2",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -166,35 +170,40 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Google\\GAX\\": "src/",
-                    "Google\\GAX\\UnitTests\\": "tests/",
-                    "Google\\": "src/generated/Google/",
-                    "GPBMetadata\\": "src/generated/GPBMetadata/"
+                    "Google\\Api\\": "src/Api",
+                    "Google\\ApiCore\\": "src/ApiCore",
+                    "Google\\Cloud\\": "src/Cloud",
+                    "Google\\Iam\\": "src/Iam",
+                    "Google\\Jison\\": "src/Jison",
+                    "Google\\LongRunning\\": "src/LongRunning",
+                    "Google\\Rpc\\": "src/Rpc",
+                    "Google\\Type\\": "src/Type",
+                    "GPBMetadata\\Google\\": "metadata"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "Google API Extensions for PHP",
+            "description": "Google API Core for PHP",
             "homepage": "https://github.com/googleapis/gax-php",
             "keywords": [
                 "google"
             ],
-            "time": "2017-11-15T00:16:32+00:00"
+            "time": "2018-01-22T21:49:54+00:00"
         },
         {
             "name": "google/proto-client",
-            "version": "0.26.0",
+            "version": "0.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "93daa25c69e476ba76884984530e9e9b6eb1796f"
+                "reference": "786e591a2aa28de571cfb95db33fb1ae21afbd0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/93daa25c69e476ba76884984530e9e9b6eb1796f",
-                "reference": "93daa25c69e476ba76884984530e9e9b6eb1796f",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/786e591a2aa28de571cfb95db33fb1ae21afbd0a",
+                "reference": "786e591a2aa28de571cfb95db33fb1ae21afbd0a",
                 "shasum": ""
             },
             "require": {
@@ -221,20 +230,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-11-14T21:47:37+00:00"
+            "time": "2018-01-22T20:04:52+00:00"
         },
         {
             "name": "google/protobuf",
-            "version": "v3.4.1",
+            "version": "v3.5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/protobuf.git",
-                "reference": "b04e5cba356212e4e8c66c61bbe0c3a20537c5b9"
+                "reference": "860bd12fec5c69e6529565165532b3d5108a7d97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/protobuf/zipball/b04e5cba356212e4e8c66c61bbe0c3a20537c5b9",
-                "reference": "b04e5cba356212e4e8c66c61bbe0c3a20537c5b9",
+                "url": "https://api.github.com/repos/google/protobuf/zipball/860bd12fec5c69e6529565165532b3d5108a7d97",
+                "reference": "860bd12fec5c69e6529565165532b3d5108a7d97",
                 "shasum": ""
             },
             "require": {
@@ -262,7 +271,7 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2017-09-14T19:24:28+00:00"
+            "time": "2018-01-05T21:42:10+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -871,16 +880,16 @@
         },
         {
             "name": "google/cloud-tools",
-            "version": "v0.6.8",
+            "version": "v0.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "cebb2588ce42a253f20380eac5708b867571708d"
+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/cebb2588ce42a253f20380eac5708b867571708d",
-                "reference": "cebb2588ce42a253f20380eac5708b867571708d",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/449025ca42977fd4911ec97df5d44b28377126b5",
+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5",
                 "shasum": ""
             },
             "require": {
@@ -920,7 +929,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-01-08T23:34:16+00:00"
+            "time": "2018-01-24T00:40:23+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -978,35 +987,29 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.2.0",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "66465776cfc249844bde6d117abff1d22e06c2da"
+                "reference": "bf329f6c1aadea3299f08ee804682b7c45b326a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/66465776cfc249844bde6d117abff1d22e06c2da",
-                "reference": "66465776cfc249844bde6d117abff1d22e06c2da",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/bf329f6c1aadea3299f08ee804682b7c45b326a2",
+                "reference": "bf329f6c1aadea3299f08ee804682b7c45b326a2",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
+                "php": "^5.6 || ^7.0",
                 "phpdocumentor/reflection-common": "^1.0.0",
                 "phpdocumentor/type-resolver": "^0.4.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
-                "doctrine/instantiator": "~1.0.5",
-                "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^6.4"
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "^4.4"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "phpDocumentor\\Reflection\\": [
@@ -1025,7 +1028,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-11-27T17:38:31+00:00"
+            "time": "2017-11-10T14:09:06+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -2156,21 +2159,20 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.4.4",
+            "version": "v1.35.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "eddb97148ad779f27e670e1e3f19fb323aedafeb"
+                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/eddb97148ad779f27e670e1e3f19fb323aedafeb",
-                "reference": "eddb97148ad779f27e670e1e3f19fb323aedafeb",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/daa657073e55b0a78cce8fdd22682fddecc6385f",
+                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
-                "symfony/polyfill-mbstring": "~1.0"
+                "php": ">=5.3.3"
             },
             "require-dev": {
                 "psr/container": "^1.0",
@@ -2180,7 +2182,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "1.35-dev"
                 }
             },
             "autoload": {
@@ -2218,7 +2220,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-09-27T18:10:31+00:00"
+            "time": "2017-09-27T18:06:46+00:00"
         },
         {
             "name": "webmozart/assert",

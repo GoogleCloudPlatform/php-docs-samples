@@ -42,7 +42,9 @@ function copy_table($projectId, $datasetId, $sourceTableId, $destinationTableId)
     $dataset = $bigQuery->dataset($datasetId);
     $sourceTable = $dataset->table($sourceTableId);
     $destinationTable = $dataset->table($destinationTableId);
-    $job = $sourceTable->copy($destinationTable);
+    $copyConfig = $sourceTable->copy($destinationTable);
+    $job = $sourceTable->runJob($copyConfig);
+
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {

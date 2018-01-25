@@ -106,7 +106,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
                 $this->projectId,
                 'updated-logger'
             ),
-            $sink->info['filter']
+            $sink->info()['filter']
         );
     }
 
@@ -127,7 +127,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         $logging = new LoggingClient(['projectId' => $this->projectId]);
         $sink = $logging->sink(self::$sinkName);
         $sink->reload();
-        $this->assertRegExp('/severity >= INFO/', $sink->info['filter']);
+        $this->assertRegExp('/severity >= INFO/', $sink->info()['filter']);
     }
 
     /**

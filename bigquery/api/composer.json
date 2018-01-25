@@ -1,12 +1,13 @@
 {
     "require": {
-        "google/cloud-bigquery": "^0.2",
-        "google/cloud-storage": "^1.0",
+        "google/cloud-bigquery": "^1.0",
+        "google/cloud-storage": "^1.2",
         "symfony/console": "^3.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
-        "google/cloud-tools": "^0.6"
+        "google/cloud-tools": "^0.6",
+        "phpunit/phpunit": "~4.8"
     },
     "autoload": {
         "psr-4": {
@@ -18,7 +19,7 @@
             "src/functions/create_dataset.php",
             "src/functions/create_table.php",
             "src/functions/delete_table.php",
-            "src/functions/export_table.php",
+            "src/functions/extract_table.php",
             "src/functions/import_from_file.php",
             "src/functions/import_from_storage.php",
             "src/functions/insert_sql.php",

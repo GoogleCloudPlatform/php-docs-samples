@@ -80,7 +80,7 @@ class CopyTableCommandTest extends TestCase
         $testFunction = function () use ($commandTester, $datasetId, $destinationTableId) {
             ob_start();
             $commandTester->execute([
-                'query' => sprintf('SELECT * FROM [%s.%s]', $datasetId, $destinationTableId),
+                'query' => sprintf('SELECT * FROM `%s.%s`', $datasetId, $destinationTableId),
                 '--project' => self::$projectId,
             ], ['interactive' => false]);
             $output = ob_get_clean();

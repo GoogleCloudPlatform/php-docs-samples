@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Video;
 
 // [START analyze_faces]
 use Google\Cloud\VideoIntelligence\V1beta1\VideoIntelligenceServiceClient;
-use Google\Cloud\Videointelligence\V1beta1\Feature;
+use Google\Cloud\VideoIntelligence\V1beta1\Feature;
 
 /**
  * Finds faces in the video.

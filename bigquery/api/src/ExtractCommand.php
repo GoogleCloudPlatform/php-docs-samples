@@ -28,26 +28,26 @@ use InvalidArgumentException;
 /**
  * Command line utility to import data into BigQuery.
  *
- * Usage: php bigquery.php export
+ * Usage: php bigquery.php extract
  */
-class ExportCommand extends Command
+class ExtractCommand extends Command
 {
     use ProjectIdTrait;
 
     protected function configure()
     {
         $this
-            ->setName('export')
-            ->setDescription('Export data from a BigQuery table into a Cloud Storage bucket')
+            ->setName('extract')
+            ->setDescription('Extract data from a BigQuery table into a Cloud Storage bucket')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command exports your data from BigQuery into
+The <info>%command.name%</info> command extracts your data from BigQuery into
 Google Cloud Storage.
 
-Export a CSV file
+Extract a CSV file
 
     <info>php %command.full_name% DATASET.TABLE gs://my_bucket/my_object</info>
 
-Export a JSON file
+Extract a JSON file
 
     <info>php %command.full_name% DATASET.TABLE gs://my_bucket/my_object --format=JSON</info>
 
@@ -74,7 +74,7 @@ EOF
                 'format',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'The format to export in. One of "csv", "json", or "avro".',
+                'The format to extract in. One of "csv", "json", or "avro".',
                 'csv'
             )
         ;
@@ -102,7 +102,7 @@ EOF
         if (!$table->exists()) {
             throw new InvalidArgumentException('The supplied table does not exist for this project. ');
         }
-        $message = sprintf('<info>Exporting table for project %s</info>', $projectId);
+        $message = sprintf('<info>extracting table for project %s</info>', $projectId);
         $output->writeln($message);
 
         if (0 !== strpos($destination, 'gs://')) {
@@ -121,6 +121,6 @@ EOF
             throw new InvalidArgumentException('Invalid format');
         }
 
-        export_table($projectId, $datasetId, $tableId, $bucketName, $objectName, $format);
+        extract_table($projectId, $datasetId, $tableId, $bucketName, $objectName, $format);
     }
 }

@@ -54,16 +54,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-auth-library-php.git",
-                "reference": "f3fc99fd621f339ee3d4de01bd6a709ed1396116"
+                "reference": "da0062d279c9459350808a4fb63dbc08b90d6b90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/f3fc99fd621f339ee3d4de01bd6a709ed1396116",
-                "reference": "f3fc99fd621f339ee3d4de01bd6a709ed1396116",
+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/da0062d279c9459350808a4fb63dbc08b90d6b90",
+                "reference": "da0062d279c9459350808a4fb63dbc08b90d6b90",
                 "shasum": ""
             },
             "require": {
@@ -77,7 +77,7 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^1.11",
                 "guzzlehttp/promises": "0.1.1|^1.3",
-                "phpunit/phpunit": "^4.8.36",
+                "phpunit/phpunit": "^4.8.36|^5.7",
                 "sebastian/comparator": ">=1.2.3"
             },
             "type": "library",
@@ -97,24 +97,24 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2017-12-06T21:27:53+00:00"
+            "time": "2018-01-24T18:28:42+00:00"
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.15.1",
+            "version": "v1.15.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "3fc680b3cd190a10e9f03fcc9318445f5ada81a2"
+                "reference": "1a74417294671775ae330c0c8d28627d50da6d77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/3fc680b3cd190a10e9f03fcc9318445f5ada81a2",
-                "reference": "3fc680b3cd190a10e9f03fcc9318445f5ada81a2",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/1a74417294671775ae330c0c8d28627d50da6d77",
+                "reference": "1a74417294671775ae330c0c8d28627d50da6d77",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "~0.9|^1.0",
+                "google/auth": "^1.2",
                 "guzzlehttp/guzzle": "^5.3|^6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "~1",
@@ -147,26 +147,26 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2018-01-05T19:34:54+00:00"
+            "time": "2018-01-23T20:20:20+00:00"
         },
         {
             "name": "google/cloud-logging",
-            "version": "v1.8.2",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-logging.git",
-                "reference": "33cbc14fa16d3775dac5c0ae4830a8083b29d9d3"
+                "reference": "62591c189efa56cfefd917f62d882c86b5da59f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-logging/zipball/33cbc14fa16d3775dac5c0ae4830a8083b29d9d3",
-                "reference": "33cbc14fa16d3775dac5c0ae4830a8083b29d9d3",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-logging/zipball/62591c189efa56cfefd917f62d882c86b5da59f0",
+                "reference": "62591c189efa56cfefd917f62d882c86b5da59f0",
                 "shasum": ""
             },
             "require": {
                 "google/cloud-core": "^1.14",
-                "google/gax": "^0.29",
-                "google/proto-client": "^0.29"
+                "google/gax": "^0.30",
+                "google/proto-client": "^0.31"
             },
             "suggest": {
                 "ext-grpc": "The gRPC extension enables use of the performant gRPC transport",
@@ -191,26 +191,28 @@
                 "Apache-2.0"
             ],
             "description": "Stackdriver Logging Client for PHP",
-            "time": "2018-01-05T19:34:54+00:00"
+            "time": "2018-01-23T14:54:53+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.29.0",
+            "version": "0.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "eb4787747f6c90cbe760a31801ef224ccf3a9b36"
+                "reference": "c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/eb4787747f6c90cbe760a31801ef224ccf3a9b36",
-                "reference": "eb4787747f6c90cbe760a31801ef224ccf3a9b36",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121",
+                "reference": "c16fe4fd7d32e21ffbeaeae27a3ec08ee0bd6121",
                 "shasum": ""
             },
             "require": {
-                "google/auth": "~0.9|^1.0",
+                "google/auth": "^1.2.0",
                 "google/protobuf": "^3.5.1",
                 "grpc/grpc": "^1.4",
+                "guzzlehttp/promises": "^1.3",
+                "guzzlehttp/psr7": "^1.2",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -220,7 +222,14 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Google\\": "src",
+                    "Google\\Api\\": "src/Api",
+                    "Google\\ApiCore\\": "src/ApiCore",
+                    "Google\\Cloud\\": "src/Cloud",
+                    "Google\\Iam\\": "src/Iam",
+                    "Google\\Jison\\": "src/Jison",
+                    "Google\\LongRunning\\": "src/LongRunning",
+                    "Google\\Rpc\\": "src/Rpc",
+                    "Google\\Type\\": "src/Type",
                     "GPBMetadata\\Google\\": "metadata"
                 }
             },
@@ -233,20 +242,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-12-28T17:31:08+00:00"
+            "time": "2018-01-22T21:49:54+00:00"
         },
         {
             "name": "google/proto-client",
-            "version": "0.29.0",
+            "version": "0.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "47e52e5819426edff97c2831efe022b0141c44f1"
+                "reference": "786e591a2aa28de571cfb95db33fb1ae21afbd0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/47e52e5819426edff97c2831efe022b0141c44f1",
-                "reference": "47e52e5819426edff97c2831efe022b0141c44f1",
+                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/786e591a2aa28de571cfb95db33fb1ae21afbd0a",
+                "reference": "786e591a2aa28de571cfb95db33fb1ae21afbd0a",
                 "shasum": ""
             },
             "require": {
@@ -273,7 +282,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-12-21T21:59:33+00:00"
+            "time": "2018-01-22T20:04:52+00:00"
         },
         {
             "name": "google/protobuf",
@@ -666,16 +675,16 @@
         },
         {
             "name": "pimple/pimple",
-            "version": "v3.2.2",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "4d45fb62d96418396ec58ba76e6f065bca16e10a"
+                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/4d45fb62d96418396ec58ba76e6f065bca16e10a",
-                "reference": "4d45fb62d96418396ec58ba76e6f065bca16e10a",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/9e403941ef9d65d20cba7d54e29fe906db42cf32",
+                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32",
                 "shasum": ""
             },
             "require": {
@@ -712,7 +721,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2017-07-23T07:32:15+00:00"
+            "time": "2018-01-21T07:42:36+00:00"
         },
         {
             "name": "psr/cache",
@@ -952,16 +961,16 @@
         },
         {
             "name": "silex/silex",
-            "version": "v2.2.1",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "a70863fdfe716b026dbc14280c49f209561ad6a6"
+                "reference": "3fe50331f194c83ded2f824c47c1c24c20877a8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/a70863fdfe716b026dbc14280c49f209561ad6a6",
-                "reference": "a70863fdfe716b026dbc14280c49f209561ad6a6",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/3fe50331f194c83ded2f824c47c1c24c20877a8c",
+                "reference": "3fe50331f194c83ded2f824c47c1c24c20877a8c",
                 "shasum": ""
             },
             "require": {
@@ -1037,7 +1046,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2017-12-14T19:22:47+00:00"
+            "time": "2018-01-12T07:16:03+00:00"
         },
         {
             "name": "symfony/debug",
@@ -1565,16 +1574,16 @@
     "packages-dev": [
         {
             "name": "google/cloud-tools",
-            "version": "v0.6.8",
+            "version": "v0.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "cebb2588ce42a253f20380eac5708b867571708d"
+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/cebb2588ce42a253f20380eac5708b867571708d",
-                "reference": "cebb2588ce42a253f20380eac5708b867571708d",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/449025ca42977fd4911ec97df5d44b28377126b5",
+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5",
                 "shasum": ""
             },
             "require": {
@@ -1614,7 +1623,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-01-08T23:34:16+00:00"
+            "time": "2018-01-24T00:40:23+00:00"
         },
         {
             "name": "symfony/browser-kit",

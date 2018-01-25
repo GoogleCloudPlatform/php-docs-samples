@@ -37,16 +37,15 @@ function insert_sql($projectId, $datasetId, $source)
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
+    $dataset = $bigQuery->dataset($datasetId);
     // run a sync query for each line of the import
     $file = fopen($source, 'r');
     while ($line = fgets($file)) {
         if (0 !== strpos(trim($line), 'INSERT')) {
             continue;
         }
-        $bigQuery->runQuery($line, [
-            'useLegacySql' => false,
-            'defaultDataset' => ['datasetId' => $datasetId],
-        ]);
+        $queryConfig = $bigQuery->query($line)->defaultDataset($dataset);
+        $bigQuery->runQuery($queryConfig);
     }
     print('Data imported successfully' . PHP_EOL);
 }

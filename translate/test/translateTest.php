@@ -34,97 +34,81 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslate()
     {
-        $commandTester = new CommandTester($this->application->get('translate'));
-        $commandTester->execute(
-            [
-                'text' => 'Hello.',
-                '-t' => 'ja',
-            ],
-            ['interactive' => false]
-        );
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $this->getActualOutput();
-        $this->assertContains('Source language: en', $display);
-        $this->assertContains('Translation:', $display);
+        $output = $this->runCommand('translate', [
+            'text' => 'Hello.',
+            '-t' => 'ja',
+        ]);
+        $this->assertContains('Source language: en', $output);
+        $this->assertContains('Translation:', $output);
     }
 
+    /** @expectedException Google\Cloud\Core\Exception\BadRequestException */
     public function testTranslateBadLanguage()
     {
-        $commandTester = new CommandTester($this->application->get('translate'));
-        $this->setExpectedException('Google\Cloud\Core\Exception\BadRequestException');
-        $commandTester->execute(
-            [
-                'text' => 'Hello.',
-                '-t' => 'jp',
-            ],
-            ['interactive' => false]
-        );
+        $this->runCommand('translate', [
+            'text' => 'Hello.',
+            '-t' => 'jp',
+        ]);
     }
 
     public function testTranslateWithModel()
     {
-        $commandTester = new CommandTester($this->application->get('translate'));
-        $commandTester->execute(
-            [
-                'text' => 'Hello.',
-                '-t' => 'ja',
-                '--model' => 'nmt',
-            ],
-            ['interactive' => false]
-        );
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $this->getActualOutput();
-        $this->assertContains('Source language: en', $display);
-        $this->assertContains('Translation:', $display);
-        $this->assertContains('Model: nmt', $display);
+        $output = $this->runCommand('translate', [
+            'text' => 'Hello.',
+            '-t' => 'ja',
+            '--model' => 'nmt',
+        ]);
+        $this->assertContains('Source language: en', $output);
+        $this->assertContains('Translation:', $output);
+        $this->assertContains('Model: nmt', $output);
     }
 
     public function testDetectLanguage()
     {
-        $commandTester = new CommandTester($this->application->get('detect-language'));
-        $commandTester->execute(
-            [
-                'text' => 'Hello.',
-            ],
-            ['interactive' => false]
-        );
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $this->getActualOutput();
-        $this->assertContains('Language code: en', $display);
-        $this->assertContains('Confidence:', $display);
+        $output = $this->runCommand('detect-language', [
+            'text' => 'Hello.',
+        ]);
+        $this->assertContains('Language code: en', $output);
+        $this->assertContains('Confidence:', $output);
     }
 
     public function testListCodes()
     {
-        $commandTester = new CommandTester($this->application->get('list-codes'));
-        $commandTester->execute([], ['interactive' => false]);
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $this->getActualOutput();
-        $this->assertContains("\nen\n", $display);
-        $this->assertContains("\nja\n", $display);
+        $output = $this->runCommand('list-codes');
+        $this->assertContains("\nen\n", $output);
+        $this->assertContains("\nja\n", $output);
     }
 
     public function testListLanguagesInEnglish()
     {
-        $commandTester = new CommandTester($this->application->get('list-langs'));
-        $commandTester->execute(
-            ['-t' => 'en'],
-            ['interactive' => false]
-        );
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $this->getActualOutput();
-        $this->assertContains('ja: Japanese', $display);
+        $output = $this->runCommand('list-langs', [
+            '-t' => 'en'
+        ]);
+        $this->assertContains('ja: Japanese', $output);
     }
 
     public function testListLanguagesInJapanese()
     {
-        $commandTester = new CommandTester($this->application->get('list-langs'));
-        $commandTester->execute(
-            ['-t' => 'ja'],
-            ['interactive' => false]
-        );
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $display = $this->getActualOutput();
-        $this->assertContains('en: 英語', $display);
+        $output = $this->runCommand('list-langs', [
+            '-t' => 'ja'
+        ]);
+        $this->assertContains('en: 英語', $output);
+    }
+
+    private function runCommand($commandName, $args = [])
+    {
+        $command = $this->application->get($commandName);
+        $commandTester = new CommandTester($command);
+
+        try {
+            ob_start();
+            $commandTester->execute(
+                $args,
+                ['interactive' => false]
+            );
+        } finally {
+            $output = ob_get_clean();
+        }
+        return $output;
     }
 }

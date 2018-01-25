@@ -58,18 +58,18 @@ EOF
                 InputOption::VALUE_REQUIRED,
                 'The Google Cloud Platform project name to use for this invocation. ' .
                 'If omitted then the current gcloud project is assumed. '
-            )
-            ->addOption(
-                'sync',
+             )
+             ->addOption(
+                'as-job',
                 null,
                 InputOption::VALUE_NONE,
-                'run the query syncronously'
+                'run the query by creating a query job'
             )
             ->addOption(
-                'standard-sql',
+                'legacy-sql',
                 null,
                 InputOption::VALUE_NONE,
-                'run the query using standard SQL instead of legacy SQL syntax'
+                'run the query using legacy SQL instead of standard SQL syntax'
             )
         ;
     }
@@ -92,16 +92,18 @@ EOF
         }
 
         try {
-            if ($input->getOption('sync')) {
+            if (!$input->getOption('as-job')) {
                 run_query(
                     $projectId,
                     $query,
-                    !$input->getOption('standard-sql'));
+                    $input->getOption('legacy-sql')
+                );
             } else {
                 run_query_as_job(
                     $projectId,
                     $query,
-                    !$input->getOption('standard-sql'));
+                    $input->getOption('legacy-sql')
+                );
             }
         } catch (BadRequestException $e) {
             $response = $e->getServiceException()->getResponse();

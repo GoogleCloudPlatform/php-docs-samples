@@ -1,9 +1,10 @@
 {
     "require": {
         "php": ">=5.4",
-        "google/cloud-datastore": "^1.0"
+        "google/cloud-datastore": "^1.2"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "phpunit/phpunit": "~4.8"
     }
 }

@@ -27,6 +27,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class error_reportingTest extends TestCase
 {
+    const RETRY_COUNT = 5;
+
     use EventuallyConsistentTestTrait;
 
     private static $projectId;
@@ -39,11 +41,6 @@ class error_reportingTest extends TestCase
         if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
             self::markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
-    }
-
-    public function setUp()
-    {
-        $this->eventuallyConsistentRetryCount = 10;
     }
 
     public function testReportErrorSimple()
@@ -78,7 +75,7 @@ class error_reportingTest extends TestCase
                 $message,
                 implode("\n", $messages)
             );
-        });
+        }, self::RETRY_COUNT, true);
     }
 
     public function testReportErrorManually()
@@ -115,7 +112,7 @@ class error_reportingTest extends TestCase
                 $message,
                 implode("\n", $messages)
             );
-        });
+        }, self::RETRY_COUNT, true);
     }
 
     public function testReportErrorGrpc()
@@ -125,7 +122,10 @@ class error_reportingTest extends TestCase
             'message' => $message,
             '--user' => 'unittests@google.com',
         ]);
-        $this->assertEquals('Reported an exception to Stackdriver using gRPC' . PHP_EOL, $output);
+        $this->assertContains(
+            'Reported an exception to Stackdriver using gRPC' . PHP_EOL,
+            $output
+        );
 
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->projectName(self::$projectId);
@@ -152,7 +152,7 @@ class error_reportingTest extends TestCase
                 $message,
                 implode("\n", $messages)
             );
-        });
+        }, self::RETRY_COUNT, true);
     }
 
     private function runCommand($commandName, $args = [])

@@ -37,16 +37,6 @@ use Google\Cloud\Core\ExponentialBackoff;
  */
 function import_from_file($projectId, $datasetId, $tableId, $source)
 {
-    // determine the import options from the file extension
-    $options = [];
-    $pathInfo = pathinfo($source) + ['extension' => null];
-    if ('csv' === $pathInfo['extension']) {
-        $options['jobConfig'] = ['sourceFormat' => 'CSV'];
-    } elseif ('json' === $pathInfo['extension']) {
-        $options['jobConfig'] = ['sourceFormat' => 'NEWLINE_DELIMITED_JSON'];
-    } else {
-        throw new InvalidArgumentException('Source format unknown. Must be JSON or CSV');
-    }
     // instantiate the bigquery table service
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
@@ -54,7 +44,17 @@ function import_from_file($projectId, $datasetId, $tableId, $source)
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
     // create the import job
-    $job = $table->load(fopen($source, 'r'), $options);
+    $loadConfig = $table->load(fopen($source, 'r'));
+    // determine the source format from the object name
+    $pathInfo = pathinfo($source) + ['extension' => null];
+    if ('csv' === $pathInfo['extension']) {
+        $loadConfig->sourceFormat('CSV');
+    } elseif ('json' === $pathInfo['extension']) {
+        $loadConfig->sourceFormat('NEWLINE_DELIMITED_JSON');
+    } else {
+        throw new InvalidArgumentException('Source format unknown. Must be JSON or CSV');
+    }
+    $job = $table->runJob($loadConfig);
     // poll the job until it is complete
     $backoff = new ExponentialBackoff(10);
     $backoff->execute(function () use ($job) {

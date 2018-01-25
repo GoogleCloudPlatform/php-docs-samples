@@ -17,16 +17,16 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
-use Google\Cloud\Samples\BigQuery\ExportCommand;
+use Google\Cloud\Samples\BigQuery\ExtractCommand;
 use Google\Cloud\Storage\StorageClient;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for ExportCommand.
+ * Unit Tests for ExtractCommand.
  */
-class ExportCommandTest extends TestCase
+class ExtractCommandTest extends TestCase
 {
     protected static $hasCredentials;
     protected static $gcsBucket;
@@ -56,8 +56,8 @@ class ExportCommandTest extends TestCase
         }
 
         $application = new Application();
-        $application->add(new ExportCommand());
-        $commandTester = new CommandTester($application->get('export'));
+        $application->add(new ExtractCommand());
+        $commandTester = new CommandTester($application->get('extract'));
         $commandTester->execute(
             [
                 'dataset.table' => $datasetId . '.' . $tableId,
@@ -80,8 +80,8 @@ class ExportCommandTest extends TestCase
 
         // run the import
         $application = new Application();
-        $application->add(new ExportCommand());
-        $commandTester = new CommandTester($application->get('export'));
+        $application->add(new ExtractCommand());
+        $commandTester = new CommandTester($application->get('extract'));
         $commandTester->execute(
             [
                 'dataset.table' => 'invalid.table.name',
@@ -110,8 +110,8 @@ class ExportCommandTest extends TestCase
 
         // run the import
         $application = new Application();
-        $application->add(new ExportCommand());
-        $commandTester = new CommandTester($application->get('export'));
+        $application->add(new ExtractCommand());
+        $commandTester = new CommandTester($application->get('extract'));
         $commandTester->execute(
             [
                 'dataset.table' => $datasetId . '.' . $tableId,
@@ -141,8 +141,8 @@ class ExportCommandTest extends TestCase
 
         // run the import
         $application = new Application();
-        $application->add(new ExportCommand());
-        $commandTester = new CommandTester($application->get('export'));
+        $application->add(new ExtractCommand());
+        $commandTester = new CommandTester($application->get('extract'));
         $commandTester->execute(
             [
                 'dataset.table' => $datasetId . '.' . $tableId,
@@ -154,9 +154,9 @@ class ExportCommandTest extends TestCase
     }
 
     /**
-     * @dataProvider provideExport
+     * @dataProvider provideExtract
      */
-    public function testExport($objectName, $format)
+    public function testExtract($objectName, $format)
     {
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
@@ -178,8 +178,8 @@ class ExportCommandTest extends TestCase
 
         // run the import
         $application = new Application();
-        $application->add(new ExportCommand());
-        $commandTester = new CommandTester($application->get('export'));
+        $application->add(new ExtractCommand());
+        $commandTester = new CommandTester($application->get('extract'));
         $commandTester->execute([
             'dataset.table' => $datasetId . '.' . $tableId,
             'destination' => $destination,
@@ -187,7 +187,7 @@ class ExportCommandTest extends TestCase
             '--project' => $projectId,
         ], ['interactive' => false]);
 
-        $this->expectOutputRegex('/Data exported successfully/');
+        $this->expectOutputRegex('/Data extracted successfully/');
 
         // verify the contents of the bucket
         $storage = new StorageClient([
@@ -202,7 +202,7 @@ class ExportCommandTest extends TestCase
         $this->assertFalse($object->exists());
     }
 
-    public function provideExport()
+    public function provideExtract()
     {
         $time = time();
 

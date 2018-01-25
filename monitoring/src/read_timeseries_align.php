@@ -25,10 +25,10 @@ namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_align]
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use Google\Monitoring\V3\Aggregation_Aligner;
-use Google\Monitoring\V3\Aggregation;
-use Google\Monitoring\V3\TimeInterval;
-use Google\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
+use Google\Cloud\Monitoring\V3\Aggregation_Aligner;
+use Google\Cloud\Monitoring\V3\Aggregation;
+use Google\Cloud\Monitoring\V3\TimeInterval;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
 use Google\Protobuf\Duration;
 use Google\Protobuf\Timestamp;
 

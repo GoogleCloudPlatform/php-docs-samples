@@ -23,10 +23,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Google\Api\Metric;
 use Google\Api\MonitoredResource;
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use Google\Monitoring\V3\Point;
-use Google\Monitoring\V3\TimeInterval;
-use Google\Monitoring\V3\TimeSeries;
-use Google\Monitoring\V3\TypedValue;
+use Google\Cloud\Monitoring\V3\Point;
+use Google\Cloud\Monitoring\V3\TimeInterval;
+use Google\Cloud\Monitoring\V3\TimeSeries;
+use Google\Cloud\Monitoring\V3\TypedValue;
 use Google\Protobuf\Timestamp;
 
 // These variables are set by the App Engine environment. To test locally,

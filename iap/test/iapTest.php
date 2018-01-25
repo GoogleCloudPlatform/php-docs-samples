@@ -46,6 +46,9 @@ class iapTest extends \PHPUnit_Framework_TestCase
 
     public function testValidate()
     {
+        if (version_compare(PHP_VERSION, '7.2.0') === 1) {
+            $this->markTestSkipped('Validate is not yet supported on PHP 7.2');
+        }
         if (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
             $this->markTestSkipped('No IAP project number found.');
         } elseif (!$projectId = getenv('IAP_PROJECT_ID')) {

@@ -33,7 +33,9 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php
+        ob_start();
         $bucket = include $file;
+        $output = ob_get_clean();
 
         // Make sure it looks correct
         $this->assertInstanceOf('Google\Cloud\Storage\Bucket', $bucket);

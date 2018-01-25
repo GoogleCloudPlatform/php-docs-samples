@@ -23,6 +23,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class monitoringTest extends \PHPUnit_Framework_TestCase
 {
+    const RETRY_COUNT = 5;
+
     use EventuallyConsistentTestTrait;
 
     private static $projectId;
@@ -51,23 +53,27 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
                 'metric_id' => self::$metricId,
             ]);
             $this->assertContains(self::$metricId, $output);
-        }, 10);
+        }, self::RETRY_COUNT, true);
     }
 
     /** @depends testCreateMetric */
     public function testGetDescriptor()
     {
-        $output = $this->runCommand('get-descriptor', [
-            'metric_id' => self::$metricId,
-        ]);
-        $this->assertContains(self::$metricId, $output);
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('get-descriptor', [
+                'metric_id' => self::$metricId,
+            ]);
+            $this->assertContains(self::$metricId, $output);
+        });
     }
 
     /** @depends testGetDescriptor */
     public function testListDescriptors()
     {
-        $output = $this->runCommand('list-descriptors');
-        $this->assertContains(self::$metricId, $output);
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('list-descriptors');
+            $this->assertContains(self::$metricId, $output);
+        });
     }
 
     /** @depends testListDescriptors */
@@ -139,7 +145,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
             // if the command throws an error cast it as a string (as this would be the output)
             $application->renderException($e, $commandTester->getOutput());
             return $commandTester->getDisplay();
+        } finally {
+            $output = ob_get_clean();
         }
-        return ob_get_clean();
+        return $output;
     }
 }
