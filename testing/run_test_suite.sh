@@ -13,7 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
+
+if [ "${BASH_DEBUG}" = "true" ]; then
+    set -x
+fi
 
 # directories known as flaky tests
 FLAKES=(
@@ -59,7 +63,7 @@ do
     set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
-        ${COMPOSER_COMMAND}
+        composer -q install
     fi
     if [ $? != 0 ]; then
         # Run composer without "-q"
