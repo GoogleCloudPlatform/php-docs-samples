@@ -106,8 +106,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
                 $args,
                 ['interactive' => false]
             );
-        }
-        finally {
+        } finally {
             $output = ob_get_clean();
         }
         return $output;
