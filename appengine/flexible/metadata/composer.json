@@ -4,7 +4,7 @@
         "google/cloud-core": "^1.5"
     },
     "require-dev": {
-        "symfony/browser-kit": "^3.0",
+        "phpunit/phpunit":"~4.8",
         "google/cloud-tools":"^0.6"
     }
 }
