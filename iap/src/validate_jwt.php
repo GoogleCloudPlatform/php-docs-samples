@@ -82,8 +82,7 @@ function validate_jwt($iap_jwt, $expected_audience)
     $jws = $loader->loadAndVerifySignatureUsingKeySet(
         $iap_jwt,
         $jwk_set,
-        ['ES256'],
-        $signature_index
+        ['ES256']
     );
 
     // Validate token by checking issuer and audience fields.
