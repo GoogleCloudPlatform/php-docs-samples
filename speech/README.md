@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=speech&open_in_editor=README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=speech
 
 These samples show how to use the [Google Cloud Speech API][speech-api]
 to transcribe audio files, as well as live audio from your computer's

@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=iap&open_in_editor=README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=iap
 
 These samples show how to use the [Google Cloud Identity Aware Proxy][iap]. Cloud Identity-Aware Proxy (Cloud IAP) controls access to your cloud applications running on Google Cloud Platform. Cloud IAP works by verifying a user’s identity and determining if that user should be allowed to access the application.
 

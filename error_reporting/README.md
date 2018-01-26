@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=error_reporting&open_in_editor=README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=error_reporting
 
 `quickstart.php` and `error_reporting.php` are simple command-line programs to demonstrate logging
 exceptions, errors, and PHP fatral errors to Stackdriver Error Reporting.
