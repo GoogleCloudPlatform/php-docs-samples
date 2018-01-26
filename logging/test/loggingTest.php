@@ -62,7 +62,6 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         if (!$bucket = getenv('GOOGLE_BUCKET_NAME')) {
             $this->markTestSkipped('No GOOGLE_BUCKET_NAME envvar');
         }
-
         $output = $this->runCommand('create-sink', [
             '--logger' => self::$loggerName,
             '--bucket' => $bucket,
@@ -144,9 +143,9 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testWrite()
+    public function testWriteAndList()
     {
-        $message = 'Test Message';
+        $message = sprintf("Test Message %s", uniqid());
         $output = $this->runCommand('write', [
             '--logger' => self::$loggerName,
             'message' => $message
@@ -155,21 +154,14 @@ class loggingTest extends \PHPUnit_Framework_TestCase
             sprintf("Wrote a log to a logger '%s'.\n", self::$loggerName),
             $output
         );
-    }
 
-    /**
-     * @depends testWrite
-     */
-    public function testListEntries()
-    {
-        $phpunit = $this;
         $loggerName = self::$loggerName;
-        $this->runEventuallyConsistentTest(function () use ($phpunit, $loggerName) {
-            $output = $phpunit->runCommand('list-entries', [
+        $this->runEventuallyConsistentTest(function () use ($loggerName, $message) {
+            $output = $this->runCommand('list-entries', [
                 '--logger' => $loggerName,
             ]);
-            $this->assertContains(': Test Message', $output);
-        }, 10);
+            $this->assertContains($message, $output);
+        });
     }
 
     /**
