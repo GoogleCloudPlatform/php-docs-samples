@@ -63,7 +63,8 @@ do
     set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
-        composer -q install
+        # Ignore platform reqs for REST tests
+        composer -q install --ignore-platform-reqs
     fi
     if [ $? != 0 ]; then
         # Run composer without "-q"

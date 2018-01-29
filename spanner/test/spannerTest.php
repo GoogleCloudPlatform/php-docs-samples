@@ -39,6 +39,9 @@ class spannerTest extends TestCase
 
     public static function setUpBeforeClass()
     {
+        if (!extension_loaded('grpc')) {
+            self::markTestSkipped('Must enable grpc extension.');
+        }
         if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             self::markTestSkipped('No application credentials were found');
         }
