@@ -25,6 +25,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class videoTest extends \PHPUnit_Framework_TestCase
 {
     private static $gcsUri = 'gs://demomaker/cat.mp4';
+    private static $gcsFacesUri = 'gs://cloud-samples-tests-php/googlework_short.mp4';
 
     public function setUp()
     {
@@ -36,7 +37,10 @@ class videoTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyzeFaces()
     {
-        $output = $this->runCommand('faces', ['uri' => self::$gcsUri]);
+        if (!extension_loaded('grpc')) {
+            $this->markTestSkipped('gRPC is required for this test');
+        }
+        $output = $this->runCommand('faces', ['uri' => self::$gcsFacesUri]);
         $this->assertContains('left:', $output);
     }
 

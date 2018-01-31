@@ -35,8 +35,10 @@ function analyze_labels_file($path)
     $inputContent = file_get_contents($path);
 
     # Execute a request.
-    $options = ['inputContent'=>$inputContent, 'features'=>[Feature::LABEL_DETECTION]];
-    $operation = $video->annotateVideo($options);
+    $operation = $video->annotateVideo([
+        'inputContent' => $inputContent,
+        'features' => [Feature::LABEL_DETECTION]
+    ]);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();

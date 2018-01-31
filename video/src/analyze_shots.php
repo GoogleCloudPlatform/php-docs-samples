@@ -33,8 +33,10 @@ function analyze_shots($uri)
     $video = new VideoIntelligenceServiceClient();
 
     # Execute a request.
-    $options = ['inputUri'=>$uri, 'features'=>[Feature::SHOT_CHANGE_DETECTION]];
-    $operation = $video->annotateVideo($options);
+    $operation = $video->annotateVideo([
+        'inputUri' => $uri,
+        'features' => [Feature::SHOT_CHANGE_DETECTION]
+    ]);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();
