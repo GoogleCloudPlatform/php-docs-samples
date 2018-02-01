@@ -63,8 +63,9 @@ do
     set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
-        if  composer check-platform-reqs | grep missing ; then
-            composer -q install --ignore-platform-reqs
+        if composer check-platform-reqs | grep missing; then
+            echo "Missing platform requirements. Skipping tests in $DIR"
+            continue
         else
             composer -q install
         fi
