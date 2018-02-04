@@ -10,7 +10,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Google\\Cloud\\Samples\\Monitoring\\": "test/lib"
+            "Google\\Cloud\\Samples\\ErrorReporting\\": "test"
         }
     }
 }

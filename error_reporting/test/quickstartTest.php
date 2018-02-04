@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Monitoring;
+namespace Google\Cloud\Samples\ErrorReporting;
 
 use PHPUnit\Framework\TestCase;
 
