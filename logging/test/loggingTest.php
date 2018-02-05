@@ -167,7 +167,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @depends testWrite
+     * @depends testWriteAndList
      */
     public function testDeleteLogger()
     {
