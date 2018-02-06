@@ -15,21 +15,15 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Monitoring;
+namespace Google\Cloud\Samples\ErrorReporting;
 
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
-use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
-use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange_Period;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class error_reportingTest extends TestCase
 {
-    const RETRY_COUNT = 5;
-
-    use EventuallyConsistentTestTrait;
+    use VerifyReportedErrorTrait;
 
     private static $projectId;
 
@@ -51,31 +45,7 @@ class error_reportingTest extends TestCase
         ]);
         $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
 
-        $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->projectName(self::$projectId);
-        $timeRange = (new QueryTimeRange())
-            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
-
-        // Iterate through all elements
-        $this->runEventuallyConsistentTest(function () use (
-            $errorStats,
-            $projectName,
-            $timeRange,
-            $message
-        ) {
-            $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange);
-            foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
-                foreach ($response->iterateAllElements() as $event) {
-                    $messages[] = $event->getMessage();
-                }
-            }
-            $this->assertContains(
-                $message,
-                implode("\n", $messages)
-            );
-        }, self::RETRY_COUNT, true);
+        $this->verifyReportedError(self::$projectId, $message);
     }
 
     public function testReportErrorManually()
@@ -87,32 +57,7 @@ class error_reportingTest extends TestCase
         ]);
         $this->assertEquals('Reported an error to Stackdriver' . PHP_EOL, $output);
 
-        $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->projectName(self::$projectId);
-        $timeRange = (new QueryTimeRange())
-            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
-
-        // Iterate through all elements
-        $this->runEventuallyConsistentTest(function () use (
-            $errorStats,
-            $projectName,
-            $timeRange,
-            $message
-        ) {
-            $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange);
-            foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
-                foreach ($response->iterateAllElements() as $event) {
-                    $messages[] = $event->getMessage();
-                }
-            }
-
-            $this->assertContains(
-                $message,
-                implode("\n", $messages)
-            );
-        }, self::RETRY_COUNT, true);
+        $this->verifyReportedError(self::$projectId, $message);
     }
 
     public function testReportErrorGrpc()
@@ -127,32 +72,7 @@ class error_reportingTest extends TestCase
             $output
         );
 
-        $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->projectName(self::$projectId);
-        $timeRange = (new QueryTimeRange())
-            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
-
-        // Iterate through all elements
-        $this->runEventuallyConsistentTest(function () use (
-            $errorStats,
-            $projectName,
-            $timeRange,
-            $message
-        ) {
-            $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange);
-            foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId());
-                foreach ($response->iterateAllElements() as $event) {
-                    $messages[] = $event->getMessage();
-                }
-            }
-
-            $this->assertContains(
-                $message,
-                implode("\n", $messages)
-            );
-        }, self::RETRY_COUNT, true);
+        $this->verifyReportedError(self::$projectId, $message);
     }
 
     private function runCommand($commandName, $args = [])

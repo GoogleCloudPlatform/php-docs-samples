@@ -15,17 +15,13 @@
  * limitations under the License.
  */
 
-use Google\Auth\ApplicationDefaultCredentials;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+namespace Google\Cloud\Samples\ErrorReporting;
+
 use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
-    const RETRY_COUNT = 5;
-
-    use EventuallyConsistentTestTrait;
+    use VerifyReportedErrorTrait;
 
     public function testQuickstart()
     {
@@ -54,30 +50,8 @@ class quickstartTest extends TestCase
             $output
         );
 
-        // call groupStats to get the latest logs per version
-        $url = sprintf('/v1beta1/projects/%s/groupStats', $projectId);
+        $message = 'This will be logged to Stack Driver Error Reporting';
 
-        // create an authorized Google Client
-        $middleware = ApplicationDefaultCredentials::getMiddleware(
-            'https://www.googleapis.com/auth/cloud-platform'
-        );
-        $stack = HandlerStack::create();
-        $stack->push($middleware);
-        $client = new Client([
-            'handler' => $stack,
-            'base_uri' => 'https://clouderrorreporting.googleapis.com',
-            'auth' => 'google_auth', // authorize all requests
-            'query' => [
-                'serviceFilter.version' => $version,
-            ]
-        ]);
-
-        $this->runEventuallyConsistentTest(function () use ($client, $url) {
-            $res = $client->get($url);
-            $this->assertContains(
-                'This will be logged to Stack Driver Error Reporting',
-                (string) $res->getBody()
-            );
-        }, self::RETRY_COUNT, true);
+        $this->verifyReportedError($projectId, $message);
     }
 }

@@ -64,7 +64,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
                 'metric_id' => self::$metricId,
             ]);
             $this->assertContains(self::$metricId, $output);
-        });
+        }, self::RETRY_COUNT, true);
     }
 
     /** @depends testGetDescriptor */

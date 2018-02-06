@@ -13,11 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
+
+if [ "${BASH_DEBUG}" = "true" ]; then
+    set -x
+fi
 
 # directories known as flaky tests
 FLAKES=(
     datastore/api
+    dlp
+)
+
+GRPC_ONLY_TESTS=(
+    appengine/standard/grpc
+    spanner
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
@@ -59,9 +69,14 @@ do
     set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
-        ${COMPOSER_COMMAND}
+        composer -q install
     fi
     if [ $? != 0 ]; then
+        if [[ "${GRPC_ONLY_TESTS[@]}" =~ "${DIR}" ]]; then
+            echo "Installation failed, skipping tests in $DIR\n"
+            popd
+            continue
+        fi
         # Run composer without "-q"
         composer install
         echo "${DIR}: failed" >> "${FAILED_FILE}"

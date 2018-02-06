@@ -33,8 +33,10 @@ function analyze_labels($uri)
     $video = new VideoIntelligenceServiceClient();
 
     # Execute a request.
-    $options = ['inputUri'=>$uri, 'features'=>[Feature::LABEL_DETECTION]];
-    $operation = $video->annotateVideo($options);
+    $operation = $video->annotateVideo([
+        'inputUri' => $uri,
+        'features' => [Feature::LABEL_DETECTION]
+    ]);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete();

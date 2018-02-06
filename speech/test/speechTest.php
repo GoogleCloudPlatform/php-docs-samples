@@ -43,8 +43,11 @@ class speechTest extends TestCase
     }
 
     /** @dataProvider provideTranscribe */
-    public function testTranscribe($command, $audioFile, $encoding, $sampleRate)
+    public function testTranscribe($command, $audioFile, $encoding, $sampleRate, $requireGrpc = false)
     {
+        if ($requireGrpc && !extension_loaded('grpc')) {
+            self::markTestSkipped('Must enable grpc extension.');
+        }
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
@@ -75,7 +78,7 @@ class speechTest extends TestCase
             ['transcribe-async-gcs', 'gs://' . self::$bucketName . '/audio32KHz.raw', 'LINEAR16', '32000'],
             ['transcribe-words', __DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
             ['transcribe-async-words', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
-            ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
+            ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000', true],
         ];
     }
 

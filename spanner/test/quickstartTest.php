@@ -27,6 +27,9 @@ class quickstartTest extends TestCase
 
     public function setUp()
     {
+        if (!extension_loaded('grpc')) {
+            self::markTestSkipped('Must enable grpc extension.');
+        }
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
