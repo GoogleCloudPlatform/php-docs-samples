@@ -45,6 +45,8 @@ if [ "${RUN_CS_FIXER}" = "true" ]; then
 fi
 $DIR/run_test_suite.sh;
 # only run for travis crons
-if [ "${TRAVIS_EVENT_TYPE}" != "pull_request" ]; then
+if [ "${TRAVIS_EVENT_TYPE}" != "pull_request" ] && \
+   [ "${RUN_DEPENDENCY_CHECK}" = "true" ]
+then
   $DIR/run_dependency_check.sh;
 fi
