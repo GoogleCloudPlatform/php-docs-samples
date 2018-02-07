@@ -28,7 +28,7 @@ php:
 matrix:
   include:
     - php: 5.6
-      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true
+      env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true RUN_DEPENDENCY_CHECK=true
     - php: 7.2
       env: SKIP_GRPC=true
 
