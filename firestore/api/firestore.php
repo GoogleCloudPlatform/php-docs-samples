@@ -85,6 +85,22 @@ EOF
     })
 );
 
+// Retrieve All Documents command
+$application->add((new Command('retrieve-all-documents'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Retrieve all documents from a collection.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command retrieves all documents from a collection using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_get_all();
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
