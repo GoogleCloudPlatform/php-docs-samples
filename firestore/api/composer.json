@@ -12,7 +12,10 @@
             "Google\\Cloud\\Samples\\Firestore\\": "src/"
         },
         "files": [
-            "src/fs_initialize.php"
+            "src/fs_initialize.php",
+            "src/fs_initialize_project_id.php",
+            "src/fs_add_data_1.php",
+            "src/fs_add_data_2.php"
         ]
     }
 }

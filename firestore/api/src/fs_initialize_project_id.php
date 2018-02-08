@@ -23,20 +23,23 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
-# [START fs_initialize]
+# [START fs_initialize_project_id]
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Initialize Cloud Firestore with default project ID.
+ * Initialize Cloud Firestore with a provided project ID.
  * ```
- * fs_initialize();
+ * fs_initialize_project_id('your-project-id');
  * ```
  *
+ * @param string $projectId Your Google Cloud Project ID
  */
-function fs_initialize()
+function fs_initialize_project_id($projectId)
 {
-    // Create the Cloud Firestore client
-    $db = new FirestoreClient();
-    printf('Created Cloud Firestore client with default project ID.' . PHP_EOL);
+    // Create the Cloud Firestore client with a provided project ID.
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
+    printf('Created Cloud Firestore client with project ID: %s' . PHP_EOL, $projectId);
 }
-# [END fs_initialize]
+# [END fs_initialize_project_id]

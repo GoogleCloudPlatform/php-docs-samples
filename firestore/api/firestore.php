@@ -28,10 +28,13 @@ require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application('Cloud Firestore');
 
+$inputDefinition = new InputDefinition([
+    new InputOption('project', 'p', InputOption::VALUE_OPTIONAL, 'Your Google Cloud Project ID'),
+]);
 
-// Analyze Sentiment command
+// Initialize command
 $application->add((new Command('initialize'))
-    ->setDefinition($inputDefinition)
+	->setDefinition($inputDefinition)
     ->setDescription('Initialize Cloud Firestore with default project ID.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command initializes Cloud Firestore using the Google Cloud Firestore API.
@@ -41,7 +44,44 @@ The <info>%command.name%</info> command initializes Cloud Firestore using the Go
 EOF
     )
     ->setCode(function ($input, $output) {
-        fs_initialize();
+    	$projectId = $input->getOption('project');
+    	if ($projectId) {
+            fs_initialize_project_id($projectId);
+    	} else {
+    		fs_initialize();
+    	}
+    })
+);
+
+// Add Data #1 command
+$application->add((new Command('add-data-1'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Add data to a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command adds data to a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_add_data_1();
+    })
+);
+
+// Add Data #2 command
+$application->add((new Command('add-data-2'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Add data to a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command adds data to a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_add_data_2();
     })
 );
 

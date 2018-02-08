@@ -23,20 +23,26 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
-# [START fs_initialize]
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Initialize Cloud Firestore with default project ID.
+ * Add data to a document.
  * ```
- * fs_initialize();
+ * fs_add_data_1();
  * ```
  *
  */
-function fs_initialize()
+function fs_add_data_1()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    printf('Created Cloud Firestore client with default project ID.' . PHP_EOL);
+    # [START fs_add_data_1]
+    $doc_ref = $db->collection('users')->document('lovelace');
+    $doc_ref->set([
+    	'first' => 'Ada',
+    	'last' => 'Lovelace',
+    	'born' => 1815
+    ]);
+    printf('Added data to the lovelace document in the users collection.' . PHP_EOL);
+    # [END fs_add_data_1]
 }
-# [END fs_initialize]
