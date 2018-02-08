@@ -15,10 +15,8 @@
  * limitations under the License.
  */
 
-use Google\Cloud\Core\Logger\AppEngineFlexHandler;
 use Google\Cloud\Logging\LoggingClient;
 use Silex\Application;
-use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -63,7 +61,7 @@ $app->post('/log', function (Request $request) use ($app) {
     return $app->redirect('/');
 });
 
-$app->get('/async_log', function (Request $request) use ($app){
+$app->get('/async_log', function (Request $request) use ($app) {
     $token = $request->query->get('token');
     $projectId = $app['project_id'];
     $text = $request->get('text');

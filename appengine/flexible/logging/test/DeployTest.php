@@ -19,7 +19,6 @@ namespace Google\Cloud\Test;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\Logging\LoggingClient;
-use GuzzleHttp\Client;
 
 use PHPUnit\Framework\TestCase;
 
