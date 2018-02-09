@@ -27,6 +27,13 @@ class DeployTest extends TestCase
     use AppEngineDeploymentTrait;
     use EventuallyConsistentTestTrait;
 
+    public function setUp()
+    {
+        if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
+            $this->markTestSkipped('No secret available');
+            // TODO: Make the test runnable without secret
+        }
+    }
     public function testIndex()
     {
         // Access the modules app top page.
