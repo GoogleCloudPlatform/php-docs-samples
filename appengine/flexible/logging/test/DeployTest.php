@@ -17,12 +17,23 @@
 namespace Google\Cloud\Test;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use Google\Cloud\Logging\LoggingClient;
+
 use PHPUnit\Framework\TestCase;
 
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
+    use EventuallyConsistentTestTrait;
 
+    public function setUp()
+    {
+        if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
+            $this->markTestSkipped('No secret available');
+            // TODO: Make the test runnable without secret
+        }
+    }
     public function testIndex()
     {
         // Access the modules app top page.
@@ -31,5 +42,33 @@ class DeployTest extends TestCase
             'top page status code');
 
         $this->assertContains("Logs:", (string) $resp->getBody());
+    }
+    public function testAsyncLog()
+    {
+        $token = uniqid();
+        $resp = $this->client->get("/async_log?token=$token");
+        $this->assertEquals('200', $resp->getStatusCode(),
+            'async_log status code');
+        $logging = new LoggingClient(
+            ['projectId' => getenv('GOOGLE_PROJECT_ID')]
+        );
+        $logger = $logging->logger('app');
+
+        $this->runEventuallyConsistentTest(
+            function () use ($logger, $token) {
+                $logs = $logger->entries([
+                    'pageSize' => 100,
+                    'orderBy' => 'timestamp desc',
+                    'resultLimit' => 100
+                ]);
+                $found = false;
+                foreach ($logs as $log) {
+                    $info = $log->info();
+                    if (strpos($token, $info['jsonPayload']['message']) !== 0) {
+                        $found = true;
+                    }
+                }
+                $this->assertTrue($found, 'The log entry was not found');
+            });
     }
 }

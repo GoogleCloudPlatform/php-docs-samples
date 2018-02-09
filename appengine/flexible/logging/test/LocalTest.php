@@ -22,8 +22,12 @@ class LocalTest extends WebTestCase
 {
     public function setUp()
     {
-        if (!getenv('GCLOUD_PROJECT')) {
-            $this->markTestSkipped('Must set GCLOUD_PROJECT');
+        if (!getenv('GOOGLE_CLOUD_PROJECT')) {
+            $this->markTestSkipped('Must set GOOGLE_CLOUD_PROJECT');
+        }
+        if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
+            $this->markTestSkipped('No secret available');
+            // TODO: Make the test runnable without secret
         }
         parent::setUp();
         $this->client = $this->createClient();
@@ -32,7 +36,7 @@ class LocalTest extends WebTestCase
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
-        $app['project_id'] = getenv('GCLOUD_PROJECT');
+        $app['project_id'] = getenv('GOOGLE_CLOUD_PROJECT');
         return $app;
     }
 
@@ -43,5 +47,12 @@ class LocalTest extends WebTestCase
         $this->assertTrue($response->isOk());
         $text = $response->getContent();
         $this->assertContains("Logs:", $text);
+    }
+
+    public function testAsyncLog()
+    {
+        $this->client->request('GET', '/async_log');
+        $response = $this->client->getResponse();
+        $this->assertTrue($response->isOk());
     }
 }
