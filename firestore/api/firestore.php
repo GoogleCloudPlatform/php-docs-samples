@@ -101,6 +101,88 @@ EOF
     })
 );
 
+// Set Document command
+$application->add((new Command('set-document'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Set document data.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command sets document data using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_set_document();
+    })
+);
+
+// Data Types command
+$application->add((new Command('add-doc-data-types'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Set document data with different data types.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command sets document data with different data types using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_add_doc_data_types();
+    })
+);
+
+// Set Document Requires ID command
+$application->add((new Command('set-requires-id'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Set document data with a given document ID.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command sets document data with a given document ID using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_set_requires_id();
+    })
+);
+
+// Add Document Auto-Generated ID command
+$application->add((new Command('add-doc-data-with-auto-id'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Add document data with an auto-generated ID.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command adds document data with an auto-generated ID using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_add_doc_data_with_auto_id();
+    })
+);
+
+// Auto-Generate ID then Add Document Data command
+$application->add((new Command('add-doc-data-after-auto-id'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Auto-generate an ID for a document, then add document data.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> auto-generates an ID for a document and then adds document data using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_add_doc_data_after_auto_id();
+    })
+);
+
+
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

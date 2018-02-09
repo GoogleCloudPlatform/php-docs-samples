@@ -1,6 +1,7 @@
 {
     "require": {
         "google/cloud-firestore": "^0.4.1",
+        "google/cloud-core": "^1.16.0",
         "symfony/console": "^3.0"
     },
     "minimum-stability": "dev",
@@ -16,7 +17,12 @@
             "src/fs_initialize_project_id.php",
             "src/fs_add_data_1.php",
             "src/fs_add_data_2.php",
-            "src/fs_get_all.php"
+            "src/fs_get_all.php",
+            "src/fs_set_document.php",
+            "src/fs_add_doc_data_types.php",
+            "src/fs_set_requires_id.php",
+            "src/fs_add_doc_data_with_auto_id.php",
+            "src/fs_add_doc_data_after_auto_id.php"
         ]
     }
 }
