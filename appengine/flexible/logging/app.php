@@ -15,16 +15,14 @@
  * limitations under the License.
  */
 
-use Google\Cloud\Core\Logger\AppEngineFlexHandler;
 use Google\Cloud\Logging\LoggingClient;
 use Silex\Application;
-use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 // create the Silex application
 $app = new Application();
-$app['project_id'] = getenv('GCLOUD_PROJECT');
+$app['project_id'] = getenv('GOOGLE_CLOUD_PROJECT');
 // register twig
 $app->register(new TwigServiceProvider(), [
     'twig.path' => __DIR__
@@ -32,7 +30,7 @@ $app->register(new TwigServiceProvider(), [
 
 $app->get('/', function () use ($app) {
     if (empty($app['project_id'])) {
-        return 'Set the GCLOUD_PROJECT environment variable to run locally';
+        return 'Set the GOOGLE_CLOUD_PROJECT environment variable to run locally';
     }
     $projectId = $app['project_id'];
     # [START list_entries]
@@ -52,19 +50,30 @@ $app->post('/log', function (Request $request) use ($app) {
     $projectId = $app['project_id'];
     $text = $request->get('text');
     # [START write_log]
+    # [START creating_psr3_logger]
     $logging = new LoggingClient([
         'projectId' => $projectId
     ]);
-    $logger = $logging->psrLogger('logging-sample');
+    $logger = $logging->psrLogger('app');
+    # [END creating_psr3_logger]
     $logger->notice($text);
     # [END write_log]
     return $app->redirect('/');
 });
 
-// add AppEngineFlexHandler on prod
-$app->register(new MonologServiceProvider());
-if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
-    $app['monolog.handler'] = new AppEngineFlexHandler();
-}
+$app->get('/async_log', function (Request $request) use ($app) {
+    $token = $request->query->get('token');
+    $projectId = $app['project_id'];
+    $text = $request->get('text');
+    # [START enabling_batch]
+    $logger = LoggingClient::psrBatchLogger('app');
+    # [END enabling_batch]
+    # [START using_the_logger]
+    $logger->info('Hello World');
+    $logger->error('Oh no');
+    # [END using_the_logger]
+    $logger->info("Token: $token");
+    return 'Sent some logs';
+});
 
 return $app;
