@@ -181,6 +181,138 @@ EOF
     })
 );
 
+// Query Create Examples command
+$application->add((new Command('query-create-examples'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create an example collection of documents.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates an example collection of documents using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_query_create_examples();
+    })
+);
+
+// Create Query State command
+$application->add((new Command('create-query-state'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create a query that gets documents where state=CA.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a query that gets documents where state=CA using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_create_query_state();
+    })
+);
+
+// Create Query Capital command
+$application->add((new Command('create-query-capital'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create a query that gets documents where capital=True.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a query that gets documents where capital=True using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_create_query_capital();
+    })
+);
+
+// Simple Queries command
+$application->add((new Command('simple-queries'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create queries using single where clauses.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates queries using single where clauses using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_simple_queries();
+    })
+);
+
+// Chained Query command
+$application->add((new Command('chained-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create a query with chained clauses.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a query with chained clauses using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_chained_query();
+    })
+);
+
+// Composite Index Chained Query command
+$application->add((new Command('composite-index-chained-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create a composite index chained query, which combines an equality operator with a range comparison.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a composite index chained query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_composite_index_chained_query();
+    })
+);
+
+// for testing
+if (getenv('PHPUNIT_TESTS') === '1') {
+    return $application;
+}
+
+// Range Query command
+$application->add((new Command('range-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create a query with range clauses.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a a query with range clauses using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_range_query();
+    })
+);
+
+// Invalid Range Query command
+$application->add((new Command('invalid-range-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('An example of an invalid range query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> is an example of an invalid range query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_invalid_range_query();
+    })
+);
 
 
 // for testing

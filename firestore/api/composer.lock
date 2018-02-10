@@ -947,12 +947,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "361106a3b8c122d9aa267f71d1a7b5ec94ef9f13"
+                "reference": "996fd519af74ddfaa7733ea358acbca5d7d43f34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/361106a3b8c122d9aa267f71d1a7b5ec94ef9f13",
-                "reference": "361106a3b8c122d9aa267f71d1a7b5ec94ef9f13",
+                "url": "https://api.github.com/repos/symfony/console/zipball/996fd519af74ddfaa7733ea358acbca5d7d43f34",
+                "reference": "996fd519af74ddfaa7733ea358acbca5d7d43f34",
                 "shasum": ""
             },
             "require": {
@@ -1008,7 +1008,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-31 10:38:55"
+            "time": "2018-02-09 14:10:47"
         },
         {
             "name": "symfony/debug",

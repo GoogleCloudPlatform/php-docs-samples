@@ -22,7 +22,15 @@
             "src/fs_add_doc_data_types.php",
             "src/fs_set_requires_id.php",
             "src/fs_add_doc_data_with_auto_id.php",
-            "src/fs_add_doc_data_after_auto_id.php"
+            "src/fs_add_doc_data_after_auto_id.php",
+            "src/fs_query_create_examples.php",
+            "src/fs_create_query_state.php",
+            "src/fs_create_query_capital.php",
+            "src/fs_simple_queries.php",
+            "src/fs_chained_query.php",
+            "src/fs_composite_index_chained_query.php",
+            "src/fs_range_query.php",
+            "src/fs_invalid_range_query.php"
         ]
     }
 }
