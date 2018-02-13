@@ -26,29 +26,18 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Add data to a document.
+ * Delete a document.
  * ```
- * fs_get_all();
+ * fs_delete_doc();
  * ```
  *
  */
-function fs_get_all()
+function fs_delete_doc()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    # [START fs_get_all]
-    $usersRef = $db->collection('users');
-    $snapshot = $usersRef->documents();
-    foreach ($snapshot as $user) {
-        printf('User: %s' . PHP_EOL, $user->id());
-        printf('First: %s' . PHP_EOL, $user['first']);
-        if (!empty($user['middle'])) {
-            printf('Middle: %s' . PHP_EOL, $user['middle']);
-        }
-        printf('Last: %s' . PHP_EOL, $user['last']);
-        printf('Born: %d' . PHP_EOL, $user['born']);
-        printf(PHP_EOL);
-    }
-    printf('Retrieved and printed out all documents from the users collection.' . PHP_EOL);
-    # [END fs_get_all]
+    # [START fs_delete_doc]
+    $db->collection('cities')->document('DC')->delete();
+    # [END fs_delete_doc]
+    printf('Deleted the DC document in the cities collection.' . PHP_EOL);
 }

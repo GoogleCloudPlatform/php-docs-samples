@@ -37,11 +37,11 @@ function fs_composite_index_chained_query()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    $cities_ref = $db->collection('cities');
+    $citiesRef = $db->collection('cities');
     # [START fs_composite_index_chained_query]
-    $chained_query = $cities_ref->where('state', '=', 'CA')->where('population', '<', 1000000);
+    $chainedQuery = $citiesRef->where('state', '=', 'CA')->where('population', '<', 1000000);
     # [END fs_composite_index_chained_query]
-    foreach ($chained_query->documents() as $document) {
+    foreach ($chainedQuery->documents() as $document) {
         printf('Document %s returned by query state=CA and population<1000000' . PHP_EOL, $document->id());
     }
 }

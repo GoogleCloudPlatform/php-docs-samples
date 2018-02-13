@@ -37,8 +37,8 @@ function fs_create_query_state()
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
     # [START fs_create_query_state]
-    $cities_ref = $db->collection('cities');
-    $query = $cities_ref->where('state', '=', 'CA');
+    $citiesRef = $db->collection('cities');
+    $query = $citiesRef->where('state', '=', 'CA');
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by query state=CA' . PHP_EOL, $document->id());

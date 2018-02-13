@@ -37,8 +37,8 @@ function fs_create_query_capital()
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
     # [START fs_create_query_capital]
-    $cities_ref = $db->collection('cities');
-    $query = $cities_ref->where('capital', '=', true);
+    $citiesRef = $db->collection('cities');
+    $query = $citiesRef->where('capital', '=', true);
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by query capital=true' . PHP_EOL, $document->id());

@@ -37,8 +37,8 @@ function fs_add_data_1()
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
     # [START fs_add_data_1]
-    $doc_ref = $db->collection('users')->document('lovelace');
-    $doc_ref->set([
+    $docRef = $db->collection('users')->document('lovelace');
+    $docRef->set([
     	'first' => 'Ada',
     	'last' => 'Lovelace',
     	'born' => 1815

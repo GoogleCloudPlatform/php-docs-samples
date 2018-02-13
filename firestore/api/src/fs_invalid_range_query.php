@@ -36,8 +36,8 @@ function fs_invalid_range_query()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    $cities_ref = $db->collection('cities');
+    $citiesRef = $db->collection('cities');
     # [START fs_invalid_range_query]
-    $invalid_range_query = $cities_ref->where('state', '>=', 'CA')->where('population', '>', 1000000);
+    $invalidRangeQuery = $citiesRef->where('state', '>=', 'CA')->where('population', '>', 1000000);
     # [END fs_invalid_range_query]
 }

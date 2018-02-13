@@ -41,7 +41,7 @@ function fs_add_doc_data_with_auto_id()
         'name' => 'Tokyo',
         'country' => 'Japan'
     ];
-    $added_doc_ref = $db->collection('cities')->add($data);
-    printf('Added document with ID: %s' . PHP_EOL, $added_doc_ref->id());
+    $addedDocRef = $db->collection('cities')->add($data);
+    printf('Added document with ID: %s' . PHP_EOL, $addedDocRef->id());
     # [END fs_add_doc_data_with_auto_id]
 }

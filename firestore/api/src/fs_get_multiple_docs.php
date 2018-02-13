@@ -26,29 +26,28 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Add data to a document.
+ * Get multiple documents from a collection.
  * ```
- * fs_get_all();
+ * fs_get_multiple_docs();
  * ```
  *
  */
-function fs_get_all()
+function fs_get_multiple_docs()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    # [START fs_get_all]
-    $usersRef = $db->collection('users');
-    $snapshot = $usersRef->documents();
-    foreach ($snapshot as $user) {
-        printf('User: %s' . PHP_EOL, $user->id());
-        printf('First: %s' . PHP_EOL, $user['first']);
-        if (!empty($user['middle'])) {
-            printf('Middle: %s' . PHP_EOL, $user['middle']);
+    # [START fs_get_multiple_docs]
+    $citiesRef = $db->collection('cities');
+    $query = $citiesRef->where('capital', '=', true);
+    $documents = $query->documents();
+    foreach ($documents as $document) {
+        if ($document->exists()) {
+            printf('Document data for document %s:' . PHP_EOL, $document->id());
+            print_r($document->fields());
+            printf(PHP_EOL);
+        } else {
+            printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
         }
-        printf('Last: %s' . PHP_EOL, $user['last']);
-        printf('Born: %d' . PHP_EOL, $user['born']);
-        printf(PHP_EOL);
     }
-    printf('Retrieved and printed out all documents from the users collection.' . PHP_EOL);
-    # [END fs_get_all]
+    # [END fs_get_multiple_docs]
 }

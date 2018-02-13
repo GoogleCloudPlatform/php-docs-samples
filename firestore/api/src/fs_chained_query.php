@@ -36,11 +36,11 @@ function fs_chained_query()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    $cities_ref = $db->collection('cities');
+    $citiesRef = $db->collection('cities');
     # [START fs_chained_query]
-    $chained_query = $cities_ref->where('state', '=', 'CA')->where('name', '=', 'San Francisco');
+    $chainedQuery = $citiesRef->where('state', '=', 'CA')->where('name', '=', 'San Francisco');
     # [END fs_chained_query]
-    foreach ($chained_query->documents() as $document) {
+    foreach ($chainedQuery->documents() as $document) {
         printf('Document %s returned by query state=CA and name=San Francisco' . PHP_EOL, $document->id());
     }
 }

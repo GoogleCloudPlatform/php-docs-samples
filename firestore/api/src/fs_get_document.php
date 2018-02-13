@@ -26,29 +26,25 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Add data to a document.
+ * Get a single document.
  * ```
- * fs_get_all();
+ * fs_get_document();
  * ```
  *
  */
-function fs_get_all()
+function fs_get_document()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    # [START fs_get_all]
-    $usersRef = $db->collection('users');
-    $snapshot = $usersRef->documents();
-    foreach ($snapshot as $user) {
-        printf('User: %s' . PHP_EOL, $user->id());
-        printf('First: %s' . PHP_EOL, $user['first']);
-        if (!empty($user['middle'])) {
-            printf('Middle: %s' . PHP_EOL, $user['middle']);
-        }
-        printf('Last: %s' . PHP_EOL, $user['last']);
-        printf('Born: %d' . PHP_EOL, $user['born']);
-        printf(PHP_EOL);
+    # [START fs_get_document]
+    $docRef = $db->collection('cities')->document('SF');
+    $snapshot = $docRef->snapshot();
+    
+    if ($snapshot->exists()) {
+        printf('Document data:' . PHP_EOL);
+        print_r($snapshot->fields());
+    } else {
+        printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
     }
-    printf('Retrieved and printed out all documents from the users collection.' . PHP_EOL);
-    # [END fs_get_all]
+    # [END fs_get_document]
 }

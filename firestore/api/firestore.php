@@ -22,6 +22,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
+use Google\Cloud\Firestore\FirestoreClient;
 
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
@@ -287,7 +288,7 @@ $application->add((new Command('range-query'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create a query with range clauses.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates a a query with range clauses using the Google Cloud Firestore API.
+The <info>%command.name%</info> creates a query with range clauses using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -314,6 +315,119 @@ EOF
     })
 );
 
+// Delete Document command
+$application->add((new Command('delete-document'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Delete a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> deletes a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_delete_doc();
+    })
+);
+
+// Delete Field command
+$application->add((new Command('delete-field'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Delete a field from a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> deletes a field from a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_delete_field();
+    })
+);
+
+// Delete Collection command
+$application->add((new Command('delete-collection'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Delete a collection.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> deletes a collection using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	$db = new FirestoreClient();
+    	$cityCollection = $db->collection('cities');
+    	fs_delete_collection($cityCollection, 2);
+    })
+);
+
+// Retrieve Create Examples command
+$application->add((new Command('retrieve-create-examples'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create an example collection of documents.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates an example collection of documents using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_retrieve_create_examples();
+    })
+);
+
+// Get Document command
+$application->add((new Command('get-document'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> gets a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_get_document();
+    })
+);
+
+// Get Multiple Documents command
+$application->add((new Command('get-multiple-docs'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get multiple documents from a collection.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> gets a multiple documents from a collection using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_get_multiple_docs();
+    })
+);
+
+// Get All Documents command
+$application->add((new Command('get-all-docs'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get all documents in a collection.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> gets all documents in a collection using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_get_all_docs();
+    })
+);
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {

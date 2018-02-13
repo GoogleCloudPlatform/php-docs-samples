@@ -23,32 +23,28 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
-use Google\Cloud\Firestore\FirestoreClient;
-
 /**
- * Add data to a document.
+ * Delete a collection.
  * ```
- * fs_get_all();
+ * fs_delete_collection();
  * ```
  *
  */
-function fs_get_all()
+
+# [START fs_delete_collection]
+function fs_delete_collection($collectionReference, $batchSize)
 {
-    // Create the Cloud Firestore client
-    $db = new FirestoreClient();
-    # [START fs_get_all]
-    $usersRef = $db->collection('users');
-    $snapshot = $usersRef->documents();
-    foreach ($snapshot as $user) {
-        printf('User: %s' . PHP_EOL, $user->id());
-        printf('First: %s' . PHP_EOL, $user['first']);
-        if (!empty($user['middle'])) {
-            printf('Middle: %s' . PHP_EOL, $user['middle']);
-        }
-        printf('Last: %s' . PHP_EOL, $user['last']);
-        printf('Born: %d' . PHP_EOL, $user['born']);
-        printf(PHP_EOL);
+    $documents = $collectionReference->limit($batchSize)->documents();
+    $numberDeleted = 0;
+
+    foreach ($documents as $document) {
+    	printf('Deleting document %s' . PHP_EOL, $document->id());
+    	$document->reference()->delete();
+    	$numberDeleted++;
     }
-    printf('Retrieved and printed out all documents from the users collection.' . PHP_EOL);
-    # [END fs_get_all]
+
+    if ($numberDeleted >= $batchSize) {
+    	fs_delete_collection($collectionReference, $batchSize);
+    }
 }
+# [END fs_delete_collection]

@@ -41,8 +41,8 @@ function fs_add_doc_data_after_auto_id()
         'country' => 'Russia'
     ];
     # [START fs_add_doc_data_after_auto_id]
-    $added_doc_ref = $db->collection('cities')->newDocument();
-    printf('Added document with ID: %s' . PHP_EOL, $added_doc_ref->id());
-    $added_doc_ref->set($data);
+    $addedDocRef = $db->collection('cities')->newDocument();
+    printf('Added document with ID: %s' . PHP_EOL, $addedDocRef->id());
+    $addedDocRef->set($data);
     # [END fs_add_doc_data_after_auto_id]
 }

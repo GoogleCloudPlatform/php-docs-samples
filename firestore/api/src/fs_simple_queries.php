@@ -36,19 +36,19 @@ function fs_simple_queries()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    $cities_ref = $db->collection('cities');
+    $citiesRef = $db->collection('cities');
     # [START fs_simple_queries]
-    $state_query = $cities_ref->where('state', '=', 'CA');
-    $population_query = $cities_ref->where('population', '>', 1000000);
-    $name_query = $cities_ref->where('name', '>=', 'San Francisco');
+    $stateQuery = $citiesRef->where('state', '=', 'CA');
+    $populationQuery = $citiesRef->where('population', '>', 1000000);
+    $nameQuery = $citiesRef->where('name', '>=', 'San Francisco');
     # [END fs_simple_queries]
-    foreach ($state_query->documents() as $document) {
+    foreach ($stateQuery->documents() as $document) {
         printf('Document %s returned by query state=CA' . PHP_EOL, $document->id());
     }
-    foreach ($population_query->documents() as $document) {
+    foreach ($populationQuery->documents() as $document) {
         printf('Document %s returned by query population>1000000' . PHP_EOL, $document->id());
     }
-    foreach ($name_query->documents() as $document) {
+    foreach ($nameQuery->documents() as $document) {
         printf('Document %s returned by query name>=San Francisco' . PHP_EOL, $document->id());
     }
 }

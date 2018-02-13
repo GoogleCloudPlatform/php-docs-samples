@@ -28,15 +28,15 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create an example collection of documents.
  * ```
- * fs_query_create_examples();
+ * fs_retrieve_create_examples();
  * ```
  *
  */
-function fs_query_create_examples()
+function fs_retrieve_create_examples()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    # [START fs_query_create_examples]
+    # [START fs_retrieve_create_examples]
     $citiesRef = $db->collection('cities');
     $citiesRef->document('SF')->set([
     	'name' => 'San Francisco',
@@ -74,5 +74,5 @@ function fs_query_create_examples()
         'population' => 21500000
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
-    # [END fs_query_create_examples]
+    # [END fs_retrieve_create_examples]
 }

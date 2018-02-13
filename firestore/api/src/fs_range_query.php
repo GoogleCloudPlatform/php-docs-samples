@@ -36,11 +36,11 @@ function fs_range_query()
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient();
-    $cities_ref = $db->collection('cities');
+    $citiesRef = $db->collection('cities');
     # [START fs_range_query]
-    $range_query = $cities_ref->where('state', '>=', 'CA')->where('state', '<=', 'IN');
+    $rangeQuery = $citiesRef->where('state', '>=', 'CA')->where('state', '<=', 'IN');
     # [END fs_range_query]
-    foreach ($range_query->documents() as $document) {
+    foreach ($rangeQuery->documents() as $document) {
         printf('Document %s returned by query CA<=state<=IN' . PHP_EOL, $document->id());
     }
 }

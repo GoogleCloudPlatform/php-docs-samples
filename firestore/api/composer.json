@@ -30,7 +30,14 @@
             "src/fs_chained_query.php",
             "src/fs_composite_index_chained_query.php",
             "src/fs_range_query.php",
-            "src/fs_invalid_range_query.php"
+            "src/fs_invalid_range_query.php",
+            "src/fs_delete_doc.php",
+            "src/fs_delete_field.php",
+            "src/fs_delete_collection.php",
+            "src/fs_retrieve_create_examples.php",
+            "src/fs_get_document.php",
+            "src/fs_get_multiple_docs.php",
+            "src/fs_get_all_docs.php"
         ]
     }
 }
