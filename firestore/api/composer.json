@@ -37,7 +37,13 @@
             "src/fs_retrieve_create_examples.php",
             "src/fs_get_document.php",
             "src/fs_get_multiple_docs.php",
-            "src/fs_get_all_docs.php"
+            "src/fs_get_all_docs.php",
+            "src/fs_order_by_name_limit_query.php",
+            "src/fs_order_by_name_desc_limit_query.php",
+            "src/fs_order_by_state_and_population_query.php",
+            "src/fs_where_order_by_limit_query.php",
+            "src/fs_range_order_by_query.php",
+            "src/fs_invalid_range_order_by_query.php"
         ]
     }
 }

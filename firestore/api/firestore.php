@@ -171,7 +171,7 @@ $application->add((new Command('add-doc-data-after-auto-id'))
 	->setDefinition($inputDefinition)
     ->setDescription('Auto-generate an ID for a document, then add document data.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> auto-generates an ID for a document and then adds document data using the Google Cloud Firestore API.
+The <info>%command.name%</info> command auto-generates an ID for a document and then adds document data using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -187,7 +187,7 @@ $application->add((new Command('query-create-examples'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create an example collection of documents.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates an example collection of documents using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates an example collection of documents using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -203,7 +203,7 @@ $application->add((new Command('create-query-state'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create a query that gets documents where state=CA.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates a query that gets documents where state=CA using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates a query that gets documents where state=CA using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -219,7 +219,7 @@ $application->add((new Command('create-query-capital'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create a query that gets documents where capital=True.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates a query that gets documents where capital=True using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates a query that gets documents where capital=True using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -235,7 +235,7 @@ $application->add((new Command('simple-queries'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create queries using single where clauses.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates queries using single where clauses using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates queries using single where clauses using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -251,7 +251,7 @@ $application->add((new Command('chained-query'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create a query with chained clauses.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates a query with chained clauses using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates a query with chained clauses using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -267,7 +267,7 @@ $application->add((new Command('composite-index-chained-query'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create a composite index chained query, which combines an equality operator with a range comparison.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates a composite index chained query using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates a composite index chained query using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -288,7 +288,7 @@ $application->add((new Command('range-query'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create a query with range clauses.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates a query with range clauses using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates a query with range clauses using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -304,7 +304,7 @@ $application->add((new Command('invalid-range-query'))
 	->setDefinition($inputDefinition)
     ->setDescription('An example of an invalid range query.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> is an example of an invalid range query using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates an example of an invalid range query using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -320,7 +320,7 @@ $application->add((new Command('delete-document'))
 	->setDefinition($inputDefinition)
     ->setDescription('Delete a document.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> deletes a document using the Google Cloud Firestore API.
+The <info>%command.name%</info> command deletes a document using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -336,7 +336,7 @@ $application->add((new Command('delete-field'))
 	->setDefinition($inputDefinition)
     ->setDescription('Delete a field from a document.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> deletes a field from a document using the Google Cloud Firestore API.
+The <info>%command.name%</info> command deletes a field from a document using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -352,7 +352,7 @@ $application->add((new Command('delete-collection'))
 	->setDefinition($inputDefinition)
     ->setDescription('Delete a collection.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> deletes a collection using the Google Cloud Firestore API.
+The <info>%command.name%</info> command deletes a collection using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -370,7 +370,7 @@ $application->add((new Command('retrieve-create-examples'))
 	->setDefinition($inputDefinition)
     ->setDescription('Create an example collection of documents.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> creates an example collection of documents using the Google Cloud Firestore API.
+The <info>%command.name%</info> command creates an example collection of documents using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -386,7 +386,7 @@ $application->add((new Command('get-document'))
 	->setDefinition($inputDefinition)
     ->setDescription('Get a document.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> gets a document using the Google Cloud Firestore API.
+The <info>%command.name%</info> command gets a document using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -402,7 +402,7 @@ $application->add((new Command('get-multiple-docs'))
 	->setDefinition($inputDefinition)
     ->setDescription('Get multiple documents from a collection.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> gets a multiple documents from a collection using the Google Cloud Firestore API.
+The <info>%command.name%</info> command gets a multiple documents from a collection using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -418,7 +418,7 @@ $application->add((new Command('get-all-docs'))
 	->setDefinition($inputDefinition)
     ->setDescription('Get all documents in a collection.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> gets all documents in a collection using the Google Cloud Firestore API.
+The <info>%command.name%</info> command gets all documents in a collection using the Google Cloud Firestore API.
 
     <info>php %command.full_name%</info>
 
@@ -428,6 +428,103 @@ EOF
     	fs_get_all_docs();
     })
 );
+
+// Order By Name Limit Query command
+$application->add((new Command('order-by-name-limit-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create an order by name with limit query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates an order by name with limit query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_order_by_name_limit_query();
+    })
+);
+
+// Order By Name Descending Limit Query command
+$application->add((new Command('order-by-name-desc-limit-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create an order by name descending with limit query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates an order by name descending with limit query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_order_by_name_desc_limit_query();
+    })
+);
+
+// Order By State and Population Query command
+$application->add((new Command('order-by-state-and-population-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create an order by state and descending population query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates an order by state and descending population query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_order_by_state_and_population_query();
+    })
+);
+
+// Where Order By Limit Query command
+$application->add((new Command('where-order-by-limit-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Combine where with order by and limit in a query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command combines where with order by and limit in a query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_where_order_by_limit_query();
+    })
+);
+
+// Range Order By Query command
+$application->add((new Command('range-order-by-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Create a range with order by query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates a range with order by query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_range_order_by_query();
+    })
+);
+
+// Invalid Range Order By Query command
+$application->add((new Command('invalid-range-order-by-query'))
+	->setDefinition($inputDefinition)
+    ->setDescription('An invalid range with order by query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates an invalid range with order by query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_invalid_range_order_by_query();
+    })
+);
+
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
