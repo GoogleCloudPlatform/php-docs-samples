@@ -1,5 +1,10 @@
 # Google Auth PHP Sample Application
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=auth
+
 ## Description
 
 This command-line application shows how to authenticate to Google Cloud APIs
