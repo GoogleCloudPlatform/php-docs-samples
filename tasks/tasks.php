@@ -35,6 +35,7 @@ $inputDefinition = new InputDefinition([
     new InputOption('payload', 'helloworld', InputOption::VALUE_OPTIONAL, 'Optional payload to attach to the App Engine HTTP request.'),
 ]);
 
+// [START create_task]
 // Create Task command
 $application->add((new Command('create-task'))
     ->setDefinition($inputDefinition)
@@ -57,7 +58,9 @@ EOF
         }
     })
 );
+// [END create_task]
 
+// [START pull_and_ackowledge_task]
 // Pull and Acknowledge Task command
 $application->add((new Command('pull-and-acknowledge-task'))
     ->setDefinition($inputDefinition)
@@ -77,7 +80,7 @@ EOF
         acknowledge_task($task);
     })
 );
-
+// [END pull_and_ackowledge_task]
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
