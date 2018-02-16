@@ -525,6 +525,70 @@ EOF
     })
 );
 
+// Document Reference command
+$application->add((new Command('document-ref'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get a document reference.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command gets a document reference using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_document_ref();
+    })
+);
+
+// Collection Reference command
+$application->add((new Command('collection-ref'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get a collection reference.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command gets a collection reference using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_collection_ref();
+    })
+);
+
+// Document Path Reference command
+$application->add((new Command('document-path-ref'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get a document path reference.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command gets a document path reference using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_document_path_ref();
+    })
+);
+
+// Subcollection Reference command
+$application->add((new Command('subcollection-ref'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Get a reference to a subcollection document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command gets a reference to a subcollection document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	fs_subcollection_ref();
+    })
+);
+
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {

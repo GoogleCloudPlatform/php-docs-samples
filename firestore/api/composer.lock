@@ -101,16 +101,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.16.0",
+            "version": "v1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "01ecaef1b3bd6a9eb86a79b253dbc7e78ae52c67"
+                "reference": "e4a2c1647439b50d9c48a29dc7e63daa2165e700"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/01ecaef1b3bd6a9eb86a79b253dbc7e78ae52c67",
-                "reference": "01ecaef1b3bd6a9eb86a79b253dbc7e78ae52c67",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/e4a2c1647439b50d9c48a29dc7e63daa2165e700",
+                "reference": "e4a2c1647439b50d9c48a29dc7e63daa2165e700",
                 "shasum": ""
             },
             "require": {
@@ -123,6 +123,7 @@
                 "rize/uri-template": "~0.3"
             },
             "suggest": {
+                "opis/closure": "May be used to serialize closures to process jobs in the batch daemon. Please require version ^3.",
                 "symfony/lock": "Required for the Spanner cached based session pool. Please require the following commit: 3.3.x-dev#1ba6ac9"
             },
             "bin": [
@@ -147,20 +148,20 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2018-02-01T16:15:59+00:00"
+            "time": "2018-02-15T22:55:30+00:00"
         },
         {
             "name": "google/cloud-firestore",
-            "version": "v0.4.1",
+            "version": "v0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-firestore.git",
-                "reference": "51aa1fee0e4cafc9863c69f485da57e251922c09"
+                "reference": "cc8765ecbec0de2cfeab7e512ee17497048ae46a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-firestore/zipball/51aa1fee0e4cafc9863c69f485da57e251922c09",
-                "reference": "51aa1fee0e4cafc9863c69f485da57e251922c09",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-firestore/zipball/cc8765ecbec0de2cfeab7e512ee17497048ae46a",
+                "reference": "cc8765ecbec0de2cfeab7e512ee17497048ae46a",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +193,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Firestore client for PHP",
-            "time": "2018-02-01T16:15:59+00:00"
+            "time": "2018-02-15T22:55:30+00:00"
         },
         {
             "name": "google/gax",

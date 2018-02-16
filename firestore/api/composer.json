@@ -43,7 +43,11 @@
             "src/fs_order_by_state_and_population_query.php",
             "src/fs_where_order_by_limit_query.php",
             "src/fs_range_order_by_query.php",
-            "src/fs_invalid_range_order_by_query.php"
+            "src/fs_invalid_range_order_by_query.php",
+            "src/fs_document_ref.php",
+            "src/fs_collection_ref.php",
+            "src/fs_document_path_ref.php",
+            "src/fs_subcollection_ref.php"
         ]
     }
 }
