@@ -35,7 +35,7 @@ $inputDefinition = new InputDefinition([
     new InputOption('payload', 'helloworld', InputOption::VALUE_OPTIONAL, 'Optional payload to attach to the App Engine HTTP request.'),
     new InputOption('seconds', 0, InputOption::VALUE_OPTIONAL, 'The number of seconds from now to schedule task attempt.'),
 ]);
-
+// [START create_task]
 // Create Task command
 $application->add((new Command('create-task'))
     ->setDefinition($inputDefinition)
@@ -59,6 +59,7 @@ EOF
         }
     })
 );
+// [END create_task]
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
