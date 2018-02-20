@@ -72,6 +72,15 @@ class DeployTest extends TestCase
         $process = self::createProcess($cmd);
         $process->setTimeout(300); // 5 minutes
         self::executeProcess($process);
+        // add cloud libraries
+        $cmd = sprintf(
+            'composer --workdir %s require google/cloud-logging '
+            . 'google/cloud-error-reporting',
+            $targetDir
+        );
+        $process = self::createProcess($cmd);
+        $process->setTimeout(300); // 5 minutes
+        self::executeProcess($process);
 
         // set the config from env vars
         $installFile = sprintf('%s/app/config/parameters.yml', $targetDir);
@@ -90,8 +99,12 @@ class DeployTest extends TestCase
 
         file_put_contents($installFile, Yaml::dump($config));
 
-        // move the code for the sample to the new drupal installation
-        $files = ['app.yaml', 'nginx-app.conf'];
+        // move the code for the sample to the new symfony installation
+        $files = [
+            'app.yaml',
+            'app/config/config_prod.yml',
+            'src/AppBundle/EventSubscriber/ExceptionSubscriber.php'
+        ];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
             $target = sprintf('%s/%s', $targetDir, $file);
