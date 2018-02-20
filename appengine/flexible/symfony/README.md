@@ -38,26 +38,16 @@ git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-d
 
 # copy the two files below to the root directory of your Symfony project
 cd /path/to/php-docs-samples/appengine/flexible/symfony/
-cp app.yaml app/config/config_prod.yml /path/to/symfony
+mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
+cp app.yaml app/config/config_prod.yml \
+    src/AppBundle/EventSubscriber/ExceptionSubscriber.php /path/to/symfony
 ```
 
 The two files needed are as follows:
 
   1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
   1. [`app/config/config_prod.yml`](app/config/config_prod.yml) - Symfony configurations for Stackdriver Logging and Error Reporting
-
-Finally, you need to have a few scripts run after your application deploys.
-Add the following scripts to your project's `composer.json`:
-
-```json
-{
-    "scripts": {
-        "post-install-cmd": [
-            "chmod -R ug+w $APP_DIR/var"
-        ]
-    }
-}
-```
+  1. [`src/AppBundle/EventSubscriber/ExceptionSubscriber.php`](src/AppBundle/EventSubscriber/ExceptionSubscriber.php) - Symfony configurations for Stackdriver Logging and Error Reporting
 
 [1]: https://cloud.google.com/appengine/docs/flexible/
 [2]: https://console.cloud.google.com

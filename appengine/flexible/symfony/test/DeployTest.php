@@ -41,7 +41,6 @@ class DeployTest extends TestCase
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
         self::setWorkingDirectory($tmpDir);
         self::createSymfonyProject($tmpDir);
-        self::addPostBuildCommands($tmpDir);
 
         // set the directory in gcloud and move there
         self::$gcloudWrapper->setDir($tmpDir);
@@ -100,23 +99,17 @@ class DeployTest extends TestCase
         file_put_contents($installFile, Yaml::dump($config));
 
         // move the code for the sample to the new symfony installation
+        mkdir("$targetDir/src/AppBundle/EventSubscriber", 0700, true);
         $files = [
             'app.yaml',
             'app/config/config_prod.yml',
+            'src/AppBundle/EventSubscriber/ExceptionSubscriber.php',
         ];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
             $target = sprintf('%s/%s', $targetDir, $file);
             copy($source, $target);
         }
-    }
-
-    private static function addPostBuildCommands($targetDir)
-    {
-        $contents = file_get_contents($targetDir . '/composer.json');
-        $json = json_decode($contents, true);
-        $json['scripts']['post-install-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
-        file_put_contents($targetDir . '/composer.json', json_encode($json, JSON_PRETTY_PRINT));
     }
 
     public function testHomepage()
