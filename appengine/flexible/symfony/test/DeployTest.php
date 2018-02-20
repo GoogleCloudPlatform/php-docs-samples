@@ -74,7 +74,7 @@ class DeployTest extends TestCase
         self::executeProcess($process);
         // add cloud libraries
         $cmd = sprintf(
-            'composer --workdir %s require google/cloud-logging '
+            'composer --working-dir=%s require google/cloud-logging '
             . 'google/cloud-error-reporting',
             $targetDir
         );
@@ -103,7 +103,6 @@ class DeployTest extends TestCase
         $files = [
             'app.yaml',
             'app/config/config_prod.yml',
-            'src/AppBundle/EventSubscriber/ExceptionSubscriber.php'
         ];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);

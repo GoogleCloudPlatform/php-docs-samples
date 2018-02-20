@@ -28,9 +28,3 @@ services:
         class: Google\Cloud\Logging\PsrLogger
         factory: ['Google\Cloud\Logging\LoggingClient', 'psrBatchLogger']
         arguments: ['app']
-
-    # For Stackdriver Error Reporting
-    app.exception_subscriber:
-        class: AppBundle\EventSubscriber\ExceptionSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
