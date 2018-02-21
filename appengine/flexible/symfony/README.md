@@ -17,7 +17,7 @@ Before setting up Symfony on App Engine, you will need to complete the following
 Use composer to download Symfony Standard and its dependencies
 
 ```sh
-composer create-project symfony/symfony:^3.0
+composer create-project symfony/framework-standard-edition:^3.0
 ```
 
 # Integrate Stackdriver
