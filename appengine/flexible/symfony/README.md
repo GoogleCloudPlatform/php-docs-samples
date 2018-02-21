@@ -38,9 +38,11 @@ directory:
 # clone this repo somewhere
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 
+# create a directory for the event subscriber
+mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
+
 # copy the three files below to your Symfony project
 cd /path/to/php-docs-samples/appengine/flexible/symfony/
-mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
 cp app.yaml /path/to/symfony
 cp app/config/config_prod.yml /path/to/symfony/app/config
 cp src/AppBundle/EventSubscriber/ExceptionSubscriber.php \
