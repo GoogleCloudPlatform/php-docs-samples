@@ -18,8 +18,10 @@
 namespace Google\Cloud\Samples\AppEngine\Symfony;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use Google\Cloud\Logging\LoggingClient;
 use Symfony\Component\Yaml\Yaml;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +30,7 @@ class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
+    use EventuallyConsistentTestTrait;
 
     public static function beforeDeploy()
     {
@@ -123,5 +126,41 @@ class DeployTest extends TestCase
         );
         $content = $resp->getBody()->getContents();
         $this->assertContains('Your application is now ready', $content);
+    }
+
+    public function testErrorLog()
+    {
+        // Access a page erroring with 404
+        $token = uniqid();
+        $path = "/404-$token";
+        $resp = $this->client->request('GET', $path, ['http_errors' => false]);
+        $this->assertEquals(
+            '404',
+            $resp->getStatusCode(),
+            '404 page status code'
+        );
+        $logging = new LoggingClient(
+            ['projectId' => getenv('GOOGLE_PROJECT_ID')]
+        );
+        // 'app-error' is the default logname of our Stackdriver Error
+        // Reporting integration.
+        $logger = $logging->logger('app-error');
+
+        $this->runEventuallyConsistentTest(
+            function () use ($logger, $path) {
+                $logs = $logger->entries([
+                    'pageSize' => 100,
+                    'orderBy' => 'timestamp desc',
+                    'resultLimit' => 100
+                ]);
+                $found = false;
+                foreach ($logs as $log) {
+                    $info = $log->info();
+                    if (strpos($path, $info['jsonPayload']['message']) !== 0) {
+                        $found = true;
+                    }
+                }
+                $this->assertTrue($found, 'The log entry was not found');
+            });
     }
 }
