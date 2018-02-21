@@ -20,7 +20,9 @@ Use composer to download Symfony Standard and its dependencies
 composer create-project symfony/symfony:^3.0
 ```
 
-# Add dependency
+# Integrate Stackdriver
+
+Install some cloud libraries for Stackdriver integration
 
 ```sh
 cd /path/to/symfony
@@ -36,18 +38,20 @@ directory:
 # clone this repo somewhere
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 
-# copy the two files below to the root directory of your Symfony project
+# copy the three files below to your Symfony project
 cd /path/to/php-docs-samples/appengine/flexible/symfony/
 mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
-cp app.yaml app/config/config_prod.yml \
-    src/AppBundle/EventSubscriber/ExceptionSubscriber.php /path/to/symfony
+cp app.yaml /path/to/symfony
+cp app/config/config_prod.yml /path/to/symfony/app/config
+cp src/AppBundle/EventSubscriber/ExceptionSubscriber.php \
+    /path/to/symfony/src/AppBundle/EventSubscriber
 ```
 
-The two files needed are as follows:
+The three files needed are as follows:
 
   1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
-  1. [`app/config/config_prod.yml`](app/config/config_prod.yml) - Symfony configurations for Stackdriver Logging and Error Reporting
-  1. [`src/AppBundle/EventSubscriber/ExceptionSubscriber.php`](src/AppBundle/EventSubscriber/ExceptionSubscriber.php) - Symfony configurations for Stackdriver Logging and Error Reporting
+  1. [`app/config/config_prod.yml`](app/config/config_prod.yml) - Symfony configurations for Stackdriver Logging
+  1. [`src/AppBundle/EventSubscriber/ExceptionSubscriber.php`](src/AppBundle/EventSubscriber/ExceptionSubscriber.php) - Symfony configurations for Stackdriver Error Reporting
 
 [1]: https://cloud.google.com/appengine/docs/flexible/
 [2]: https://console.cloud.google.com
