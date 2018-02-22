@@ -21,8 +21,9 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 
-class DeployDatabaseSessionTest extends \PHPUnit_Framework_TestCase
+class DeployDatabaseSessionTest extends TestCase
 {
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;

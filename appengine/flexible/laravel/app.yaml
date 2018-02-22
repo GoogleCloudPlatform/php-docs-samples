@@ -3,6 +3,7 @@ env: flex
 
 runtime_config:
   document_root: public
+  enable_stackdriver_integration: true
 
 # Ensure we skip ".env", which is only for local development
 skip_files:
@@ -10,6 +11,5 @@ skip_files:
 
 env_variables:
   # Put production environment variables here.
-  APP_LOG: errorlog
+  LOG_CHANNEL: stackdriver
   APP_KEY: YOUR_APP_KEY
-  STORAGE_DIR: /tmp
