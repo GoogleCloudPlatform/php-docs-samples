@@ -17,7 +17,16 @@ Before setting up Symfony on App Engine, you will need to complete the following
 Use composer to download Symfony Standard and its dependencies
 
 ```sh
-composer create-project symfony/symfony:^3.0
+composer create-project symfony/framework-standard-edition:^3.0
+```
+
+# Integrate Stackdriver
+
+Install some cloud libraries for Stackdriver integration
+
+```sh
+cd /path/to/symfony
+composer require google/cloud-logging google/cloud-error-reporting
 ```
 
 ## Copy over App Engine files
@@ -29,28 +38,22 @@ directory:
 # clone this repo somewhere
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 
-# copy the two files below to the root directory of your Symfony project
+# create a directory for the event subscriber
+mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
+
+# copy the three files below to your Symfony project
 cd /path/to/php-docs-samples/appengine/flexible/symfony/
-cp ./{app.yaml,nginx-app.conf} /path/to/symfony
+cp app.yaml /path/to/symfony
+cp app/config/config_prod.yml /path/to/symfony/app/config
+cp src/AppBundle/EventSubscriber/ExceptionSubscriber.php \
+    /path/to/symfony/src/AppBundle/EventSubscriber
 ```
 
-The two files needed are as follows:
+The three files needed are as follows:
 
   1. [`app.yaml`](app.yaml) - The App Engine configuration for your project
-  1. [`nginx-app.conf`](nginx-app.conf) - Nginx web server configuration needed for `Symfony`
-
-Finally, you need to have a few scripts run after your application deploys.
-Add the following scripts to your project's `composer.json`:
-
-```json
-{
-    "scripts": {
-        "post-install-cmd": [
-            "chmod -R ug+w $APP_DIR/var"
-        ]
-    }
-}
-```
+  1. [`app/config/config_prod.yml`](app/config/config_prod.yml) - Symfony configurations for Stackdriver Logging
+  1. [`src/AppBundle/EventSubscriber/ExceptionSubscriber.php`](src/AppBundle/EventSubscriber/ExceptionSubscriber.php) - Symfony configurations for Stackdriver Error Reporting
 
 [1]: https://cloud.google.com/appengine/docs/flexible/
 [2]: https://console.cloud.google.com

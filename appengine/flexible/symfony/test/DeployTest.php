@@ -18,8 +18,10 @@
 namespace Google\Cloud\Samples\AppEngine\Symfony;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use Google\Cloud\Logging\LoggingClient;
 use Symfony\Component\Yaml\Yaml;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +30,7 @@ class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
+    use EventuallyConsistentTestTrait;
 
     public static function beforeDeploy()
     {
@@ -41,7 +44,6 @@ class DeployTest extends TestCase
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
         self::setWorkingDirectory($tmpDir);
         self::createSymfonyProject($tmpDir);
-        self::addPostBuildCommands($tmpDir);
 
         // set the directory in gcloud and move there
         self::$gcloudWrapper->setDir($tmpDir);
@@ -72,6 +74,15 @@ class DeployTest extends TestCase
         $process = self::createProcess($cmd);
         $process->setTimeout(300); // 5 minutes
         self::executeProcess($process);
+        // add cloud libraries
+        $cmd = sprintf(
+            'composer --working-dir=%s require google/cloud-logging '
+            . 'google/cloud-error-reporting',
+            $targetDir
+        );
+        $process = self::createProcess($cmd);
+        $process->setTimeout(300); // 5 minutes
+        self::executeProcess($process);
 
         // set the config from env vars
         $installFile = sprintf('%s/app/config/parameters.yml', $targetDir);
@@ -90,21 +101,18 @@ class DeployTest extends TestCase
 
         file_put_contents($installFile, Yaml::dump($config));
 
-        // move the code for the sample to the new drupal installation
-        $files = ['app.yaml', 'nginx-app.conf'];
+        // move the code for the sample to the new symfony installation
+        mkdir("$targetDir/src/AppBundle/EventSubscriber", 0700, true);
+        $files = [
+            'app.yaml',
+            'app/config/config_prod.yml',
+            'src/AppBundle/EventSubscriber/ExceptionSubscriber.php',
+        ];
         foreach ($files as $file) {
             $source = sprintf('%s/../%s', __DIR__, $file);
             $target = sprintf('%s/%s', $targetDir, $file);
             copy($source, $target);
         }
-    }
-
-    private static function addPostBuildCommands($targetDir)
-    {
-        $contents = file_get_contents($targetDir . '/composer.json');
-        $json = json_decode($contents, true);
-        $json['scripts']['post-install-cmd'] = ['chmod -R ug+w $APP_DIR/var'];
-        file_put_contents($targetDir . '/composer.json', json_encode($json, JSON_PRETTY_PRINT));
     }
 
     public function testHomepage()
@@ -118,5 +126,41 @@ class DeployTest extends TestCase
         );
         $content = $resp->getBody()->getContents();
         $this->assertContains('Your application is now ready', $content);
+    }
+
+    public function testErrorLog()
+    {
+        // Access a page erroring with 404
+        $token = uniqid();
+        $path = "/404-$token";
+        $resp = $this->client->request('GET', $path, ['http_errors' => false]);
+        $this->assertEquals(
+            '404',
+            $resp->getStatusCode(),
+            '404 page status code'
+        );
+        $logging = new LoggingClient(
+            ['projectId' => getenv('GOOGLE_PROJECT_ID')]
+        );
+        // 'app-error' is the default logname of our Stackdriver Error
+        // Reporting integration.
+        $logger = $logging->logger('app-error');
+
+        $this->runEventuallyConsistentTest(
+            function () use ($logger, $path) {
+                $logs = $logger->entries([
+                    'pageSize' => 100,
+                    'orderBy' => 'timestamp desc',
+                    'resultLimit' => 100
+                ]);
+                $found = false;
+                foreach ($logs as $log) {
+                    $info = $log->info();
+                    if (strpos($path, $info['jsonPayload']['message']) !== 0) {
+                        $found = true;
+                    }
+                }
+                $this->assertTrue($found, 'The log entry was not found');
+            });
     }
 }

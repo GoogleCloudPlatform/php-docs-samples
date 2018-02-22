@@ -3,6 +3,9 @@ env: flex
 
 runtime_config:
   document_root: web
+  front_controller_file: app.php
+  enable_stackdriver_integration: true
 
 env_variables:
   WHITELIST_FUNCTIONS: libxml_disable_entity_loader
+  SYMFONY_ENV: prod

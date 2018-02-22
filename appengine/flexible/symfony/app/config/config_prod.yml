@@ -1,0 +1,30 @@
+imports:
+    - { resource: config.yml }
+
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: debug # Choose whichever level you like
+            handler:      nested
+        nested:
+            type: service
+            id: monolog_psr_batch_logger
+
+services:
+    # Monolog wrapper
+    monolog_psr_batch_logger:
+        class: Monolog\Handler\PsrHandler
+        arguments: ['@psr_batch_logger']
+
+    # PsrBatchLogger
+    psr_batch_logger:
+        class: Google\Cloud\Logging\PsrLogger
+        factory: ['Google\Cloud\Logging\LoggingClient', 'psrBatchLogger']
+        arguments: ['app']
