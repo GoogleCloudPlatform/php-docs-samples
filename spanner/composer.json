@@ -1,10 +1,21 @@
 {
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-private"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/jdpedrie/proto-client-php-private"
+        }
+    ],
     "require": {
-        "google/cloud-spanner": "^1.1",
         "symfony/console": "^3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4"
+        "phpunit/phpunit": "^4",
+        "google/cloud": "dev-spanner-wip",
+        "google/proto-client": "dev-master"
     },
     "autoload": {
         "files": [
@@ -22,7 +33,9 @@
             "src/create_storing_index.php",
             "src/query_data_with_new_column.php",
             "src/read_only_transaction.php",
-            "src/read_stale_data.php"
+            "src/read_stale_data.php",
+            "src/batch_query_data.php"
         ]
-    }
+    },
+    "minimum-stability": "dev"
 }

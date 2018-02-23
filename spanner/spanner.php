@@ -216,6 +216,18 @@ $application->add((new Command('read-only-transaction'))
     })
 );
 
+// Batch query data command
+$application->add((new Command('batch-query-data'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Batch queries sample data from the database using SQL.')
+    ->setCode(function ($input, $output) {
+        batch_query_data(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
