@@ -3,7 +3,6 @@
 require_once __DIR__ . '/../trace-sample.php';
 
 use PHPUnit\Framework\TestCase;
-use OpenCensus\Trace\Tracer;
 
 class TraceTest extends TestCase
 {

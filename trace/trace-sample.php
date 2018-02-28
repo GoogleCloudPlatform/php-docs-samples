@@ -21,6 +21,7 @@ use OpenCensus\Trace\Exporter\NullExporter;
 # [START trace_use_statement]
 use OpenCensus\Trace\Exporter\StackdriverExporter;
 use OpenCensus\Trace\Tracer;
+
 # [END trace_use_statement]
 
 $projectId = getenv('GOOGLE_CLOUD_PROJECT');
