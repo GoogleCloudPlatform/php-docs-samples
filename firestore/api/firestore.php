@@ -47,15 +47,15 @@ EOF
     ->setCode(function ($input, $output) {
     	$projectId = $input->getOption('project');
     	if ($projectId) {
-            fs_initialize_project_id($projectId);
+            initialize_project_id($projectId);
     	} else {
-    		fs_initialize();
+    		initialize();
     	}
     })
 );
 
-// Add Data #1 command
-$application->add((new Command('add-data-1'))
+// Add Data command
+$application->add((new Command('add-data'))
 	->setDefinition($inputDefinition)
     ->setDescription('Add data to a document.')
     ->setHelp(<<<EOF
@@ -66,23 +66,7 @@ The <info>%command.name%</info> command adds data to a document using the Google
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_add_data_1();
-    })
-);
-
-// Add Data #2 command
-$application->add((new Command('add-data-2'))
-	->setDefinition($inputDefinition)
-    ->setDescription('Add data to a document.')
-    ->setHelp(<<<EOF
-The <info>%command.name%</info> command adds data to a document using the Google Cloud Firestore API.
-
-    <info>php %command.full_name%</info>
-
-EOF
-    )
-    ->setCode(function ($input, $output) {
-    	fs_add_data_2();
+    	add_data();
     })
 );
 
@@ -98,7 +82,7 @@ The <info>%command.name%</info> command retrieves all documents from a collectio
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_get_all();
+    	get_all();
     })
 );
 
@@ -114,7 +98,7 @@ The <info>%command.name%</info> command sets document data using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_set_document();
+    	set_document();
     })
 );
 
@@ -130,7 +114,7 @@ The <info>%command.name%</info> command sets document data with different data t
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_add_doc_data_types();
+    	add_doc_data_types();
     })
 );
 
@@ -146,7 +130,7 @@ The <info>%command.name%</info> command sets document data with a given document
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_set_requires_id();
+    	set_requires_id();
     })
 );
 
@@ -162,7 +146,7 @@ The <info>%command.name%</info> command adds document data with an auto-generate
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_add_doc_data_with_auto_id();
+    	add_doc_data_with_auto_id();
     })
 );
 
@@ -178,7 +162,7 @@ The <info>%command.name%</info> command auto-generates an ID for a document and 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_add_doc_data_after_auto_id();
+    	add_doc_data_after_auto_id();
     })
 );
 
@@ -194,7 +178,7 @@ The <info>%command.name%</info> command creates an example collection of documen
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_query_create_examples();
+    	query_create_examples();
     })
 );
 
@@ -210,7 +194,7 @@ The <info>%command.name%</info> command creates a query that gets documents wher
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_create_query_state();
+    	create_query_state();
     })
 );
 
@@ -226,7 +210,7 @@ The <info>%command.name%</info> command creates a query that gets documents wher
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_create_query_capital();
+    	create_query_capital();
     })
 );
 
@@ -242,7 +226,7 @@ The <info>%command.name%</info> command creates queries using single where claus
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_simple_queries();
+    	simple_queries();
     })
 );
 
@@ -258,7 +242,7 @@ The <info>%command.name%</info> command creates a query with chained clauses usi
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_chained_query();
+    	chained_query();
     })
 );
 
@@ -274,7 +258,7 @@ The <info>%command.name%</info> command creates a composite index chained query 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_composite_index_chained_query();
+    	composite_index_chained_query();
     })
 );
 
@@ -295,7 +279,7 @@ The <info>%command.name%</info> command creates a query with range clauses using
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_range_query();
+    	range_query();
     })
 );
 
@@ -311,7 +295,7 @@ The <info>%command.name%</info> command creates an example of an invalid range q
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_invalid_range_query();
+    	invalid_range_query();
     })
 );
 
@@ -327,7 +311,7 @@ The <info>%command.name%</info> command deletes a document using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_delete_doc();
+    	delete_doc();
     })
 );
 
@@ -343,7 +327,7 @@ The <info>%command.name%</info> command deletes a field from a document using th
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_delete_field();
+    	delete_field();
     })
 );
 
@@ -361,7 +345,7 @@ EOF
     ->setCode(function ($input, $output) {
     	$db = new FirestoreClient();
     	$cityCollection = $db->collection('cities');
-    	fs_delete_collection($cityCollection, 2);
+    	delete_collection($cityCollection, 2);
     })
 );
 
@@ -377,7 +361,7 @@ The <info>%command.name%</info> command creates an example collection of documen
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_retrieve_create_examples();
+    	retrieve_create_examples();
     })
 );
 
@@ -393,7 +377,7 @@ The <info>%command.name%</info> command gets a document using the Google Cloud F
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_get_document();
+    	get_document();
     })
 );
 
@@ -409,7 +393,7 @@ The <info>%command.name%</info> command gets a multiple documents from a collect
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_get_multiple_docs();
+    	get_multiple_docs();
     })
 );
 
@@ -425,7 +409,7 @@ The <info>%command.name%</info> command gets all documents in a collection using
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_get_all_docs();
+    	get_all_docs();
     })
 );
 
@@ -441,7 +425,7 @@ The <info>%command.name%</info> command creates an order by name with limit quer
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_order_by_name_limit_query();
+    	order_by_name_limit_query();
     })
 );
 
@@ -457,7 +441,7 @@ The <info>%command.name%</info> command creates an order by name descending with
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_order_by_name_desc_limit_query();
+    	order_by_name_desc_limit_query();
     })
 );
 
@@ -473,7 +457,7 @@ The <info>%command.name%</info> command creates an order by state and descending
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_order_by_state_and_population_query();
+    	order_by_state_and_population_query();
     })
 );
 
@@ -489,7 +473,7 @@ The <info>%command.name%</info> command combines where with order by and limit i
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_where_order_by_limit_query();
+    	where_order_by_limit_query();
     })
 );
 
@@ -505,7 +489,7 @@ The <info>%command.name%</info> command creates a range with order by query usin
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_range_order_by_query();
+    	range_order_by_query();
     })
 );
 
@@ -521,7 +505,7 @@ The <info>%command.name%</info> command creates an invalid range with order by q
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_invalid_range_order_by_query();
+    	invalid_range_order_by_query();
     })
 );
 
@@ -537,7 +521,7 @@ The <info>%command.name%</info> command gets a document reference using the Goog
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_document_ref();
+    	document_ref();
     })
 );
 
@@ -553,7 +537,7 @@ The <info>%command.name%</info> command gets a collection reference using the Go
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_collection_ref();
+    	collection_ref();
     })
 );
 
@@ -569,7 +553,7 @@ The <info>%command.name%</info> command gets a document path reference using the
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_document_path_ref();
+    	document_path_ref();
     })
 );
 
@@ -585,10 +569,185 @@ The <info>%command.name%</info> command gets a reference to a subcollection docu
 EOF
     )
     ->setCode(function ($input, $output) {
-    	fs_subcollection_ref();
+    	subcollection_ref();
     })
 );
 
+// Update Document command
+$application->add((new Command('update-doc'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Update a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command updates a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	update_doc();
+    })
+);
+
+// Set Document Merge command
+$application->add((new Command('set-document-merge'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Set document data by merging it into the existing document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command sets document data by merging it into the existing document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	set_document_merge();
+    })
+);
+
+// Update Nested Fields command
+$application->add((new Command('update-nested-fields'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Update fields in nested data.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command updates fields in nested data using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	update_nested_fields();
+    })
+);
+
+// Update Field With Server Timestamp command
+$application->add((new Command('update-server-timestamp'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Update field with server timestamp.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command updates a field with the server timestamp using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	update_server_timestamp();
+    })
+);
+
+// Run Simple Transaction command
+$application->add((new Command('run-simple-transaction'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Run a simple transaction.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command runs a simple transaction using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	run_simple_transaction();
+    })
+);
+
+// Return Info Transaction command
+$application->add((new Command('return-info-transaction'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Return information from your transaction.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command returns information from your transaction using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	return_info_transaction();
+    })
+);
+
+// Batch Write command
+$application->add((new Command('batch-write'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Batch write.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command batch writes using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	batch_write();
+    })
+);
+
+// Start At Field Query Cursor command
+$application->add((new Command('start-at-field-query-cursor'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Define field start point for a query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command defines a field start point for a query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	start_at_field_query_cursor();
+    })
+);
+
+// End At Field Query Cursor command
+$application->add((new Command('end-at-field-query-cursor'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Define field end point for a query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command defines a field end point for a query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	end_at_field_query_cursor();
+    })
+);
+
+// Paginated Query Cursor command
+$application->add((new Command('paginated-query-cursor'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Paginate using cursor queries.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command paginates using query cursors using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	paginated_query_cursor();
+    })
+);
+
+// Multple Cursor Conditions command
+$application->add((new Command('multiple-cursor-conditions'))
+	->setDefinition($inputDefinition)
+    ->setDescription('Set multiple cursor conditions.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command sets multiple cursor conditions using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+    	multiple_cursor_conditions();
+    })
+);
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
