@@ -63,7 +63,8 @@ authentication:
 
 To run the Cloud Firestore Samples:
 
-Cloud Firestore
+    $ php firestore.php
+    Cloud Firestore
 
     Usage:
       command [options] [arguments]
