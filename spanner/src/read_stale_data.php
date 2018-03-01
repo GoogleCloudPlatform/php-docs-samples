@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START read_stale_data]
+// [START spanner_read_stale_data]
 use Google\Cloud\Spanner\Duration;
 use Google\Cloud\Spanner\SpannerClient;
 
@@ -56,4 +56,4 @@ function read_stale_data($instanceId, $databaseId)
             $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
     }
 }
-// [END read_stale_data]
+// [END spanner_read_stale_data]
