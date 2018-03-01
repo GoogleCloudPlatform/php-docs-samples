@@ -30,12 +30,13 @@ if ($projectId === false) {
 }
 
 # [START exporter_setup]
-$exporter = new StackdriverExporter(
-    ['clientConfig' => [
+$exporter = new StackdriverExporter([
+    'clientConfig' => [
         'projectId' => $projectId
-    ]]);
+    ]
+]);
 # [END exporter_setup]
-// For testing
+// When running tests, use a null exporter instead.
 if (getenv('USE_NULL_EXPORTER')) {
     $exporter = new NullExporter();
 }
@@ -43,7 +44,7 @@ if (getenv('USE_NULL_EXPORTER')) {
 Tracer::start($exporter);
 # [END tracer_start]
 
-function use_trace()
+function trace_callable()
 {
     # [START span_with_closure]
     Tracer::inSpan(
@@ -52,5 +53,5 @@ function use_trace()
             sleep(1);
         }
     );
+    # [END span_with_closure]
 }
-# [END span_with_closure]

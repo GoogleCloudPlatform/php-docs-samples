@@ -8,7 +8,7 @@ class TraceTest extends TestCase
 {
     public function testTraceSample()
     {
-        use_trace();
+        trace_callable();
         $reflection = new \ReflectionProperty('\OpenCensus\Trace\Tracer', 'instance');
         $reflection->setAccessible(true);
         $handler = $reflection->getValue();
