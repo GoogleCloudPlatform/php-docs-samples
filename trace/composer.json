@@ -1,0 +1,6 @@
+{
+    "require": {
+        "opencensus/opencensus": "^0.2.1",
+        "google/cloud-trace": "^0.6.2"
+    }
+}

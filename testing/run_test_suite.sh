@@ -65,6 +65,7 @@ do
         fi
     fi
     pushd ${DIR}
+    mkdir -p build/logs
     # Temporarily allowing error
     set +e
     if [ -f "composer.json" ]; then
