@@ -40,7 +40,7 @@ function delete_field()
     # [START fs_delete_field]
     $cityRef = $db->collection('cities')->document('BJ');
     $cityRef->update([
-    	['path' => 'capital', 'value' => FieldValue::deleteField()]
+        ['path' => 'capital', 'value' => FieldValue::deleteField()]
     ]);
     # [END fs_delete_field]
     printf('Deleted the capital field from the BJ document in the cities collection.' . PHP_EOL);

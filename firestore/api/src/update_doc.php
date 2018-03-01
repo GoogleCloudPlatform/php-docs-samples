@@ -39,7 +39,7 @@ function update_doc()
     # [START fs_update_doc]
     $cityRef = $db->collection('cities')->document('DC');
     $cityRef->update([
-    	['path' => 'capital', 'value' => true]
+        ['path' => 'capital', 'value' => true]
     ]);
     # [END fs_update_doc]
     printf('Updated the capital field of the DC document in the cities collection.' . PHP_EOL);

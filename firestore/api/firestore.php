@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Firestore;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
 use Google\Cloud\Firestore\FirestoreClient;
@@ -35,7 +34,7 @@ $inputDefinition = new InputDefinition([
 
 // Initialize command
 $application->add((new Command('initialize'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Initialize Cloud Firestore with default project ID.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command initializes Cloud Firestore using the Google Cloud Firestore API.
@@ -45,18 +44,18 @@ The <info>%command.name%</info> command initializes Cloud Firestore using the Go
 EOF
     )
     ->setCode(function ($input, $output) {
-    	$projectId = $input->getOption('project');
-    	if ($projectId) {
+        $projectId = $input->getOption('project');
+        if ($projectId) {
             initialize_project_id($projectId);
-    	} else {
-    		initialize();
-    	}
+        } else {
+            initialize();
+        }
     })
 );
 
 // Add Data command
 $application->add((new Command('add-data'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Add data to a document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command adds data to a document using the Google Cloud Firestore API.
@@ -66,13 +65,13 @@ The <info>%command.name%</info> command adds data to a document using the Google
 EOF
     )
     ->setCode(function ($input, $output) {
-    	add_data();
+        add_data();
     })
 );
 
 // Retrieve All Documents command
 $application->add((new Command('retrieve-all-documents'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Retrieve all documents from a collection.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command retrieves all documents from a collection using the Google Cloud Firestore API.
@@ -82,13 +81,13 @@ The <info>%command.name%</info> command retrieves all documents from a collectio
 EOF
     )
     ->setCode(function ($input, $output) {
-    	get_all();
+        get_all();
     })
 );
 
 // Set Document command
 $application->add((new Command('set-document'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Set document data.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command sets document data using the Google Cloud Firestore API.
@@ -98,13 +97,13 @@ The <info>%command.name%</info> command sets document data using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-    	set_document();
+        set_document();
     })
 );
 
 // Data Types command
 $application->add((new Command('add-doc-data-types'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Set document data with different data types.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command sets document data with different data types using the Google Cloud Firestore API.
@@ -114,13 +113,13 @@ The <info>%command.name%</info> command sets document data with different data t
 EOF
     )
     ->setCode(function ($input, $output) {
-    	add_doc_data_types();
+        add_doc_data_types();
     })
 );
 
 // Set Document Requires ID command
 $application->add((new Command('set-requires-id'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Set document data with a given document ID.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command sets document data with a given document ID using the Google Cloud Firestore API.
@@ -130,13 +129,13 @@ The <info>%command.name%</info> command sets document data with a given document
 EOF
     )
     ->setCode(function ($input, $output) {
-    	set_requires_id();
+        set_requires_id();
     })
 );
 
 // Add Document Auto-Generated ID command
 $application->add((new Command('add-doc-data-with-auto-id'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Add document data with an auto-generated ID.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command adds document data with an auto-generated ID using the Google Cloud Firestore API.
@@ -146,13 +145,13 @@ The <info>%command.name%</info> command adds document data with an auto-generate
 EOF
     )
     ->setCode(function ($input, $output) {
-    	add_doc_data_with_auto_id();
+        add_doc_data_with_auto_id();
     })
 );
 
 // Auto-Generate ID then Add Document Data command
 $application->add((new Command('add-doc-data-after-auto-id'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Auto-generate an ID for a document, then add document data.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command auto-generates an ID for a document and then adds document data using the Google Cloud Firestore API.
@@ -162,13 +161,13 @@ The <info>%command.name%</info> command auto-generates an ID for a document and 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	add_doc_data_after_auto_id();
+        add_doc_data_after_auto_id();
     })
 );
 
 // Query Create Examples command
 $application->add((new Command('query-create-examples'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create an example collection of documents.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an example collection of documents using the Google Cloud Firestore API.
@@ -178,13 +177,13 @@ The <info>%command.name%</info> command creates an example collection of documen
 EOF
     )
     ->setCode(function ($input, $output) {
-    	query_create_examples();
+        query_create_examples();
     })
 );
 
 // Create Query State command
 $application->add((new Command('create-query-state'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create a query that gets documents where state=CA.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates a query that gets documents where state=CA using the Google Cloud Firestore API.
@@ -194,13 +193,13 @@ The <info>%command.name%</info> command creates a query that gets documents wher
 EOF
     )
     ->setCode(function ($input, $output) {
-    	create_query_state();
+        create_query_state();
     })
 );
 
 // Create Query Capital command
 $application->add((new Command('create-query-capital'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create a query that gets documents where capital=True.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates a query that gets documents where capital=True using the Google Cloud Firestore API.
@@ -210,13 +209,13 @@ The <info>%command.name%</info> command creates a query that gets documents wher
 EOF
     )
     ->setCode(function ($input, $output) {
-    	create_query_capital();
+        create_query_capital();
     })
 );
 
 // Simple Queries command
 $application->add((new Command('simple-queries'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create queries using single where clauses.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates queries using single where clauses using the Google Cloud Firestore API.
@@ -226,13 +225,13 @@ The <info>%command.name%</info> command creates queries using single where claus
 EOF
     )
     ->setCode(function ($input, $output) {
-    	simple_queries();
+        simple_queries();
     })
 );
 
 // Chained Query command
 $application->add((new Command('chained-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create a query with chained clauses.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates a query with chained clauses using the Google Cloud Firestore API.
@@ -242,13 +241,13 @@ The <info>%command.name%</info> command creates a query with chained clauses usi
 EOF
     )
     ->setCode(function ($input, $output) {
-    	chained_query();
+        chained_query();
     })
 );
 
 // Composite Index Chained Query command
 $application->add((new Command('composite-index-chained-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create a composite index chained query, which combines an equality operator with a range comparison.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates a composite index chained query using the Google Cloud Firestore API.
@@ -258,18 +257,13 @@ The <info>%command.name%</info> command creates a composite index chained query 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	composite_index_chained_query();
+        composite_index_chained_query();
     })
 );
 
-// for testing
-if (getenv('PHPUNIT_TESTS') === '1') {
-    return $application;
-}
-
 // Range Query command
 $application->add((new Command('range-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create a query with range clauses.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates a query with range clauses using the Google Cloud Firestore API.
@@ -279,13 +273,13 @@ The <info>%command.name%</info> command creates a query with range clauses using
 EOF
     )
     ->setCode(function ($input, $output) {
-    	range_query();
+        range_query();
     })
 );
 
 // Invalid Range Query command
 $application->add((new Command('invalid-range-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('An example of an invalid range query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an example of an invalid range query using the Google Cloud Firestore API.
@@ -295,13 +289,13 @@ The <info>%command.name%</info> command creates an example of an invalid range q
 EOF
     )
     ->setCode(function ($input, $output) {
-    	invalid_range_query();
+        invalid_range_query();
     })
 );
 
 // Delete Document command
 $application->add((new Command('delete-document'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Delete a document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command deletes a document using the Google Cloud Firestore API.
@@ -311,13 +305,13 @@ The <info>%command.name%</info> command deletes a document using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-    	delete_doc();
+        delete_doc();
     })
 );
 
 // Delete Field command
 $application->add((new Command('delete-field'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Delete a field from a document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command deletes a field from a document using the Google Cloud Firestore API.
@@ -327,13 +321,13 @@ The <info>%command.name%</info> command deletes a field from a document using th
 EOF
     )
     ->setCode(function ($input, $output) {
-    	delete_field();
+        delete_field();
     })
 );
 
 // Delete Collection command
 $application->add((new Command('delete-collection'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Delete a collection.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command deletes a collection using the Google Cloud Firestore API.
@@ -343,15 +337,15 @@ The <info>%command.name%</info> command deletes a collection using the Google Cl
 EOF
     )
     ->setCode(function ($input, $output) {
-    	$db = new FirestoreClient();
-    	$cityCollection = $db->collection('cities');
-    	delete_collection($cityCollection, 2);
+        $db = new FirestoreClient();
+        $cityCollection = $db->collection('cities');
+        delete_collection($cityCollection, 2);
     })
 );
 
 // Retrieve Create Examples command
 $application->add((new Command('retrieve-create-examples'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create an example collection of documents.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an example collection of documents using the Google Cloud Firestore API.
@@ -361,13 +355,13 @@ The <info>%command.name%</info> command creates an example collection of documen
 EOF
     )
     ->setCode(function ($input, $output) {
-    	retrieve_create_examples();
+        retrieve_create_examples();
     })
 );
 
 // Get Document command
 $application->add((new Command('get-document'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get a document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets a document using the Google Cloud Firestore API.
@@ -377,13 +371,13 @@ The <info>%command.name%</info> command gets a document using the Google Cloud F
 EOF
     )
     ->setCode(function ($input, $output) {
-    	get_document();
+        get_document();
     })
 );
 
 // Get Multiple Documents command
 $application->add((new Command('get-multiple-docs'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get multiple documents from a collection.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets a multiple documents from a collection using the Google Cloud Firestore API.
@@ -393,13 +387,13 @@ The <info>%command.name%</info> command gets a multiple documents from a collect
 EOF
     )
     ->setCode(function ($input, $output) {
-    	get_multiple_docs();
+        get_multiple_docs();
     })
 );
 
 // Get All Documents command
 $application->add((new Command('get-all-docs'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get all documents in a collection.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets all documents in a collection using the Google Cloud Firestore API.
@@ -409,13 +403,13 @@ The <info>%command.name%</info> command gets all documents in a collection using
 EOF
     )
     ->setCode(function ($input, $output) {
-    	get_all_docs();
+        get_all_docs();
     })
 );
 
 // Order By Name Limit Query command
 $application->add((new Command('order-by-name-limit-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create an order by name with limit query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an order by name with limit query using the Google Cloud Firestore API.
@@ -425,13 +419,13 @@ The <info>%command.name%</info> command creates an order by name with limit quer
 EOF
     )
     ->setCode(function ($input, $output) {
-    	order_by_name_limit_query();
+        order_by_name_limit_query();
     })
 );
 
 // Order By Name Descending Limit Query command
 $application->add((new Command('order-by-name-desc-limit-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create an order by name descending with limit query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an order by name descending with limit query using the Google Cloud Firestore API.
@@ -441,13 +435,13 @@ The <info>%command.name%</info> command creates an order by name descending with
 EOF
     )
     ->setCode(function ($input, $output) {
-    	order_by_name_desc_limit_query();
+        order_by_name_desc_limit_query();
     })
 );
 
 // Order By State and Population Query command
 $application->add((new Command('order-by-state-and-population-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create an order by state and descending population query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an order by state and descending population query using the Google Cloud Firestore API.
@@ -457,13 +451,13 @@ The <info>%command.name%</info> command creates an order by state and descending
 EOF
     )
     ->setCode(function ($input, $output) {
-    	order_by_state_and_population_query();
+        order_by_state_and_population_query();
     })
 );
 
 // Where Order By Limit Query command
 $application->add((new Command('where-order-by-limit-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Combine where with order by and limit in a query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command combines where with order by and limit in a query using the Google Cloud Firestore API.
@@ -473,13 +467,13 @@ The <info>%command.name%</info> command combines where with order by and limit i
 EOF
     )
     ->setCode(function ($input, $output) {
-    	where_order_by_limit_query();
+        where_order_by_limit_query();
     })
 );
 
 // Range Order By Query command
 $application->add((new Command('range-order-by-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Create a range with order by query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates a range with order by query using the Google Cloud Firestore API.
@@ -489,13 +483,13 @@ The <info>%command.name%</info> command creates a range with order by query usin
 EOF
     )
     ->setCode(function ($input, $output) {
-    	range_order_by_query();
+        range_order_by_query();
     })
 );
 
 // Invalid Range Order By Query command
 $application->add((new Command('invalid-range-order-by-query'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('An invalid range with order by query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates an invalid range with order by query using the Google Cloud Firestore API.
@@ -505,13 +499,13 @@ The <info>%command.name%</info> command creates an invalid range with order by q
 EOF
     )
     ->setCode(function ($input, $output) {
-    	invalid_range_order_by_query();
+        invalid_range_order_by_query();
     })
 );
 
 // Document Reference command
 $application->add((new Command('document-ref'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get a document reference.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets a document reference using the Google Cloud Firestore API.
@@ -521,13 +515,13 @@ The <info>%command.name%</info> command gets a document reference using the Goog
 EOF
     )
     ->setCode(function ($input, $output) {
-    	document_ref();
+        document_ref();
     })
 );
 
 // Collection Reference command
 $application->add((new Command('collection-ref'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get a collection reference.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets a collection reference using the Google Cloud Firestore API.
@@ -537,13 +531,13 @@ The <info>%command.name%</info> command gets a collection reference using the Go
 EOF
     )
     ->setCode(function ($input, $output) {
-    	collection_ref();
+        collection_ref();
     })
 );
 
 // Document Path Reference command
 $application->add((new Command('document-path-ref'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get a document path reference.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets a document path reference using the Google Cloud Firestore API.
@@ -553,13 +547,13 @@ The <info>%command.name%</info> command gets a document path reference using the
 EOF
     )
     ->setCode(function ($input, $output) {
-    	document_path_ref();
+        document_path_ref();
     })
 );
 
 // Subcollection Reference command
 $application->add((new Command('subcollection-ref'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Get a reference to a subcollection document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command gets a reference to a subcollection document using the Google Cloud Firestore API.
@@ -569,13 +563,13 @@ The <info>%command.name%</info> command gets a reference to a subcollection docu
 EOF
     )
     ->setCode(function ($input, $output) {
-    	subcollection_ref();
+        subcollection_ref();
     })
 );
 
 // Update Document command
 $application->add((new Command('update-doc'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Update a document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command updates a document using the Google Cloud Firestore API.
@@ -585,13 +579,13 @@ The <info>%command.name%</info> command updates a document using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-    	update_doc();
+        update_doc();
     })
 );
 
 // Set Document Merge command
 $application->add((new Command('set-document-merge'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Set document data by merging it into the existing document.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command sets document data by merging it into the existing document using the Google Cloud Firestore API.
@@ -601,13 +595,13 @@ The <info>%command.name%</info> command sets document data by merging it into th
 EOF
     )
     ->setCode(function ($input, $output) {
-    	set_document_merge();
+        set_document_merge();
     })
 );
 
 // Update Nested Fields command
 $application->add((new Command('update-nested-fields'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Update fields in nested data.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command updates fields in nested data using the Google Cloud Firestore API.
@@ -617,13 +611,13 @@ The <info>%command.name%</info> command updates fields in nested data using the 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	update_nested_fields();
+        update_nested_fields();
     })
 );
 
 // Update Field With Server Timestamp command
 $application->add((new Command('update-server-timestamp'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Update field with server timestamp.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command updates a field with the server timestamp using the Google Cloud Firestore API.
@@ -633,13 +627,13 @@ The <info>%command.name%</info> command updates a field with the server timestam
 EOF
     )
     ->setCode(function ($input, $output) {
-    	update_server_timestamp();
+        update_server_timestamp();
     })
 );
 
 // Run Simple Transaction command
 $application->add((new Command('run-simple-transaction'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Run a simple transaction.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command runs a simple transaction using the Google Cloud Firestore API.
@@ -649,13 +643,13 @@ The <info>%command.name%</info> command runs a simple transaction using the Goog
 EOF
     )
     ->setCode(function ($input, $output) {
-    	run_simple_transaction();
+        run_simple_transaction();
     })
 );
 
 // Return Info Transaction command
 $application->add((new Command('return-info-transaction'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Return information from your transaction.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command returns information from your transaction using the Google Cloud Firestore API.
@@ -665,13 +659,13 @@ The <info>%command.name%</info> command returns information from your transactio
 EOF
     )
     ->setCode(function ($input, $output) {
-    	return_info_transaction();
+        return_info_transaction();
     })
 );
 
 // Batch Write command
 $application->add((new Command('batch-write'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Batch write.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command batch writes using the Google Cloud Firestore API.
@@ -681,13 +675,13 @@ The <info>%command.name%</info> command batch writes using the Google Cloud Fire
 EOF
     )
     ->setCode(function ($input, $output) {
-    	batch_write();
+        batch_write();
     })
 );
 
 // Start At Field Query Cursor command
 $application->add((new Command('start-at-field-query-cursor'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Define field start point for a query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command defines a field start point for a query using the Google Cloud Firestore API.
@@ -697,13 +691,13 @@ The <info>%command.name%</info> command defines a field start point for a query 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	start_at_field_query_cursor();
+        start_at_field_query_cursor();
     })
 );
 
 // End At Field Query Cursor command
 $application->add((new Command('end-at-field-query-cursor'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Define field end point for a query.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command defines a field end point for a query using the Google Cloud Firestore API.
@@ -713,13 +707,13 @@ The <info>%command.name%</info> command defines a field end point for a query us
 EOF
     )
     ->setCode(function ($input, $output) {
-    	end_at_field_query_cursor();
+        end_at_field_query_cursor();
     })
 );
 
 // Paginated Query Cursor command
 $application->add((new Command('paginated-query-cursor'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Paginate using cursor queries.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command paginates using query cursors using the Google Cloud Firestore API.
@@ -729,13 +723,13 @@ The <info>%command.name%</info> command paginates using query cursors using the 
 EOF
     )
     ->setCode(function ($input, $output) {
-    	paginated_query_cursor();
+        paginated_query_cursor();
     })
 );
 
 // Multple Cursor Conditions command
 $application->add((new Command('multiple-cursor-conditions'))
-	->setDefinition($inputDefinition)
+    ->setDefinition($inputDefinition)
     ->setDescription('Set multiple cursor conditions.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command sets multiple cursor conditions using the Google Cloud Firestore API.
@@ -745,7 +739,31 @@ The <info>%command.name%</info> command sets multiple cursor conditions using th
 EOF
     )
     ->setCode(function ($input, $output) {
-    	multiple_cursor_conditions();
+        multiple_cursor_conditions();
+    })
+);
+
+// Delete Test Collections command
+$application->add((new Command('delete-test-collections'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Delete test collections used in these code samples.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command deletes test collections used in these code samples using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $db = new FirestoreClient();
+        $cityCollection = $db->collection('cities');
+        delete_collection($cityCollection, 2);
+        $dataCollection = $db->collection('data');
+        delete_collection($dataCollection, 2);
+        $usersCollection = $db->collection('users');
+        delete_collection($usersCollection, 2);
+        $objectsCollection = $db->collection('objects');
+        delete_collection($objectsCollection, 2);
     })
 );
 

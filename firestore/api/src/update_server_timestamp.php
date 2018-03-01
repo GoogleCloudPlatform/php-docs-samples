@@ -44,7 +44,7 @@ function update_server_timestamp()
     # [START fs_update_server_timestamp]
     $docRef = $db->collection('objects')->document('some-id');
     $docRef->update([
-    	['path' => 'timestamp', 'value' => FieldValue::serverTimestamp()]
+        ['path' => 'timestamp', 'value' => FieldValue::serverTimestamp()]
     ]);
     # [END fs_update_server_timestamp]
     printf('Updated the timestamp field of the some-id document in the objects collection.' . PHP_EOL);

@@ -40,15 +40,15 @@ function update_nested_fields()
     // Create an initial document to update
     $frankRef = $db->collection('users')->document('frank');
     $frankRef->set([
-    	'name' => 'Frank',
-    	'favorites' => ['food' => 'Pizza', 'color' => 'Blue', 'subject' => 'Recess'],
-    	'age' => 12
+        'name' => 'Frank',
+        'favorites' => ['food' => 'Pizza', 'color' => 'Blue', 'subject' => 'Recess'],
+        'age' => 12
     ]);
 
     // Update age and favorite color
     $frankRef->update([
-    	['path' => 'age', 'value' => 13],
-    	['path' => 'favorites.color', 'value' => 'Red']
+        ['path' => 'age', 'value' => 13],
+        ['path' => 'favorites.color', 'value' => 'Red']
     ]);
     # [END fs_update_nested_fields]
     printf('Updated the age and favorite color fields of the frank document in the users collection.' . PHP_EOL);

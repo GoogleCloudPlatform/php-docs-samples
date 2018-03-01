@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Add data to a document.
+ * Retrieve all documents from a collection.
  * ```
  * get_all();
  * ```

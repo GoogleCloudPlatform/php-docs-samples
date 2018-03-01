@@ -39,7 +39,7 @@ function set_document_merge()
     # [START fs_set_document_merge]
     $cityRef = $db->collection('cities')->document('BJ');
     $cityRef->set([
-    	'capital' => true
+        'capital' => true
     ], ['merge' => true]);
     # [END fs_set_document_merge]
     printf('Set document data by merging it into the existing BJ document in the cities collection.' . PHP_EOL);
