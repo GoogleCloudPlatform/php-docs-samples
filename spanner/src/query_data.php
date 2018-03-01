@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START query_data]
+// [START spanner_query_data]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -51,4 +51,4 @@ function query_data($instanceId, $databaseId)
             $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
     }
 }
-// [END query_data]
+// [END spanner_query_data]

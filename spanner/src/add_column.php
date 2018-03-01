@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START add_column]
+// [START spanner_add_column]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -51,4 +51,4 @@ function add_column($instanceId, $databaseId)
 
     printf('Added the MarketingBudget column.' . PHP_EOL);
 }
-// [END add_column]
+// [END spanner_add_column]
