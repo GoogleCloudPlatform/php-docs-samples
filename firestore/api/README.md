@@ -15,7 +15,7 @@ These samples show how to use the [Google Cloud Firestore API][cloud-firestore-a
 
 1. Click Enable.
 
-[firebase-console]: http://console.firebase.gooogle.com
+[firebase-console]: https://console.firebase.google.com
 
 
 ### Authentication
@@ -65,66 +65,66 @@ To run the Cloud Firestore Samples:
 
 Cloud Firestore
 
-Usage:
-  command [options] [arguments]
+    Usage:
+      command [options] [arguments]
 
-Options:
-  -h, --help            Display this help message
-  -q, --quiet           Do not output any message
-  -V, --version         Display this application version
-      --ansi            Force ANSI output
-      --no-ansi         Disable ANSI output
-  -n, --no-interaction  Do not ask any interactive question
-  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+    Options:
+      -h, --help            Display this help message
+      -q, --quiet           Do not output any message
+      -V, --version         Display this application version
+          --ansi            Force ANSI output
+          --no-ansi         Disable ANSI output
+      -n, --no-interaction  Do not ask any interactive question
+      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
-Available commands:
-  add-data                             Add data to a document.
-  add-doc-data-after-auto-id           Auto-generate an ID for a document, then add document data.
-  add-doc-data-types                   Set document data with different data types.
-  add-doc-data-with-auto-id            Add document data with an auto-generated ID.
-  batch-write                          Batch write.
-  chained-query                        Create a query with chained clauses.
-  collection-ref                       Get a collection reference.
-  composite-index-chained-query        Create a composite index chained query, which combines an equality operator with a range comparison.
-  create-query-capital                 Create a query that gets documents where capital=True.
-  create-query-state                   Create a query that gets documents where state=CA.
-  delete-collection                    Delete a collection.
-  delete-document                      Delete a document.
-  delete-field                         Delete a field from a document.
-  delete-test-collections              Delete test collections used in these code samples.
-  document-path-ref                    Get a document path reference.
-  document-ref                         Get a document reference.
-  end-at-field-query-cursor            Define field end point for a query.
-  get-all-docs                         Get all documents in a collection.
-  get-document                         Get a document.
-  get-multiple-docs                    Get multiple documents from a collection.
-  help                                 Displays help for a command
-  initialize                           Initialize Cloud Firestore with default project ID.
-  invalid-range-order-by-query         An invalid range with order by query.
-  invalid-range-query                  An example of an invalid range query.
-  list                                 Lists commands
-  multiple-cursor-conditions           Set multiple cursor conditions.
-  order-by-name-desc-limit-query       Create an order by name descending with limit query.
-  order-by-name-limit-query            Create an order by name with limit query.
-  order-by-state-and-population-query  Create an order by state and descending population query.
-  paginated-query-cursor               Paginate using cursor queries.
-  query-create-examples                Create an example collection of documents.
-  range-order-by-query                 Create a range with order by query.
-  range-query                          Create a query with range clauses.
-  retrieve-all-documents               Retrieve all documents from a collection.
-  retrieve-create-examples             Create an example collection of documents.
-  return-info-transaction              Return information from your transaction.
-  run-simple-transaction               Run a simple transaction.
-  set-document                         Set document data.
-  set-document-merge                   Set document data by merging it into the existing document.
-  set-requires-id                      Set document data with a given document ID.
-  simple-queries                       Create queries using single where clauses.
-  start-at-field-query-cursor          Define field start point for a query.
-  subcollection-ref                    Get a reference to a subcollection document.
-  update-doc                           Update a document.
-  update-nested-fields                 Update fields in nested data.
-  update-server-timestamp              Update field with server timestamp.
-  where-order-by-limit-query           Combine where with order by and limit in a query.
+    Available commands:
+      add-data                             Add data to a document.
+      add-doc-data-after-auto-id           Auto-generate an ID for a document, then add document data.
+      add-doc-data-types                   Set document data with different data types.
+      add-doc-data-with-auto-id            Add document data with an auto-generated ID.
+      batch-write                          Batch write.
+      chained-query                        Create a query with chained clauses.
+      collection-ref                       Get a collection reference.
+      composite-index-chained-query        Create a composite index chained query, which combines an equality operator with a range comparison.
+      create-query-capital                 Create a query that gets documents where capital=True.
+      create-query-state                   Create a query that gets documents where state=CA.
+      delete-collection                    Delete a collection.
+      delete-document                      Delete a document.
+      delete-field                         Delete a field from a document.
+      delete-test-collections              Delete test collections used in these code samples.
+      document-path-ref                    Get a document path reference.
+      document-ref                         Get a document reference.
+      end-at-field-query-cursor            Define field end point for a query.
+      get-all-docs                         Get all documents in a collection.
+      get-document                         Get a document.
+      get-multiple-docs                    Get multiple documents from a collection.
+      help                                 Displays help for a command
+      initialize                           Initialize Cloud Firestore with default project ID.
+      invalid-range-order-by-query         An invalid range with order by query.
+      invalid-range-query                  An example of an invalid range query.
+      list                                 Lists commands
+      multiple-cursor-conditions           Set multiple cursor conditions.
+      order-by-name-desc-limit-query       Create an order by name descending with limit query.
+      order-by-name-limit-query            Create an order by name with limit query.
+      order-by-state-and-population-query  Create an order by state and descending population query.
+      paginated-query-cursor               Paginate using cursor queries.
+      query-create-examples                Create an example collection of documents.
+      range-order-by-query                 Create a range with order by query.
+      range-query                          Create a query with range clauses.
+      retrieve-all-documents               Retrieve all documents from a collection.
+      retrieve-create-examples             Create an example collection of documents.
+      return-info-transaction              Return information from your transaction.
+      run-simple-transaction               Run a simple transaction.
+      set-document                         Set document data.
+      set-document-merge                   Set document data by merging it into the existing document.
+      set-requires-id                      Set document data with a given document ID.
+      simple-queries                       Create queries using single where clauses.
+      start-at-field-query-cursor          Define field start point for a query.
+      subcollection-ref                    Get a reference to a subcollection document.
+      update-doc                           Update a document.
+      update-nested-fields                 Update fields in nested data.
+      update-server-timestamp              Update field with server timestamp.
+      where-order-by-limit-query           Combine where with order by and limit in a query.
 
 ## The client library
 
