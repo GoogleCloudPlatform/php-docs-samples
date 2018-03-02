@@ -17,28 +17,22 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_list_categories]
-use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
+// [START dlp_delete_job]
+use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
- * Lists all Info Type Categories for the Data Loss Prevention (DLP) API.
+ * Delete results of a Data Loss Prevention API job
  *
- * @param string $languageCode Optional language code, empty for 'en-US'.
+ * @param string $jobId The name of the job whose results should be deleted
  */
-function list_categories($languageCode = '')
-{
+function delete_job ($jobId) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
-    // Run request
-    $response = $dlp->listRootCategories($languageCode);
+    // Run job-deletion request
+    $dlp->deleteDlpJob($jobId);
 
-    // Print the results
-    print('Categories:' . PHP_EOL);
-    foreach ($response->getCategories() as $category) {
-        printf('  %s (%s)' . PHP_EOL,
-            $category->getDisplayName(),
-            $category->getName());
-    }
+    // Print status
+    print_r('Successfully deleted job ' . $jobId . PHP_EOL);
 }
-# [END dlp_list_categories]
+// [END dlp_delete_job]

@@ -17,33 +17,21 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_list_info_types]
+# [START dlp_delete_trigger]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\ListInfoTypesRequest;
 
 /**
- * Lists all Info Types for the Data Loss Prevention (DLP) API.
- *
- * @param string $category Optional filter to use, empty for ''.
- * @param string $languageCode Optional language code, empty for 'en-US'.
+ * Delete a Data Loss Prevention API job trigger.
+ * @param string $triggerId The name of the trigger to be deleted
  */
-function list_info_types($filter = '', $languageCode = '')
-{
+function delete_trigger($triggerId) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     // Run request
-    $response = $dlp->listInfoTypes([
-        'languageCode' => $languageCode,
-        'filter' => $filter
-    ]);
+    $response = $dlp->deleteJobTrigger($triggerId);
 
     // Print the results
-    print('Info Types:' . PHP_EOL);
-    foreach ($response->getInfoTypes() as $infoType) {
-        printf('  %s (%s)' . PHP_EOL,
-            $infoType->getDisplayName(),
-            $infoType->getName());
-    }
+    print_r('Successfully deleted trigger ' . $triggerId . PHP_EOL);
 }
-# [END dlp_list_info_types]
+# [END dlp_delete_trigger]

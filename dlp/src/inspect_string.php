@@ -18,54 +18,68 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_string]
-use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Cloud\Dlp\V2beta1\ContentItem;
-use Google\Cloud\Dlp\V2beta1\InfoType;
-use Google\Cloud\Dlp\V2beta1\InspectConfig;
-use Google\Cloud\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 
 /**
  * Inspect a string using the Data Loss Prevention (DLP) API.
  *
+ * @param string $callingProject The GCP Project ID to run the API call under
  * @param string $string The text to inspect
+ * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_string(
+    $callingProject,
     $string,
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED,
     $maxFindings = 0)
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to match
-    $usMaleNameInfoType = new InfoType();
-    $usMaleNameInfoType->setName('US_MALE_NAME');
-    $usFemaleNameInfoType = new InfoType();
-    $usFemaleNameInfoType->setName('US_FEMALE_NAME');
-    $infoTypes = [$usMaleNameInfoType, $usFemaleNameInfoType];
+    $personNameInfoType = new InfoType();
+    $personNameInfoType->setName('PERSON_NAME');
+    $usStateInfoType = new InfoType();
+    $usStateInfoType->setName('US_STATE');
+    $infoTypes = [$personNameInfoType, $usStateInfoType];
+
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Whether to include the matching string in the response
     $includeQuote = true;
 
+    // Specify finding limits
+    $limits = new InspectConfig_FindingLimits();
+    $limits->setMaxFindingsPerRequest($maxFindings);
+
     // Create the configuration object
     $inspectConfig = new InspectConfig();
     $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setMaxFindings($maxFindings);
+    $inspectConfig->setLimits($limits);
     $inspectConfig->setInfoTypes($infoTypes);
     $inspectConfig->setIncludeQuote($includeQuote);
 
     $content = new ContentItem();
-    $content->setType('text/plain');
     $content->setValue($string);
 
+    $parent = $dlp->projectName($callingProject);
+
     // Run request
-    $response = $dlp->inspectContent($inspectConfig, [$content]);
+    $response = $dlp->inspectContent($parent, Array(
+        'inspectConfig' => $inspectConfig,
+        'item' => $content
+    ));
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
                     'Likely', 'Very likely'];
 
     // Print the results
-    $findings = $response->getResults()[0]->getFindings();
+    $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
         print('No findings.' . PHP_EOL);
     } else {

@@ -17,44 +17,42 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_datastore]
+# [START inspect_gcs_file]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\DatastoreOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
 use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\InspectJobConfig;
-use Google\Cloud\Dlp\V2\KindExpression;
-use Google\Cloud\Dlp\V2\PartitionId;
 use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\Dlp\V2\Action;
+use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
+use Google\Cloud\Dlp\V2\InspectJobConfig;
 
 /**
- * Inspect Datastore using the Data Loss Prevention (DLP) API.
+ * Inspect a BigQuery table using the Data Loss Prevention (DLP) API.
  *
  * @param string $callingProjectId The project ID to run the API call under
- * @param string $dataProjectId The project ID containing the target Datastore
- *        (This may or may not be equal to $callingProjectId)
+ * @param string $bucketId The name of the bucket where the file resides
+ * @param string $file The path to the file within the bucket to inspect. Can contain wildcards
+ *        e.g. "my-image.*"
  * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $kind The datastore kind to inspect
- * @param string $namespaceId The ID namespace of the Datastore document to inspect
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
-function inspect_datastore(
+function inspect_gcs(
     $callingProjectId,
-    $dataProjectId,
+    $bucketId,
+    $file,
     $topicId,
     $subscriptionId,
-    $kind,
-    $namespaceId,
     $maxFindings = 0)
 {
-    // Instantiate clients
+    // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient([
         'projectId' => $callingProjectId // TODO is this necessary?
@@ -63,9 +61,9 @@ function inspect_datastore(
     // The infoTypes of information to match
     $personNameInfoType = new InfoType();
     $personNameInfoType->setName('PERSON_NAME');
-    $usStateInfoType = new InfoType();
-    $usStateInfoType->setName('US_STATE');
-    $infoTypes = [$personNameInfoType, $usStateInfoType];
+    $creditCardNumberInfoType = new InfoType();
+    $creditCardNumberInfoType->setName('CREDIT_CARD_NUMBER');
+    $infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
@@ -73,28 +71,22 @@ function inspect_datastore(
     // Specify finding limits
     $limits = new InspectConfig_FindingLimits();
     $limits->setMaxFindingsPerRequest($maxFindings);
-    
+
     // Construct items to be inspected
-    $partitionId = new PartitionId();
-    $partitionId->setProjectId($dataProjectId);
-    $partitionId->setNamespaceId($namespaceId);
+    $fileSet = new CloudStorageOptions_FileSet();
+    $fileSet->setUrl('gs://' . $bucketId . '/' . $file);
 
-    $kindExpression = new KindExpression();
-    $kindExpression->setName($kind);
+    $cloudStorageOptions = new CloudStorageOptions();
+    $cloudStorageOptions->setFileSet($fileSet);
 
-    $datastoreOptions = new DatastoreOptions();
-    $datastoreOptions->setPartitionId($partitionId);
-    $datastoreOptions->setKind($kindExpression);
+    $storageConfig = new StorageConfig();
+    $storageConfig->setCloudStorageOptions($cloudStorageOptions);
 
     // Construct the inspect config object
     $inspectConfig = new InspectConfig();
-    $inspectConfig->setInfoTypes($infoTypes);
     $inspectConfig->setMinLikelihood($minLikelihood);
     $inspectConfig->setLimits($limits);
-
-    // Construct the storage config object
-    $storageConfig = new StorageConfig();
-    $storageConfig->setDatastoreOptions($datastoreOptions);
+    $inspectConfig->setInfoTypes($infoTypes);
 
     // Construct the action to run when job completes
     $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
@@ -160,4 +152,4 @@ function inspect_datastore(
             print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_inspect_datastore]
+# [END inspect_gcs_file]

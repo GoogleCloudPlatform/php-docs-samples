@@ -17,84 +17,62 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_datastore]
+# [START numerical_stats]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\DatastoreOptions;
+use Google\Cloud\Dlp\V2\BigQueryOptions;
 use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\InspectJobConfig;
-use Google\Cloud\Dlp\V2\KindExpression;
-use Google\Cloud\Dlp\V2\PartitionId;
+use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
-
+use Google\Cloud\Dlp\V2\Action;
+use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
+use Google\Cloud\Dlp\V2\PrivacyMetric_NumericalStatsConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric;
+use Google\Cloud\Dlp\V2\FieldId;
 /**
- * Inspect Datastore using the Data Loss Prevention (DLP) API.
+ * Computes risk metrics of a column of numbers in a Google BigQuery table.
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $dataProjectId The project ID containing the target Datastore
- *        (This may or may not be equal to $callingProjectId)
  * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $kind The datastore kind to inspect
- * @param string $namespaceId The ID namespace of the Datastore document to inspect
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param string $datasetId The ID of the dataset to inspect
+ * @param string $tableId The ID of the table to inspect
+ * @param string $columnName The name of the (number-type) column to compute risk metrics for, e.g. 'age'
  */
-function inspect_datastore(
+function numerical_stats(
     $callingProjectId,
     $dataProjectId,
     $topicId,
     $subscriptionId,
-    $kind,
-    $namespaceId,
-    $maxFindings = 0)
+    $datasetId,
+    $tableId,
+    $columnName)
 {
-    // Instantiate clients
+    // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient([
         'projectId' => $callingProjectId // TODO is this necessary?
     ]);
 
-    // The infoTypes of information to match
-    $personNameInfoType = new InfoType();
-    $personNameInfoType->setName('PERSON_NAME');
-    $usStateInfoType = new InfoType();
-    $usStateInfoType->setName('US_STATE');
-    $infoTypes = [$personNameInfoType, $usStateInfoType];
+    // Construct risk analysis config
+    $columnField = new FieldId();
+    $columnField->setName($columnName);
 
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+    $statsConfig = new PrivacyMetric_NumericalStatsConfig();
+    $statsConfig->setField($columnField);
 
-    // Specify finding limits
-    $limits = new InspectConfig_FindingLimits();
-    $limits->setMaxFindingsPerRequest($maxFindings);
-    
-    // Construct items to be inspected
-    $partitionId = new PartitionId();
-    $partitionId->setProjectId($dataProjectId);
-    $partitionId->setNamespaceId($namespaceId);
+    $privacyMetric = new PrivacyMetric();
+    $privacyMetric->setNumericalStatsConfig($statsConfig);
 
-    $kindExpression = new KindExpression();
-    $kindExpression->setName($kind);
-
-    $datastoreOptions = new DatastoreOptions();
-    $datastoreOptions->setPartitionId($partitionId);
-    $datastoreOptions->setKind($kindExpression);
-
-    // Construct the inspect config object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setInfoTypes($infoTypes);
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setLimits($limits);
-
-    // Construct the storage config object
-    $storageConfig = new StorageConfig();
-    $storageConfig->setDatastoreOptions($datastoreOptions);
+    // Construct items to be analyzed
+    $bigqueryTable = new BigQueryTable();
+    $bigqueryTable->setProjectId($dataProjectId);
+    $bigqueryTable->setDatasetId($datasetId);
+    $bigqueryTable->setTableId($tableId);
 
     // Construct the action to run when job completes
     $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
@@ -104,11 +82,11 @@ function inspect_datastore(
     $action = new Action();
     $action->setPubSub($pubSubAction);
 
-    // Construct inspect job config to run
-    $inspectJob = new InspectJobConfig();
-    $inspectJob->setInspectConfig($inspectConfig);
-    $inspectJob->setStorageConfig($storageConfig);
-    $inspectJob->setActions([$action]);
+    // Construct risk analysis job config to run
+    $riskJob = new RiskAnalysisJobConfig();
+    $riskJob->setPrivacyMetric($privacyMetric);
+    $riskJob->setSourceTable($bigqueryTable);
+    $riskJob->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
     $topic = $pubsub->topic($topicId);
@@ -117,7 +95,7 @@ function inspect_datastore(
     // Submit request
     $parent = $dlp->projectName($callingProjectId);
     $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJob
+        'riskJob' => $riskJob
     ]);
 
     // Poll via Pub/Sub until job finishes
@@ -136,18 +114,41 @@ function inspect_datastore(
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
 
+    // Helper function to convert Protobuf values to strings
+    // TODO is there a better way?
+    $value_to_string = function ($value) {
+        return $value->getIntegerValue() ?:
+            $value->getFloatValue() ?:
+            $value->getStringValue() ?:
+            $value->getBooleanValue() ?:
+            $value->getTimestampValue() ?:
+            $value->getTimeValue() ?:
+            $value->getDateValue() ?:
+            $value->getDayOfWeekValue();
+    };
+
     // Print finding counts
     print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
     switch ($job->getState()) {
         case DlpJob_JobState::DONE:
-            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-            if (count($infoTypeStats) === 0) {
-                print_r('No findings.' . PHP_EOL);
-            } else {
-                foreach ($infoTypeStats as $infoTypeStat) {
-                    print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of infoType ' .  $infoTypeStat->getInfoType()->getName() . PHP_EOL);
+            $results = $job->getRiskDetails()->getNumericalStatsResult();
+            print_r('Value range: [' .
+                $value_to_string($results->getMinValue()) .
+                ', ' .
+                $value_to_string($results->getMaxValue()) .
+                ']' . PHP_EOL
+            );
+
+            // Only print unique values
+            $lastValue = null;
+            foreach ($results->getQuantileValues() as $percent => $quantileValue) {
+                $value = $value_to_string($quantileValue);
+                if ($value != $lastValue) {
+                    print_r('Value at ' . $percent . ' quantile: ' . $value . PHP_EOL);
+                    $lastValue = $value;
                 }
             }
+            
             break;
         case DlpJob_JobState::ERROR:
             $errors = $job->getErrors();
@@ -160,4 +161,4 @@ function inspect_datastore(
             print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_inspect_datastore]
+# [END numerical_stats]

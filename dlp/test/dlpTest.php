@@ -24,52 +24,84 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class dlpTest extends \PHPUnit_Framework_TestCase
 {
+    public function checkEnv($var)
+    {
+        if (!getenv($var)) {
+            $this->markTestSkipped('Set the ' . $var . ' environment variable');
+        }
+    }
+
     public function setUp()
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
+        $this->checkEnv('GOOGLE_APPLICATION_CREDENTIALS');
     }
 
     public function testInspectDatastore()
     {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
+
         $output = $this->runCommand('inspect-datastore', [
-            'kind' => 'Book',
-            'project' => getenv('GOOGLE_PROJECT_ID'),
+            'kind' => 'Person',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'namespace' => 'DLP'
         ]);
-        $this->assertContains('US_MALE_NAME', $output);
+        $this->assertContains('PERSON_NAME', $output);
     }
 
     public function testInspectBigquery()
     {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
+
         $output = $this->runCommand('inspect-bigquery', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'project' => getenv('GOOGLE_PROJECT_ID'),
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'data-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION')
         ]);
-        $this->assertContains('CREDIT_CARD_NUMBER', $output);
+        $this->assertContains('PERSON_NAME', $output);
+    }
+
+    public function testInspectGCS()
+    {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
+        $this->checkEnv('DLP_BUCKET');
+
+        $output = $this->runCommand('inspect-gcs', [
+            'bucket-id' => getEnv('DLP_BUCKET'),
+            'file' => 'harmful.csv',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION')
+        ]);
+        $this->assertContains('PERSON_NAME', $output);
     }
 
     public function testInspectFile()
     {
         // inspect a text file with results
         $output = $this->runCommand('inspect-file', [
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'path' => __DIR__ . '/data/test.txt'
         ]);
-        $this->assertContains('US_MALE_NAME', $output);
-        $this->assertContains('Very likely', $output);
+        $this->assertContains('PERSON_NAME', $output);
 
         // inspect an image file with results
         $output = $this->runCommand('inspect-file', [
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'path' => __DIR__ . '/data/test.png'
         ]);
-        // Temporary disabling the asserts
-        // $this->assertContains('US_MALE_NAME', $output);
-        // $this->assertContains('Very likely', $output);
+        $this->assertContains('PERSON_NAME', $output);
 
         // inspect a file with no results
         $output = $this->runCommand('inspect-file', [
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'path' => __DIR__ . '/data/harmless.txt'
         ]);
         $this->assertContains('No findings', $output);
@@ -79,52 +111,172 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     {
         // inspect a string with results
         $output = $this->runCommand('inspect-string', [
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'string' => 'The name Robert is very common.'
         ]);
-        $this->assertContains('US_MALE_NAME', $output);
-        $this->assertContains('Very likely', $output);
+        $this->assertContains('PERSON_NAME', $output);
 
         // inspect a string with no results
         $output = $this->runCommand('inspect-string', [
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'string' => 'The name Zolo is not very common.'
         ]);
         $this->assertContains('No findings', $output);
-    }
-
-    public function testListCategories()
-    {
-        $output = $this->runCommand('list-categories');
-        $this->assertContains('Personally identifiable information', $output);
     }
 
     public function testListInfoTypes()
     {
         // list all info types
         $output = $this->runCommand('list-info-types');
+
         $this->assertContains('US_DEA_NUMBER', $output);
         $this->assertContains('AMERICAN_BANKERS_CUSIP_ID', $output);
 
-        // list info types by category
+        // list info types with a filter
         $output = $this->runCommand('list-info-types', [
-            'category' => 'GOVERNMENT'
+            'filter' => 'supported_by=RISK_ANALYSIS'
         ]);
-
-        $this->assertContains('US_DEA_NUMBER', $output);
+        $this->assertContains('AGE', $output);
         $this->assertNotContains('AMERICAN_BANKERS_CUSIP_ID', $output);
     }
 
-    public function testRedactString()
+    public function testRedactImage()
     {
-        $output = $this->runCommand('redact-string', [
-            'string' => 'The name Robert is very common.'
+        $output = $this->runCommand('redact-image', [
+            'image-path' => dirname(__FILE__) . '/data/test.png',
+            'output-path' => dirname(__FILE__) . '/data/redact.output.png'
         ]);
-        $this->assertContains('The name xxx is very common', $output);
+        $this->assertEquals(
+            sha1_file(dirname(__FILE__) . '/data/redact.output.png'),
+            sha1_file(dirname(__FILE__) . '/data/redact.correct.png')
+        );
+    }
 
-
-        $output = $this->runCommand('redact-string', [
-            'string' => 'The name Zolo is not very common.'
+    public function testDeidentifyMask()
+    {
+        $output = $this->runCommand('deidentify-mask', [
+            'string' => 'My SSN is 372819127.',
+            'number-to-mask' => 5
         ]);
-        $this->assertContains('The name Zolo is not very common', $output);
+        $this->assertContains('My SSN is xxxxx9127', $output);
+    }
+
+    public function testDeidReidFPE()
+    {
+        $this->markTestSkipped();
+        $this->checkEnv('DLP_DEID_KEY_NAME');
+        $this->checkEnv('DLP_DEID_WRAPPED_KEY');
+
+        $output = $this->runCommand('deidentify-fpe', [
+            'string' => 'My SSN is 372819127.',
+            'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
+            'key-name' => getEnv('DLP_DEID_KEY_NAME')
+        ]);
+        $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $output);
+    }
+
+    public function testTriggers()
+    {
+        $this->checkEnv('DLP_BUCKET');
+
+        $bucketName = getenv('DLP_BUCKET');
+        $displayName = uniqid("My trigger display name ");
+        $description = uniqid("My trigger description ");
+        $triggerId = uniqid('my-php-test-trigger-');
+        $fullTriggerId = 'projects/' . getEnv('GOOGLE_PROJECT_ID') . '/jobTriggers/' . $triggerId;
+
+        $output = $this->runCommand('create-trigger', [
+            'bucket-name' => $bucketName,
+            'display-name' => $displayName,
+            'description' => $description,
+            'trigger-id' => $triggerId,
+            'frequency' => 1
+        ]);
+        $this->assertContains('Successfully created trigger ' . $triggerId, $output);
+
+        $output = $this->runCommand('list-triggers', []);
+        $this->assertContains('Trigger ' . $fullTriggerId, $output);
+        $this->assertContains('Display Name: ' . $displayName, $output);
+        $this->assertContains('Description: ' . $description, $output);
+
+        $output = $this->runCommand('delete-trigger', [
+            'trigger-id' => $fullTriggerId
+        ]);
+        $this->assertContains('Successfully deleted trigger ' . $fullTriggerId, $output);
+    }
+
+    public function testJobs()
+    {
+        // TODO createJob() for this
+        $this->markTestSkipped();
+        $jobId = '';
+
+        $output = $this->runCommand('list-jobs', [
+            'filter' => 'state=DONE'
+        ]);
+
+        $output = $this->runCommand('delete-job', [
+            'job-id' => $jobId
+        ]);
+        $this->assertContains('Successfully deleted job ' . $jobId, $output);
+    }
+
+    public function testInspectTemplates() {
+        $displayName = uniqid("My inspect template display name ");
+        $description = uniqid("My inspect template description ");
+        $templateId = uniqid('my-php-test-inspect-template-');
+        $fullTemplateId = 'projects/' . getEnv('GOOGLE_PROJECT_ID') . '/inspectTemplates/' . $templateId;
+
+        $output  = $this->runCommand('create-inspect-template', [
+            'template-id' => $templateId,
+            'display-name' => $displayName,
+            'description' => $description
+        ]);
+        $this->assertContains('Successfully created template ' . $fullTemplateId, $output);
+
+        $output = $this->runCommand('list-inspect-templates', []);
+        $this->assertContains('Template ' . $fullTemplateId, $output);
+        $this->assertContains('Display Name: ' . $displayName, $output);
+        $this->assertContains('Description: ' . $description, $output);
+
+        $output = $this->runCommand('delete-inspect-template', [
+            'template-id' => $fullTemplateId
+        ]);
+        $this->assertContains('Successfully deleted template ' . $fullTemplateId, $output);
+    }
+
+    public function testRiskAnalysis() {
+        $this->checkEnv('DLP_SUBSCRIPTION');
+        $this->checkEnv('DLP_BUCKET');
+
+        $output = $this->runCommand('numerical-stats', [
+            'dataset' => 'integration_tests_dlp',
+            'table' => 'harmful',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'data-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'column-name' => 'Age'
+        ]);
+
+        $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
+        $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
+
+        $output = $this->runCommand('categorical-stats', [
+            'dataset' => 'integration_tests_dlp',
+            'table' => 'harmful',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'data-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'column-name' => 'Gender'
+        ]);
+
+        $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
+        $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
+        $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
+
+        
     }
 
     private function runCommand($commandName, $args = [])
