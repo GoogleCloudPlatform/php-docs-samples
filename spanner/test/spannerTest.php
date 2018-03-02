@@ -99,6 +99,22 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertData
      */
+    public function testBatchQueryData()
+    {
+        $output = $this->runCommand('batch-query-data');
+        $this->assertContains('SingerId: 1, FirstName: Marc, LastName: Richards', $output);
+        $this->assertContains('SingerId: 2, FirstName: Catalina, LastName: Smith', $output);
+        $this->assertContains('SingerId: 3, FirstName: Alice, LastName: Trentor', $output);
+        $this->assertContains('SingerId: 4, FirstName: Lea, LastName: Martin', $output);
+        $this->assertContains('SingerId: 5, FirstName: David, LastName: Lomond', $output);
+        $this->assertContains('Total Partitions:', $output);
+        $this->assertContains('Total Records: 5', $output);
+        $this->assertContains('Average Records Per Partition:', $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
     public function testReadData()
     {
         $output = $this->runCommand('read-data');
