@@ -17,9 +17,10 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_bigquery]
+# [START inspect_gcs_file]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
@@ -36,20 +37,19 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
  * Inspect a BigQuery table using the Data Loss Prevention (DLP) API.
  *
  * @param string $callingProjectId The project ID to run the API call under
- * @param string $dataProjectId The project ID containing the target Datastore
+ * @param string $bucketId The name of the bucket where the file resides
+ * @param string $file The path to the file within the bucket to inspect. Can contain wildcards
+ *        e.g. "my-image.*"
  * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId The ID of the dataset to inspect
- * @param string $tableId The ID of the table to inspect
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
-function inspect_bigquery(
+function inspect_gcs(
     $callingProjectId,
-    $dataProjectId,
+    $bucketId,
+    $file,
     $topicId,
     $subscriptionId,
-    $datasetId,
-    $tableId,
     $maxFindings = 0)
 {
     // Instantiate a client.
@@ -73,16 +73,14 @@ function inspect_bigquery(
     $limits->setMaxFindingsPerRequest($maxFindings);
 
     // Construct items to be inspected
-    $bigqueryTable = new BigQueryTable();
-    $bigqueryTable->setProjectId($dataProjectId);
-    $bigqueryTable->setDatasetId($datasetId);
-    $bigqueryTable->setTableId($tableId);
+    $fileSet = new CloudStorageOptions_FileSet();
+    $fileSet->setUrl('gs://' . $bucketId . '/' . $file);
 
-    $bigQueryOptions = new BigQueryOptions();
-    $bigQueryOptions->setTableReference($bigqueryTable);
+    $cloudStorageOptions = new CloudStorageOptions();
+    $cloudStorageOptions->setFileSet($fileSet);
 
     $storageConfig = new StorageConfig();
-    $storageConfig->setBigQueryOptions($bigQueryOptions);
+    $storageConfig->setCloudStorageOptions($cloudStorageOptions);
 
     // Construct the inspect config object
     $inspectConfig = new InspectConfig();
@@ -154,4 +152,4 @@ function inspect_bigquery(
             print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END inspect_bigquery]
+# [END inspect_gcs_file]
