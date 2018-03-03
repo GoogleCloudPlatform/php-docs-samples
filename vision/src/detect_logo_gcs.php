@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,21 @@
 // [START logo_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_logo_gcs($projectId, $bucketName, $objectName)
+function detect_logo_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['LOGO_DETECTION']);
-    $result = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->logoDetection($path);
+    $logos = $response->getLogoAnnotations();
 
-    // print the response
-    print("Logos:\n");
-    foreach ((array) $result->logos() as $logo) {
-        print($logo->description() . PHP_EOL);
+    printf('%d logos found:' . PHP_EOL, count($logos));
+    foreach ($logos as $logo) {
+        print($logo->getDescription() . PHP_EOL);
     }
 }
 // [END logo_detection_gcs]

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,50 +18,50 @@
 // [START vision_fulltext_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
-function detect_document_text($projectId, $path)
+function detect_document_text($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    # Annotate the image
-    $image = $vision->image(
-        file_get_contents($path), ['DOCUMENT_TEXT_DETECTION']);
-    $annotation = $vision->annotate($image);
+    # annotate the image
+    $image = file_get_contents($path);
+    $response = $imageAnnotator->documentTextDetection($image);
+    $annotation = $response->getFullTextAnnotation();
 
-    # Print out document text
-    $document = $annotation->fullText();
-    $text = $document->text();
-    printf('Document text: %s' . PHP_EOL, $text);
-
-    # Print out more detailed and structured information about document text
-    foreach ($document->pages() as $page) {
-        foreach ($page['blocks'] as $block) {
-            $block_text = '';
-            foreach ($block['paragraphs'] as $paragraph) {
-                foreach ($paragraph['words'] as $word) {
-                    foreach ($word['symbols'] as $symbol) {
-                        $block_text .= $symbol['text'];
+    # print out detailed and structured information about document text
+    if ($annotation) {
+        foreach ($annotation->getPages() as $page) {
+            foreach ($page->getBlocks() as $block) {
+                $block_text = '';
+                foreach ($block->getParagraphs() as $paragraph) {
+                    foreach ($paragraph->getWords() as $word) {
+                        foreach ($word->getSymbols() as $symbol) {
+                            $block_text .= $symbol->getText();
+                        }
+                        $block_text .= ' ';
                     }
-                    $block_text .= ' ';
+                    $block_text .= "\n";
                 }
-                $block_text .= "\n";
+                printf('Block content: %s', $block_text);
+                printf('Block confidence: %f' . PHP_EOL, 
+                    $block->getConfidence());
+
+                # get bounds
+                $vertices = $block->getBoundingBox()->getVertices();
+                $bounds = [];
+                foreach ($vertices as $vertex) {
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), 
+                        $vertex->getY());
+                }
+                print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+                print(PHP_EOL);
             }
-            printf('Block text: %s' . PHP_EOL, $block_text);
-            printf('Block bounds:' . PHP_EOL);
-            foreach ($block['boundingBox']['vertices'] as $vertice) {
-                printf('X: %s Y: %s' . PHP_EOL,
-                    isset($vertice['x']) ? $vertice['x'] : 'N/A',
-                    isset($vertice['y']) ? $vertice['y'] : 'N/A'
-                );
-            }
-            printf(PHP_EOL);
         }
+    } else {
+        print('No text found' . PHP_EOL);
     }
 }
 // [END vision_fulltext_detection]

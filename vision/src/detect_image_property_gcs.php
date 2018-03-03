@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,29 @@
  * limitations under the License.
  */
 
-# [START image_property_detection_gcs]
+// [START image_property_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_image_property_gcs($projectId, $bucketName, $objectName)
+function detect_image_property_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['IMAGE_PROPERTIES']);
-    $result = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->imagePropertiesDetection($path);
+    $props = $response->getImagePropertiesAnnotation();
 
-    // print the response
-    print("Properties:\n");
-    foreach ($result->imageProperties()->colors() as $color) {
-        $rgb = $color['color'];
-        printf("red:%s\n", $rgb['red']);
-        printf("green:%s\n", $rgb['green']);
-        printf("blue:%s\n\n", $rgb['blue']);
+    print("Properties:" . PHP_EOL);
+    foreach ($props->getDominantColors()->getColors() as $colorInfo) {
+        printf("Fraction: %s" .PHP_EOL, $colorInfo->getPixelFraction());
+        $color = $colorInfo->getColor();
+        printf("Red: %s" . PHP_EOL, $color->getRed());
+        printf("Green: %s" . PHP_EOL, $color->getGreen());
+        printf("Blue: %s" . PHP_EOL, $color->getBlue());
+        print(PHP_EOL);
     }
 }
-# [END image_property_detection]
+// [END image_property_detection]

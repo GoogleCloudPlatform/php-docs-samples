@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,24 @@
  * limitations under the License.
  */
 
-# [START landmark_detection_gcs]
+// [START landmark_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_landmark_gcs($projectId, $bucketName, $objectName)
+function detect_landmark_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['LANDMARK_DETECTION']);
-    $result = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->landmarkDetection($path);
+    $landmarks = $response->getLandmarkAnnotations();
 
-    // print the response
-    print("Landmarks:\n");
-    foreach ((array) $result->landmarks() as $landmark) {
-        print($landmark->description() . PHP_EOL);
+    printf('%d landmark found:' . PHP_EOL, count($landmarks));
+    foreach ($landmarks as $landmark) {
+        print($landmark->getDescription() . PHP_EOL);
     }
 }
-# [END landmark_detection_gcs]
+// [END landmark_detection_gcs]

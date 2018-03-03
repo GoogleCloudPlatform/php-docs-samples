@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,30 @@
 // [START text_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_text_gcs($projectId, $bucketName, $objectName)
+function detect_text_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['TEXT_DETECTION']);
-    $result = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->textDetection($path);
+    $texts = $response->getTextAnnotations();
 
-    // print the response
-    print("Texts:\n");
-    foreach ((array) $result->text() as $text) {
-        print($text->description() . PHP_EOL);
+    printf('%d texts found:' . PHP_EOL, count($texts));
+    foreach ($texts as $text) {
+
+        print($text->getDescription() . PHP_EOL);
+
+        # get bounds
+        $vertices = $text->getBoundingPoly()->getVertices();
+        $bounds = [];
+        foreach ($vertices as $vertex) {
+            $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+        }
+        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
     }
 }
 // [END text_detection]

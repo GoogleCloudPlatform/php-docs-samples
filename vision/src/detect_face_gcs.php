@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,44 @@
  * limitations under the License.
  */
 
-# [START face_detection_gcs]
+// [START face_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_face_gcs($projectId, $bucketName, $objectName)
+function detect_face_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['FACE_DETECTION']);
-    $result = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->faceDetection($path);
+    $faces = $response->getFaceAnnotations();
 
-    // print the response
-    print("Faces:\n");
-    foreach ((array) $result->faces() as $face) {
-        printf("Anger: %s\n", $face->isAngry() ? 'yes' : 'no');
-        printf("Joy: %s\n", $face->isJoyful() ? 'yes' : 'no');
-        printf("Surprise: %s\n\n", $face->isSurprised() ? 'yes' : 'no');
+    # names of likelihood from google.cloud.vision.enums
+    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 
+    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+
+    printf("%d faces found:" . PHP_EOL, count($faces));
+    foreach ($faces as $face) {
+        $anger = $face->getAngerLikelihood();
+        printf("Anger: %s" . PHP_EOL, $likelihoodName[$anger]);
+
+        $joy = $face->getJoyLikelihood();
+        printf("Joy: %s" . PHP_EOL, $likelihoodName[$joy]);
+
+        $surprise = $face->getSurpriseLikelihood();
+        printf("Surprise: %s" . PHP_EOL, $likelihoodName[$surprise]);
+
+        # get bounds
+        $vertices = $face->getBoundingPoly()->getVertices();
+        $bounds = [];
+        foreach ($vertices as $vertex) {
+            $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+        }
+        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+        print(PHP_EOL);
     }
-    return $result;
 }
-# [END face_detection_gcs]
+// [END face_detection_gcs]

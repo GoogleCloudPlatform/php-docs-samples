@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,55 +15,53 @@
  * limitations under the License.
  */
 
-# [START vision_fulltext_detection_gcs]
+// [START vision_fulltext_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_document_text_gcs($projectId, $bucketName, $objectName)
+function detect_document_text_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    # Fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['DOCUMENT_TEXT_DETECTION']);
-    $annotation = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->documentTextDetection($path);
+    $annotation = $response->getFullTextAnnotation();
 
-    # Print out document text
-    $document = $annotation->fullText();
-    $text = $document->text();
-    printf('Document text: %s' . PHP_EOL, $text);
-
-    # Print out more detailed and structured information about document text
-    foreach ($document->pages() as $page) {
-        foreach ($page['blocks'] as $block) {
-            $block_text = '';
-            foreach ($block['paragraphs'] as $paragraph) {
-                foreach ($paragraph['words'] as $word) {
-                    foreach ($word['symbols'] as $symbol) {
-                        $block_text .= $symbol['text'];
+    # print out detailed and structured information about document text
+    if ($annotation) {
+        foreach ($annotation->getPages() as $page) {
+            foreach ($page->getBlocks() as $block) {
+                $block_text = '';
+                foreach ($block->getParagraphs() as $paragraph) {
+                    foreach ($paragraph->getWords() as $word) {
+                        foreach ($word->getSymbols() as $symbol) {
+                            $block_text .= $symbol->getText();
+                        }
+                        $block_text .= ' ';
                     }
-                    $block_text .= ' ';
+                    $block_text .= "\n";
                 }
-                $block_text .= "\n";
+                printf('Block content: %s', $block_text);
+                printf('Block confidence: %f' . PHP_EOL, 
+                    $block->getConfidence());
+
+                # get bounds
+                $vertices = $block->getBoundingBox()->getVertices();
+                $bounds = [];
+                foreach ($vertices as $vertex) {
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), 
+                        $vertex->getY());
+                }
+                print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+
+                print(PHP_EOL);
             }
-            printf('Block text: %s' . PHP_EOL, $block_text);
-            printf('Block bounds:' . PHP_EOL);
-            foreach ($block['boundingBox']['vertices'] as $vertice) {
-                printf('X: %s Y: %s' . PHP_EOL, $vertice['x'], $vertice['y']);
-            }
-            printf(PHP_EOL);
         }
+    } else {
+        print('No text found' . PHP_EOL);
     }
 }
-# [END vision_fulltext_detection_gcs]
+// [END vision_fulltext_detection_gcs]
