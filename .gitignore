@@ -10,3 +10,4 @@ credentials.*
 .vscode/
 export-secrets.sh
 iap/composer.lock
+.DS_Store
