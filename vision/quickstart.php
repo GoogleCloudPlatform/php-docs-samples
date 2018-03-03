@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,34 +16,31 @@
  */
 
 # [START vision_quickstart]
-# Includes the autoloader for libraries installed with composer
+# includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-# Imports the Google Cloud client library
-use Google\Cloud\Vision\VisionClient;
+# imports the Google Cloud client library
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-# Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
+# instantiates a client
+$imageAnnotator = new ImageAnnotatorClient();
 
-# Instantiates a client
-$vision = new VisionClient([
-    'projectId' => $projectId
-]);
-
-# The name of the image file to annotate
+# the name of the image file to annotate
 $fileName = 'test/data/wakeupcat.jpg';
 
-# Prepare the image to be annotated
-$image = $vision->image(fopen($fileName, 'r'), [
-    'LABEL_DETECTION'
-]);
+# prepare the image to be annotated
+$image = file_get_contents($path);
 
-# Performs label detection on the image file
-$labels = $vision->annotate($image)->labels();
+# performs label detection on the image file
+$labels = $imageAnnotator->labelDetection($image)->getLabelAnnotations();
 
-echo "Labels:\n";
-foreach ($labels as $label) {
-    echo $label->description() . "\n";
+if ($labels) {
+    echo("Labels:" . PHP_EOL);
+    foreach ($labels as $label) {
+        echo($label->getDescription() . PHP_EOL);
+    }
+} else {
+    echo('No label found' . PHP_EOL);
 }
 # [END vision_quickstart]
 return $labels;

@@ -23,18 +23,17 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
 
-# Includes the autoloader for libraries installed with composer
+# includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application('Vision');
 
 $inputDefinition = new InputDefinition([
     new InputArgument('path', InputArgument::REQUIRED, 'The image to examine.'),
-    new InputOption('project', 'p', InputOption::VALUE_REQUIRED, 'The project id'),
     new InputArgument('output', InputArgument::OPTIONAL, 'The output file'),
 ]);
 
-// Create Detect Label command
+// detect label command
 $application->add((new Command('label'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect labels in an image using Google Cloud Vision API')
@@ -47,18 +46,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_label_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_label_gcs($path);
         } else {
-            detect_label($projectId, $path);
+            detect_label($path);
         }
     })
 );
 
-// Create Detect Text command
+// detect text command
 $application->add((new Command('text'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect text in an image using '
@@ -72,18 +69,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_text_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_text_gcs($path);
         } else {
-            detect_text($projectId, $path);
+            detect_text($path);
         }
     })
 );
 
-// Create Detect Face command
+// detect face command
 $application->add((new Command('face'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect faces in an image using '
@@ -97,57 +92,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            $result = detect_face_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_face_gcs($path);
         } else {
-            $result = detect_face($projectId, $path);
-        }
-        $imageCreateFunc = [
-            'png' => 'imagecreatefrompng',
-            'gd' => 'imagecreatefromgd',
-            'gif' => 'imagecreatefromgif',
-            'jpg' => 'imagecreatefromjpeg',
-            'jpeg' => 'imagecreatefromjpeg',
-        ];
-        $imageWriteFunc = [
-            'png' => 'imagepng',
-            'gd' => 'imagegd',
-            'gif' => 'imagegif',
-            'jpg' => 'imagejpeg',
-            'jpeg' => 'imagejpeg',
-        ];
-        if (
-            isset($result->info()['faceAnnotations'])
-            && $outFile = $input->getArgument('output')
-        ) {
-            copy($path, $outFile);
-            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-            if (!in_array($ext, array_keys($imageCreateFunc))) {
-                throw new \Exception('Unsupported image extension');
-            }
-            $outputImage = call_user_func($imageCreateFunc[$ext], $outFile);
-            # [START highlight_image]
-            foreach ($result->info()['faceAnnotations'] as $annotation) {
-                if (isset($annotation['boundingPoly'])) {
-                    $verticies = $annotation['boundingPoly']['vertices'];
-                    $x1 = isset($verticies[0]['x']) ? $verticies[0]['x'] : 0;
-                    $y1 = isset($verticies[0]['y']) ? $verticies[0]['y'] : 0;
-                    $x2 = isset($verticies[2]['x']) ? $verticies[2]['x'] : 0;
-                    $y2 = isset($verticies[2]['y']) ? $verticies[2]['y'] : 0;
-                    imagerectangle($outputImage, $x1, $y1, $x2, $y2, 0x00ff00);
-                }
-            }
-            # [END highlight_image]
-            call_user_func($imageWriteFunc[$ext], $outputImage, $outFile);
-            printf('Output image written to %s' . PHP_EOL, $outFile);
+            detect_face($path);
         }
     })
 );
 
-// Create Detect Landmark command
+// detect landmark command
 $application->add((new Command('landmark'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect landmarks in an image using '
@@ -161,18 +115,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_landmark_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_landmark_gcs($path);
         } else {
-            detect_landmark($projectId, $path);
+            detect_landmark($path);
         }
     })
 );
 
-// Create Detect Logo command
+// detect logo command
 $application->add((new Command('logo'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect logos in an image using '
@@ -186,18 +138,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_logo_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_logo_gcs($path);
         } else {
-            detect_logo($projectId, $path);
+            detect_logo($path);
         }
     })
 );
 
-// Detect Safe Search command
+// detect safe search command
 $application->add((new Command('safe-search'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect adult content in an image using '
@@ -211,18 +161,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_safe_search_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_safe_search_gcs($path);
         } else {
-            detect_safe_search($projectId, $path);
+            detect_safe_search($path);
         }
     })
 );
 
-// Detect Image Property command
+// detect image property command
 $application->add((new Command('property'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect image proerties in an image using '
@@ -236,18 +184,16 @@ using the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_image_property_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_image_property_gcs($path);
         } else {
-            detect_image_property($projectId, $path);
+            detect_image_property($path);
         }
     })
 );
 
-// Detect Crop Hints command
+// detect crop hints command
 $application->add((new Command('crop-hints'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect crop hints in an image using '
@@ -261,18 +207,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_crop_hints_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_crop_hints_gcs($path);
         } else {
-            detect_crop_hints($projectId, $path);
+            detect_crop_hints($path);
         }
     })
 );
 
-// Detect Document Text command
+// detect document text command
 $application->add((new Command('document-text'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect document text in an image using '
@@ -286,18 +230,16 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_document_text_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_document_text_gcs($path);
         } else {
-            detect_document_text($projectId, $path);
+            detect_document_text($path);
         }
     })
 );
 
-// Detect Web command
+// detect web command
 $application->add((new Command('web'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect web references to an image using '
@@ -311,13 +253,34 @@ the Google Cloud Vision API.
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
         $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path, $matches)) {
-            list($bucketName, $objectName) = array_slice($matches, 1);
-            detect_web_gcs($projectId, $bucketName, $objectName);
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_web_gcs($path);
         } else {
-            detect_web($projectId, $path);
+            detect_web($path);
+        }
+    })
+);
+
+// detect web with geo command
+$application->add((new Command('web-geo'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect web entities to an image with geo metadata '
+                . 'using Google Cloud Vision API')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command prints web entities to an image with 
+geo metadata using the Google Cloud Vision API.
+
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $path = $input->getArgument('path');
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_web_geo_gcs($path);
+        } else {
+            detect_web_geo($path);
         }
     })
 );

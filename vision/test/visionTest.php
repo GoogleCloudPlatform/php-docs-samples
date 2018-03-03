@@ -74,7 +74,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/faulkner.jpg';
         $output = $this->runCommand('text', $path);
-        $this->assertContains("Texts:\n", $output);
+        $this->assertContains('0 texts found', $output);
+    }
+
+    public function testTextCommandWithImageLackingTextGcs()
+    {
+        $this->requireCloudStorage();
+
+        $path = 'gs://' . $this->bucketName . '/faulkner.jpg';
+        $output = $this->runCommand('text', $path);
+        $this->assertContains('0 texts found', $output);
     }
 
     public function testFaceCommand()
@@ -101,28 +110,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runCommand('face', $path);
-        $this->assertContains("Faces:\n", $output);
+        $this->assertContains('0 faces found', $output);
     }
 
-    public function testFaceCommandWithOutput()
+    public function testFaceCommandWithImageLackingFacesGcs()
     {
-        $path = __DIR__ . '/data/face.png';
-        $output_file = sys_get_temp_dir() . '/face.png';
-        $output = $this->runCommand('face', $path, $output_file);
-        $this->assertContains('Anger: ', $output);
-        $this->assertContains('Joy: ', $output);
-        $this->assertContains('Surprise: ', $output);
-        $this->assertContains('Output image written to ' . $output_file, $output);
-        $this->assertTrue(file_exists($output_file));
-    }
+        $this->requireCloudStorage();
 
-    public function testFaceCommandWithImageLackingFacesAndOutput()
-    {
-        $path = __DIR__ . '/data/tower.jpg';
-        $output_file = sys_get_temp_dir() . '/tower.jpg';
-        $output = $this->runCommand('face', $path, $output_file);
-        $this->assertContains("Faces:\n", $output);
-        $this->assertFalse(file_exists($output_file));
+        $path = 'gs://' . $this->bucketName . '/tower.jpg';
+        $output = $this->runCommand('face', $path);
+        $this->assertContains('0 faces found', $output);
     }
 
     public function testLandmarkCommand()
@@ -145,7 +142,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/faulkner.jpg';
         $output = $this->runCommand('landmark', $path);
-        $this->assertContains("Landmarks:\n", $output);
+        $this->assertContains('0 landmark found', $output);
+    }
+
+    public function testLandmarkCommandWithImageLackingLandmarksGcs()
+    {
+        $this->requireCloudStorage();
+
+        $path = 'gs://' . $this->bucketName . '/faulkner.jpg';
+        $output = $this->runCommand('landmark', $path);
+        $this->assertContains('0 landmark found', $output);
     }
 
     public function testLogoCommand()
@@ -168,7 +174,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runCommand('logo', $path);
-        $this->assertContains("Logos:\n", $output);
+        $this->assertContains('0 logos found', $output);
+    }
+
+    public function testLogoCommandWithImageLackingLogoGcs()
+    {
+        $this->requireCloudStorage();
+
+        $path = 'gs://' . $this->bucketName . '/tower.jpg';
+        $output = $this->runCommand('logo', $path);
+        $this->assertContains('0 logos found', $output);
     }
 
     public function testSafeSearchCommand()
@@ -176,6 +191,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/data/logo.jpg';
         $output = $this->runCommand('safe-search', $path);
         $this->assertContains('Adult:', $output);
+        $this->assertContains('Racy:', $output);
     }
 
     public function testSafeSearchCommandGcs()
@@ -185,15 +201,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = 'gs://' . $this->bucketName . '/logo.jpg';
         $output = $this->runCommand('safe-search', $path);
         $this->assertContains('Adult:', $output);
+        $this->assertContains('Racy:', $output);
     }
 
     public function testImagePropertyCommand()
     {
         $path = __DIR__ . '/data/logo.jpg';
         $output = $this->runCommand('property', $path);
-        $this->assertContains('red:', $output);
-        $this->assertContains('green:', $output);
-        $this->assertContains('blue:', $output);
+        $this->assertContains('Red:', $output);
+        $this->assertContains('Green:', $output);
+        $this->assertContains('Blue:', $output);
     }
 
     public function testImagePropertyCommandGcs()
@@ -202,21 +219,21 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/logo.jpg';
         $output = $this->runCommand('property', $path);
-        $this->assertContains('red:', $output);
-        $this->assertContains('green:', $output);
-        $this->assertContains('blue:', $output);
+        $this->assertContains('Red:', $output);
+        $this->assertContains('Green:', $output);
+        $this->assertContains('Blue:', $output);
     }
 
-    # Tests for Vision 1.1 Features
+    # tests for Vision 1.1 features
     public function testCropHintsCommand()
     {
         $path = __DIR__ . '/data/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', $path);
-        $this->assertContains('Crop Hints:', $output);
-        $this->assertContains('X: 0 Y: 0', $output);
-        $this->assertContains('X: 599 Y: 0', $output);
-        $this->assertContains('X: 599 Y: 475', $output);
-        $this->assertContains('X: 0 Y: 475', $output);
+        $this->assertContains('Crop hints:', $output);
+        $this->assertContains('(0,0)', $output);
+        $this->assertContains('(599,0)', $output);
+        $this->assertContains('(599,475)', $output);
+        $this->assertContains('(0,475)', $output);
     }
 
     public function testCropHintsCommandGcs()
@@ -225,22 +242,21 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', $path);
-        $this->assertContains('Crop Hints:', $output);
-        $this->assertContains('X: 0 Y: 0', $output);
-        $this->assertContains('X: 599 Y: 0', $output);
-        $this->assertContains('X: 599 Y: 475', $output);
-        $this->assertContains('X: 0 Y: 475', $output);
+        $this->assertContains('Crop hints:', $output);
+        $this->assertContains('(0,0)', $output);
+        $this->assertContains('(599,0)', $output);
+        $this->assertContains('(599,475)', $output);
+        $this->assertContains('(0,475)', $output);
     }
 
     public function testDocumentTextCommand()
     {
         $path = __DIR__ . '/data/text.jpg';
         $output = $this->runCommand('document-text', $path);
-        $this->assertContains('Document text:', $output);
         $this->assertContains('the PS4 will automatically restart', $output);
         $this->assertContains('37%', $output);
-        $this->assertContains('Block text:', $output);
-        $this->assertContains('Block bounds:', $output);
+        $this->assertContains('Block content:', $output);
+        $this->assertContains('Bounds:', $output);
     }
 
     public function testDocumentTextCommandGcs()
@@ -249,18 +265,17 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/text.jpg';
         $output = $this->runCommand('document-text', $path);
-        $this->assertContains('Document text:', $output);
         $this->assertContains('the PS4 will automatically restart', $output);
         $this->assertContains('37%', $output);
-        $this->assertContains('Block text:', $output);
-        $this->assertContains('Block bounds:', $output);
+        $this->assertContains('Block content:', $output);
+        $this->assertContains('Bounds:', $output);
     }
 
     public function testDetectWebCommand()
     {
         $path = __DIR__ . '/data/landmark.jpg';
         $output = $this->runCommand('web', $path);
-        $this->assertContains('Web Entities found:', $output);
+        $this->assertContains('web entities found:', $output);
         $this->assertContains('Palace of Fine Arts Theatre', $output);
     }
 
@@ -270,7 +285,25 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/landmark.jpg';
         $output = $this->runCommand('web', $path);
-        $this->assertContains('Web Entities found:', $output);
+        $this->assertContains('web entities found:', $output);
+        $this->assertContains('Palace of Fine Arts Theatre', $output);
+    }
+
+    public function testDetectWebGeoCommand()
+    {
+        $path = __DIR__ . '/data/landmark.jpg';
+        $output = $this->runCommand('web-geo', $path);
+        $this->assertContains('web entities found:', $output);
+        $this->assertContains('Palace of Fine Arts Theatre', $output);
+    }
+
+    public function testDetectWebGeoCommandGcs()
+    {
+        $this->requireCloudStorage();
+
+        $path = 'gs://' . $this->bucketName . '/landmark.jpg';
+        $output = $this->runCommand('web-geo', $path);
+        $this->assertContains('web entities found:', $output);
         $this->assertContains('Palace of Fine Arts Theatre', $output);
     }
 

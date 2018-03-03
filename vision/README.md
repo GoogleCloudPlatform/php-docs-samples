@@ -28,18 +28,20 @@ Vision API from PHP.
 5.  For a basic demonstration of the Cloud Vision API, run `php quickstart.php`.
 6.  Run `php vision.php`. The following commands are available:
 ```
-  face         Detect faces in an image using Google Cloud Vision API
-  help         Displays help for a command
-  label        Detect labels in an image using Google Cloud Vision API
-  landmark     Detect landmarks in an image using Google Cloud Vision API
-  list         Lists commands
-  logo         Detect logos in an image using Google Cloud Vision API
-  property     Detect image proerties in an image using Google Cloud Vision API
-  safe-search  Detect adult content in an image using Google Cloud Vision API
-  text         Detect text in an image using Google Cloud Vision API
-  crop-hints   Detect crop hints in an image using Google Cloud Vision API
-  document-text    Detect document text in an image using Google Cloud Vision API
-  web          Detect web entities in an image using Google Cloud Vision API
+  face           Detect faces in an image using Google Cloud Vision API
+  help           Displays help for a command
+  label          Detect labels in an image using Google Cloud Vision API
+  landmark       Detect landmarks in an image using Google Cloud Vision API
+  list           Lists commands
+  logo           Detect logos in an image using Google Cloud Vision API
+  property       Detect image proerties in an image using Google Cloud Vision API
+  safe-search    Detect adult content in an image using Google Cloud Vision API
+  text           Detect text in an image using Google Cloud Vision API
+  crop-hints     Detect crop hints in an image using Google Cloud Vision API
+  document-text  Detect document text in an image using Google Cloud Vision API
+  web            Detect web entities in an image using Google Cloud Vision API
+  web-geo        Detect web entities in an image with geo metadata using 
+                 Google Cloud Vision API
 ```
 7. Run `php vision.php COMMAND --help` to print information about the usage of each command.
 
