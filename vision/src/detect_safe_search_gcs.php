@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START safe_search_detection_gcs]
+// [START vision_safe_search_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -46,4 +46,4 @@ function detect_safe_search_gcs($path)
     printf("Violence: %s" . PHP_EOL, $likelihoodName[$violence]);
     printf("Racy: %s" . PHP_EOL, $likelihoodName[$racy]);
 }
-// [END safe_search_detection_gcs]
+// [END vision_safe_search_detection_gcs]

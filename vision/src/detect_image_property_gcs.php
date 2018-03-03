@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START image_property_detection_gcs]
+// [START vision_image_property_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -40,4 +40,4 @@ function detect_image_property_gcs($path)
         print(PHP_EOL);
     }
 }
-// [END image_property_detection]
+// [END vision_image_property_detection_gcs]

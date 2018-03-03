@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START detect_labels_gcs]
+// [START vision_label_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -39,4 +39,4 @@ function detect_label_gcs($path)
         print('No label found' . PHP_EOL);
     }
 }
-// [END detect_labels_gcs]
+// [END vision_label_detection_gcs]

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START face_detection_gcs]
+// [START vision_face_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -55,4 +55,4 @@ function detect_face_gcs($path)
         print(PHP_EOL);
     }
 }
-// [END face_detection_gcs]
+// [END vision_face_detection_gcs]

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START text_detection]
+// [START vision_text_detection]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -45,4 +45,4 @@ function detect_text($path)
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
     }
 }
-// [END text_detection]
+// [END vision_text_detection]

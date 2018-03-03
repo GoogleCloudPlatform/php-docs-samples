@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START landmark_detection]
+// [START vision_landmark_detection]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -36,4 +36,4 @@ function detect_landmark($path)
         print($landmark->getDescription() . PHP_EOL);
     }
 }
-// [END landmark_detection]
+// [END vision_landmark_detection]

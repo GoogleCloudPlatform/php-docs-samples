@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START logo_detection_gcs]
+// [START vision_logo_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -35,4 +35,4 @@ function detect_logo_gcs($path)
         print($logo->getDescription() . PHP_EOL);
     }
 }
-// [END logo_detection_gcs]
+// [END vision_logo_detection_gcs]
