@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Get a single document.
  * ```
- * get_document();
+ * get_document('your-project-id');
  * ```
  *
  */
-function get_document()
+function get_document($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_get_document]
     $docRef = $db->collection('cities')->document('SF');
     $snapshot = $docRef->snapshot();

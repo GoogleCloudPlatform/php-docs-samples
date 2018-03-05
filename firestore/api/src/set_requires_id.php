@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Set document data with a given document ID.
  * ```
- * set_requires_id();
+ * set_requires_id('your-project-id');
  * ```
  *
  */
-function set_requires_id()
+function set_requires_id($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $data = [
         'name' => 'Phuket',
         'country' => 'Thailand'

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Retrieve all documents from a collection.
  * ```
- * get_all();
+ * get_all('your-project-id');
  * ```
  *
  */
-function get_all()
+function get_all($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_get_all]
     $usersRef = $db->collection('users');
     $snapshot = $usersRef->documents();

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Add data to a document.
  * ```
- * add_data();
+ * add_data('your-project-id');
  * ```
  *
  */
-function add_data()
+function add_data($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_add_data_1]
     $docRef = $db->collection('users')->document('lovelace');
     $docRef->set([

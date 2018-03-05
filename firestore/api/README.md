@@ -101,6 +101,7 @@ To run the Cloud Firestore Samples:
       get-multiple-docs                    Get multiple documents from a collection.
       help                                 Displays help for a command
       initialize                           Initialize Cloud Firestore with default project ID.
+      initialize-project-id                Initialize Cloud Firestore with given project ID.
       invalid-range-order-by-query         An invalid range with order by query.
       invalid-range-query                  An example of an invalid range query.
       list                                 Lists commands

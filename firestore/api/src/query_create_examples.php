@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create an example collection of documents.
  * ```
- * query_create_examples();
+ * query_create_examples('your-project-id');
  * ```
  *
  */
-function query_create_examples()
+function query_create_examples($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_query_create_examples]
     $citiesRef = $db->collection('cities');
     $citiesRef->document('SF')->set([

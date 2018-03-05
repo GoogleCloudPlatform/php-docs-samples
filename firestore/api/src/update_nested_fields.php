@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Update fields in nested data.
  * ```
- * update_nested_fields();
+ * update_nested_fields('your-project-id');
  * ```
  *
  */
-function update_nested_fields()
+function update_nested_fields($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_update_nested_fields]
     // Create an initial document to update
     $frankRef = $db->collection('users')->document('frank');

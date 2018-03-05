@@ -29,7 +29,7 @@ require __DIR__ . '/vendor/autoload.php';
 $application = new Application('Cloud Firestore');
 
 $inputDefinition = new InputDefinition([
-    new InputOption('project', 'p', InputOption::VALUE_OPTIONAL, 'Your Google Cloud Project ID'),
+    new InputArgument('project', 'p', InputArgument::REQUIRED, 'Your Google Cloud Project ID'),
 ]);
 
 // Initialize command
@@ -44,12 +44,24 @@ The <info>%command.name%</info> command initializes Cloud Firestore using the Go
 EOF
     )
     ->setCode(function ($input, $output) {
-        $projectId = $input->getOption('project');
-        if ($projectId) {
-            initialize_project_id($projectId);
-        } else {
-            initialize();
-        }
+        initialize();
+    })
+);
+
+// Initialize Project ID command
+$application->add((new Command('initialize-project-id'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Initialize Cloud Firestore with given project ID.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command initializes Cloud Firestore using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        initialize_project_id($projectId);
     })
 );
 
@@ -65,7 +77,8 @@ The <info>%command.name%</info> command adds data to a document using the Google
 EOF
     )
     ->setCode(function ($input, $output) {
-        add_data();
+        $projectId = $input->getArgument('project');
+        add_data($projectId);
     })
 );
 
@@ -81,7 +94,8 @@ The <info>%command.name%</info> command retrieves all documents from a collectio
 EOF
     )
     ->setCode(function ($input, $output) {
-        get_all();
+        $projectId = $input->getArgument('project');
+        get_all($projectId);
     })
 );
 
@@ -97,7 +111,8 @@ The <info>%command.name%</info> command sets document data using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-        set_document();
+        $projectId = $input->getArgument('project');
+        set_document($projectId);
     })
 );
 
@@ -113,7 +128,8 @@ The <info>%command.name%</info> command sets document data with different data t
 EOF
     )
     ->setCode(function ($input, $output) {
-        add_doc_data_types();
+        $projectId = $input->getArgument('project');
+        add_doc_data_types($projectId);
     })
 );
 
@@ -129,7 +145,8 @@ The <info>%command.name%</info> command sets document data with a given document
 EOF
     )
     ->setCode(function ($input, $output) {
-        set_requires_id();
+        $projectId = $input->getArgument('project');
+        set_requires_id($projectId);
     })
 );
 
@@ -145,7 +162,8 @@ The <info>%command.name%</info> command adds document data with an auto-generate
 EOF
     )
     ->setCode(function ($input, $output) {
-        add_doc_data_with_auto_id();
+        $projectId = $input->getArgument('project');
+        add_doc_data_with_auto_id($projectId);
     })
 );
 
@@ -161,7 +179,8 @@ The <info>%command.name%</info> command auto-generates an ID for a document and 
 EOF
     )
     ->setCode(function ($input, $output) {
-        add_doc_data_after_auto_id();
+        $projectId = $input->getArgument('project');
+        add_doc_data_after_auto_id($projectId);
     })
 );
 
@@ -177,7 +196,8 @@ The <info>%command.name%</info> command creates an example collection of documen
 EOF
     )
     ->setCode(function ($input, $output) {
-        query_create_examples();
+        $projectId = $input->getArgument('project');
+        query_create_examples($projectId);
     })
 );
 
@@ -193,7 +213,8 @@ The <info>%command.name%</info> command creates a query that gets documents wher
 EOF
     )
     ->setCode(function ($input, $output) {
-        create_query_state();
+        $projectId = $input->getArgument('project');
+        create_query_state($projectId);
     })
 );
 
@@ -209,7 +230,8 @@ The <info>%command.name%</info> command creates a query that gets documents wher
 EOF
     )
     ->setCode(function ($input, $output) {
-        create_query_capital();
+        $projectId = $input->getArgument('project');
+        create_query_capital($projectId);
     })
 );
 
@@ -225,7 +247,8 @@ The <info>%command.name%</info> command creates queries using single where claus
 EOF
     )
     ->setCode(function ($input, $output) {
-        simple_queries();
+        $projectId = $input->getArgument('project');
+        simple_queries($projectId);
     })
 );
 
@@ -241,7 +264,8 @@ The <info>%command.name%</info> command creates a query with chained clauses usi
 EOF
     )
     ->setCode(function ($input, $output) {
-        chained_query();
+        $projectId = $input->getArgument('project');
+        chained_query($projectId);
     })
 );
 
@@ -257,7 +281,8 @@ The <info>%command.name%</info> command creates a composite index chained query 
 EOF
     )
     ->setCode(function ($input, $output) {
-        composite_index_chained_query();
+        $projectId = $input->getArgument('project');
+        composite_index_chained_query($projectId);
     })
 );
 
@@ -273,7 +298,8 @@ The <info>%command.name%</info> command creates a query with range clauses using
 EOF
     )
     ->setCode(function ($input, $output) {
-        range_query();
+        $projectId = $input->getArgument('project');
+        range_query($projectId);
     })
 );
 
@@ -289,7 +315,8 @@ The <info>%command.name%</info> command creates an example of an invalid range q
 EOF
     )
     ->setCode(function ($input, $output) {
-        invalid_range_query();
+        $projectId = $input->getArgument('project');
+        invalid_range_query($projectId);
     })
 );
 
@@ -305,7 +332,8 @@ The <info>%command.name%</info> command deletes a document using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-        delete_doc();
+        $projectId = $input->getArgument('project');
+        delete_doc($projectId);
     })
 );
 
@@ -321,7 +349,8 @@ The <info>%command.name%</info> command deletes a field from a document using th
 EOF
     )
     ->setCode(function ($input, $output) {
-        delete_field();
+        $projectId = $input->getArgument('project');
+        delete_field($projectId);
     })
 );
 
@@ -337,7 +366,10 @@ The <info>%command.name%</info> command deletes a collection using the Google Cl
 EOF
     )
     ->setCode(function ($input, $output) {
-        $db = new FirestoreClient();
+        $projectId = $input->getArgument('project');
+        $db = new FirestoreClient([
+            'projectId' => $projectId,
+        ]);
         $cityCollection = $db->collection('cities');
         delete_collection($cityCollection, 2);
     })
@@ -355,7 +387,8 @@ The <info>%command.name%</info> command creates an example collection of documen
 EOF
     )
     ->setCode(function ($input, $output) {
-        retrieve_create_examples();
+        $projectId = $input->getArgument('project');
+        retrieve_create_examples($projectId);
     })
 );
 
@@ -371,7 +404,8 @@ The <info>%command.name%</info> command gets a document using the Google Cloud F
 EOF
     )
     ->setCode(function ($input, $output) {
-        get_document();
+        $projectId = $input->getArgument('project');
+        get_document($projectId);
     })
 );
 
@@ -387,7 +421,8 @@ The <info>%command.name%</info> command gets a multiple documents from a collect
 EOF
     )
     ->setCode(function ($input, $output) {
-        get_multiple_docs();
+        $projectId = $input->getArgument('project');
+        get_multiple_docs($projectId);
     })
 );
 
@@ -403,7 +438,8 @@ The <info>%command.name%</info> command gets all documents in a collection using
 EOF
     )
     ->setCode(function ($input, $output) {
-        get_all_docs();
+        $projectId = $input->getArgument('project');
+        get_all_docs($projectId);
     })
 );
 
@@ -419,7 +455,8 @@ The <info>%command.name%</info> command creates an order by name with limit quer
 EOF
     )
     ->setCode(function ($input, $output) {
-        order_by_name_limit_query();
+        $projectId = $input->getArgument('project');
+        order_by_name_limit_query($projectId);
     })
 );
 
@@ -435,7 +472,8 @@ The <info>%command.name%</info> command creates an order by name descending with
 EOF
     )
     ->setCode(function ($input, $output) {
-        order_by_name_desc_limit_query();
+        $projectId = $input->getArgument('project');
+        order_by_name_desc_limit_query($projectId);
     })
 );
 
@@ -451,7 +489,8 @@ The <info>%command.name%</info> command creates an order by state and descending
 EOF
     )
     ->setCode(function ($input, $output) {
-        order_by_state_and_population_query();
+        $projectId = $input->getArgument('project');
+        order_by_state_and_population_query($projectId);
     })
 );
 
@@ -467,7 +506,8 @@ The <info>%command.name%</info> command combines where with order by and limit i
 EOF
     )
     ->setCode(function ($input, $output) {
-        where_order_by_limit_query();
+        $projectId = $input->getArgument('project');
+        where_order_by_limit_query($projectId);
     })
 );
 
@@ -483,7 +523,8 @@ The <info>%command.name%</info> command creates a range with order by query usin
 EOF
     )
     ->setCode(function ($input, $output) {
-        range_order_by_query();
+        $projectId = $input->getArgument('project');
+        range_order_by_query($projectId);
     })
 );
 
@@ -499,7 +540,8 @@ The <info>%command.name%</info> command creates an invalid range with order by q
 EOF
     )
     ->setCode(function ($input, $output) {
-        invalid_range_order_by_query();
+        $projectId = $input->getArgument('project');
+        invalid_range_order_by_query($projectId);
     })
 );
 
@@ -515,7 +557,8 @@ The <info>%command.name%</info> command gets a document reference using the Goog
 EOF
     )
     ->setCode(function ($input, $output) {
-        document_ref();
+        $projectId = $input->getArgument('project');
+        document_ref($projectId);
     })
 );
 
@@ -531,7 +574,8 @@ The <info>%command.name%</info> command gets a collection reference using the Go
 EOF
     )
     ->setCode(function ($input, $output) {
-        collection_ref();
+        $projectId = $input->getArgument('project');
+        collection_ref($projectId);
     })
 );
 
@@ -547,7 +591,8 @@ The <info>%command.name%</info> command gets a document path reference using the
 EOF
     )
     ->setCode(function ($input, $output) {
-        document_path_ref();
+        $projectId = $input->getArgument('project');
+        document_path_ref($projectId);
     })
 );
 
@@ -563,7 +608,8 @@ The <info>%command.name%</info> command gets a reference to a subcollection docu
 EOF
     )
     ->setCode(function ($input, $output) {
-        subcollection_ref();
+        $projectId = $input->getArgument('project');
+        subcollection_ref($projectId);
     })
 );
 
@@ -579,7 +625,8 @@ The <info>%command.name%</info> command updates a document using the Google Clou
 EOF
     )
     ->setCode(function ($input, $output) {
-        update_doc();
+        $projectId = $input->getArgument('project');
+        update_doc($projectId);
     })
 );
 
@@ -595,7 +642,8 @@ The <info>%command.name%</info> command sets document data by merging it into th
 EOF
     )
     ->setCode(function ($input, $output) {
-        set_document_merge();
+        $projectId = $input->getArgument('project');
+        set_document_merge($projectId);
     })
 );
 
@@ -611,7 +659,8 @@ The <info>%command.name%</info> command updates fields in nested data using the 
 EOF
     )
     ->setCode(function ($input, $output) {
-        update_nested_fields();
+        $projectId = $input->getArgument('project');
+        update_nested_fields($projectId);
     })
 );
 
@@ -627,7 +676,8 @@ The <info>%command.name%</info> command updates a field with the server timestam
 EOF
     )
     ->setCode(function ($input, $output) {
-        update_server_timestamp();
+        $projectId = $input->getArgument('project');
+        update_server_timestamp($projectId);
     })
 );
 
@@ -643,7 +693,8 @@ The <info>%command.name%</info> command runs a simple transaction using the Goog
 EOF
     )
     ->setCode(function ($input, $output) {
-        run_simple_transaction();
+        $projectId = $input->getArgument('project');
+        run_simple_transaction($projectId);
     })
 );
 
@@ -659,7 +710,8 @@ The <info>%command.name%</info> command returns information from your transactio
 EOF
     )
     ->setCode(function ($input, $output) {
-        return_info_transaction();
+        $projectId = $input->getArgument('project');
+        return_info_transaction($projectId);
     })
 );
 
@@ -675,7 +727,8 @@ The <info>%command.name%</info> command batch writes using the Google Cloud Fire
 EOF
     )
     ->setCode(function ($input, $output) {
-        batch_write();
+        $projectId = $input->getArgument('project');
+        batch_write($projectId);
     })
 );
 
@@ -691,7 +744,8 @@ The <info>%command.name%</info> command defines a field start point for a query 
 EOF
     )
     ->setCode(function ($input, $output) {
-        start_at_field_query_cursor();
+        $projectId = $input->getArgument('project');
+        start_at_field_query_cursor($projectId);
     })
 );
 
@@ -707,7 +761,8 @@ The <info>%command.name%</info> command defines a field end point for a query us
 EOF
     )
     ->setCode(function ($input, $output) {
-        end_at_field_query_cursor();
+        $projectId = $input->getArgument('project');
+        end_at_field_query_cursor($projectId);
     })
 );
 
@@ -723,7 +778,8 @@ The <info>%command.name%</info> command paginates using query cursors using the 
 EOF
     )
     ->setCode(function ($input, $output) {
-        paginated_query_cursor();
+        $projectId = $input->getArgument('project');
+        paginated_query_cursor($projectId);
     })
 );
 
@@ -739,7 +795,8 @@ The <info>%command.name%</info> command sets multiple cursor conditions using th
 EOF
     )
     ->setCode(function ($input, $output) {
-        multiple_cursor_conditions();
+        $projectId = $input->getArgument('project');
+        multiple_cursor_conditions($projectId);
     })
 );
 
@@ -755,7 +812,10 @@ The <info>%command.name%</info> command deletes test collections used in these c
 EOF
     )
     ->setCode(function ($input, $output) {
-        $db = new FirestoreClient();
+        $projectId = $input->getArgument('project');
+        $db = new FirestoreClient([
+            'projectId' => $projectId,
+        ]);
         $cityCollection = $db->collection('cities');
         delete_collection($cityCollection, 2);
         $dataCollection = $db->collection('data');

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create a query with chained clauses.
  * ```
- * chained_query();
+ * chained_query('your-project-id');
  * ```
  *
  */
-function chained_query()
+function chained_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_chained_query]
     $chainedQuery = $citiesRef

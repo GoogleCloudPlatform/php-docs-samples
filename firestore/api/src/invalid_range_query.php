@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * An example of an invalid range query. @see https://cloud.google.com/firestore/docs/query-data/queries#compound_queries
  * ```
- * invalid_range_query();
+ * invalid_range_query('your-project-id');
  * ```
  *
  */
-function invalid_range_query()
+function invalid_range_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_invalid_range_query]
     $invalidRangeQuery = $citiesRef->where('state', '>=', 'CA')->where('population', '>', 1000000);

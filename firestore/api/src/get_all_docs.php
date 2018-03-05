@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Get all documents in a collection.
  * ```
- * get_all_docs();
+ * get_all_docs('your-project-id');
  * ```
  *
  */
-function get_all_docs()
+function get_all_docs($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_get_all_docs]
     $citiesRef = $db->collection('cities');
     $documents = $citiesRef->documents();

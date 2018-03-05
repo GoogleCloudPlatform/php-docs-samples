@@ -29,14 +29,16 @@ use Google\Cloud\Firestore\FieldValue;
 /**
  * Update field with server timestamp.
  * ```
- * update_server_timestamp();
+ * update_server_timestamp('your-project-id');
  * ```
  *
  */
-function update_server_timestamp()
+function update_server_timestamp($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $docRef = $db->collection('objects')->document('some-id');
     $docRef->set([
         'timestamp' => 'N/A'

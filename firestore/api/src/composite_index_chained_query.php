@@ -29,14 +29,16 @@ use Google\Cloud\Firestore\FirestoreClient;
  * Create a composite index chained query, which combines an equality operator with a range comparison. You will need to
  * create a custom index. @see https://cloud.google.com/firestore/docs/query-data/indexing.
  * ```
- * composite_index_chained_query();
+ * composite_index_chained_query('your-project-id');
  * ```
  *
  */
-function composite_index_chained_query()
+function composite_index_chained_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_composite_index_chained_query]
     $chainedQuery = $citiesRef->where('state', '=', 'CA')->where('population', '<', 1000000);

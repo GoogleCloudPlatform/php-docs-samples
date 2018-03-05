@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create an order by name with limit query.
  * ```
- * order_by_name_limit_query();
+ * order_by_name_limit_query('your-project-id');
  * ```
  *
  */
-function order_by_name_limit_query()
+function order_by_name_limit_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_order_by_name_limit_query]
     $query = $citiesRef->orderBy('name')->limit(3);

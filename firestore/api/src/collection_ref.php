@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Get a collection reference.
  * ```
- * collection_ref();
+ * collection_ref('your-project-id');
  * ```
  *
  */
-function collection_ref()
+function collection_ref($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_collection_ref]
     $collection = $db->collection('users');
     # [END fs_collection_ref]

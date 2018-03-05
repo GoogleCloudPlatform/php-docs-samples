@@ -30,14 +30,16 @@ use DateTime;
 /**
  * Set document data with different data types.
  * ```
- * add_doc_data_types();
+ * add_doc_data_types('your-project-id');
  * ```
  *
  */
-function add_doc_data_types()
+function add_doc_data_types($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_add_doc_data_types]
     $data = [
         'stringExample' => 'Hello World',

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Set multiple cursor conditions
  * ```
- * multiple_cursor_conditions();
+ * multiple_cursor_conditions('your-project-id');
  * ```
  *
  */
-function multiple_cursor_conditions()
+function multiple_cursor_conditions($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_multiple_cursor_conditions]
     // Will return all Springfields
     $query1 = $db->collection('cities')->orderBy('name')->orderBy('state')->startAt(['Springfield']);

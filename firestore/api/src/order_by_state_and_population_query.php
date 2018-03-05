@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create an order by state and descending population query.
  * ```
- * order_by_state_and_population_query();
+ * order_by_state_and_population_query('your-project-id');
  * ```
  *
  */
-function order_by_state_and_population_query()
+function order_by_state_and_population_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_order_by_state_and_population_query]
     $query = $citiesRef->orderBy('state')->orderBy('population', 'DESC');

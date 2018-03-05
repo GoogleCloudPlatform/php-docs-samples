@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create a range with order by query.
  * ```
- * invalid_range_order_by_query();
+ * invalid_range_order_by_query('your-project-id');
  * ```
  *
  */
-function invalid_range_order_by_query()
+function invalid_range_order_by_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_invalid_range_order_by_query]
     $query = $citiesRef->where('population', '>', 2500000)->orderBy('country');

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create a query that gets documents where capital=true.
  * ```
- * create_query_capital();
+ * create_query_capital('your-project-id');
  * ```
  *
  */
-function create_query_capital()
+function create_query_capital($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_create_query_capital]
     $citiesRef = $db->collection('cities');
     $query = $citiesRef->where('capital', '=', true);

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Delete a document.
  * ```
- * delete_doc();
+ * delete_doc('your-project-id');
  * ```
  *
  */
-function delete_doc()
+function delete_doc($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_delete_doc]
     $db->collection('cities')->document('DC')->delete();
     # [END fs_delete_doc]

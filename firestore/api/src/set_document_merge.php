@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Set document data by merging it into the existing document.
  * ```
- * set_document_merge();
+ * set_document_merge('your-project-id');
  * ```
  *
  */
-function set_document_merge()
+function set_document_merge($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_set_document_merge]
     $cityRef = $db->collection('cities')->document('BJ');
     $cityRef->set([

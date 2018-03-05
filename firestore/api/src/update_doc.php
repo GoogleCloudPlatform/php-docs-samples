@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Update a document.
  * ```
- * update_doc();
+ * update_doc('your-project-id');
  * ```
  *
  */
-function update_doc()
+function update_doc($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_update_doc]
     $cityRef = $db->collection('cities')->document('DC');
     $cityRef->update([

@@ -33,6 +33,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
+        self::$projectId = getenv('FIRESTORE_PROJECT_ID');
     }
 
     public function setUp()
@@ -40,12 +41,21 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
+        if (!self::$projectId) {
+            $this->markTestSkipped('No project ID was found.');
+        }
     }
 
     public function testInitialize()
     {
         $output = $this->runCommand('initialize');
         $this->assertContains('Created Cloud Firestore client with default project ID.', $output);
+    }
+
+    public function testInitializeProjectId()
+    {
+        $output = $this->runCommand('initialize-project-id');
+        $this->assertContains('Created Cloud Firestore client with project ID:', $output);
     }
 
     public function testAddData()
@@ -357,7 +367,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($command);
 
         ob_start();
-        $commandTester->execute([], [
+        $commandTester->execute([
+            'project' => self::$projectId,
+        ], [
             'interactive' => false
         ]);
         return ob_get_clean();

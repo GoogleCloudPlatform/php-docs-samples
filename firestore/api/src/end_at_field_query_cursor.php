@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Define field end point for a query.
  * ```
- * end_at_field_query_cursor();
+ * end_at_field_query_cursor('your-project-id');
  * ```
  *
  */
-function end_at_field_query_cursor()
+function end_at_field_query_cursor($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_end_at_field_query_cursor]
     $query = $citiesRef->orderBy('population')->endAt([1000000]);

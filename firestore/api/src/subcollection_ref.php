@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Get a reference to a subcollection document.
  * ```
- * subcollection_ref();
+ * subcollection_ref('your-project-id');
  * ```
  *
  */
-function subcollection_ref()
+function subcollection_ref($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_subcollection_ref]
     $document = $db
         ->collection('rooms')

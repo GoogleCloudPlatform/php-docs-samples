@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Get a document path reference.
  * ```
- * document_path_ref();
+ * document_path_ref('your-project-id');
  * ```
  *
  */
-function document_path_ref()
+function document_path_ref($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_document_path_ref]
     $document = $db->document('users/lovelace');
     # [END fs_document_path_ref]

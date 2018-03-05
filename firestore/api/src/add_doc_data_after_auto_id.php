@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Auto-generate an ID for a document, then add document data.
  * ```
- * add_doc_data_after_auto_id();
+ * add_doc_data_after_auto_id('your-project-id');
  * ```
  *
  */
-function add_doc_data_after_auto_id()
+function add_doc_data_after_auto_id($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $data = [
         'name' => 'Moscow',
         'country' => 'Russia'

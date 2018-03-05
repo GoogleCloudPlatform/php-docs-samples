@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create a query that gets documents where state=CA.
  * ```
- * create_query_state();
+ * create_query_state('your-project-id');
  * ```
  *
  */
-function create_query_state()
+function create_query_state($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_create_query_state]
     $citiesRef = $db->collection('cities');
     $query = $citiesRef->where('state', '=', 'CA');

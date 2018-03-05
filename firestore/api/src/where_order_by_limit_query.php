@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Combine where with order by and limit in a query.
  * ```
- * where_order_by_limit_query();
+ * where_order_by_limit_query('your-project-id');
  * ```
  *
  */
-function where_order_by_limit_query()
+function where_order_by_limit_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_where_order_by_limit_query]
     $query = $citiesRef->where('population', '>', 2500000)->orderBy('population')->limit(2);

@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Set document data.
  * ```
- * set_document();
+ * set_document('your-project-id');
  * ```
  *
  */
-function set_document()
+function set_document($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_set_document]
     $data = [
         'name' => 'Los Angeles',

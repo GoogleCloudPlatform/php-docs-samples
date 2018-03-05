@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create queries using single where clauses.
  * ```
- * simple_queries();
+ * simple_queries('your-project-id');
  * ```
  *
  */
-function simple_queries()
+function simple_queries($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_simple_queries]
     $stateQuery = $citiesRef->where('state', '=', 'CA');

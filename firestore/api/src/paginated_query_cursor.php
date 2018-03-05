@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Paginate using cursor queries.
  * ```
- * paginated_query_cursor();
+ * paginated_query_cursor('your-project-id');
  * ```
  *
  */
-function paginated_query_cursor()
+function paginated_query_cursor($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_paginated_query_cursor]
     $citiesRef = $db->collection('cities');
     $firstQuery = $citiesRef->orderBy('population')->limit(3);

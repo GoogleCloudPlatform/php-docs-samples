@@ -29,14 +29,16 @@ use Google\Cloud\Firestore\Transaction;
 /**
  * Run a simple transaction.
  * ```
- * run_simple_transaction();
+ * run_simple_transaction('your-project-id');
  * ```
  *
  */
-function run_simple_transaction()
+function run_simple_transaction($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_run_simple_transaction]
     $cityRef = $db->collection('cities')->document('SF');
     $db->runTransaction(function (Transaction $transaction) use ($cityRef) {

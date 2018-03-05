@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Get multiple documents from a collection.
  * ```
- * get_multiple_docs();
+ * get_multiple_docs('your-project-id');
  * ```
  *
  */
-function get_multiple_docs()
+function get_multiple_docs($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_get_multiple_docs]
     $citiesRef = $db->collection('cities');
     $query = $citiesRef->where('capital', '=', true);

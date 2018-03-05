@@ -28,14 +28,16 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create a query with range clauses.
  * ```
- * range_query();
+ * range_query('your-project-id');
  * ```
  *
  */
-function range_query()
+function range_query($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $citiesRef = $db->collection('cities');
     # [START fs_range_query]
     $rangeQuery = $citiesRef->where('state', '>=', 'CA')->where('state', '<=', 'IN');

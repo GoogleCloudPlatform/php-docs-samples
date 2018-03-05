@@ -29,14 +29,16 @@ use Google\Cloud\Firestore\FieldValue;
 /**
  * Delete a field from a document.
  * ```
- * delete_field();
+ * delete_field('your-project-id');
  * ```
  *
  */
-function delete_field()
+function delete_field($projectId)
 {
     // Create the Cloud Firestore client
-    $db = new FirestoreClient();
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     # [START fs_delete_field]
     $cityRef = $db->collection('cities')->document('BJ');
     $cityRef->update([
