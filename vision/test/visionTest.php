@@ -289,7 +289,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Palace of Fine Arts Theatre', $output);
     }
 
-    public function testDetectWebCommand()
+    public function testDetectWebNoGeoCommand()
     {
         $path = __DIR__ . '/data/geotagged.jpg';
         $output = $this->runCommand('web', $path);
@@ -297,7 +297,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Luna Park Sydney', $output);
     }
 
-    public function testDetectWebCommandGcs()
+    public function testDetectWebNoGeoCommandGcs()
     {
         $this->requireCloudStorage();
 
