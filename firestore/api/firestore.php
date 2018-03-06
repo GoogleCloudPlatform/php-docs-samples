@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Firestore;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Google\Cloud\Firestore\FirestoreClient;
 
@@ -29,7 +30,7 @@ require __DIR__ . '/vendor/autoload.php';
 $application = new Application('Cloud Firestore');
 
 $inputDefinition = new InputDefinition([
-    new InputArgument('project', 'p', InputArgument::REQUIRED, 'Your Google Cloud Project ID'),
+    new InputArgument('project', InputArgument::REQUIRED, 'Your Google Cloud Project ID'),
 ]);
 
 // Initialize command
