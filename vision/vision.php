@@ -254,9 +254,9 @@ EOF
     ->setCode(function ($input, $output) {
         $path = $input->getArgument('path');
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
-            detect_web_with_geo_metadata_gcs($path);
+            detect_web_gcs($path);
         } else {
-            detect_web_with_geo_metadata($path);
+            detect_web($path);
         }
     })
 );
@@ -277,9 +277,9 @@ EOF
     ->setCode(function ($input, $output) {
         $path = $input->getArgument('path');
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
-            detect_web_geo_gcs($path);
+            detect_web_with_geo_metadata_gcs($path);
         } else {
-            detect_web_geo($path);
+            detect_web_with_geo_metadata($path);
         }
     })
 );
