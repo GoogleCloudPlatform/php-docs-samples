@@ -19,12 +19,9 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START k_map]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
-use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
@@ -33,6 +30,7 @@ use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig_TaggedField;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+
 /**
  * Computes the k-map risk estimation of a column set in a Google BigQuery table.
  *
@@ -67,22 +65,22 @@ function k_map(
 
     // Verify input
     if (count($infoTypes) != count($quasiIdNames)) {
-      throw new Exception('Number of infoTypes and number of quasi-identifiers must be equal!');
+        throw new Exception('Number of infoTypes and number of quasi-identifiers must be equal!');
     }
 
     // Map infoTypes to quasi-ids
-    $quasiIdObjects = array_map(function($quasiId, $infoType) {
-      $quasiIdField = new FieldId();
-      $quasiIdField->setName($quasiId);
+    $quasiIdObjects = array_map(function ($quasiId, $infoType) {
+        $quasiIdField = new FieldId();
+        $quasiIdField->setName($quasiId);
 
-      $quasiIdType = new InfoType();
-      $quasiIdType->setName($infoType);
+        $quasiIdType = new InfoType();
+        $quasiIdType->setName($infoType);
 
-      $quasiIdObject = new PrivacyMetric_KMapEstimationConfig_TaggedField();
-      $quasiIdObject->setInfoType($quasiIdType);
-      $quasiIdObject->setField($quasiIdField);
+        $quasiIdObject = new PrivacyMetric_KMapEstimationConfig_TaggedField();
+        $quasiIdObject->setInfoType($quasiIdType);
+        $quasiIdObject->setField($quasiIdField);
 
-      return $quasiIdObject;
+        return $quasiIdObject;
     }, $quasiIdNames, $infoTypes);
 
     // Construct analysis config
@@ -179,7 +177,7 @@ function k_map(
                     // TODO better to use array_map and iterator_to_array here?
                     print_r('  Values: {');
                     foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                      print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                        print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
                     }
                     print_r('}' . PHP_EOL);
                 }

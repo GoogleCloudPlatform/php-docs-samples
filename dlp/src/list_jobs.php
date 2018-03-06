@@ -28,7 +28,8 @@ use Google\Cloud\Dlp\V2\DlpJobType;
  * @param string $filter The filter expression to use
  *        For more information and filter syntax, see https://cloud.google.com/dlp/docs/reference/rest/v2beta2/projects.dlpJobs/list
  */
-function list_jobs ($callingProject, $filter) {
+function list_jobs($callingProject, $filter)
+{
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -45,16 +46,16 @@ function list_jobs ($callingProject, $filter) {
     // Print job list
     $jobs = $response->iterateAllElements();
     foreach ($jobs as $job) {
-      print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
-      $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+        print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+        $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
 
-      if (count($infoTypeStats) > 0) {
-        foreach ($infoTypeStats as $infoTypeStat) {
-          print_r('  Found '. $infoTypeStat->getCount() . ' instance(s) of type ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
+        if (count($infoTypeStats) > 0) {
+            foreach ($infoTypeStats as $infoTypeStat) {
+                print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of type ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
+            }
+        } else {
+            print_r('  No findings.' . PHP_EOL);
         }
-      } else {
-        print_r('  No findings.' . PHP_EOL);
-      }
     }
 }
 # [END dlp_list_jobs]

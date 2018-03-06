@@ -25,7 +25,8 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
  *
  * @param string $jobId The name of the job whose results should be deleted
  */
-function delete_job ($jobId) {
+function delete_job($jobId)
+{
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 

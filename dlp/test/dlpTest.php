@@ -247,7 +247,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 
-    public function testInspectTemplates() {
+    public function testInspectTemplates()
+    {
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
@@ -271,7 +272,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Successfully deleted template ' . $fullTemplateId, $output);
     }
 
-    public function testNumericalStats() {
+    public function testNumericalStats()
+    {
         $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
 
@@ -289,7 +291,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
     }
 
-    public function testCategoricalStats() {
+    public function testCategoricalStats()
+    {
         $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
 
@@ -308,7 +311,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
     }
 
-    public function testKAnonymity() {
+    public function testKAnonymity()
+    {
         $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
 
@@ -325,7 +329,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/Class size: \d/', $output);
     }
 
-    public function testLDiversity() {
+    public function testLDiversity()
+    {
         $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
 
@@ -344,7 +349,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/Sensitive value James occurs \d time\(s\)/', $output);
     }
 
-    public function testKMap() {
+    public function testKMap()
+    {
         $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
 

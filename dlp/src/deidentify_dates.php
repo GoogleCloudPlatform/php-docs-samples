@@ -18,31 +18,24 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START deidentify_dates]
-use Google\Cloud\Dlp\V2\CharacterMaskConfig;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\DateShiftConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\FieldTransformation;
-use Google\Cloud\Dlp\V2\RecordTransformation;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\Table;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
 use Google\Cloud\Dlp\V2\RecordTransformations;
-use Google\Cloud\Dlp\V2\DateTime;
 use Google\Cloud\Dlp\V2\Table_Row;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 
 /**
  * Deidentify dates in a CSV file by pseudorandomly shifting them.
- * 
+ *
  * @param string $callingProject The GCP Project ID to run the API call under
  * @param string $inputCsvFile The path to the CSV file to deidentify
  * @param string $outputCsvFile The path to save the date-shifted CSV file to
@@ -106,7 +99,7 @@ function deidentify_dates(
     }, $csvRows);
 
     // Convert date fields into protobuf objects
-    $dateFields = array_map(function($dateFieldName) {
+    $dateFields = array_map(function ($dateFieldName) {
         return (new FieldId())->setName($dateFieldName);
     }, $dateFieldNames);
 
@@ -138,7 +131,7 @@ function deidentify_dates(
 
         $dateShiftConfig->setContext($contextField);
         $dateShiftConfig->setCryptoKey($cryptoKey);
-    } else if ($contextFieldName || $keyName || $wrappedKey) {
+    } elseif ($contextFieldName || $keyName || $wrappedKey) {
         throw new Exception('You must set either ALL or NONE of {$contextFieldName, $keyName, $wrappedKey}!');
     }
 
@@ -160,7 +153,7 @@ function deidentify_dates(
     $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->deidentifyContent($parent, Array(
+    $response = $dlp->deidentifyContent($parent, array(
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $item
     ));
@@ -176,8 +169,7 @@ function deidentify_dates(
 
             if ($tableValue->getStringValue()) {
                 $outputCsvText .= $tableValue->getStringValue();
-            }
-            else {
+            } else {
                 $protoDate = $tableValue->getDateValue();
                 $date = mktime(0, 0, 0, $protoDate->getMonth(), $protoDate->getDay(), $protoDate->getYear());
                 $outputCsvText .= strftime('%D', $date);

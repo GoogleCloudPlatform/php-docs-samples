@@ -24,14 +24,15 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
  * List DLP inspection configuration templates.
  * @param string $callingProject The GCP Project ID to run the API call under
  */
-function delete_inspect_templates ($templateId) {
-  // Instantiate a client.
-  $dlp = new DlpServiceClient();
+function delete_inspect_templates($templateId)
+{
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-  // Run template deletion request
-  $dlp->deleteInspectTemplate($templateId);
+    // Run template deletion request
+    $dlp->deleteInspectTemplate($templateId);
 
-  // Print results
-  print_r('Successfully deleted template ' . $templateId . PHP_EOL);
+    // Print results
+    print_r('Successfully deleted template ' . $templateId . PHP_EOL);
 }
 // [END dlp_delete_inspect_templates]

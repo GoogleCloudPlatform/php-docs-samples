@@ -19,12 +19,8 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START l_diversity]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
-use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
-use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
@@ -32,6 +28,7 @@ use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_LDiversityConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+
 /**
  * Computes the l-diversity of a column set in a Google BigQuery table.
  *
@@ -63,7 +60,9 @@ function l_diversity(
 
     // Construct risk analysis config
     $quasiIds = array_map(
-      function ($id) { return (new FieldId())->setName($id); },
+      function ($id) {
+          return (new FieldId())->setName($id);
+      },
       $quasiIdNames
     );
 
@@ -162,7 +161,7 @@ function l_diversity(
                     // TODO better to use array_map and iterator_to_array here?
                     print_r('  Quasi-ID values: {');
                     foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                      print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                        print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
                     }
                     print_r('}' . PHP_EOL);
 

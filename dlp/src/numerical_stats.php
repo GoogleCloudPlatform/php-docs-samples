@@ -19,12 +19,8 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START numerical_stats]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
-use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
-use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
@@ -32,6 +28,7 @@ use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_NumericalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+
 /**
  * Computes risk metrics of a column of numbers in a Google BigQuery table.
  *

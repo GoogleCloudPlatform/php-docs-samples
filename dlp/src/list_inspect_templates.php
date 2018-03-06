@@ -24,8 +24,9 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
  * List DLP inspection configuration templates.
  * @param string $callingProject The GCP Project ID to run the API call under
  */
-function list_inspect_templates ($callingProject) {
-  // Instantiate a client.
+function list_inspect_templates($callingProject)
+{
+    // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     $parent = $dlp->projectName($callingProject);
