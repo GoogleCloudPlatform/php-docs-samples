@@ -24,7 +24,6 @@ use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2\CharacterMaskConfig;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
@@ -112,7 +111,7 @@ function reidentify_fpe(
     $parent = $dlp->projectName($callingProject);
 
     // Run request
-    $response = $dlp->reidentifyContent($parent, Array(
+    $response = $dlp->reidentifyContent($parent, array(
         'reidentifyConfig' => $reidentifyConfig,
         'inspectConfig' => $inspectConfig,
         'item' => $item

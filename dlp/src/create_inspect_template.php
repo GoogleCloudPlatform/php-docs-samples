@@ -34,56 +34,56 @@ use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
  * @param string $description Optional A description for the trigger to be created
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
-function create_inspect_template (
+function create_inspect_template(
   $callingProjectId,
   $templateId,
   $displayName,
   $description,
   $maxFindings
 ) {
-  // Instantiate a client.
-  $dlp = new DlpServiceClient();
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-  // ----- Construct inspection config -----
-  // The infoTypes of information to match
-  $personNameInfoType = new InfoType();
-  $personNameInfoType->setName('PERSON_NAME');
-  $usStateInfoType = new InfoType();
-  $usStateInfoType->setName('US_STATE');
-  $infoTypes = [$personNameInfoType, $usStateInfoType];
+    // ----- Construct inspection config -----
+    // The infoTypes of information to match
+    $personNameInfoType = new InfoType();
+    $personNameInfoType->setName('PERSON_NAME');
+    $usStateInfoType = new InfoType();
+    $usStateInfoType->setName('US_STATE');
+    $infoTypes = [$personNameInfoType, $usStateInfoType];
 
-  // Whether to include the matching string in the response
-  $includeQuote = true;
+    // Whether to include the matching string in the response
+    $includeQuote = true;
 
-  // The minimum likelihood required before returning a match
-  $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-  // Specify finding limits
-  $limits = new InspectConfig_FindingLimits();
-  $limits->setMaxFindingsPerRequest($maxFindings);
+    // Specify finding limits
+    $limits = new InspectConfig_FindingLimits();
+    $limits->setMaxFindingsPerRequest($maxFindings);
 
-  // Create the configuration object
-  $inspectConfig = new InspectConfig();
-  $inspectConfig->setMinLikelihood($minLikelihood);
-  $inspectConfig->setLimits($limits);
-  $inspectConfig->setInfoTypes($infoTypes);
-  $inspectConfig->setIncludeQuote($includeQuote);
+    // Create the configuration object
+    $inspectConfig = new InspectConfig();
+    $inspectConfig->setMinLikelihood($minLikelihood);
+    $inspectConfig->setLimits($limits);
+    $inspectConfig->setInfoTypes($infoTypes);
+    $inspectConfig->setIncludeQuote($includeQuote);
 
-  // Construct inspection template
-  $inspectTemplate = new InspectTemplate();
-  $inspectTemplate->setInspectConfig($inspectConfig);
-  $inspectTemplate->setDisplayName($displayName);
-  $inspectTemplate->setDescription($description);
+    // Construct inspection template
+    $inspectTemplate = new InspectTemplate();
+    $inspectTemplate->setInspectConfig($inspectConfig);
+    $inspectTemplate->setDisplayName($displayName);
+    $inspectTemplate->setDescription($description);
   
-  // Run request
-  $parent = $dlp->projectName($callingProjectId);
-  $dlp->createInspectTemplate($parent, [
+    // Run request
+    $parent = $dlp->projectName($callingProjectId);
+    $dlp->createInspectTemplate($parent, [
     'inspectTemplate' => $inspectTemplate,
     'templateId' => $templateId
   ]);
 
-  // Print results
-  print_r(
+    // Print results
+    print_r(
     'Successfully created template projects/' .
     $callingProjectId .
     '/inspectTemplates/' .

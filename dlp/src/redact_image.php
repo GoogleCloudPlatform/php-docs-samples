@@ -19,14 +19,11 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START redact_string]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\Dlp\V2\RedactImageRequest_ImageRedactionConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\ByteContentItem;
-use Google\Cloud\Dlp\V2\ByteContentItem_BytesType;
 
 /**
  * Redact a sensitive string using the Data Loss Prevention (DLP) API.
@@ -85,7 +82,7 @@ function redact_image(
     $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->redactImage($parent, Array(
+    $response = $dlp->redactImage($parent, array(
         'inspectConfig' => $inspectConfig,
         'byteItem' => $byteContent,
         'imageRedactionConfigs' => $imageRedactionConfigs

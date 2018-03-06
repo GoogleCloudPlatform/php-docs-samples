@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START list_info_types]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\ListInfoTypesRequest;
 
 /**
  * Lists all Info Types for the Data Loss Prevention (DLP) API.

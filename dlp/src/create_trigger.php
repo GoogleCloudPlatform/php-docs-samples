@@ -45,7 +45,7 @@ use Google\Protobuf\Duration;
  * @param string $triggerId (Optional) The name of the trigger to be created
  */
 
-function create_trigger (
+function create_trigger(
   $callingProjectId,
   $bucketName,
   $triggerId = '',
@@ -113,7 +113,7 @@ function create_trigger (
 
     // Run trigger creation request
     $parent = $dlp->projectName($callingProjectId);
-    $dlp->createJobTrigger($parent, Array(
+    $dlp->createJobTrigger($parent, array(
       'jobTrigger' => $jobTriggerObject,
       'triggerId' => $triggerId
     ));

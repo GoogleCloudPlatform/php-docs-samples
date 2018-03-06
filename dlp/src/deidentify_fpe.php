@@ -24,10 +24,8 @@ use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2\CharacterMaskConfig;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
@@ -102,7 +100,7 @@ function deidentify_fpe(
     $parent = $dlp->projectName($callingProject);
 
     // Run request
-    $response = $dlp->deidentifyContent($parent, Array(
+    $response = $dlp->deidentifyContent($parent, array(
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $content
     ));

@@ -73,7 +73,7 @@ function inspect_file(
     $parent = $dlp->projectName($callingProject);
 
     // Run request
-    $response = $dlp->inspectContent($parent, Array(
+    $response = $dlp->inspectContent($parent, array(
         'inspectConfig' => $inspectConfig,
         'item' => $content
     ));

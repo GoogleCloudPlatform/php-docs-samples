@@ -24,7 +24,8 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
  * Delete a Data Loss Prevention API job trigger.
  * @param string $triggerId The name of the trigger to be deleted
  */
-function delete_trigger($triggerId) {
+function delete_trigger($triggerId)
+{
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 

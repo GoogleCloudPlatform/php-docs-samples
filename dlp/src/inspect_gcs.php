@@ -24,7 +24,6 @@ use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
@@ -137,7 +136,7 @@ function inspect_gcs(
                 print_r('No findings.' . PHP_EOL);
             } else {
                 foreach ($infoTypeStats as $infoTypeStat) {
-                    print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of infoType ' .  $infoTypeStat->getInfoType()->getName() . PHP_EOL);
+                    print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of infoType ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
                 }
             }
             break;
