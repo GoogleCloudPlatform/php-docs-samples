@@ -25,7 +25,7 @@ use Google\Cloud\Vision\V1\WebDetectionParams;
 // $path = 'path/to/your/image.jpg'
 
 /**
- * Detect web entities on an image and include the image's geo metadata 
+ * Detect web entities on an image and include the image's geo metadata
  * to improve the quality of the detection.
  */
 function detect_web_with_geo_metadata($path)
@@ -40,7 +40,7 @@ function detect_web_with_geo_metadata($path)
 
     # annotate the image
     $image = file_get_contents($path);
-    $response = $imageAnnotator->webDetection($image, [$imageContext]);
+    $response = $imageAnnotator->webDetection($image, ['imageContext' => $imageContext]);
     $web = $response->getWebDetection();
 
     if ($web->getWebEntities()) {

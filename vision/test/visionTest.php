@@ -289,22 +289,40 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Palace of Fine Arts Theatre', $output);
     }
 
+    public function testDetectWebCommand()
+    {
+        $path = __DIR__ . '/data/geotagged.jpg';
+        $output = $this->runCommand('web', $path);
+        $this->assertContains('web entities found:', $output);
+        $this->assertContains('Luna Park Sydney', $output);
+    }
+
+    public function testDetectWebCommandGcs()
+    {
+        $this->requireCloudStorage();
+
+        $path = 'gs://' . $this->bucketName . '/geotagged.jpg';
+        $output = $this->runCommand('web', $path);
+        $this->assertContains('web entities found:', $output);
+        $this->assertContains('Luna Park Sydney', $output);
+    }
+
     public function testDetectWebGeoCommand()
     {
-        $path = __DIR__ . '/data/landmark.jpg';
+        $path = __DIR__ . '/data/geotagged.jpg';
         $output = $this->runCommand('web-geo', $path);
         $this->assertContains('web entities found:', $output);
-        $this->assertContains('Palace of Fine Arts Theatre', $output);
+        $this->assertContains('Sydney Harbour Bridge', $output);
     }
 
     public function testDetectWebGeoCommandGcs()
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/landmark.jpg';
+        $path = 'gs://' . $this->bucketName . '/geotagged.jpg';
         $output = $this->runCommand('web-geo', $path);
         $this->assertContains('web entities found:', $output);
-        $this->assertContains('Palace of Fine Arts Theatre', $output);
+        $this->assertContains('Sydney Harbour Bridge', $output);
     }
 
     private function runCommand($commandName, $path, $output=null)
