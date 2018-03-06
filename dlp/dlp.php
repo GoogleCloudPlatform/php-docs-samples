@@ -187,6 +187,58 @@ $application->add(new Command('deidentify-fpe'))
             (string) $input->getArgument('calling-project'),
             $input->getArgument('string'),
             $input->getArgument('key-name'),
+            $input->getArgument('wrapped-key'),
+            $input->getArgument('surrogate-type')
+        );
+    });
+
+$application->add(new Command('reidentify-fpe'))
+    ->addArgument('string', InputArgument::REQUIRED, 'The text to deidentify')
+    ->addArgument('key-name',
+        InputArgument::REQUIRED,
+        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key')
+    ->addArgument('wrapped-key',
+        InputArgument::REQUIRED,
+        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
+    ->addArgument('surrogate-type', InputArgument::REQUIRED, 'The name of the surrogate custom info type to use when reidentifying')
+    ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
+    ->setDescription('Mask sensitive data in a string using the Data Loss Prevention (DLP) API.')
+    ->setCode(function ($input, $output) {
+        reidentify_fpe(
+            (string) $input->getArgument('calling-project'),
+            $input->getArgument('string'),
+            $input->getArgument('key-name'),
+            $input->getArgument('wrapped-key'),
+            $input->getArgument('surrogate-type')
+        );
+    });
+
+$application->add(new Command('deidentify-dates'))
+    ->addArgument('input-csv', InputArgument::REQUIRED, 'The path to the CSV file to deidentify')
+    ->addArgument('output-csv', InputArgument::REQUIRED, 'The path to save the date-shifted CSV file to')
+    ->addArgument('date-fields', InputArgument::REQUIRED, 'The list of (date) fields in the CSV file to date shift')
+    ->addArgument('lower-bound-days', InputArgument::REQUIRED, 'The maximum number of days to shift a date backward')
+    ->addArgument('upper-bound-days', InputArgument::REQUIRED, 'The maximum number of days to shift a date forward')
+
+    ->addArgument('key-name',
+        InputArgument::OPTIONAL,
+        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key')
+    ->addArgument('wrapped-key',
+        InputArgument::OPTIONAL,
+        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
+    ->addArgument('context-field', InputArgument::OPTIONAL, 'The column to determine date shift amount based on. If omitted, random amounts will be used for each row.')
+    ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
+    ->setDescription('Deidentify dates in a CSV file by pseudorandomly shifting them.')
+    ->setCode(function ($input, $output) {
+        deidentify_dates(
+            (string) $input->getArgument('calling-project'),
+            $input->getArgument('input-csv'),
+            $input->getArgument('output-csv'),
+            $input->getArgument('date-fields'),
+            (int) $input->getArgument('lower-bound-days'),
+            (int) $input->getArgument('upper-bound-days'),
+            $input->getArgument('context-field'),
+            $input->getArgument('key-name'),
             $input->getArgument('wrapped-key')
         );
     });
@@ -316,7 +368,7 @@ $application->add(new Command('categorical-stats'))
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Computes risk metrics of a column of numbers in a Google BigQuery table.')
+    ->setDescription('Computes risk metrics of a column of data in a Google BigQuery table.')
     ->setCode(function ($input, $output) {
         categorical_stats(
             (string) $input->getArgument('calling-project'),
@@ -326,6 +378,83 @@ $application->add(new Command('categorical-stats'))
             $input->getArgument('dataset'),
             $input->getArgument('table'),
             $input->getArgument('column-name')
+        );
+    });
+
+$application->add(new Command('k-anonymity'))
+    ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
+    ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
+    ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
+    ->addArgument('quasi-ids',
+        InputArgument::REQUIRED,
+        'A set of columns that form a composite key ("quasi-identifiers")')
+    ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
+    ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
+    ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
+    ->setDescription('Computes the k-anonymity of a column set in a Google BigQuery table.')
+    ->setCode(function ($input, $output) {
+        k_anonymity(
+            (string) $input->getArgument('calling-project'),
+            (string) $input->getArgument('data-project'),
+            $input->getArgument('topic-id'),
+            $input->getArgument('subscription-id'),
+            $input->getArgument('dataset'),
+            $input->getArgument('table'),
+            (array) $input->getArgument('quasi-ids')
+        );
+    });
+
+$application->add(new Command('l-diversity'))
+    ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
+    ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
+    ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
+    ->addArgument('quasi-ids',
+        InputArgument::REQUIRED,
+        'A set of columns that form a composite key ("quasi-identifiers")')
+    ->addArgument('sensitive-attribute', InputArgument::REQUIRED, 'The column to measure l-diversity relative to, e.g. "firstName"')
+    ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
+    ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
+    ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
+    ->setDescription('Computes the l-diversity of a column set in a Google BigQuery table.')
+    ->setCode(function ($input, $output) {
+        l_diversity(
+            (string) $input->getArgument('calling-project'),
+            (string) $input->getArgument('data-project'),
+            $input->getArgument('topic-id'),
+            $input->getArgument('subscription-id'),
+            $input->getArgument('dataset'),
+            $input->getArgument('table'),
+            $input->getArgument('sensitive-attribute'),
+            (array) $input->getArgument('quasi-ids')
+        );
+    });
+
+$application->add(new Command('k-map'))
+    ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
+    ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
+    ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
+    ->addArgument('quasi-ids',
+        InputArgument::REQUIRED,
+        'A set of columns that form a composite key ("quasi-identifiers")')
+    ->addArgument('info-types',
+        InputArgument::REQUIRED,
+        'The infoTypes corresponding to the chosen quasi-identifiers')
+    ->addArgument('region-code', InputArgument::REQUIRED, 'The ISO 3166-1 region code that the data is representative of')
+    ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
+    ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
+    ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
+    ->setDescription('Computes the k-map risk estimation of a column set in a Google BigQuery table.')
+    ->setCode(function ($input, $output) {
+        k_map(
+            (string) $input->getArgument('calling-project'),
+            (string) $input->getArgument('data-project'),
+            $input->getArgument('topic-id'),
+            $input->getArgument('subscription-id'),
+            $input->getArgument('dataset'),
+            $input->getArgument('table'),
+            $input->getArgument('region-code'),
+            (array) $input->getArgument('quasi-ids'),
+            (array) $input->getArgument('info-types')
         );
     });
 

@@ -17,19 +17,19 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_string]
-use Google\Cloud\Dlp\V2beta2\CharacterMaskConfig;
-use Google\Cloud\Dlp\V2beta2\DlpServiceClient;
-use Google\Cloud\Dlp\V2beta2\InfoType;
-use Google\Cloud\Dlp\V2beta2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2beta2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2beta2\InspectConfig;
-use Google\Cloud\Dlp\V2beta2\InfoTypeTransformations_InfoTypeTransformation;
-use Google\Cloud\Dlp\V2beta2\InfoTypeTransformations;
-use Google\Cloud\Dlp\V2beta2\ContentItem;
+# [START deidentify_mask]
+use Google\Cloud\Dlp\V2\CharacterMaskConfig;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\ContentItem;
 
 /**
- * Inspect a string using the Data Loss Prevention (DLP) API.
+ * Deidentify sensitive data in a string by masking it with a character.
  * @param string $callingProject The GCP Project ID to run the API call under
  * @param string $string The string to deidentify
  * @param int $numberToMask (Optional) The maximum number of sensitive characters to mask in a match
@@ -69,7 +69,6 @@ function deidentify_mask(
     $deidentifyConfig->setInfoTypeTransformations($infoTypeTransformations);
 
     $item = new ContentItem();
-    $item->setType('text/plain');
     $item->setValue($string);
 
     $parent = $dlp->projectName($callingProjectId);
@@ -87,4 +86,4 @@ function deidentify_mask(
     $deidentifiedValue = $response->getItem()->getValue();
     print_r($deidentifiedValue);
 }
-# [END inspect_string]
+# [END deidentify_mask]

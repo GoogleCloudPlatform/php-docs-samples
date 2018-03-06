@@ -18,19 +18,21 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START reidentify_fpe]
-use Google\Cloud\Dlp\V2beta2\CryptoReplaceFfxFpeConfig;
-use Google\Cloud\Dlp\V2beta2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
-use Google\Cloud\Dlp\V2beta2\CryptoKey;
-use Google\Cloud\Dlp\V2beta2\DlpServiceClient;
-use Google\Cloud\Dlp\V2beta2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2beta2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2beta2\CharacterMaskConfig;
-use Google\Cloud\Dlp\V2beta2\InfoType;
-use Google\Cloud\Dlp\V2beta2\ReidentifyConfig;
-use Google\Cloud\Dlp\V2beta2\InspectConfig;
-use Google\Cloud\Dlp\V2beta2\InfoTypeTransformations_InfoTypeTransformation;
-use Google\Cloud\Dlp\V2beta2\InfoTypeTransformations;
-use Google\Cloud\Dlp\V2beta2\ContentItem;
+use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
+use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
+use Google\Cloud\Dlp\V2\CryptoKey;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
+use Google\Cloud\Dlp\V2\CharacterMaskConfig;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\CustomInfoType;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\CustomInfoType_SurrogateType;
 
 /**
  * Inspect a string using Format-Preserving Encryption (FPE) and the Data Loss Prevention (DLP) API.
@@ -60,21 +62,25 @@ function reidentify_fpe(
     $infoTypes = [$ssnInfoType];
 
     // The set of characters to replace sensitive ones with
-    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2/organizations.deidentifyTemplates#ffxcommonnativealphabet
     $commonAlphabet = CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the wrapped crypto key configuration object
     $kmsWrappedCryptoKey = new KmsWrappedCryptoKey();
-    $kmsWrappedCryptoKey->setWrappedKey($wrappedKey);
+    $kmsWrappedCryptoKey->setWrappedKey(base64_decode($wrappedKey));
     $kmsWrappedCryptoKey->setCryptoKeyName($keyName);
 
     // Create the crypto key configuration object
     $cryptoKey = new CryptoKey();
-    $cryptoKey->setKmsWrappedCryptoKey($kmsWrappedCryptoKey);
+    $cryptoKey->setKmsWrapped($kmsWrappedCryptoKey);
 
     // Create the surrogate type object
     $surrogateType = new InfoType();
-    $surrogateType->setName($surrogateTypeName)
+    $surrogateType->setName($surrogateTypeName);
+
+    $customInfoType = new CustomInfoType();
+    $customInfoType->setInfoType($surrogateType);
+    $customInfoType->setSurrogateType(new CustomInfoType_SurrogateType());
 
     // Create the crypto FFX FPE configuration object
     $cryptoReplaceFfxFpeConfig = new CryptoReplaceFfxFpeConfig();
@@ -84,7 +90,6 @@ function reidentify_fpe(
 
     // Create the information transform configuration objects
     $primitiveTransformation = new PrimitiveTransformation();
-    $primitiveTransformation->setInfoTypes([$surrogateType])
     $primitiveTransformation->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
     $infoTypeTransformation = new InfoTypeTransformations_InfoTypeTransformation();
@@ -95,15 +100,14 @@ function reidentify_fpe(
 
     // Create the inspect configuration object
     $inspectConfig = new InspectConfig();
-    $inspectConfig->setCustomInfoTypes([$surrogateType]);
+    $inspectConfig->setCustomInfoTypes([$customInfoType]);
 
     // Create the reidentification configuration object
-    $reidentifyConfig = new ReidentifyConfig();
+    $reidentifyConfig = new DeidentifyConfig();
     $reidentifyConfig->setInfoTypeTransformations($infoTypeTransformations);
 
-    $content = new ContentItem();
-    $content->setType('text/plain');
-    $content->setValue($string);
+    $item = new ContentItem();
+    $item->setValue($string);
 
     $parent = $dlp->projectName($callingProject);
 

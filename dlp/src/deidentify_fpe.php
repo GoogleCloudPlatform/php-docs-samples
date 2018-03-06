@@ -18,19 +18,19 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START deidentify_fpe]
-use Google\Cloud\Dlp\V2beta2\CryptoReplaceFfxFpeConfig;
-use Google\Cloud\Dlp\V2beta2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
-use Google\Cloud\Dlp\V2beta2\CryptoKey;
-use Google\Cloud\Dlp\V2beta2\DlpServiceClient;
-use Google\Cloud\Dlp\V2beta2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2beta2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2beta2\CharacterMaskConfig;
-use Google\Cloud\Dlp\V2beta2\InfoType;
-use Google\Cloud\Dlp\V2beta2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2beta2\InspectConfig;
-use Google\Cloud\Dlp\V2beta2\InfoTypeTransformations_InfoTypeTransformation;
-use Google\Cloud\Dlp\V2beta2\InfoTypeTransformations;
-use Google\Cloud\Dlp\V2beta2\ContentItem;
+use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
+use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
+use Google\Cloud\Dlp\V2\CryptoKey;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
+use Google\Cloud\Dlp\V2\CharacterMaskConfig;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\ContentItem;
 
 /**
  * Deidentify a string using Format-Preserving Encryption (FPE) and the Data Loss Prevention (DLP) API.
@@ -40,7 +40,7 @@ use Google\Cloud\Dlp\V2beta2\ContentItem;
  * @param string $keyName The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
  * @param wrappedKey $wrappedKey The AES-256 key to use, encrypted ('wrapped') with the KMS key
  *        defined by $keyName.
- * @param string $surrogateType Optional surrogate custom info type to enable
+ * @param string $surrogateTypeName Optional surrogate custom info type to enable
  *        reidentification. Can be essentially any arbitrary string that doesn't
  *        appear in your dataset'
  */
@@ -49,7 +49,7 @@ function deidentify_fpe(
     $string,
     $keyName,
     $wrappedKey,
-    $surrogateType = '')
+    $surrogateTypeName = '')
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -61,13 +61,11 @@ function deidentify_fpe(
 
     // Create the wrapped crypto key configuration object
     $kmsWrappedCryptoKey = new KmsWrappedCryptoKey();
-    var_dump($wrappedKey);
-    var_dump($keyName);
-    $kmsWrappedCryptoKey->setWrappedKey($wrappedKey);
+    $kmsWrappedCryptoKey->setWrappedKey(base64_decode($wrappedKey));
     $kmsWrappedCryptoKey->setCryptoKeyName($keyName);
 
     // The set of characters to replace sensitive ones with
-    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/V2/organizations.deidentifyTemplates#ffxcommonnativealphabet
     $commonAlphabet = CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the crypto key configuration object
@@ -78,7 +76,9 @@ function deidentify_fpe(
     $cryptoReplaceFfxFpeConfig = new CryptoReplaceFfxFpeConfig();
     $cryptoReplaceFfxFpeConfig->setCryptoKey($cryptoKey);
     $cryptoReplaceFfxFpeConfig->setCommonAlphabet($commonAlphabet);
-    if ($surrogateType) {
+    if ($surrogateTypeName) {
+        $surrogateType = new InfoType();
+        $surrogateType->setName($surrogateTypeName);
         $cryptoReplaceFfxFpeConfig->setSurrogateInfoType($surrogateType);
     }
 
@@ -97,7 +97,6 @@ function deidentify_fpe(
     $deidentifyConfig->setInfoTypeTransformations($infoTypeTransformations);
 
     $content = new ContentItem();
-    $content->setType('text/plain');
     $content->setValue($string);
 
     $parent = $dlp->projectName($callingProject);
