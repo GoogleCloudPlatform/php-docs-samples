@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ function detect_safe_search_gcs($path)
     $racy = $safe->getRacy();
     
     # names of likelihood from google.cloud.vision.enums
-    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 
+    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
     'POSSIBLE','LIKELY', 'VERY_LIKELY'];
 
     printf("Adult: %s" . PHP_EOL, $likelihoodName[$adult]);

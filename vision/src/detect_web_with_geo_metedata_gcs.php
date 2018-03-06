@@ -15,33 +15,35 @@
  * limitations under the License.
  */
 
-// [START vision_web_entities_include_geo_results]
+// [START vision_web_entities_include_geo_results_gcs]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ImageContext;
 use Google\Cloud\Vision\V1\WebDetectionParams;
 
-// $path = 'path/to/your/image.jpg'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_web_geo($path)
+/**
+ * Detect web entities on an image and include the image's geo metadata 
+ * to improve the quality of the detection.
+ */
+function detect_web_with_geo_metedata_gcs($path)
 {
-
     $imageAnnotator = new ImageAnnotatorClient();
 
     # enable include geo results
     $params = new WebDetectionParams();
-    $params->setIncludeGeoResults(True);
+    $params->setIncludeGeoResults(true);
     $imageContext = new ImageContext();
     $imageContext-> setWebDetectionParams($params);
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->webDetection($image, [$imageContext]);
+    $response = $imageAnnotator->webDetection($path, [$imageContext]);
     $web = $response->getWebDetection();
 
     if ($web->getWebEntities()) {
-        printf('%d web entities found:' . PHP_EOL, 
+        printf('%d web entities found:' . PHP_EOL,
             count($web->getWebEntities()));
         foreach ($web->getWebEntities() as $entity) {
             printf('Description: %s ' . PHP_EOL, $entity->getDescription());
@@ -50,4 +52,4 @@ function detect_web_geo($path)
         }
     }
 }
-// [END vision_web_entities_include_geo_results]
+// [END vision_web_entities_include_geo_results_gcs]

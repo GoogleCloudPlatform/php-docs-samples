@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Vision;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
 
 # includes the autoloader for libraries installed with composer

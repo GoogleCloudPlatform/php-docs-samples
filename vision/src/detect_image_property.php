@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ function detect_image_property($path)
 
     print("Properties:" . PHP_EOL);
     foreach ($props->getDominantColors()->getColors() as $colorInfo) {
-        printf("Fraction: %s" .PHP_EOL, $colorInfo->getPixelFraction());
+        printf("Fraction: %s" . PHP_EOL, $colorInfo->getPixelFraction());
         $color = $colorInfo->getColor();
         printf("Red: %s" . PHP_EOL, $color->getRed());
         printf("Green: %s" . PHP_EOL, $color->getGreen());

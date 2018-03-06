@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,14 +45,14 @@ function detect_document_text_gcs($path)
                     $block_text .= "\n";
                 }
                 printf('Block content: %s', $block_text);
-                printf('Block confidence: %f' . PHP_EOL, 
+                printf('Block confidence: %f' . PHP_EOL,
                     $block->getConfidence());
 
                 # get bounds
                 $vertices = $block->getBoundingBox()->getVertices();
                 $bounds = [];
                 foreach ($vertices as $vertex) {
-                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), 
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
                         $vertex->getY());
                 }
                 print('Bounds: ' . join(', ',$bounds) . PHP_EOL);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ function detect_web_gcs($path)
     }
 
     if ($web->getPagesWithMatchingImages()) {
-        printf('%d pages with matching images found:' . PHP_EOL, 
+        printf('%d pages with matching images found:' . PHP_EOL,
             count($web->getPagesWithMatchingImages()));
         foreach ($web->getPagesWithMatchingImages() as $page) {
             printf('URL: %s' . PHP_EOL, $page->getUrl());
@@ -47,7 +47,7 @@ function detect_web_gcs($path)
     }
 
     if ($web->getFullMatchingImages()) {
-        printf('%d full matching images found:' . PHP_EOL, 
+        printf('%d full matching images found:' . PHP_EOL,
             count($web->getFullMatchingImages()));
         foreach ($web->getFullMatchingImages() as $fullMatchingImage) {
             printf('URL: %s' . PHP_EOL, $fullMatchingImage->getUrl());
@@ -56,7 +56,7 @@ function detect_web_gcs($path)
     }
 
     if ($web->getPartialMatchingImages()) {
-        printf('%d partial matching images found:' . PHP_EOL, 
+        printf('%d partial matching images found:' . PHP_EOL,
             count($web->getPartialMatchingImages()));
         foreach ($web->getPartialMatchingImages() as $partialMatchingImage) {
             printf('URL: %s' . PHP_EOL, $partialMatchingImage->getUrl());
@@ -65,7 +65,7 @@ function detect_web_gcs($path)
     }
 
     if ($web->getVisuallySimilarImages()) {
-        printf('%d visually similar images found:' . PHP_EOL, 
+        printf('%d visually similar images found:' . PHP_EOL,
             count($web->getVisuallySimilarImages()));
         foreach ($web->getVisuallySimilarImages() as $visuallySimilarImage) {
             printf('URL: %s' . PHP_EOL, $visuallySimilarImage->getUrl());
@@ -74,7 +74,7 @@ function detect_web_gcs($path)
     }
 
     if ($web->getWebEntities()) {
-        printf('%d web entities found:' . PHP_EOL, 
+        printf('%d web entities found:' . PHP_EOL,
             count($web->getWebEntities()));
         foreach ($web->getWebEntities() as $entity) {
             printf('Description: %s' . PHP_EOL, $entity->getDescription());

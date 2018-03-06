@@ -254,7 +254,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/data/text.jpg';
         $output = $this->runCommand('document-text', $path);
         $this->assertContains('the PS4 will automatically restart', $output);
-        $this->assertContains('37%', $output);
+        $this->assertContains('37 %', $output);
         $this->assertContains('Block content:', $output);
         $this->assertContains('Bounds:', $output);
     }
@@ -266,7 +266,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = 'gs://' . $this->bucketName . '/text.jpg';
         $output = $this->runCommand('document-text', $path);
         $this->assertContains('the PS4 will automatically restart', $output);
-        $this->assertContains('37%', $output);
+        $this->assertContains('37 %', $output);
         $this->assertContains('Block content:', $output);
         $this->assertContains('Bounds:', $output);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ $fileName = 'test/data/wakeupcat.jpg';
 $image = file_get_contents($path);
 
 # performs label detection on the image file
-$labels = $imageAnnotator->labelDetection($image)->getLabelAnnotations();
+$response = $imageAnnotator->labelDetection($image);
+$labels = $response->getLabelAnnotations();
 
 if ($labels) {
     echo("Labels:" . PHP_EOL);

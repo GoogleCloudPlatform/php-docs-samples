@@ -1,5 +1,5 @@
 {
-    "name": "google/translate-sample",
+    "name": "google/vision",
     "type": "project",
     "require": {
         "google/cloud-vision": "^0.10",
@@ -31,8 +31,8 @@
             "src/detect_document_text_gcs.php",
             "src/detect_web.php",
             "src/detect_web_gcs.php",
-            "src/detect_web_geo.php",
-            "src/detect_web_geo_gcs.php"
+            "src/detect_web_with_geo_metedata.php",
+            "src/detect_web_with_geo_metedata_gcs.php"
         ]
     },
     "require-dev": {

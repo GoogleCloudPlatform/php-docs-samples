@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,14 +31,14 @@ function detect_crop_hints_gcs($path)
     $annotations = $response->getCropHintsAnnotation();
 
     # print the crop hints from the annotation
-    if ($annotations){
+    if ($annotations) {
         print("Crop hints:" . PHP_EOL);
         foreach ($annotations->getCropHints() as $hint) {
             # get bounds
             $vertices = $hint->getBoundingPoly()->getVertices();
             $bounds = [];
             foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex->getX(), 
+                $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
                     $vertex->getY());
             }
             print('Bounds: ' . join(', ',$bounds) . PHP_EOL);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ function detect_text_gcs($path)
 
     printf('%d texts found:' . PHP_EOL, count($texts));
     foreach ($texts as $text) {
-
         print($text->getDescription() . PHP_EOL);
 
         # get bounds
