@@ -31,8 +31,8 @@
             "src/detect_document_text_gcs.php",
             "src/detect_web.php",
             "src/detect_web_gcs.php",
-            "src/detect_web_with_geo_metedata.php",
-            "src/detect_web_with_geo_metedata_gcs.php"
+            "src/detect_web_with_geo_metadata.php",
+            "src/detect_web_with_geo_metadata_gcs.php"
         ]
     },
     "require-dev": {
