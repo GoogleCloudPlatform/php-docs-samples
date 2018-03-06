@@ -29,7 +29,7 @@ $imageAnnotator = new ImageAnnotatorClient();
 $fileName = 'test/data/wakeupcat.jpg';
 
 # prepare the image to be annotated
-$image = file_get_contents($path);
+$image = file_get_contents($fileName);
 
 # performs label detection on the image file
 $response = $imageAnnotator->labelDetection($image);
