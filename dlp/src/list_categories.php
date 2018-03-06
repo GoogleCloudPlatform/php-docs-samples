@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START list_categories]
+# [START dlp_list_categories]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
 
 /**
@@ -41,4 +41,4 @@ function list_categories($languageCode = '')
             $category->getName());
     }
 }
-# [END list_categories]
+# [END dlp_list_categories]

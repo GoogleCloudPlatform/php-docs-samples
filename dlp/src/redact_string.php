@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START redact_string]
+# [START dlp_redact_string]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
 use Google\Cloud\Dlp\V2beta1\ContentItem;
 use Google\Cloud\Dlp\V2beta1\InfoType;
@@ -79,4 +79,4 @@ function redact_string(
     // Print the results
     print('Redacted String: ' . $content->getValue() . PHP_EOL);
 }
-# [END redact_string]
+# [END dlp_redact_string]
