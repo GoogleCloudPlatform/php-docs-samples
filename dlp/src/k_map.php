@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START categorical_stats]
+# [START k_map]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\BigQueryOptions;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -29,11 +29,12 @@ use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\PrivacyMetric_CategoricalStatsConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig_TaggedField;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 /**
- * Computes risk metrics of a column of data in a Google BigQuery table.
+ * Computes the k-map risk estimation of a column set in a Google BigQuery table.
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $dataProjectId The project ID containing the target Datastore
@@ -41,16 +42,22 @@ use Google\Cloud\Dlp\V2\FieldId;
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
  * @param string $datasetId The ID of the dataset to inspect
  * @param string $tableId The ID of the table to inspect
- * @param string $columnName The name of the column to compute risk metrics for, e.g. 'age'
+ * @param string $regionCode The ISO 3166-1 region code that the data is representative of
+ * @param array $quasiIdNames A set of columns that form a composite key ('quasi-identifiers'),
+ *        and optionally their reidentification distributions
+ * @param array $infoTypes The infoTypes corresponding to the chosen quasi-identifiers
+
  */
-function categorical_stats(
+function k_map(
     $callingProjectId,
     $dataProjectId,
     $topicId,
     $subscriptionId,
     $datasetId,
     $tableId,
-    $columnName)
+    $regionCode,
+    $quasiIdNames,
+    $infoTypes)
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -58,15 +65,33 @@ function categorical_stats(
         'projectId' => $callingProjectId // TODO is this necessary?
     ]);
 
-    // Construct risk analysis config
-    $columnField = new FieldId();
-    $columnField->setName($columnName);
+    // Verify input
+    if (count($infoTypes) != count($quasiIdNames)) {
+      throw new Exception('Number of infoTypes and number of quasi-identifiers must be equal!');
+    }
 
-    $statsConfig = new PrivacyMetric_CategoricalStatsConfig();
-    $statsConfig->setField($columnField);
+    // Map infoTypes to quasi-ids
+    $quasiIdObjects = array_map(function($quasiId, $infoType) {
+      $quasiIdField = new FieldId();
+      $quasiIdField->setName($quasiId);
+
+      $quasiIdType = new InfoType();
+      $quasiIdType->setName($infoType);
+
+      $quasiIdObject = new PrivacyMetric_KMapEstimationConfig_TaggedField();
+      $quasiIdObject->setInfoType($quasiIdType);
+      $quasiIdObject->setField($quasiIdField);
+
+      return $quasiIdObject;
+    }, $quasiIdNames, $infoTypes);
+
+    // Construct analysis config
+    $statsConfig = new PrivacyMetric_KMapEstimationConfig();
+    $statsConfig->setQuasiIds($quasiIdObjects);
+    $statsConfig->setRegionCode($regionCode);
 
     $privacyMetric = new PrivacyMetric();
-    $privacyMetric->setCategoricalStatsConfig($statsConfig);
+    $privacyMetric->setKMapEstimationConfig($statsConfig);
 
     // Construct items to be analyzed
     $bigqueryTable = new BigQueryTable();
@@ -131,27 +156,36 @@ function categorical_stats(
     print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
     switch ($job->getState()) {
         case DlpJob_JobState::DONE:
-            $histBuckets = $job->getRiskDetails()->getCategoricalStatsResult()->getValueFrequencyHistogramBuckets();
+            $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
 
             foreach ($histBuckets as $bucketIndex => $histBucket) {
                 // Print bucket stats
                 print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-                print_r('  Most common value occurs ' . $histBucket->getValueFrequencyUpperBound() . ' time(s).' . PHP_EOL);
-                print_r('  Least common value occurs ' . $histBucket->getValueFrequencyLowerBound() . ' time(s).' . PHP_EOL);
-                print_r('  ' . $histBucket->getBucketSize() . ' unique value(s) total.');
+                print_r('  Anonymity range: [' .
+                  $histBucket->getMinAnonymity() .
+                  ', ' .
+                  $histBucket->getMaxAnonymity() .
+                  "]" . PHP_EOL
+                );
+                print_r('  Size: ' . $histBucket->getBucketSize() . PHP_EOL);
 
                 // Print bucket values
-                foreach ($histBucket->getBucketValues() as $percent => $quantile) {
-                    print_r('  Value ' .
-                      $value_to_string($quantile->getValue()) .
-                      ' occurs ' .
-                      $quantile->getCount() .
-                      ' time(s).' . PHP_EOL);
+                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+                    print_r('  Estimated k-map anonymity: ' .
+                      $valueBucket->getEstimatedAnonymity() . PHP_EOL
+                    );
+
+                    // Pretty-print quasi-ID values
+                    // TODO better to use array_map and iterator_to_array here?
+                    print_r('  Values: {');
+                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                      print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                    }
+                    print_r('}' . PHP_EOL);
                 }
             }
-            
             break;
-        case DlpJob_JobState::ERROR:
+        case DlpJob_JobState::FAILED:
             $errors = $job->getErrors();
             foreach ($errors as $error) {
                 var_dump($error->getDetails());
@@ -162,4 +196,4 @@ function categorical_stats(
             print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END categorical_stats]
+# [END k_map]

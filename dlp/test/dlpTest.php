@@ -161,18 +161,60 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('My SSN is xxxxx9127', $output);
     }
 
-    public function testDeidReidFPE()
+    public function testDeidentifyDates()
     {
-        $this->markTestSkipped();
         $this->checkEnv('DLP_DEID_KEY_NAME');
         $this->checkEnv('DLP_DEID_WRAPPED_KEY');
 
-        $output = $this->runCommand('deidentify-fpe', [
-            'string' => 'My SSN is 372819127.',
+        $inputPath = dirname(__FILE__) . '/data/dates.csv';
+        $outputPath = dirname(__FILE__) . '/data/results.temp.csv';
+
+        $output = $this->runCommand('deidentify-dates', [
+            'input-csv' => 'test/data/dates.csv',
+            'output-csv' => 'test/data/results.temp.csv',
+            'date-fields' => ['birth_date', 'register_date'],
+            'lower-bound-days' => 5,
+            'upper-bound-days' => 5,
+            'context-field' => 'name',
             'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
             'key-name' => getEnv('DLP_DEID_KEY_NAME')
         ]);
-        $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $output);
+        
+        $this->assertNotEquals(
+            sha1_file($inputPath),
+            sha1_file($outputPath)
+        );
+
+        $this->assertEquals(
+            file($inputPath)[0],
+            file($outputPath)[0]
+        );
+
+        unlink($outputPath);
+    }
+
+    public function testDeidReidFPE()
+    {
+        $this->checkEnv('DLP_DEID_KEY_NAME');
+        $this->checkEnv('DLP_DEID_WRAPPED_KEY');
+
+        $string = 'My SSN is 372819127.';
+
+        $deidOutput = $this->runCommand('deidentify-fpe', [
+            'string' => $string,
+            'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
+            'key-name' => getEnv('DLP_DEID_KEY_NAME'),
+            'surrogate-type' => 'SSN_TOKEN'
+        ]);
+        $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runCommand('reidentify-fpe', [
+            'string' => $deidOutput,
+            'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
+            'key-name' => getEnv('DLP_DEID_KEY_NAME'),
+            'surrogate-type' => 'SSN_TOKEN'
+        ]);
+        $this->assertContains($string, $reidOutput);
     }
 
     public function testTriggers()
@@ -205,22 +247,6 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 
-    public function testJobs()
-    {
-        // TODO createJob() for this
-        $this->markTestSkipped();
-        $jobId = '';
-
-        $output = $this->runCommand('list-jobs', [
-            'filter' => 'state=DONE'
-        ]);
-
-        $output = $this->runCommand('delete-job', [
-            'job-id' => $jobId
-        ]);
-        $this->assertContains('Successfully deleted job ' . $jobId, $output);
-    }
-
     public function testInspectTemplates() {
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
@@ -245,9 +271,9 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Successfully deleted template ' . $fullTemplateId, $output);
     }
 
-    public function testRiskAnalysis() {
+    public function testNumericalStats() {
+        $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
-        $this->checkEnv('DLP_BUCKET');
 
         $output = $this->runCommand('numerical-stats', [
             'dataset' => 'integration_tests_dlp',
@@ -261,6 +287,11 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
         $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
+    }
+
+    public function testCategoricalStats() {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('categorical-stats', [
             'dataset' => 'integration_tests_dlp',
@@ -275,8 +306,81 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
         $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
         $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
+    }
 
+    public function testKAnonymity() {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
+
+        $output = $this->runCommand('k-anonymity', [
+            'dataset' => 'integration_tests_dlp',
+            'table' => 'harmful',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'data-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'quasi-ids' => ['Age', 'Gender']
+        ]);
+        $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
+        $this->assertRegExp('/Class size: \d/', $output);
+    }
+
+    public function testLDiversity() {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
+
+        $output = $this->runCommand('l-diversity', [
+            'dataset' => 'integration_tests_dlp',
+            'table' => 'harmful',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'data-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'quasi-ids' => ['Age', 'Gender'],
+            'sensitive-attribute' => 'Name'
+        ]);
+        $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
+        $this->assertRegExp('/Class size: \d/', $output);
+        $this->assertRegExp('/Sensitive value James occurs \d time\(s\)/', $output);
+    }
+
+    public function testKMap() {
+        $this->checkEnv('DLP_TOPIC');
+        $this->checkEnv('DLP_SUBSCRIPTION');
+
+        $output = $this->runCommand('k-map', [
+            'dataset' => 'integration_tests_dlp',
+            'table' => 'harmful',
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'data-project' => getenv('GOOGLE_PROJECT_ID'),
+            'topic-id' => getenv('DLP_TOPIC'),
+            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'region-code' => 'USA',
+            'quasi-ids' => ['Age', 'Gender'],
+            'info-types' => ['AGE', 'GENDER']
+        ]);
+        $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
+        $this->assertRegExp('/Size: \d/', $output);
+        $this->assertRegExp('/Values: \{\d{2}, Female\}/', $output);
+    }
+
+    public function testJobs()
+    {
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
         
+        $output = $this->runCommand('list-jobs', [
+            'filter' => 'state=DONE'
+        ]);
+
+        $this->assertRegExp($jobIdRegex, $output);
+        preg_match($jobIdRegex, $output, $jobIds);
+        $jobId = $jobIds[0];
+
+
+        $output = $this->runCommand('delete-job', [
+            'job-id' => $jobId
+        ]);
+        $this->assertContains('Successfully deleted job ' . $jobId, $output);
     }
 
     private function runCommand($commandName, $args = [])
