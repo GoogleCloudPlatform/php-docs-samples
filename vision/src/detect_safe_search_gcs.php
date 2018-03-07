@@ -15,35 +15,35 @@
  * limitations under the License.
  */
 
-// [START safe_search_detection_gcs]
+// [START vision_safe_search_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_safe_search_gcs($projectId, $bucketName, $objectName)
+function detect_safe_search_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['SAFE_SEARCH_DETECTION']);
-    $result = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->safeSearchDetection($path);
+    $safe = $response->getSafeSearchAnnotation();
 
-    // print the response
-    $safe = $result->safeSearch();
-    printf("Adult: %s\n", $safe->isAdult() ? 'yes' : 'no');
-    printf("Spoof: %s\n", $safe->isSpoof() ? 'yes' : 'no');
-    printf("Medical: %s\n", $safe->isMedical() ? 'yes' : 'no');
-    printf("Violence: %s\n\n", $safe->isViolent() ? 'yes' : 'no');
+    $adult = $safe->getAdult();
+    $medical = $safe->getMedical();
+    $spoof = $safe->getSpoof();
+    $violence = $safe->getViolence();
+    $racy = $safe->getRacy();
+    
+    # names of likelihood from google.cloud.vision.enums
+    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
+    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+
+    printf("Adult: %s" . PHP_EOL, $likelihoodName[$adult]);
+    printf("Medical: %s" . PHP_EOL, $likelihoodName[$medical]);
+    printf("Spoof: %s" . PHP_EOL, $likelihoodName[$spoof]);
+    printf("Violence: %s" . PHP_EOL, $likelihoodName[$violence]);
+    printf("Racy: %s" . PHP_EOL, $likelihoodName[$racy]);
 }
-// [END safe_search_detection_gcs]
+// [END vision_safe_search_detection_gcs]

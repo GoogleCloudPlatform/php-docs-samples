@@ -15,24 +15,25 @@
  * limitations under the License.
  */
 
-// [START logo_detection]
+// [START vision_logo_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
-function detect_logo($projectId, $path)
+function detect_logo($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $image = $vision->image(file_get_contents($path), ['LOGO_DETECTION']);
-    $result = $vision->annotate($image);
-    print("Logos:\n");
-    foreach ((array) $result->logos() as $logo) {
-        print($logo->description() . PHP_EOL);
+    $imageAnnotator = new ImageAnnotatorClient();
+
+    # annotate the image
+    $image = file_get_contents($path);
+    $response = $imageAnnotator->logoDetection($image);
+    $logos = $response->getLogoAnnotations();
+
+    printf('%d logos found:' . PHP_EOL, count($logos));
+    foreach ($logos as $logo) {
+        print($logo->getDescription() . PHP_EOL);
     }
 }
-// [END logo_detection]
+// [END vision_logo_detection]

@@ -15,33 +15,28 @@
  * limitations under the License.
  */
 
-# [START detect_labels_gcs]
+// [START vision_label_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_label_gcs($projectId, $bucketName, $objectName)
+function detect_label_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
-    // fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['LABEL_DETECTION']);
-    $result = $vision->annotate($image);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    // print the response
-    print("LABELS:\n");
-    foreach ($result->labels() as $label) {
-        print($label->description() . PHP_EOL);
+    # annotate the image
+    $response = $imageAnnotator->labelDetection($path);
+    $labels = $response->getLabelAnnotations();
+
+    if ($labels) {
+        print("Labels:" . PHP_EOL);
+        foreach ($labels as $label) {
+            print($label->getDescription() . PHP_EOL);
+        }
+    } else {
+        print('No label found' . PHP_EOL);
     }
 }
-# [END detect_labels_gcs]
+// [END vision_label_detection_gcs]

@@ -15,44 +15,36 @@
  * limitations under the License.
  */
 
-# [START vision_crop_hint_detection_gcs]
+// [START vision_crop_hint_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $bucketName = 'your-bucket-name'
-// $objectName = 'your-object-name'
+// $path = 'gs://path/to/your/image.jpg'
 
-function detect_crop_hints_gcs($projectId, $bucketName, $objectName)
+function detect_crop_hints_gcs($path)
 {
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    # Fetch the storage object and annotate the image
-    $object = $storage->bucket($bucketName)->object($objectName);
-    $image = $vision->image($object, ['CROP_HINTS']);
-    $annotation = $vision->annotate($image);
+    # annotate the image
+    $response = $imageAnnotator->cropHintsDetection($path);
+    $annotations = $response->getCropHintsAnnotation();
 
-    # Print the crop hints from the annotation
-    printf("Crop Hints:\n");
-    foreach ((array) $annotation->cropHints() as $hint) {
-        $boundingPoly = $hint->boundingPoly();
-        $vertices = $boundingPoly['vertices'];
-        foreach ((array) $vertices as $vertice) {
-            if (!isset($vertice['x'])) {
-                $vertice['x'] = 0;
+    # print the crop hints from the annotation
+    if ($annotations) {
+        print("Crop hints:" . PHP_EOL);
+        foreach ($annotations->getCropHints() as $hint) {
+            # get bounds
+            $vertices = $hint->getBoundingPoly()->getVertices();
+            $bounds = [];
+            foreach ($vertices as $vertex) {
+                $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
+                    $vertex->getY());
             }
-            if (!isset($vertice['y'])) {
-                $vertice['y'] = 0;
-            }
-            printf('X: %s Y: %s' . PHP_EOL, $vertice['x'], $vertice['y']);
+            print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         }
+    } else {
+        print('No crop hints' . PHP_EOL);
     }
 }
-# [END vision_crop_hint_detection_gcs]
+// [END vision_crop_hint_detection_gcs]

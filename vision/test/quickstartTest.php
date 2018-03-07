@@ -18,24 +18,19 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 {
     public function testQuickstart()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
-
         $file = sys_get_temp_dir() . '/vision_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['YOUR_PROJECT_ID', '__DIR__'],
-            [$projectId, sprintf('"%s/.."', __DIR__)],
+            ['__DIR__'],
+            [sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);
 
-        // Invoke quickstart.php
+        // invoke quickstart.php
         $labels = include $file;
 
-        // Make sure it looks correct
-        $this->assertTrue(is_array($labels));
+        // make sure it looks correct
         $this->assertTrue(count($labels) > 0);
         $this->expectOutputRegex('/cat/');
     }

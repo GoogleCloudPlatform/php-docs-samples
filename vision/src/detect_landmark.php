@@ -15,28 +15,25 @@
  * limitations under the License.
  */
 
-// [START landmark_detection]
+// [START vision_landmark_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\VisionClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
-// $path = 'path/to/your/image.jpg'
+// $path = 'path/to/your/image.jpg1'
 
-function detect_landmark($projectId, $path)
+function detect_landmark($path)
 {
-    // [START get_vision_service]
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    // [END get_vision_service]
-    // [START construct_request]
-    $image = $vision->image(file_get_contents($path), ['LANDMARK_DETECTION']);
-    $result = $vision->annotate($image);
-    // [END construct_request]
-    print("Landmarks:\n");
-    foreach ((array) $result->landmarks() as $landmark) {
-        print($landmark->description() . PHP_EOL);
+    $imageAnnotator = new ImageAnnotatorClient();
+
+    # annotate the image
+    $image = file_get_contents($path);
+    $response = $imageAnnotator->landmarkDetection($image);
+    $landmarks = $response->getLandmarkAnnotations();
+
+    printf('%d landmark found:' . PHP_EOL, count($landmarks));
+    foreach ($landmarks as $landmark) {
+        print($landmark->getDescription() . PHP_EOL);
     }
 }
-// [END landmark_detection]
+// [END vision_landmark_detection]

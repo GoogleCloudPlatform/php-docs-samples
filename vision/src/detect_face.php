@@ -15,31 +15,45 @@
  * limitations under the License.
  */
 
-# [START face_detection]
+// [START vision_face_detection]
 namespace Google\Cloud\Samples\Vision;
 
-# [START get_vision_service]
-use Google\Cloud\Vision\VisionClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
-function detect_face($projectId, $path)
+function detect_face($path)
 {
-    $vision = new VisionClient([
-       'projectId' => $projectId,
-    ]);
-    # [END get_vision_service]
-    # [START detect_face]
-    $image = $vision->image(file_get_contents($path), ['FACE_DETECTION']);
-    $result = $vision->annotate($image);
-    # [END detect_face]
-    print("Faces:\n");
-    foreach ((array) $result->faces() as $face) {
-        printf("Anger: %s\n", $face->isAngry() ? 'yes' : 'no');
-        printf("Joy: %s\n", $face->isJoyful() ? 'yes' : 'no');
-        printf("Surprise: %s\n\n", $face->isSurprised() ? 'yes' : 'no');
+    $imageAnnotator = new ImageAnnotatorClient();
+
+    # annotate the image
+    $image = file_get_contents($path);
+    $response = $imageAnnotator->faceDetection($image);
+    $faces = $response->getFaceAnnotations();
+
+    # names of likelihood from google.cloud.vision.enums
+    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
+    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+
+    printf("%d faces found:" . PHP_EOL, count($faces));
+    foreach ($faces as $face) {
+        $anger = $face->getAngerLikelihood();
+        printf("Anger: %s" . PHP_EOL, $likelihoodName[$anger]);
+
+        $joy = $face->getJoyLikelihood();
+        printf("Joy: %s" . PHP_EOL, $likelihoodName[$joy]);
+
+        $surprise = $face->getSurpriseLikelihood();
+        printf("Surprise: %s" . PHP_EOL, $likelihoodName[$surprise]);
+
+        # get bounds
+        $vertices = $face->getBoundingPoly()->getVertices();
+        $bounds = [];
+        foreach ($vertices as $vertex) {
+            $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+        }
+        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+        print(PHP_EOL);
     }
-    return $result;
 }
-# [END face_detection]
+// [END vision_face_detection]

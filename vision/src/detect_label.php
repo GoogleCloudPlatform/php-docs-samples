@@ -15,35 +15,29 @@
  * limitations under the License.
  */
 
-# [START detect_labels]
+// [START vision_label_detection]
 namespace Google\Cloud\Samples\Vision;
 
-# [START import_libraries]
-use Google\Cloud\Vision\VisionClient;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-# [END import_libraries]
-
-// $projectId = 'YOUR_PROJECT_ID';
 // $path = 'path/to/your/image.jpg'
 
-function detect_label($projectId, $path)
+function detect_label($path)
 {
-    # [START authenticate]
-    $vision = new VisionClient([
-        'projectId' => $projectId,
-    ]);
-    # [END authenticate]
+    $imageAnnotator = new ImageAnnotatorClient();
 
-    # [START construct_request]
-    $image = $vision->image(file_get_contents($path), ['LABEL_DETECTION']);
-    $result = $vision->annotate($image);
-    # [END construct_request]
+    # annotate the image
+    $image = file_get_contents($path);
+    $response = $imageAnnotator->labelDetection($image);
+    $labels = $response->getLabelAnnotations();
 
-    # [START parse_response]
-    print("LABELS:\n");
-    foreach ($result->labels() as $label) {
-        print($label->description() . PHP_EOL);
+    if ($labels) {
+        print("Labels:" . PHP_EOL);
+        foreach ($labels as $label) {
+            print($label->getDescription() . PHP_EOL);
+        }
+    } else {
+        print('No label found' . PHP_EOL);
     }
-    # [END parse_response]
 }
-# [END detect_labels]
+// [END vision_label_detection]
