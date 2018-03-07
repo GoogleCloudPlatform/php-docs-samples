@@ -29,16 +29,18 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
+        if (!extension_loaded('grpc')) {
+            self::markTestSkipped('Must enable grpc extension.');
+        }
+        if (!getenv('FIRESTORE_PROJECT_ID')) {
+            self::markTestSkipped('FIRESTORE_PROJECT_ID must be set.');
+        }
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            self::markTestSkipped('No application credentials were found.');
+        }
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-    }
-
-    public function setUp()
-    {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
     }
 
     public function testInitialize()
