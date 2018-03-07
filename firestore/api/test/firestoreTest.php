@@ -33,7 +33,6 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$projectId = getenv('FIRESTORE_PROJECT_ID');
     }
 
     public function setUp()
@@ -368,7 +367,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
 
         ob_start();
         $commandTester->execute([
-            'project' => self::$projectId,
+            'project' => getenv('FIRESTORE_PROJECT_ID'),
         ], [
             'interactive' => false
         ]);
