@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Firestore\Tests;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-
 /**
  * Unit Tests for Firestore commands.
  */
