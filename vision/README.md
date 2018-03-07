@@ -45,6 +45,32 @@ Vision API from PHP.
 ```
 7. Run `php vision.php COMMAND --help` to print information about the usage of each command.
 
+## The client library
+
+This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+You can read the documentation for more details on API usage and use GitHub
+to [browse the source][google-cloud-php-source] and [report issues][google-cloud-php-issues].
+
+## Troubleshooting
+
+If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:
+
+```
+[Google\Cloud\Core\Exception\GoogleException]
+No project ID was provided, and we were unable to detect a default project ID.
+```
+
+If you have not set a timezone you may get an error from php. This can be resolved by:
+
+  1. Finding where the php.ini is stored by running `php -i | grep 'Configuration File'`
+  1. Finding out your timezone from the list on this page: http://php.net/manual/en/timezones.php
+  1. Editing the php.ini file (or creating one if it doesn't exist)
+  1. Adding the timezone to the php.ini file e.g., adding the following line: `date.timezone = "America/Los_Angeles"`
+
+[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
+[google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
+
 ## Contributing changes
 
 * See [CONTRIBUTING.md](../../CONTRIBUTING.md)
