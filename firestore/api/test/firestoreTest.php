@@ -40,9 +40,6 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!self::$projectId) {
-            $this->markTestSkipped('No project ID was found.');
-        }
     }
 
     public function testInitialize()
