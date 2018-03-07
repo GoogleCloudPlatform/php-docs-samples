@@ -40,7 +40,9 @@ function range_query($projectId)
     ]);
     $citiesRef = $db->collection('cities');
     # [START fs_range_query]
-    $rangeQuery = $citiesRef->where('state', '>=', 'CA')->where('state', '<=', 'IN');
+    $rangeQuery = $citiesRef
+        ->where('state', '>=', 'CA')
+        ->where('state', '<=', 'IN');
     # [END fs_range_query]
     foreach ($rangeQuery->documents() as $document) {
         printf('Document %s returned by query CA<=state<=IN' . PHP_EOL, $document->id());

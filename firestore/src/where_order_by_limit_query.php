@@ -40,7 +40,10 @@ function where_order_by_limit_query($projectId)
     ]);
     $citiesRef = $db->collection('cities');
     # [START fs_where_order_by_limit_query]
-    $query = $citiesRef->where('population', '>', 2500000)->orderBy('population')->limit(2);
+    $query = $citiesRef
+        ->where('population', '>', 2500000)
+        ->orderBy('population')
+        ->limit(2);
     # [END fs_where_order_by_limit_query]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {

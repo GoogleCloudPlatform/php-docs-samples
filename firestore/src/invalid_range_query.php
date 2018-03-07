@@ -40,6 +40,8 @@ function invalid_range_query($projectId)
     ]);
     $citiesRef = $db->collection('cities');
     # [START fs_invalid_range_query]
-    $invalidRangeQuery = $citiesRef->where('state', '>=', 'CA')->where('population', '>', 1000000);
+    $invalidRangeQuery = $citiesRef
+        ->where('state', '>=', 'CA')
+        ->where('population', '>', 1000000);
     # [END fs_invalid_range_query]
 }

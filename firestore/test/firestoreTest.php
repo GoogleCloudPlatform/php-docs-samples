@@ -62,6 +62,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Added data to the aturing document in the users collection.', $output);
     }
 
+    /**
+     * @depends testAddData
+     */
     public function testRetrieveAllDocuments()
     {
         $output = $this->runCommand('retrieve-all-documents');
@@ -76,30 +79,45 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Retrieved and printed out all documents from the users collection.', $output);
     }
 
+    /**
+     * @depends testAddData
+     */
     public function testSetDocument()
     {
         $output = $this->runCommand('set-document');
         $this->assertContains('Set data for the LA document in the cities collection.', $output);
     }
 
+    /**
+     * @depends testAddData
+     */
     public function testAddDocDataTypes()
     {
         $output = $this->runCommand('add-doc-data-types');
         $this->assertContains('Set multiple data-type data for the one document in the data collection.', $output);
     }
 
+    /**
+     * @depends testAddData
+     */
     public function testSetRequiresId()
     {
         $output = $this->runCommand('set-requires-id');
         $this->assertContains('Added document with ID: new-city-id', $output);
     }
 
+    /**
+     * @depends testAddData
+     */
     public function testAddDocDataWithAutoId()
     {
         $output = $this->runCommand('add-doc-data-with-auto-id');
         $this->assertContains('Added document with ID:', $output);
     }
 
+    /**
+     * @depends testAddData
+     */
     public function testAddDocDataAfterAutoId()
     {
         $output = $this->runCommand('add-doc-data-after-auto-id');
@@ -112,6 +130,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Added example cities data to the cities collection.', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testCreateQueryState()
     {
         $output = $this->runCommand('create-query-state');
@@ -119,6 +140,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document LA returned by query state=CA', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testCreateQueryCapital()
     {
         $output = $this->runCommand('create-query-capital');
@@ -127,6 +151,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document TOK returned by query capital=true', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testSimpleQueries()
     {
         $output = $this->runCommand('simple-queries');
@@ -139,18 +166,27 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document TOK returned by query name>=San Francisco', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testChainedQuery()
     {
         $output = $this->runCommand('chained-query');
         $this->assertContains('Document SF returned by query state=CA and name=San Francisco', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testCompositeIndexChainedQuery()
     {
         $output = $this->runCommand('composite-index-chained-query');
         $this->assertContains('Document SF returned by query state=CA and population<1000000', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testRangeQuery()
     {
         $output = $this->runCommand('range-query');
@@ -158,23 +194,35 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document SF returned by query CA<=state<=IN', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testInvalidRangeQuery()
     {
         $output = $this->runCommand('invalid-range-query');
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testDeleteDocument()
     {
         $output = $this->runCommand('delete-document');
         $this->assertContains('Deleted the DC document in the cities collection.', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testDeleteField()
     {
         $output = $this->runCommand('delete-field');
         $this->assertContains('Deleted the capital field from the BJ document in the cities collection.', $output);
     }
 
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testDeleteCollection()
     {
         $output = $this->runCommand('delete-collection');
@@ -190,6 +238,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Added example cities data to the cities collection.', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testGetDocument()
     {
         $output = $this->runCommand('get-document');
@@ -201,6 +252,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('[country] => USA', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testGetMultipleDocs()
     {
         $output = $this->runCommand('get-multiple-docs');
@@ -210,6 +264,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('[name] => Tokyo', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testGetAllDocs()
     {
         $output = $this->runCommand('get-all-docs');
@@ -217,6 +274,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('[name] => Los Angeles', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testOrderByNameLimitQuery()
     {
         $output = $this->runCommand('order-by-name-limit-query');
@@ -225,6 +285,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document SF returned by order by name with limit query', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testOrderByNameDescLimitQuery()
     {
         $output = $this->runCommand('order-by-name-desc-limit-query');
@@ -233,6 +296,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document SF returned by order by name descending with limit query', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testOrderByStateAndPopulationQuery()
     {
         $output = $this->runCommand('order-by-state-and-population-query');
@@ -243,6 +309,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document TOK returned by order by state and descending population query', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testWhereOrderByLimitQuery()
     {
         $output = $this->runCommand('where-order-by-limit-query');
@@ -250,6 +319,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document TOK returned by where order by limit query', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testRangeOrderByQuery()
     {
         $output = $this->runCommand('range-order-by-query');
@@ -258,6 +330,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document BJ returned by range with order by query', $output);
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testInvalidRangeOrderByQuery()
     {
         $output = $this->runCommand('invalid-range-order-by-query');
@@ -283,48 +358,72 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $output = $this->runCommand('subcollection-ref');
     }
 
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testUpdateDoc()
     {
         $output = $this->runCommand('update-doc');
         $this->assertContains('Updated the capital field of the DC document in the cities collection.', $output);
     }
 
+    /**
+     * @depends testUpdateDoc
+     */
     public function testSetDocumentMerge()
     {
         $output = $this->runCommand('set-document-merge');
         $this->assertContains('Set document data by merging it into the existing BJ document in the cities collection.', $output);
     }
 
+    /**
+     * @depends testSetDocumentMerge
+     */
     public function testUpdateNestedFields()
     {
         $output = $this->runCommand('update-nested-fields');
         $this->assertContains('Updated the age and favorite color fields of the frank document in the users collection.', $output);
     }
 
+    /**
+     * @depends testUpdateNestedFields
+     */
     public function testUpdateServerTimestamp()
     {
         $output = $this->runCommand('update-server-timestamp');
         $this->assertContains('Updated the timestamp field of the some-id document in the objects collection.', $output);
     }
 
+    /**
+     * @depends testUpdateServerTimestamp
+     */
     public function testRunSimpleTransaction()
     {
         $output = $this->runCommand('run-simple-transaction');
         $this->assertContains('Ran a simple transaction to update the population field in the SF document in the cities collection.', $output);
     }
 
+    /**
+     * @depends testRunSimpleTransaction
+     */
     public function testReturnInfoTransaction()
     {
         $output = $this->runCommand('return-info-transaction');
         $this->assertContains('Population updated successfully.', $output);
     }
 
+    /**
+     * @depends testReturnInfoTransaction
+     */
     public function testBatchWrite()
     {
         $output = $this->runCommand('batch-write');
         $this->assertContains('Batch write successfully completed.', $output);
     }
 
+    /**
+     * @depends testBatchWrite
+     */
     public function testStartAtFieldQueryCursor()
     {
         $output = $this->runCommand('start-at-field-query-cursor');
@@ -333,6 +432,9 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document BJ returned by start at population 1000000 field query cursor.', $output);
     }
 
+    /**
+     * @depends testStartAtFieldQueryCursor
+     */
     public function testEndAtFieldQueryCursor()
     {
         $output = $this->runCommand('end-at-field-query-cursor');
@@ -340,12 +442,18 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document SF returned by end at population 1000000 field query cursor.', $output);
     }
 
+    /**
+     * @depends testEndAtFieldQueryCursor
+     */
     public function testPaginatedQueryCursor()
     {
         $output = $this->runCommand('paginated-query-cursor');
         $this->assertContains('Document BJ returned by paginated query cursor.', $output);
     }
 
+    /**
+     * @depends testPaginatedQueryCursor
+     */
     public function testMultipleCursorConditions()
     {
         $output = $this->runCommand('multiple-cursor-conditions');
@@ -355,7 +463,6 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('delete-test-collections');
     }
-
 
     private function runCommand($commandName)
     {

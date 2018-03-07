@@ -40,7 +40,9 @@ function start_at_field_query_cursor($projectId)
     ]);
     $citiesRef = $db->collection('cities');
     # [START fs_start_at_field_query_cursor]
-    $query = $citiesRef->orderBy('population')->startAt([1000000]);
+    $query = $citiesRef
+        ->orderBy('population')
+        ->startAt([1000000]);
     # [END fs_start_at_field_query_cursor]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {

@@ -40,10 +40,18 @@ function multiple_cursor_conditions($projectId)
     ]);
     # [START fs_multiple_cursor_conditions]
     // Will return all Springfields
-    $query1 = $db->collection('cities')->orderBy('name')->orderBy('state')->startAt(['Springfield']);
+    $query1 = $db
+        ->collection('cities')
+        ->orderBy('name')
+        ->orderBy('state')
+        ->startAt(['Springfield']);
 
     // Will return "Springfield, Missouri" and "Springfield, Wisconsin"
-    $query2 = $db->collection('cities')->orderBy('name')->orderBy('state')->startAt(['Springfield', 'Missouri']);
+    $query2 = $db
+        ->collection('cities')
+        ->orderBy('name')
+        ->orderBy('state')
+        ->startAt(['Springfield', 'Missouri']);
     # [END fs_multiple_cursor_conditions]
     $snapshot1 = $query1->documents();
     foreach ($snapshot1 as $document) {

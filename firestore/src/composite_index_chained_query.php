@@ -41,7 +41,9 @@ function composite_index_chained_query($projectId)
     ]);
     $citiesRef = $db->collection('cities');
     # [START fs_composite_index_chained_query]
-    $chainedQuery = $citiesRef->where('state', '=', 'CA')->where('population', '<', 1000000);
+    $chainedQuery = $citiesRef
+        ->where('state', '=', 'CA')
+        ->where('population', '<', 1000000);
     # [END fs_composite_index_chained_query]
     foreach ($chainedQuery->documents() as $document) {
         printf('Document %s returned by query state=CA and population<1000000' . PHP_EOL, $document->id());

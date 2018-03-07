@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * add_data('your-project-id');
  * ```
- *
  */
 function add_data($projectId)
 {
