@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_bigquery]
+# [START dlp_inspect_bigquery]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
 use Google\Cloud\Dlp\V2beta1\BigQueryOptions;
 use Google\Cloud\Dlp\V2beta1\InfoType;
@@ -98,4 +98,4 @@ function inspect_bigquery(
         print_r($operation->getError());
     }
 }
-# [END inspect_bigquery]
+# [END dlp_inspect_bigquery]

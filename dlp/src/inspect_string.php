@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_string]
+# [START dlp_inspect_string]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
 use Google\Cloud\Dlp\V2beta1\ContentItem;
 use Google\Cloud\Dlp\V2beta1\InfoType;
@@ -80,4 +80,4 @@ function inspect_string(
         }
     }
 }
-# [END inspect_string]
+# [END dlp_inspect_string]

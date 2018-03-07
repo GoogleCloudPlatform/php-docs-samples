@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START list_info_types]
+# [START dlp_list_info_types]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
 
 /**
@@ -42,4 +42,4 @@ function list_info_types($category = '', $languageCode = '')
             $infoType->getName());
     }
 }
-# [END list_info_types]
+# [END dlp_list_info_types]

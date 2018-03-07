@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_datastore]
+# [START dlp_inspect_datastore]
 use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
 use Google\Cloud\Dlp\V2beta1\DatastoreOptions;
 use Google\Cloud\Dlp\V2beta1\InfoType;
@@ -105,4 +105,4 @@ function inspect_datastore(
         print_r($operation->getError());
     }
 }
-# [END inspect_datastore]
+# [END dlp_inspect_datastore]
