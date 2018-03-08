@@ -31,7 +31,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * composite_index_chained_query('your-project-id');
  * ```
- *
  */
 function composite_index_chained_query($projectId)
 {

@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * set_requires_id('your-project-id');
  * ```
- *
  */
 function set_requires_id($projectId)
 {

@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * multiple_cursor_conditions('your-project-id');
  * ```
- *
  */
 function multiple_cursor_conditions($projectId)
 {

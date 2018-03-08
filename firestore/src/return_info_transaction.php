@@ -31,7 +31,6 @@ use Google\Cloud\Firestore\Transaction;
  * ```
  * return_info_transaction('your-project-id');
  * ```
- *
  */
 function return_info_transaction($projectId)
 {
@@ -53,7 +52,7 @@ function return_info_transaction($projectId)
             return false;
         }
     });
-    
+
     if ($transactionResult) {
         printf('Population updated successfully.' . PHP_EOL);
     } else {

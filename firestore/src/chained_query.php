@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * chained_query('your-project-id');
  * ```
- *
  */
 function chained_query($projectId)
 {

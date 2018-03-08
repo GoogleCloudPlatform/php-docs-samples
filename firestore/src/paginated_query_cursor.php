@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * paginated_query_cursor('your-project-id');
  * ```
- *
  */
 function paginated_query_cursor($projectId)
 {

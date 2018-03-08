@@ -31,7 +31,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * initialize();
  * ```
- *
  */
 function initialize()
 {

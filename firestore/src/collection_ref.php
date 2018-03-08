@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * collection_ref('your-project-id');
  * ```
- *
  */
 function collection_ref($projectId)
 {

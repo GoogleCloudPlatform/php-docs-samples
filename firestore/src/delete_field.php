@@ -31,7 +31,6 @@ use Google\Cloud\Firestore\FieldValue;
  * ```
  * delete_field('your-project-id');
  * ```
- *
  */
 function delete_field($projectId)
 {

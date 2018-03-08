@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * add_doc_data_after_auto_id('your-project-id');
  * ```
- *
  */
 function add_doc_data_after_auto_id($projectId)
 {

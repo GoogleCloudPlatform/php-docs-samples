@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * batch_write('your-project-id');
  * ```
- *
  */
 function batch_write($projectId)
 {
@@ -40,7 +39,7 @@ function batch_write($projectId)
     ]);
     # [START fs_batch_write]
     $batch = $db->batch();
-    
+
     # Set the data for NYC
     $nycRef = $db->collection('cities')->document('NYC');
     $batch->set($nycRef, [
@@ -52,7 +51,7 @@ function batch_write($projectId)
     $batch->update($sfRef, [
         ['path' => 'population', 'value' => 1000000]
     ]);
-    
+
     # Delete LA
     $laRef = $db->collection('cities')->document('LA');
     $batch->delete($laRef);

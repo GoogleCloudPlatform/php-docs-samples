@@ -28,7 +28,6 @@ namespace Google\Cloud\Samples\Firestore;
  * ```
  * delete_collection($collectionReference, $batchSize);
  * ```
- *
  */
 
 # [START fs_delete_collection]

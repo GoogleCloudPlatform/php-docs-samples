@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * create_query_capital('your-project-id');
  * ```
- *
  */
 function create_query_capital($projectId)
 {

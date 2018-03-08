@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * update_nested_fields('your-project-id');
  * ```
- *
  */
 function update_nested_fields($projectId)
 {

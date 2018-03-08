@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * invalid_range_order_by_query('your-project-id');
  * ```
- *
  */
 function invalid_range_order_by_query($projectId)
 {

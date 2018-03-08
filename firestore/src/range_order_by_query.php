@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * range_order_by_query('your-project-id');
  * ```
- *
  */
 function range_order_by_query($projectId)
 {
@@ -40,7 +39,9 @@ function range_order_by_query($projectId)
     ]);
     $citiesRef = $db->collection('cities');
     # [START fs_range_order_by_query]
-    $query = $citiesRef->where('population', '>', 2500000)->orderBy('population');
+    $query = $citiesRef
+        ->where('population', '>', 2500000)
+        ->orderBy('population');
     # [END fs_range_order_by_query]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {

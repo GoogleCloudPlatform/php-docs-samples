@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * get_multiple_docs('your-project-id');
  * ```
- *
  */
 function get_multiple_docs($projectId)
 {

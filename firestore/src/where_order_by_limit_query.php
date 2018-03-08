@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * where_order_by_limit_query('your-project-id');
  * ```
- *
  */
 function where_order_by_limit_query($projectId)
 {

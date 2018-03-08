@@ -31,7 +31,6 @@ use Google\Cloud\Firestore\FieldValue;
  * ```
  * update_server_timestamp('your-project-id');
  * ```
- *
  */
 function update_server_timestamp($projectId)
 {

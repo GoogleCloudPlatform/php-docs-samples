@@ -31,7 +31,6 @@ use Google\Cloud\Firestore\Transaction;
  * ```
  * run_simple_transaction('your-project-id');
  * ```
- *
  */
 function run_simple_transaction($projectId)
 {

@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * end_at_field_query_cursor('your-project-id');
  * ```
- *
  */
 function end_at_field_query_cursor($projectId)
 {

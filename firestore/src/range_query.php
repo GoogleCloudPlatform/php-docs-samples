@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * range_query('your-project-id');
  * ```
- *
  */
 function range_query($projectId)
 {

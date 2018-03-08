@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * simple_queries('your-project-id');
  * ```
- *
  */
 function simple_queries($projectId)
 {

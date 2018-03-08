@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * get_document('your-project-id');
  * ```
- *
  */
 function get_document($projectId)
 {
@@ -41,7 +40,7 @@ function get_document($projectId)
     # [START fs_get_document]
     $docRef = $db->collection('cities')->document('SF');
     $snapshot = $docRef->snapshot();
-    
+
     if ($snapshot->exists()) {
         printf('Document data:' . PHP_EOL);
         print_r($snapshot->fields());

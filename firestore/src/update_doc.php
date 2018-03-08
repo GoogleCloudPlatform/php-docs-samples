@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * update_doc('your-project-id');
  * ```
- *
  */
 function update_doc($projectId)
 {

@@ -32,7 +32,6 @@ use DateTime;
  * ```
  * add_doc_data_types('your-project-id');
  * ```
- *
  */
 function add_doc_data_types($projectId)
 {

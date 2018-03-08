@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * delete_doc('your-project-id');
  * ```
- *
  */
 function delete_doc($projectId)
 {

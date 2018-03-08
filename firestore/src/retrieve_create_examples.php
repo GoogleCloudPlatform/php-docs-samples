@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * retrieve_create_examples('your-project-id');
  * ```
- *
  */
 function retrieve_create_examples($projectId)
 {

@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * set_document_merge('your-project-id');
  * ```
- *
  */
 function set_document_merge($projectId)
 {

@@ -30,7 +30,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * ```
  * get_all('your-project-id');
  * ```
- *
  */
 function get_all($projectId)
 {
