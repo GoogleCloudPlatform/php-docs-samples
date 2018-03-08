@@ -17,12 +17,14 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-// [START dlp_delete_inspect_templates]
+// [START dlp_delete_inspect_template]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
- * List DLP inspection configuration templates.
- * @param string $callingProject The GCP Project ID to run the API call under
+ * Delete a DLP inspection configuration template.
+ *
+ * @param string $templateId The name of the template to delete.
+ *        Parent project ID is automatically extracted from this parameter
  */
 function delete_inspect_templates($templateId)
 {
@@ -35,4 +37,4 @@ function delete_inspect_templates($templateId)
     // Print results
     print_r('Successfully deleted template ' . $templateId . PHP_EOL);
 }
-// [END dlp_delete_inspect_templates]
+// [END dlp_delete_inspect_template]

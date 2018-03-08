@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START numerical_stats]
+# [START dlp_numerical_stats]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -47,13 +47,11 @@ function numerical_stats(
     $subscriptionId,
     $datasetId,
     $tableId,
-    $columnName)
-{
+    $columnName
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId // TODO is this necessary?
-    ]);
+    $pubsub = new PubSubClient();
 
     // Construct risk analysis config
     $columnField = new FieldId();
@@ -96,7 +94,6 @@ function numerical_stats(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    // TODO is there a better way to do this?
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
@@ -112,7 +109,6 @@ function numerical_stats(
     $job = $dlp->getDlpJob($job->getName());
 
     // Helper function to convert Protobuf values to strings
-    // TODO is there a better way?
     $value_to_string = function ($value) {
         return $value->getIntegerValue() ?:
             $value->getFloatValue() ?:
@@ -129,7 +125,8 @@ function numerical_stats(
     switch ($job->getState()) {
         case DlpJob_JobState::DONE:
             $results = $job->getRiskDetails()->getNumericalStatsResult();
-            print_r('Value range: [' .
+            print_r(
+                'Value range: [' .
                 $value_to_string($results->getMinValue()) .
                 ', ' .
                 $value_to_string($results->getMaxValue()) .
@@ -158,4 +155,4 @@ function numerical_stats(
             print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END numerical_stats]
+# [END dlp_numerical_stats]

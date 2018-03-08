@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START deidentify_mask]
+# [START dlp_deidentify_masking]
 use Google\Cloud\Dlp\V2\CharacterMaskConfig;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -29,17 +29,17 @@ use Google\Cloud\Dlp\V2\ContentItem;
 
 /**
  * Deidentify sensitive data in a string by masking it with a character.
- * @param string $callingProject The GCP Project ID to run the API call under
+ * @param string $callingProjectId The GCP Project ID to run the API call under
  * @param string $string The string to deidentify
  * @param int $numberToMask (Optional) The maximum number of sensitive characters to mask in a match
  * @param string $maskingCharacter (Optional) The character to mask matching sensitive data with
  */
 function deidentify_mask(
-    $callingProjectId,
-    $string,
-    $numberToMask = 0,
-    $maskingCharacter = 'x')
-{
+  $callingProjectId,
+  $string,
+  $numberToMask = 0,
+  $maskingCharacter = 'x'
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -73,16 +73,16 @@ function deidentify_mask(
     $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->deidentifyContent($parent, array(
+    $response = $dlp->deidentifyContent($parent, [
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $item
-    ));
+    ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
+                  'Likely', 'Very likely'];
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();
     print_r($deidentifiedValue);
 }
-# [END deidentify_mask]
+# [END dlp_deidentify_masking]

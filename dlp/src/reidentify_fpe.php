@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START reidentify_fpe]
+# [START dlp_reidentify_fpe]
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
 use Google\Cloud\Dlp\V2\CryptoKey;
@@ -34,9 +34,9 @@ use Google\Cloud\Dlp\V2\DeidentifyConfig;
 use Google\Cloud\Dlp\V2\CustomInfoType_SurrogateType;
 
 /**
- * Inspect a string using Format-Preserving Encryption (FPE) and the Data Loss Prevention (DLP) API.
+ * Reidentify a deidentified string using Format-Preserving Encryption (FPE).
  *
- * @param string $callingProject The GCP Project ID to run the API call under
+ * @param string $callingProjectId The GCP Project ID to run the API call under
  * @param string $string The string to deidentify
  * @param keyName $keyName The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
  * @param string $wrappedKey The AES-256 key to use, encrypted ('wrapped') with the KMS key
@@ -46,12 +46,12 @@ use Google\Cloud\Dlp\V2\CustomInfoType_SurrogateType;
  *        appear in your dataset'
  */
 function reidentify_fpe(
-    $callingProject,
+    $callingProjectId,
     $string,
     $keyName,
     $wrappedKey,
-    $surrogateTypeName = '')
-{
+    $surrogateTypeName = ''
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -108,14 +108,14 @@ function reidentify_fpe(
     $item = new ContentItem();
     $item->setValue($string);
 
-    $parent = $dlp->projectName($callingProject);
+    $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->reidentifyContent($parent, array(
+    $response = $dlp->reidentifyContent($parent, [
         'reidentifyConfig' => $reidentifyConfig,
         'inspectConfig' => $inspectConfig,
         'item' => $item
-    ));
+    ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
                     'Likely', 'Very likely'];
@@ -124,4 +124,4 @@ function reidentify_fpe(
     $reidentifiedValue = $response->getItem()->getValue();
     print_r($reidentifiedValue);
 }
-# [END reidentify_fpe]
+# [END dlp_reidentify_fpe]

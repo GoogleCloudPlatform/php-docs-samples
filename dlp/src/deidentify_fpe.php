@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START deidentify_fpe]
+# [START dlp_deidentify_fpe]
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
 use Google\Cloud\Dlp\V2\CryptoKey;
@@ -31,9 +31,9 @@ use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
 
 /**
- * Deidentify a string using Format-Preserving Encryption (FPE) and the Data Loss Prevention (DLP) API.
+ * Deidentify a string using Format-Preserving Encryption (FPE).
  *
- * @param string $callingProject The GCP Project ID to run the API call under
+ * @param string $callingProjectId The GCP Project ID to run the API call under
  * @param string $string The string to deidentify
  * @param string $keyName The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
  * @param wrappedKey $wrappedKey The AES-256 key to use, encrypted ('wrapped') with the KMS key
@@ -43,12 +43,12 @@ use Google\Cloud\Dlp\V2\ContentItem;
  *        appear in your dataset'
  */
 function deidentify_fpe(
-    $callingProject,
+    $callingProjectId,
     $string,
     $keyName,
     $wrappedKey,
-    $surrogateTypeName = '')
-{
+    $surrogateTypeName = ''
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -97,19 +97,19 @@ function deidentify_fpe(
     $content = new ContentItem();
     $content->setValue($string);
 
-    $parent = $dlp->projectName($callingProject);
+    $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->deidentifyContent($parent, array(
+    $response = $dlp->deidentifyContent($parent, [
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $content
-    ));
+    ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
+                  'Likely', 'Very likely'];
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();
     print_r($deidentifiedValue);
 }
-# [END deidentify_fpe]
+# [END dlp_deidentify_fpe]

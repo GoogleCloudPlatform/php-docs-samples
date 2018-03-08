@@ -46,13 +46,13 @@ use Google\Protobuf\Duration;
  */
 
 function create_trigger(
-  $callingProjectId,
-  $bucketName,
-  $triggerId = '',
-  $displayName = '',
-  $description = '',
-  $scanPeriod = 1,
-  $maxFindings = 0
+    $callingProjectId,
+    $bucketName,
+    $triggerId = '',
+    $displayName = '',
+    $description = '',
+    $scanPeriod = 1,
+    $maxFindings = 0
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -113,10 +113,10 @@ function create_trigger(
 
     // Run trigger creation request
     $parent = $dlp->projectName($callingProjectId);
-    $dlp->createJobTrigger($parent, array(
-      'jobTrigger' => $jobTriggerObject,
-      'triggerId' => $triggerId
-    ));
+    $dlp->createJobTrigger($parent, [
+        'jobTrigger' => $jobTriggerObject,
+        'triggerId' => $triggerId
+    ]);
 
     // Print results
     print_r('Successfully created trigger ' . $triggerId . PHP_EOL);

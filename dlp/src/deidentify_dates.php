@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START deidentify_dates]
+# [START dlp_deidentify_date_shift]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
@@ -153,10 +153,10 @@ function deidentify_dates(
     $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->deidentifyContent($parent, array(
+    $response = $dlp->deidentifyContent($parent, [
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $item
-    ));
+    ]);
 
     // Save the results to a file
     $resultTable = $response->getItem()->getTable();
@@ -179,4 +179,4 @@ function deidentify_dates(
     };
     file_put_contents($outputCsvFile, $outputCsvText);
 }
-# [END deidentify_dates]
+# [END dlp_deidentify_date_shift]

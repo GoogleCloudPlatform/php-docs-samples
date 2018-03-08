@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START l_diversity]
+# [START dlp_l_diversity]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -50,20 +50,18 @@ function l_diversity(
     $datasetId,
     $tableId,
     $sensitiveAttribute,
-    $quasiIdNames)
-{
+    $quasiIdNames
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId // TODO is this necessary?
-    ]);
+    $pubsub = new PubSubClient();
 
     // Construct risk analysis config
     $quasiIds = array_map(
-      function ($id) {
-          return (new FieldId())->setName($id);
-      },
-      $quasiIdNames
+        function ($id) {
+            return (new FieldId())->setName($id);
+        },
+        $quasiIdNames
     );
 
     $sensitiveField = new FieldId();
@@ -75,7 +73,7 @@ function l_diversity(
 
     $privacyMetric = new PrivacyMetric();
     $privacyMetric->setLDiversityConfig($statsConfig);
-    
+  
     // Construct items to be analyzed
     $bigqueryTable = new BigQueryTable();
     $bigqueryTable->setProjectId($dataProjectId);
@@ -107,7 +105,6 @@ function l_diversity(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    // TODO is there a better way to do this?
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
@@ -123,7 +120,6 @@ function l_diversity(
     $job = $dlp->getDlpJob($job->getName());
 
     // Helper function to convert Protobuf values to strings
-    // TODO is there a better way?
     $value_to_string = function ($value) {
         return $value->getIntegerValue() ?:
             $value->getFloatValue() ?:
@@ -138,56 +134,57 @@ function l_diversity(
     // Print finding counts
     print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
-            $histBuckets = $job->getRiskDetails()->getLDiversityResult()->getSensitiveValueFrequencyHistogramBuckets();
+    case DlpJob_JobState::DONE:
+        $histBuckets = $job->getRiskDetails()->getLDiversityResult()->getSensitiveValueFrequencyHistogramBuckets();
 
-            foreach ($histBuckets as $bucketIndex => $histBucket) {
-                // Print bucket stats
-                print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-                print_r('  Bucket size range: [' .
-                  $histBucket->getSensitiveValueFrequencyLowerBound() .
-                  ', ' .
-                  $histBucket->getSensitiveValueFrequencyUpperBound() .
-                  "]" . PHP_EOL
+        foreach ($histBuckets as $bucketIndex => $histBucket) {
+            // Print bucket stats
+            print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
+            print_r(
+              '  Bucket size range: [' .
+                $histBucket->getSensitiveValueFrequencyLowerBound() .
+                ', ' .
+                $histBucket->getSensitiveValueFrequencyUpperBound() .
+                "]" . PHP_EOL
+            );
+
+            // Print bucket values
+            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+                print_r(
+                    '  Class size: ' .
+                    $valueBucket->getEquivalenceClassSize() . PHP_EOL
                 );
 
-                // Print bucket values
-                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
-                    print_r('  Class size: ' .
-                      $valueBucket->getEquivalenceClassSize() . PHP_EOL
+                // Pretty-print quasi-ID values
+                print_r('  Quasi-ID values: {');
+                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                    print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                }
+                print_r('}' . PHP_EOL);
+
+                // Pretty-print sensitive values
+                $topValues = $valueBucket->getTopSensitiveValues();
+                foreach ($topValues as $topValue) {
+                    print_r(
+                        '  Sensitive value ' .
+                        $value_to_string($topValue->getValue()) .
+                        ' occurs ' .
+                        $topValue->getCount() .
+                        ' time(s).' . PHP_EOL
                     );
-
-                    // Pretty-print quasi-ID values
-                    // TODO better to use array_map and iterator_to_array here?
-                    print_r('  Quasi-ID values: {');
-                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                        print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
-                    }
-                    print_r('}' . PHP_EOL);
-
-                    // Pretty-print sensitive values
-                    $topValues = $valueBucket->getTopSensitiveValues();
-                    foreach ($topValues as $topValue) {
-                        print_r(
-                          '  Sensitive value ' .
-                          $value_to_string($topValue->getValue()) .
-                          ' occurs ' .
-                          $topValue->getCount() .
-                          ' time(s).' . PHP_EOL
-                        );
-                    }
                 }
             }
-            break;
-        case DlpJob_JobState::FAILED:
-            $errors = $job->getErrors();
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
-            break;
-        default:
-            print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+        }
+        break;
+    case DlpJob_JobState::FAILED:
+        $errors = $job->getErrors();
+        foreach ($errors as $error) {
+            var_dump($error->getDetails());
+        }
+        print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
+        break;
+    default:
+        print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END l_diversity]
+# [END dlp_l_diversity]

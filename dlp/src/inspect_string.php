@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_string]
+# [START dlp_inspect_string]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -26,17 +26,17 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 
 /**
- * Inspect a string using the Data Loss Prevention (DLP) API.
+ * Inspect a string.
  *
- * @param string $callingProject The GCP Project ID to run the API call under
+ * @param string $callingProjectId The GCP Project ID to run the API call under
  * @param string $string The text to inspect
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_string(
-    $callingProject,
-    $string,
-    $maxFindings = 0)
-{
+  $callingProjectId,
+  $string,
+  $maxFindings = 0
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -67,16 +67,16 @@ function inspect_string(
     $content = new ContentItem();
     $content->setValue($string);
 
-    $parent = $dlp->projectName($callingProject);
+    $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->inspectContent($parent, array(
+    $response = $dlp->inspectContent($parent, [
         'inspectConfig' => $inspectConfig,
         'item' => $content
-    ));
+    ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
+                  'Likely', 'Very likely'];
 
     // Print the results
     $findings = $response->getResult()->getFindings();
@@ -94,4 +94,4 @@ function inspect_string(
         }
     }
 }
-# [END inspect_string]
+# [END dlp_inspect_string]

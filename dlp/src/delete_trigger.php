@@ -17,12 +17,13 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_list_triggers]
+# [START dlp_delete_trigger]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
  * Delete a Data Loss Prevention API job trigger.
- * @param string $triggerId The name of the trigger to be deleted
+ * @param string $triggerId The name of the trigger to be deleted.
+ *        Parent project ID is automatically extracted from this parameter
  */
 function delete_trigger($triggerId)
 {
@@ -35,4 +36,4 @@ function delete_trigger($triggerId)
     // Print the results
     print_r('Successfully deleted trigger ' . $triggerId . PHP_EOL);
 }
-# [END dlp_list_triggers]
+# [END dlp_delete_trigger]

@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START list_info_types]
+# [START dlp_list_info_types]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
@@ -40,9 +40,11 @@ function list_info_types($filter = '', $languageCode = '')
     // Print the results
     print('Info Types:' . PHP_EOL);
     foreach ($response->getInfoTypes() as $infoType) {
-        printf('  %s (%s)' . PHP_EOL,
+        printf(
+            '  %s (%s)' . PHP_EOL,
             $infoType->getDisplayName(),
-            $infoType->getName());
+            $infoType->getName()
+        );
     }
 }
-# [END list_info_types]
+# [END dlp_list_info_types]

@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START inspect_gcs_file]
+# [START dlp_inspect_gcs]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
@@ -33,7 +33,7 @@ use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 
 /**
- * Inspect a BigQuery table using the Data Loss Prevention (DLP) API.
+ * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $bucketId The name of the bucket where the file resides
@@ -44,18 +44,16 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_gcs(
-    $callingProjectId,
-    $bucketId,
-    $file,
-    $topicId,
-    $subscriptionId,
-    $maxFindings = 0)
-{
+  $callingProjectId,
+  $bucketId,
+  $file,
+  $topicId,
+  $subscriptionId,
+  $maxFindings = 0
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId // TODO is this necessary?
-    ]);
+    $pubsub = new PubSubClient();
 
     // The infoTypes of information to match
     $personNameInfoType = new InfoType();
@@ -108,17 +106,16 @@ function inspect_gcs(
     // Submit request
     $parent = $dlp->projectName($callingProjectId);
     $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJob
-    ]);
+      'inspectJob' => $inspectJob
+  ]);
 
     // Poll via Pub/Sub until job finishes
-    // TODO is there a better way to do this?
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
             $subscription->acknowledge($message);
             if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+        $message->attributes()['DlpJobName'] === $job->getName()) {
                 $polling = false;
             }
         }
@@ -130,25 +127,25 @@ function inspect_gcs(
     // Print finding counts
     print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
-            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-            if (count($infoTypeStats) === 0) {
-                print_r('No findings.' . PHP_EOL);
-            } else {
-                foreach ($infoTypeStats as $infoTypeStat) {
-                    print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of infoType ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
-                }
-            }
-            break;
-        case DlpJob_JobState::ERROR:
-            $errors = $job->getErrors();
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
-            break;
-        default:
-            print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
-    }
+    case DlpJob_JobState::DONE:
+      $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+      if (count($infoTypeStats) === 0) {
+          print_r('No findings.' . PHP_EOL);
+      } else {
+          foreach ($infoTypeStats as $infoTypeStat) {
+              print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of infoType ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
+          }
+      }
+      break;
+    case DlpJob_JobState::ERROR:
+      $errors = $job->getErrors();
+      foreach ($errors as $error) {
+          var_dump($error->getDetails());
+      }
+      print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
+      break;
+    default:
+      print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+  }
 }
-# [END inspect_gcs_file]
+# [END dlp_inspect_gcs]

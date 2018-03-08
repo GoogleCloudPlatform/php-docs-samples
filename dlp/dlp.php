@@ -28,7 +28,7 @@ $application = new Application('Cloud DLP');
 $application->add(new Command('inspect-string'))
     ->addArgument('string', InputArgument::REQUIRED, 'The text to inspect')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Inspect a string using the Data Loss Prevention (DLP) API.')
+    ->setDescription('Inspect a string.')
     ->addArgument('max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
@@ -43,7 +43,7 @@ $application->add(new Command('inspect-string'))
 $application->add(new Command('inspect-file'))
     ->addArgument('path', InputArgument::REQUIRED, 'The file path to inspect')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Inspect a file using the Data Loss Prevention (DLP) API.')
+    ->setDescription('Inspect a file.')
     ->addArgument('max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
@@ -66,7 +66,7 @@ $application->add(new Command('inspect-datastore'))
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
         0)
-    ->setDescription('Inspect a Google Cloud Platform project\'s Cloud Datastore using the Data Loss Prevention (DLP) API and Pub/Sub for job status notifications.')
+    ->setDescription('Inspect a Google Cloud Platform project\'s Cloud Datastore , using Pub/Sub for job status notifications.')
     ->setCode(function ($input, $output) {
         inspect_datastore(
             (string) $input->getArgument('calling-project'),
@@ -90,7 +90,7 @@ $application->add(new Command('inspect-bigquery'))
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
         0)
-    ->setDescription('Inspect a BigQuery table using the Data Loss Prevention (DLP) API and Pub/Sub for job status notifications.')
+    ->setDescription('Inspect a BigQuery table , using Pub/Sub for job status notifications.')
     ->setCode(function ($input, $output) {
         inspect_bigquery(
             (string) $input->getArgument('calling-project'),
@@ -114,7 +114,7 @@ $application->add(new Command('inspect-gcs'))
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
         0)
-    ->setDescription('Inspect a file stored on Google Cloud Storage using the Data Loss Prevention (DLP) API and Pub/Sub for job status notifications.')
+    ->setDescription('Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.')
     ->setCode(function ($input, $output) {
         inspect_gcs(
             (string) $input->getArgument('calling-project'),
@@ -138,10 +138,10 @@ $application->add(new Command('list-info-types'))
     });
 
 $application->add(new Command('redact-image'))
-    ->addArgument('image-path', InputArgument::REQUIRED, 'The filepath of the image to inspect')
-    ->addArgument('output-path', InputArgument::REQUIRED, 'The local path to save the resulting image to')
+    ->addArgument('image-path', InputArgument::REQUIRED, 'The local filepath of the image to inspect')
+    ->addArgument('output-path', InputArgument::REQUIRED, 'The local filepath to save the resulting image to')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Redact sensitive data from an image using the Data Loss Prevention (DLP) API.')
+    ->setDescription('Redact sensitive data from an image.')
     ->setCode(function ($input, $output) {
         redact_image(
             (string) $input->getArgument('calling-project'),
@@ -161,7 +161,7 @@ $application->add(new Command('deidentify-mask'))
         'The character to mask matching sensitive data with',
         'x')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Mask sensitive data in a string using the Data Loss Prevention (DLP) API.')
+    ->setDescription('Mask sensitive data in a string.')
     ->setCode(function ($input, $output) {
         deidentify_mask(
             (string) $input->getArgument('calling-project'),
@@ -181,7 +181,7 @@ $application->add(new Command('deidentify-fpe'))
         'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
     ->addArgument('surrogate-type', InputArgument::OPTIONAL, 'The name of the surrogate custom info type to use when reidentifying')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Mask sensitive data in a string using the Data Loss Prevention (DLP) API.')
+    ->setDescription('Deidentify a string using Format-Preserving Encryption (FPE).')
     ->setCode(function ($input, $output) {
         deidentify_fpe(
             (string) $input->getArgument('calling-project'),
@@ -202,7 +202,7 @@ $application->add(new Command('reidentify-fpe'))
         'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
     ->addArgument('surrogate-type', InputArgument::REQUIRED, 'The name of the surrogate custom info type to use when reidentifying')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
-    ->setDescription('Mask sensitive data in a string using the Data Loss Prevention (DLP) API.')
+    ->setDescription('Mask sensitive data in a string.')
     ->setCode(function ($input, $output) {
         reidentify_fpe(
             (string) $input->getArgument('calling-project'),
@@ -284,7 +284,7 @@ $application->add(new Command('delete-trigger'))
     });
 
 $application->add(new Command('list-jobs'))
-    ->addArgument('filter', InputArgument::REQUIRED, 'The filter expression to use; see https://cloud.google.com/dlp/docs/reference/rest/v2beta2/projects.dlpJobs/list')
+    ->addArgument('filter', InputArgument::REQUIRED, 'The filter expression to use; see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('List Data Loss Prevention API jobs corresponding to a given filter.')
     ->setCode(function ($input, $output) {
@@ -330,7 +330,7 @@ $application->add(new Command('list-inspect-templates'))
 
 $application->add(new Command('delete-inspect-template'))
     ->addArgument('template-id', InputArgument::REQUIRED, 'The name of the template to delete')
-    ->setDescription('Delete the DLP inspection configuration template with the specified name.')
+    ->setDescription('Delete a DLP inspection configuration template.')
     ->setCode(function ($input, $output) {
         delete_inspect_templates($input->getArgument('template-id'));
     });
