@@ -24,6 +24,7 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
  * Delete results of a Data Loss Prevention API job
  *
  * @param string $jobId The name of the job whose results should be deleted
+ *               Parent project ID is automatically extracted from this parameter
  */
 function delete_job($jobId)
 {

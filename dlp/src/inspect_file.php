@@ -28,16 +28,17 @@ use Google\Cloud\Dlp\V2\ByteContentItem;
 use Google\Cloud\Dlp\V2\ByteContentItem_BytesType;
 
 /**
- * Inspect a file using the Data Loss Prevention (DLP) API.
+ * Inspect a local file.
  *
+ * @param string $callingProjectId The project ID to run the API call under
  * @param string $path The file path to the file to inspect
+ * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_file(
-    $callingProject,
-    $path,
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED,
-    $maxFindings = 0)
-{
+  $callingProjectId,
+  $path,
+  $maxFindings = 0
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -47,6 +48,9 @@ function inspect_file(
     $usStateInfoType = new InfoType();
     $usStateInfoType->setName('US_STATE');
     $infoTypes = [$usNameInfoType, $usStateInfoType];
+
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Whether to include the matching string in the response
     $includeQuote = true;
@@ -70,16 +74,16 @@ function inspect_file(
     $content = new ContentItem();
     $content->setByteItem($byteContent);
 
-    $parent = $dlp->projectName($callingProject);
+    $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->inspectContent($parent, array(
+    $response = $dlp->inspectContent($parent, [
         'inspectConfig' => $inspectConfig,
         'item' => $content
-    ));
+    ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
+                  'Likely', 'Very likely'];
 
     // Print the results
     $findings = $response->getResult()->getFindings();

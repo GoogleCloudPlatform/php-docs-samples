@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START redact_string]
+# [START dlp_redact_image]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -26,16 +26,17 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 
 /**
- * Redact a sensitive string using the Data Loss Prevention (DLP) API.
+ * Redact sensitive data from an image.
  *
- * @param string $string The text to inspect
+ * @param string $callingProjectId The GCP Project ID to run the API call under
+ * @param string $imagePath The local filepath of the image to inspect
+ * @param string $outputPath The local filepath to save the resulting image to
  */
 function redact_image(
     $callingProjectId,
     $imagePath,
-    $outputPath,
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED)
-{
+    $outputPath
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
@@ -43,6 +44,9 @@ function redact_image(
     $phoneNumberInfoType = new InfoType();
     $phoneNumberInfoType->setName('PHONE_NUMBER');
     $infoTypes = [$phoneNumberInfoType];
+
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Whether to include the matching string in the response
     $includeQuote = true;
@@ -82,11 +86,11 @@ function redact_image(
     $parent = $dlp->projectName($callingProjectId);
 
     // Run request
-    $response = $dlp->redactImage($parent, array(
+    $response = $dlp->redactImage($parent, [
         'inspectConfig' => $inspectConfig,
         'byteItem' => $byteContent,
         'imageRedactionConfigs' => $imageRedactionConfigs
-    ));
+    ]);
 
     // Save result to file
     $outputRef = fopen($outputPath, 'wb');
@@ -96,4 +100,4 @@ function redact_image(
     // Print completion message
     print('Redacted image saved to ' . $outputPath . PHP_EOL);
 }
-# [END redact_string]
+# [END dlp_redact_image]

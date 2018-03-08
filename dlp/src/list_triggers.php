@@ -22,14 +22,14 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
  * List Data Loss Prevention API job triggers.
- * @param string $callingProject The GCP Project ID to run the API call under
+ * @param string $callingProjectId The GCP Project ID to run the API call under
  */
-function list_triggers($callingProject)
+function list_triggers($callingProjectId)
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
-    $parent = $dlp->projectName($callingProject);
+    $parent = $dlp->projectName($callingProjectId);
 
     // Run request
     $response = $dlp->listJobTriggers($parent);

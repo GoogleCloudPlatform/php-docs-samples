@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-// [START create_inspect_template]
+// [START dlp_create_inspect_template]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -35,11 +35,11 @@ use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function create_inspect_template(
-  $callingProjectId,
-  $templateId,
-  $displayName,
-  $description,
-  $maxFindings
+    $callingProjectId,
+    $templateId,
+    $displayName,
+    $description,
+    $maxFindings
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -78,17 +78,17 @@ function create_inspect_template(
     // Run request
     $parent = $dlp->projectName($callingProjectId);
     $dlp->createInspectTemplate($parent, [
-    'inspectTemplate' => $inspectTemplate,
-    'templateId' => $templateId
-  ]);
+        'inspectTemplate' => $inspectTemplate,
+        'templateId' => $templateId
+    ]);
 
     // Print results
     print_r(
-    'Successfully created template projects/' .
-    $callingProjectId .
-    '/inspectTemplates/' .
-    $templateId .
-    PHP_EOL
-  );
+        'Successfully created template projects/' .
+        $callingProjectId .
+        '/inspectTemplates/' .
+        $templateId .
+        PHP_EOL
+    );
 }
-// [END create_inspect_template]
+// [END dlp_create_inspect_template]

@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START k_anomymity]
+# [START dlp_k_anomymity]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -47,20 +47,18 @@ function k_anonymity(
     $subscriptionId,
     $datasetId,
     $tableId,
-    $quasiIdNames)
-{
+    $quasiIdNames
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId // TODO is this necessary?
-    ]);
+    $pubsub = new PubSubClient();
 
     // Construct risk analysis config
     $quasiIds = array_map(
-      function ($id) {
-          return (new FieldId())->setName($id);
-      },
-      $quasiIdNames
+        function ($id) {
+            return (new FieldId())->setName($id);
+        },
+        $quasiIdNames
     );
 
     $statsConfig = new PrivacyMetric_KAnonymityConfig();
@@ -100,7 +98,6 @@ function k_anonymity(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    // TODO is there a better way to do this?
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
@@ -116,7 +113,6 @@ function k_anonymity(
     $job = $dlp->getDlpJob($job->getName());
 
     // Helper function to convert Protobuf values to strings
-    // TODO is there a better way?
     $value_to_string = function ($value) {
         return $value->getIntegerValue() ?:
             $value->getFloatValue() ?:
@@ -131,45 +127,45 @@ function k_anonymity(
     // Print finding counts
     print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
-            $histBuckets = $job->getRiskDetails()->getKAnonymityResult()->getEquivalenceClassHistogramBuckets();
+    case DlpJob_JobState::DONE:
+        $histBuckets = $job->getRiskDetails()->getKAnonymityResult()->getEquivalenceClassHistogramBuckets();
 
-            foreach ($histBuckets as $bucketIndex => $histBucket) {
-                // Print bucket stats
-                print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-                print_r('  Bucket size range: [' .
-                  $histBucket->getEquivalenceClassSizeLowerBound() .
-                  ', ' .
-                  $histBucket->getEquivalenceClassSizeUpperBound() .
-                  "]" . PHP_EOL
-                );
+        foreach ($histBuckets as $bucketIndex => $histBucket) {
+            // Print bucket stats
+            print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
+            print_r(
+                '  Bucket size range: [' .
+                $histBucket->getEquivalenceClassSizeLowerBound() .
+                ', ' .
+                $histBucket->getEquivalenceClassSizeUpperBound() .
+                "]" . PHP_EOL
+            );
 
-                // Print bucket values
-                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
-                    // Pretty-print quasi-ID values
-                    // TODO better to use array_map and iterator_to_array here?
-                    print_r('  Quasi-ID values: {');
-                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                        print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
-                    }
-                    print_r('}' . PHP_EOL);
-
-                    print_r('  Class size: ' .
-                      $valueBucket->getEquivalenceClassSize() . PHP_EOL
-                    );
+            // Print bucket values
+            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+                // Pretty-print quasi-ID values
+                print_r('  Quasi-ID values: {');
+                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                    print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
                 }
+                print_r('}' . PHP_EOL);
+
+                print_r(
+                    '  Class size: ' . $valueBucket->getEquivalenceClassSize() . PHP_EOL
+                );
             }
-            
-            break;
-        case DlpJob_JobState::FAILED:
-            $errors = $job->getErrors();
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
-            break;
-        default:
-            print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+        }
+      
+        break;
+    case DlpJob_JobState::FAILED:
+        $errors = $job->getErrors();
+        foreach ($errors as $error) {
+            var_dump($error->getDetails());
+        }
+        print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
+        break;
+    default:
+        print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END k_anomymity]
+# [END dlp_k_anomymity]

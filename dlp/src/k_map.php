@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START k_map]
+# [START dlp_k_map]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
@@ -47,21 +47,19 @@ use Google\Cloud\Dlp\V2\FieldId;
 
  */
 function k_map(
-    $callingProjectId,
-    $dataProjectId,
-    $topicId,
-    $subscriptionId,
-    $datasetId,
-    $tableId,
-    $regionCode,
-    $quasiIdNames,
-    $infoTypes)
-{
+  $callingProjectId,
+  $dataProjectId,
+  $topicId,
+  $subscriptionId,
+  $datasetId,
+  $tableId,
+  $regionCode,
+  $quasiIdNames,
+  $infoTypes
+) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId // TODO is this necessary?
-    ]);
+    $pubsub = new PubSubClient();
 
     // Verify input
     if (count($infoTypes) != count($quasiIdNames)) {
@@ -153,45 +151,46 @@ function k_map(
     // Print finding counts
     print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
-            $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
+    case DlpJob_JobState::DONE:
+        $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
 
-            foreach ($histBuckets as $bucketIndex => $histBucket) {
-                // Print bucket stats
-                print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-                print_r('  Anonymity range: [' .
-                  $histBucket->getMinAnonymity() .
-                  ', ' .
-                  $histBucket->getMaxAnonymity() .
-                  "]" . PHP_EOL
+        foreach ($histBuckets as $bucketIndex => $histBucket) {
+            // Print bucket stats
+            print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
+            print_r(
+                '  Anonymity range: [' .
+                $histBucket->getMinAnonymity() .
+                ', ' .
+                $histBucket->getMaxAnonymity() .
+                "]" . PHP_EOL
+            );
+            print_r('  Size: ' . $histBucket->getBucketSize() . PHP_EOL);
+
+            // Print bucket values
+            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+                print_r(
+                    '  Estimated k-map anonymity: ' .
+                    $valueBucket->getEstimatedAnonymity() . PHP_EOL
                 );
-                print_r('  Size: ' . $histBucket->getBucketSize() . PHP_EOL);
 
-                // Print bucket values
-                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
-                    print_r('  Estimated k-map anonymity: ' .
-                      $valueBucket->getEstimatedAnonymity() . PHP_EOL
-                    );
-
-                    // Pretty-print quasi-ID values
-                    // TODO better to use array_map and iterator_to_array here?
-                    print_r('  Values: {');
-                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                        print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
-                    }
-                    print_r('}' . PHP_EOL);
+                // Pretty-print quasi-ID values
+                print_r('  Values: {');
+                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                    print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
                 }
+                print_r('}' . PHP_EOL);
             }
-            break;
-        case DlpJob_JobState::FAILED:
-            $errors = $job->getErrors();
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
-            break;
-        default:
-            print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+        }
+        break;
+    case DlpJob_JobState::FAILED:
+        $errors = $job->getErrors();
+        foreach ($errors as $error) {
+            var_dump($error->getDetails());
+        }
+        print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
+        break;
+    default:
+        print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END k_map]
+# [END dlp_k_map]

@@ -34,7 +34,7 @@ use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Inspect Datastore using the Data Loss Prevention (DLP) API.
+ * Inspect Datastore, using Pub/Sub for job status notifications.
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $dataProjectId The project ID containing the target Datastore
@@ -52,13 +52,11 @@ function inspect_datastore(
     $subscriptionId,
     $kind,
     $namespaceId,
-    $maxFindings = 0)
-{
+    $maxFindings = 0
+) {
     // Instantiate clients
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId // TODO is this necessary?
-    ]);
+    $pubsub = new PubSubClient();
 
     // The infoTypes of information to match
     $personNameInfoType = new InfoType();
@@ -73,7 +71,7 @@ function inspect_datastore(
     // Specify finding limits
     $limits = new InspectConfig_FindingLimits();
     $limits->setMaxFindingsPerRequest($maxFindings);
-    
+  
     // Construct items to be inspected
     $partitionId = new PartitionId();
     $partitionId->setProjectId($dataProjectId);
@@ -121,13 +119,12 @@ function inspect_datastore(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    // TODO is there a better way to do this?
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
             $subscription->acknowledge($message);
             if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+        $message->attributes()['DlpJobName'] === $job->getName()) {
                 $polling = false;
             }
         }

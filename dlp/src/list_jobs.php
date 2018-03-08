@@ -24,11 +24,11 @@ use Google\Cloud\Dlp\V2\DlpJobType;
 /**
  * List Data Loss Prevention API jobs corresponding to a given filter.
  *
- * @param string $callingProject The project ID to run the API call under
+ * @param string $callingProjectId The project ID to run the API call under
  * @param string $filter The filter expression to use
- *        For more information and filter syntax, see https://cloud.google.com/dlp/docs/reference/rest/v2beta2/projects.dlpJobs/list
+ *        For more information and filter syntax, see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
  */
-function list_jobs($callingProject, $filter)
+function list_jobs($callingProjectId, $filter)
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -37,7 +37,7 @@ function list_jobs($callingProject, $filter)
     $jobType = DlpJobType::INSPECT_JOB;
 
     // Run job-listing request
-    $parent = $dlp->projectName($callingProject);
+    $parent = $dlp->projectName($callingProjectId);
     $response = $dlp->listDlpJobs($parent, [
       'filter' => $filter,
       'type' => $jobType
@@ -51,7 +51,11 @@ function list_jobs($callingProject, $filter)
 
         if (count($infoTypeStats) > 0) {
             foreach ($infoTypeStats as $infoTypeStat) {
-                print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of type ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
+                printf(
+                    '  Found %s instance(s) of type %s' . PHP_EOL,
+                    $infoTypeStat->getCount(),
+                    $infoTypeStat->getInfoType()->getName()
+                );
             }
         } else {
             print_r('  No findings.' . PHP_EOL);
