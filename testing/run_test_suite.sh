@@ -28,6 +28,7 @@ FLAKES=(
 GRPC_ONLY_TESTS=(
     appengine/standard/grpc
     spanner
+    firestore
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
