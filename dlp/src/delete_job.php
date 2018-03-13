@@ -35,6 +35,6 @@ function delete_job($jobId)
     $dlp->deleteDlpJob($jobId);
 
     // Print status
-    print_r('Successfully deleted job ' . $jobId . PHP_EOL);
+    printf('Successfully deleted job %s' . PHP_EOL, $jobId);
 }
 // [END dlp_delete_job]

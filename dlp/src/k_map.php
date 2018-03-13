@@ -30,6 +30,7 @@ use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig_TaggedField;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\PubSub\V1\PublisherClient;
 
 /**
  * Computes the k-map risk estimation of a column set in a Google BigQuery table.
@@ -68,46 +69,46 @@ function k_map(
 
     // Map infoTypes to quasi-ids
     $quasiIdObjects = array_map(function ($quasiId, $infoType) {
-        $quasiIdField = new FieldId();
-        $quasiIdField->setName($quasiId);
+        $quasiIdField = (new FieldId())
+            ->setName($quasiId);
 
-        $quasiIdType = new InfoType();
-        $quasiIdType->setName($infoType);
+        $quasiIdType = (new InfoType())
+            ->setName($infoType);
 
-        $quasiIdObject = new PrivacyMetric_KMapEstimationConfig_TaggedField();
-        $quasiIdObject->setInfoType($quasiIdType);
-        $quasiIdObject->setField($quasiIdField);
+        $quasiIdObject = (new PrivacyMetric_KMapEstimationConfig_TaggedField())
+            ->setInfoType($quasiIdType)
+            ->setField($quasiIdField);
 
         return $quasiIdObject;
     }, $quasiIdNames, $infoTypes);
 
     // Construct analysis config
-    $statsConfig = new PrivacyMetric_KMapEstimationConfig();
-    $statsConfig->setQuasiIds($quasiIdObjects);
-    $statsConfig->setRegionCode($regionCode);
+    $statsConfig = (new PrivacyMetric_KMapEstimationConfig())
+        ->setQuasiIds($quasiIdObjects)
+        ->setRegionCode($regionCode);
 
-    $privacyMetric = new PrivacyMetric();
-    $privacyMetric->setKMapEstimationConfig($statsConfig);
+    $privacyMetric = (new PrivacyMetric())
+        ->setKMapEstimationConfig($statsConfig);
 
     // Construct items to be analyzed
-    $bigqueryTable = new BigQueryTable();
-    $bigqueryTable->setProjectId($dataProjectId);
-    $bigqueryTable->setDatasetId($datasetId);
-    $bigqueryTable->setTableId($tableId);
+    $bigqueryTable = (new BigQueryTable())
+        ->setProjectId($dataProjectId)
+        ->setDatasetId($datasetId)
+        ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
-    $pubSubAction = new Action_PublishToPubSub();
-    $pubSubAction->setTopic($fullTopicId);
+    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
+    $pubSubAction = (new Action_PublishToPubSub())
+        ->setTopic($fullTopicId);
 
-    $action = new Action();
-    $action->setPubSub($pubSubAction);
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
     // Construct risk analysis job config to run
-    $riskJob = new RiskAnalysisJobConfig();
-    $riskJob->setPrivacyMetric($privacyMetric);
-    $riskJob->setSourceTable($bigqueryTable);
-    $riskJob->setActions([$action]);
+    $riskJob = (new RiskAnalysisJobConfig())
+        ->setPrivacyMetric($privacyMetric)
+        ->setSourceTable($bigqueryTable)
+        ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
     $topic = $pubsub->topic($topicId);
@@ -149,48 +150,46 @@ function k_map(
     };
 
     // Print finding counts
-    print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
     case DlpJob_JobState::DONE:
         $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
 
         foreach ($histBuckets as $bucketIndex => $histBucket) {
             // Print bucket stats
-            print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-            print_r(
-                '  Anonymity range: [' .
-                $histBucket->getMinAnonymity() .
-                ', ' .
-                $histBucket->getMaxAnonymity() .
-                "]" . PHP_EOL
+            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+            printf(
+                '  Anonymity range: [%s, %s]' . PHP_EOL,
+                $histBucket->getMinAnonymity(),
+                $histBucket->getMaxAnonymity()
             );
-            print_r('  Size: ' . $histBucket->getBucketSize() . PHP_EOL);
+            printf('  Size: %s' . PHP_EOL, $histBucket->getBucketSize());
 
             // Print bucket values
             foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
-                print_r(
-                    '  Estimated k-map anonymity: ' .
-                    $valueBucket->getEstimatedAnonymity() . PHP_EOL
+                printf(
+                    '  Estimated k-map anonymity: %s' . PHP_EOL,
+                    $valueBucket->getEstimatedAnonymity()
                 );
 
                 // Pretty-print quasi-ID values
-                print_r('  Values: {');
+                print('  Values: {');
                 foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                    print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                    print(($index !== 0 ? ', ' : '') . $value_to_string($value));
                 }
-                print_r('}' . PHP_EOL);
+                print('}' . PHP_EOL);
             }
         }
         break;
     case DlpJob_JobState::FAILED:
+        printf('Job %s had errors:' . PHP_EOL, $job->getName());
         $errors = $job->getErrors();
         foreach ($errors as $error) {
             var_dump($error->getDetails());
         }
-        print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
         break;
     default:
-        print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+        print('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_k_map]

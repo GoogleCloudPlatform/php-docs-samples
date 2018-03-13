@@ -28,6 +28,7 @@ use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_KAnonymityConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\PubSub\V1\PublisherClient;
 
 /**
  * Computes the k-anonymity of a column set in a Google BigQuery table.
@@ -61,31 +62,31 @@ function k_anonymity(
         $quasiIdNames
     );
 
-    $statsConfig = new PrivacyMetric_KAnonymityConfig();
-    $statsConfig->setQuasiIds($quasiIds);
+    $statsConfig = (new PrivacyMetric_KAnonymityConfig())
+        ->setQuasiIds($quasiIds);
 
-    $privacyMetric = new PrivacyMetric();
-    $privacyMetric->setKAnonymityConfig($statsConfig);
+    $privacyMetric = (new PrivacyMetric())
+        ->setKAnonymityConfig($statsConfig);
 
     // Construct items to be analyzed
-    $bigqueryTable = new BigQueryTable();
-    $bigqueryTable->setProjectId($dataProjectId);
-    $bigqueryTable->setDatasetId($datasetId);
-    $bigqueryTable->setTableId($tableId);
+    $bigqueryTable = (new BigQueryTable())
+        ->setProjectId($dataProjectId)
+        ->setDatasetId($datasetId)
+        ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
-    $pubSubAction = new Action_PublishToPubSub();
-    $pubSubAction->setTopic($fullTopicId);
+    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
+    $pubSubAction = (new Action_PublishToPubSub())
+        ->setTopic($fullTopicId);
 
-    $action = new Action();
-    $action->setPubSub($pubSubAction);
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
     // Construct risk analysis job config to run
-    $riskJob = new RiskAnalysisJobConfig();
-    $riskJob->setPrivacyMetric($privacyMetric);
-    $riskJob->setSourceTable($bigqueryTable);
-    $riskJob->setActions([$action]);
+    $riskJob = (new RiskAnalysisJobConfig())
+        ->setPrivacyMetric($privacyMetric)
+        ->setSourceTable($bigqueryTable)
+        ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
     $topic = $pubsub->topic($topicId);
@@ -125,47 +126,45 @@ function k_anonymity(
     };
 
     // Print finding counts
-    print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
     case DlpJob_JobState::DONE:
         $histBuckets = $job->getRiskDetails()->getKAnonymityResult()->getEquivalenceClassHistogramBuckets();
 
         foreach ($histBuckets as $bucketIndex => $histBucket) {
             // Print bucket stats
-            print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-            print_r(
-                '  Bucket size range: [' .
-                $histBucket->getEquivalenceClassSizeLowerBound() .
-                ', ' .
-                $histBucket->getEquivalenceClassSizeUpperBound() .
-                "]" . PHP_EOL
+            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+            printf(
+                '  Bucket size range: [%s, %s]' . PHP_EOL,
+                $histBucket->getEquivalenceClassSizeLowerBound(),
+                $histBucket->getEquivalenceClassSizeUpperBound()
             );
 
             // Print bucket values
             foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
                 // Pretty-print quasi-ID values
-                print_r('  Quasi-ID values: {');
+                print('  Quasi-ID values: {');
                 foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                    print_r(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                    print(($index !== 0 ? ', ' : '') . $value_to_string($value));
                 }
-                print_r('}' . PHP_EOL);
-
-                print_r(
-                    '  Class size: ' . $valueBucket->getEquivalenceClassSize() . PHP_EOL
+                print('}' . PHP_EOL);
+                printf(
+                    '  Class size: %s' . PHP_EOL,
+                    $valueBucket->getEquivalenceClassSize()
                 );
             }
         }
       
         break;
     case DlpJob_JobState::FAILED:
+        printf('Job %s had errors:' . PHP_EOL, $job->getName());
         $errors = $job->getErrors();
         foreach ($errors as $error) {
             var_dump($error->getDetails());
         }
-        print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
         break;
     default:
-        print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+        printf('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_k_anomymity]

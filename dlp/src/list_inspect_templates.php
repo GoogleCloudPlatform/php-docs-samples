@@ -38,18 +38,18 @@ function list_inspect_templates($callingProjectId)
     $templates = $response->iterateAllElements();
 
     foreach ($templates as $template) {
-        print_r('Template ' . $template->getName() . PHP_EOL);
-        print_r('  Created: ' . $template->getCreateTime()->getSeconds() . PHP_EOL);
-        print_r('  Updated: ' . $template->getUpdateTime()->getSeconds() . PHP_EOL);
-        print_r('  Display Name: ' . $template->getDisplayName() . PHP_EOL);
-        print_r('  Description: ' . $template->getDescription() . PHP_EOL);
+        printf('Template %s' . PHP_EOL, $template->getName());
+        printf('  Created: %s' . PHP_EOL, $template->getCreateTime()->getSeconds());
+        printf('  Updated: %s' . PHP_EOL, $template->getUpdateTime()->getSeconds());
+        printf('  Display Name: %s' . PHP_EOL, $template->getDisplayName());
+        printf('  Description: %s' . PHP_EOL, $template->getDescription());
 
         $inspectConfig = $template->getInspectConfig();
-        print_r('  Minimum likelihood: ' . $inspectConfig->getMinLikelihood() . PHP_EOL);
-        print_r('  Include quotes: ' . $inspectConfig->getIncludeQuote() . PHP_EOL);
+        printf('  Minimum likelihood: %s' . PHP_EOL, $inspectConfig->getMinLikelihood());
+        printf('  Include quotes: %s' . PHP_EOL, $inspectConfig->getIncludeQuote());
 
         $limits = $inspectConfig->getLimits();
-        print_r('  Max findings per request:' . $limits->getMaxFindingsPerRequest() . PHP_EOL);
+        printf('  Max findings per request: %s' . PHP_EOL, $limits->getMaxFindingsPerRequest());
     }
 }
 // [END dlp_list_inspect_templates]

@@ -28,6 +28,7 @@ use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_NumericalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\PubSub\V1\PublisherClient;
 
 /**
  * Computes risk metrics of a column of numbers in a Google BigQuery table.
@@ -54,34 +55,34 @@ function numerical_stats(
     $pubsub = new PubSubClient();
 
     // Construct risk analysis config
-    $columnField = new FieldId();
-    $columnField->setName($columnName);
+    $columnField = (new FieldId())
+        ->setName($columnName);
 
-    $statsConfig = new PrivacyMetric_NumericalStatsConfig();
-    $statsConfig->setField($columnField);
+    $statsConfig = (new PrivacyMetric_NumericalStatsConfig())
+        ->setField($columnField);
 
-    $privacyMetric = new PrivacyMetric();
-    $privacyMetric->setNumericalStatsConfig($statsConfig);
+    $privacyMetric = (new PrivacyMetric())
+        ->setNumericalStatsConfig($statsConfig);
 
     // Construct items to be analyzed
-    $bigqueryTable = new BigQueryTable();
-    $bigqueryTable->setProjectId($dataProjectId);
-    $bigqueryTable->setDatasetId($datasetId);
-    $bigqueryTable->setTableId($tableId);
+    $bigqueryTable = (new BigQueryTable())
+        ->setProjectId($dataProjectId)
+        ->setDatasetId($datasetId)
+        ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
-    $pubSubAction = new Action_PublishToPubSub();
-    $pubSubAction->setTopic($fullTopicId);
+    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
+    $pubSubAction = (new Action_PublishToPubSub())
+        ->setTopic($fullTopicId);
 
-    $action = new Action();
-    $action->setPubSub($pubSubAction);
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
     // Construct risk analysis job config to run
-    $riskJob = new RiskAnalysisJobConfig();
-    $riskJob->setPrivacyMetric($privacyMetric);
-    $riskJob->setSourceTable($bigqueryTable);
-    $riskJob->setActions([$action]);
+    $riskJob = (new RiskAnalysisJobConfig())
+        ->setPrivacyMetric($privacyMetric)
+        ->setSourceTable($bigqueryTable)
+        ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
     $topic = $pubsub->topic($topicId);
@@ -121,16 +122,14 @@ function numerical_stats(
     };
 
     // Print finding counts
-    print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
         case DlpJob_JobState::DONE:
             $results = $job->getRiskDetails()->getNumericalStatsResult();
-            print_r(
-                'Value range: [' .
-                $value_to_string($results->getMinValue()) .
-                ', ' .
-                $value_to_string($results->getMaxValue()) .
-                ']' . PHP_EOL
+            printf(
+                'Value range: [%s, %s]' . PHP_EOL,
+                $value_to_string($results->getMinValue()),
+                $value_to_string($results->getMaxValue())
             );
 
             // Only print unique values
@@ -138,21 +137,21 @@ function numerical_stats(
             foreach ($results->getQuantileValues() as $percent => $quantileValue) {
                 $value = $value_to_string($quantileValue);
                 if ($value != $lastValue) {
-                    print_r('Value at ' . $percent . ' quantile: ' . $value . PHP_EOL);
+                    printf('Value at % quantile: %s' . PHP_EOL, $percent, $value);
                     $lastValue = $value;
                 }
             }
             
             break;
         case DlpJob_JobState::ERROR:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {
                 var_dump($error->getDetails());
             }
-            print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
             break;
         default:
-            print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+            print('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_numerical_stats]

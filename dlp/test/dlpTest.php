@@ -97,6 +97,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'path' => __DIR__ . '/data/test.png'
         ]);
+        var_dump($output);
         $this->assertContains('PERSON_NAME', $output);
 
         // inspect a file with no results
@@ -172,7 +173,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $output = $this->runCommand('deidentify-dates', [
             'input-csv' => 'test/data/dates.csv',
             'output-csv' => 'test/data/results.temp.csv',
-            'date-fields' => ['birth_date', 'register_date'],
+            'date-fields' => 'birth_date,register_date',
             'lower-bound-days' => 5,
             'upper-bound-days' => 5,
             'context-field' => 'name',
@@ -225,7 +226,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $displayName = uniqid("My trigger display name ");
         $description = uniqid("My trigger description ");
         $triggerId = uniqid('my-php-test-trigger-');
-        $fullTriggerId = 'projects/' . getEnv('GOOGLE_PROJECT_ID') . '/jobTriggers/' . $triggerId;
+        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', getEnv('GOOGLE_PROJECT_ID'), $triggerId);
 
         $output = $this->runCommand('create-trigger', [
             'bucket-name' => $bucketName,
@@ -252,7 +253,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
-        $fullTemplateId = 'projects/' . getEnv('GOOGLE_PROJECT_ID') . '/inspectTemplates/' . $templateId;
+        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', getEnv('GOOGLE_PROJECT_ID'), $templateId);
 
         $output  = $this->runCommand('create-inspect-template', [
             'template-id' => $templateId,
@@ -323,7 +324,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'data-project' => getenv('GOOGLE_PROJECT_ID'),
             'topic-id' => getenv('DLP_TOPIC'),
             'subscription-id' => getenv('DLP_SUBSCRIPTION'),
-            'quasi-ids' => ['Age', 'Gender']
+            'quasi-ids' => 'Age,Gender'
         ]);
         $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
         $this->assertRegExp('/Class size: \d/', $output);
@@ -341,7 +342,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'data-project' => getenv('GOOGLE_PROJECT_ID'),
             'topic-id' => getenv('DLP_TOPIC'),
             'subscription-id' => getenv('DLP_SUBSCRIPTION'),
-            'quasi-ids' => ['Age', 'Gender'],
+            'quasi-ids' => 'Age,Gender',
             'sensitive-attribute' => 'Name'
         ]);
         $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
@@ -362,8 +363,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'topic-id' => getenv('DLP_TOPIC'),
             'subscription-id' => getenv('DLP_SUBSCRIPTION'),
             'region-code' => 'USA',
-            'quasi-ids' => ['Age', 'Gender'],
-            'info-types' => ['AGE', 'GENDER']
+            'quasi-ids' => 'Age,Gender',
+            'info-types' => 'AGE,GENDER'
         ]);
         $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
         $this->assertRegExp('/Size: \d/', $output);
@@ -398,7 +399,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args,
-            ['interactive' => false]);
+            ['interactive' => false]
+        );
 
         return ob_get_clean();
     }

@@ -46,10 +46,10 @@ function create_inspect_template(
 
     // ----- Construct inspection config -----
     // The infoTypes of information to match
-    $personNameInfoType = new InfoType();
-    $personNameInfoType->setName('PERSON_NAME');
-    $usStateInfoType = new InfoType();
-    $usStateInfoType->setName('US_STATE');
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $usStateInfoType = (new InfoType())
+        ->setName('US_STATE');
     $infoTypes = [$personNameInfoType, $usStateInfoType];
 
     // Whether to include the matching string in the response
@@ -59,21 +59,21 @@ function create_inspect_template(
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = new InspectConfig_FindingLimits();
-    $limits->setMaxFindingsPerRequest($maxFindings);
+    $limits = (new InspectConfig_FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the configuration object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setLimits($limits);
-    $inspectConfig->setInfoTypes($infoTypes);
-    $inspectConfig->setIncludeQuote($includeQuote);
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits)
+        ->setInfoTypes($infoTypes)
+        ->setIncludeQuote($includeQuote);
 
     // Construct inspection template
-    $inspectTemplate = new InspectTemplate();
-    $inspectTemplate->setInspectConfig($inspectConfig);
-    $inspectTemplate->setDisplayName($displayName);
-    $inspectTemplate->setDescription($description);
+    $inspectTemplate = (new InspectTemplate())
+        ->setInspectConfig($inspectConfig)
+        ->setDisplayName($displayName)
+        ->setDescription($description);
   
     // Run request
     $parent = $dlp->projectName($callingProjectId);
@@ -83,12 +83,10 @@ function create_inspect_template(
     ]);
 
     // Print results
-    print_r(
-        'Successfully created template projects/' .
-        $callingProjectId .
-        '/inspectTemplates/' .
-        $templateId .
-        PHP_EOL
+    printf(
+        'Successfully created template projects/%s/inspectTemplates/%s' . PHP_EOL,
+        $callingProjectId,
+        $templateId
     );
 }
 // [END dlp_create_inspect_template]

@@ -46,7 +46,7 @@ function list_jobs($callingProjectId, $filter)
     // Print job list
     $jobs = $response->iterateAllElements();
     foreach ($jobs as $job) {
-        print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+        printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
         $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
 
         if (count($infoTypeStats) > 0) {
@@ -58,7 +58,7 @@ function list_jobs($callingProjectId, $filter)
                 );
             }
         } else {
-            print_r('  No findings.' . PHP_EOL);
+            print('  No findings.' . PHP_EOL);
         }
     }
 }

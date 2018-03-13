@@ -56,8 +56,8 @@ function reidentify_fpe(
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to mask
-    $ssnInfoType = new InfoType();
-    $ssnInfoType->setName('US_SOCIAL_SECURITY_NUMBER');
+    $ssnInfoType = (new InfoType())
+        ->setName('US_SOCIAL_SECURITY_NUMBER');
     $infoTypes = [$ssnInfoType];
 
     // The set of characters to replace sensitive ones with
@@ -65,48 +65,48 @@ function reidentify_fpe(
     $commonAlphabet = CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the wrapped crypto key configuration object
-    $kmsWrappedCryptoKey = new KmsWrappedCryptoKey();
-    $kmsWrappedCryptoKey->setWrappedKey(base64_decode($wrappedKey));
-    $kmsWrappedCryptoKey->setCryptoKeyName($keyName);
+    $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
+        ->setWrappedKey(base64_decode($wrappedKey))
+        ->setCryptoKeyName($keyName);
 
     // Create the crypto key configuration object
-    $cryptoKey = new CryptoKey();
-    $cryptoKey->setKmsWrapped($kmsWrappedCryptoKey);
+    $cryptoKey = (new CryptoKey())
+        ->setKmsWrapped($kmsWrappedCryptoKey);
 
     // Create the surrogate type object
-    $surrogateType = new InfoType();
-    $surrogateType->setName($surrogateTypeName);
+    $surrogateType = (new InfoType())
+        ->setName($surrogateTypeName);
 
-    $customInfoType = new CustomInfoType();
-    $customInfoType->setInfoType($surrogateType);
-    $customInfoType->setSurrogateType(new CustomInfoType_SurrogateType());
+    $customInfoType = (new CustomInfoType())
+        ->setInfoType($surrogateType)
+        ->setSurrogateType(new CustomInfoType_SurrogateType());
 
     // Create the crypto FFX FPE configuration object
-    $cryptoReplaceFfxFpeConfig = new CryptoReplaceFfxFpeConfig();
-    $cryptoReplaceFfxFpeConfig->setCryptoKey($cryptoKey);
-    $cryptoReplaceFfxFpeConfig->setCommonAlphabet($commonAlphabet);
-    $cryptoReplaceFfxFpeConfig->setSurrogateInfoType($surrogateType);
+    $cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
+        ->setCryptoKey($cryptoKey)
+        ->setCommonAlphabet($commonAlphabet)
+        ->setSurrogateInfoType($surrogateType);
 
     // Create the information transform configuration objects
-    $primitiveTransformation = new PrimitiveTransformation();
-    $primitiveTransformation->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
+    $primitiveTransformation = (new PrimitiveTransformation())
+        ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
-    $infoTypeTransformation = new InfoTypeTransformations_InfoTypeTransformation();
-    $infoTypeTransformation->setPrimitiveTransformation($primitiveTransformation);
+    $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
+        ->setPrimitiveTransformation($primitiveTransformation);
 
-    $infoTypeTransformations = new InfoTypeTransformations();
-    $infoTypeTransformations->setTransformations([$infoTypeTransformation]);
+    $infoTypeTransformations = (new InfoTypeTransformations())
+        ->setTransformations([$infoTypeTransformation]);
 
     // Create the inspect configuration object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setCustomInfoTypes([$customInfoType]);
+    $inspectConfig = (new InspectConfig())
+        ->setCustomInfoTypes([$customInfoType]);
 
     // Create the reidentification configuration object
-    $reidentifyConfig = new DeidentifyConfig();
-    $reidentifyConfig->setInfoTypeTransformations($infoTypeTransformations);
+    $reidentifyConfig = (new DeidentifyConfig())
+        ->setInfoTypeTransformations($infoTypeTransformations);
 
-    $item = new ContentItem();
-    $item->setValue($string);
+    $item = (new ContentItem())
+        ->setValue($string);
 
     $parent = $dlp->projectName($callingProjectId);
 
@@ -122,6 +122,6 @@ function reidentify_fpe(
 
     // Print the results
     $reidentifiedValue = $response->getItem()->getValue();
-    print_r($reidentifiedValue);
+    print($reidentifiedValue);
 }
 # [END dlp_reidentify_fpe]

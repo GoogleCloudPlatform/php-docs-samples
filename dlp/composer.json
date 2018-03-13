@@ -3,17 +3,35 @@
     "type": "project",
     "require": {
         "google/cloud-dlp": "^0.5",
+        "google/cloud-pubsub": "^1.0",
         "symfony/console": "^3.3"
     },
     "autoload": {
         "files": [
             "src/inspect_datastore.php",
             "src/inspect_bigquery.php",
+            "src/inspect_gcs.php",
             "src/inspect_file.php",
             "src/inspect_string.php",
-            "src/list_categories.php",
             "src/list_info_types.php",
-            "src/redact_string.php"
+            "src/deidentify_mask.php",
+            "src/deidentify_fpe.php",
+            "src/reidentify_fpe.php",
+            "src/deidentify_dates.php",
+            "src/redact_image.php",
+            "src/create_trigger.php",
+            "src/list_triggers.php",
+            "src/delete_trigger.php",
+            "src/create_inspect_template.php",
+            "src/list_inspect_templates.php",
+            "src/delete_inspect_template.php",
+            "src/list_jobs.php",
+            "src/delete_job.php",
+            "src/numerical_stats.php",
+            "src/categorical_stats.php",
+            "src/k_anonymity.php",
+            "src/l_diversity.php",
+            "src/k_map.php"
         ]
     },
     "require-dev": {

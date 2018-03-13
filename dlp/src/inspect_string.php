@@ -41,10 +41,10 @@ function inspect_string(
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to match
-    $personNameInfoType = new InfoType();
-    $personNameInfoType->setName('PERSON_NAME');
-    $usStateInfoType = new InfoType();
-    $usStateInfoType->setName('US_STATE');
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $usStateInfoType = (new InfoType())
+        ->setName('US_STATE');
     $infoTypes = [$personNameInfoType, $usStateInfoType];
 
     // The minimum likelihood required before returning a match
@@ -54,18 +54,18 @@ function inspect_string(
     $includeQuote = true;
 
     // Specify finding limits
-    $limits = new InspectConfig_FindingLimits();
-    $limits->setMaxFindingsPerRequest($maxFindings);
+    $limits = (new InspectConfig_FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the configuration object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setLimits($limits);
-    $inspectConfig->setInfoTypes($infoTypes);
-    $inspectConfig->setIncludeQuote($includeQuote);
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits)
+        ->setInfoTypes($infoTypes)
+        ->setIncludeQuote($includeQuote);
 
-    $content = new ContentItem();
-    $content->setValue($string);
+    $content = (new ContentItem())
+        ->setValue($string);
 
     $parent = $dlp->projectName($callingProjectId);
 
@@ -76,7 +76,7 @@ function inspect_string(
     ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                  'Likely', 'Very likely'];
+                    'Likely', 'Very likely'];
 
     // Print the results
     $findings = $response->getResult()->getFindings();

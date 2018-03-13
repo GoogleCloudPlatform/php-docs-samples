@@ -53,49 +53,49 @@ function deidentify_fpe(
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to mask
-    $ssnInfoType = new InfoType();
-    $ssnInfoType->setName('US_SOCIAL_SECURITY_NUMBER');
+    $ssnInfoType = (new InfoType())
+        ->setName('US_SOCIAL_SECURITY_NUMBER');
     $infoTypes = [$ssnInfoType];
 
     // Create the wrapped crypto key configuration object
-    $kmsWrappedCryptoKey = new KmsWrappedCryptoKey();
-    $kmsWrappedCryptoKey->setWrappedKey(base64_decode($wrappedKey));
-    $kmsWrappedCryptoKey->setCryptoKeyName($keyName);
+    $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
+        ->setWrappedKey(base64_decode($wrappedKey))
+        ->setCryptoKeyName($keyName);
 
     // The set of characters to replace sensitive ones with
     // For more information, see https://cloud.google.com/dlp/docs/reference/rest/V2/organizations.deidentifyTemplates#ffxcommonnativealphabet
     $commonAlphabet = CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the crypto key configuration object
-    $cryptoKey = new CryptoKey();
-    $cryptoKey->setKmsWrapped($kmsWrappedCryptoKey);
+    $cryptoKey = (new CryptoKey())
+        ->setKmsWrapped($kmsWrappedCryptoKey);
 
     // Create the crypto FFX FPE configuration object
-    $cryptoReplaceFfxFpeConfig = new CryptoReplaceFfxFpeConfig();
-    $cryptoReplaceFfxFpeConfig->setCryptoKey($cryptoKey);
-    $cryptoReplaceFfxFpeConfig->setCommonAlphabet($commonAlphabet);
+    $cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
+        ->setCryptoKey($cryptoKey)
+        ->setCommonAlphabet($commonAlphabet);
     if ($surrogateTypeName) {
-        $surrogateType = new InfoType();
-        $surrogateType->setName($surrogateTypeName);
+        $surrogateType = (new InfoType())
+            ->setName($surrogateTypeName);
         $cryptoReplaceFfxFpeConfig->setSurrogateInfoType($surrogateType);
     }
 
     // Create the information transform configuration objects
-    $primitiveTransformation = new PrimitiveTransformation();
-    $primitiveTransformation->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
+    $primitiveTransformation = (new PrimitiveTransformation())
+        ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
-    $infoTypeTransformation = new InfoTypeTransformations_InfoTypeTransformation();
-    $infoTypeTransformation->setPrimitiveTransformation($primitiveTransformation);
+    $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
+        ->setPrimitiveTransformation($primitiveTransformation);
 
-    $infoTypeTransformations = new InfoTypeTransformations();
-    $infoTypeTransformations->setTransformations([$infoTypeTransformation]);
+    $infoTypeTransformations = (new InfoTypeTransformations())
+        ->setTransformations([$infoTypeTransformation]);
 
     // Create the deidentification configuration object
-    $deidentifyConfig = new DeidentifyConfig();
-    $deidentifyConfig->setInfoTypeTransformations($infoTypeTransformations);
+    $deidentifyConfig = (new DeidentifyConfig())
+        ->setInfoTypeTransformations($infoTypeTransformations);
 
-    $content = new ContentItem();
-    $content->setValue($string);
+    $content = (new ContentItem())
+        ->setValue($string);
 
     $parent = $dlp->projectName($callingProjectId);
 
@@ -106,10 +106,10 @@ function deidentify_fpe(
     ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                  'Likely', 'Very likely'];
+                    'Likely', 'Very likely'];
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();
-    print_r($deidentifiedValue);
+    print($deidentifiedValue);
 }
 # [END dlp_deidentify_fpe]

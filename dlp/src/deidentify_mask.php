@@ -44,31 +44,31 @@ function deidentify_mask(
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to mask
-    $ssnInfoType = new InfoType();
-    $ssnInfoType->setName('US_SOCIAL_SECURITY_NUMBER');
+    $ssnInfoType = (new InfoType())
+        ->setName('US_SOCIAL_SECURITY_NUMBER');
     $infoTypes = [$ssnInfoType];
 
     // Create the masking configuration object
-    $maskConfig = new CharacterMaskConfig();
-    $maskConfig->setMaskingCharacter($maskingCharacter);
-    $maskConfig->setNumberToMask($numberToMask);
+    $maskConfig = (new CharacterMaskConfig())
+        ->setMaskingCharacter($maskingCharacter)
+        ->setNumberToMask($numberToMask);
 
     // Create the information transform configuration objects
-    $primitiveTransformation = new PrimitiveTransformation();
-    $primitiveTransformation->setCharacterMaskConfig($maskConfig);
+    $primitiveTransformation = (new PrimitiveTransformation())
+        ->setCharacterMaskConfig($maskConfig);
 
-    $infoTypeTransformation = new InfoTypeTransformations_InfoTypeTransformation();
-    $infoTypeTransformation->setPrimitiveTransformation($primitiveTransformation);
+    $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
+        ->setPrimitiveTransformation($primitiveTransformation);
 
-    $infoTypeTransformations = new InfoTypeTransformations();
-    $infoTypeTransformations->setTransformations([$infoTypeTransformation]);
+    $infoTypeTransformations = (new InfoTypeTransformations())
+        ->setTransformations([$infoTypeTransformation]);
 
     // Create the deidentification configuration object
-    $deidentifyConfig = new DeidentifyConfig();
-    $deidentifyConfig->setInfoTypeTransformations($infoTypeTransformations);
+    $deidentifyConfig = (new DeidentifyConfig())
+        ->setInfoTypeTransformations($infoTypeTransformations);
 
-    $item = new ContentItem();
-    $item->setValue($string);
+    $item = (new ContentItem())
+        ->setValue($string);
 
     $parent = $dlp->projectName($callingProjectId);
 
@@ -79,10 +79,10 @@ function deidentify_mask(
     ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                  'Likely', 'Very likely'];
+                    'Likely', 'Very likely'];
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();
-    print_r($deidentifiedValue);
+    print($deidentifiedValue);
 }
 # [END dlp_deidentify_masking]
