@@ -20,6 +20,7 @@
             "src/set_requires_id.php",
             "src/add_doc_data_with_auto_id.php",
             "src/add_doc_data_after_auto_id.php",
+            "src/list_subcollections.php",
             "src/query_create_examples.php",
             "src/create_query_state.php",
             "src/create_query_capital.php",

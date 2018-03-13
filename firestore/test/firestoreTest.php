@@ -273,6 +273,16 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document data for document LA:', $output);
         $this->assertContains('[name] => Los Angeles', $output);
     }
+    
+    /**
+     * @depends testRetrieveCreateExamples
+     */
+    public function testListSubcollections()
+    {
+        $this->runCommand('add-subcollection');
+        $output = $this->runCommand('list-subcollections');
+        $this->assertContains('Found subcollection with id: neighborhoods', $output);
+    }
 
     /**
      * @depends testRetrieveCreateExamples
