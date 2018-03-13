@@ -82,6 +82,7 @@ To run the Cloud Firestore Samples:
       add-doc-data-after-auto-id           Auto-generate an ID for a document, then add document data.
       add-doc-data-types                   Set document data with different data types.
       add-doc-data-with-auto-id            Add document data with an auto-generated ID.
+      add-subcollection                    Add a subcollection by creating a new document.
       batch-write                          Batch write.
       chained-query                        Create a query with chained clauses.
       collection-ref                       Get a collection reference.
@@ -104,6 +105,7 @@ To run the Cloud Firestore Samples:
       invalid-range-order-by-query         An invalid range with order by query.
       invalid-range-query                  An example of an invalid range query.
       list                                 Lists commands
+      list-subcollections                  List subcollections of a document.
       multiple-cursor-conditions           Set multiple cursor conditions.
       order-by-name-desc-limit-query       Create an order by name descending with limit query.
       order-by-name-limit-query            Create an order by name with limit query.
