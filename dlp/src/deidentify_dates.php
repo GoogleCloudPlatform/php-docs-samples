@@ -77,24 +77,23 @@ function deidentify_dates(
     $tableRows = array_map(function ($csvRow) {
         $rowValues = array_map(function ($csvValue) {
             if ($csvDate = strptime($csvValue, '%m/%d/%Y')) {
-                $date = new Date();
-                $date->setYear((int) $csvDate['tm_year']);
-                $date->setMonth((int) $csvDate['tm_mon']);
-                $date->setDay((int) $csvDate['tm_mday']);
+                $date = (new Date())
+                    ->setYear((int) $csvDate['tm_year'])
+                    ->setMonth((int) $csvDate['tm_mon'])
+                    ->setDay((int) $csvDate['tm_mday']);
 
-                $protoDate = new Value();
-                $protoDate->setDateValue($date);
+                $protoDate = (new Value())
+                    ->setDateValue($date);
                 return $protoDate;
             } else {
-                $protoString = new Value();
-                $protoString->setStringValue($csvValue);
-                //var_dump($protoString->getStringValue());
+                $protoString = (new Value())
+                    ->setStringValue($csvValue);
                 return $protoString;
             }
         }, explode(',', $csvRow));
 
-        $tableRow = new Table_Row();
-        $tableRow->setValues($rowValues);
+        $tableRow = (new Table_Row())
+            ->setValues($rowValues);
         return $tableRow;
     }, $csvRows);
 
@@ -104,51 +103,51 @@ function deidentify_dates(
     }, $dateFieldNames);
 
     // Construct the table object
-    $table = new Table();
-    $table->setHeaders($tableHeaders);
-    $table->setRows($tableRows);
+    $table = (new Table())
+        ->setHeaders($tableHeaders)
+        ->setRows($tableRows);
 
-    $item = new ContentItem();
-    //$item->setType('text/csv');
-    $item->setTable($table);
+    $item = (new ContentItem())
+        ->setTable($table);
 
     // Construct dateShiftConfig
-    $dateShiftConfig = new DateShiftConfig();
-    $dateShiftConfig->setLowerBoundDays($lowerBoundDays);
-    $dateShiftConfig->setUpperBoundDays($upperBoundDays);
+    $dateShiftConfig = (new DateShiftConfig())
+        ->setLowerBoundDays($lowerBoundDays)
+        ->setUpperBoundDays($upperBoundDays);
 
     if ($contextFieldName && $keyName && $wrappedKey) {
-        $contextField = new FieldId();
-        $contextField->setName($contextFieldName);
+        $contextField = (new FieldId())
+            ->setName($contextFieldName);
 
         // Create the wrapped crypto key configuration object
-        $kmsWrappedCryptoKey = new KmsWrappedCryptoKey();
-        $kmsWrappedCryptoKey->setWrappedKey(base64_decode($wrappedKey));
-        $kmsWrappedCryptoKey->setCryptoKeyName($keyName);
+        $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
+            ->setWrappedKey(base64_decode($wrappedKey))
+            ->setCryptoKeyName($keyName);
 
-        $cryptoKey = new CryptoKey();
-        $cryptoKey->setKmsWrapped($kmsWrappedCryptoKey);
+        $cryptoKey = (new CryptoKey())
+            ->setKmsWrapped($kmsWrappedCryptoKey);
 
-        $dateShiftConfig->setContext($contextField);
-        $dateShiftConfig->setCryptoKey($cryptoKey);
+        $dateShiftConfig
+            ->setContext($contextField)
+            ->setCryptoKey($cryptoKey);
     } elseif ($contextFieldName || $keyName || $wrappedKey) {
         throw new Exception('You must set either ALL or NONE of {$contextFieldName, $keyName, $wrappedKey}!');
     }
 
     // Create the information transform configuration objects
-    $primitiveTransformation = new PrimitiveTransformation();
-    $primitiveTransformation->setDateShiftConfig($dateShiftConfig);
+    $primitiveTransformation = (new PrimitiveTransformation())
+        ->setDateShiftConfig($dateShiftConfig);
 
-    $fieldTransformation = new FieldTransformation();
-    $fieldTransformation->setPrimitiveTransformation($primitiveTransformation);
-    $fieldTransformation->setFields($dateFields);
+    $fieldTransformation = (new FieldTransformation())
+        ->setPrimitiveTransformation($primitiveTransformation)
+        ->setFields($dateFields);
 
-    $recordTransformations = new RecordTransformations();
-    $recordTransformations->setFieldTransformations([$fieldTransformation]);
+    $recordTransformations = (new RecordTransformations())
+        ->setFieldTransformations([$fieldTransformation]);
 
     // Create the deidentification configuration object
-    $deidentifyConfig = new DeidentifyConfig();
-    $deidentifyConfig->setRecordTransformations($recordTransformations);
+    $deidentifyConfig = (new DeidentifyConfig())
+        ->setRecordTransformations($recordTransformations);
 
     $parent = $dlp->projectName($callingProjectId);
 

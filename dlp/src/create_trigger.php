@@ -59,57 +59,57 @@ function create_trigger(
 
     // ----- Construct job config -----
     // The infoTypes of information to match
-    $personNameInfoType = new InfoType();
-    $personNameInfoType->setName('PERSON_NAME');
-    $usStateInfoType = new InfoType();
-    $usStateInfoType->setName('US_STATE');
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $usStateInfoType = (new InfoType())
+        ->setName('US_STATE');
     $infoTypes = [$personNameInfoType, $usStateInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = new InspectConfig_FindingLimits();
-    $limits->setMaxFindingsPerRequest($maxFindings);
+    $limits = (new InspectConfig_FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the inspectConfig object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setLimits($limits);
-    $inspectConfig->setInfoTypes($infoTypes);
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits)
+        ->setInfoTypes($infoTypes);
 
     // Create triggers
-    $duration = new Duration();
-    $duration->setSeconds($scanPeriod * 60 * 60 * 24);
+    $duration = (new Duration())
+        ->setSeconds($scanPeriod * 60 * 60 * 24);
 
-    $schedule = new Schedule();
-    $schedule->setRecurrencePeriodDuration($duration);
+    $schedule = (new Schedule())
+        ->setRecurrencePeriodDuration($duration);
 
-    $triggerObject = new JobTrigger_Trigger();
-    $triggerObject->setSchedule($schedule);
+    $triggerObject = (new JobTrigger_Trigger())
+        ->setSchedule($schedule);
 
     // Create the storageConfig object
-    $fileSet = new CloudStorageOptions_FileSet();
-    $fileSet->setUrl('gs://' . $bucketName . '/*');
+    $fileSet = (new CloudStorageOptions_FileSet())
+        ->setUrl('gs://' . $bucketName . '/*');
 
-    $storageOptions = new CloudStorageOptions();
-    $storageOptions->setFileSet($fileSet);
+    $storageOptions = (new CloudStorageOptions())
+        ->setFileSet($fileSet);
 
-    $storageConfig = new StorageConfig();
-    $storageConfig->setCloudStorageOptions($storageOptions);
+    $storageConfig = (new StorageConfig())
+        ->setCloudStorageOptions($storageOptions);
 
     // Construct the jobConfig object
-    $jobConfig = new InspectJobConfig();
-    $jobConfig->setInspectConfig($inspectConfig);
-    $jobConfig->setStorageConfig($storageConfig);
+    $jobConfig = (new InspectJobConfig())
+        ->setInspectConfig($inspectConfig)
+        ->setStorageConfig($storageConfig);
 
     // ----- Construct trigger object -----
-    $jobTriggerObject = new JobTrigger();
-    $jobTriggerObject->setTriggers([$triggerObject]);
-    $jobTriggerObject->setInspectJob($jobConfig);
-    $jobTriggerObject->setStatus(JobTrigger_Status::HEALTHY);
-    $jobTriggerObject->setDisplayName($displayName);
-    $jobTriggerObject->setDescription($description);
+    $jobTriggerObject = (new JobTrigger())
+        ->setTriggers([$triggerObject])
+        ->setInspectJob($jobConfig)
+        ->setStatus(JobTrigger_Status::HEALTHY)
+        ->setDisplayName($displayName)
+        ->setDescription($description);
 
     // Run trigger creation request
     $parent = $dlp->projectName($callingProjectId);
@@ -119,6 +119,6 @@ function create_trigger(
     ]);
 
     // Print results
-    print_r('Successfully created trigger ' . $triggerId . PHP_EOL);
+    printf('Successfully created trigger %s' . PHP_EOL, $triggerId);
 }
 // [END dlp_create_trigger]

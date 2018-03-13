@@ -35,6 +35,6 @@ function delete_inspect_templates($templateId)
     $dlp->deleteInspectTemplate($templateId);
 
     // Print results
-    print_r('Successfully deleted template ' . $templateId . PHP_EOL);
+    printf('Successfully deleted template %s' . PHP_EOL, $templateId);
 }
 // [END dlp_delete_inspect_template]

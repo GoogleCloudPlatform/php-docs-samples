@@ -34,6 +34,6 @@ function delete_trigger($triggerId)
     $response = $dlp->deleteJobTrigger($triggerId);
 
     // Print the results
-    print_r('Successfully deleted trigger ' . $triggerId . PHP_EOL);
+    printf('Successfully deleted trigger %s' . PHP_EOL, $triggerId);
 }
 # [END dlp_delete_trigger]

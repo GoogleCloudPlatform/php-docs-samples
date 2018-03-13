@@ -37,13 +37,13 @@ function list_triggers($callingProjectId)
     // Print results
     $triggers = $response->iterateAllElements();
     foreach ($triggers as $trigger) {
-        print_r('Trigger ' . $trigger->getName() . PHP_EOL);
-        print_r('  Created: ' . $trigger->getCreateTime()->getSeconds() . PHP_EOL);
-        print_r('  Updated: ' . $trigger->getUpdateTime()->getSeconds() . PHP_EOL);
-        print_r('  Display Name: ' . $trigger->getDisplayName() . PHP_EOL);
-        print_r('  Description: ' . $trigger->getDescription() . PHP_EOL);
-        print_r('  Status: ' . $trigger->getStatus() . PHP_EOL);
-        print_r('  Error count: ' . count($trigger->getErrors()) . PHP_EOL);
+        printf('Trigger %s' . PHP_EOL, $trigger->getName());
+        printf('  Created: %s' . PHP_EOL, $trigger->getCreateTime()->getSeconds());
+        printf('  Updated: %s' . PHP_EOL, $trigger->getUpdateTime()->getSeconds());
+        printf('  Display Name: %s' . PHP_EOL, $trigger->getDisplayName());
+        printf('  Description: %s' . PHP_EOL, $trigger->getDescription());
+        printf('  Status: %s' . PHP_EOL, $trigger->getStatus());
+        printf('  Error count: %s' . PHP_EOL, count($trigger->getErrors()));
     }
 }
 # [END dlp_list_triggers]

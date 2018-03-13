@@ -28,6 +28,7 @@ use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_CategoricalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\PubSub\V1\PublisherClient;
 
 /**
  * Computes risk metrics of a column of data in a Google BigQuery table.
@@ -54,34 +55,34 @@ function categorical_stats(
     $pubsub = new PubSubClient();
 
     // Construct risk analysis config
-    $columnField = new FieldId();
-    $columnField->setName($columnName);
+    $columnField = (new FieldId())
+        ->setName($columnName);
 
-    $statsConfig = new PrivacyMetric_CategoricalStatsConfig();
-    $statsConfig->setField($columnField);
+    $statsConfig = (new PrivacyMetric_CategoricalStatsConfig())
+        ->setField($columnField);
 
-    $privacyMetric = new PrivacyMetric();
-    $privacyMetric->setCategoricalStatsConfig($statsConfig);
+    $privacyMetric = (new PrivacyMetric())
+        ->setCategoricalStatsConfig($statsConfig);
 
     // Construct items to be analyzed
-    $bigqueryTable = new BigQueryTable();
-    $bigqueryTable->setProjectId($dataProjectId);
-    $bigqueryTable->setDatasetId($datasetId);
-    $bigqueryTable->setTableId($tableId);
+    $bigqueryTable = (new BigQueryTable())
+        ->setProjectId($dataProjectId)
+        ->setDatasetId($datasetId)
+        ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
-    $pubSubAction = new Action_PublishToPubSub();
-    $pubSubAction->setTopic($fullTopicId);
+    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
+    $pubSubAction = (new Action_PublishToPubSub())
+        ->setTopic($fullTopicId);
 
-    $action = new Action();
-    $action->setPubSub($pubSubAction);
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
     // Construct risk analysis job config to run
-    $riskJob = new RiskAnalysisJobConfig();
-    $riskJob->setPrivacyMetric($privacyMetric);
-    $riskJob->setSourceTable($bigqueryTable);
-    $riskJob->setActions([$action]);
+    $riskJob = (new RiskAnalysisJobConfig())
+        ->setPrivacyMetric($privacyMetric)
+        ->setSourceTable($bigqueryTable)
+        ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
     $topic = $pubsub->topic($topicId);
@@ -121,38 +122,38 @@ function categorical_stats(
     };
 
     // Print finding counts
-    print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
         case DlpJob_JobState::DONE:
             $histBuckets = $job->getRiskDetails()->getCategoricalStatsResult()->getValueFrequencyHistogramBuckets();
 
             foreach ($histBuckets as $bucketIndex => $histBucket) {
                 // Print bucket stats
-                print_r('Bucket ' . $bucketIndex . ':' . PHP_EOL);
-                print_r('  Most common value occurs ' . $histBucket->getValueFrequencyUpperBound() . ' time(s).' . PHP_EOL);
-                print_r('  Least common value occurs ' . $histBucket->getValueFrequencyLowerBound() . ' time(s).' . PHP_EOL);
-                print_r('  ' . $histBucket->getBucketSize() . ' unique value(s) total.');
+                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+                printf('  Most common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyUpperBound());
+                printf('  Least common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyLowerBound());
+                printf('  %s unique value(s) total.', $histBucket->getBucketSize());
 
                 // Print bucket values
                 foreach ($histBucket->getBucketValues() as $percent => $quantile) {
-                    print_r('  Value ' .
-                      $value_to_string($quantile->getValue()) .
-                      ' occurs ' .
-                      $quantile->getCount() .
-                      ' time(s).' . PHP_EOL);
+                    printf(
+                        '  Value %s occurs %s time(s).' . PHP_EOL,
+                      $value_to_string($quantile->getValue()),
+                      $quantile->getCount()
+                    );
                 }
             }
             
             break;
         case DlpJob_JobState::ERROR:
             $errors = $job->getErrors();
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
             foreach ($errors as $error) {
                 var_dump($error->getDetails());
             }
-            print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
             break;
         default:
-            print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
+            printf('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_categorical_stats]

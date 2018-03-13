@@ -30,10 +30,10 @@ use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 $dlp = new DlpServiceClient();
 
 // The infoTypes of information to match
-$usNameInfoType = new InfoType();
-$usNameInfoType->setName('PERSON_NAME');
-$usStateInfoType = new InfoType();
-$usStateInfoType->setName('US_STATE');
+$usNameInfoType = (new InfoType())
+    ->setName('PERSON_NAME');
+$usStateInfoType = (new InfoType())
+    ->setName('US_STATE');
 $infoTypes = [$usNameInfoType, $usStateInfoType];
 
 // Set the string to inspect
@@ -49,18 +49,18 @@ $maxFindings = 0;
 $includeQuote = true;
 
 // Specify finding limits
-$limits = new InspectConfig_FindingLimits();
-$limits->setMaxFindingsPerRequest($maxFindings);
+$limits = (new InspectConfig_FindingLimits())
+    ->setMaxFindingsPerRequest($maxFindings);
 
 // Create the configuration object
-$inspectConfig = new InspectConfig();
-$inspectConfig->setMinLikelihood($minLikelihood);
-$inspectConfig->setLimits($limits);
-$inspectConfig->setInfoTypes($infoTypes);
-$inspectConfig->setIncludeQuote($includeQuote);
+$inspectConfig = (new InspectConfig())
+    ->setMinLikelihood($minLikelihood)
+    ->setLimits($limits)
+    ->setInfoTypes($infoTypes)
+    ->setIncludeQuote($includeQuote);
 
-$content = new ContentItem();
-$content->setValue($stringToInspect);
+$content = (new ContentItem())
+    ->setValue($stringToInspect);
 
 $parent = $dlp->projectName(getEnv('GOOGLE_PROJECT_ID'));
 

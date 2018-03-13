@@ -29,10 +29,12 @@ $application->add(new Command('inspect-string'))
     ->addArgument('string', InputArgument::REQUIRED, 'The text to inspect')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Inspect a string.')
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setCode(function ($input, $output) {
         inspect_string(
             (string) $input->getArgument('calling-project'),
@@ -44,10 +46,12 @@ $application->add(new Command('inspect-file'))
     ->addArgument('path', InputArgument::REQUIRED, 'The file path to inspect')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Inspect a file.')
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setCode(function ($input, $output) {
         inspect_file(
             (string) $input->getArgument('calling-project'),
@@ -62,10 +66,12 @@ $application->add(new Command('inspect-datastore'))
     ->addArgument('namespace', InputArgument::OPTIONAL, 'The ID namespace of the Datastore document to inspect', '')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the Datastore exists under', getenv('GOOGLE_PROJECT_ID'))
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setDescription('Inspect a Google Cloud Platform project\'s Cloud Datastore , using Pub/Sub for job status notifications.')
     ->setCode(function ($input, $output) {
         inspect_datastore(
@@ -86,10 +92,12 @@ $application->add(new Command('inspect-bigquery'))
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setDescription('Inspect a BigQuery table , using Pub/Sub for job status notifications.')
     ->setCode(function ($input, $output) {
         inspect_bigquery(
@@ -110,10 +118,12 @@ $application->add(new Command('inspect-gcs'))
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setDescription('Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.')
     ->setCode(function ($input, $output) {
         inspect_gcs(
@@ -152,14 +162,18 @@ $application->add(new Command('redact-image'))
 
 $application->add(new Command('deidentify-mask'))
     ->addArgument('string', InputArgument::REQUIRED, 'The text to deidentify')
-    ->addArgument('number-to-mask',
+    ->addArgument(
+        'number-to-mask',
         InputArgument::OPTIONAL,
         'The maximum number of sensitive characters to mask in a match',
-        0)
-    ->addArgument('masking-character',
+        0
+    )
+    ->addArgument(
+        'masking-character',
         InputArgument::OPTIONAL,
         'The character to mask matching sensitive data with',
-        'x')
+        'x'
+    )
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Mask sensitive data in a string.')
     ->setCode(function ($input, $output) {
@@ -173,12 +187,16 @@ $application->add(new Command('deidentify-mask'))
 
 $application->add(new Command('deidentify-fpe'))
     ->addArgument('string', InputArgument::REQUIRED, 'The text to deidentify')
-    ->addArgument('key-name',
+    ->addArgument(
+        'key-name',
         InputArgument::REQUIRED,
-        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key')
-    ->addArgument('wrapped-key',
+        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key'
+    )
+    ->addArgument(
+        'wrapped-key',
         InputArgument::REQUIRED,
-        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
+        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.'
+    )
     ->addArgument('surrogate-type', InputArgument::OPTIONAL, 'The name of the surrogate custom info type to use when reidentifying')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Deidentify a string using Format-Preserving Encryption (FPE).')
@@ -194,12 +212,16 @@ $application->add(new Command('deidentify-fpe'))
 
 $application->add(new Command('reidentify-fpe'))
     ->addArgument('string', InputArgument::REQUIRED, 'The text to deidentify')
-    ->addArgument('key-name',
+    ->addArgument(
+        'key-name',
         InputArgument::REQUIRED,
-        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key')
-    ->addArgument('wrapped-key',
+        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key'
+    )
+    ->addArgument(
+        'wrapped-key',
         InputArgument::REQUIRED,
-        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
+        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.'
+    )
     ->addArgument('surrogate-type', InputArgument::REQUIRED, 'The name of the surrogate custom info type to use when reidentifying')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Mask sensitive data in a string.')
@@ -220,12 +242,16 @@ $application->add(new Command('deidentify-dates'))
     ->addArgument('lower-bound-days', InputArgument::REQUIRED, 'The maximum number of days to shift a date backward')
     ->addArgument('upper-bound-days', InputArgument::REQUIRED, 'The maximum number of days to shift a date forward')
 
-    ->addArgument('key-name',
+    ->addArgument(
+        'key-name',
         InputArgument::OPTIONAL,
-        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key')
-    ->addArgument('wrapped-key',
+        'The name of the Cloud KMS key used to encrypt ("wrap") the AES-256 key'
+    )
+    ->addArgument(
+        'wrapped-key',
         InputArgument::OPTIONAL,
-        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.')
+        'The AES-256 key to use, encrypted ("wrapped") with the KMS key defined by $keyName.'
+    )
     ->addArgument('context-field', InputArgument::OPTIONAL, 'The column to determine date shift amount based on. If omitted, random amounts will be used for each row.')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Deidentify dates in a CSV file by pseudorandomly shifting them.')
@@ -250,10 +276,12 @@ $application->add(new Command('create-trigger'))
     ->addArgument('trigger-id', InputArgument::OPTIONAL, 'The name of the trigger to be created', '')
     ->addArgument('display-name', InputArgument::OPTIONAL, 'The human-readable name to give the trigger', '')
     ->addArgument('description', InputArgument::OPTIONAL, 'A description for the trigger to be created', '')
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setDescription('List Data Loss Prevention API job triggers.')
     ->setCode(function ($input, $output) {
         create_trigger(
@@ -306,10 +334,12 @@ $application->add(new Command('create-inspect-template'))
     ->addArgument('template-id', InputArgument::OPTIONAL, 'The name of the template to be created.', '')
     ->addArgument('display-name', InputArgument::OPTIONAL, 'The human-readable name to give the template', '')
     ->addArgument('description', InputArgument::OPTIONAL, 'A description for the trigger to be created', '')
-    ->addArgument('max-findings',
+    ->addArgument(
+        'max-findings',
         InputArgument::OPTIONAL,
         'The maximum number of findings to report per request (0 = server maximum)',
-        0)
+        0
+    )
     ->setDescription('Create a new DLP inspection configuration template.')
     ->setCode(function ($input, $output) {
         create_inspect_template(
@@ -339,9 +369,11 @@ $application->add(new Command('numerical-stats'))
     ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
     ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
     ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
-    ->addArgument('column-name',
+    ->addArgument(
+        'column-name',
         InputArgument::REQUIRED,
-        'The name of the (number-type) column to compute risk metrics for, e.g. "age"')
+        'The name of the (number-type) column to compute risk metrics for, e.g. "age"'
+    )
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
@@ -362,9 +394,11 @@ $application->add(new Command('categorical-stats'))
     ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
     ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
     ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
-    ->addArgument('column-name',
+    ->addArgument(
+        'column-name',
         InputArgument::REQUIRED,
-        'The name of the column to compute risk metrics for, e.g. "gender"')
+        'The name of the column to compute risk metrics for, e.g. "gender"'
+    )
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
@@ -385,9 +419,11 @@ $application->add(new Command('k-anonymity'))
     ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
     ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
     ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
-    ->addArgument('quasi-ids',
+    ->addArgument(
+        'quasi-ids',
         InputArgument::REQUIRED,
-        'A set of columns that form a composite key ("quasi-identifiers")')
+        'A set of columns that form a composite key ("quasi-identifiers")'
+    )
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
@@ -400,7 +436,7 @@ $application->add(new Command('k-anonymity'))
             $input->getArgument('subscription-id'),
             $input->getArgument('dataset'),
             $input->getArgument('table'),
-            (array) $input->getArgument('quasi-ids')
+            explode(",", $input->getArgument('quasi-ids'))
         );
     });
 
@@ -408,9 +444,11 @@ $application->add(new Command('l-diversity'))
     ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
     ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
     ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
-    ->addArgument('quasi-ids',
+    ->addArgument(
+        'quasi-ids',
         InputArgument::REQUIRED,
-        'A set of columns that form a composite key ("quasi-identifiers")')
+        'A set of columns that form a composite key ("quasi-identifiers")'
+    )
     ->addArgument('sensitive-attribute', InputArgument::REQUIRED, 'The column to measure l-diversity relative to, e.g. "firstName"')
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
@@ -425,7 +463,7 @@ $application->add(new Command('l-diversity'))
             $input->getArgument('dataset'),
             $input->getArgument('table'),
             $input->getArgument('sensitive-attribute'),
-            (array) $input->getArgument('quasi-ids')
+            explode(",", $input->getArgument('quasi-ids'))
         );
     });
 
@@ -433,12 +471,16 @@ $application->add(new Command('k-map'))
     ->addArgument('dataset', InputArgument::REQUIRED, 'The ID of the dataset to inspect')
     ->addArgument('table', InputArgument::REQUIRED, 'The ID of the table to inspect')
     ->addArgument('topic-id', InputArgument::REQUIRED, 'The name of the Pub/Sub topic to notify once the job completes')
-    ->addArgument('quasi-ids',
+    ->addArgument(
+        'quasi-ids',
         InputArgument::REQUIRED,
-        'A set of columns that form a composite key ("quasi-identifiers")')
-    ->addArgument('info-types',
+        'A set of columns that form a composite key ("quasi-identifiers")'
+    )
+    ->addArgument(
+        'info-types',
         InputArgument::REQUIRED,
-        'The infoTypes corresponding to the chosen quasi-identifiers')
+        'The infoTypes corresponding to the chosen quasi-identifiers'
+    )
     ->addArgument('region-code', InputArgument::REQUIRED, 'The ISO 3166-1 region code that the data is representative of')
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
@@ -453,8 +495,8 @@ $application->add(new Command('k-map'))
             $input->getArgument('dataset'),
             $input->getArgument('table'),
             $input->getArgument('region-code'),
-            (array) $input->getArgument('quasi-ids'),
-            (array) $input->getArgument('info-types')
+            explode(",", $input->getArgument('quasi-ids')),
+            explode(",", $input->getArgument('info-types'))
         );
     });
 

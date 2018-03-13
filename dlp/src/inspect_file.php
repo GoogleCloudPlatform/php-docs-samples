@@ -35,18 +35,18 @@ use Google\Cloud\Dlp\V2\ByteContentItem_BytesType;
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_file(
-  $callingProjectId,
-  $path,
-  $maxFindings = 0
+    $callingProjectId,
+    $path,
+    $maxFindings = 0
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to match
-    $usNameInfoType = new InfoType();
-    $usNameInfoType->setName('PERSON_NAME');
-    $usStateInfoType = new InfoType();
-    $usStateInfoType->setName('US_STATE');
+    $usNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $usStateInfoType = (new InfoType())
+        ->setName('US_STATE');
     $infoTypes = [$usNameInfoType, $usStateInfoType];
 
     // The minimum likelihood required before returning a match
@@ -56,23 +56,29 @@ function inspect_file(
     $includeQuote = true;
 
     // Specify finding limits
-    $limits = new InspectConfig_FindingLimits();
-    $limits->setMaxFindingsPerRequest($maxFindings);
+    $limits = (new InspectConfig_FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the configuration object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setLimits($limits);
-    $inspectConfig->setInfoTypes($infoTypes);
-    $inspectConfig->setIncludeQuote($includeQuote);
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits)
+        ->setInfoTypes($infoTypes)
+        ->setIncludeQuote($includeQuote);
 
     // Create the content item objects
-    $byteContent = new ByteContentItem();
-    $byteContent->setType(ByteContentItem_BytesType::BYTES_TYPE_UNSPECIFIED);
-    $byteContent->setData(file_get_contents($path));
+    $typeConstant = array_search(
+        mime_content_type($path),
+        ['image/jpeg', 'image/bmp', 'image/png', 'image/svg']
+    ) + 1;
 
-    $content = new ContentItem();
-    $content->setByteItem($byteContent);
+
+    $byteContent = (new ByteContentItem())
+        ->setType($typeConstant)
+        ->setData(file_get_contents($path));
+
+    $content = (new ContentItem())
+        ->setByteItem($byteContent);
 
     $parent = $dlp->projectName($callingProjectId);
 
@@ -83,7 +89,7 @@ function inspect_file(
     ]);
 
     $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                  'Likely', 'Very likely'];
+                    'Likely', 'Very likely'];
 
     // Print the results
     $findings = $response->getResult()->getFindings();

@@ -41,8 +41,8 @@ function redact_image(
     $dlp = new DlpServiceClient();
 
     // The infoTypes of information to match
-    $phoneNumberInfoType = new InfoType();
-    $phoneNumberInfoType->setName('PHONE_NUMBER');
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
     $infoTypes = [$phoneNumberInfoType];
 
     // The minimum likelihood required before returning a match
@@ -52,9 +52,9 @@ function redact_image(
     $includeQuote = true;
 
     // Create the configuration object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setInfoTypes($infoTypes);
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setInfoTypes($infoTypes);
 
     // Read image file into a buffer
     $imageRef = fopen($imagePath, 'rb');
@@ -71,15 +71,15 @@ function redact_image(
     }
 
     // Create the byte-storing object
-    $byteContent = new ByteContentItem();
-    $byteContent->setType($mime_index);
-    $byteContent->setData($imageBytes);
+    $byteContent = (new ByteContentItem())
+        ->setType($mime_index)
+        ->setData($imageBytes);
 
     // Create the image redaction config objects
     $imageRedactionConfigs = [];
     foreach ($infoTypes as $infoType) {
-        $config = new RedactImageRequest_ImageRedactionConfig();
-        $config->setInfoType($infoType);
+        $config = (new RedactImageRequest_ImageRedactionConfig())
+            ->setInfoType($infoType);
         $imageRedactionConfigs[] = $config;
     }
 

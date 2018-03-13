@@ -31,6 +31,7 @@ use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\PubSub\V1\PublisherClient;
 
 /**
  * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
@@ -44,60 +45,60 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
  * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_gcs(
-  $callingProjectId,
-  $bucketId,
-  $file,
-  $topicId,
-  $subscriptionId,
-  $maxFindings = 0
+    $callingProjectId,
+    $bucketId,
+    $file,
+    $topicId,
+    $subscriptionId,
+    $maxFindings = 0
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
 
     // The infoTypes of information to match
-    $personNameInfoType = new InfoType();
-    $personNameInfoType->setName('PERSON_NAME');
-    $creditCardNumberInfoType = new InfoType();
-    $creditCardNumberInfoType->setName('CREDIT_CARD_NUMBER');
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $creditCardNumberInfoType = (new InfoType())
+        ->setName('CREDIT_CARD_NUMBER');
     $infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = new InspectConfig_FindingLimits();
-    $limits->setMaxFindingsPerRequest($maxFindings);
+    $limits = (new InspectConfig_FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
     // Construct items to be inspected
-    $fileSet = new CloudStorageOptions_FileSet();
-    $fileSet->setUrl('gs://' . $bucketId . '/' . $file);
+    $fileSet = (new CloudStorageOptions_FileSet())
+        ->setUrl('gs://' . $bucketId . '/' . $file);
 
-    $cloudStorageOptions = new CloudStorageOptions();
-    $cloudStorageOptions->setFileSet($fileSet);
+    $cloudStorageOptions = (new CloudStorageOptions())
+        ->setFileSet($fileSet);
 
-    $storageConfig = new StorageConfig();
-    $storageConfig->setCloudStorageOptions($cloudStorageOptions);
+    $storageConfig = (new StorageConfig())
+        ->setCloudStorageOptions($cloudStorageOptions);
 
     // Construct the inspect config object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setLimits($limits);
-    $inspectConfig->setInfoTypes($infoTypes);
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits)
+        ->setInfoTypes($infoTypes);
 
     // Construct the action to run when job completes
-    $fullTopicId = 'projects/' . $callingProjectId . '/topics/' . $topicId;
-    $pubSubAction = new Action_PublishToPubSub();
-    $pubSubAction->setTopic($fullTopicId);
+    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
+    $pubSubAction = (new Action_PublishToPubSub())
+        ->setTopic($fullTopicId);
 
-    $action = new Action();
-    $action->setPubSub($pubSubAction);
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
     // Construct inspect job config to run
-    $inspectJob = new InspectJobConfig();
-    $inspectJob->setInspectConfig($inspectConfig);
-    $inspectJob->setStorageConfig($storageConfig);
-    $inspectJob->setActions([$action]);
+    $inspectJob = (new InspectJobConfig())
+        ->setInspectConfig($inspectConfig)
+        ->setStorageConfig($storageConfig)
+        ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
     $topic = $pubsub->topic($topicId);
@@ -106,8 +107,8 @@ function inspect_gcs(
     // Submit request
     $parent = $dlp->projectName($callingProjectId);
     $job = $dlp->createDlpJob($parent, [
-      'inspectJob' => $inspectJob
-  ]);
+        'inspectJob' => $inspectJob
+    ]);
 
     // Poll via Pub/Sub until job finishes
     $polling = true;
@@ -125,27 +126,27 @@ function inspect_gcs(
     $job = $dlp->getDlpJob($job->getName());
 
     // Print finding counts
-    print_r('Job ' . $job->getName() . ' status: ' . $job->getState() . PHP_EOL);
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-    case DlpJob_JobState::DONE:
-      $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-      if (count($infoTypeStats) === 0) {
-          print_r('No findings.' . PHP_EOL);
-      } else {
-          foreach ($infoTypeStats as $infoTypeStat) {
-              print_r('  Found ' . $infoTypeStat->getCount() . ' instance(s) of infoType ' . $infoTypeStat->getInfoType()->getName() . PHP_EOL);
-          }
-      }
-      break;
-    case DlpJob_JobState::ERROR:
-      $errors = $job->getErrors();
-      foreach ($errors as $error) {
-          var_dump($error->getDetails());
-      }
-      print_r('Job ' . $job->getName() . ' had errors:' . PHP_EOL);
-      break;
-    default:
-      print_r('Unknown job state. Most likely, the job is either running or has not yet started.');
-  }
+        case DlpJob_JobState::DONE:
+            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+            if (count($infoTypeStats) === 0) {
+                print('No findings.' . PHP_EOL);
+            } else {
+                foreach ($infoTypeStats as $infoTypeStat) {
+                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+                }
+            }
+            break;
+        case DlpJob_JobState::ERROR:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        default:
+            print('Unknown job state. Most likely, the job is either running or has not yet started.');
+    }
 }
 # [END dlp_inspect_gcs]
