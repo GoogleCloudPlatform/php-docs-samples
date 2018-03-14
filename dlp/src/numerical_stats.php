@@ -98,9 +98,9 @@ function numerical_stats(
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
-            $subscription->acknowledge($message);
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
+                $subscription->acknowledge($message);
                 $polling = false;
             }
         }

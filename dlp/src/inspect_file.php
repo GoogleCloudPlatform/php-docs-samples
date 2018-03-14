@@ -25,7 +25,6 @@ use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\Dlp\V2\ByteContentItem;
-use Google\Cloud\Dlp\V2\ByteContentItem_BytesType;
 
 /**
  * Inspect a local file.

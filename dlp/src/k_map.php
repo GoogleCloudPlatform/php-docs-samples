@@ -121,13 +121,12 @@ function k_map(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    // TODO is there a better way to do this?
     $polling = true;
     while ($polling) {
         foreach ($subscription->pull() as $message) {
-            $subscription->acknowledge($message);
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
+                $subscription->acknowledge($message);
                 $polling = false;
             }
         }
@@ -137,7 +136,6 @@ function k_map(
     $job = $dlp->getDlpJob($job->getName());
 
     // Helper function to convert Protobuf values to strings
-    // TODO is there a better way?
     $value_to_string = function ($value) {
         return $value->getIntegerValue() ?:
             $value->getFloatValue() ?:
