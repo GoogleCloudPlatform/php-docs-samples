@@ -260,7 +260,7 @@ $application->add(new Command('deidentify-dates'))
             (string) $input->getArgument('calling-project'),
             $input->getArgument('input-csv'),
             $input->getArgument('output-csv'),
-            $input->getArgument('date-fields'),
+            explode(',', $input->getArgument('date-fields')),
             (int) $input->getArgument('lower-bound-days'),
             (int) $input->getArgument('upper-bound-days'),
             $input->getArgument('context-field'),

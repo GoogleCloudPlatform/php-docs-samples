@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,6 +106,9 @@ function numerical_stats(
         }
     }
 
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
+
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
 
@@ -137,13 +140,13 @@ function numerical_stats(
             foreach ($results->getQuantileValues() as $percent => $quantileValue) {
                 $value = $value_to_string($quantileValue);
                 if ($value != $lastValue) {
-                    printf('Value at % quantile: %s' . PHP_EOL, $percent, $value);
+                    printf('Value at %s quantile: %s' . PHP_EOL, $percent, $value);
                     $lastValue = $value;
                 }
             }
-            
+
             break;
-        case DlpJob_JobState::ERROR:
+        case DlpJob_JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

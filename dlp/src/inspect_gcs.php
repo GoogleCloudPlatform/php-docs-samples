@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,10 @@ use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
-use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
-use Google\Cloud\PubSub\V1\PublisherClient;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
@@ -42,7 +41,7 @@ use Google\Cloud\PubSub\V1\PublisherClient;
  *        e.g. "my-image.*"
  * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_gcs(
     $callingProjectId,
@@ -55,6 +54,7 @@ function inspect_gcs(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // The infoTypes of information to match
     $personNameInfoType = (new InfoType())
@@ -87,9 +87,8 @@ function inspect_gcs(
         ->setInfoTypes($infoTypes);
 
     // Construct the action to run when job completes
-    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
     $pubSubAction = (new Action_PublishToPubSub())
-        ->setTopic($fullTopicId);
+        ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
@@ -101,7 +100,6 @@ function inspect_gcs(
         ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
-    $topic = $pubsub->topic($topicId);
     $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
@@ -111,16 +109,18 @@ function inspect_gcs(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
+
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
 
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
@@ -138,7 +138,7 @@ function inspect_gcs(
                 }
             }
             break;
-        case DlpJob_JobState::ERROR:
+        case DlpJob_JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

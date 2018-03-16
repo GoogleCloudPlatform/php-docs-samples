@@ -27,11 +27,10 @@ use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
-use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
-use Google\Cloud\PubSub\V1\PublisherClient;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Inspect a BigQuery table , using Pub/Sub for job status notifications.
@@ -56,6 +55,7 @@ function inspect_bigquery(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // The infoTypes of information to match
     $personNameInfoType = (new InfoType())
@@ -90,9 +90,8 @@ function inspect_bigquery(
         ->setInfoTypes($infoTypes);
 
     // Construct the action to run when job completes
-    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
     $pubSubAction = (new Action_PublishToPubSub())
-        ->setTopic($fullTopicId);
+        ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
@@ -104,7 +103,6 @@ function inspect_bigquery(
         ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
-    $topic = $pubsub->topic($topicId);
     $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
@@ -114,16 +112,18 @@ function inspect_bigquery(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
+
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
 
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
@@ -131,29 +131,29 @@ function inspect_bigquery(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-    case DlpJob_JobState::DONE:
-        $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-        if (count($infoTypeStats) === 0) {
-            print('No findings.' . PHP_EOL);
-        } else {
-            foreach ($infoTypeStats as $infoTypeStat) {
-                printf(
-                    '  Found %s instance(s) of infoType %s' . PHP_EOL,
-                    $infoTypeStat->getCount(),
-                    $infoTypeStat->getInfoType()->getName()
-                );
+        case DlpJob_JobState::DONE:
+            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+            if (count($infoTypeStats) === 0) {
+                print('No findings.' . PHP_EOL);
+            } else {
+                foreach ($infoTypeStats as $infoTypeStat) {
+                    printf(
+                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
+                        $infoTypeStat->getCount(),
+                        $infoTypeStat->getInfoType()->getName()
+                    );
+                }
             }
-        }
-        break;
-    case DlpJob_JobState::ERROR:
-        printf('Job %s had errors:' . PHP_EOL, $job->getName());
-        $errors = $job->getErrors();
-        foreach ($errors as $error) {
-            var_dump($error->getDetails());
-        }
-        break;
-    default:
-        printf('Unknown job state. Most likely, the job is either running or has not yet started.');
+            break;
+        case DlpJob_JobState::FAILED:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        default:
+            printf('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_inspect_bigquery]

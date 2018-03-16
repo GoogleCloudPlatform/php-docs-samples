@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,12 +42,12 @@ use Google\Type\Date;
  * @param array $dateFieldNames The list of (date) fields in the CSV file to date shift
  * @param string $lowerBoundDays The maximum number of days to shift a date backward
  * @param string $upperBoundDays The maximum number of days to shift a date forward
- * @param string contextFieldName optional The column to determine date shift amount based on
+ * @param string contextFieldName (Optional) The column to determine date shift amount based on
  *        If this is not specified, a random shift amount will be used for every row.
  *        If this is specified, then 'wrappedKey' and 'keyName' must also be set
- * @param string keyName optional The encrypted ('wrapped') AES-256 key to use when shifting dates
+ * @param string keyName (Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
  *        If this is specified, then 'wrappedKey' and 'contextFieldName' must also be set
- * @param string wrappedKey optional The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
+ * @param string wrappedKey (Optional) The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
  *        If this is specified, then 'keyName' and 'contextFieldName' must also be set
  */
 function deidentify_dates(
@@ -57,9 +57,9 @@ function deidentify_dates(
     $dateFieldNames,
     $lowerBoundDays,
     $upperBoundDays,
-    $contextFieldName,
-    $keyName,
-    $wrappedKey
+    $contextFieldName = '',
+    $keyName = '',
+    $wrappedKey = ''
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

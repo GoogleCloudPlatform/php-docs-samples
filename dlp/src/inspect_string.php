@@ -43,9 +43,9 @@ function inspect_string(
     // The infoTypes of information to match
     $personNameInfoType = (new InfoType())
         ->setName('PERSON_NAME');
-    $usStateInfoType = (new InfoType())
-        ->setName('US_STATE');
-    $infoTypes = [$personNameInfoType, $usStateInfoType];
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;

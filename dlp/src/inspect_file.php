@@ -31,7 +31,7 @@ use Google\Cloud\Dlp\V2\ByteContentItem;
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $path The file path to the file to inspect
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_file(
     $callingProjectId,
@@ -44,9 +44,9 @@ function inspect_file(
     // The infoTypes of information to match
     $usNameInfoType = (new InfoType())
         ->setName('PERSON_NAME');
-    $usStateInfoType = (new InfoType())
-        ->setName('US_STATE');
-    $infoTypes = [$usNameInfoType, $usStateInfoType];
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$usNameInfoType, $phoneNumberInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
@@ -66,11 +66,10 @@ function inspect_file(
         ->setIncludeQuote($includeQuote);
 
     // Create the content item objects
-    $typeConstant = array_search(
+    $typeConstant = (int) array_search(
         mime_content_type($path),
-        ['image/jpeg', 'image/bmp', 'image/png', 'image/svg']
-    ) + 1;
-
+        [false, 'image/jpeg', 'image/bmp', 'image/png', 'image/svg']
+    );
 
     $byteContent = (new ByteContentItem())
         ->setType($typeConstant)
@@ -101,8 +100,7 @@ function inspect_file(
                 print('  Quote: ' . $finding->getQuote() . PHP_EOL);
             }
             print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            $likelihoodString = $likelihoods[$finding->getLikelihood()];
-            print('  Likelihood: ' . $likelihoodString . PHP_EOL);
+            print('  Likelihood: ' . $likelihoods[$finding->getLikelihood()] . PHP_EOL);
         }
     }
 }

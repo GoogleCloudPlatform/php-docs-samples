@@ -32,9 +32,9 @@ $dlp = new DlpServiceClient();
 // The infoTypes of information to match
 $usNameInfoType = (new InfoType())
     ->setName('PERSON_NAME');
-$usStateInfoType = (new InfoType())
-    ->setName('US_STATE');
-$infoTypes = [$usNameInfoType, $usStateInfoType];
+$phoneNumberInfoType = (new InfoType())
+    ->setName('PHONE_NUMBER');
+$infoTypes = [$usNameInfoType, $phoneNumberInfoType];
 
 // Set the string to inspect
 $stringToInspect = 'Robert Frost';

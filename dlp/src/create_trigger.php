@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,11 @@ use Google\Protobuf\Duration;
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $bucketName The name of the bucket to scan
+ * @param string $triggerId (Optional) The name of the trigger to be created
  * @param string $displayName (Optional) The human-readable name to give the trigger
  * @param string $description (Optional) A description for the trigger to be created
- * @param int $scanPeriod How often to wait between scans, in days (minimum = 1 day)
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
- * @param string $triggerId (Optional) The name of the trigger to be created
+ * @param int $scanPeriod (Optional) How often to wait between scans, in days (minimum = 1 day)
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 
 function create_trigger(
@@ -61,9 +61,9 @@ function create_trigger(
     // The infoTypes of information to match
     $personNameInfoType = (new InfoType())
         ->setName('PERSON_NAME');
-    $usStateInfoType = (new InfoType())
-        ->setName('US_STATE');
-    $infoTypes = [$personNameInfoType, $usStateInfoType];
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;

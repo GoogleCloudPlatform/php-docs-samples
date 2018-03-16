@@ -32,7 +32,6 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\PublisherClient;
 
 /**
  * Inspect Datastore, using Pub/Sub for job status notifications.
@@ -44,7 +43,7 @@ use Google\Cloud\PubSub\V1\PublisherClient;
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
  * @param string $kind The datastore kind to inspect
  * @param string $namespaceId The ID namespace of the Datastore document to inspect
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_datastore(
     $callingProjectId,
@@ -58,13 +57,14 @@ function inspect_datastore(
     // Instantiate clients
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // The infoTypes of information to match
     $personNameInfoType = (new InfoType())
         ->setName('PERSON_NAME');
-    $usStateInfoType = (new InfoType())
-        ->setName('US_STATE');
-    $infoTypes = [$personNameInfoType, $usStateInfoType];
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
@@ -72,7 +72,7 @@ function inspect_datastore(
     // Specify finding limits
     $limits = (new InspectConfig_FindingLimits())
         ->setMaxFindingsPerRequest($maxFindings);
-  
+
     // Construct items to be inspected
     $partitionId = (new PartitionId())
         ->setProjectId($dataProjectId)
@@ -96,9 +96,8 @@ function inspect_datastore(
         ->setDatastoreOptions($datastoreOptions);
 
     // Construct the action to run when job completes
-    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
     $pubSubAction = (new Action_PublishToPubSub())
-        ->setTopic($fullTopicId);
+        ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
@@ -110,7 +109,6 @@ function inspect_datastore(
         ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
-    $topic = $pubsub->topic($topicId);
     $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
@@ -131,6 +129,9 @@ function inspect_datastore(
         }
     }
 
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
+
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
 
@@ -147,7 +148,7 @@ function inspect_datastore(
                 }
             }
             break;
-        case DlpJob_JobState::ERROR:
+        case DlpJob_JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

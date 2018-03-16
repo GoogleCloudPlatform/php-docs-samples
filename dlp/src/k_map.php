@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,13 @@ use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig_TaggedField;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\V1\PublisherClient;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Computes the k-map risk estimation of a column set in a Google BigQuery table.
@@ -61,6 +60,7 @@ function k_map(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // Verify input
     if (count($infoTypes) != count($quasiIdNames)) {
@@ -97,9 +97,8 @@ function k_map(
         ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
     $pubSubAction = (new Action_PublishToPubSub())
-        ->setTopic($fullTopicId);
+        ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
@@ -111,7 +110,6 @@ function k_map(
         ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
-    $topic = $pubsub->topic($topicId);
     $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
@@ -121,16 +119,18 @@ function k_map(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
+
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
 
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
@@ -150,44 +150,44 @@ function k_map(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-    case DlpJob_JobState::DONE:
-        $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
+        case DlpJob_JobState::DONE:
+            $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
 
-        foreach ($histBuckets as $bucketIndex => $histBucket) {
-            // Print bucket stats
-            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
-            printf(
-                '  Anonymity range: [%s, %s]' . PHP_EOL,
-                $histBucket->getMinAnonymity(),
-                $histBucket->getMaxAnonymity()
-            );
-            printf('  Size: %s' . PHP_EOL, $histBucket->getBucketSize());
-
-            // Print bucket values
-            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+            foreach ($histBuckets as $bucketIndex => $histBucket) {
+                // Print bucket stats
+                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
                 printf(
-                    '  Estimated k-map anonymity: %s' . PHP_EOL,
-                    $valueBucket->getEstimatedAnonymity()
+                    '  Anonymity range: [%s, %s]' . PHP_EOL,
+                    $histBucket->getMinAnonymity(),
+                    $histBucket->getMaxAnonymity()
                 );
+                printf('  Size: %s' . PHP_EOL, $histBucket->getBucketSize());
 
-                // Pretty-print quasi-ID values
-                print('  Values: {');
-                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                    print(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                // Print bucket values
+                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+                    printf(
+                        '  Estimated k-map anonymity: %s' . PHP_EOL,
+                        $valueBucket->getEstimatedAnonymity()
+                    );
+
+                    // Pretty-print quasi-ID values
+                    print('  Values: {');
+                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                        print(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                    }
+                    print('}' . PHP_EOL);
                 }
-                print('}' . PHP_EOL);
             }
-        }
-        break;
-    case DlpJob_JobState::FAILED:
-        printf('Job %s had errors:' . PHP_EOL, $job->getName());
-        $errors = $job->getErrors();
-        foreach ($errors as $error) {
-            var_dump($error->getDetails());
-        }
-        break;
-    default:
-        print('Unknown job state. Most likely, the job is either running or has not yet started.');
+            break;
+        case DlpJob_JobState::FAILED:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        default:
+            print('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_k_map]

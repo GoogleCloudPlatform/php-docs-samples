@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,16 +30,16 @@ use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $templateId The name of the template to be created
- * @param string $displayName Optional The human-readable name to give the template
- * @param string $description Optional A description for the trigger to be created
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param string $displayName (Optional) The human-readable name to give the template
+ * @param string $description (Optional) A description for the trigger to be created
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function create_inspect_template(
     $callingProjectId,
     $templateId,
-    $displayName,
-    $description,
-    $maxFindings
+    $displayName = '',
+    $description = '',
+    $maxFindings = 0
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -48,9 +48,9 @@ function create_inspect_template(
     // The infoTypes of information to match
     $personNameInfoType = (new InfoType())
         ->setName('PERSON_NAME');
-    $usStateInfoType = (new InfoType())
-        ->setName('US_STATE');
-    $infoTypes = [$personNameInfoType, $usStateInfoType];
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
     // Whether to include the matching string in the response
     $includeQuote = true;
@@ -74,7 +74,7 @@ function create_inspect_template(
         ->setInspectConfig($inspectConfig)
         ->setDisplayName($displayName)
         ->setDescription($description);
-  
+
     // Run request
     $parent = $dlp->projectName($callingProjectId);
     $dlp->createInspectTemplate($parent, [

@@ -74,7 +74,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->checkEnv('DLP_BUCKET');
 
         $output = $this->runCommand('inspect-gcs', [
-            'bucket-id' => getEnv('DLP_BUCKET'),
+            'bucket-id' => getenv('DLP_BUCKET'),
             'file' => 'harmful.csv',
             'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'topic-id' => getenv('DLP_TOPIC'),
@@ -97,8 +97,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'path' => __DIR__ . '/data/test.png'
         ]);
-        var_dump($output);
-        $this->assertContains('PERSON_NAME', $output);
+
+        $this->assertContains('PHONE_NUMBER', $output);
 
         // inspect a file with no results
         $output = $this->runCommand('inspect-file', [
@@ -177,10 +177,10 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'lower-bound-days' => 5,
             'upper-bound-days' => 5,
             'context-field' => 'name',
-            'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
-            'key-name' => getEnv('DLP_DEID_KEY_NAME')
+            'wrapped-key' => getenv('DLP_DEID_WRAPPED_KEY'),
+            'key-name' => getenv('DLP_DEID_KEY_NAME')
         ]);
-        
+
         $this->assertNotEquals(
             sha1_file($inputPath),
             sha1_file($outputPath)
@@ -203,16 +203,16 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
         $deidOutput = $this->runCommand('deidentify-fpe', [
             'string' => $string,
-            'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
-            'key-name' => getEnv('DLP_DEID_KEY_NAME'),
+            'wrapped-key' => getenv('DLP_DEID_WRAPPED_KEY'),
+            'key-name' => getenv('DLP_DEID_KEY_NAME'),
             'surrogate-type' => 'SSN_TOKEN'
         ]);
         $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
 
         $reidOutput = $this->runCommand('reidentify-fpe', [
             'string' => $deidOutput,
-            'wrapped-key' => getEnv('DLP_DEID_WRAPPED_KEY'),
-            'key-name' => getEnv('DLP_DEID_KEY_NAME'),
+            'wrapped-key' => getenv('DLP_DEID_WRAPPED_KEY'),
+            'key-name' => getenv('DLP_DEID_KEY_NAME'),
             'surrogate-type' => 'SSN_TOKEN'
         ]);
         $this->assertContains($string, $reidOutput);
@@ -226,7 +226,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $displayName = uniqid("My trigger display name ");
         $description = uniqid("My trigger description ");
         $triggerId = uniqid('my-php-test-trigger-');
-        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', getEnv('GOOGLE_PROJECT_ID'), $triggerId);
+        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', getenv('GOOGLE_PROJECT_ID'), $triggerId);
 
         $output = $this->runCommand('create-trigger', [
             'bucket-name' => $bucketName,
@@ -253,7 +253,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
-        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', getEnv('GOOGLE_PROJECT_ID'), $templateId);
+        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', getenv('GOOGLE_PROJECT_ID'), $templateId);
 
         $output  = $this->runCommand('create-inspect-template', [
             'template-id' => $templateId,
@@ -374,7 +374,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     public function testJobs()
     {
         $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
-        
+
         $output = $this->runCommand('list-jobs', [
             'filter' => 'state=DONE'
         ]);

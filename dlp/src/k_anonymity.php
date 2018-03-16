@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,12 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_KAnonymityConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\V1\PublisherClient;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Computes the k-anonymity of a column set in a Google BigQuery table.
@@ -53,6 +52,7 @@ function k_anonymity(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // Construct risk analysis config
     $quasiIds = array_map(
@@ -75,9 +75,8 @@ function k_anonymity(
         ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
     $pubSubAction = (new Action_PublishToPubSub())
-        ->setTopic($fullTopicId);
+        ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
@@ -89,7 +88,6 @@ function k_anonymity(
         ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
-    $topic = $pubsub->topic($topicId);
     $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
@@ -99,16 +97,18 @@ function k_anonymity(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
+
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
 
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
@@ -154,7 +154,7 @@ function k_anonymity(
                 );
             }
         }
-      
+
         break;
     case DlpJob_JobState::FAILED:
         printf('Job %s had errors:' . PHP_EOL, $job->getName());

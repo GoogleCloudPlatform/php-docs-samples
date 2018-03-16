@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,17 +62,14 @@ function redact_image(
     fclose($imageRef);
 
     // Get the image's content type
-    $mime_type = mime_content_type($imagePath);
-    $mime_index = array_search($mime_type, ['image/jpeg', 'image/bmp', 'image/png', 'image/svg']);
-    if ($mime_index === false) {
-        $mime_index = 0;
-    } else {
-        $mime_index++;
-    }
+    $typeConstant = (int) array_search(
+        mime_content_type($imagePath),
+        [false, 'image/jpeg', 'image/bmp', 'image/png', 'image/svg']
+    );
 
     // Create the byte-storing object
     $byteContent = (new ByteContentItem())
-        ->setType($mime_index)
+        ->setType($typeConstant)
         ->setData($imageBytes);
 
     // Create the image redaction config objects
@@ -93,9 +90,7 @@ function redact_image(
     ]);
 
     // Save result to file
-    $outputRef = fopen($outputPath, 'wb');
-    fwrite($outputRef, $response->getRedactedImage());
-    fclose($outputRef);
+    file_put_contents($outputPath, $response->getRedactedImage());
 
     // Print completion message
     print('Redacted image saved to ' . $outputPath . PHP_EOL);

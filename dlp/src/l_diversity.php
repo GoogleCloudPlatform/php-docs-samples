@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,12 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric_LDiversityConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\V1\PublisherClient;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Computes the l-diversity of a column set in a Google BigQuery table.
@@ -56,6 +55,7 @@ function l_diversity(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // Construct risk analysis config
     $quasiIds = array_map(
@@ -74,7 +74,7 @@ function l_diversity(
 
     $privacyMetric = (new PrivacyMetric())
         ->setLDiversityConfig($statsConfig);
-  
+
     // Construct items to be analyzed
     $bigqueryTable = (new BigQueryTable())
         ->setProjectId($dataProjectId)
@@ -82,9 +82,8 @@ function l_diversity(
         ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
     $pubSubAction = (new Action_PublishToPubSub())
-        ->setTopic($fullTopicId);
+        ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
@@ -96,7 +95,6 @@ function l_diversity(
         ->setActions([$action]);
 
     // Listen for job notifications via an existing topic/subscription.
-    $topic = $pubsub->topic($topicId);
     $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
@@ -106,16 +104,18 @@ function l_diversity(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
+
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
 
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
@@ -135,53 +135,53 @@ function l_diversity(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-    case DlpJob_JobState::DONE:
-        $histBuckets = $job->getRiskDetails()->getLDiversityResult()->getSensitiveValueFrequencyHistogramBuckets();
+        case DlpJob_JobState::DONE:
+            $histBuckets = $job->getRiskDetails()->getLDiversityResult()->getSensitiveValueFrequencyHistogramBuckets();
 
-        foreach ($histBuckets as $bucketIndex => $histBucket) {
-            // Print bucket stats
-            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
-            printf(
-              '  Bucket size range: [%s, %s]' . PHP_EOL,
-                $histBucket->getSensitiveValueFrequencyLowerBound(),
-                $histBucket->getSensitiveValueFrequencyUpperBound()
-            );
-
-            // Print bucket values
-            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+            foreach ($histBuckets as $bucketIndex => $histBucket) {
+                // Print bucket stats
+                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
                 printf(
-                    '  Class size: %s' . PHP_EOL,
-                    $valueBucket->getEquivalenceClassSize()
+                    '  Bucket size range: [%s, %s]' . PHP_EOL,
+                    $histBucket->getSensitiveValueFrequencyLowerBound(),
+                    $histBucket->getSensitiveValueFrequencyUpperBound()
                 );
 
-                // Pretty-print quasi-ID values
-                print('  Quasi-ID values: {');
-                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                    print(($index !== 0 ? ', ' : '') . $value_to_string($value));
-                }
-                print('}' . PHP_EOL);
-
-                // Pretty-print sensitive values
-                $topValues = $valueBucket->getTopSensitiveValues();
-                foreach ($topValues as $topValue) {
+                // Print bucket values
+                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
                     printf(
-                        '  Sensitive value %s occurs %s time(s).' . PHP_EOL,
-                        $value_to_string($topValue->getValue()),
-                        $topValue->getCount()
+                        '  Class size: %s' . PHP_EOL,
+                        $valueBucket->getEquivalenceClassSize()
                     );
+
+                    // Pretty-print quasi-ID values
+                    print('  Quasi-ID values: {');
+                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                        print(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                    }
+                    print('}' . PHP_EOL);
+
+                    // Pretty-print sensitive values
+                    $topValues = $valueBucket->getTopSensitiveValues();
+                    foreach ($topValues as $topValue) {
+                        printf(
+                            '  Sensitive value %s occurs %s time(s).' . PHP_EOL,
+                            $value_to_string($topValue->getValue()),
+                            $topValue->getCount()
+                        );
+                    }
                 }
             }
-        }
-        break;
-    case DlpJob_JobState::FAILED:
-        printf('Job %s had errors:' . PHP_EOL, $job->getName());
-        $errors = $job->getErrors();
-        foreach ($errors as $error) {
-            var_dump($error->getDetails());
-        }
-        break;
-    default:
-        printf('Unknown job state. Most likely, the job is either running or has not yet started.');
+            break;
+        case DlpJob_JobState::FAILED:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        default:
+            printf('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_l_diversity]
