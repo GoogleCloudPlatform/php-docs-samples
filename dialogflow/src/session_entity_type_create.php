@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 // $path = 'path/to/your/image.jpg'
 
-function session_entity_type_create($projectId, $displayName, $values, 
+function session_entity_type_create($projectId, $displayName, $values,
     $sessionId = null, $overrideMode = null)
 {
     print('project id: ' . $projectId . PHP_EOL);

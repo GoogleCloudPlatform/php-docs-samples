@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 // $path = 'path/to/your/image.jpg'
 
-function intent_create($projectId, $displayName, $trainingPhrases = null, 
+function intent_create($projectId, $displayName, $trainingPhrases = null,
     $messageTexts = null)
 {
     print('project id: ' . $projectId . PHP_EOL);

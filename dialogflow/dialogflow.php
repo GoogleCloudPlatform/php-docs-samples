@@ -36,31 +36,31 @@ $inputDefinition = new InputDefinition([
 
 // input definition with session-id
 $inputDefinitionSession = clone $inputDefinition;
-$sessionIdOption = new InputOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+$sessionIdOption = new InputOption('session-id', 's', InputOption::VALUE_REQUIRED,
     'Identifier of the DetectIntent session. Defaults to random.');
 $inputDefinitionSession->addOption($sessionIdOption);
 
 // input definition for intent detection
 $inputDefinitionDetect = clone $inputDefinitionSession;
-$languageCodeOption = new InputOption('language-code', 'l', 
+$languageCodeOption = new InputOption('language-code', 'l',
     InputOption::VALUE_REQUIRED, 'Language code of the query. Defaults to "en-US".');
 $inputDefinitionDetect->addOption($languageCodeOption);
 
 // input definition for text command
 $inputDefinitionText = clone $inputDefinitionDetect;
-$textArgument = new InputArgument('texts', InputArgument::IS_ARRAY | 
+$textArgument = new InputArgument('texts', InputArgument::IS_ARRAY |
     InputArgument::REQUIRED, 'Text inputs.');
 $inputDefinitionText->addArgument($textArgument);
 
 // input definition for audio and stream commands
 $inputDefinitionAudio = clone $inputDefinitionDetect;
-$pathArgument = new InputArgument('path', InputArgument::REQUIRED, 
+$pathArgument = new InputArgument('path', InputArgument::REQUIRED,
     'Path to audio file.');
 $inputDefinitionAudio->addArgument($pathArgument);
 
 // input definition for intent deletion command
 $inputDefinitionIntentDelete = clone $inputDefinition;
-$intentIdArgument = new InputArgument('intent-id', InputArgument::REQUIRED, 
+$intentIdArgument = new InputArgument('intent-id', InputArgument::REQUIRED,
     'ID of intent.');
 $inputDefinitionIntentDelete->addArgument($intentIdArgument);
 
@@ -79,16 +79,16 @@ $inputDefinitionIntentCreate->addOption($messageTextsOption);
 
 // input definition for entity type creation command
 $inputDefinitionEntityTypeCreate = clone $inputDefinition;
-$entityNameArgument = new InputArgument('display-name', 
+$entityNameArgument = new InputArgument('display-name',
     InputArgument::REQUIRED, 'Display name of the entity.');
 $inputDefinitionEntityTypeCreate->addArgument($entityNameArgument);
-$kindOption = new InputOption('kind', 'k', InputOption::VALUE_REQUIRED, 
+$kindOption = new InputOption('kind', 'k', InputOption::VALUE_REQUIRED,
     'Kind of entity. KIND_MAP (default) or KIND_LIST');
 $inputDefinitionEntityTypeCreate->addOption($kindOption);
 
 // input definition for entity type deletion command
 $inputDefinitionEntityTypeDelete = clone $inputDefinition;
-$entityTypeIdArgument = new InputArgument('entity-type-id', 
+$entityTypeIdArgument = new InputArgument('entity-type-id',
     InputArgument::REQUIRED, 'ID of entity type.');
 $inputDefinitionEntityTypeDelete->addArgument($entityTypeIdArgument);
 
@@ -97,40 +97,40 @@ $inputDefinitionEntity = $inputDefinitionEntityTypeDelete;
 
 // input definition for entity deletion command
 $inputDefinitionEntityDelete = clone $inputDefinitionEntity;
-$entityValueArgument = new InputArgument('entity-value', InputArgument::REQUIRED, 
+$entityValueArgument = new InputArgument('entity-value', InputArgument::REQUIRED,
     'Value of the entity.');
 $inputDefinitionEntityDelete->addArgument($entityValueArgument);
 
 // input definition for entity creation command
 $inputDefinitionEntityCreate = clone $inputDefinitionEntityDelete;
-$synonymsArgument = new InputArgument('synonyms', InputArgument::OPTIONAL | 
+$synonymsArgument = new InputArgument('synonyms', InputArgument::OPTIONAL |
     InputArgument::IS_ARRAY, 'Synonyms that will map to provided entity value.');
 $inputDefinitionEntityCreate->addArgument($synonymsArgument);
 
 // input definition for context commands
 $inputDefinitionContext = clone $inputDefinitionSession;
-$contextArgument = new InputArgument('context-id', InputArgument::REQUIRED, 
+$contextArgument = new InputArgument('context-id', InputArgument::REQUIRED,
     'ID of the context.');
 $inputDefinitionContext->addArgument($contextArgument);
 
 // input definition for context creation command
 $inputDefinitionContextCreate = clone $inputDefinitionContext;
-$lifespanCountOption = new InputOption('lifespan-count', 'c', 
+$lifespanCountOption = new InputOption('lifespan-count', 'c',
     InputOption::VALUE_REQUIRED, 'Lifespan count of the context. Defaults to 1.');
 $inputDefinitionContextCreate->addOption($lifespanCountOption);
 
 // input definition for session entity type commands
 $inputDefinitionSessionEntityType = clone $inputDefinitionSession;
-$entityTypeNameArgument = new InputArgument('entity-type-display-name', 
+$entityTypeNameArgument = new InputArgument('entity-type-display-name',
     InputArgument::REQUIRED, 'Display name of the entity type.');
 $inputDefinitionSessionEntityType->addArgument($entityTypeNameArgument);
 
 // input definition for session entity type creation command
 $inputDefinitionSessionEntityTypeCreate = clone $inputDefinitionSessionEntityType;
-$sessionEntityValueArgument = new InputArgument('entity-values', InputArgument::IS_ARRAY | 
+$sessionEntityValueArgument = new InputArgument('entity-values', InputArgument::IS_ARRAY |
     InputArgument::REQUIRED, 'Entity values of the session entity type.');
 $inputDefinitionSessionEntityTypeCreate->addArgument($sessionEntityValueArgument);
-$entityOverrideOption = new InputOption('entity-override-mode', 'o', 
+$entityOverrideOption = new InputOption('entity-override-mode', 'o',
     InputOption::VALUE_REQUIRED, 'ENTITY_OVERRIDE_MODE_OVERRIDE (default) or 
     ENTITY_OVERRIDE_MODE_SUPPLEMENT');
 $inputDefinitionSessionEntityTypeCreate->addOption($entityOverrideOption);
@@ -171,7 +171,7 @@ EOF
     )
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project-id');
-        $sessionId = $input->getOption('session-id'); 
+        $sessionId = $input->getOption('session-id');
         $languageCode = $input->getOption('language-code');
         $path = $input->getArgument('path');
         detect_intent_audio($projectId, $path, $sessionId, $languageCode);
@@ -389,7 +389,7 @@ EOF
         $projectId = $input->getArgument('project-id');
         $sessionId = $input->getOption('session-id');
         $contextId = $input->getArgument('context-id');
-        $lifespan = $input->getOption('lifespan-count'); 
+        $lifespan = $input->getOption('lifespan-count');
         context_create($projectId, $contextId, $sessionId, $lifespan);
     })
 );
@@ -448,7 +448,7 @@ EOF
         $displayName = $input->getArgument('entity-type-display-name');
         $values = $input->getArgument('entity-values');
         $overrideMode = $input->getOption('entity-override-mode');
-        session_entity_type_create($projectId, $displayName, $values, 
+        session_entity_type_create($projectId, $displayName, $values,
             $sessionId, $overrideMode);
     })
 );
