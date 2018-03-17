@@ -40,7 +40,7 @@ $application->add((new Command('label'))
 The <info>%command.name%</info> command labels objects seen in an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -63,7 +63,7 @@ $application->add((new Command('text'))
 The <info>%command.name%</info> command prints text seen in an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -86,7 +86,7 @@ $application->add((new Command('face'))
 The <info>%command.name%</info> command finds faces in an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -109,7 +109,7 @@ $application->add((new Command('landmark'))
 The <info>%command.name%</info> command finds landmarks in an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -132,7 +132,7 @@ $application->add((new Command('logo'))
 The <info>%command.name%</info> command finds logos in an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -155,7 +155,7 @@ $application->add((new Command('safe-search'))
 The <info>%command.name%</info> command detects adult content in an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -178,7 +178,7 @@ $application->add((new Command('property'))
 The <info>%command.name%</info> command detects image properties in an image
 using the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -201,7 +201,7 @@ $application->add((new Command('crop-hints'))
 The <info>%command.name%</info> command prints crop hints for an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -224,7 +224,7 @@ $application->add((new Command('document-text'))
 The <info>%command.name%</info> command prints document text for an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -247,7 +247,7 @@ $application->add((new Command('web'))
 The <info>%command.name%</info> command prints web references to an image using
 the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
@@ -270,7 +270,7 @@ $application->add((new Command('web-geo'))
 The <info>%command.name%</info> command prints web entities to an image with 
 geo metadata using the Google Cloud Vision API.
 
-    <info>php %command.full_name% path/to/image.png</info>
+    <info>php %command.full_name% -k YOUR-API-KEY path/to/image.png</info>
 
 EOF
     )
