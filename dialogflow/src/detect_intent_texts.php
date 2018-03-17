@@ -18,45 +18,62 @@
 // [START dialogflow_detect_intent_text]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\SessionsClient;
+use Google\Cloud\Dialogflow\V2\TextInput;
+use Google\Cloud\Dialogflow\V2\QueryInput;
+use Ramsey\Uuid\Uuid;
 
-// $path = 'path/to/your/image.jpg'
-
-function detect_intent_texts($projectId, $texts, $sessionId = null, $languageCode = null)
+/**
+ * Returns the result of detect intent with texts as inputs.
+ * Using the same `session_id` between requests allows continuation
+ * of the conversation.
+ */
+function detect_intent_texts($projectId, $texts, $sessionId, $languageCode)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    if ($sessionId) {
-        print('session id: ' . $sessionId . PHP_EOL);
+    // random session id if not provided
+    if (! $sessionId) {
+        $sessionId = (string) Uuid::uuid4();
     }
-    if ($languageCode) {
-        print('language: ' . $languageCode . PHP_EOL);
-    }
-    print('texts: ' . PHP_EOL);
-    foreach ($texts as $text) {
-        print($text . PHP_EOL);
-    }
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    // set default language to en-US
+    if (! $languageCode) {
+        $languageCode = 'en-US';
+    }
+
+    // new session
+    $sessionsClient = new SessionsClient();
+    $session = $sessionsClient->sessionName($projectId, $sessionId);
+    printf('Session path: %s' . PHP_EOL, $session);
+
+    // query for each string in array
+    foreach ($texts as $text) {
+        // create text input
+        $textInput = new TextInput();
+        $textInput->setText($text);
+        $textInput->setLanguageCode($languageCode);
+
+        // create query input
+        $queryInput = new QueryInput();
+        $queryInput->setText($textInput);
+
+        // get response and relevant info
+        $response = $sessionsClient->detectIntent($session, $queryInput);
+        $queryResult = $response->getQueryResult();
+        $queryText = $queryResult->getQueryText();
+        $intent = $queryResult->getIntent();
+        $displayName = $intent->getDisplayName();
+        $confidence = $queryResult->getIntentDetectionConfidence();
+        $fulfilmentText = $queryResult->getFulfillmentText();
+
+        // output relevant info
+        print(str_repeat("=", 20) . PHP_EOL);
+        printf('Query text: %s' . PHP_EOL, $queryText);
+        printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
+            $confidence);
+        print(PHP_EOL);
+        printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
+    }
+    
+    $sessionsClient->close();
 }
 // [END dialogflow_detect_intent_text]

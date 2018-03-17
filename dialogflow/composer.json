@@ -3,7 +3,8 @@
     "type": "project",
     "require": {
         "google/cloud": "dev-dialogflow",
-        "symfony/console": "^3.1"
+        "symfony/console": "^3.1",
+        "ramsey/uuid": "~3"
     },
     "repositories": [
         {
