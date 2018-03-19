@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,23 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_list_categories]
-use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
+# [START dlp_delete_trigger]
+use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
- * Lists all Info Type Categories for the Data Loss Prevention (DLP) API.
- *
- * @param string $languageCode Optional language code, empty for 'en-US'.
+ * Delete a Data Loss Prevention API job trigger.
+ * @param string $triggerId The name of the trigger to be deleted.
+ *        Parent project ID is automatically extracted from this parameter
  */
-function list_categories($languageCode = '')
+function delete_trigger($triggerId)
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     // Run request
-    $response = $dlp->listRootCategories($languageCode);
+    $response = $dlp->deleteJobTrigger($triggerId);
 
     // Print the results
-    print('Categories:' . PHP_EOL);
-    foreach ($response->getCategories() as $category) {
-        printf('  %s (%s)' . PHP_EOL,
-            $category->getDisplayName(),
-            $category->getName());
-    }
+    printf('Successfully deleted trigger %s' . PHP_EOL, $triggerId);
 }
-# [END dlp_list_categories]
+# [END dlp_delete_trigger]

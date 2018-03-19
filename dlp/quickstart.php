@@ -19,21 +19,22 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # [START dlp_quickstart]
-use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Cloud\Dlp\V2beta1\ContentItem;
-use Google\Cloud\Dlp\V2beta1\InfoType;
-use Google\Cloud\Dlp\V2beta1\InspectConfig;
-use Google\Cloud\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
 // The infoTypes of information to match
-$usMaleNameInfoType = new InfoType();
-$usMaleNameInfoType->setName('US_MALE_NAME');
-$usFemaleNameInfoType = new InfoType();
-$usFemaleNameInfoType->setName('US_FEMALE_NAME');
-$infoTypes = [$usMaleNameInfoType, $usFemaleNameInfoType];
+$usNameInfoType = (new InfoType())
+    ->setName('PERSON_NAME');
+$phoneNumberInfoType = (new InfoType())
+    ->setName('PHONE_NUMBER');
+$infoTypes = [$usNameInfoType, $phoneNumberInfoType];
 
 // Set the string to inspect
 $stringToInspect = 'Robert Frost';
@@ -47,25 +48,33 @@ $maxFindings = 0;
 // Whether to include the matching string in the response
 $includeQuote = true;
 
-// Create the configuration object
-$inspectConfig = new InspectConfig();
-$inspectConfig->setMinLikelihood($minLikelihood);
-$inspectConfig->setMaxFindings($maxFindings);
-$inspectConfig->setInfoTypes($infoTypes);
-$inspectConfig->setIncludeQuote($includeQuote);
+// Specify finding limits
+$limits = (new InspectConfig_FindingLimits())
+    ->setMaxFindingsPerRequest($maxFindings);
 
-$content = new ContentItem();
-$content->setType('text/plain');
-$content->setValue($stringToInspect);
+// Create the configuration object
+$inspectConfig = (new InspectConfig())
+    ->setMinLikelihood($minLikelihood)
+    ->setLimits($limits)
+    ->setInfoTypes($infoTypes)
+    ->setIncludeQuote($includeQuote);
+
+$content = (new ContentItem())
+    ->setValue($stringToInspect);
+
+$parent = $dlp->projectName(getEnv('GOOGLE_PROJECT_ID'));
 
 // Run request
-$response = $dlp->inspectContent($inspectConfig, [$content]);
+$response = $dlp->inspectContent($parent, array(
+    'inspectConfig' => $inspectConfig,
+    'item' => $content
+));
 
 $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
                 'Likely', 'Very likely'];
 
 // Print the results
-$findings = $response->getResults()[0]->getFindings();
+$findings = $response->getResult()->getFindings();
 if (count($findings) == 0) {
     print('No findings.' . PHP_EOL);
 } else {

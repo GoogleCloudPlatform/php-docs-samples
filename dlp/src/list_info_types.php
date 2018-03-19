@@ -18,28 +18,33 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_info_types]
-use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
  * Lists all Info Types for the Data Loss Prevention (DLP) API.
  *
- * @param string $category Optional category for the Info Types, empty for all.
+ * @param string $category Optional filter to use, empty for ''.
  * @param string $languageCode Optional language code, empty for 'en-US'.
  */
-function list_info_types($category = '', $languageCode = '')
+function list_info_types($filter = '', $languageCode = '')
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     // Run request
-    $response = $dlp->listInfoTypes($category, $languageCode);
+    $response = $dlp->listInfoTypes([
+        'languageCode' => $languageCode,
+        'filter' => $filter
+    ]);
 
     // Print the results
     print('Info Types:' . PHP_EOL);
     foreach ($response->getInfoTypes() as $infoType) {
-        printf('  %s (%s)' . PHP_EOL,
+        printf(
+            '  %s (%s)' . PHP_EOL,
             $infoType->getDisplayName(),
-            $infoType->getName());
+            $infoType->getName()
+        );
     }
 }
 # [END dlp_list_info_types]

@@ -18,91 +18,145 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_datastore]
-use Google\Cloud\Dlp\V2beta1\DlpServiceClient;
-use Google\Cloud\Dlp\V2beta1\DatastoreOptions;
-use Google\Cloud\Dlp\V2beta1\InfoType;
-use Google\Cloud\Dlp\V2beta1\InspectConfig;
-use Google\Cloud\Dlp\V2beta1\KindExpression;
-use Google\Cloud\Dlp\V2beta1\PartitionId;
-use Google\Cloud\Dlp\V2beta1\StorageConfig;
-use Google\Cloud\Dlp\V2beta1\Likelihood;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DatastoreOptions;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\Action;
+use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\KindExpression;
+use Google\Cloud\Dlp\V2\PartitionId;
+use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\DlpJob_JobState;
+use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Inspect Datastore using the Data Loss Prevention (DLP) API.
+ * Inspect Datastore, using Pub/Sub for job status notifications.
  *
- * @param string $kind Optional The datastore kind to inspect
- * @param string $namespaceId Optional The ID namespace of the Datastore document to inspect.
- * @param string $projectId Optional The project ID containing the target Datastore.
+ * @param string $callingProjectId The project ID to run the API call under
+ * @param string $dataProjectId The project ID containing the target Datastore
+ *        (This may or may not be equal to $callingProjectId)
+ * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
+ * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
+ * @param string $kind The datastore kind to inspect
+ * @param string $namespaceId The ID namespace of the Datastore document to inspect
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_datastore(
+    $callingProjectId,
+    $dataProjectId,
+    $topicId,
+    $subscriptionId,
     $kind,
-    $namespaceId = '',
-    $projectId = '',
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED,
-    $maxFindings = 0)
-{
-    // Instantiate a client.
+    $namespaceId,
+    $maxFindings = 0
+) {
+    // Instantiate clients
     $dlp = new DlpServiceClient();
+    $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
     // The infoTypes of information to match
-    $usMaleNameInfoType = new InfoType();
-    $usMaleNameInfoType->setName('US_MALE_NAME');
-    $usFemaleNameInfoType = new InfoType();
-    $usFemaleNameInfoType->setName('US_FEMALE_NAME');
-    $infoTypes = [$usMaleNameInfoType, $usFemaleNameInfoType];
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
-    // Create the configuration object
-    $inspectConfig = new InspectConfig();
-    $inspectConfig->setMinLikelihood($minLikelihood);
-    $inspectConfig->setMaxFindings($maxFindings);
-    $inspectConfig->setInfoTypes($infoTypes);
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-    $partitionId = new PartitionId();
-    $partitionId->setProjectId($projectId);
-    $partitionId->setNamespaceId($namespaceId);
+    // Specify finding limits
+    $limits = (new InspectConfig_FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
-    $kindExpression = new KindExpression();
-    $kindExpression->setName($kind);
+    // Construct items to be inspected
+    $partitionId = (new PartitionId())
+        ->setProjectId($dataProjectId)
+        ->setNamespaceId($namespaceId);
 
-    $datastoreOptions = new DatastoreOptions();
-    $datastoreOptions->setPartitionId($partitionId);
-    $datastoreOptions->setKind($kindExpression);
+    $kindExpression = (new KindExpression())
+        ->setName($kind);
 
-    $storageConfig = new StorageConfig();
-    $storageConfig->setDatastoreOptions($datastoreOptions);
+    $datastoreOptions = (new DatastoreOptions())
+        ->setPartitionId($partitionId)
+        ->setKind($kindExpression);
 
-    $outputConfig = null;
+    // Construct the inspect config object
+    $inspectConfig = (new InspectConfig())
+        ->setInfoTypes($infoTypes)
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits);
 
-    // Run request
-    $operation = $dlp->createInspectOperation(
-        $inspectConfig,
-        $storageConfig,
-        $outputConfig);
+    // Construct the storage config object
+    $storageConfig = (new StorageConfig())
+        ->setDatastoreOptions($datastoreOptions);
 
-    $operation->pollUntilComplete();
+    // Construct the action to run when job completes
+    $pubSubAction = (new Action_PublishToPubSub())
+        ->setTopic($topic->name());
 
-    if ($operation->operationSucceeded()) {
-        $result = $operation->getResult();
-        $response = $dlp->listInspectFindings($result->getName());
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
-        $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                        'Likely', 'Very likely'];
+    // Construct inspect job config to run
+    $inspectJob = (new InspectJobConfig())
+        ->setInspectConfig($inspectConfig)
+        ->setStorageConfig($storageConfig)
+        ->setActions([$action]);
 
-        // Print the results
-        $findings = $response->getResult()->getFindings();
-        if (count($findings) == 0) {
-            print('No findings.' . PHP_EOL);
-        } else {
-            print('Findings:' . PHP_EOL);
-            foreach ($findings as $finding) {
-                printf('- Info type: %s' . PHP_EOL,
-                    $finding->getInfoType()->getName());
-                printf('  Likelihood: %s' . PHP_EOL,
-                    $likelihoods[$finding->getLikelihood()]);
+    // Listen for job notifications via an existing topic/subscription.
+    $subscription = $topic->subscription($subscriptionId);
+
+    // Submit request
+    $parent = $dlp->projectName($callingProjectId);
+    $job = $dlp->createDlpJob($parent, [
+        'inspectJob' => $inspectJob
+    ]);
+
+    // Poll via Pub/Sub until job finishes
+    $polling = true;
+    while ($polling) {
+        foreach ($subscription->pull() as $message) {
+            if (isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()) {
+                $subscription->acknowledge($message);
+                $polling = false;
             }
         }
-    } else {
-        print_r($operation->getError());
+    }
+
+    // Sleep for half a second to avoid race condition with the job's status.
+    usleep(500000);
+
+    // Get the updated job
+    $job = $dlp->getDlpJob($job->getName());
+
+    // Print finding counts
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+    switch ($job->getState()) {
+        case DlpJob_JobState::DONE:
+            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+            if (count($infoTypeStats) === 0) {
+                print('No findings.' . PHP_EOL);
+            } else {
+                foreach ($infoTypeStats as $infoTypeStat) {
+                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+                }
+            }
+            break;
+        case DlpJob_JobState::FAILED:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        default:
+            print('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_inspect_datastore]
