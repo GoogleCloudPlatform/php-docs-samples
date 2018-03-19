@@ -115,56 +115,50 @@ function k_anonymity(
 
     // Helper function to convert Protobuf values to strings
     $value_to_string = function ($value) {
-        return $value->getIntegerValue() ?:
-            $value->getFloatValue() ?:
-            $value->getStringValue() ?:
-            $value->getBooleanValue() ?:
-            $value->getTimestampValue() ?:
-            $value->getTimeValue() ?:
-            $value->getDateValue() ?:
-            $value->getDayOfWeekValue();
+        $json = json_decode($value->serializeToJsonString(), true);
+        return array_shift($json);
     };
 
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-    case DlpJob_JobState::DONE:
-        $histBuckets = $job->getRiskDetails()->getKAnonymityResult()->getEquivalenceClassHistogramBuckets();
+        case DlpJob_JobState::DONE:
+            $histBuckets = $job->getRiskDetails()->getKAnonymityResult()->getEquivalenceClassHistogramBuckets();
 
-        foreach ($histBuckets as $bucketIndex => $histBucket) {
-            // Print bucket stats
-            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
-            printf(
-                '  Bucket size range: [%s, %s]' . PHP_EOL,
-                $histBucket->getEquivalenceClassSizeLowerBound(),
-                $histBucket->getEquivalenceClassSizeUpperBound()
-            );
-
-            // Print bucket values
-            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
-                // Pretty-print quasi-ID values
-                print('  Quasi-ID values: {');
-                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                    print(($index !== 0 ? ', ' : '') . $value_to_string($value));
-                }
-                print('}' . PHP_EOL);
+            foreach ($histBuckets as $bucketIndex => $histBucket) {
+                // Print bucket stats
+                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
                 printf(
-                    '  Class size: %s' . PHP_EOL,
-                    $valueBucket->getEquivalenceClassSize()
+                    '  Bucket size range: [%s, %s]' . PHP_EOL,
+                    $histBucket->getEquivalenceClassSizeLowerBound(),
+                    $histBucket->getEquivalenceClassSizeUpperBound()
                 );
-            }
-        }
 
-        break;
-    case DlpJob_JobState::FAILED:
-        printf('Job %s had errors:' . PHP_EOL, $job->getName());
-        $errors = $job->getErrors();
-        foreach ($errors as $error) {
-            var_dump($error->getDetails());
-        }
-        break;
-    default:
-        printf('Unknown job state. Most likely, the job is either running or has not yet started.');
+                // Print bucket values
+                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
+                    // Pretty-print quasi-ID values
+                    print('  Quasi-ID values: {');
+                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                        print(($index !== 0 ? ', ' : '') . $value_to_string($value));
+                    }
+                    print('}' . PHP_EOL);
+                    printf(
+                        '  Class size: %s' . PHP_EOL,
+                        $valueBucket->getEquivalenceClassSize()
+                    );
+                }
+            }
+
+            break;
+        case DlpJob_JobState::FAILED:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        default:
+            printf('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_k_anomymity]

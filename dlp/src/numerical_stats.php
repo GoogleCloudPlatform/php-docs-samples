@@ -114,14 +114,8 @@ function numerical_stats(
 
     // Helper function to convert Protobuf values to strings
     $value_to_string = function ($value) {
-        return $value->getIntegerValue() ?:
-            $value->getFloatValue() ?:
-            $value->getStringValue() ?:
-            $value->getBooleanValue() ?:
-            $value->getTimestampValue() ?:
-            $value->getTimeValue() ?:
-            $value->getDateValue() ?:
-            $value->getDayOfWeekValue();
+        $json = json_decode($value->serializeToJsonString(), true);
+        return array_shift($json);
     };
 
     // Print finding counts

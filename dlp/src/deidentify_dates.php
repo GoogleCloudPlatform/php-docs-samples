@@ -18,18 +18,19 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_date_shift]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\DateShiftConfig;
-use Google\Cloud\Dlp\V2\FieldTransformation;
 use Google\Cloud\Dlp\V2\ContentItem;
-use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\Dlp\V2\Table;
 use Google\Cloud\Dlp\V2\CryptoKey;
+use Google\Cloud\Dlp\V2\DateShiftConfig;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\Dlp\V2\FieldTransformation;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\RecordTransformations;
+use Google\Cloud\Dlp\V2\Table;
 use Google\Cloud\Dlp\V2\Table_Row;
+use Google\Cloud\Dlp\V2\TransformationSummary_TransformationResultCode as ResultCode;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 
@@ -78,23 +79,20 @@ function deidentify_dates(
         $rowValues = array_map(function ($csvValue) {
             if ($csvDate = strptime($csvValue, '%m/%d/%Y')) {
                 $date = (new Date())
-                    ->setYear((int) $csvDate['tm_year'])
-                    ->setMonth((int) $csvDate['tm_mon'])
+                    ->setYear((int) $csvDate['tm_year'] + 1900)
+                    ->setMonth((int) $csvDate['tm_mon'] + 1)
                     ->setDay((int) $csvDate['tm_mday']);
 
-                $protoDate = (new Value())
+                return (new Value())
                     ->setDateValue($date);
-                return $protoDate;
             } else {
-                $protoString = (new Value())
+                return (new Value())
                     ->setStringValue($csvValue);
-                return $protoString;
             }
         }, explode(',', $csvRow));
 
-        $tableRow = (new Table_Row())
+        return (new Table_Row())
             ->setValues($rowValues);
-        return $tableRow;
     }, $csvRows);
 
     // Convert date fields into protobuf objects
@@ -157,25 +155,31 @@ function deidentify_dates(
         'item' => $item
     ]);
 
-    // Save the results to a file
-    $resultTable = $response->getItem()->getTable();
-    $outputCsvText = join($csvHeaders, ',') . PHP_EOL;
-    foreach ($resultTable->getRows() as $tableRow) {
-        foreach ($tableRow->getValues() as $tableValueIdx => $tableValue) {
-            if ($tableValueIdx != 0) {
-                $outputCsvText .= ',';
+    // Check for errors
+    foreach ($response->getOverview()->getTransformationSummaries() as $summary) {
+        foreach ($summary->getResults() as $result) {
+            if ($details = $result->getDetails()) {
+                printf('Error: %s' . PHP_EOL, $details);
+                return;
             }
+        }
+    }
 
+    // Save the results to a file
+    $csvRef = fopen($outputCsvFile, 'w');
+    fputcsv($csvRef, $csvHeaders);
+    foreach ($response->getItem()->getTable()->getRows() as $tableRow) {
+        $values = array_map(function ($tableValue) {
             if ($tableValue->getStringValue()) {
-                $outputCsvText .= $tableValue->getStringValue();
-            } else {
-                $protoDate = $tableValue->getDateValue();
-                $date = mktime(0, 0, 0, $protoDate->getMonth(), $protoDate->getDay(), $protoDate->getYear());
-                $outputCsvText .= strftime('%D', $date);
+                return $tableValue->getStringValue();
             }
-        };
-        $outputCsvText .= PHP_EOL;
+            $protoDate = $tableValue->getDateValue();
+            $date = mktime(0, 0, 0, $protoDate->getMonth(), $protoDate->getDay(), $protoDate->getYear());
+            return strftime('%D', $date);
+        }, iterator_to_array($tableRow->getValues()));
+        fputcsv($csvRef, $values);
     };
-    file_put_contents($outputCsvFile, $outputCsvText);
+    fclose($csvRef);
+    printf('Deidentified dates written to %s' . PHP_EOL, $outputCsvFile);
 }
 # [END dlp_deidentify_date_shift]
