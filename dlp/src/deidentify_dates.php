@@ -32,6 +32,7 @@ use Google\Cloud\Dlp\V2\Table;
 use Google\Cloud\Dlp\V2\Table_Row;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
+use DateTime;
 
 /**
  * Deidentify dates in a CSV file by pseudorandomly shifting them.
@@ -76,12 +77,11 @@ function deidentify_dates(
 
     $tableRows = array_map(function ($csvRow) {
         $rowValues = array_map(function ($csvValue) {
-            if ($csvDate = strptime($csvValue, '%m/%d/%Y')) {
+            if ($csvDate = DateTime::createFromFormat('m/d/Y', $csvValue)) {
                 $date = (new Date())
-                    ->setYear((int) $csvDate['tm_year'] + 1900)
-                    ->setMonth((int) $csvDate['tm_mon'] + 1)
-                    ->setDay((int) $csvDate['tm_mday']);
-
+                    ->setYear((int) $csvDate->format('Y'))
+                    ->setMonth((int) $csvDate->format('m'))
+                    ->setDay((int) $csvDate->format('d'));
                 return (new Value())
                     ->setDateValue($date);
             } else {
