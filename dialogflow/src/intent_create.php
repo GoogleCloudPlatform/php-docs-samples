@@ -18,46 +18,49 @@
 // [START dialogflow_create_intent]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\IntentsClient;
+use Google\Cloud\Dialogflow\V2\Intent_TrainingPhrase_Part;
+use Google\Cloud\Dialogflow\V2\Intent_TrainingPhrase;
+use Google\Cloud\Dialogflow\V2\Intent_Message_Text;
+use Google\Cloud\Dialogflow\V2\Intent_Message;
+use Google\Cloud\Dialogflow\V2\Intent;
 
-// $path = 'path/to/your/image.jpg'
-
-function intent_create($projectId, $displayName, $trainingPhrases = null,
+function intent_create($projectId, $displayName, $trainingPhraseParts = null,
     $messageTexts = null)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    print('display name: ' . $displayName . PHP_EOL);
-    print('training phrases: ' . PHP_EOL);
-    foreach ($trainingPhrases as $trainingPhrase) {
-        print($trainingPhrase . PHP_EOL);
-    }
-    print('message texts: ' . PHP_EOL);
-    foreach ($messageTexts as $messageText) {
-        print($messageText . PHP_EOL);
+    $intentsClient = new IntentsClient();
+
+    // prepare parent
+    $parent = $intentsClient->projectAgentName($projectId);
+
+    // prepare training phrases for intent
+    $trainingPhrases = [];
+    foreach ($trainingPhraseParts as $trainingPhrasePart) {
+        $part = new Intent_TrainingPhrase_Part;
+        $part->setText($trainingPhrasePart);
+
+        // create new training phrase for each provided part
+        $trainingPhrase = new Intent_TrainingPhrase();
+        $trainingPhrase->setParts([$part]);
+        $trainingPhrases[] = $trainingPhrase;
     }
 
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    // prepare messages for intent
+    $text = new Intent_Message_Text();
+    $text->setText($messageTexts);
+    $message = new Intent_Message();
+    $message->setText($text);
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    // prepare intent
+    $intent = new Intent();
+    $intent->setDisplayName($displayName);
+    $intent->setTrainingPhrases($trainingPhrases);
+    $intent->setMessages([$message]);
+
+    // create intent
+    $response = $intentsClient->createIntent($parent, $intent);
+    printf('Intent created: %s' . PHP_EOL, $response->getName());
+
+    $intentsClient->close();
 }
 // [END dialogflow_create_intent]

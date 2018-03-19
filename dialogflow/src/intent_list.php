@@ -18,35 +18,38 @@
 // [START dialogflow_list_intent]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\IntentsClient;
 
-// $path = 'path/to/your/image.jpg'
 
 function intent_list($projectId)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    // get intents
+    $intentsClient = new IntentsClient();
+    $parent = $intentsClient->projectAgentName($projectId);
+    $intents = $intentsClient->listIntents($parent);
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    foreach ($intents->iterateAllElements() as $intent) {
+        // print relevant info
+        print(str_repeat("=", 20) . PHP_EOL);
+        printf('Intent name: %s' . PHP_EOL, $intent->getName());
+        printf('Intent display name: %s' . PHP_EOL, $intent->getDisplayName());
+        printf('Action: %s' . PHP_EOL, $intent->getAction());
+        printf('Root followup intent: %s' . PHP_EOL, 
+            $intent->getRootFollowupIntentName());
+        printf('Parent followup intent: %s' . PHP_EOL, 
+            $intent->getParentFollowupIntentName());
+        print(PHP_EOL);
+
+        print('Input contexts: ' . PHP_EOL);
+        foreach ($intent->getInputContextNames() as $inputContextName) {
+            printf("\t Name: %s" . PHP_EOL, $inputContextName);
+        }
+
+        print('Output contexts: ' . PHP_EOL);
+        foreach ($intent->getOutputContexts() as $outputContext) {
+            printf("\t Name: %s" . PHP_EOL, $outputContext->getName());
+        }
+    }
+    $intentsClient->close();
 }
 // [END dialogflow_list_intent]

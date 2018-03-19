@@ -18,36 +18,16 @@
 // [START dialogflow_delete_intent]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// $path = 'path/to/your/image.jpg'
+use Google\Cloud\Dialogflow\V2\IntentsClient;
 
 function intent_delete($projectId, $intentId)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    print('intent id: ' . $intentId . PHP_EOL);
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    $intentsClient = new IntentsClient();
+    $intentName = $intentsClient->intentName($projectId, $intentId);
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    $intentsClient->deleteIntent($intentName);
+    printf('Intent deleted: %s' . PHP_EOL, $intentName);
+    
+    $intentsClient->close();
 }
 // [END dialogflow_delete_intent]
