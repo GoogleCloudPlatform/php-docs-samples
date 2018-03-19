@@ -30,7 +30,6 @@ use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\RecordTransformations;
 use Google\Cloud\Dlp\V2\Table;
 use Google\Cloud\Dlp\V2\Table_Row;
-use Google\Cloud\Dlp\V2\TransformationSummary_TransformationResultCode as ResultCode;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 
