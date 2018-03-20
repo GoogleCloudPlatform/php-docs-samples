@@ -18,40 +18,22 @@
 // [START dialogflow_list_context]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// $path = 'path/to/your/image.jpg'
+use Google\Cloud\Dialogflow\V2\ContextsClient;
 
 function context_list($projectId, $sessionId)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    if ($sessionId) {
-        print('session id: ' . $sessionId . PHP_EOL);
-    } else {
-        print('bad session id' . PHP_EOL);
-    }
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    // get contexts
+    $contextsClient = new ContextsClient();
+    $parent = $contextsClient->sessionName($projectId, $sessionId);
+    $contexts = $contextsClient->listContexts($parent);
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    printf('Contexts for session %s' . PHP_EOL, $parent);
+    foreach ($contexts->iterateAllElements() as $context) {
+        // print relevant info
+        printf('Context name: %s' . PHP_EOL, $context->getName());
+        printf('Lifespan count: %d' . PHP_EOL, $context->getLifespanCount());
+    }
+    
+    $contextsClient->close();
 }
 // [END dialogflow_list_context]

@@ -18,44 +18,24 @@
 // [START dialogflow_create_context]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\ContextsClient;
+use Google\Cloud\Dialogflow\V2\Context;
 
-// $path = 'path/to/your/image.jpg'
-
-function context_create($projectId, $contextId, $sessionId = null, $lifespan = null)
+function context_create($projectId, $contextId, $sessionId, $lifespan = null)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    if ($sessionId) {
-        print('session id: ' . $sessionId . PHP_EOL);
-    } else {
-        print('bad session id' . PHP_EOL);
-    }
-    print('context id: ' . $contextId . PHP_EOL);
-    if ($lifespan) {
-        print('lifespan: ' . $lifespan . PHP_EOL);
-    }
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    $contextsClient = new ContextsClient();
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    // prepare context
+    $parent = $contextsClient->sessionName($projectId, $sessionId);
+    $contextName = $contextsClient->contextName($projectId, $sessionId, $contextId);
+    $context = new Context();
+    $context->setName($contextName);
+    $context->setLifespanCount($lifespan);
+    
+    // create context
+    $response = $contextsClient->createContext($parent, $context);
+    printf('Context created: %s' . PHP_EOL, $response->getName());
+    
+    $contextsClient->close();
 }
 // [END dialogflow_create_context]

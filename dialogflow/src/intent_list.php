@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\IntentsClient;
 
-
 function intent_list($projectId)
 {
     // get intents
@@ -34,9 +33,9 @@ function intent_list($projectId)
         printf('Intent name: %s' . PHP_EOL, $intent->getName());
         printf('Intent display name: %s' . PHP_EOL, $intent->getDisplayName());
         printf('Action: %s' . PHP_EOL, $intent->getAction());
-        printf('Root followup intent: %s' . PHP_EOL, 
+        printf('Root followup intent: %s' . PHP_EOL,
             $intent->getRootFollowupIntentName());
-        printf('Parent followup intent: %s' . PHP_EOL, 
+        printf('Parent followup intent: %s' . PHP_EOL,
             $intent->getParentFollowupIntentName());
         print(PHP_EOL);
 
