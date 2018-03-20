@@ -362,7 +362,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'data-project' => getenv('GOOGLE_PROJECT_ID'),
             'topic-id' => getenv('DLP_TOPIC'),
             'subscription-id' => getenv('DLP_SUBSCRIPTION'),
-            'region-code' => 'USA',
+            'region-code' => 'US',
             'quasi-ids' => 'Age,Gender',
             'info-types' => 'AGE,GENDER'
         ]);
