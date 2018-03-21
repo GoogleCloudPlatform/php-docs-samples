@@ -18,50 +18,48 @@
 // [START dialogflow_create_session_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\SessionEntityType_EntityOverrideMode;
+use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
+use Google\Cloud\Dialogflow\V2\SessionEntityType;
+use Google\Cloud\Dialogflow\V2\EntityType_Entity;
 
-// $path = 'path/to/your/image.jpg'
-
+/**
+* Create a session entity type with the given display name.
+*/
 function session_entity_type_create($projectId, $displayName, $values,
-    $sessionId = null, $overrideMode = null)
+    $sessionId, $overrideMode)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    if ($sessionId) {
-        print('session id: ' . $sessionId . PHP_EOL);
-    } else {
-        print('bad session id' . PHP_EOL);
-    }
-    print('display name: ' . $displayName . PHP_EOL);
-    print('values: ' . PHP_EOL);
-    foreach ($values as $value) {
-        print($value . PHP_EOL);
-    }
-    if ($overrideMode) {
-        print('override: ' . $overrideMode . PHP_EOL);
+    if (! $overrideMode) {
+        $overrideMode = SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE;
     }
 
-    // $imageAnnotator = new ImageAnnotatorClient();
+    $sessionEntityTypesClient = new SessionEntityTypesClient();
+    $parent = $sessionEntityTypesClient->sessionName($projectId, $sessionId);
+
+    // prepare name
+    $sessionEntityTypeName = $sessionEntityTypesClient
+    ->sessionEntityTypeName($projectId, $sessionId, $displayName);
     
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    // prepare entities
+    $entities = [];
+    foreach ($values as $value) {
+        $entity = new EntityType_Entity();
+        $entity->setValue($value);
+        $entity->setSynonyms([$value]);
+        $entities[] = $entity;
+    }
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    // prepare session entity type
+    $sessionEntityType = new SessionEntityType();
+    $sessionEntityType->setName($sessionEntityTypeName);
+    $sessionEntityType->setEntityOverrideMode($overrideMode);
+    $sessionEntityType->setEntities($entities);
+
+    // create session entity type
+    $response = $sessionEntityTypesClient->createSessionEntityType($parent,
+        $sessionEntityType);
+    printf('Session entity type created: %s' . PHP_EOL, $response->getName());
+
+    $sessionEntityTypesClient->close();
 }
 // [END dialogflow_create_session_entity_type]
