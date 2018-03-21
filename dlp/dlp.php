@@ -481,8 +481,8 @@ $application->add(new Command('k-map'))
         InputArgument::REQUIRED,
         'The infoTypes corresponding to the chosen quasi-identifiers'
     )
-    ->addArgument('region-code', InputArgument::REQUIRED, 'The ISO 3166-1 region code that the data is representative of')
     ->addArgument('subscription-id', InputArgument::REQUIRED, 'The name of the Pub/Sub subscription to use when listening for job')
+    ->addArgument('region-code', InputArgument::OPTIONAL, 'The ISO 3166-1 region code that the data is representative of', 'US')
     ->addArgument('calling-project', InputArgument::OPTIONAL, 'The GCP Project ID to run the API call under', getenv('GOOGLE_PROJECT_ID'))
     ->addArgument('data-project', InputArgument::OPTIONAL, 'The GCP Project ID that the BigQuery table exists under', getenv('GOOGLE_PROJECT_ID'))
     ->setDescription('Computes the k-map risk estimation of a column set in a Google BigQuery table.')

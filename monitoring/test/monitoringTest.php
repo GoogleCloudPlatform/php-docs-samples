@@ -88,8 +88,11 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteTimeseries()
     {
-        $output = $this->runCommand('write-timeseries');
-        $this->assertContains('Done writing time series data', $output);
+        // Catch all exceptions as this method occasionally throws an Internal error.
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('write-timeseries');
+            $this->assertContains('Done writing time series data', $output);
+        }, self::RETRY_COUNT, true);
     }
 
     /** @depends testWriteTimeseries */
