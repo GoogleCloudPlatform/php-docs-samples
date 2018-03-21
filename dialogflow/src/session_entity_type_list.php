@@ -18,10 +18,7 @@
 // [START dialogflow_list_session_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\EntityTypesClient;
-
 function session_entity_type_list($projectId, $sessionId)
 {
-    
 }
 // [END dialogflow_list_session_entity_type]

@@ -18,37 +18,20 @@
 // [START dialogflow_delete_entity]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 
-// $path = 'path/to/your/image.jpg'
-
+/**
+* Delete entity with the given entity type and entity value.
+*/
 function entity_delete($projectId, $entityTypeId, $entityValue)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    print('entity type id: ' . $entityTypeId . PHP_EOL);
-    print('entity value: ' . $entityValue . PHP_EOL);
-    // $imageAnnotator = new ImageAnnotatorClient();
+    $entityTypesClient = new EntityTypesClient();
     
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    $parent = $entityTypesClient->entityTypeName($projectId,
+        $entityTypeId);
+    $entityTypesClient->batchDeleteEntities($parent, [$entityValue]);
+    printf('Entity deleted: %s' . PHP_EOL, $entityValue);
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    $entityTypesClient->close();
 }
 // [END dialogflow_delete_entity]

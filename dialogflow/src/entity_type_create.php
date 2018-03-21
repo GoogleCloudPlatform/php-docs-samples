@@ -22,6 +22,9 @@ use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 use Google\Cloud\Dialogflow\V2\EntityType;
 use Google\Cloud\Dialogflow\V2\EntityType_Kind;
 
+/**
+* Create an entity type with the given display name.
+*/
 function entity_type_create($projectId, $displayName, $kind)
 {
     // set default kind to KIND_MAP

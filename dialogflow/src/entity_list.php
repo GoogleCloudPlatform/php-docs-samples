@@ -18,8 +18,29 @@
 // [START dialogflow_list_entity]
 namespace Google\Cloud\Samples\Dialogflow;
 
+use Google\Cloud\Dialogflow\V2\EntityTypesClient;
+
 function entity_list($projectId, $entityTypeId)
 {
+    $entityTypesClient = new EntityTypesClient();
 
+    // prepare
+    $parent = $entityTypesClient->entityTypeName($projectId,
+        $entityTypeId);
+    $entityType = $entityTypesClient->getEntityType($parent);
+    
+    // get entities
+    $entities = $entityType->getEntities();
+    foreach ($entities as $entity) {
+        print(PHP_EOL);
+        printf('Entity value: %s' . PHP_EOL, $entity->getValue());
+        print('Synonyms: ');
+        foreach ($entity->getSynonyms() as $synonym) {
+            print($synonym . "\t");
+        }
+        print(PHP_EOL);
+    }
+
+    $entityTypesClient->close();
 }
 // [END dialogflow_list_entity]
