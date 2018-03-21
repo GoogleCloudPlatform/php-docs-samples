@@ -25,8 +25,8 @@ use Google\Cloud\Dialogflow\V2\Intent_Message_Text;
 use Google\Cloud\Dialogflow\V2\Intent_Message;
 use Google\Cloud\Dialogflow\V2\Intent;
 
-function intent_create($projectId, $displayName, $trainingPhraseParts = null,
-    $messageTexts = null)
+function intent_create($projectId, $displayName, $trainingPhraseParts = [],
+    $messageTexts = [])
 {
     $intentsClient = new IntentsClient();
 

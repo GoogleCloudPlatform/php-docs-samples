@@ -18,35 +18,22 @@
 // [START dialogflow_list_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// $path = 'path/to/your/image.jpg'
+use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 
 function entity_type_list($projectId)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    // get entity types
+    $entityTypesClient = new EntityTypesClient();
+    $parent = $entityTypesClient->projectAgentName($projectId);
+    $entityTypes = $entityTypesClient->listEntityTypes($parent);
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    foreach ($entityTypes->iterateAllElements() as $entityType) {
+        // print relevant info
+        printf('Entity type name: %s' . PHP_EOL, $entityType->getName());
+        printf('Entity type display name: %s' . PHP_EOL, $entityType->getDisplayName());
+        printf('Number of entities: %d' . PHP_EOL, count($entityType->getEntities()));
+    }
+
+    $entityTypesClient->close();
 }
 // [END dialogflow_list_entity_type]

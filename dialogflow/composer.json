@@ -1,6 +1,4 @@
 {
-    "name": "google/dialogflow",
-    "type": "project",
     "require": {
         "google/cloud": "dev-dialogflow",
         "symfony/console": "^3.1",

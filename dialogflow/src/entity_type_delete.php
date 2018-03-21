@@ -18,36 +18,18 @@
 // [START dialogflow_delete_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// $path = 'path/to/your/image.jpg'
+use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 
 function entity_type_delete($projectId, $entityTypeId)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    print('entity type id: ' . $entityTypeId . PHP_EOL);
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
+    $entityTypesClient = new EntityTypesClient();
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    $formattedName = $entityTypesClient->entityTypeName($projectId, 
+        $entityTypeId);
+    $entityTypesClient->deleteEntityType($formattedName);
+    printf('Entity type deleted: %s' . PHP_EOL, $formattedName);
+    
+    $entityTypesClient->close();
+
 }
 // [END dialogflow_delete_entity_type]

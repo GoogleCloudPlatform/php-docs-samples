@@ -18,40 +18,10 @@
 // [START dialogflow_list_session_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// $path = 'path/to/your/image.jpg'
+use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 
 function session_entity_type_list($projectId, $sessionId)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    if ($sessionId) {
-        print('session id: ' . $sessionId . PHP_EOL);
-    } else {
-        print('bad session id' . PHP_EOL);
-    }
-    // $imageAnnotator = new ImageAnnotatorClient();
     
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
-
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
 }
 // [END dialogflow_list_session_entity_type]

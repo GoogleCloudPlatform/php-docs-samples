@@ -18,39 +18,29 @@
 // [START dialogflow_create_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Dialogflow\V2\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\EntityType;
+use Google\Cloud\Dialogflow\V2\EntityType_Kind;
 
-// $path = 'path/to/your/image.jpg'
-
-function entity_type_create($projectId, $displayName, $kind = null)
+function entity_type_create($projectId, $displayName, $kind)
 {
-    print('project id: ' . $projectId . PHP_EOL);
-    print('display name: ' . $displayName . PHP_EOL);
-    if ($kind) {
-        print('kind: ' . $kind . PHP_EOL);
+    // set default kind to KIND_MAP
+    if (! $kind) {
+        $kind = EntityType_Kind::KIND_MAP;
     }
-    // $imageAnnotator = new ImageAnnotatorClient();
-    
-    // # annotate the image
-    // $image = file_get_contents($path);
-    // $response = $imageAnnotator->cropHintsDetection($image);
-    // $annotations = $response->getCropHintsAnnotation();
 
-    // # print the crop hints from the annotation
-    // if ($annotations) {
-    //     print("Crop hints:" . PHP_EOL);
-    //     foreach ($annotations->getCropHints() as $hint) {
-    //         # get bounds
-    //         $vertices = $hint->getBoundingPoly()->getVertices();
-    //         $bounds = [];
-    //         foreach ($vertices as $vertex) {
-    //             $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-    //                 $vertex->getY());
-    //         }
-    //         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-    //     }
-    // } else {
-    //     print('No crop hints' . PHP_EOL);
-    // }
+    $entityTypesClient = new EntityTypesClient();
+    
+    // prepare entity type
+    $parent = $entityTypesClient->projectAgentName($projectId);
+    $entityType = new EntityType();
+    $entityType->setDisplayName($displayName);
+    $entityType->setKind($kind);
+
+    // create entity type
+    $response = $entityTypesClient->createEntityType($parent, $entityType);
+    printf('Entity type created: %s' . PHP_EOL, $response->getName());
+
+    $entityTypesClient->close();
 }
 // [END dialogflow_create_entity_type]
