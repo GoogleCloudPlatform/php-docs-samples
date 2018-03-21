@@ -32,6 +32,12 @@ use Ramsey\Uuid\Uuid;
 */
 function detect_intent_stream($projectId, $path, $sessionId, $languageCode)
 {
+    // need to use gRPC
+    if (!defined('Grpc\STATUS_OK')) {
+        throw new \Exception('Install the grpc extension ' .
+            '(pecl install grpc)');
+    }
+
     // random session id if not provided
     if (! $sessionId) {
         $sessionId = (string) Uuid::uuid4();
@@ -77,22 +83,35 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode)
         $requests[] = $request;
     }
     
-    // get response and relevant info
-    $responses = $sessionsClient->streamingDetectIntent($requests);
-    // $queryResult = $response->getQueryResult();
-    // $queryText = $queryResult->getQueryText();
-    // $intent = $queryResult->getIntent();
-    // $displayName = $intent->getDisplayName();
-    // $confidence = $queryResult->getIntentDetectionConfidence();
-    // $fulfilmentText = $queryResult->getFulfillmentText();
+    // intermediate transcript info
+    print(PHP_EOL . str_repeat("=", 20) . PHP_EOL);
+    $stream = $sessionsClient->streamingDetectIntent();
+    foreach ($requests as $request) {
+        $stream->write($request);
+    }
+    foreach ($stream->closeWriteAndReadAll() as $response) {
+        $recognitionResult = $response->getRecognitionResult();
+        if ($recognitionResult) {
+            $transcript = $recognitionResult->getTranscript();
+            printf('Intermediate transcript: %s' . PHP_EOL, $transcript);
+        }
+    }
+    print(str_repeat("=", 20) . PHP_EOL);
 
-    // // output relevant info
-    // print(str_repeat("=", 20) . PHP_EOL);
-    // printf('Query text: %s' . PHP_EOL, $queryText);
-    // printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
-    //     $confidence);
-    // print(PHP_EOL);
-    // printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
+    // get final response and relevant info
+    $queryResult = $response->getQueryResult();
+    $queryText = $queryResult->getQueryText();
+    $intent = $queryResult->getIntent();
+    $displayName = $intent->getDisplayName();
+    $confidence = $queryResult->getIntentDetectionConfidence();
+    $fulfilmentText = $queryResult->getFulfillmentText();
+
+    // output relevant info
+    printf('Query text: %s' . PHP_EOL, $queryText);
+    printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
+        $confidence);
+    print(PHP_EOL);
+    printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
 
     $sessionsClient->close();
 }

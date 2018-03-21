@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d450c33ccf1e6e8439ee237364ea109",
+    "content-hash": "22c63e7735fe0394d60dbb940d21d18d",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -105,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:GoogleCloudPlatform/google-cloud-php-private.git",
-                "reference": "2dc96b1a338e9d13dbe1b02d89eb8798a90e1571"
+                "reference": "8783b58b6deeda57d517afbd400a137fe4988ea3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-private/zipball/2dc96b1a338e9d13dbe1b02d89eb8798a90e1571",
-                "reference": "2dc96b1a338e9d13dbe1b02d89eb8798a90e1571",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-private/zipball/8783b58b6deeda57d517afbd400a137fe4988ea3",
+                "reference": "8783b58b6deeda57d517afbd400a137fe4988ea3",
                 "shasum": ""
             },
             "require": {
@@ -248,20 +248,20 @@
                 "source": "https://github.com/GoogleCloudPlatform/google-cloud-php-private/tree/dialogflow",
                 "issues": "https://github.com/GoogleCloudPlatform/google-cloud-php-private/issues"
             },
-            "time": "2018-02-13T00:54:59+00:00"
+            "time": "2018-03-19T20:00:42+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.30.1",
+            "version": "0.30.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "dda1f751734fb1ba4bf4f93c7f9335bf652c82bb"
+                "reference": "74769e356bd360ea7bd9cc84406e65d297758e16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/dda1f751734fb1ba4bf4f93c7f9335bf652c82bb",
-                "reference": "dda1f751734fb1ba4bf4f93c7f9335bf652c82bb",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/74769e356bd360ea7bd9cc84406e65d297758e16",
+                "reference": "74769e356bd360ea7bd9cc84406e65d297758e16",
                 "shasum": ""
             },
             "require": {
@@ -299,7 +299,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-03-14T16:49:37+00:00"
+            "time": "2018-03-21T15:52:11+00:00"
         },
         {
             "name": "google/proto-client",
