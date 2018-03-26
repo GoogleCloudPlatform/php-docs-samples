@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "22c63e7735fe0394d60dbb940d21d18d",
+    "content-hash": "5d097f354c0bea841f1062689f0e1d73",
     "packages": [
         {
             "name": "firebase/php-jwt",
