@@ -144,8 +144,8 @@ $application->add((new Command('detect-intent-texts'))
 The <info>%command.name%</info> command detects the intent of provided text 
 using Dialogflow.
 
-    <info>php %command.full_name% PROJECT_ID -s SESSION-ID 
-    -l LANGUAGE-CODE text [texts ...]</info>
+    <info>php %command.full_name% PROJECT_ID [-s SESSION-ID] 
+    [-l LANGUAGE-CODE] text [texts ...]</info>
 EOF
     )
     ->setCode(function ($input, $output) {
@@ -165,8 +165,8 @@ $application->add((new Command('detect-intent-audio'))
 The <info>%command.name%</info> command detects the intent of provided audio 
 using Dialogflow.
 
-    <info>php %command.full_name% PROJECT_ID -s SESSION-ID 
-    -l LANGUAGE-CODE AUDIO_FILE_PATH</info>
+    <info>php %command.full_name% PROJECT_ID [-s SESSION-ID] 
+    [-l LANGUAGE-CODE] AUDIO_FILE_PATH</info>
 EOF
     )
     ->setCode(function ($input, $output) {
