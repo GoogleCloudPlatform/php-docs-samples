@@ -18,18 +18,24 @@
 // [START vision_face_detection]
 namespace Google\Cloud\Samples\Vision;
 
+// [START import_client_library]
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+// [END import_client_library]
 
 // $path = 'path/to/your/image.jpg'
 
 function detect_face($path)
 {
+    // [START get_vision_service]
     $imageAnnotator = new ImageAnnotatorClient();
-
+    // [END get_vision_service]
+    
+    // [START detect_face]
     # annotate the image
     $image = file_get_contents($path);
     $response = $imageAnnotator->faceDetection($image);
     $faces = $response->getFaceAnnotations();
+    // [END detect_face]
 
     # names of likelihood from google.cloud.vision.enums
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -55,5 +61,6 @@ function detect_face($path)
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         print(PHP_EOL);
     }
+    return $faces;
 }
 // [END vision_face_detection]
