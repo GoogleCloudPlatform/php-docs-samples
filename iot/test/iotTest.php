@@ -264,10 +264,14 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($command);
 
         ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]
-        );
+        try {
+            $commandTester->execute(
+                $args,
+                ['interactive' => false]
+            );
+        } catch (\Exception $e) {
+            print($e->getMessage() . PHP_EOL);
+        }
 
         return ob_get_clean();
     }

@@ -23,8 +23,7 @@ use Google\Cloud\Iot\V1\DeviceRegistry;
 use Google\Cloud\Iot\V1\EventNotificationConfig;
 
 /**
- * Creates a registry and returns the result. Returns an empty result if
- * the registry already exists.
+ * Creates a registry if it doesn't exist and prints the result.
  *
  * @param string $registryId IOT Device Registry ID
  * @param string $pubsubTopic PubSub topic name for the new registry's event change notification.
