@@ -12,7 +12,7 @@
             "type": "vcs"
         },
         {
-            "url": "https://github.com/michaelbausor/gax-php.git",
+            "url": "https://github.com/bshaffer/gax-php.git",
             "type": "vcs"
         }
     ],
@@ -39,6 +39,6 @@
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "~4"
+        "phpunit/phpunit": "^5"
     }
 }
