@@ -2,20 +2,9 @@
     "name": "google/iot-sample",
     "type": "project",
     "require": {
-        "google/cloud": "dev-add-iot",
+        "google/cloud": "dev-master as 0.53.0",
         "symfony/console": "^3.3"
     },
-    "minimum-stability": "dev",
-    "repositories": [
-        {
-            "url": "https://github.com/michaelbausor/gcloud-php.git",
-            "type": "vcs"
-        },
-        {
-            "url": "https://github.com/bshaffer/gax-php.git",
-            "type": "vcs"
-        }
-    ],
     "autoload": {
         "files": [
             "src/create_es_device.php",
