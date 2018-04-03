@@ -70,11 +70,3 @@ If you have not set a timezone you may get an error from php. This can be resolv
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
-
-## Contributing changes
-
-* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
-
-## Licensing
-
-* See [LICENSE](../../LICENSE)
