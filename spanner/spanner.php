@@ -228,6 +228,66 @@ $application->add((new Command('batch-query-data'))
     })
 );
 
+// Create table with timestamp column command
+$application->add((new Command('create-table-timestamp'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Creates a table with a commit timestamp column.')
+    ->setCode(function ($input, $output) {
+        create_table_with_timestamp_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Insert data with timestamp column command
+$application->add((new Command('insert-data-timestamp'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Inserts data into a table with a commit timestamp column.')
+    ->setCode(function ($input, $output) {
+        insert_data_with_timestamp_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Add timestamp column command
+$application->add((new Command('add-timestamp-column'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Adds a commit timestamp column to a table.')
+    ->setCode(function ($input, $output) {
+        add_timestamp_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update data with timestamp column command
+$application->add((new Command('update-data-timestamp'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates sample data in a table with a commit timestamp column.')
+    ->setCode(function ($input, $output) {
+        update_data_with_timestamp_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with timestamp column command
+$application->add((new Command('query-data-timestamp'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from a database with a commit timestamp column.')
+    ->setCode(function ($input, $output) {
+        query_data_with_timestamp_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

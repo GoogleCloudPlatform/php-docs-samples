@@ -256,6 +256,58 @@ class spannerTest extends TestCase
         $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
+    
+    /**
+     * @depends testReadStaleData
+     */
+    public function testCreateTableTimestamp()
+    {
+        $output = $this->runCommand('create-table-timestamp');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Created Performances table in database test-', $output);
+    }
+    
+    /**
+     * @depends testCreateTableTimestamp
+     */
+    public function testInsertDataTimestamp()
+    {
+        $output = $this->runCommand('insert-data-timestamp');
+        $this->assertEquals('Inserted data.' . PHP_EOL, $output);
+    }
+    
+    /**
+     * @depends testInsertDataTimestamp
+     */
+    public function testAddTimestampColumn()
+    {
+        $output = $this->runCommand('add-timestamp-column');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Added LastUpdateTime as a commit timestamp column in Albums table', $output);
+    }
+    
+    /**
+     * @depends testAddTimestampColumn
+     */
+    public function testUpdateDataTimestamp()
+    {
+        $output = $this->runCommand('update-data-timestamp');
+        $this->assertEquals('Updated data.' . PHP_EOL, $output);
+    }
+    
+    /**
+     * @depends testUpdateDataTimestamp
+     */
+    public function testQueryDataTimestamp()
+    {
+        $output = $this->runCommand('query-data-timestamp');
+        $this->assertContains('SingerId: 1, AlbumId: 1, MarketingBudget: 1000000, LastUpdateTime: 20', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 2, MarketingBudget: 750000, LastUpdateTime: 20', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 1, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+        $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+    }
+
 
     private function runCommand($commandName)
     {
