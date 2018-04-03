@@ -29,13 +29,13 @@ $application = new Application('Dialogflow');
 
 // detect text intent command
 $application->add((new Command('detect-intent-texts'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session. Defaults to random.')
-    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED, 
+    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
         'Language code of the query. Defaults to "en-US".')
-    ->addArgument('texts', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 
+    ->addArgument('texts', InputArgument::IS_ARRAY | InputArgument::REQUIRED,
         'Text inputs.')
     ->setDescription('Detect intent of text inputs using Dialogflow.')
     ->setHelp(<<<EOF
@@ -57,11 +57,11 @@ EOF
 
 // detect audio intent command
 $application->add((new Command('detect-intent-audio'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session. Defaults to random.')
-    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED, 
+    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
         'Language code of the query. Defaults to "en-US".')
     ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
     ->setDescription('Detect intent of audio file using Dialogflow.')
@@ -84,11 +84,11 @@ EOF
 
 // detect stream intent command
 $application->add((new Command('detect-intent-stream'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session. Defaults to random.')
-    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED, 
+    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
         'Language code of the query. Defaults to "en-US".')
     ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
     ->setDescription('Detect intent of audio stream using Dialogflow.')
@@ -111,7 +111,7 @@ EOF
 
 // list intent command
 $application->add((new Command('intent-list'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->setDescription('List intents.')
     ->setHelp(<<<EOF
@@ -128,14 +128,14 @@ EOF
 
 // create intent command
 $application->add((new Command('intent-create'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addArgument('display-name', InputArgument::REQUIRED, 
+    ->addArgument('display-name', InputArgument::REQUIRED,
         'Display name of intent.')
-    ->addOption('training-phrases-parts', 't', InputOption::VALUE_REQUIRED | 
+    ->addOption('training-phrases-parts', 't', InputOption::VALUE_REQUIRED |
         InputOption::VALUE_IS_ARRAY, 'Training phrases.')
-    ->addOption('message-texts', 'm', 
-        InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
+    ->addOption('message-texts', 'm',
+        InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
         'Message texts for the agent\'s response when the intent is detected.')
     ->setDescription('Create intent of provided display name.')
     ->setHelp(<<<EOF
@@ -156,7 +156,7 @@ EOF
 
 // delete intent command
 $application->add((new Command('intent-delete'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->addArgument('intent-id', InputArgument::REQUIRED, 'ID of intent.')
     ->setDescription('Delete intent of provided intent id.')
@@ -175,7 +175,7 @@ EOF
 
 // list entity type command
 $application->add((new Command('entity-type-list'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->setDescription('List entity types.')
     ->setHelp(<<<EOF
@@ -192,11 +192,11 @@ EOF
 
 // create entity type command
 $application->add((new Command('entity-type-create'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addArgument('display-name', InputArgument::REQUIRED, 
+    ->addArgument('display-name', InputArgument::REQUIRED,
         'Display name of the entity.')
-    ->addOption('kind', 'k', InputOption::VALUE_REQUIRED, 
+    ->addOption('kind', 'k', InputOption::VALUE_REQUIRED,
         'Kind of entity. KIND_MAP (default) or KIND_LIST')
     ->setDescription('Create entity types with provided display name.')
     ->setHelp(<<<EOF
@@ -215,7 +215,7 @@ EOF
 
 // delete entity type command
 $application->add((new Command('entity-type-delete'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->addArgument('entity-type-id', InputArgument::REQUIRED, 'ID of entity type.')
     ->setDescription('Delete entity types of provided entity type id.')
@@ -234,7 +234,7 @@ EOF
 
 // list entity command
 $application->add((new Command('entity-list'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->addArgument('entity-type-id', InputArgument::REQUIRED, 'ID of entity type.')
     ->setDescription('List entities of provided entity type id.')
@@ -253,11 +253,11 @@ EOF
 
 // create entity command
 $application->add((new Command('entity-create'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->addArgument('entity-type-id', InputArgument::REQUIRED, 'ID of entity type.')
     ->addArgument('entity-value', InputArgument::REQUIRED, 'Value of the entity.')
-    ->addArgument('synonyms', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 
+    ->addArgument('synonyms', InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
         'Synonyms that will map to provided entity value.')
     ->setDescription('Create entity value for entity type id.')
     ->setHelp(<<<EOF
@@ -277,7 +277,7 @@ EOF
 
 // delete entity command
 $application->add((new Command('entity-delete'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->addArgument('entity-type-id', InputArgument::REQUIRED, 'ID of entity type.')
     ->addArgument('entity-value', InputArgument::REQUIRED, 'Value of the entity.')
@@ -298,9 +298,9 @@ EOF
 
 // list context command
 $application->add((new Command('context-list'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session.')
     ->setDescription('List contexts.')
     ->setHelp(<<<EOF
@@ -318,12 +318,12 @@ EOF
 
 // create context command
 $application->add((new Command('context-create'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session.')
     ->addArgument('context-id', InputArgument::REQUIRED, 'ID of the context.')
-    ->addOption('lifespan-count', 'c', InputOption::VALUE_REQUIRED, 
+    ->addOption('lifespan-count', 'c', InputOption::VALUE_REQUIRED,
         'Lifespan count of the context. Defaults to 1.')
     ->setDescription('Create context of provided context id.')
     ->setHelp(<<<EOF
@@ -344,9 +344,9 @@ EOF
 
 // delete context command
 $application->add((new Command('context-delete'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session.')
     ->addArgument('context-id', InputArgument::REQUIRED, 'ID of the context.')
     ->setDescription('Delete context of provided context id.')
@@ -366,9 +366,9 @@ EOF
 
 // list session entity type command
 $application->add((new Command('session-entity-type-list'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session.')
     ->setDescription('List session entity types.')
     ->setHelp(<<<EOF
@@ -386,15 +386,15 @@ EOF
 
 // create session entity type command
 $application->add((new Command('session-entity-type-create'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session.')
-    ->addArgument('entity-type-display-name', InputArgument::REQUIRED, 
+    ->addArgument('entity-type-display-name', InputArgument::REQUIRED,
         'Display name of the entity type.')
-    ->addArgument('entity-values', InputArgument::IS_ARRAY | 
+    ->addArgument('entity-values', InputArgument::IS_ARRAY |
         InputArgument::REQUIRED, 'Entity values of the session entity type.')
-    ->addOption('entity-override-mode', 'o', InputOption::VALUE_REQUIRED, 
+    ->addOption('entity-override-mode', 'o', InputOption::VALUE_REQUIRED,
         'ENTITY_OVERRIDE_MODE_OVERRIDE (default) or ENTITY_OVERRIDE_MODE_SUPPLEMENT')
     ->setDescription('Create session entity type.')
     ->setHelp(<<<EOF
@@ -419,11 +419,11 @@ EOF
 
 // delete session entity type command
 $application->add((new Command('session-entity-type-delete'))
-    ->addArgument('project-id', InputArgument::REQUIRED, 
+    ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED, 
+    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session.')
-    ->addArgument('entity-type-display-name', InputArgument::REQUIRED, 
+    ->addArgument('entity-type-display-name', InputArgument::REQUIRED,
         'Display name of the entity type.')
     ->setDescription('Delete session entity type of provided display name.')
     ->setHelp(<<<EOF
