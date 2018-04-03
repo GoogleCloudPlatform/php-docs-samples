@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Vision;
 
 // [START import_client_library]
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+
 // [END import_client_library]
 
 // $path = 'path/to/your/image.jpg'
