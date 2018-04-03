@@ -24,7 +24,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // $path = 'path/to/your/image.jpg'
 
-function detect_face($path)
+function detect_face($path, $outFile = null)
 {
     // [START get_vision_service]
     $imageAnnotator = new ImageAnnotatorClient();
@@ -61,6 +61,44 @@ function detect_face($path)
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         print(PHP_EOL);
     }
-    return $faces;
+
+    # draw box around faces
+    $imageCreateFunc = [
+        'png' => 'imagecreatefrompng',
+        'gd' => 'imagecreatefromgd',
+        'gif' => 'imagecreatefromgif',
+        'jpg' => 'imagecreatefromjpeg',
+        'jpeg' => 'imagecreatefromjpeg',
+    ];
+    $imageWriteFunc = [
+        'png' => 'imagepng',
+        'gd' => 'imagegd',
+        'gif' => 'imagegif',
+        'jpg' => 'imagejpeg',
+        'jpeg' => 'imagejpeg',
+    ];
+
+    if ($faces && $outFile) {
+        copy($path, $outFile);
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, array_keys($imageCreateFunc))) {
+            throw new \Exception('Unsupported image extension');
+        }
+        $outputImage = call_user_func($imageCreateFunc[$ext], $outFile);
+        # [START highlight_image]
+        foreach ($faces as $face) {
+            $vertices = $face->getBoundingPoly()->getVertices();
+            if ($vertices) {
+                $x1 = $vertices[0]->getX();
+                $y1 = $vertices[0]->getY();
+                $x2 = $vertices[2]->getX();
+                $y2 = $vertices[2]->getY();
+                imagerectangle($outputImage, $x1, $y1, $x2, $y2, 0x00ff00);
+            }
+        }
+        # [END highlight_image]
+        call_user_func($imageWriteFunc[$ext], $outputImage, $outFile);
+        printf('Output image written to %s' . PHP_EOL, $outFile);
+    }
 }
 // [END vision_face_detection]

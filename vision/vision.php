@@ -92,46 +92,11 @@ EOF
     )
     ->setCode(function ($input, $output) {
         $path = $input->getArgument('path');
+        $outFile = $input->getArgument('output');
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
-            $result = detect_face_gcs($path);
+            $result = detect_face_gcs($path, $outFile);
         } else {
-            $result = detect_face($path);
-        }
-        $imageCreateFunc = [
-            'png' => 'imagecreatefrompng',
-            'gd' => 'imagecreatefromgd',
-            'gif' => 'imagecreatefromgif',
-            'jpg' => 'imagecreatefromjpeg',
-            'jpeg' => 'imagecreatefromjpeg',
-        ];
-        $imageWriteFunc = [
-            'png' => 'imagepng',
-            'gd' => 'imagegd',
-            'gif' => 'imagegif',
-            'jpg' => 'imagejpeg',
-            'jpeg' => 'imagejpeg',
-        ];
-        if ($result && $outFile = $input->getArgument('output')) {
-            copy($path, $outFile);
-            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-            if (!in_array($ext, array_keys($imageCreateFunc))) {
-                throw new \Exception('Unsupported image extension');
-            }
-            $outputImage = call_user_func($imageCreateFunc[$ext], $outFile);
-            # [START highlight_image]
-            foreach ($result as $face) {
-                $vertices = $face->getBoundingPoly()->getVertices();
-                if ($vertices) {
-                    $x1 = $vertices[0]->getX();
-                    $y1 = $vertices[0]->getY();
-                    $x2 = $vertices[2]->getX();
-                    $y2 = $vertices[2]->getY();
-                    imagerectangle($outputImage, $x1, $y1, $x2, $y2, 0x00ff00);
-                }
-            }
-            # [END highlight_image]
-            call_user_func($imageWriteFunc[$ext], $outputImage, $outFile);
-            printf('Output image written to %s' . PHP_EOL, $outFile);
+            $result = detect_face($path, $outFile);
         }
     })
 );
