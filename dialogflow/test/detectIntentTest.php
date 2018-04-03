@@ -32,7 +32,7 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->texts = array('hello', 'book a meeting room', 'mountain view');
-        $this->audioFilePath = __DIR__ . '/data/book_a_room.wav';
+        $this->audioFilePath = realpath(__DIR__ . '/../resources/book_a_room.wav');
 
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .

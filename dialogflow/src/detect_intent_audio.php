@@ -22,7 +22,6 @@ use Google\Cloud\Dialogflow\V2\SessionsClient;
 use Google\Cloud\Dialogflow\V2\AudioEncoding;
 use Google\Cloud\Dialogflow\V2\InputAudioConfig;
 use Google\Cloud\Dialogflow\V2\QueryInput;
-use Ramsey\Uuid\Uuid;
 
 /**
 * Returns the result of detect intent with an audio file as input.
@@ -33,7 +32,7 @@ function detect_intent_audio($projectId, $path, $sessionId, $languageCode)
 {
     // random session id if not provided
     if (! $sessionId) {
-        $sessionId = (string) Uuid::uuid4();
+        $sessionId = uniqid();
     }
 
     // set default language to en-US

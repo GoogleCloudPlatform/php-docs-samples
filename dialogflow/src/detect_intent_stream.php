@@ -23,7 +23,6 @@ use Google\Cloud\Dialogflow\V2\AudioEncoding;
 use Google\Cloud\Dialogflow\V2\InputAudioConfig;
 use Google\Cloud\Dialogflow\V2\QueryInput;
 use Google\Cloud\Dialogflow\V2\StreamingDetectIntentRequest;
-use Ramsey\Uuid\Uuid;
 
 /**
 * Returns the result of detect intent with streaming audio as input.
@@ -40,7 +39,7 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode)
 
     // random session id if not provided
     if (! $sessionId) {
-        $sessionId = (string) Uuid::uuid4();
+        $sessionId = uniqid();
     }
 
     // set default language to en-US

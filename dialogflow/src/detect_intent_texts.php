@@ -21,7 +21,6 @@ namespace Google\Cloud\Samples\Dialogflow;
 use Google\Cloud\Dialogflow\V2\SessionsClient;
 use Google\Cloud\Dialogflow\V2\TextInput;
 use Google\Cloud\Dialogflow\V2\QueryInput;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Returns the result of detect intent with texts as inputs.
@@ -32,7 +31,7 @@ function detect_intent_texts($projectId, $texts, $sessionId, $languageCode)
 {
     // random session id if not provided
     if (! $sessionId) {
-        $sessionId = (string) Uuid::uuid4();
+        $sessionId = uniqid();
     }
 
     // set default language to en-US
