@@ -27,12 +27,8 @@ use Google\Cloud\Dialogflow\V2\EntityType_Entity;
 * Create a session entity type with the given display name.
 */
 function session_entity_type_create($projectId, $displayName, $values,
-    $sessionId, $overrideMode)
+    $sessionId, $overrideMode = SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
 {
-    if (! $overrideMode) {
-        $overrideMode = SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE;
-    }
-
     $sessionEntityTypesClient = new SessionEntityTypesClient();
     $parent = $sessionEntityTypesClient->sessionName($projectId, $sessionId);
 

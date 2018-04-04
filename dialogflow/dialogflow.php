@@ -21,6 +21,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Google\Cloud\Dialogflow\V2\EntityType_Kind;
+use Google\Cloud\Dialogflow\V2\SessionEntityType_EntityOverrideMode;
 
 # includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
@@ -34,7 +36,7 @@ $application->add((new Command('detect-intent-texts'))
     ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session. Defaults to random.')
     ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
-        'Language code of the query. Defaults to "en-US".')
+        'Language code of the query. Defaults to "en-US".', 'en-US')
     ->addArgument('texts', InputArgument::IS_ARRAY | InputArgument::REQUIRED,
         'Text inputs.')
     ->setDescription('Detect intent of text inputs using Dialogflow.')
@@ -62,7 +64,7 @@ $application->add((new Command('detect-intent-audio'))
     ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session. Defaults to random.')
     ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
-        'Language code of the query. Defaults to "en-US".')
+        'Language code of the query. Defaults to "en-US".', 'en-US')
     ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
     ->setDescription('Detect intent of audio file using Dialogflow.')
     ->setHelp(<<<EOF
@@ -89,7 +91,7 @@ $application->add((new Command('detect-intent-stream'))
     ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
         'Identifier of the DetectIntent session. Defaults to random.')
     ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
-        'Language code of the query. Defaults to "en-US".')
+        'Language code of the query. Defaults to "en-US".', 'en-US')
     ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
     ->setDescription('Detect intent of audio stream using Dialogflow.')
     ->setHelp(<<<EOF
@@ -197,7 +199,7 @@ $application->add((new Command('entity-type-create'))
     ->addArgument('display-name', InputArgument::REQUIRED,
         'Display name of the entity.')
     ->addOption('kind', 'k', InputOption::VALUE_REQUIRED,
-        'Kind of entity. KIND_MAP (default) or KIND_LIST')
+        'Kind of entity. KIND_MAP (default) or KIND_LIST', EntityType_Kind::KIND_MAP)
     ->setDescription('Create entity types with provided display name.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates entity type with provided name.
@@ -324,7 +326,7 @@ $application->add((new Command('context-create'))
         'Identifier of the DetectIntent session.')
     ->addArgument('context-id', InputArgument::REQUIRED, 'ID of the context.')
     ->addOption('lifespan-count', 'c', InputOption::VALUE_REQUIRED,
-        'Lifespan count of the context. Defaults to 1.')
+        'Lifespan count of the context. Defaults to 1.', 1)
     ->setDescription('Create context of provided context id.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates context of provided context id.
@@ -395,7 +397,8 @@ $application->add((new Command('session-entity-type-create'))
     ->addArgument('entity-values', InputArgument::IS_ARRAY |
         InputArgument::REQUIRED, 'Entity values of the session entity type.')
     ->addOption('entity-override-mode', 'o', InputOption::VALUE_REQUIRED,
-        'ENTITY_OVERRIDE_MODE_OVERRIDE (default) or ENTITY_OVERRIDE_MODE_SUPPLEMENT')
+        'ENTITY_OVERRIDE_MODE_OVERRIDE (default) or ENTITY_OVERRIDE_MODE_SUPPLEMENT',
+        SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
     ->setDescription('Create session entity type.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates session entity type with 

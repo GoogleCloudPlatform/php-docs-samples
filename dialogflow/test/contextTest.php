@@ -44,61 +44,42 @@ class contextTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-
-        $application = require __DIR__ . '/../dialogflow.php';
-        $createCommand = $application->get('context-create');
-        $listCommand = $application->get('context-list');
-        $deleteCommand = $application->get('context-delete');
-        $this->commandTesterCreate = new CommandTester($createCommand);
-        $this->commandTesterList = new CommandTester($listCommand);
-        $this->commandTesterDelete = new CommandTester($deleteCommand);
     }
 
     public function testCreateContext()
     {
-        $this->commandTesterCreate->execute(
-            [
-                'project-id' => $this->projectId,
-                'context-id' => $this->contextId,
-                '--session-id' => $this->sessionId,
-            ],
-            ['interactive' => false]
-        );
-
-        ob_start();
-        $this->commandTesterList->execute(
-            [
-                'project-id' => $this->projectId,
-                '--session-id' => $this->sessionId,
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
+        $this->runCommand('context-create', [
+            'context-id' => $this->contextId
+        ]);
+        $output = $this->runCommand('context-list');
 
         $this->assertContains($this->contextId, $output);
     }
 
+    /** @depends testCreateContext */
     public function testDeleteContext()
     {
-        $this->commandTesterDelete->execute(
-            [
-                'project-id' => $this->projectId,
-                'context-id' => $this->contextId,
-                '--session-id' => $this->sessionId,
-            ],
-            ['interactive' => false]
-        );
-
-        ob_start();
-        $this->commandTesterList->execute(
-            [
-                'project-id' => $this->projectId,
-                '--session-id' => $this->sessionId,
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
-
+        $this->runCommand('context-delete', [
+            'context-id' => $this->contextId
+        ]);
+        $output = $this->runCommand('context-list');
+        
         $this->assertNotContains($this->contextId, $output);
+    }
+
+    private function runCommand($commandName, $args=[])
+    {
+        $application = require __DIR__ . '/../dialogflow.php';
+        $command = $application->get($commandName);
+        $commandTester = new CommandTester($command);
+        ob_start();
+        $commandTester->execute(
+            $args + [
+                'project-id' => $this->projectId,
+                '--session-id' => $this->sessionId
+            ],
+            ['interactive' => false]
+        );
+        return ob_get_clean();
     }
 }

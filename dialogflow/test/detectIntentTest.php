@@ -44,58 +44,47 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-
-        $application = require __DIR__ . '/../dialogflow.php';
-        $textCommand = $application->get('detect-intent-texts');
-        $audioCommand = $application->get('detect-intent-audio');
-        $streamCommand = $application->get('detect-intent-stream');
-        $this->commandTesterText = new CommandTester($textCommand);
-        $this->commandTesterAudio = new CommandTester($audioCommand);
-        $this->commandTesterStream = new CommandTester($streamCommand);
     }
 
     public function testDetectText()
     {
-        ob_start();
-        $this->commandTesterText->execute(
-            [
-                'project-id' => $this->projectId,
-                'texts' => $this->texts,
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
+        $output = $this->runCommand('detect-intent-texts', [
+            'texts' => $this->texts
+        ]);
 
         $this->assertContains('date', $output);
     }
 
     public function testDetectAudio()
     {
-        ob_start();
-        $this->commandTesterAudio->execute(
-            [
-                'project-id' => $this->projectId,
-                'path' => $this->audioFilePath,
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
+        $output = $this->runCommand('detect-intent-audio', [
+            'path' => $this->audioFilePath
+        ]);
 
         $this->assertContains('would you like to reserve a room', $output);
     }
 
     public function testDetectStream()
     {
+        $output = $this->runCommand('detect-intent-stream', [
+            'path' => $this->audioFilePath
+        ]);
+        
+        $this->assertContains('would you like to reserve a room', $output);
+    }
+
+    private function runCommand($commandName, $args=[])
+    {
+        $application = require __DIR__ . '/../dialogflow.php';
+        $command = $application->get($commandName);
+        $commandTester = new CommandTester($command);
         ob_start();
-        $this->commandTesterStream->execute(
-            [
-                'project-id' => $this->projectId,
-                'path' => $this->audioFilePath,
+        $commandTester->execute(
+            $args + [
+                'project-id' => $this->projectId
             ],
             ['interactive' => false]
         );
-        $output = ob_get_clean();
-
-        $this->assertContains('would you like to reserve a room', $output);
+        return ob_get_clean();
     }
 }

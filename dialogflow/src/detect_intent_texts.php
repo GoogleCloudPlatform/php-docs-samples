@@ -27,21 +27,11 @@ use Google\Cloud\Dialogflow\V2\QueryInput;
  * Using the same `session_id` between requests allows continuation
  * of the conversation.
  */
-function detect_intent_texts($projectId, $texts, $sessionId, $languageCode)
+function detect_intent_texts($projectId, $texts, $sessionId, $languageCode = 'en-US')
 {
-    // random session id if not provided
-    if (! $sessionId) {
-        $sessionId = uniqid();
-    }
-
-    // set default language to en-US
-    if (! $languageCode) {
-        $languageCode = 'en-US';
-    }
-
     // new session
     $sessionsClient = new SessionsClient();
-    $session = $sessionsClient->sessionName($projectId, $sessionId);
+    $session = $sessionsClient->sessionName($projectId, $sessionId ?: uniqid());
     printf('Session path: %s' . PHP_EOL, $session);
 
     // query for each string in array

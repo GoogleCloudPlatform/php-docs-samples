@@ -42,66 +42,46 @@ class entityTypeTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-
-        $application = require __DIR__ . '/../dialogflow.php';
-        $createCommand = $application->get('entity-type-create');
-        $listCommand = $application->get('entity-type-list');
-        $deleteCommand = $application->get('entity-type-delete');
-        $this->commandTesterCreate = new CommandTester($createCommand);
-        $this->commandTesterList = new CommandTester($listCommand);
-        $this->commandTesterDelete = new CommandTester($deleteCommand);
     }
 
     public function testCreateEntityType()
     {
-        ob_start();
-        $this->commandTesterCreate->execute(
-            [
-                'project-id' => $this->projectId,
-                'display-name' => $this->entityTypeDisplayName
-            ],
-            ['interactive' => false]
-        );
-        $response = ob_get_clean();
+        $response = $this->runCommand('entity-type-create', [
+            'display-name' => $this->entityTypeDisplayName
+        ]);
+        $output = $this->runCommand('entity-type-list');
+
+        $this->assertContains($this->entityTypeDisplayName, $output);
+
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
         $entityTypeId = end($response);
-
-        ob_start();
-        $this->commandTesterList->execute(
-            [
-                'project-id' => $this->projectId
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
-
-        $this->assertContains($this->entityTypeDisplayName, $output);
         return $entityTypeId;
     }
 
-    /**
-    * @depends testCreateEntityType
-    */
+    /** @depends testCreateEntityType */
     public function testDeleteEntityType($entityTypeId)
     {
-        $this->commandTesterDelete->execute(
-            [
-                'project-id' => $this->projectId,
-                'entity-type-id' => $entityTypeId
-            ],
-            ['interactive' => false]
-        );
+        $this->runCommand('entity-type-delete', [
+            'entity-type-id' => $entityTypeId
+        ]);
+        $output = $this->runCommand('entity-type-list');
         
+        $this->assertNotContains($this->entityTypeDisplayName, $output);
+    }
+
+    private function runCommand($commandName, $args=[])
+    {
+        $application = require __DIR__ . '/../dialogflow.php';
+        $command = $application->get($commandName);
+        $commandTester = new CommandTester($command);
         ob_start();
-        $this->commandTesterList->execute(
-            [
+        $commandTester->execute(
+            $args + [
                 'project-id' => $this->projectId
             ],
             ['interactive' => false]
         );
-        $output = ob_get_clean();
-
-        $this->assertNotContains($this->entityTypeDisplayName, $output);
+        return ob_get_clean();
     }
 }

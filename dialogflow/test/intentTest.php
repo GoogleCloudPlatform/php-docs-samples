@@ -46,68 +46,48 @@ class intentTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-
-        $application = require __DIR__ . '/../dialogflow.php';
-        $createCommand = $application->get('intent-create');
-        $listCommand = $application->get('intent-list');
-        $deleteCommand = $application->get('intent-delete');
-        $this->commandTesterCreate = new CommandTester($createCommand);
-        $this->commandTesterList = new CommandTester($listCommand);
-        $this->commandTesterDelete = new CommandTester($deleteCommand);
     }
 
     public function testCreateIntent()
     {
-        ob_start();
-        $this->commandTesterCreate->execute(
-            [
-                'project-id' => $this->projectId,
-                'display-name' => $this->displayName,
-                '--training-phrases-parts' => $this->trainingPhraseParts,
-                '--message-texts' => $this->messageTexts
-            ],
-            ['interactive' => false]
-        );
-        $response = ob_get_clean();
+        $response = $this->runCommand('intent-create', [
+            'display-name' => $this->displayName,
+            '--training-phrases-parts' => $this->trainingPhraseParts,
+            '--message-texts' => $this->messageTexts
+        ]);
+        $output = $this->runCommand('intent-list');
+
+        $this->assertContains($this->displayName, $output);
+
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
         $intentId = end($response);
-
-        ob_start();
-        $this->commandTesterList->execute(
-            [
-                'project-id' => $this->projectId
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
-
-        $this->assertContains($this->displayName, $output);
         return $intentId;
     }
 
-    /**
-    * @depends testCreateIntent
-    */
+    /** @depends testCreateIntent */
     public function testDeleteIntent($intentId)
     {
-        $this->commandTesterDelete->execute(
-            [
-                'project-id' => $this->projectId,
-                'intent-id' => $intentId
-            ],
-            ['interactive' => false]
-        );
-        
+        $this->runCommand('intent-delete', [
+            'intent-id' => $intentId
+        ]);
+        $output = $this->runCommand('intent-list');
+
+        $this->assertNotContains($this->displayName, $output);
+    }
+
+    private function runCommand($commandName, $args=[])
+    {
+        $application = require __DIR__ . '/../dialogflow.php';
+        $command = $application->get($commandName);
+        $commandTester = new CommandTester($command);
         ob_start();
-        $this->commandTesterList->execute(
-            [
+        $commandTester->execute(
+            $args + [
                 'project-id' => $this->projectId
             ],
             ['interactive' => false]
         );
-        $output = ob_get_clean();
-
-        $this->assertNotContains($this->displayName, $output);
+        return ob_get_clean();
     }
 }

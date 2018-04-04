@@ -29,7 +29,7 @@ use Google\Cloud\Dialogflow\V2\StreamingDetectIntentRequest;
 * Using the same `session_id` between requests allows continuation
 * of the conversation.
 */
-function detect_intent_stream($projectId, $path, $sessionId, $languageCode)
+function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en-US')
 {
     // need to use gRPC
     if (!defined('Grpc\STATUS_OK')) {
@@ -37,19 +37,9 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode)
             '(pecl install grpc)');
     }
 
-    // random session id if not provided
-    if (! $sessionId) {
-        $sessionId = uniqid();
-    }
-
-    // set default language to en-US
-    if (! $languageCode) {
-        $languageCode = 'en-US';
-    }
-
     // new session
     $sessionsClient = new SessionsClient();
-    $session = $sessionsClient->sessionName($projectId, $sessionId);
+    $session = $sessionsClient->sessionName($projectId, $sessionId ?: uniqid());
     printf('Session path: %s' . PHP_EOL, $session);
 
     // hard coding audio_encoding and sample_rate_hertz for simplicity
@@ -74,7 +64,7 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode)
     $audioStream = fopen($path, 'rb');
     while (true) {
         $chunk = stream_get_contents($audioStream, 4096);
-        if (! $chunk) {
+        if (!$chunk) {
             break;
         }
         $request = new StreamingDetectIntentRequest();

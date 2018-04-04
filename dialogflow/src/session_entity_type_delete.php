@@ -28,7 +28,7 @@ function session_entity_type_delete($projectId, $displayName, $sessionId)
     $sessionEntityTypesClient = new SessionEntityTypesClient();
     
     $sessionEntityTypeName = $sessionEntityTypesClient
-    ->sessionEntityTypeName($projectId, $sessionId, $displayName);
+        ->sessionEntityTypeName($projectId, $sessionId, $displayName);
     $sessionEntityTypesClient->deleteSessionEntityType($sessionEntityTypeName);
     printf('Session entity type deleted: %s' . PHP_EOL, $sessionEntityTypeName);
 

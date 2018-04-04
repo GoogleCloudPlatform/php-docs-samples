@@ -62,75 +62,55 @@ class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateSessionEntityType()
     {
-        ob_start();
-        $this->commandTesterSetUp->execute(
-            [
-                'project-id' => $this->projectId,
-                'display-name' => $this->entityTypeDisplayName
-            ],
-            ['interactive' => false]
-        );
-        $response = ob_get_clean();
+        $response = $this->runCommand('entity-type-create',[
+            'display-name' => $this->entityTypeDisplayName
+        ]);
+        $this->runCommand('session-entity-type-create', [
+            'entity-type-display-name' => $this->entityTypeDisplayName,
+            'entity-values' => $this->entityValues,
+            '--session-id' => $this->sessionId
+        ]);
+        $output = $this->runCommand('session-entity-type-list', [
+            '--session-id' => $this->sessionId
+        ]);
+
+        $this->assertContains($this->entityTypeDisplayName, $output);
+
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
         $entityTypeId = end($response);
-
-        $this->commandTesterCreate->execute(
-            [
-                'project-id' => $this->projectId,
-                'entity-type-display-name' => $this->entityTypeDisplayName,
-                'entity-values' => $this->entityValues,
-                '--session-id' => $this->sessionId
-            ],
-            ['interactive' => false]
-        );
-
-        ob_start();
-        $this->commandTesterList->execute(
-            [
-                'project-id' => $this->projectId,
-                '--session-id' => $this->sessionId
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
-
-        $this->assertContains($this->entityTypeDisplayName, $output);
         return $entityTypeId;
     }
 
-    /**
-    * @depends testCreateSessionEntityType
-    */
+    /** @depends testCreateSessionEntityType */
     public function testDeleteSessionEntityType($entityTypeId)
     {
-        $this->commandTesterDelete->execute(
-            [
-                'project-id' => $this->projectId,
-                'entity-type-display-name' => $this->entityTypeDisplayName,
-                '--session-id' => $this->sessionId
-            ],
-            ['interactive' => false]
-        );
+        $this->runCommand('session-entity-type-delete', [
+            'entity-type-display-name' => $this->entityTypeDisplayName,
+            '--session-id' => $this->sessionId
+        ]);
+        $output = $this->runCommand('session-entity-type-list', [
+            '--session-id' => $this->sessionId
+        ]);
+        $this->runCommand('entity-type-delete', [
+            'entity-type-id' => $entityTypeId
+        ]);
         
-        ob_start();
-        $this->commandTesterList->execute(
-            [
-                'project-id' => $this->projectId,
-                '--session-id' => $this->sessionId
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
-
         $this->assertNotContains($this->entityTypeDisplayName, $output);
+    }
 
-        $this->commandTesterCleanUp->execute(
-            [
-                'project-id' => $this->projectId,
-                'entity-type-id' => $entityTypeId
+    private function runCommand($commandName, $args=[])
+    {
+        $application = require __DIR__ . '/../dialogflow.php';
+        $command = $application->get($commandName);
+        $commandTester = new CommandTester($command);
+        ob_start();
+        $commandTester->execute(
+            $args + [
+                'project-id' => $this->projectId
             ],
             ['interactive' => false]
         );
+        return ob_get_clean();
     }
 }
