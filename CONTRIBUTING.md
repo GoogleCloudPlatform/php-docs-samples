@@ -26,6 +26,14 @@ accept your pull requests.
 1. If your proposed change is accepted, and you haven't already done so, sign a
    Contributor License Agreement (see details above).
 1. Fork the desired repo, develop and test your code changes.
+
+   To run the tests in a sample directory, run:
+   ```
+   composer install
+   export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
+   vendor/bin/phpunit
+   ```
+
 1. Ensure that your code adheres to the existing style in the sample to which
    you are contributing.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
