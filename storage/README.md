@@ -45,4 +45,4 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../CONTRIBUTING.md)

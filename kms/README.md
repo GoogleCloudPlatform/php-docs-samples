@@ -36,8 +36,8 @@ These samples show how to use the [Google Cloud KMS API]
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../../LICENSE)
+* See [LICENSE](../LICENSE)

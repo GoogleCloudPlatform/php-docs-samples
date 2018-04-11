@@ -40,7 +40,7 @@ Vision API from PHP.
   crop-hints     Detect crop hints in an image using Google Cloud Vision API
   document-text  Detect document text in an image using Google Cloud Vision API
   web            Detect web entities in an image using Google Cloud Vision API
-  web-geo        Detect web entities in an image with geo metadata using 
+  web-geo        Detect web entities in an image with geo metadata using
                  Google Cloud Vision API
 ```
 7. Run `php vision.php COMMAND --help` to print information about the usage of each command.
@@ -73,8 +73,8 @@ If you have not set a timezone you may get an error from php. This can be resolv
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../../LICENSE)
+* See [LICENSE](../LICENSE)
