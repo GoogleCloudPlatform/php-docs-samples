@@ -64,22 +64,22 @@ function detect_face($path, $outFile = null)
     }
 
     # draw box around faces
-    $imageCreateFunc = [
-        'png' => 'imagecreatefrompng',
-        'gd' => 'imagecreatefromgd',
-        'gif' => 'imagecreatefromgif',
-        'jpg' => 'imagecreatefromjpeg',
-        'jpeg' => 'imagecreatefromjpeg',
-    ];
-    $imageWriteFunc = [
-        'png' => 'imagepng',
-        'gd' => 'imagegd',
-        'gif' => 'imagegif',
-        'jpg' => 'imagejpeg',
-        'jpeg' => 'imagejpeg',
-    ];
-
     if ($faces && $outFile) {
+        $imageCreateFunc = [
+            'png' => 'imagecreatefrompng',
+            'gd' => 'imagecreatefromgd',
+            'gif' => 'imagecreatefromgif',
+            'jpg' => 'imagecreatefromjpeg',
+            'jpeg' => 'imagecreatefromjpeg',
+        ];
+        $imageWriteFunc = [
+            'png' => 'imagepng',
+            'gd' => 'imagegd',
+            'gif' => 'imagegif',
+            'jpg' => 'imagejpeg',
+            'jpeg' => 'imagejpeg',
+        ];
+        
         copy($path, $outFile);
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (!array_key_exists($ext, $imageCreateFunc)) {
