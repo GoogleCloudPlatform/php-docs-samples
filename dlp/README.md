@@ -55,8 +55,8 @@ DLP API from PHP.
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../../LICENSE)
+* See [LICENSE](../LICENSE)
