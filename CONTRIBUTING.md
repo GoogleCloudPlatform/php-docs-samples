@@ -27,10 +27,21 @@ accept your pull requests.
    Contributor License Agreement (see details above).
 1. Fork the desired repo, develop and test your code changes.
 
-   To run the tests in a sample directory, run:
+   To run the tests in a sample directory, set up [application default
+   credentials](https://cloud.google.com/docs/authentication/getting-started)
+   by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the
+   path to a service account key JSON file.
+   
+   In addition, set environment variables needed by the test. Check the test
+   directory to see what specific variables are needed.
+   ```
+   export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
+   export GOOGLE_BUCKET_NAME=YOUR_BUCKET
+   ```
+   
+   Run the tests.
    ```
    composer install
-   export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
    vendor/bin/phpunit
    ```
 
