@@ -26,6 +26,26 @@ accept your pull requests.
 1. If your proposed change is accepted, and you haven't already done so, sign a
    Contributor License Agreement (see details above).
 1. Fork the desired repo, develop and test your code changes.
+
+   To run the tests, first set up [application default
+   credentials](https://cloud.google.com/docs/authentication/getting-started)
+   by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the
+   path to a service account key JSON file.
+   
+   Then set any environment variables needed by the test. Check the
+   `$SAMPLES_DIRECTORY/test` directory to see what specific variables are needed.
+   ```
+   export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
+   export GOOGLE_BUCKET_NAME=YOUR_BUCKET
+   ```
+   
+   To run the tests in a samples directory,
+   ```
+   cd $SAMPLES_DIRECTORY
+   composer install
+   vendor/bin/phpunit
+   ```
+
 1. Ensure that your code adheres to the existing style in the sample to which
    you are contributing.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
