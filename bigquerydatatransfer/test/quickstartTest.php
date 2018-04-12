@@ -34,10 +34,11 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         );
         file_put_contents($file, $contents);
 
-        // Invoke quickstart.php
-        $this->result = include $file;
+        // Invoke quickstart.php and capture output
+        include $file;
+        $result = ob_get_clean();
 
         // Make sure it looks correct
-        $this->assertTrue($this->result);
+        $this->assertContains('ID: youtube_channel', $result);
     }
 }
