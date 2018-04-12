@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_bigquery]
+# [START dlp_inspect_gcs]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
@@ -33,24 +33,23 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Inspect a BigQuery table , using Pub/Sub for job status notifications.
+ * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
  *
  * @param string $callingProjectId The project ID to run the API call under
- * @param string $dataProjectId The project ID containing the target Datastore
+ * @param string $bucketId The name of the bucket where the file resides
+ * @param string $file The path to the file within the bucket to inspect. Can contain wildcards
+ *        e.g. "my-image.*"
  * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId The ID of the dataset to inspect
- * @param string $tableId The ID of the table to inspect
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
-function inspect_bigquery(
-  $callingProjectId,
-  $dataProjectId,
-  $topicId,
-  $subscriptionId,
-  $datasetId,
-  $tableId,
-  $maxFindings = 0
+function inspect_gcs(
+    $callingProjectId,
+    $bucketId,
+    $file,
+    $topicId,
+    $subscriptionId,
+    $maxFindings = 0
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -72,16 +71,14 @@ function inspect_bigquery(
         ->setMaxFindingsPerRequest($maxFindings);
 
     // Construct items to be inspected
-    $bigqueryTable = (new BigQueryTable())
-        ->setProjectId($dataProjectId)
-        ->setDatasetId($datasetId)
-        ->setTableId($tableId);
+    $fileSet = (new CloudStorageOptions_FileSet())
+        ->setUrl('gs://' . $bucketId . '/' . $file);
 
-    $bigQueryOptions = (new BigQueryOptions())
-        ->setTableReference($bigqueryTable);
+    $cloudStorageOptions = (new CloudStorageOptions())
+        ->setFileSet($fileSet);
 
     $storageConfig = (new StorageConfig())
-        ->setBigQueryOptions($bigQueryOptions);
+        ->setCloudStorageOptions($cloudStorageOptions);
 
     // Construct the inspect config object
     $inspectConfig = (new InspectConfig())
@@ -137,11 +134,7 @@ function inspect_bigquery(
                 print('No findings.' . PHP_EOL);
             } else {
                 foreach ($infoTypeStats as $infoTypeStat) {
-                    printf(
-                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
-                        $infoTypeStat->getCount(),
-                        $infoTypeStat->getInfoType()->getName()
-                    );
+                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
                 }
             }
             break;
@@ -153,7 +146,7 @@ function inspect_bigquery(
             }
             break;
         default:
-            printf('Unknown job state. Most likely, the job is either running or has not yet started.');
+            print('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_inspect_bigquery]
+# [END dlp_inspect_gcs]

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,42 +17,46 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_file]
+// [START dlp_create_inspect_template]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
-use Google\Cloud\Dlp\V2\ByteContentItem;
 
 /**
- * Inspect a local file.
+ * Create a new DLP inspection configuration template.
  *
  * @param string $callingProjectId The project ID to run the API call under
- * @param string $path The file path to the file to inspect
+ * @param string $templateId The name of the template to be created
+ * @param string $displayName (Optional) The human-readable name to give the template
+ * @param string $description (Optional) A description for the trigger to be created
  * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
-function inspect_file(
+function create_inspect_template(
     $callingProjectId,
-    $path,
+    $templateId,
+    $displayName = '',
+    $description = '',
     $maxFindings = 0
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
+    // ----- Construct inspection config -----
     // The infoTypes of information to match
-    $usNameInfoType = (new InfoType())
+    $personNameInfoType = (new InfoType())
         ->setName('PERSON_NAME');
     $phoneNumberInfoType = (new InfoType())
         ->setName('PHONE_NUMBER');
-    $infoTypes = [$usNameInfoType, $phoneNumberInfoType];
-
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
     // Whether to include the matching string in the response
     $includeQuote = true;
+
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
     $limits = (new InspectConfig_FindingLimits())
@@ -65,43 +69,24 @@ function inspect_file(
         ->setInfoTypes($infoTypes)
         ->setIncludeQuote($includeQuote);
 
-    // Create the content item objects
-    $typeConstant = (int) array_search(
-        mime_content_type($path),
-        [false, 'image/jpeg', 'image/bmp', 'image/png', 'image/svg']
-    );
-
-    $byteContent = (new ByteContentItem())
-        ->setType($typeConstant)
-        ->setData(file_get_contents($path));
-
-    $content = (new ContentItem())
-        ->setByteItem($byteContent);
-
-    $parent = $dlp->projectName($callingProjectId);
+    // Construct inspection template
+    $inspectTemplate = (new InspectTemplate())
+        ->setInspectConfig($inspectConfig)
+        ->setDisplayName($displayName)
+        ->setDescription($description);
 
     // Run request
-    $response = $dlp->inspectContent($parent, [
-        'inspectConfig' => $inspectConfig,
-        'item' => $content
+    $parent = $dlp->projectName($callingProjectId);
+    $dlp->createInspectTemplate($parent, [
+        'inspectTemplate' => $inspectTemplate,
+        'templateId' => $templateId
     ]);
 
-    $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
-
-    // Print the results
-    $findings = $response->getResult()->getFindings();
-    if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
-    } else {
-        print('Findings:' . PHP_EOL);
-        foreach ($findings as $finding) {
-            if ($includeQuote) {
-                print('  Quote: ' . $finding->getQuote() . PHP_EOL);
-            }
-            print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            print('  Likelihood: ' . $likelihoods[$finding->getLikelihood()] . PHP_EOL);
-        }
-    }
+    // Print results
+    printf(
+        'Successfully created template projects/%s/inspectTemplates/%s' . PHP_EOL,
+        $callingProjectId,
+        $templateId
+    );
 }
-# [END dlp_inspect_file]
+// [END dlp_create_inspect_template]

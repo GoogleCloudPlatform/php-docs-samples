@@ -443,6 +443,48 @@ EOF
     })
 );
 
+// Add Subcollection command
+$application->add((new Command('add-subcollection'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Add a subcollection by creating a new document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command adds a subcollection by creating a new document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        $db = new FirestoreClient([
+            'projectId' => $projectId,
+        ]);
+        $cityRef = $db->collection('cities')->document('SF');
+        $subcollectionRef = $cityRef->collection('neighborhoods');
+        $data = [
+            'name' => 'Marina',
+        ];
+        $subcollectionRef->document('Marina')->set($data);
+    })
+);
+
+// List Subcollections command
+$application->add((new Command('list-subcollections'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('List subcollections of a document.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command lists subcollections of a document using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        list_subcollections($projectId);
+    })
+);
+
 // Order By Name Limit Query command
 $application->add((new Command('order-by-name-limit-query'))
     ->setDefinition($inputDefinition)
@@ -816,6 +858,8 @@ EOF
         $db = new FirestoreClient([
             'projectId' => $projectId,
         ]);
+        $subcollection = $db->collection('cities/SF/neighborhoods');
+        delete_collection($subcollection, 2);
         $cityCollection = $db->collection('cities');
         delete_collection($cityCollection, 2);
         $dataCollection = $db->collection('data');

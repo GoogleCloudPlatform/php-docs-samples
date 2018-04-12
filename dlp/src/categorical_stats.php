@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,20 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_bigquery]
+# [START dlp_categorical_stats]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric_CategoricalStatsConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric;
+use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Inspect a BigQuery table , using Pub/Sub for job status notifications.
+ * Computes risk metrics of a column of data in a Google BigQuery table.
  *
  * @param string $callingProjectId The project ID to run the API call under
  * @param string $dataProjectId The project ID containing the target Datastore
@@ -41,53 +38,37 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
  * @param string $datasetId The ID of the dataset to inspect
  * @param string $tableId The ID of the table to inspect
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * @param string $columnName The name of the column to compute risk metrics for, e.g. 'age'
  */
-function inspect_bigquery(
-  $callingProjectId,
-  $dataProjectId,
-  $topicId,
-  $subscriptionId,
-  $datasetId,
-  $tableId,
-  $maxFindings = 0
+function categorical_stats(
+    $callingProjectId,
+    $dataProjectId,
+    $topicId,
+    $subscriptionId,
+    $datasetId,
+    $tableId,
+    $columnName
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
-    // The infoTypes of information to match
-    $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
-    $creditCardNumberInfoType = (new InfoType())
-        ->setName('CREDIT_CARD_NUMBER');
-    $infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
+    // Construct risk analysis config
+    $columnField = (new FieldId())
+        ->setName($columnName);
 
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+    $statsConfig = (new PrivacyMetric_CategoricalStatsConfig())
+        ->setField($columnField);
 
-    // Specify finding limits
-    $limits = (new InspectConfig_FindingLimits())
-        ->setMaxFindingsPerRequest($maxFindings);
+    $privacyMetric = (new PrivacyMetric())
+        ->setCategoricalStatsConfig($statsConfig);
 
-    // Construct items to be inspected
+    // Construct items to be analyzed
     $bigqueryTable = (new BigQueryTable())
         ->setProjectId($dataProjectId)
         ->setDatasetId($datasetId)
         ->setTableId($tableId);
-
-    $bigQueryOptions = (new BigQueryOptions())
-        ->setTableReference($bigqueryTable);
-
-    $storageConfig = (new StorageConfig())
-        ->setBigQueryOptions($bigQueryOptions);
-
-    // Construct the inspect config object
-    $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood($minLikelihood)
-        ->setLimits($limits)
-        ->setInfoTypes($infoTypes);
 
     // Construct the action to run when job completes
     $pubSubAction = (new Action_PublishToPubSub())
@@ -96,20 +77,20 @@ function inspect_bigquery(
     $action = (new Action())
         ->setPubSub($pubSubAction);
 
-    // Construct inspect job config to run
-    $inspectJob = (new InspectJobConfig())
-        ->setInspectConfig($inspectConfig)
-        ->setStorageConfig($storageConfig)
+    // Construct risk analysis job config to run
+    $riskJob = (new RiskAnalysisJobConfig())
+        ->setPrivacyMetric($privacyMetric)
+        ->setSourceTable($bigqueryTable)
         ->setActions([$action]);
-
-    // Listen for job notifications via an existing topic/subscription.
-    $subscription = $topic->subscription($subscriptionId);
 
     // Submit request
     $parent = $dlp->projectName($callingProjectId);
     $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJob
+        'riskJob' => $riskJob
     ]);
+
+    // Listen for job notifications via an existing topic/subscription.
+    $subscription = $topic->subscription($subscriptionId);
 
     // Poll via Pub/Sub until job finishes
     while (true) {
@@ -128,26 +109,39 @@ function inspect_bigquery(
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
 
+    // Helper function to convert Protobuf values to strings
+    $value_to_string = function ($value) {
+        $json = json_decode($value->serializeToJsonString(), true);
+        return array_shift($json);
+    };
+
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
         case DlpJob_JobState::DONE:
-            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-            if (count($infoTypeStats) === 0) {
-                print('No findings.' . PHP_EOL);
-            } else {
-                foreach ($infoTypeStats as $infoTypeStat) {
+            $histBuckets = $job->getRiskDetails()->getCategoricalStatsResult()->getValueFrequencyHistogramBuckets();
+
+            foreach ($histBuckets as $bucketIndex => $histBucket) {
+                // Print bucket stats
+                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+                printf('  Most common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyUpperBound());
+                printf('  Least common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyLowerBound());
+                printf('  %s unique value(s) total.', $histBucket->getBucketSize());
+
+                // Print bucket values
+                foreach ($histBucket->getBucketValues() as $percent => $quantile) {
                     printf(
-                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
-                        $infoTypeStat->getCount(),
-                        $infoTypeStat->getInfoType()->getName()
+                        '  Value %s occurs %s time(s).' . PHP_EOL,
+                        $value_to_string($quantile->getValue()),
+                        $quantile->getCount()
                     );
                 }
             }
+
             break;
         case DlpJob_JobState::FAILED:
-            printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
             foreach ($errors as $error) {
                 var_dump($error->getDetails());
             }
@@ -156,4 +150,4 @@ function inspect_bigquery(
             printf('Unknown job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_inspect_bigquery]
+# [END dlp_categorical_stats]

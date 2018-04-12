@@ -271,24 +271,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Bounds:', $output);
     }
 
-    public function testDetectWebCommand()
-    {
-        $path = __DIR__ . '/data/landmark.jpg';
-        $output = $this->runCommand('web', $path);
-        $this->assertContains('web entities found:', $output);
-        $this->assertContains('Palace of Fine Arts Theatre', $output);
-    }
-
-    public function testDetectWebCommandGcs()
-    {
-        $this->requireCloudStorage();
-
-        $path = 'gs://' . $this->bucketName . '/landmark.jpg';
-        $output = $this->runCommand('web', $path);
-        $this->assertContains('web entities found:', $output);
-        $this->assertContains('Palace of Fine Arts Theatre', $output);
-    }
-
     public function testDetectWebNoGeoCommand()
     {
         $path = __DIR__ . '/data/geotagged.jpg';

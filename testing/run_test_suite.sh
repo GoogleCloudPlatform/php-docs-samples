@@ -22,7 +22,6 @@ fi
 # directories known as flaky tests
 FLAKES=(
     datastore/api
-    dlp
 )
 
 GRPC_ONLY_TESTS=(
