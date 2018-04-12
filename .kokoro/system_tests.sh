@@ -23,5 +23,7 @@ source ${KOKORO_GFILE_DIR}/secrets.sh
 
 mkdir -p build/logs
 
+export IS_PULL_REQUEST=$KOKORO_GITHUB_PULL_REQUEST_COMMIT
+
 # Run tests
 bash testing/run_test_suite.sh
