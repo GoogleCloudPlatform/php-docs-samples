@@ -36,7 +36,7 @@ class ExtractCommandTest extends TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$gcsBucket = getenv('GOOGLE_BUCKET_NAME');
+        self::$gcsBucket = getenv('GOOGLE_STORAGE_BUCKET');
     }
 
     /**
@@ -207,8 +207,8 @@ class ExtractCommandTest extends TestCase
         $time = time();
 
         return [
-            [sprintf('test_data_%s.json', $time), 'json'],
-            [sprintf('test_data_%s.csv', $time), 'csv'],
+            [sprintf('bigquery/test_data_%s.json', $time), 'json'],
+            [sprintf('bigquery/test_data_%s.csv', $time), 'csv'],
         ];
     }
 }

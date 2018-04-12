@@ -23,8 +23,8 @@ class LocalTest extends WebTestCase
         if (!getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');
         }
-        if (!getenv('GOOGLE_BUCKET_NAME')) {
-            $this->markTestSkipped('Must set GOOGLE_BUCKET_NAME');
+        if (!getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('Must set GOOGLE_STORAGE_BUCKET');
         }
         parent::setUp();
         $this->client = $this->createClient();
@@ -43,8 +43,8 @@ class LocalTest extends WebTestCase
 
         // the bucket name doesn't matter because we mock the stream wrapper
         $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
-        $app['bucket_name'] = getenv('GOOGLE_BUCKET_NAME');
-        $app['object_name'] = 'hello_flex.txt';
+        $app['bucket_name'] = getenv('GOOGLE_STORAGE_BUCKET');
+        $app['object_name'] = 'appengine/hello_flex.txt';
 
         return $app;
     }

@@ -77,7 +77,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
-                '--prefix' => 'test_data.csv'
+                '--prefix' => 'storage/test_data.csv'
             ],
             ['interactive' => false]
         );

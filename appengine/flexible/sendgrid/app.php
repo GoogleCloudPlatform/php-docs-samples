@@ -38,7 +38,7 @@ $app->post('/', function (Request $request) use ($app) {
     $sendgridApiKey = $app['sendgrid.api_key'];
     $sendgridRecipient = $request->get('recipient');
     # [START send_mail]
-    // $sendgridApiKey = 'YOUR_SENDGRID_API_KEY';
+    // $sendgridApiKey = 'YOUR_SENDGRID_APIKEY';
     // $sendgridSender = 'an-email-to-send-from@example.com';
     // $sendgridRecipient = 'some-recipient@example.com';
     $sender = new SendGrid\Email(null, $sendgridSender);

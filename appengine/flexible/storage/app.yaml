@@ -6,6 +6,6 @@ runtime_config:
 
 # [START env_variables]
 env_variables:
-  GOOGLE_BUCKET_NAME: "your-bucket-name"
+  GOOGLE_STORAGE_BUCKET: "your-bucket-name"
 # [END env_variables]
 
