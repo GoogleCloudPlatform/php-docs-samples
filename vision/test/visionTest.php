@@ -276,7 +276,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/data/geotagged.jpg';
         $output = $this->runCommand('web', $path);
         $this->assertContains('web entities found:', $output);
-        $this->assertContains('Luna Park Sydney', $output);
     }
 
     public function testDetectWebNoGeoCommandGcs()
@@ -286,7 +285,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = 'gs://' . $this->bucketName . '/geotagged.jpg';
         $output = $this->runCommand('web', $path);
         $this->assertContains('web entities found:', $output);
-        $this->assertContains('Luna Park Sydney', $output);
     }
 
     public function testDetectWebGeoCommand()
