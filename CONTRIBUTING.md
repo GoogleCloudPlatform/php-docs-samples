@@ -39,7 +39,7 @@ accept your pull requests.
    export GOOGLE_BUCKET_NAME=YOUR_BUCKET
    ```
    
-   To run the tests in a sample directory,
+   To run the tests in a samples directory,
    ```
    cd $SAMPLES_DIRECTORY
    composer install
