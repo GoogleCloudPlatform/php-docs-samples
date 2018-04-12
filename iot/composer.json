@@ -1,0 +1,33 @@
+{
+    "name": "google/iot-sample",
+    "type": "project",
+    "require": {
+        "google/cloud-iot": "^0.1",
+        "symfony/console": "^3.3"
+    },
+    "autoload": {
+        "files": [
+            "src/create_es_device.php",
+            "src/create_registry.php",
+            "src/create_rsa_device.php",
+            "src/create_unauth_device.php",
+            "src/delete_device.php",
+            "src/delete_registry.php",
+            "src/get_iam_policy.php",
+            "src/get_device.php",
+            "src/get_device_state.php",
+            "src/get_device_configs.php",
+            "src/get_registry.php",
+            "src/list_devices.php",
+            "src/list_registries.php",
+            "src/patch_es.php",
+            "src/patch_rsa.php",
+            "src/set_device_config.php",
+            "src/set_device_state.php",
+            "src/set_iam_policy.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    }
+}

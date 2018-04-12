@@ -51,5 +51,5 @@ for more information.
 [select-source-code]: https://cloud.google.com/debugger/docs/source-options]
 [snapshots]: https://cloud.google.com/debugger/docs/using/snapshots
 [logpoints]: https://cloud.google.com/debugger/docs/using/logpoints
-[contributing]: ../../CONTRIBUTING.md
-[license]: ../../LICENSE
+[contributing]: ../CONTRIBUTING.md
+[license]: ../LICENSE
