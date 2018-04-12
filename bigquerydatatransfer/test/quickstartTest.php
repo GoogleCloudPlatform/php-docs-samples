@@ -35,6 +35,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, $contents);
 
         // Invoke quickstart.php and capture output
+        ob_start();
         include $file;
         $result = ob_get_clean();
 
