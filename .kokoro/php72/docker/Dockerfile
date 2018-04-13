@@ -12,7 +12,7 @@ RUN git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-t
 RUN pecl install grpc \
     && echo "extension=grpc.so" >> /opt/php72/lib/conf.d/ext-grpc.ini
 
-RUN export PATH="$PATH:/opt/composer/vendor/bin"
-RUN composer global require phpunit/phpunit:4.8
+RUN composer global require phpunit/phpunit:^5.0
+ENV PATH="$PATH:/opt/composer/vendor/bin"
 
 ENTRYPOINT /bin/bash
