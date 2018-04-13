@@ -42,4 +42,3 @@ try {
     $bqdtsClient->close();
 }
 # [END bigquerydatatransfer_quickstart]
-return true;
