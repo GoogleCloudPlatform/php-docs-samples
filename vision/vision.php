@@ -92,10 +92,11 @@ EOF
     )
     ->setCode(function ($input, $output) {
         $path = $input->getArgument('path');
+        $outFile = $input->getArgument('output');
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
-            detect_face_gcs($path);
+            detect_face_gcs($path, $outFile);
         } else {
-            detect_face($path);
+            detect_face($path, $outFile);
         }
     })
 );

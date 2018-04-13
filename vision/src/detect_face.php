@@ -18,18 +18,25 @@
 // [START vision_face_detection]
 namespace Google\Cloud\Samples\Vision;
 
+// [START import_client_library]
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+
+// [END import_client_library]
 
 // $path = 'path/to/your/image.jpg'
 
-function detect_face($path)
+function detect_face($path, $outFile = null)
 {
+    // [START get_vision_service]
     $imageAnnotator = new ImageAnnotatorClient();
-
+    // [END get_vision_service]
+    
+    // [START detect_face]
     # annotate the image
     $image = file_get_contents($path);
     $response = $imageAnnotator->faceDetection($image);
     $faces = $response->getFaceAnnotations();
+    // [END detect_face]
 
     # names of likelihood from google.cloud.vision.enums
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -54,6 +61,45 @@ function detect_face($path)
         }
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         print(PHP_EOL);
+    }
+
+    # draw box around faces
+    if ($faces && $outFile) {
+        $imageCreateFunc = [
+            'png' => 'imagecreatefrompng',
+            'gd' => 'imagecreatefromgd',
+            'gif' => 'imagecreatefromgif',
+            'jpg' => 'imagecreatefromjpeg',
+            'jpeg' => 'imagecreatefromjpeg',
+        ];
+        $imageWriteFunc = [
+            'png' => 'imagepng',
+            'gd' => 'imagegd',
+            'gif' => 'imagegif',
+            'jpg' => 'imagejpeg',
+            'jpeg' => 'imagejpeg',
+        ];
+        
+        copy($path, $outFile);
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!array_key_exists($ext, $imageCreateFunc)) {
+            throw new \Exception('Unsupported image extension');
+        }
+        $outputImage = call_user_func($imageCreateFunc[$ext], $outFile);
+        # [START highlight_image]
+        foreach ($faces as $face) {
+            $vertices = $face->getBoundingPoly()->getVertices();
+            if ($vertices) {
+                $x1 = $vertices[0]->getX();
+                $y1 = $vertices[0]->getY();
+                $x2 = $vertices[2]->getX();
+                $y2 = $vertices[2]->getY();
+                imagerectangle($outputImage, $x1, $y1, $x2, $y2, 0x00ff00);
+            }
+        }
+        # [END highlight_image]
+        call_user_func($imageWriteFunc[$ext], $outputImage, $outFile);
+        printf('Output image written to %s' . PHP_EOL, $outFile);
     }
 }
 // [END vision_face_detection]
