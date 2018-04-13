@@ -45,10 +45,19 @@ class WordPressSetup extends Command
     const DEFAULT_DB_REGION = 'us-central1';
 
     private static $availableDbRegions = array(
+        'us-central',
         'us-central1',
         'us-east1',
+        'us-east4',
+        'us-west1',
+        'southamerica-east1',
         'europe-west1',
+        'europe-west2',
+        'europe-west3',
         'asia-east1',
+        'asia-northeast1',
+        'asia-south1',
+        'australia-southeast1',
     );
 
     protected function configure()
