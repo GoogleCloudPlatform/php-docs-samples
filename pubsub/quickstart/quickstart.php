@@ -23,7 +23,7 @@ require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\PubSub\PubSubClient;
 
 # Your Google Cloud Platform project ID
-$projectId = 'cloud-samples-tests-php';
+$projectId = 'YOUR_PROJECT_ID';
 
 # Instantiates a client
 $pubsub = new PubSubClient([
