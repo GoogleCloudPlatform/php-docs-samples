@@ -350,6 +350,7 @@ class WordPressSetup extends Command
                 'cron.yaml' => '/',
                 'composer.json' => '/',
                 'php.ini' => '/',
+                'wp-cli.yml' => '/',
                 'wp-config.php' => '/wordpress/',
             );
             $templateDir = __DIR__ . '/files/standard';
@@ -373,6 +374,7 @@ class WordPressSetup extends Command
                 'composer.json' => '/',
                 'nginx-app.conf' => '/',
                 'php.ini' => '/',
+                'wp-cli.yml' => '/',
                 'wp-config.php' => '/wordpress/',
             );
             $templateDir = __DIR__ . '/files/flexible';
