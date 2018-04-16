@@ -1,15 +1,9 @@
 {
     "require": {
-        "google/cloud": "dev-dialogflow",
+        "google/cloud-dialogflow": "^0.1",
         "symfony/console": "^3.1",
         "ext-grpc": "*"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "git@github.com:GoogleCloudPlatform/google-cloud-php-private.git"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Google\\Cloud\\Samples\\Dialogflow\\": "src/"
