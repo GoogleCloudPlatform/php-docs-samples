@@ -76,13 +76,15 @@ function read_timeseries_reduce($projectId, $minutesAgo = 20)
         $view,
         ['aggregation' => $aggregation]);
 
-    $reductions = $result->iterateAllElements()->current()->getPoints();
     printf('Average CPU utilization across all GCE instances:' . PHP_EOL);
-    printf('  Last 10 minutes: ');
-    printf($reductions[0]->getValue()->getDoubleValue() . PHP_EOL);
-    if (count($reductions) > 1) {
-        printf('  10-20 minutes ago: ');
-        printf($reductions[1]->getValue()->getDoubleValue() . PHP_EOL);
+    if ($timeSeries = $result->iterateAllElements()->current()) {
+        $reductions = $timeSeries->getPoints();
+        printf('  Last 10 minutes: ');
+        printf($reductions[0]->getValue()->getDoubleValue() . PHP_EOL);
+        if (count($reductions) > 1) {
+            printf('  10-20 minutes ago: ');
+            printf($reductions[1]->getValue()->getDoubleValue() . PHP_EOL);
+        }
     }
 }
 // [END monitoring_read_timeseries_reduce]

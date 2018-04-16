@@ -37,9 +37,6 @@ class videoTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyzeFaces()
     {
-        if (!extension_loaded('grpc')) {
-            $this->markTestSkipped('gRPC is required for this test');
-        }
         $output = $this->runCommand('faces', ['uri' => self::$gcsFacesUri]);
         $this->assertContains('left:', $output);
     }
