@@ -66,10 +66,13 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectStream()
     {
+        if (!extension_loaded('grpc')) {
+            $this->markTestSkipped('Must enable grpc extension.');
+        }
         $output = $this->runCommand('detect-intent-stream', [
             'path' => $this->audioFilePath
         ]);
-        
+
         $this->assertContains('would you like to reserve a room', $output);
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d860ee3dd2c964f2a2fa6dbde3f17ee",
+    "content-hash": "ab06b1486203c55264a5876ec4bee390",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -148,16 +148,16 @@
         },
         {
             "name": "google/gax",
-            "version": "0.31.1",
+            "version": "0.31.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "3d98f03cad0698e0a58b81673648abdddd73f299"
+                "reference": "9043b2ae9ad3d1dfdc5d7f492496d2d3149e9caa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/3d98f03cad0698e0a58b81673648abdddd73f299",
-                "reference": "3d98f03cad0698e0a58b81673648abdddd73f299",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9043b2ae9ad3d1dfdc5d7f492496d2d3149e9caa",
+                "reference": "9043b2ae9ad3d1dfdc5d7f492496d2d3149e9caa",
                 "shasum": ""
             },
             "require": {
@@ -195,7 +195,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-04-03T16:58:32+00:00"
+            "time": "2018-04-16T23:39:56+00:00"
         },
         {
             "name": "google/proto-client",
@@ -1954,8 +1954,6 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "ext-grpc": "*"
-    },
+    "platform": [],
     "platform-dev": []
 }
