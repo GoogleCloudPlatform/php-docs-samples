@@ -249,7 +249,7 @@ class ImportCommandTest extends TestCase
         if (0 === strpos($source, 'gs://') && !$this->gcsBucket) {
             $this->markTestSkipped('No Cloud Storage bucket');
         }
-        $tableId = sprintf('test_table_%s', time());
+        $this->tempTableId = $tableId = sprintf('test_table_%s', time());
         if ($createTable) {
             $this->createTempTable($this->projectId, $this->datasetId, $tableId);
         }
@@ -287,8 +287,6 @@ class ImportCommandTest extends TestCase
         };
 
         $this->runEventuallyConsistentTest($testFunction);
-
-        $this->tempTableId = $tableId;
     }
 
     public function provideImport()
