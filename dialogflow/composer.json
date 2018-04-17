@@ -1,0 +1,34 @@
+{
+    "require": {
+        "google/cloud-dialogflow": "^0.1",
+        "symfony/console": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Dialogflow\\": "src/"
+        },
+        "files": [
+            "src/detect_intent_audio.php",
+            "src/detect_intent_stream.php",
+            "src/detect_intent_texts.php",
+            "src/entity_create.php",
+            "src/entity_delete.php",
+            "src/entity_list.php",
+            "src/entity_type_delete.php",
+            "src/entity_type_create.php",
+            "src/entity_type_list.php",
+            "src/intent_create.php",
+            "src/intent_delete.php",
+            "src/intent_list.php",
+            "src/context_create.php",
+            "src/context_delete.php",
+            "src/context_list.php",
+            "src/session_entity_type_create.php",
+            "src/session_entity_type_delete.php",
+            "src/session_entity_type_list.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4"
+    }
+}
