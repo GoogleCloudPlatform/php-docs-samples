@@ -207,8 +207,8 @@ class ExtractCommandTest extends TestCase
         $time = time();
 
         return [
-            [sprintf('test_data_%s.json', $time), 'json'],
-            [sprintf('test_data_%s.csv', $time), 'csv'],
+            [sprintf('bigquery/test_data_%s.json', $time), 'json'],
+            [sprintf('bigquery/test_data_%s.csv', $time), 'csv'],
         ];
     }
 }

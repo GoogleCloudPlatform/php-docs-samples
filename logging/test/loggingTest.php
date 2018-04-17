@@ -66,7 +66,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         }
         $output = $this->runCommand('create-sink', [
             '--logger' => self::$loggerName,
-            '--bucket' => $bucket,
+            '--bucket' => $bucket . '/logging',
             '--sink' => self::$sinkName,
         ]);
         $this->assertEquals(

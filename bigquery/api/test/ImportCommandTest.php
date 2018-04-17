@@ -299,9 +299,9 @@ class ImportCommandTest extends TestCase
             [__DIR__ . '/data/test_data.csv'],
             [__DIR__ . '/data/test_data.json'],
             [__DIR__ . '/data/test_data.sql'],
-            [sprintf('gs://%s/test_data.csv', $bucket)],
-            [sprintf('gs://%s/test_data.json', $bucket)],
-            [sprintf('gs://%s/test_data.backup_info', $bucket), false],
+            [sprintf('gs://%s/bigquery/test_data.csv', $bucket)],
+            [sprintf('gs://%s/bigquery/test_data.json', $bucket)],
+            [sprintf('gs://%s/bigquery/test_data.backup_info', $bucket), false],
         ];
     }
 
