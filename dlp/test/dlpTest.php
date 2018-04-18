@@ -71,11 +71,11 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     {
         $this->checkEnv('DLP_TOPIC');
         $this->checkEnv('DLP_SUBSCRIPTION');
-        $this->checkEnv('DLP_BUCKET');
+        $this->checkEnv('GOOGLE_STORAGE_BUCKET');
 
         $output = $this->runCommand('inspect-gcs', [
-            'bucket-id' => getenv('DLP_BUCKET'),
-            'file' => 'harmful.csv',
+            'bucket-id' => getenv('GOOGLE_STORAGE_BUCKET'),
+            'file' => 'dlp/harmful.csv',
             'calling-project' => getenv('GOOGLE_PROJECT_ID'),
             'topic-id' => getenv('DLP_TOPIC'),
             'subscription-id' => getenv('DLP_SUBSCRIPTION')
@@ -147,9 +147,9 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'image-path' => dirname(__FILE__) . '/data/test.png',
             'output-path' => dirname(__FILE__) . '/data/redact.output.png'
         ]);
-        $this->assertEquals(
+        $this->assertNotEquals(
             sha1_file(dirname(__FILE__) . '/data/redact.output.png'),
-            sha1_file(dirname(__FILE__) . '/data/redact.correct.png')
+            sha1_file(dirname(__FILE__) . '/data/test.png')
         );
     }
 
@@ -220,9 +220,9 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggers()
     {
-        $this->checkEnv('DLP_BUCKET');
+        $this->checkEnv('GOOGLE_STORAGE_BUCKET');
 
-        $bucketName = getenv('DLP_BUCKET');
+        $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         $displayName = uniqid("My trigger display name ");
         $description = uniqid("My trigger description ");
         $triggerId = uniqid('my-php-test-trigger-');
