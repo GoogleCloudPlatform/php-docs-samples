@@ -45,7 +45,9 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
         $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('iam'));
         $this->storage = new StorageClient();
-        $this->user = getenv('GOOGLE_IAM_USER');
+        if (!$this->user = getenv('GOOGLE_IAM_USER')) {
+            $this->markTestSkipped('Set GOOGLE_IAM_USER environemnt variable');
+        }
         $this->bucket = getenv('GOOGLE_STORAGE_BUCKET');
     }
 
