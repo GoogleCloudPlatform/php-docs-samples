@@ -28,9 +28,9 @@ class LocalTest extends WebTestCase
 
     public function createApplication()
     {
-        if (getenv('POSTGRES_DSN') === false ||
-            getenv('POSTGRES_USER') === false ||
-            getenv('POSTGRES_PASSWORD') === false) {
+        if (!getenv('POSTGRES_DSN') ||
+            !getenv('POSTGRES_USER') ||
+            !getenv('POSTGRES_PASSWORD')) {
             $this->markTestSkipped('set the POSTGRES_DSN, POSTGRES_USER and POSTGRES_PASSWORD environment variables');
             return;
         }

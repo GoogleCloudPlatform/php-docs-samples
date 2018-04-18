@@ -24,6 +24,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
 {
+    private static $encryptedFile;
     private $commandTester;
     private $projectId;
     private $ring;
@@ -93,18 +94,20 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->expectOutputString(sprintf('Saved encrypted text to %s' . PHP_EOL, $outfile));
+
+        self::$encryptedFile = $outfile;
     }
 
+    /** @depends testEncrypt */
     public function testDecrypt()
     {
-        $infile = __DIR__ . '/data/plaintext.txt.encrypted';
         $outfile = sys_get_temp_dir() . '/plaintext.txt.decrypted';
 
         $this->commandTester->execute(
             [
                 'keyring' => $this->ring,
                 'cryptokey' => $this->key,
-                'infile' => $infile,
+                'infile' => self::$encryptedFile,
                 'outfile' => $outfile,
                 '--decrypt' => true,
                 '--project' => $this->projectId,
