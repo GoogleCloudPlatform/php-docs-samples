@@ -1,4 +1,4 @@
-FROM gcr.io/google_appengine/php72
+FROM gcr.io/google_appengine/PHP_VERSION
 
 RUN apt-get update && apt-get install -y \
     python-ipaddr \
@@ -12,8 +12,8 @@ RUN git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-t
 
 # install / enable PHP extensions
 RUN pecl install grpc \
-    && echo "extension=grpc.so" >> /opt/php72/lib/conf.d/ext-grpc.ini \
-    && echo "extension=bcmath.so" >> /opt/php72/lib/conf.d/ext-bcmath.ini
+    && echo "extension=grpc.so" >> /opt/PHP_VERSION/lib/conf.d/ext-grpc.ini \
+    && echo "extension=bcmath.so" >> /opt/PHP_VERSION/lib/conf.d/ext-bcmath.ini
 
 # Install composer globally
 RUN composer global require phpunit/phpunit:^5.0
