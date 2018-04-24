@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START list_datasets]
+# [START bigquery_list_datasets]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -39,4 +39,4 @@ function list_datasets($projectId)
         print($dataset->id() . PHP_EOL);
     }
 }
-# [END list_datasets]
+# [END bigquery_list_datasets]

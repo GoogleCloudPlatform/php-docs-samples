@@ -25,11 +25,11 @@ namespace Google\Cloud\Samples\BigQuery;
  * $bigQuery = require '/path/to/bigquery_client.php';
  * ```
  */
-# [START build_service]
+# [START bigquery_client_default_credentials]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
-# [END build_service]
+# [END bigquery_client_default_credentials]
 return $bigQuery;

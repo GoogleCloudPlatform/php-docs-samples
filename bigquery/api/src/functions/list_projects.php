@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START list_projects]
 use Google\Auth\CredentialsLoader;
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\BigQuery\Connection\Rest;
@@ -43,4 +42,3 @@ function list_projects($maxResults = null)
         print($project['id'] . PHP_EOL);
     }
 }
-# [END list_projects]

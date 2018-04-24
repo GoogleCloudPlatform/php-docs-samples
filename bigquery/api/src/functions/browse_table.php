@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START browse_table]
+# [START bigquery_browse_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -63,9 +63,8 @@ function browse_table($projectId, $datasetId, $tableId, $maxResults = 10, $start
 
     return $numRows;
 }
-# [END browse_table]
+# [END bigquery_browse_table]
 
-# [START paginate_table]
 /**
  * Paginate through a bigquery table.
  * Example:
@@ -97,4 +96,3 @@ function paginate_table($projectId, $datasetId, $tableId, $maxResults = 10, $sho
 
     return $totalRows;
 }
-# [END paginate_table]

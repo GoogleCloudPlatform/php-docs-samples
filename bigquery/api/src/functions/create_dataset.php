@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START create_dataset]
+# [START bigquery_create_dataset]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -38,4 +38,4 @@ function create_dataset($projectId, $datasetId)
     $dataset = $bigQuery->createDataset($datasetId);
     return $dataset;
 }
-# [END create_dataset]
+# [END bigquery_create_dataset]

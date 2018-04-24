@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
 use InvalidArgumentException;
-# [START import_from_file]
+# [START bigquery_load_from_file]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
@@ -72,4 +72,4 @@ function import_from_file($projectId, $datasetId, $tableId, $source)
         print('Data imported successfully' . PHP_EOL);
     }
 }
-# [END import_from_file]
+# [END bigquery_load_from_file]

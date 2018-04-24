@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
-# [START copy_table]
+# [START bigquery_copy_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
@@ -62,4 +62,4 @@ function copy_table($projectId, $datasetId, $sourceTableId, $destinationTableId)
         print('Table copied successfully' . PHP_EOL);
     }
 }
-# [END copy_table]
+# [END bigquery_copy_table]

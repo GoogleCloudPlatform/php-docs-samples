@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
-# [START extract_table]
+# [START bigquery_extract_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
@@ -70,4 +70,4 @@ function extract_table($projectId, $datasetId, $tableId, $bucketName, $objectNam
         print('Data extracted successfully' . PHP_EOL);
     }
 }
-# [END extract_table]
+# [END bigquery_extract_table]

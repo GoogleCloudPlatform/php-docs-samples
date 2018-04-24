@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START list_tables]
+# [START bigquery_list_tables]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -55,4 +55,4 @@ function get_table($projectId, $datasetId, $tableId)
     $dataset = $bigQuery->dataset($datasetId);
     return $dataset->table($tableId);
 }
-# [END list_tables]
+# [END bigquery_list_tables]
