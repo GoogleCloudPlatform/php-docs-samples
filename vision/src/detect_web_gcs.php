@@ -30,57 +30,61 @@ function detect_web_gcs($path)
     $response = $imageAnnotator->webDetection($path);
     $web = $response->getWebDetection();
 
-    if ($web->getBestGuessLabels()) {
-        foreach ($web->getBestGuessLabels() as $label) {
-            printf('Best guess label: %s' . PHP_EOL, $label->getLabel());
-        }
-        print(PHP_EOL);
-    }
-
-    if ($web->getPagesWithMatchingImages()) {
-        printf('%d pages with matching images found:' . PHP_EOL,
-            count($web->getPagesWithMatchingImages()));
-        foreach ($web->getPagesWithMatchingImages() as $page) {
-            printf('URL: %s' . PHP_EOL, $page->getUrl());
-        }
-        print(PHP_EOL);
-    }
-
-    if ($web->getFullMatchingImages()) {
-        printf('%d full matching images found:' . PHP_EOL,
-            count($web->getFullMatchingImages()));
-        foreach ($web->getFullMatchingImages() as $fullMatchingImage) {
-            printf('URL: %s' . PHP_EOL, $fullMatchingImage->getUrl());
-        }
-        print(PHP_EOL);
-    }
-
-    if ($web->getPartialMatchingImages()) {
-        printf('%d partial matching images found:' . PHP_EOL,
-            count($web->getPartialMatchingImages()));
-        foreach ($web->getPartialMatchingImages() as $partialMatchingImage) {
-            printf('URL: %s' . PHP_EOL, $partialMatchingImage->getUrl());
-        }
-        print(PHP_EOL);
-    }
-
-    if ($web->getVisuallySimilarImages()) {
-        printf('%d visually similar images found:' . PHP_EOL,
-            count($web->getVisuallySimilarImages()));
-        foreach ($web->getVisuallySimilarImages() as $visuallySimilarImage) {
-            printf('URL: %s' . PHP_EOL, $visuallySimilarImage->getUrl());
-        }
-        print(PHP_EOL);
-    }
-
-    if ($web->getWebEntities()) {
-        printf('%d web entities found:' . PHP_EOL,
-            count($web->getWebEntities()));
-        foreach ($web->getWebEntities() as $entity) {
-            printf('Description: %s' . PHP_EOL, $entity->getDescription());
-            printf('Score: %f' . PHP_EOL, $entity->getScore());
+    if ($web) {
+        if ($web->getBestGuessLabels()) {
+            foreach ($web->getBestGuessLabels() as $label) {
+                printf('Best guess label: %s' . PHP_EOL, $label->getLabel());
+            }
             print(PHP_EOL);
         }
+
+        if ($web->getPagesWithMatchingImages()) {
+            printf('%d pages with matching images found:' . PHP_EOL,
+                count($web->getPagesWithMatchingImages()));
+            foreach ($web->getPagesWithMatchingImages() as $page) {
+                printf('URL: %s' . PHP_EOL, $page->getUrl());
+            }
+            print(PHP_EOL);
+        }
+
+        if ($web->getFullMatchingImages()) {
+            printf('%d full matching images found:' . PHP_EOL,
+                count($web->getFullMatchingImages()));
+            foreach ($web->getFullMatchingImages() as $fullMatchingImage) {
+                printf('URL: %s' . PHP_EOL, $fullMatchingImage->getUrl());
+            }
+            print(PHP_EOL);
+        }
+
+        if ($web->getPartialMatchingImages()) {
+            printf('%d partial matching images found:' . PHP_EOL,
+                count($web->getPartialMatchingImages()));
+            foreach ($web->getPartialMatchingImages() as $partialMatchingImage) {
+                printf('URL: %s' . PHP_EOL, $partialMatchingImage->getUrl());
+            }
+            print(PHP_EOL);
+        }
+
+        if ($web->getVisuallySimilarImages()) {
+            printf('%d visually similar images found:' . PHP_EOL,
+                count($web->getVisuallySimilarImages()));
+            foreach ($web->getVisuallySimilarImages() as $visuallySimilarImage) {
+                printf('URL: %s' . PHP_EOL, $visuallySimilarImage->getUrl());
+            }
+            print(PHP_EOL);
+        }
+
+        if ($web->getWebEntities()) {
+            printf('%d web entities found:' . PHP_EOL,
+                count($web->getWebEntities()));
+            foreach ($web->getWebEntities() as $entity) {
+                printf('Description: %s' . PHP_EOL, $entity->getDescription());
+                printf('Score: %f' . PHP_EOL, $entity->getScore());
+                print(PHP_EOL);
+            }
+        }
+    } else {
+        print('No Results.' . PHP_EOL);
     }
 }
 // [END vision_web_detection_gcs]

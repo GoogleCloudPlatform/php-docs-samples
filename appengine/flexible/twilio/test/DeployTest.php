@@ -35,9 +35,8 @@ class DeployTest extends \PHPUnit_Framework_TestCase
             getenv('TWILIO_ACCOUNT_SID');
         $appYaml['env_variables']['TWILIO_AUTH_TOKEN'] =
             getenv('TWILIO_AUTH_TOKEN');
-        $appYaml['env_variables']['TWILIO_NUMBER'] =
-            getenv('TWILIO_FROM_NUMBER') ?
-                getenv('TWILIO_FROM_NUMBER') : getenv('TWILIO_NUMBER');
+        $appYaml['env_variables']['TWILIO_FROM_NUMBER'] =
+            getenv('TWILIO_FROM_NUMBER');
         file_put_contents('app.yaml', Yaml::dump($appYaml));
     }
 

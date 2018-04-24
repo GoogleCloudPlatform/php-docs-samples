@@ -33,7 +33,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-        $this->bucketName = getenv('GOOGLE_BUCKET_NAME');
+        $this->bucketName = getenv('GOOGLE_STORAGE_BUCKET');
     }
 
     public function testLabelCommand()
@@ -48,7 +48,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/cat.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/cat.jpg';
         $output = $this->runCommand('label', $path);
         $this->assertContains('cat', $output);
         $this->assertContains('mammal', $output);
@@ -65,7 +65,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/sabertooth.gif';
+        $path = 'gs://' . $this->bucketName . '/vision/sabertooth.gif';
         $output = $this->runCommand('text', $path);
         $this->assertContains('extinct', $output);
     }
@@ -81,7 +81,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/faulkner.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/faulkner.jpg';
         $output = $this->runCommand('text', $path);
         $this->assertContains('0 texts found', $output);
     }
@@ -99,7 +99,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/face.png';
+        $path = 'gs://' . $this->bucketName . '/vision/face.png';
         $output = $this->runCommand('face', $path);
         $this->assertContains('Anger: ', $output);
         $this->assertContains('Joy: ', $output);
@@ -117,7 +117,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/tower.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('face', $path);
         $this->assertContains('0 faces found', $output);
     }
@@ -133,7 +133,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/tower.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('landmark', $path);
         $this->assertContains('Eiffel', $output);
     }
@@ -149,7 +149,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/faulkner.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/faulkner.jpg';
         $output = $this->runCommand('landmark', $path);
         $this->assertContains('0 landmark found', $output);
     }
@@ -165,7 +165,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/logo.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('logo', $path);
         $this->assertContains('Google', $output);
     }
@@ -181,7 +181,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/tower.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('logo', $path);
         $this->assertContains('0 logos found', $output);
     }
@@ -198,7 +198,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/logo.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('safe-search', $path);
         $this->assertContains('Adult:', $output);
         $this->assertContains('Racy:', $output);
@@ -217,7 +217,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/logo.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('property', $path);
         $this->assertContains('Red:', $output);
         $this->assertContains('Green:', $output);
@@ -240,7 +240,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/wakeupcat.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', $path);
         $this->assertContains('Crop hints:', $output);
         $this->assertContains('(0,0)', $output);
@@ -263,7 +263,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/text.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/text.jpg';
         $output = $this->runCommand('document-text', $path);
         $this->assertContains('the PS4 will automatically restart', $output);
         $this->assertContains('37 %', $output);
@@ -282,7 +282,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/geotagged.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/geotagged.jpg';
         $output = $this->runCommand('web', $path);
         $this->assertContains('web entities found:', $output);
     }
@@ -292,17 +292,17 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/data/geotagged.jpg';
         $output = $this->runCommand('web-geo', $path);
         $this->assertContains('web entities found:', $output);
-        $this->assertContains('Sydney Harbour Bridge', $output);
+        $this->assertContains('Sydney', $output);
     }
 
     public function testDetectWebGeoCommandGcs()
     {
         $this->requireCloudStorage();
 
-        $path = 'gs://' . $this->bucketName . '/geotagged.jpg';
+        $path = 'gs://' . $this->bucketName . '/vision/geotagged.jpg';
         $output = $this->runCommand('web-geo', $path);
         $this->assertContains('web entities found:', $output);
-        $this->assertContains('Sydney Harbour Bridge', $output);
+        $this->assertContains('Sydney', $output);
     }
 
     private function runCommand($commandName, $path, $output=null)
@@ -325,7 +325,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     private function requireCloudStorage()
     {
         if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GOOGLE_BUCKET_NAME environment variable');
+            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET environment variable');
         }
     }
 }

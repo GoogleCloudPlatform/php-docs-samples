@@ -27,7 +27,7 @@ composer install
 
 **Run Locally**
 ```sh
-export SENDGRID_API_KEY=your-sendgrid-api-key
+export SENDGRID_APIKEY=your-sendgrid-api-key
 export SENDGRID_SENDER=somebody@yourdomain.com
 php -S localhost:8000 -t .
 ```

@@ -39,6 +39,8 @@ env:
     - PATH="${HOME}/google-cloud-sdk/bin:${PATH}"
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
+    # We use the envvar "IS_PULL_REQUEST" for both kokoro and travis
+    - IS_PULL_REQUEST=$TRAVIS_PULL_REQUEST_BRANCH
 
 before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools

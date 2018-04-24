@@ -28,9 +28,9 @@ class LocalTest extends WebTestCase
 
     public function createApplication()
     {
-        if (getenv('MYSQL_DSN') === false ||
-            getenv('MYSQL_USER') === false ||
-            getenv('MYSQL_PASSWORD') === false) {
+        if (!getenv('MYSQL_DSN') ||
+            !getenv('MYSQL_USER') ||
+            !getenv('MYSQL_PASSWORD')) {
             $this->markTestSkipped('set the MYSQL_DSN, MYSQL_USER and MYSQL_PASSWORD environment variables');
             return;
         }

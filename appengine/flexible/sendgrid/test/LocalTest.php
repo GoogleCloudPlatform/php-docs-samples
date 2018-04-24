@@ -27,11 +27,11 @@ class LocalTest extends WebTestCase
         $app['debug'] = true;
 
         $app['sendgrid.sender'] = getenv('SENDGRID_SENDER');
-        $app['sendgrid.api_key'] = getenv('SENDGRID_API_KEY');
+        $app['sendgrid.api_key'] = getenv('SENDGRID_APIKEY');
 
         if (empty($app['sendgrid.sender']) || empty($app['sendgrid.api_key'])) {
             $this->markTestSkipped(
-                'set the SENDGRID_SENDER and SENDGRID_API_KEY' .
+                'set the SENDGRID_SENDER and SENDGRID_APIKEY ' .
                 'environment variables'
             );
         }

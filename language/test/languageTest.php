@@ -27,6 +27,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
 
+    protected $gcsFile;
+
     public static function setUpBeforeClass()
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
@@ -39,6 +41,7 @@ class languageTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
+        $this->gcsFile = sprintf('gs://%s/language/presidents.txt', getenv('GOOGLE_STORAGE_BUCKET'));
     }
 
     public function testAll()
@@ -74,10 +77,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testAllFromStorageObject()
     {
-        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
-            $this->markTestSkipped('No GCS file.');
-        }
-        $output = $this->runCommand('all', $gcsFile);
+        $this->checkBucketName();
+
+        $output = $this->runCommand('all', $this->gcsFile);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
@@ -121,10 +123,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testEntitiesFromStorageObject()
     {
-        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
-            $this->markTestSkipped('No GCS file.');
-        }
-        $output = $this->runCommand('entities', $gcsFile);
+        $this->checkBucketName();
+
+        $output = $this->runCommand('entities', $this->gcsFile);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
@@ -149,10 +150,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testSentimentFromStorageObject()
     {
-        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
-            $this->markTestSkipped('No GCS file.');
-        }
-        $output = $this->runCommand('sentiment', $gcsFile);
+        $this->checkBucketName();
+
+        $output = $this->runCommand('sentiment', $this->gcsFile);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -181,10 +181,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testSyntaxFromStorageObject()
     {
-        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
-            $this->markTestSkipped('No GCS file.');
-        }
-        $output = $this->runCommand('syntax', $gcsFile);
+        $this->checkBucketName();
+
+        $output = $this->runCommand('syntax', $this->gcsFile);
         $this->assertContains('Token text: Barack', $output);
         $this->assertContains('Token part of speech: NOUN', $output);
         $this->assertContains('Token text: Obama', $output);
@@ -213,10 +212,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testEntitySentimentFromStorageObject()
     {
-        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
-            $this->markTestSkipped('No GCS file.');
-        }
-        $output = $this->runCommand('entity-sentiment', $gcsFile);
+        $this->checkBucketName();
+
+        $output = $this->runCommand('entity-sentiment', $this->gcsFile);
         $this->assertContains('Entity Name: Barack Obama', $output);
         $this->assertContains('Entity Type: PERSON', $output);
         $this->assertContains('Entity Salience:', $output);
@@ -238,10 +236,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testClassifyTextFromStorageObject()
     {
-        if (!$gcsFile = getenv('GOOGLE_LANGUAGE_GCS_FILE')) {
-            $this->markTestSkipped('No GCS file.');
-        }
-        $output = $this->runCommand('classify', $gcsFile);
+        $this->checkBucketName();
+
+        $output = $this->runCommand('classify', $this->gcsFile);
         $this->assertContains('Category Name: /News/Politics', $output);
         $this->assertContains('Confidence:', $output);
     }
@@ -259,5 +256,12 @@ class languageTest extends \PHPUnit_Framework_TestCase
             'interactive' => false
         ]);
         return ob_get_clean();
+    }
+
+    private function checkBucketName()
+    {
+        if (!getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('Specify GOOGLE_STORAGE_BUCKET environment variable.');
+        }
     }
 }

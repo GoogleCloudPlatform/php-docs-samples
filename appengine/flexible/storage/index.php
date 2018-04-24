@@ -22,7 +22,7 @@ require __DIR__ . '/vendor/autoload.php';
 $app = require __DIR__ . '/app.php';
 
 // change this to your bucket name!
-$app['bucket_name'] = getenv('GOOGLE_BUCKET_NAME') ?: 'your-bucket-name';
+$app['bucket_name'] = getenv('GOOGLE_STORAGE_BUCKET') ?: 'your-bucket-name';
 $app['project_id'] = getenv('GCLOUD_PROJECT');
 $app['object_name'] = 'hello.txt';
 

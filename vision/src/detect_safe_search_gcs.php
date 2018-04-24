@@ -30,20 +30,24 @@ function detect_safe_search_gcs($path)
     $response = $imageAnnotator->safeSearchDetection($path);
     $safe = $response->getSafeSearchAnnotation();
 
-    $adult = $safe->getAdult();
-    $medical = $safe->getMedical();
-    $spoof = $safe->getSpoof();
-    $violence = $safe->getViolence();
-    $racy = $safe->getRacy();
-    
-    # names of likelihood from google.cloud.vision.enums
-    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
-    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+    if ($safe) {
+        $adult = $safe->getAdult();
+        $medical = $safe->getMedical();
+        $spoof = $safe->getSpoof();
+        $violence = $safe->getViolence();
+        $racy = $safe->getRacy();
 
-    printf("Adult: %s" . PHP_EOL, $likelihoodName[$adult]);
-    printf("Medical: %s" . PHP_EOL, $likelihoodName[$medical]);
-    printf("Spoof: %s" . PHP_EOL, $likelihoodName[$spoof]);
-    printf("Violence: %s" . PHP_EOL, $likelihoodName[$violence]);
-    printf("Racy: %s" . PHP_EOL, $likelihoodName[$racy]);
+        # names of likelihood from google.cloud.vision.enums
+        $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
+        'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+
+        printf("Adult: %s" . PHP_EOL, $likelihoodName[$adult]);
+        printf("Medical: %s" . PHP_EOL, $likelihoodName[$medical]);
+        printf("Spoof: %s" . PHP_EOL, $likelihoodName[$spoof]);
+        printf("Violence: %s" . PHP_EOL, $likelihoodName[$violence]);
+        printf("Racy: %s" . PHP_EOL, $likelihoodName[$racy]);
+    } else {
+        print('No Results.' . PHP_EOL);
+    }
 }
 // [END vision_safe_search_detection_gcs]

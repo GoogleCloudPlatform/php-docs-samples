@@ -31,8 +31,8 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         chdir($tmpDir);
 
         $appYaml = Yaml::parse(file_get_contents('app.yaml'));
-        $appYaml['env_variables']['SENDGRID_API_KEY'] =
-            getenv('SENDGRID_API_KEY');
+        $appYaml['env_variables']['SENDGRID_APIKEY'] =
+            getenv('SENDGRID_APIKEY');
         $appYaml['env_variables']['SENDGRID_SENDER'] =
             getenv('SENDGRID_SENDER');
         file_put_contents('app.yaml', Yaml::dump($appYaml));
