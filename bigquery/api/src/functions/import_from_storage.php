@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
-# [START import_from_storage]
+# [START bigquery_load_table_gcs_csv]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
@@ -75,4 +75,4 @@ function import_from_storage($projectId, $datasetId, $tableId, $bucketName, $obj
         print('Data imported successfully' . PHP_EOL);
     }
 }
-# [END import_from_storage]
+# [END bigquery_load_table_gcs_csv]

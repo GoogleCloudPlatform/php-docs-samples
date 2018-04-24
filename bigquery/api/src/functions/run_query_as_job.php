@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\BigQuery;
 
 use Exception;
-# [START query_as_job]
+# [START bigquery_query]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
@@ -33,8 +33,8 @@ use Google\Cloud\Core\ExponentialBackoff;
  * Example:
  * ```
  * $query = 'SELECT TOP(corpus, 10) as title, COUNT(*) as unique_words ' .
- *          'FROM [publicdata:samples.shakespeare]';
- * run_query_as_job($projectId, $query, true);
+ *          'FROM `bigquery-public-data.samples.shakespeare`';
+ * run_query_as_job($projectId, $query, false);
  * ```.
  *
  * @param string $projectId The Google project ID.
@@ -69,4 +69,4 @@ function run_query_as_job($projectId, $query, $useLegacySql)
     }
     printf('Found %s row(s)' . PHP_EOL, $i);
 }
-# [END query_as_job]
+# [END bigquery_query]

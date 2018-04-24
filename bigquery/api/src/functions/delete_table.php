@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START delete_table]
+# [START bigquery_delete_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -36,10 +36,8 @@ function delete_table($projectId, $datasetId, $tableId)
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    # [START get_table]
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
-    # [END get_table]
     $table->delete();
 }
-# [END delete_table]
+# [END bigquery_delete_table]

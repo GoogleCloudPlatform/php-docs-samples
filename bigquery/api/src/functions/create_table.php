@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START create_table]
+# [START bigquery_create_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -58,4 +58,4 @@ function create_table($projectId, $datasetId, $tableId, $schema)
     $table = $dataset->createTable($tableId, $options);
     return $table;
 }
-# [END create_table]
+# [END bigquery_create_table]

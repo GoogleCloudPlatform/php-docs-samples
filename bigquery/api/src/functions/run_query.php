@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START all]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -42,17 +41,12 @@ use Google\Cloud\BigQuery\BigQueryClient;
  */
 function run_query($projectId, $query, $useLegacySql)
 {
-    # [START build_service]
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
     ]);
-    # [END build_service]
-    # [START run_query]
     $jobConfig = $bigQuery->query($query)->useLegacySql($useLegacySql);
     $queryResults = $bigQuery->runQuery($jobConfig);
-    # [END run_query]
 
-    # [START print_results]
     $i = 0;
     foreach ($queryResults as $row) {
         printf('--- Row %s ---' . PHP_EOL, ++$i);
@@ -61,6 +55,4 @@ function run_query($projectId, $query, $useLegacySql)
         }
     }
     printf('Found %s row(s)' . PHP_EOL, $i);
-    # [END print_results]
 }
-# [END all]

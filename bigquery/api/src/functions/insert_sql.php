@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START insert_sql]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -49,4 +48,3 @@ function insert_sql($projectId, $datasetId, $source)
     }
     print('Data imported successfully' . PHP_EOL);
 }
-# [END insert_sql]

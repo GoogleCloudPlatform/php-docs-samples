@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-# [START stream_row]
+# [START bigquery_table_insert_rows]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
@@ -66,4 +66,4 @@ function stream_row($projectId, $datasetId, $tableId, $data, $insertId = null)
         }
     }
 }
-# [END stream_row]
+# [END bigquery_table_insert_rows]
