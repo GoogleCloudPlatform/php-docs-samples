@@ -47,7 +47,7 @@ class ImportCommandTest extends TestCase
 
     public function setUp()
     {
-        $this->gcsBucket = getenv('GOOGLE_BUCKET_NAME');
+        $this->gcsBucket = getenv('GOOGLE_STORAGE_BUCKET');
         $this->projectId = getenv('GOOGLE_PROJECT_ID');
         $this->datasetId = getenv('GOOGLE_BIGQUERY_DATASET');
     }
@@ -291,7 +291,7 @@ class ImportCommandTest extends TestCase
 
     public function provideImport()
     {
-        $bucket = getenv('GOOGLE_BUCKET_NAME');
+        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
 
         return [
             [__DIR__ . '/data/test_data.csv'],

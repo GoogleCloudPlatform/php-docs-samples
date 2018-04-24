@@ -36,7 +36,7 @@ class ExtractCommandTest extends TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$gcsBucket = getenv('GOOGLE_BUCKET_NAME');
+        self::$gcsBucket = getenv('GOOGLE_STORAGE_BUCKET');
     }
 
     /**

@@ -33,7 +33,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-        $this->bucketName = getenv('GOOGLE_BUCKET_NAME');
+        $this->bucketName = getenv('GOOGLE_STORAGE_BUCKET');
     }
 
     public function testLabelCommand()
@@ -325,7 +325,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     private function requireCloudStorage()
     {
         if (!$this->bucketName) {
-            $this->markTestSkipped('Set the GOOGLE_BUCKET_NAME environment variable');
+            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET environment variable');
         }
     }
 }

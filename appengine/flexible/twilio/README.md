@@ -10,7 +10,7 @@ Before running this sample:
 1. Update `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` in `app.yaml` to match your
    Twilio credentials. These can be found in your [account settings]
    (https://www.twilio.com/user/account/settings)
-1. Update `TWILIO_NUMBER` in `app.yaml` with a number you have authorized
+1. Update `TWILIO_FROM_NUMBER` in `app.yaml` with a number you have authorized
    for sending messages. Follow [Twilio's documentation]
    (https://www.twilio.com/user/account/phone-numbers/getting-started) to set
    this up.
@@ -48,7 +48,7 @@ you can run locally using PHP's built-in web server:
 ```sh
 export TWILIO_ACCOUNT_SID=your-account-sid
 export TWILIO_AUTH_TOKEN=your-auth-token
-export TWILIO_NUMBER=your-twilio-number
+export TWILIO_FROM_NUMBER=your-twilio-number
 cd php-docs-samples/appengine/flexible/twilio
 php -S localhost:8080
 ```

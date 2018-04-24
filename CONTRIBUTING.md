@@ -12,7 +12,7 @@ Please fill out either the individual or corporate Contributor License Agreement
     own the intellectual property, then you'll need to sign an
     [individual CLA](https://developers.google.com/open-source/cla/individual).
   * If you work for a company that wants to allow you to contribute your work,
-    then you'll need to sign a 
+    then you'll need to sign a
     [corporate CLA](https://developers.google.com/open-source/cla/corporate).
 
 Follow either of the two links above to access the appropriate CLA and
@@ -31,14 +31,14 @@ accept your pull requests.
    credentials](https://cloud.google.com/docs/authentication/getting-started)
    by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the
    path to a service account key JSON file.
-   
+
    Then set any environment variables needed by the test. Check the
    `$SAMPLES_DIRECTORY/test` directory to see what specific variables are needed.
    ```
    export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
-   export GOOGLE_BUCKET_NAME=YOUR_BUCKET
+   export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
    ```
-   
+
    To run the tests in a samples directory,
    ```
    cd $SAMPLES_DIRECTORY

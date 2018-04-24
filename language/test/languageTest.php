@@ -41,7 +41,7 @@ class languageTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        $this->gcsFile = sprintf('gs://%s/language/presidents.txt', getenv('GOOGLE_BUCKET_NAME'));
+        $this->gcsFile = sprintf('gs://%s/language/presidents.txt', getenv('GOOGLE_STORAGE_BUCKET'));
     }
 
     public function testAll()
@@ -260,8 +260,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     private function checkBucketName()
     {
-        if (!getenv('GOOGLE_BUCKET_NAME')) {
-            $this->markTestSkipped('Specify GOOGLE_BUCKET_NAME environment variable.');
+        if (!getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('Specify GOOGLE_STORAGE_BUCKET environment variable.');
         }
     }
 }

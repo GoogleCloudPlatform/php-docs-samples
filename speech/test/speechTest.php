@@ -52,7 +52,7 @@ class speechTest extends TestCase
             $this->markTestSkipped('No application credentials were found.');
         }
         if (!self::$bucketName && in_array($command, ['transcribe-gcs', 'transcribe-async-gcs'])) {
-            $this->markTestSkipped('You must set the GOOGLE_BUCKET_NAME environment variable.');
+            $this->markTestSkipped('You must set the GOOGLE_STORAGE_BUCKET environment variable.');
         }
         $output = $this->runCommand($command, [
             'audio-file' => $audioFile,
@@ -70,7 +70,7 @@ class speechTest extends TestCase
 
     public function provideTranscribe()
     {
-        self::$bucketName = getenv('GOOGLE_BUCKET_NAME');
+        self::$bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         return [
             ['transcribe', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
             ['transcribe', __DIR__ . '/data/audio32KHz.flac', 'FLAC', '32000'],
