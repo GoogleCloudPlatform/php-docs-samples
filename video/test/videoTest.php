@@ -25,7 +25,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 class videoTest extends \PHPUnit_Framework_TestCase
 {
     private static $gcsUri = 'gs://demomaker/cat.mp4';
-    private static $gcsFacesUri = 'gs://cloud-samples-tests-php/googlework_short.mp4';
 
     public function setUp()
     {
@@ -33,12 +32,6 @@ class videoTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-    }
-
-    public function testAnalyzeFaces()
-    {
-        $output = $this->runCommand('faces', ['uri' => self::$gcsFacesUri]);
-        $this->assertContains('left:', $output);
     }
 
     public function testAnalyzeLabels()
