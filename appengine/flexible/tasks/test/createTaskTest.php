@@ -37,7 +37,7 @@ class tasksTest extends TestCase
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
-        self::$project = getenv('GOOGLE_CLOUD_PROJECT');
+        self::$project = getenv('GOOGLE_PROJECT_ID');
         self::$queue = getenv('CLOUD_TASKS_APPENGINE_QUEUE');
         self::$location = getenv('CLOUD_TASKS_LOCATION');
     }
@@ -47,7 +47,7 @@ class tasksTest extends TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found. Please set the GOOGLE_APPLICATION_CREDENTIALS environment variable.');
         } elseif (!self::$project) {
-            $this->markTestSkipped('No project ID was found. Please set the GOOGLE_CLOUD_PROJECT environment variable.');
+            $this->markTestSkipped('No project ID was found. Please set the GOOGLE_PROJECT_ID environment variable.');
         } elseif (!self::$queue) {
             $this->markTestSkipped('No App Engine Queue was found. Please set the CLOUD_TASKS_APPENGINE_QUEUE environment variable.');
         } elseif (!self::$location) {

@@ -24,9 +24,9 @@ use OpenCensus\Trace\Tracer;
 
 # [END trace_use_statement]
 
-$projectId = getenv('GOOGLE_CLOUD_PROJECT');
+$projectId = getenv('GOOGLE_PROJECT_ID');
 if ($projectId === false) {
-    die('Set GOOGLE_CLOUD_PROJECT envvar');
+    die('Set GOOGLE_PROJECT_ID envvar');
 }
 
 # [START exporter_setup]

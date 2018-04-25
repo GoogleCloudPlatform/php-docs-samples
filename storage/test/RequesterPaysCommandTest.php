@@ -53,8 +53,8 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
         }
-        if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
-            $this->markTestSkipped('Please set GOOGLE_CLOUD_PROJECT.');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
         }
 
         $this->commandTester->execute(
@@ -78,8 +78,8 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
         }
-        if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
-            $this->markTestSkipped('Please set GOOGLE_CLOUD_PROJECT.');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
         }
 
         $this->commandTester->execute(
@@ -103,8 +103,8 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
         }
-        if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
-            $this->markTestSkipped('Please set GOOGLE_CLOUD_PROJECT.');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
         }
 
         $this->commandTester->execute(
@@ -130,8 +130,8 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
         if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
             $this->markTestSkipped('Please set GOOGLE_STORAGE_OBJECT.');
         }
-        if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
-            $this->markTestSkipped('Please set GOOGLE_CLOUD_PROJECT.');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
         }
 
         $destination = $objectName;

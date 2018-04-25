@@ -22,8 +22,8 @@ class LocalTest extends WebTestCase
 {
     public function setUp()
     {
-        if (!getenv('GOOGLE_CLOUD_PROJECT')) {
-            $this->markTestSkipped('Must set GOOGLE_CLOUD_PROJECT');
+        if (!getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');
         }
         if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
             $this->markTestSkipped('No secret available');
@@ -36,7 +36,7 @@ class LocalTest extends WebTestCase
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
-        $app['project_id'] = getenv('GOOGLE_CLOUD_PROJECT');
+        $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
         return $app;
     }
 
