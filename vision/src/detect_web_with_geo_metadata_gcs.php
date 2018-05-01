@@ -53,6 +53,5 @@ function detect_web_with_geo_metadata_gcs($path)
     } else {
         print('No Results.' . PHP_EOL);
     }
-
 }
 // [END vision_web_entities_include_geo_results_gcs]
