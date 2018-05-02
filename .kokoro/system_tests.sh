@@ -16,13 +16,12 @@
 
 set -ex
 
-cd github/php-docs-samples
+cd $DIR
 
 # export the secrets
-if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
-    gcloud config set project ${GOOGLE_PROJECT_ID}
+if [ -f ${KOKORO_GFILE_DIR}/service-account.json ]; then
     gcloud auth activate-service-account --key-file \
-           "${GOOGLE_APPLICATION_CREDENTIALS}"
+           "${KOKORO_GFILE_DIR}/service-account.json"
     gcloud kms decrypt \
            --location=global \
            --keyring=ci \
