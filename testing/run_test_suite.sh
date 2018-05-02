@@ -84,9 +84,9 @@ do
     else
         echo "running phpunit in ${DIR}"
         if [ -f "vendor/bin/phpunit" ]; then
-            vendor/bin/phpunit
+            vendor/bin/phpunit -v
         else
-            phpunit
+            phpunit -v
         fi
         if [ $? == 0 ]; then
             echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"

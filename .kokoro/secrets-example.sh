@@ -1,10 +1,14 @@
 #!/bin/bash
 
-#####################################################
-# Copy this file to .kokoro/secrets.sh and populate #
-# with your own environment variables. Then run     #
-# `source .kokoro/secrets.sh`                       #
-#####################################################
+################################################################################
+# Run the following gcloud command to decrypt secrets.sh.enc as follows:       #
+#                                                                              #
+# gcloud kms decrypt -location=global --keyring=ci --key=ci \                  #
+#   --ciphertext-file=.kokoro/secrets.sh.enc \                                 #
+#   --plaintext-file=.kokoro/secrets.sh                                        #
+#                                                                              #
+# Then run `source .kokoro/secrets.sh`                                         #
+################################################################################
 
 # General
 export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
@@ -14,7 +18,6 @@ export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
 export GOOGLE_CLIENT_ID=
 export GOOGLE_CLIENT_SECRET=
 export GCLOUD_PROJECT=$GOOGLE_PROJECT_ID
-export FIRESTORE_PROJECT_ID=$GOOGLE_PROJECT_ID
 
 # AppEngine
 export MAILJET_APIKEY=
@@ -54,6 +57,9 @@ export DLP_TOPIC=dlp-tests
 export DLP_SUBSCRIPTION=dlp-tests
 export DLP_DEID_WRAPPED_KEY=
 export DLP_DEID_KEY_NAME=projects/$GOOGLE_PROJECT_ID/locations/global/keyRings/ci/cryptoKeys/ci
+
+# Firestore
+export FIRESTORE_PROJECT_ID=
 
 # IAP
 export IAP_CLIENT_ID=

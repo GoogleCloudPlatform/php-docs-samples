@@ -275,7 +275,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/geotagged.jpg';
         $output = $this->runCommand('web', $path);
-        $this->assertContains('web entities found:', $output);
+        $this->assertContains('web entities found', $output);
+        $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
 
     public function testDetectWebNoGeoCommandGcs()
@@ -284,14 +285,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/vision/geotagged.jpg';
         $output = $this->runCommand('web', $path);
-        $this->assertContains('web entities found:', $output);
+        $this->assertContains('web entities found', $output);
+        $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
 
     public function testDetectWebGeoCommand()
     {
         $path = __DIR__ . '/data/geotagged.jpg';
         $output = $this->runCommand('web-geo', $path);
-        $this->assertContains('web entities found:', $output);
+        $this->assertContains('web entities found', $output);
+        $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
 
     public function testDetectWebGeoCommandGcs()
@@ -300,7 +303,8 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/vision/geotagged.jpg';
         $output = $this->runCommand('web-geo', $path);
-        $this->assertContains('web entities found:', $output);
+        $this->assertContains('web entities found', $output);
+        $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
 
     private function runCommand($commandName, $path, $output=null)

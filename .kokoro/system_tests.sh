@@ -18,8 +18,21 @@ set -ex
 
 cd github/php-docs-samples
 
+# export the secrets
+if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
+    gcloud config set project ${GOOGLE_PROJECT_ID}
+    gcloud auth activate-service-account --key-file \
+           "${GOOGLE_APPLICATION_CREDENTIALS}"
+    gcloud kms decrypt \
+           --location=global \
+           --keyring=ci \
+           --key=ci \
+           --ciphertext-file=${DIR}/.kokoro/secrets.sh.enc \
+           --plaintext-file=${DIR}/.kokoro/secrets.sh
+fi
+
 # Unencrypt and extract secrets
-source ${KOKORO_GFILE_DIR}/secrets.sh
+source ${DIR}/.kokoro/secrets.sh
 
 mkdir -p build/logs
 
