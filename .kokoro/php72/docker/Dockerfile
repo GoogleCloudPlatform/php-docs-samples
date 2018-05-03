@@ -4,7 +4,8 @@ RUN apt-get update && apt-get install -y \
     python-ipaddr \
     autoconf \
     build-essential \
-    zlib1g-dev
+    zlib1g-dev \
+    jq
 
 RUN git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools \
     && ${HOME}/php-tools/scripts/install_test_deps.sh

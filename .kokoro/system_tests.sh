@@ -18,10 +18,13 @@ set -ex
 
 cd $DIR
 
+export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
+
 # export the secrets
-if [ -f ${KOKORO_GFILE_DIR}/service-account.json ]; then
-    gcloud auth activate-service-account --key-file \
-           "${KOKORO_GFILE_DIR}/service-account.json"
+if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
+    gcloud auth activate-service-account \
+        --key-file "${GOOGLE_APPLICATION_CREDENTIALS}" \
+        --project $(cat "${GOOGLE_APPLICATION_CREDENTIALS}" | jq -r .project_id)
     gcloud kms decrypt \
            --location=global \
            --keyring=ci \

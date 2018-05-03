@@ -11,7 +11,6 @@
 ################################################################################
 
 # General
-export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
 export GOOGLE_PROJECT_ID=
 export GOOGLE_API_KEY=
 export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
