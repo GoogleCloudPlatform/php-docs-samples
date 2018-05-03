@@ -25,26 +25,20 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class entityTest extends \PHPUnit_Framework_TestCase
 {
-    private $projectId;
-    private $entityTypeId;
-    private $entityValue1;
-    private $entityValue2;
-    private $synonyms;
+    private static $projectId;
+    private static $entityTypeId = 'e57238e2-e692-44ea-9216-6be1b2332e2a';
+    private static $entityValue1 = 'fake_entit_for_testing_1';
+    private static $entityValue2 = 'fake_entit_for_testing_2';
+    private static $synonyms = ['fake_synonym_for_testing_1', 'fake_synonym_for_testing_2'];
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->entityTypeId = 'e57238e2-e692-44ea-9216-6be1b2332e2a';
-        $this->entityValue1 = 'fake_entit_for_testing_1';
-        $this->entityValue2 = 'fake_entit_for_testing_2';
-        $this->synonyms = array('fake_synonym_for_testing_1', 'fake_synonym_for_testing_2');
-
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
             return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
                 'environment variable');
         }
-        $this->projectId = $projectId;
 
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
@@ -53,17 +47,17 @@ class entityTest extends \PHPUnit_Framework_TestCase
     public function testCreateEntity()
     {
         $this->runCommand('entity-create', [
-            'entity-value' => $this->entityValue1
+            'entity-value' => self::$entityValue1
         ]);
         $this->runCommand('entity-create', [
-            'entity-value' => $this->entityValue2,
-            'synonyms' => $this->synonyms
+            'entity-value' => self::$entityValue2,
+            'synonyms' => self::$synonyms
         ]);
         $output = $this->runCommand('entity-list');
 
-        $this->assertContains($this->entityValue1, $output);
-        $this->assertContains($this->entityValue2, $output);
-        foreach ($this->synonyms as $synonym) {
+        $this->assertContains(self::$entityValue1, $output);
+        $this->assertContains(self::$entityValue2, $output);
+        foreach (self::$synonyms as $synonym) {
             $this->assertContains($synonym, $output);
         }
     }
@@ -72,15 +66,15 @@ class entityTest extends \PHPUnit_Framework_TestCase
     public function testDeleteEntity()
     {
         $this->runCommand('entity-delete', [
-            'entity-value' => $this->entityValue1
+            'entity-value' => self::$entityValue1
         ]);
         $this->runCommand('entity-delete', [
-            'entity-value' => $this->entityValue2
+            'entity-value' => self::$entityValue2
         ]);
         $output = $this->runCommand('entity-list');
 
-        $this->assertNotContains($this->entityValue1, $output);
-        $this->assertNotContains($this->entityValue2, $output);
+        $this->assertNotContains(self::$entityValue1, $output);
+        $this->assertNotContains(self::$entityValue2, $output);
     }
 
     private function runCommand($commandName, $args=[])
@@ -91,8 +85,8 @@ class entityTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args + [
-                'project-id' => $this->projectId,
-                'entity-type-id' => $this->entityTypeId
+                'project-id' => self::$projectId,
+                'entity-type-id' => self::$entityTypeId
             ],
             ['interactive' => false]
         );

@@ -25,56 +25,41 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
 {
-    private $projectId;
-    private $entityTypeDisplayName;
-    private $entityValues;
-    private $sessionId;
+    private static $projectId;
+    private static $entityTypeDisplayName;
+    private static $sessionId = 'fake_session_for_testing';
+    private static $entityValues = ['fake_entity_value_1', 'fake_entity_value_2'];
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->entityTypeDisplayName = 'fake_display_name_for_testing';
-        $this->entityValues = array('fake_entity_value_1', 'fake_entity_value_2');
-        $this->sessionId = 'fake_session_for_testing';
-
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-        $this->projectId = $projectId;
-
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
+        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            return self::$markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
                 'environment variable');
         }
 
-        $application = require __DIR__ . '/../dialogflow.php';
-        $setUpCommand = $application->get('entity-type-create');
-        $createCommand = $application->get('session-entity-type-create');
-        $listCommand = $application->get('session-entity-type-list');
-        $deleteCommand = $application->get('session-entity-type-delete');
-        $cleanUpCommand = $application->get('entity-type-delete');
-        $this->commandTesterSetUp = new CommandTester($setUpCommand);
-        $this->commandTesterCreate = new CommandTester($createCommand);
-        $this->commandTesterList = new CommandTester($listCommand);
-        $this->commandTesterDelete = new CommandTester($deleteCommand);
-        $this->commandTesterCleanUp = new CommandTester($cleanUpCommand);
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            self::$markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
+                'environment variable');
+        }
+
+        self::$entityTypeDisplayName = 'fake_display_name_for_testing_' . time();
     }
 
     public function testCreateSessionEntityType()
     {
         $response = $this->runCommand('entity-type-create',[
-            'display-name' => $this->entityTypeDisplayName
+            'display-name' => self::$entityTypeDisplayName
         ]);
         $this->runCommand('session-entity-type-create', [
-            'entity-type-display-name' => $this->entityTypeDisplayName,
-            'entity-values' => $this->entityValues,
-            '--session-id' => $this->sessionId
+            'entity-type-display-name' => self::$entityTypeDisplayName,
+            'entity-values' => self::$entityValues,
+            '--session-id' => self::$sessionId
         ]);
         $output = $this->runCommand('session-entity-type-list', [
-            '--session-id' => $this->sessionId
+            '--session-id' => self::$sessionId
         ]);
 
-        $this->assertContains($this->entityTypeDisplayName, $output);
+        $this->assertContains(self::$entityTypeDisplayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
@@ -86,17 +71,17 @@ class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
     public function testDeleteSessionEntityType($entityTypeId)
     {
         $this->runCommand('session-entity-type-delete', [
-            'entity-type-display-name' => $this->entityTypeDisplayName,
-            '--session-id' => $this->sessionId
+            'entity-type-display-name' => self::$entityTypeDisplayName,
+            '--session-id' => self::$sessionId
         ]);
         $output = $this->runCommand('session-entity-type-list', [
-            '--session-id' => $this->sessionId
+            '--session-id' => self::$sessionId
         ]);
         $this->runCommand('entity-type-delete', [
             'entity-type-id' => $entityTypeId
         ]);
-        
-        $this->assertNotContains($this->entityTypeDisplayName, $output);
+
+        $this->assertNotContains(self::$entityTypeDisplayName, $output);
     }
 
     private function runCommand($commandName, $args=[])
@@ -107,7 +92,7 @@ class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args + [
-                'project-id' => $this->projectId
+                'project-id' => self::$projectId
             ],
             ['interactive' => false]
         );

@@ -25,24 +25,21 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class intentTest extends \PHPUnit_Framework_TestCase
 {
-    private $projectId;
-    private $displayName;
-    private $messageTexts;
-    private $trainingPhraseParts;
+    private static $projectId;
+    private static $displayName;
+    private static $messageTexts = ['fake_message_for_testing_1', 'fake_message_for_testing_2'];
+    private static $trainingPhraseParts = ['fake_phrase_1', 'fake_phrase_2'];
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->displayName = 'fake_display_name_for_testing';
-        $this->messageTexts = array('fake_message_for_testing_1', 'fake_message_for_testing_2');
-        $this->trainingPhraseParts = array('fake_phrase_1', 'fake_phrase_2');
+        self::$displayName = 'fake_display_name_for_testing_' . time();
 
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
             return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
                 'environment variable');
         }
-        $this->projectId = $projectId;
 
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
@@ -51,13 +48,13 @@ class intentTest extends \PHPUnit_Framework_TestCase
     public function testCreateIntent()
     {
         $response = $this->runCommand('intent-create', [
-            'display-name' => $this->displayName,
-            '--training-phrases-parts' => $this->trainingPhraseParts,
-            '--message-texts' => $this->messageTexts
+            'display-name' => self::$displayName,
+            '--training-phrases-parts' => self::$trainingPhraseParts,
+            '--message-texts' => self::$messageTexts
         ]);
         $output = $this->runCommand('intent-list');
 
-        $this->assertContains($this->displayName, $output);
+        $this->assertContains(self::$displayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
@@ -73,7 +70,7 @@ class intentTest extends \PHPUnit_Framework_TestCase
         ]);
         $output = $this->runCommand('intent-list');
 
-        $this->assertNotContains($this->displayName, $output);
+        $this->assertNotContains(self::$displayName, $output);
     }
 
     private function runCommand($commandName, $args=[])
@@ -84,7 +81,7 @@ class intentTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args + [
-                'project-id' => $this->projectId
+                'project-id' => self::$projectId
             ],
             ['interactive' => false]
         );

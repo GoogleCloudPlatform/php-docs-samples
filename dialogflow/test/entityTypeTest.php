@@ -25,18 +25,17 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class entityTypeTest extends \PHPUnit_Framework_TestCase
 {
-    private $projectId;
-    private $entityTypeDisplayName;
+    private static $projectId;
+    private static $entityTypeDisplayName;
 
     public function setUp()
     {
-        $this->entityTypeDisplayName = 'fake_display_name_for_testing';
+        self::$entityTypeDisplayName = 'fake_display_name_for_testing_' . time();
 
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
             return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
                 'environment variable');
         }
-        $this->projectId = $projectId;
 
         if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
@@ -47,11 +46,11 @@ class entityTypeTest extends \PHPUnit_Framework_TestCase
     public function testCreateEntityType()
     {
         $response = $this->runCommand('entity-type-create', [
-            'display-name' => $this->entityTypeDisplayName
+            'display-name' => self::$entityTypeDisplayName
         ]);
         $output = $this->runCommand('entity-type-list');
 
-        $this->assertContains($this->entityTypeDisplayName, $output);
+        $this->assertContains(self::$entityTypeDisplayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
@@ -66,8 +65,8 @@ class entityTypeTest extends \PHPUnit_Framework_TestCase
             'entity-type-id' => $entityTypeId
         ]);
         $output = $this->runCommand('entity-type-list');
-        
-        $this->assertNotContains($this->entityTypeDisplayName, $output);
+
+        $this->assertNotContains(self::$entityTypeDisplayName, $output);
     }
 
     private function runCommand($commandName, $args=[])
@@ -78,7 +77,7 @@ class entityTypeTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args + [
-                'project-id' => $this->projectId
+                'project-id' => self::$projectId
             ],
             ['interactive' => false]
         );

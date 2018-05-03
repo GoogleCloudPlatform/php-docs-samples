@@ -25,46 +25,43 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class contextTest extends \PHPUnit_Framework_TestCase
 {
-    private $projectId;
-    private $sessionId;
-    private $contextId;
+    private static $projectId;
+    private static $contextId;
+    private static $sessionId = 'fake_session_for_testing';
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->sessionId = 'fake_session_for_testing';
-        $this->contextId = 'fake_context_for_testing';
-
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
             return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
                 'environment variable');
         }
-        $this->projectId = $projectId;
 
         if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
+        self::$contextId = 'fake_context_for_testing_' . time();
     }
 
     public function testCreateContext()
     {
         $this->runCommand('context-create', [
-            'context-id' => $this->contextId
+            'context-id' => self::$contextId
         ]);
         $output = $this->runCommand('context-list');
 
-        $this->assertContains($this->contextId, $output);
+        $this->assertContains(self::$contextId, $output);
     }
 
     /** @depends testCreateContext */
     public function testDeleteContext()
     {
         $this->runCommand('context-delete', [
-            'context-id' => $this->contextId
+            'context-id' => self::$contextId
         ]);
         $output = $this->runCommand('context-list');
-        
-        $this->assertNotContains($this->contextId, $output);
+
+        $this->assertNotContains(self::$contextId, $output);
     }
 
     private function runCommand($commandName, $args=[])
@@ -75,8 +72,8 @@ class contextTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args + [
-                'project-id' => $this->projectId,
-                '--session-id' => $this->sessionId
+                'project-id' => self::$projectId,
+                '--session-id' => self::$sessionId
             ],
             ['interactive' => false]
         );

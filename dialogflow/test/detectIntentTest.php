@@ -25,23 +25,21 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class detectIntentTest extends \PHPUnit_Framework_TestCase
 {
-    private $projectId;
-    private $texts;
-    private $audioFilePath;
+    private static $projectId;
+    private static $audioFilePath;
+    private static $texts = ['hello', 'book a meeting room', 'mountain view'];
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->texts = array('hello', 'book a meeting room', 'mountain view');
-        $this->audioFilePath = realpath(__DIR__ . '/../resources/book_a_room.wav');
+        self::$audioFilePath = realpath(__DIR__ . '/../resources/book_a_room.wav');
 
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
+        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            return self::$markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
                 'environment variable');
         }
-        $this->projectId = $projectId;
 
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            self::$markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
     }
@@ -49,7 +47,7 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
     public function testDetectText()
     {
         $output = $this->runCommand('detect-intent-texts', [
-            'texts' => $this->texts
+            'texts' => self::$texts
         ]);
 
         $this->assertContains('date', $output);
@@ -58,7 +56,7 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
     public function testDetectAudio()
     {
         $output = $this->runCommand('detect-intent-audio', [
-            'path' => $this->audioFilePath
+            'path' => self::$audioFilePath
         ]);
 
         $this->assertContains('would you like to reserve a room', $output);
@@ -70,7 +68,7 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Must enable grpc extension.');
         }
         $output = $this->runCommand('detect-intent-stream', [
-            'path' => $this->audioFilePath
+            'path' => self::$audioFilePath
         ]);
 
         $this->assertContains('would you like to reserve a room', $output);
@@ -84,7 +82,7 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $commandTester->execute(
             $args + [
-                'project-id' => $this->projectId
+                'project-id' => self::$projectId
             ],
             ['interactive' => false]
         );
