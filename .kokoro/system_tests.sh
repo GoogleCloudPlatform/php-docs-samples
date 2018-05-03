@@ -16,7 +16,8 @@
 
 set -ex
 
-cd $DIR
+# Kokoro directory for running these samples
+cd github/php-docs-samples
 
 export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
 
@@ -29,12 +30,12 @@ if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
            --location=global \
            --keyring=ci \
            --key=ci \
-           --ciphertext-file=${DIR}/.kokoro/secrets.sh.enc \
-           --plaintext-file=${DIR}/.kokoro/secrets.sh
+           --ciphertext-file=.kokoro/secrets.sh.enc \
+           --plaintext-file=.kokoro/secrets.sh
 fi
 
 # Unencrypt and extract secrets
-source ${DIR}/.kokoro/secrets.sh
+source .kokoro/secrets.sh
 
 mkdir -p build/logs
 
