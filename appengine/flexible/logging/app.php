@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 // create the Silex application
 $app = new Application();
-$app['project_id'] = getenv('GOOGLE_CLOUD_PROJECT');
+$app['project_id'] = getenv('GOOGLE_PROJECT_ID');
 // register twig
 $app->register(new TwigServiceProvider(), [
     'twig.path' => __DIR__
@@ -30,7 +30,7 @@ $app->register(new TwigServiceProvider(), [
 
 $app->get('/', function () use ($app) {
     if (empty($app['project_id'])) {
-        return 'Set the GOOGLE_CLOUD_PROJECT environment variable to run locally';
+        return 'Set the GOOGLE_PROJECT_ID environment variable to run locally';
     }
     $projectId = $app['project_id'];
     # [START list_entries]

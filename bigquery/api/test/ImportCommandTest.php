@@ -47,7 +47,7 @@ class ImportCommandTest extends TestCase
 
     public function setUp()
     {
-        $this->gcsBucket = getenv('GOOGLE_BUCKET_NAME');
+        $this->gcsBucket = getenv('GOOGLE_STORAGE_BUCKET');
         $this->projectId = getenv('GOOGLE_PROJECT_ID');
         $this->datasetId = getenv('GOOGLE_BIGQUERY_DATASET');
     }
@@ -249,7 +249,7 @@ class ImportCommandTest extends TestCase
         if (0 === strpos($source, 'gs://') && !$this->gcsBucket) {
             $this->markTestSkipped('No Cloud Storage bucket');
         }
-        $tableId = sprintf('test_table_%s', time());
+        $this->tempTableId = $tableId = sprintf('test_table_%s', time());
         if ($createTable) {
             $this->createTempTable($this->projectId, $this->datasetId, $tableId);
         }
@@ -287,21 +287,19 @@ class ImportCommandTest extends TestCase
         };
 
         $this->runEventuallyConsistentTest($testFunction);
-
-        $this->tempTableId = $tableId;
     }
 
     public function provideImport()
     {
-        $bucket = getenv('GOOGLE_BUCKET_NAME');
+        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
 
         return [
             [__DIR__ . '/data/test_data.csv'],
             [__DIR__ . '/data/test_data.json'],
             [__DIR__ . '/data/test_data.sql'],
-            [sprintf('gs://%s/test_data.csv', $bucket)],
-            [sprintf('gs://%s/test_data.json', $bucket)],
-            [sprintf('gs://%s/test_data.backup_info', $bucket), false],
+            [sprintf('gs://%s/bigquery/test_data.csv', $bucket)],
+            [sprintf('gs://%s/bigquery/test_data.json', $bucket)],
+            [sprintf('gs://%s/bigquery/test_data.backup_info', $bucket), false],
         ];
     }
 

@@ -35,8 +35,8 @@ class authTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
                 'environment variable');
         }
-        if (!$bucketName = getenv('GOOGLE_BUCKET_NAME')) {
-            $this->markTestSkipped('Set the GOOGLE_BUCKET_NAME ' .
+        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET ' .
                 'environment variable');
         }
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {

@@ -61,12 +61,12 @@ class loggingTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateSink()
     {
-        if (!$bucket = getenv('GOOGLE_BUCKET_NAME')) {
-            $this->markTestSkipped('No GOOGLE_BUCKET_NAME envvar');
+        if (!$bucket = getenv('GOOGLE_STORAGE_BUCKET')) {
+            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET environment variable');
         }
         $output = $this->runCommand('create-sink', [
             '--logger' => self::$loggerName,
-            '--bucket' => $bucket,
+            '--bucket' => $bucket . '/logging',
             '--sink' => self::$sinkName,
         ]);
         $this->assertEquals(

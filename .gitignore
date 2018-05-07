@@ -8,5 +8,5 @@ credentials.*
 **/build/
 .php_cs.cache
 .vscode/
-export-secrets.sh
 iap/composer.lock
+.kokoro/secrets.sh

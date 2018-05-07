@@ -42,7 +42,7 @@ function detect_web_with_geo_metadata_gcs($path)
     $response = $imageAnnotator->webDetection($path, ['imageContext' => $imageContext]);
     $web = $response->getWebDetection();
 
-    if ($web->getWebEntities()) {
+    if ($web) {
         printf('%d web entities found:' . PHP_EOL,
             count($web->getWebEntities()));
         foreach ($web->getWebEntities() as $entity) {
@@ -50,6 +50,8 @@ function detect_web_with_geo_metadata_gcs($path)
             printf('Score: %f' . PHP_EOL, $entity->getScore());
             print(PHP_EOL);
         }
+    } else {
+        print('No Results.' . PHP_EOL);
     }
 }
 // [END vision_web_entities_include_geo_results_gcs]

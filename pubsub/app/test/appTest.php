@@ -29,7 +29,7 @@ class appTest extends WebTestCase
 
         $app['session.test'] = true;
         $app['debug'] = true;
-        $app['project_id'] = 'cloud-samples-tests-php';
+        $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
         $app['topic'] = getenv('GOOGLE_PUBSUB_TOPIC');
         $app['subscription'] = getenv('GOOGLE_PUBSUB_SUBSCRIPTION');
 

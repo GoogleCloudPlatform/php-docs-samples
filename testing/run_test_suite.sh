@@ -44,7 +44,7 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 # on a Pull Request, run the whole test suite.
 if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
     grep -qv \/ <<< "$FILES_CHANGED" || \
-    [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then
+    [ -z "$IS_PULL_REQUEST" ]; then
     RUN_ALL_TESTS=1
 else
     RUN_ALL_TESTS=0
@@ -84,9 +84,9 @@ do
     else
         echo "running phpunit in ${DIR}"
         if [ -f "vendor/bin/phpunit" ]; then
-            vendor/bin/phpunit
+            vendor/bin/phpunit -v
         else
-            phpunit
+            phpunit -v
         fi
         if [ $? == 0 ]; then
             echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"

@@ -8,5 +8,5 @@ runtime_config:
 env_variables:
     TWILIO_ACCOUNT_SID: your-account-sid
     TWILIO_AUTH_TOKEN: your-auth-token
-    TWILIO_NUMBER: your-twilio-number
+    TWILIO_FROM_NUMBER: your-twilio-number
 # [END env_variables]

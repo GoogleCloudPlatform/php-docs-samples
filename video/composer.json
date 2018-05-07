@@ -3,11 +3,10 @@
     "type": "project",
     "require": {
         "symfony/console": "^3.1",
-        "google/cloud-videointelligence": "^0.9"
+        "google/cloud-videointelligence": "^0.10"
     },
     "autoload": {
         "files": [
-            "src/analyze_faces.php",
             "src/analyze_labels.php",
             "src/analyze_labels_file.php",
             "src/analyze_explicit_content.php",

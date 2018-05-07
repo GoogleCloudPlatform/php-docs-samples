@@ -34,15 +34,6 @@ $inputDefinition = new InputDefinition([
     ),
 ]);
 
-$application->add(new Command('faces'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Detect faces changes in video using the Video Intelligence API')
-    ->setCode(function ($input, $output) {
-        analyze_faces(
-            $input->getArgument('uri')
-        );
-    });
-
 $application->add(new Command('labels'))
     ->setDefinition($inputDefinition)
     ->setDescription('Detect labels in video using the Video Intelligence API')

@@ -22,7 +22,7 @@ require __DIR__ . '/vendor/autoload.php';
 $app = require __DIR__ . '/app.php';
 
 $app['sendgrid.sender'] = getenv('SENDGRID_SENDER');
-$app['sendgrid.api_key'] = getenv('SENDGRID_API_KEY');
+$app['sendgrid.api_key'] = getenv('SENDGRID_APIKEY');
 
 // Run the app!
 // use "gcloud app deploy" or run "php -S localhost:8000"
