@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_explicit_content]
+// [START video_analyze_explicit_content]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
@@ -59,4 +59,4 @@ function analyze_explicit_content($uri)
         print_r($operation->getError());
     }
 }
-// [END analyze_explicit_content]
+// [END video_analyze_explicit_content]
