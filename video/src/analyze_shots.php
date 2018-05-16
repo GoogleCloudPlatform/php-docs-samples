@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_shots]
+// [START video_analyze_shots]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
@@ -59,4 +59,4 @@ function analyze_shots($uri)
         print_r($operation->getError());
     }
 }
-// [END analyze_shots]
+// [END video_analyze_shots]
