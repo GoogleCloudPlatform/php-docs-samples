@@ -20,7 +20,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
  */
 
-# [START make_iap_request]
+# [START iap_make_request]
 namespace Google\Cloud\Samples\Iap;
 
 # Imports Auth libraries and Guzzle HTTP libraries.
@@ -80,4 +80,4 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
     $response = $http_client->request('GET', '/', []);
     return $response;
 }
-# [END make_iap_request]
+# [END iap_make_request]

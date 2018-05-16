@@ -20,7 +20,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
  */
 
-# [START validate_jwt]
+# [START iap_validate_jwt]
 namespace Google\Cloud\Samples\Iap;
 
 # Imports OAuth Guzzle HTTP libraries.
@@ -92,4 +92,4 @@ function validate_jwt($iap_jwt, $expected_audience)
     // Return the user identity (subject and user email) if JWT verification is successful.
     return array('sub' => $jws->getClaim('sub'), 'email' => $jws->getClaim('email'));
 }
-# [END validate_jwt]
+# [END iap_validate_jwt]
