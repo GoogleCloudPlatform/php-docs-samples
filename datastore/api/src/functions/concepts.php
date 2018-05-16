@@ -33,9 +33,9 @@ use Google\Cloud\Datastore\Query\Query;
  */
 function initialize_client()
 {
-    // [START initialize_client]
+    // [START datastore_initialize_client]
     $datastore = new DatastoreClient();
-    // [END initialize_client]
+    // [END datastore_initialize_client]
     return $datastore;
 }
 
@@ -47,14 +47,14 @@ function initialize_client()
  */
 function basic_entity(DatastoreClient $datastore)
 {
-    // [START basic_entity]
+    // [START datastore_basic_entity]
     $task = $datastore->entity('Task', [
         'category' => 'Personal',
         'done' => false,
         'priority' => 4,
         'description' => 'Learn Cloud Datastore'
     ]);
-    // [END basic_entity]
+    // [END datastore_basic_entity]
     return $task;
 }
 
@@ -66,7 +66,7 @@ function basic_entity(DatastoreClient $datastore)
  */
 function upsert(DatastoreClient $datastore)
 {
-    // [START upsert]
+    // [START datastore_upsert]
     $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->entity($key, [
         'category' => 'Personal',
@@ -75,7 +75,7 @@ function upsert(DatastoreClient $datastore)
         'description' => 'Learn Cloud Datastore'
     ]);
     $datastore->upsert($task);
-    // [END upsert]
+    // [END datastore_upsert]
 
     return $task;
 }
@@ -89,7 +89,7 @@ function upsert(DatastoreClient $datastore)
  */
 function insert(DatastoreClient $datastore)
 {
-    // [START insert]
+    // [START datastore_insert]
     $task = $datastore->entity('Task', [
         'category' => 'Personal',
         'done' => false,
@@ -97,7 +97,7 @@ function insert(DatastoreClient $datastore)
         'description' => 'Learn Cloud Datastore'
     ]);
     $datastore->insert($task);
-    // [END insert]
+    // [END datastore_insert]
     return $task;
 }
 
@@ -109,10 +109,10 @@ function insert(DatastoreClient $datastore)
  */
 function lookup(DatastoreClient $datastore)
 {
-    // [START lookup]
+    // [START datastore_lookup]
     $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->lookup($key);
-    // [END lookup]
+    // [END datastore_lookup]
     return $task;
 }
 
@@ -124,14 +124,14 @@ function lookup(DatastoreClient $datastore)
  */
 function update(DatastoreClient $datastore)
 {
-    // [START update]
+    // [START datastore_update]
     $transaction = $datastore->transaction();
     $key = $datastore->key('Task', 'sampleTask');
     $task = $transaction->lookup($key);
     $task['priority'] = 5;
     $transaction->upsert($task);
     $transaction->commit();
-    // [END update]
+    // [END datastore_update]
     return $task;
 }
 
@@ -143,9 +143,9 @@ function update(DatastoreClient $datastore)
  */
 function delete(DatastoreClient $datastore, Key $taskKey)
 {
-    // [START delete]
+    // [START datastore_delete]
     $datastore->delete($taskKey);
-    // [END delete]
+    // [END datastore_delete]
 }
 
 /**
@@ -156,9 +156,9 @@ function delete(DatastoreClient $datastore, Key $taskKey)
  */
 function batch_upsert(DatastoreClient $datastore, array $tasks)
 {
-    // [START batch_upsert]
+    // [START datastore_batch_upsert]
     $datastore->upsertBatch($tasks);
-    // [END batch_upsert]
+    // [END datastore_batch_upsert]
 }
 
 /**
@@ -170,14 +170,14 @@ function batch_upsert(DatastoreClient $datastore, array $tasks)
  */
 function batch_lookup(DatastoreClient $datastore, array $keys)
 {
-    // [START batch_lookup]
+    // [START datastore_batch_lookup]
     $result = $datastore->lookupBatch($keys);
     if (isset($result['found'])) {
         // $result['found'] is an array of entities.
     } else {
         // No entities found.
     }
-    // [END batch_lookup]
+    // [END datastore_batch_lookup]
     return $result;
 }
 
@@ -189,9 +189,9 @@ function batch_lookup(DatastoreClient $datastore, array $keys)
  */
 function batch_delete(DatastoreClient $datastore, array $keys)
 {
-    // [START batch_delete]
+    // [START datastore_batch_delete]
     $datastore->deleteBatch($keys);
-    // [END batch_delete]
+    // [END datastore_batch_delete]
 }
 
 /**
@@ -202,9 +202,9 @@ function batch_delete(DatastoreClient $datastore, array $keys)
  */
 function named_key(DatastoreClient $datastore)
 {
-    // [START named_key]
+    // [START datastore_named_key]
     $taskKey = $datastore->key('Task', 'sampleTask');
-    // [END named_key]
+    // [END datastore_named_key]
     return $taskKey;
 }
 
@@ -216,9 +216,9 @@ function named_key(DatastoreClient $datastore)
  */
 function incomplete_key(DatastoreClient $datastore)
 {
-    // [START incomplete_key]
+    // [START datastore_incomplete_key]
     $taskKey = $datastore->key('Task');
-    // [END incomplete_key]
+    // [END datastore_incomplete_key]
     return $taskKey;
 }
 
@@ -230,10 +230,10 @@ function incomplete_key(DatastoreClient $datastore)
  */
 function key_with_parent(DatastoreClient $datastore)
 {
-    // [START key_with_parent]
+    // [START datastore_key_with_parent]
     $taskKey = $datastore->key('TaskList', 'default')
         ->pathElement('Task', 'sampleTask');
-    // [END key_with_parent]
+    // [END datastore_key_with_parent]
     return $taskKey;
 }
 
@@ -245,11 +245,11 @@ function key_with_parent(DatastoreClient $datastore)
  */
 function key_with_multilevel_parent(DatastoreClient $datastore)
 {
-    // [START key_with_multilevel_parent]
+    // [START datastore_key_with_multilevel_parent]
     $taskKey = $datastore->key('User', 'alice')
         ->pathElement('TaskList', 'default')
         ->pathElement('Task', 'sampleTask');
-    // [END key_with_multilevel_parent]
+    // [END datastore_key_with_multilevel_parent]
     return $taskKey;
 }
 
@@ -262,7 +262,7 @@ function key_with_multilevel_parent(DatastoreClient $datastore)
  */
 function properties(DatastoreClient $datastore, Key $key)
 {
-    // [START properties]
+    // [START datastore_properties]
     $task = $datastore->entity(
         $key,
         [
@@ -275,7 +275,7 @@ function properties(DatastoreClient $datastore, Key $key)
         ],
         ['excludeFromIndexes' => ['description']]
     );
-    // [END properties]
+    // [END datastore_properties]
     return $task;
 }
 
@@ -288,7 +288,7 @@ function properties(DatastoreClient $datastore, Key $key)
  */
 function array_value(DatastoreClient $datastore, Key $key)
 {
-    // [START array_value]
+    // [START datastore_array_value]
     $task = $datastore->entity(
         $key,
         [
@@ -296,7 +296,7 @@ function array_value(DatastoreClient $datastore, Key $key)
             'collaborators' => ['alice', 'bob']
         ]
     );
-    // [END array_value]
+    // [END datastore_array_value]
     return $task;
 }
 
@@ -308,13 +308,13 @@ function array_value(DatastoreClient $datastore, Key $key)
  */
 function basic_query(DatastoreClient $datastore)
 {
-    // [START basic_query]
+    // [START datastore_basic_query]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('done', '=', false)
         ->filter('priority', '>=', 4)
         ->order('priority', Query::ORDER_DESCENDING);
-    // [END basic_query]
+    // [END datastore_basic_query]
     return $query;
 }
 
@@ -326,9 +326,9 @@ function basic_query(DatastoreClient $datastore)
  */
 function run_query(DatastoreClient $datastore, Query $query)
 {
-    // [START run_query]
+    // [START datastore_run_query]
     $result = $datastore->runQuery($query);
-    // [END run_query]
+    // [END datastore_run_query]
     return $result;
 }
 
@@ -340,11 +340,11 @@ function run_query(DatastoreClient $datastore, Query $query)
  */
 function property_filter(DatastoreClient $datastore)
 {
-    // [START property_filter]
+    // [START datastore_property_filter]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('done', '=', false);
-    // [END property_filter]
+    // [END datastore_property_filter]
     return $query;
 }
 
@@ -356,12 +356,12 @@ function property_filter(DatastoreClient $datastore)
  */
 function composite_filter(DatastoreClient $datastore)
 {
-    // [START composite_filter]
+    // [START datastore_composite_filter]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('done', '=', false)
         ->filter('priority', '=', 4);
-    // [END composite_filter]
+    // [END datastore_composite_filter]
     return $query;
 }
 
@@ -373,11 +373,11 @@ function composite_filter(DatastoreClient $datastore)
  */
 function key_filter(DatastoreClient $datastore)
 {
-    // [START key_filter]
+    // [START datastore_key_filter]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('__key__', '>', $datastore->key('Task', 'someTask'));
-    // [END key_filter]
+    // [END datastore_key_filter]
     return $query;
 }
 
@@ -389,11 +389,11 @@ function key_filter(DatastoreClient $datastore)
  */
 function ascending_sort(DatastoreClient $datastore)
 {
-    // [START ascending_sort]
+    // [START datastore_ascending_sort]
     $query = $datastore->query()
         ->kind('Task')
         ->order('created');
-    // [END ascending_sort]
+    // [END datastore_ascending_sort]
     return $query;
 }
 
@@ -405,11 +405,11 @@ function ascending_sort(DatastoreClient $datastore)
  */
 function descending_sort(DatastoreClient $datastore)
 {
-    // [START descending_sort]
+    // [START datastore_descending_sort]
     $query = $datastore->query()
         ->kind('Task')
         ->order('created', Query::ORDER_DESCENDING);
-    // [END descending_sort]
+    // [END datastore_descending_sort]
     return $query;
 }
 
@@ -421,12 +421,12 @@ function descending_sort(DatastoreClient $datastore)
  */
 function multi_sort(DatastoreClient $datastore)
 {
-    // [START multi_sort]
+    // [START datastore_multi_sort]
     $query = $datastore->query()
         ->kind('Task')
         ->order('priority', Query::ORDER_DESCENDING)
         ->order('created');
-    // [END multi_sort]
+    // [END datastore_multi_sort]
     return $query;
 }
 
@@ -438,12 +438,12 @@ function multi_sort(DatastoreClient $datastore)
  */
 function ancestor_query(DatastoreClient $datastore)
 {
-    // [START ancestor_query]
+    // [START datastore_ancestor_query]
     $ancestorKey = $datastore->key('TaskList', 'default');
     $query = $datastore->query()
         ->kind('Task')
         ->hasAncestor($ancestorKey);
-    // [END ancestor_query]
+    // [END datastore_ancestor_query]
     return $query;
 }
 
@@ -456,10 +456,10 @@ function ancestor_query(DatastoreClient $datastore)
  */
 function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
 {
-    // [START kindless_query]
+    // [START datastore_kindless_query]
     $query = $datastore->query()
         ->filter('__key__', '>', $lastSeenKey);
-    // [END kindless_query]
+    // [END datastore_kindless_query]
     return $query;
 }
 
@@ -471,10 +471,10 @@ function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
  */
 function keys_only_query(DatastoreClient $datastore)
 {
-    // [START keys_only_query]
+    // [START datastore_keys_only_query]
     $query = $datastore->query()
         ->keysOnly();
-    // [END keys_only_query]
+    // [END datastore_keys_only_query]
     return $query;
 }
 
@@ -486,11 +486,11 @@ function keys_only_query(DatastoreClient $datastore)
  */
 function projection_query(DatastoreClient $datastore)
 {
-    // [START projection_query]
+    // [START datastore_projection_query]
     $query = $datastore->query()
         ->kind('Task')
         ->projection(['priority', 'percent_complete']);
-    // [END projection_query]
+    // [END datastore_projection_query]
     return $query;
 }
 
@@ -503,7 +503,7 @@ function projection_query(DatastoreClient $datastore)
  */
 function run_projection_query(DatastoreClient $datastore, Query $query)
 {
-    // [START run_query_projection]
+    // [START datastore_run_query_projection]
     $priorities = array();
     $percentCompletes = array();
     $result = $datastore->runQuery($query);
@@ -512,7 +512,7 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
         $priorities[] = $task['priority'];
         $percentCompletes[] = $task['percent_complete'];
     }
-    // [END run_query_projection]
+    // [END datastore_run_query_projection]
     return array($priorities, $percentCompletes);
 }
 
@@ -524,14 +524,14 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
  */
 function distinct_on(DatastoreClient $datastore)
 {
-    // [START distinct_on_query]
+    // [START datastore_distinct_on_query]
     $query = $datastore->query()
         ->kind('Task')
         ->order('category')
         ->order('priority')
         ->projection(['category', 'priority'])
         ->distinctOn('category');
-    // [END distinct_on_query]
+    // [END datastore_distinct_on_query]
     return $query;
 }
 
@@ -543,12 +543,12 @@ function distinct_on(DatastoreClient $datastore)
  */
 function array_value_inequality_range(DatastoreClient $datastore)
 {
-    // [START array_value_inequality_range]
+    // [START datastore_array_value_inequality_range]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('tag', '>', 'learn')
         ->filter('tag', '<', 'math');
-    // [END array_value_inequality_range]
+    // [END datastore_array_value_inequality_range]
     return $query;
 }
 
@@ -560,12 +560,12 @@ function array_value_inequality_range(DatastoreClient $datastore)
  */
 function array_value_equality(DatastoreClient $datastore)
 {
-    // [START array_value_equality]
+    // [START datastore_array_value_equality]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('tag', '=', 'fun')
         ->filter('tag', '=', 'programming');
-    // [END array_value_equality]
+    // [END datastore_array_value_equality]
     return $query;
 }
 
@@ -577,15 +577,15 @@ function array_value_equality(DatastoreClient $datastore)
  */
 function limit(DatastoreClient $datastore)
 {
-    // [START limit]
+    // [START datastore_limit]
     $query = $datastore->query()
         ->kind('Task')
         ->limit(5);
-    // [END limit]
+    // [END datastore_limit]
     return $query;
 }
 
-// [START cursor_paging]
+// [START datastore_cursor_paging]
 /**
  * Fetch a query cursor.
  *
@@ -613,7 +613,7 @@ function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
         'entities' => $entities
     );
 }
-// [END cursor_paging]
+// [END datastore_cursor_paging]
 
 /**
  * Create a query with inequality range filters on the same property.
@@ -623,12 +623,12 @@ function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
  */
 function inequality_range(DatastoreClient $datastore)
 {
-    // [START inequality_range]
+    // [START datastore_inequality_range]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'))
         ->filter('created', '<', new DateTime('2000-12-31T23:59:59z'));
-    // [END inequality_range]
+    // [END datastore_inequality_range]
     return $query;
 }
 
@@ -640,12 +640,12 @@ function inequality_range(DatastoreClient $datastore)
  */
 function inequality_invalid(DatastoreClient $datastore)
 {
-    // [START inequality_invalid]
+    // [START datastore_inequality_invalid]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'));
-    // [END inequality_invalid]
+    // [END datastore_inequality_invalid]
     return $query;
 }
 
@@ -658,14 +658,14 @@ function inequality_invalid(DatastoreClient $datastore)
  */
 function equal_and_inequality_range(DatastoreClient $datastore)
 {
-    // [START equal_and_inequality_range]
+    // [START datastore_equal_and_inequality_range]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '=', 4)
         ->filter('done', '=', false)
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'))
         ->filter('created', '<', new DateTime('2000-12-31T23:59:59z'));
-    // [END equal_and_inequality_range]
+    // [END datastore_equal_and_inequality_range]
     return $query;
 }
 
@@ -677,13 +677,13 @@ function equal_and_inequality_range(DatastoreClient $datastore)
  */
 function inequality_sort(DatastoreClient $datastore)
 {
-    // [START inequality_sort]
+    // [START datastore_inequality_sort]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
         ->order('priority')
         ->order('created');
-    // [END inequality_sort]
+    // [END datastore_inequality_sort]
     return $query;
 }
 
@@ -695,12 +695,12 @@ function inequality_sort(DatastoreClient $datastore)
  */
 function inequality_sort_invalid_not_same(DatastoreClient $datastore)
 {
-    // [START inequality_sort_invalid_not_same]
+    // [START datastore_inequality_sort_invalid_not_same]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
         ->order('created');
-    // [END inequality_sort_invalid_not_same]
+    // [END datastore_inequality_sort_invalid_not_same]
     return $query;
 }
 
@@ -712,13 +712,13 @@ function inequality_sort_invalid_not_same(DatastoreClient $datastore)
  */
 function inequality_sort_invalid_not_first(DatastoreClient $datastore)
 {
-    // [START inequality_sort_invalid_not_first]
+    // [START datastore_inequality_sort_invalid_not_first]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
         ->order('created')
         ->order('priority');
-    // [END inequality_sort_invalid_not_first]
+    // [END datastore_inequality_sort_invalid_not_first]
     return $query;
 }
 
@@ -730,11 +730,11 @@ function inequality_sort_invalid_not_first(DatastoreClient $datastore)
  */
 function unindexed_property_query(DatastoreClient $datastore)
 {
-    // [START unindexed_property_query]
+    // [START datastore_unindexed_property_query]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('description', '=', 'A task description.');
-    // [END unindexed_property_query]
+    // [END datastore_unindexed_property_query]
     return $query;
 }
 
@@ -746,7 +746,7 @@ function unindexed_property_query(DatastoreClient $datastore)
  */
 function exploding_properties(DatastoreClient $datastore)
 {
-    // [START exploding_properties]
+    // [START datastore_exploding_properties]
     $task = $datastore->entity(
         $datastore->key('Task'),
         [
@@ -755,11 +755,11 @@ function exploding_properties(DatastoreClient $datastore)
             'created' => new DateTime(),
         ]
     );
-    // [END exploding_properties]
+    // [END datastore_exploding_properties]
     return $task;
 }
 
-// [START transactional_update]
+// [START datastore_transactional_update]
 /**
  * Update two entities in a transaction.
  *
@@ -788,7 +788,7 @@ function transfer_funds(
     $transaction->updateBatch([$fromAccount, $toAccount]);
     $transaction->commit();
 }
-// [END transactional_update]
+// [END datastore_transactional_update]
 
 /**
  * Call a function and retry upon conflicts for several times.
@@ -802,7 +802,7 @@ function transactional_retry(
     Key $fromKey,
     Key $toKey
 ) {
-    // [START transactional_retry]
+    // [START datastore_transactional_retry]
     $retries = 5;
     for ($i = 0; $i < $retries; $i++) {
         try {
@@ -814,7 +814,7 @@ function transactional_retry(
         // Succeeded!
         break;
     }
-    // [END transactional_retry]
+    // [END datastore_transactional_retry]
 }
 
 /**
@@ -825,14 +825,14 @@ function transactional_retry(
  */
 function get_or_create(DatastoreClient $datastore, Entity $task)
 {
-    // [START transactional_get_or_create]
+    // [START datastore_transactional_get_or_create]
     $transaction = $datastore->transaction();
     $existed = $transaction->lookup($task->key());
     if ($existed === null) {
         $transaction->insert($task);
         $transaction->commit();
     }
-    // [END transactional_get_or_create]
+    // [END datastore_transactional_get_or_create]
 }
 
 /**
@@ -843,7 +843,7 @@ function get_or_create(DatastoreClient $datastore, Entity $task)
  */
 function get_task_list_entities(DatastoreClient $datastore)
 {
-    // [START transactional_single_entity_group_read_only]
+    // [START datastore_transactional_single_entity_group_read_only]
     $transaction = $datastore->transaction();
     $taskListKey = $datastore->key('TaskList', 'default');
     $query = $datastore->query()
@@ -856,7 +856,7 @@ function get_task_list_entities(DatastoreClient $datastore)
         $taskListEntities[] = $task;
     }
     $transaction->commit();
-    // [END transactional_single_entity_group_read_only]
+    // [END datastore_transactional_single_entity_group_read_only]
     return $taskListEntities;
 }
 
@@ -868,12 +868,12 @@ function get_task_list_entities(DatastoreClient $datastore)
  */
 function eventual_consistent_query(DatastoreClient $datastore)
 {
-    // [START eventual_consistent_query]
+    // [START datastore_eventual_consistent_query]
     $query = $datastore->query()
         ->kind('Task')
         ->hasAncestor($datastore->key('TaskList', 'default'));
     $result = $datastore->runQuery($query, ['readConsistency' => 'EVENTUAL']);
-    // [END eventual_consistent_query]
+    // [END datastore_eventual_consistent_query]
     return $result;
 }
 
@@ -885,7 +885,7 @@ function eventual_consistent_query(DatastoreClient $datastore)
  */
 function entity_with_parent(DatastoreClient $datastore)
 {
-    // [START entity_with_parent]
+    // [START datastore_entity_with_parent]
     $parentKey = $datastore->key('TaskList', 'default');
     $key = $datastore->key('Task')->ancestorKey($parentKey);
     $task = $datastore->entity(
@@ -897,7 +897,7 @@ function entity_with_parent(DatastoreClient $datastore)
             'Description' => 'Learn Cloud Datastore'
         ]
     );
-    // [END entity_with_parent]
+    // [END datastore_entity_with_parent]
     return $task;
 }
 
@@ -911,7 +911,7 @@ function entity_with_parent(DatastoreClient $datastore)
  */
 function namespace_run_query(DatastoreClient $datastore, $start, $end)
 {
-    // [START namespace_run_query]
+    // [START datastore_namespace_run_query]
     $query = $datastore->query()
         ->kind('__namespace__')
         ->projection(['__key__'])
@@ -923,7 +923,7 @@ function namespace_run_query(DatastoreClient $datastore, $start, $end)
     foreach ($result as $namespace) {
         $namespaces[] = $namespace->key()->pathEnd()['name'];
     }
-    // [END namespace_run_query]
+    // [END datastore_namespace_run_query]
     return $namespaces;
 }
 
@@ -935,7 +935,7 @@ function namespace_run_query(DatastoreClient $datastore, $start, $end)
  */
 function kind_run_query(DatastoreClient $datastore)
 {
-    // [START kind_run_query]
+    // [START datastore_kind_run_query]
     $query = $datastore->query()
         ->kind('__kind__')
         ->projection(['__key__']);
@@ -945,7 +945,7 @@ function kind_run_query(DatastoreClient $datastore)
     foreach ($result as $kind) {
         $kinds[] = $kind->key()->pathEnd()['name'];
     }
-    // [END kind_run_query]
+    // [END datastore_kind_run_query]
     return $kinds;
 }
 
@@ -957,7 +957,7 @@ function kind_run_query(DatastoreClient $datastore)
  */
 function property_run_query(DatastoreClient $datastore)
 {
-    // [START property_run_query]
+    // [START datastore_property_run_query]
     $query = $datastore->query()
         ->kind('__property__')
         ->projection(['__key__']);
@@ -970,7 +970,7 @@ function property_run_query(DatastoreClient $datastore)
         $propertyName = $entity->key()->path()[1]['name'];
         $properties[] = "$kind.$propertyName";
     }
-    // [END property_run_query]
+    // [END datastore_property_run_query]
     return $properties;
 }
 
@@ -982,7 +982,7 @@ function property_run_query(DatastoreClient $datastore)
  */
 function property_by_kind_run_query(DatastoreClient $datastore)
 {
-    // [START property_by_kind_run_query]
+    // [START datastore_property_by_kind_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
     $query = $datastore->query()
         ->kind('__property__')
@@ -997,7 +997,7 @@ function property_by_kind_run_query(DatastoreClient $datastore)
         $properties[$propertyName] = $propertyType;
     }
     // Example values of $properties: ['description' => ['STRING']]
-    // [END property_by_kind_run_query]
+    // [END datastore_property_by_kind_run_query]
     return $properties;
 }
 
@@ -1009,7 +1009,7 @@ function property_by_kind_run_query(DatastoreClient $datastore)
  */
 function property_filtering_run_query(DatastoreClient $datastore)
 {
-    // [START property_filtering_run_query]
+    // [START datastore_property_filtering_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
     $startKey = $datastore->key('__property__', 'priority')
         ->ancestorKey($ancestorKey);
@@ -1025,6 +1025,6 @@ function property_filtering_run_query(DatastoreClient $datastore)
         $propertyName = $entity->key()->path()[1]['name'];
         $properties[] = "$kind.$propertyName";
     }
-    // [END property_filtering_run_query]
+    // [END datastore_property_filtering_run_query]
     return $properties;
 }
