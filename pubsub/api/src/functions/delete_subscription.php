@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START delete_subscription]
+# [START pubsub_delete_subscription]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -42,4 +42,4 @@ function delete_subscription($projectId, $subscriptionName)
 
     printf('Subscription deleted: %s' . PHP_EOL, $subscription->name());
 }
-# [END delete_subscription]
+# [END pubsub_delete_subscription]

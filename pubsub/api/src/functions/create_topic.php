@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START create_topic]
+# [START pubsub_create_topic]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -41,4 +41,4 @@ function create_topic($projectId, $topicName)
 
     printf('Topic created: %s' . PHP_EOL, $topic->name());
 }
-# [END create_topic]
+# [END pubsub_create_topic]

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START pubsub_quickstart]
+# [START pubsub_quickstart_create_topic]
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
@@ -37,5 +37,5 @@ $topicName = 'my-new-topic-2';
 $topic = $pubsub->createTopic($topicName);
 
 echo 'Topic ' . $topic->name() . ' created.';
-# [END pubsub_quickstart]
+# [END pubsub_quickstart_create_topic]
 return $topic;

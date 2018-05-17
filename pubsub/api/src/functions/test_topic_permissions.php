@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START test_topic_permissions]
+# [START pubsub_test_topic_permissions]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -47,4 +47,4 @@ function test_topic_permissions($projectId, $topicName)
         printf('Permission: %s' . PHP_EOL, $permission);
     }
 }
-# [END test_topic_permissions]
+# [END pubsub_test_topic_permissions]

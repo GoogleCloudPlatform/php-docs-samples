@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START get_topic_policy]
+# [START pubsub_get_topic_policy]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -41,4 +41,4 @@ function get_topic_policy($projectId, $topicName)
     $policy = $topic->iam()->policy();
     print_r($policy);
 }
-# [END get_topic_policy]
+# [END pubsub_get_topic_policy]

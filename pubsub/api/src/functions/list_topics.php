@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START list_topics]
+# [START pubsub_list_topics]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -40,4 +40,4 @@ function list_topics($projectId)
         printf('Topic: %s' . PHP_EOL, $topic->name());
     }
 }
-# [END list_topics]
+# [END pubsub_list_topics]
