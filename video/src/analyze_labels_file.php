@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Video;
 
-// [START analyze_labels_file]
+// [START video_analyze_labels_gcs]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
@@ -92,4 +92,4 @@ function analyze_labels_file($path)
         print_r($operation->getError());
     }
 }
-// [END analyze_labels_file]
+// [END video_analyze_labels_gcs]
