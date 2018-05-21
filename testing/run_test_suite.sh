@@ -24,12 +24,17 @@ FLAKES=(
     datastore/api
 )
 
-GRPC_ONLY_TESTS=(
-    appengine/php55/grpc
-    appengine/php72/grpc
-    spanner
-    firestore
+# tests to run with grpc.so disabled
+REST_TESTS=(
+    bigquerydatatransfer
+    error_reporting
+    dialogflow
+    dlp
+    monitoring
+    video
 )
+
+GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
 
 TMP_REPORT_DIR=$(mktemp -d)
 
@@ -44,6 +49,7 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 # If any files outside the sample directories changed, or if we are not
 # on a Pull Request, run the whole test suite.
 if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
+   grep -q ^.kokoro\/ <<< "$FILES_CHANGED" || \
     grep -qv \/ <<< "$FILES_CHANGED" || \
     [ -z "$IS_PULL_REQUEST" ]; then
     RUN_ALL_TESTS=1
@@ -54,6 +60,24 @@ fi
 if [ "${TEST_DIRECTORIES}" = "" ]; then
   TEST_DIRECTORIES="*"
 fi
+
+run_tests()
+{
+    if [ -f "vendor/bin/phpunit" ]; then
+        vendor/bin/phpunit -v
+    else
+        phpunit -v
+    fi
+    if [ $? == 0 ]; then
+        echo "$1: ok" >> "${SUCCEEDED_FILE}"
+    else
+        if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
+            echo "$1: failed" >> "${FAILED_FLAKY_FILE}"
+        else
+            echo "$1: failed" >> "${FAILED_FILE}"
+        fi
+    fi
+}
 
 # Loop through all directories containing "phpunit.xml*" and run the test suites.
 find $TEST_DIRECTORIES -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \; | while read DIR
@@ -74,29 +98,17 @@ do
         composer -q install
     fi
     if [ $? != 0 ]; then
-        if [[ "${GRPC_ONLY_TESTS[@]}" =~ "${DIR}" ]]; then
-            echo "Installation failed, skipping tests in $DIR\n"
-            popd
-            continue
-        fi
         # Run composer without "-q"
         composer install
         echo "${DIR}: failed" >> "${FAILED_FILE}"
     else
         echo "running phpunit in ${DIR}"
-        if [ -f "vendor/bin/phpunit" ]; then
-            vendor/bin/phpunit -v
-        else
-            phpunit -v
-        fi
-        if [ $? == 0 ]; then
-            echo "${DIR}: ok" >> "${SUCCEEDED_FILE}"
-        else
-            if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
-                echo "${DIR}: failed" >> "${FAILED_FLAKY_FILE}"
-            else
-                echo "${DIR}: failed" >> "${FAILED_FILE}"
-            fi
+        run_tests $DIR
+        if [[ "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+            # disable gRPC to test using REST only, then re-enable it
+            mv $GRPC_INI "${GRPC_INI}.disabled"
+            run_tests "${DIR} (rest)"
+            mv "${GRPC_INI}.disabled" $GRPC_INI
         fi
         set -e
         if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then

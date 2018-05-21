@@ -30,3 +30,4 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
 ENV PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
 
 ENTRYPOINT /bin/bash
+

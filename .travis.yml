@@ -29,8 +29,6 @@ matrix:
   include:
     - php: 5.6
       env: RUN_DEVSERVER_TESTS=true RUN_CS_FIXER=true RUN_DEPENDENCY_CHECK=true
-    - php: 7.2
-      env: SKIP_GRPC=true
 
 env:
   global:
@@ -50,7 +48,6 @@ before_install:
   - sudo apt-get update && sudo apt-get install -y python-ipaddr
 
 before_script:
-  - if [ "${SKIP_GRPC}" != "true" ]; then travis_retry pecl install grpc; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then yes '' | pecl install "channel://pecl.php.net/mcrypt-1.0.1"; fi
   - composer self-update
 

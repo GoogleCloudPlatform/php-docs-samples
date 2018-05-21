@@ -14,6 +14,8 @@
 php56:
 	mkdir -p php56
 	sed -e 's/PHP_VERSION/php56/g' Dockerfile.template > php56/Dockerfile
+	echo "ENV RUN_DEVSERVER_TESTS=true" >> php56/Dockerfile
+	echo "ENV RUN_CS_FIXER=true\n" >> php56/Dockerfile
 
 php70:
 	mkdir -p php70
