@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 
 use DateTime;
 use Google\Cloud\Datastore\EntityIterator;
-// [START build_service]
+// [START datastore_build_service]
 use Google\Cloud\Datastore\DatastoreClient;
 
 /**
@@ -33,7 +33,7 @@ function build_datastore_service($projectId)
     $datastore = new DatastoreClient(['projectId' => $projectId]);
     return $datastore;
 }
-// [END build_service]
+// [END datastore_build_service]
 
 /**
  * Create a Cloud Datastore client with a namespace.
@@ -49,7 +49,7 @@ function build_datastore_service_with_namespace()
     return new DatastoreClient(['namespaceId' => $namespaceId]);
 }
 
-// [START add_entity]
+// [START datastore_add_entity]
 /**
  * Create a new task with a given description.
  *
@@ -72,9 +72,9 @@ function add_task(DatastoreClient $datastore, $description)
     $datastore->insert($task);
     return $task;
 }
-// [END add_entity]
+// [END datastore_add_entity]
 
-// [START update_entity]
+// [START datastore_update_entity]
 /**
  * Mark a task with a given id as done.
  *
@@ -90,9 +90,9 @@ function mark_done(DatastoreClient $datastore, $taskId)
     $transaction->upsert($task);
     $transaction->commit();
 }
-// [END update_entity]
+// [END datastore_update_entity]
 
-// [START delete_entity]
+// [START datastore_delete_entity]
 /**
  * Delete a task with a given id.
  *
@@ -104,9 +104,9 @@ function delete_task(DatastoreClient $datastore, $taskId)
     $taskKey = $datastore->key('Task', $taskId);
     $datastore->delete($taskKey);
 }
-// [END delete_entity]
+// [END datastore_delete_entity]
 
-// [START retrieve_entities]
+// [START datastore_retrieve_entities]
 /**
  * Return an iterator for all the tasks in ascending order of creation time.
  *
@@ -120,4 +120,4 @@ function list_tasks(DatastoreClient $datastore)
         ->order('created');
     return $datastore->runQuery($query);
 }
-// [END retrieve_entities]
+// [END datastore_retrieve_entities]
