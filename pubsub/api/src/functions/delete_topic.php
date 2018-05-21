@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START delete_topic]
+# [START pubsub_delete_topic]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -42,4 +42,4 @@ function delete_topic($projectId, $topicName)
 
     printf('Topic deleted: %s' . PHP_EOL, $topic->name());
 }
-# [END delete_topic]
+# [END pubsub_delete_topic]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START set_subscription_policy]
+# [START pubsub_set_subscription_policy]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -50,4 +50,4 @@ function set_subscription_policy($projectId, $subscriptionName, $userEmail)
         $userEmail,
         $subscriptionName);
 }
-# [END set_subscription_policy]
+# [END pubsub_set_subscription_policy]

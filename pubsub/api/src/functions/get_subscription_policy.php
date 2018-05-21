@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START get_subscription_policy]
+# [START pubsub_get_subscription_policy]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -41,4 +41,4 @@ function get_subscription_policy($projectId, $subscriptionName)
     $policy = $subscription->iam()->policy();
     print_r($policy);
 }
-# [END get_subscription_policy]
+# [END pubsub_get_subscription_policy]

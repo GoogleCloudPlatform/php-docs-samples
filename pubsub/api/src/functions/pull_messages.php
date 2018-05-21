@@ -23,7 +23,8 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START pull_message]
+# [START pubsub_subscriber_sync_pull]
+# [START pubsub_quickstart_subscriber]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -44,4 +45,5 @@ function pull_messages($projectId, $subscriptionName)
         $subscription->acknowledge($message);
     }
 }
-# [END pull_message]
+# [END pubsub_subscriber_sync_pull]
+# [END pubsub_quickstart_subscriber]

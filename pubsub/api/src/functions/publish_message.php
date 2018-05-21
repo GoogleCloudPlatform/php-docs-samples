@@ -23,7 +23,8 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START publish_message]
+# [START pubsub_publish]
+# [START pubsub_quickstart_publisher]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -42,4 +43,5 @@ function publish_message($projectId, $topicName, $message)
     $topic->publish(['data' => $message]);
     print('Message published' . PHP_EOL);
 }
-# [END publish_message]
+# [END pubsub_publish]
+# [END pubsub_quickstart_publisher]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START create_subscription]
+# [START pubsub_create_pull_subscription]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -44,4 +44,4 @@ function create_subscription($projectId, $topicName, $subscriptionName)
 
     printf('Subscription created: %s' . PHP_EOL, $subscription->name());
 }
-# [END create_subscription]
+# [END pubsub_create_pull_subscription]

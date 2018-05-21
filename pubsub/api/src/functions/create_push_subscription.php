@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START create_push_subscription]
+# [START pubsub_create_push_subscription]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -45,4 +45,4 @@ function create_push_subscription($projectId, $topicName, $subscriptionName, $en
         'endpoint' => $endpoint
     ]);
 }
-# [END create_push_subscription]
+# [END pubsub_create_push_subscription]

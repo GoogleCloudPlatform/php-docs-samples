@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START test_subscription_permissions]
+# [START pubsub_test_subscription_permissions]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -46,4 +46,4 @@ function test_subscription_permissions($projectId, $subscriptionName)
         printf('Permission: %s' . PHP_EOL, $permission);
     }
 }
-# [END test_subscription_permissions]
+# [END pubsub_test_subscription_permissions]

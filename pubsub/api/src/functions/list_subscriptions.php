@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START list_subscriptions]
+# [START pubsub_list_subscriptions]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -40,4 +40,4 @@ function list_subscriptions($projectId)
         printf('Subscription: %s' . PHP_EOL, $subscription->name());
     }
 }
-# [END list_subscriptions]
+# [END pubsub_list_subscriptions]

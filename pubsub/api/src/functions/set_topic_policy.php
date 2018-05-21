@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START set_topic_policy]
+# [START pubsub_set_topic_policy]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -50,4 +50,4 @@ function set_topic_policy($projectId, $topicName, $userEmail)
         $userEmail,
         $topicName);
 }
-# [END set_topic_policy]
+# [END pubsub_set_topic_policy]
