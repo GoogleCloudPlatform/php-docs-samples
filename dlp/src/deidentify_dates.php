@@ -17,6 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
+use Exception;
 # [START dlp_deidentify_date_shift]
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoKey;
