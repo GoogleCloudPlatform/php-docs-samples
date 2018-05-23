@@ -103,12 +103,14 @@ do
         echo "${DIR}: failed" >> "${FAILED_FILE}"
     else
         echo "running phpunit in ${DIR}"
-        run_tests $DIR
         if [[ "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+            run_tests "${DIR} (grpc)"
             # disable gRPC to test using REST only, then re-enable it
             mv $GRPC_INI "${GRPC_INI}.disabled"
             run_tests "${DIR} (rest)"
             mv "${GRPC_INI}.disabled" $GRPC_INI
+        else
+            run_tests $DIR
         fi
         set -e
         if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
