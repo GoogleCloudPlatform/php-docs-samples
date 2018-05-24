@@ -19,7 +19,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Spanner\V1\SpannerClient;
+use Google\Cloud\Spanner\SpannerClient;
 
 # Imports the App Engine SDK
 use google\appengine\api\app_identity\AppIdentityService;
@@ -35,19 +35,20 @@ $spanner = new SpannerClient([
 # Your Cloud Spanner instance ID.
 $instanceId = 'your-instance-id';
 
+# Get a Cloud Spanner instance by ID.
+$instance = $spanner->instance($instanceId);
+
 # Your Cloud Spanner database ID.
 $databaseId = 'your-database-id';
 
-# Create a database session.
-$databaseName = $spanner->databaseName($projectId, $instanceId, $databaseId);
-$session = $spanner->createSession($databaseName);
+# Get a Cloud Spanner database by ID.
+$database = $instance->database($databaseId);
 
 # Execute a simple SQL statement.
-$response = $spanner->executeSql($session->getName(), 'SELECT "Hello World" as test');
+$results = $database->execute('SELECT "Hello World" as test');
 
-# Print the results.
-foreach ($response->getRows() as $row) {
-    foreach ($row->getValues() as $value) {
-        print($value->getStringValue() . PHP_EOL);
-    }
+foreach ($results as $row) {
+    print($row['test'] . PHP_EOL);
 }
+// [END spanner_quickstart]
+return $results;
