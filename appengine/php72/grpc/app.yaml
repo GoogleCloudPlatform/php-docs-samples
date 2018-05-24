@@ -1,0 +1,9 @@
+runtime: php72
+api_version: 1
+
+handlers:
+- url: /
+  script: index.php
+
+- url: /(monitoring|spanner)\.php
+  script: \1.php
