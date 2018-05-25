@@ -1,0 +1,6 @@
+runtime: php72
+api_version: 1
+
+handlers:
+- url: /
+  script: index.php
