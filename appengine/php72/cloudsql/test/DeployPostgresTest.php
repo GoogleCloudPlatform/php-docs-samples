@@ -55,15 +55,15 @@ class DeployPostgresTest extends \PHPUnit_Framework_TestCase
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $appYamlContents = file_get_contents('app.yaml');
+        $appYamlContents = file_get_contents('app-postgres.yaml');
         $appYaml = Yaml::parse($appYamlContents);
         $appYaml['env_variables']['CLOUDSQL_USER'] = $user;
         $appYaml['env_variables']['CLOUDSQL_PASSWORD'] = $password;
         $appYaml['beta_settings']['cloud_sql_instances'] = $connectionName;
-        $appYaml['env_variables']['CLOUDSQL_DSN'] = sprintf(
-            'pgsql:dbname=%s;host=/cloudsql/%s',
-            $database,
-            $connectionName
+        $appYaml['env_variables']['CLOUDSQL_DSN'] = str_replace(
+            ['DATABASE', 'CONNECTION_NAME'],
+            [$database, $connectionName],
+            $appYaml['env_variables']['CLOUDSQL_DSN']
         );
 
         file_put_contents('app.yaml', Yaml::dump($appYaml));
