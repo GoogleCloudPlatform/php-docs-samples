@@ -23,7 +23,7 @@ if (!isset($dsn, $user) || false === $password) {
     throw new Exception('Set CLOUDSQL_DSN, CLOUDSQL_USER, and CLOUDSQL_PASSWORD environment variables');
 }
 
-# [START create_tables]
+# [START gae_cloudsql_create_tables]
 // Create the PDO object to talk to CloudSQL
 $db = new PDO($dsn, $user, $password);
 
@@ -32,7 +32,7 @@ $stmt = $db->prepare('CREATE TABLE IF NOT EXISTS entries ('
     . 'guestName VARCHAR(255), '
     . 'content VARCHAR(255))');
 $result = $stmt->execute();
-# [END create_tables]
+# [END gae_cloudsql_create_tables]
 
 if (false === $result) {
     exit("Error: " . $stmt->errorInfo()[2]);

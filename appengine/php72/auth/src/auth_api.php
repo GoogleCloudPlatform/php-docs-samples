@@ -20,7 +20,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
  */
 
-# [START auth_api_implicit]
+# [START gae_auth_api_implicit]
 namespace Google\Cloud\Samples\Auth;
 
 // Imports the Google Cloud Storage client library.
@@ -42,4 +42,4 @@ function auth_api($projectId)
         printf('Bucket: %s' . PHP_EOL, $bucket->getName());
     }
 }
-# [END auth_api_implicit]
+# [END gae_auth_api_implicit]

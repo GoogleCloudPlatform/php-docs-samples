@@ -7,17 +7,17 @@ handlers:
 - url: /
   script: index.php
 
-# [START env]
+# [START gae_cloudsql_mysql_env]
 env_variables:
   # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
   # values obtained when configuring your Cloud SQL instance.
   CLOUDSQL_USER: USER
   CLOUDSQL_PASSWORD: PASSWORD
   CLOUDSQL_DSN: "mysql:dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME"
-# [END env]
+# [END gae_cloudsql_mysql_env]
 
-#[START cloudsql_settings]
+#[START gae_cloudsql_settings]
 # Use the connection name obtained when configuring your Cloud SQL instance.
 beta_settings:
     cloud_sql_instances: "CONNECTION_NAME"
-#[END cloudsql_settings]
+#[END gae_cloudsql_settings]
