@@ -16,16 +16,11 @@
 -->
 <phpunit>
     <testsuites>
-        <testsuite name="PHP cloudsql test">
+        <testsuite name="AppEngine for PHP 7.2 Cloud SQL test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
-    <filter>
-        <whitelist>
-            <file>app.php</file>
-        </whitelist>
-    </filter>
 </phpunit>

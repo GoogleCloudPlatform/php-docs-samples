@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHP auth test">
+        <testsuite name="AppEngine for PHP 7.2 auth test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -28,7 +28,4 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
-    <php>
-        <env name="PHPUNIT_TESTS" value="1"/>
-    </php>
 </phpunit>
