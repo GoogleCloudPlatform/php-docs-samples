@@ -1,0 +1,15 @@
+# This app.yaml is for deploying to instances of Cloud SQL running MySQL.
+# See app-postgres.yaml for running Cloud SQL with PostgreSQL.
+
+runtime: php72
+
+# [START gae_memorystore_app_yaml]
+# update with Redis instance host IP, port
+env_variables:
+  REDIS_HOST: YOUR_REDIS_HOST
+  REDIS_PORT: 6379
+
+# Configure your VPC Access connector here
+vpc_access_connector:
+  name: "projects/YOUR_PROJECT_ID/locations/YOUR_REGION/connectors/YOUR_CONNECTOR_NAME"
+# [END gae_memorystore_app_yaml]
