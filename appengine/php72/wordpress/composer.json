@@ -1,0 +1,17 @@
+{
+    "require": {
+        "ext-phar": "*",
+        "ext-zip": "*",
+        "paragonie/random_compat": "^1.3",
+        "symfony/console": "^3.0",
+        "google/cloud-tools": "dev-adds-misc-utility-functions"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\AppEngine\\Php72\\WordPress\\": "test"
+        }
+    }
+}
