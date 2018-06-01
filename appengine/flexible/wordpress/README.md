@@ -134,24 +134,11 @@ https://PROJECT_ID.appspot.com/
 Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins page, activate the following
 plugins:
 
-  - Batcache Manager
   - GCS media plugin
 
 After activating the plugins, try uploading a media object in a new post
 and confirm the image is uploaded to the GCS bucket by visiting the
 [Google Cloud console's Storage page][cloud-storage-console].
-
-## Check if the Batcache plugin is working
-
-On the plugin page in the WordPress dashboard, click on the Drop-ins tab near
-the top. You should see 2 drop-ins are activated: `advanced-cache.php` and
-`object-cache.php`.
-
-To make sure it’s really working, you can open an incognito window and
-visit the site because the cache plugin only serves from cache to
-anonymous users. Then go to
-[the memcache dashboard in the Cloud Console][memcache-dashboard] and
-check the hit ratio and number of items in cache.
 
 ## Various workflows
 

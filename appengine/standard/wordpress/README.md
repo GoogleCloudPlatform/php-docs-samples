@@ -138,10 +138,6 @@ plugins:
   - Google App Engine for WordPress (also set the e-mail address in its
     settings page)
 
-After activating the plugins, try uploading a media object in a new post
-and confirm the image is uploaded to the GCS bucket by visiting the
-[Google Cloud console's Storage page][cloud-storage-console].
-
 ## Check if the Batcache plugin is working
 
 On the plugin page in the WordPress dashboard, click on the Drop-ins tab near
