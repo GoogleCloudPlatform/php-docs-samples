@@ -46,22 +46,22 @@ define('FORCE_SSL_ADMIN', $onGae);
 // ** MySQL settings - You can get this info from your web host ** //
 if ($onGae) {
     /** Production environment */
-    define('DB_HOST', ':/cloudsql/{{db_connection}}');
+    define('DB_HOST', ':/cloudsql/DB_CONNECTION');
     /** The name of the database for WordPress */
-    define('DB_NAME', '{{db_name}}');
+    define('DB_NAME', 'DB_NAME');
     /** MySQL database username */
-    define('DB_USER', '{{db_user}}');
+    define('DB_USER', 'DB_USER');
     /** MySQL database password */
-    define('DB_PASSWORD', '{{db_password}}');
+    define('DB_PASSWORD', 'DB_PASSWORD');
 } else {
     /** Local environment */
     define('DB_HOST', '127.0.0.1');
     /** The name of the database for WordPress */
-    define('DB_NAME', '{{db_name}}');
+    define('DB_NAME', 'DB_NAME');
     /** MySQL database username */
-    define('DB_USER', '{{local_db_user}}');
+    define('DB_USER', 'LOCAL_DB_USER');
     /** MySQL database password */
-    define('DB_PASSWORD', '{{local_db_password}}');
+    define('DB_PASSWORD', 'LOCAL_DB_PASSWORD');
 }
 
 /** Database Charset to use in creating database tables. */
@@ -80,14 +80,14 @@ define('DB_COLLATE', '');
  * @since 2.6.0
  */
 
-define('AUTH_KEY',         '{{auth_key}}');
-define('SECURE_AUTH_KEY',  '{{secure_auth_key}}');
-define('LOGGED_IN_KEY',    '{{logged_in_key}}');
-define('NONCE_KEY',        '{{nonce_key}}');
-define('AUTH_SALT',        '{{auth_salt}}');
-define('SECURE_AUTH_SALT', '{{secure_auth_salt}}');
-define('LOGGED_IN_SALT',   '{{logged_in_salt}}');
-define('NONCE_SALT',       '{{nonce_salt}}');
+define('AUTH_KEY',         'AUTH_KEY');
+define('SECURE_AUTH_KEY',  'SECURE_AUTH_KEY');
+define('LOGGED_IN_KEY',    'LOGGED_IN_KEY');
+define('NONCE_KEY',        'NONCE_KEY');
+define('AUTH_SALT',        'AUTH_SALT');
+define('SECURE_AUTH_SALT', 'SECURE_AUTH_SALT');
+define('LOGGED_IN_SALT',   'LOGGED_IN_SALT');
+define('NONCE_SALT',       'NONCE_SALT');
 
 /**#@-*/
 

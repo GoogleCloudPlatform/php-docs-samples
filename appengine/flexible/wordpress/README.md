@@ -42,7 +42,7 @@ $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
 
 Note: In this guide, we use `wp` for various resource names; the instance
 name, the database name, and the user name.
-    
+
 Create a new Cloud SQL for MySQL Second Generation instance with the following
 command:
 
@@ -142,8 +142,8 @@ plugins:
   - Batcache Manager
   - GCS media plugin
 
-After activating the plugins, try uploading a media object in a new post 
-and confirm the image is uploaded to the GCS bucket by visiting the 
+After activating the plugins, try uploading a media object in a new post
+and confirm the image is uploaded to the GCS bucket by visiting the
 [Google Cloud console's Storage page][cloud-storage-console].
 
 ## Check if the Batcache plugin is working
