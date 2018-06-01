@@ -3,8 +3,9 @@
 This is a small command line tool for downloading and configuring
 WordPress for Google Cloud Platform. The script allows you to create a
 working WordPress project for the
-[App Engine standard environment][appengine-standard] or the
-[App Engine flexible environment][appengine-flexible].
+[App Engine flexible environment][appengine-flexible]. For deploying
+WordPress to the [App Engine standard environment][appengine-standard],
+refer to the example at [appengine/standard/wordpress][../../standard/wordpress]
 
 ## Common Prerequisites
 
@@ -12,7 +13,7 @@ working WordPress project for the
 * Create a new Cloud Project using the [Cloud Console][cloud-console]
 * Enable Billing on that project
 * [Enable Cloud SQL API][cloud-sql-api-enable]
-* Install [Google Cloud SDK][gcloud-sdk]
+* Install [Google Cloud SDK][gsubl ..cloud-sdk]
 * Install the [mysql-client][mysql-client] command line tool
 * [Install Memcache][memcache-installation]
 
@@ -109,7 +110,7 @@ extensions and retry.
 Then run the helper command.
 
 ```
-$ php wordpress-helper.php setup
+$ php wordpress.php setup
 ```
 
 The command asks you several questions, please answer them. Then you'll have a
@@ -133,12 +134,6 @@ https://PROJECT_ID.appspot.com/
 Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins page, activate the following
 plugins:
 
-
-- For the standard environment
-  - Batcache Manager
-  - Google App Engine for WordPress (also set the e-mail address in its
-    settings page)
-- For the flexible environment
   - Batcache Manager
   - GCS media plugin
 
@@ -176,21 +171,6 @@ $ vendor/bin/wp plugin update --all --path=wordpress
 # To update all the themes
 $ vendor/bin/wp theme update --all --path=wordpress
 ```
-
-If you're using App Engine Standard, You may get the following error:
-
-```
-Failed opening required 'google/appengine/api/urlfetch_service_pb.php'
-```
-
-You can set a `WP_CLI_PHP_ARGS` environment variable to add
-`include_path` PHP configuration for wp-cli.
-
-```
-$ export WP_CLI_PHP_ARGS='-d include_path=vendor/google/appengine-php-sdk'
-```
-
-Then try the above commands again.
 
 ### Remove plugins/themes
 

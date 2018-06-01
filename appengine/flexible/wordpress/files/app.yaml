@@ -2,7 +2,7 @@ runtime: php
 env: flex
 
 beta_settings:
-  cloud_sql_instances: DB_CONNECTION
+  cloud_sql_instances: "YOUR_DB_CONNECTION"
 
 runtime_config:
   document_root: wordpress

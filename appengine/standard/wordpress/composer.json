@@ -10,5 +10,10 @@
         "guzzlehttp/guzzle": "~6.0",
         "phpunit/phpunit": "~4",
         "symfony/browser-kit": "~2"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\AppEngine\\Standard\\WordPress\\": "test"
+        }
     }
 }

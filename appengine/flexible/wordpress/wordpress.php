@@ -28,16 +28,16 @@ use Google\Cloud\Utils\WordPressProject;
 $application = new Application('Wordpress Helper');
 $application->add(new Command('setup'))
     ->setDescription('Setup WordPress on GCP')
-    ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'Directory for the new project', WordPressProject::DEFAULT_DIR)
-    ->addOption('project_id', 'p', InputOption::VALUE_OPTIONAL, 'Google Cloud project id')
-    ->addOption('db_region', null, InputOption::VALUE_OPTIONAL, 'Cloud SQL region')
-    ->addOption('db_instance', null, InputOption::VALUE_OPTIONAL, 'Cloud SQL instance id')
-    ->addOption('db_name', null, InputOption::VALUE_OPTIONAL, 'Cloud SQL database name')
-    ->addOption('db_user', null, InputOption::VALUE_OPTIONAL, 'Cloud SQL database username')
-    ->addOption('db_password', null, InputOption::VALUE_OPTIONAL, 'Cloud SQL database password')
-    ->addOption('local_db_user', null, InputOption::VALUE_OPTIONAL, 'Local SQL database username')
-    ->addOption('local_db_password', null, InputOption::VALUE_OPTIONAL, 'Local SQL database password')
-    ->addOption('wordpress_url', null, InputOption::VALUE_OPTIONAL, 'URL of the WordPress archive', WordPressProject::LATEST_WP)
+    ->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Directory for the new project', WordPressProject::DEFAULT_DIR)
+    ->addOption('project_id', null, InputOption::VALUE_REQUIRED, 'Google Cloud project id')
+    ->addOption('db_region', null, InputOption::VALUE_REQUIRED, 'Cloud SQL region')
+    ->addOption('db_instance', null, InputOption::VALUE_REQUIRED, 'Cloud SQL instance id', 'wp')
+    ->addOption('db_name', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database name', 'wp')
+    ->addOption('db_user', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database username', 'wp')
+    ->addOption('db_password', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database password')
+    ->addOption('local_db_user', null, InputOption::VALUE_REQUIRED, 'Local SQL database username')
+    ->addOption('local_db_password', null, InputOption::VALUE_REQUIRED, 'Local SQL database password')
+    ->addOption('wordpress_url', null, InputOption::VALUE_REQUIRED, 'URL of the WordPress archive', WordPressProject::LATEST_WP)
     ->setCode(function(InputInterface $input, OutputInterface $output) {
         $wordpress = new WordPressProject($input, $output);
 
@@ -47,6 +47,7 @@ $application->add(new Command('setup'))
 
         // download wordpress and plugins
         $wordpress->downloadWordpress();
+        $wordpress->downloadBatcachePlugin();
         $wordpress->downloadGcsPlugin();
 
         // populate random key params
@@ -68,5 +69,9 @@ $application->add(new Command('setup'))
 
         $output->writeln("<info>Your WordPress project is ready at $dir</info>");
     });
+
+if (getenv('PHPUNIT_TESTS') === '1') {
+    return $application;
+}
 
 $application->run();

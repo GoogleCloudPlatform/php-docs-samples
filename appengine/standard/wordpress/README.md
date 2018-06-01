@@ -3,8 +3,9 @@
 This is a small command line tool for downloading and configuring
 WordPress for Google Cloud Platform. The script allows you to create a
 working WordPress project for the
-[App Engine standard environment][appengine-standard] or the
-[App Engine flexible environment][appengine-flexible].
+[App Engine standard environment][appengine-standard]. For deploying
+WordPress to the [App Engine flexible environment][appengine-flexible],
+refer to the example at [appengine/standard/wordpress][../../flexible/wordpress]
 
 ## Common Prerequisites
 
@@ -109,7 +110,7 @@ extensions and retry.
 Then run the helper command.
 
 ```
-$ php wordpress-helper.php setup
+$ php wordpress.php setup
 ```
 
 The command asks you several questions, please answer them. Then you'll have a
@@ -133,14 +134,9 @@ https://PROJECT_ID.appspot.com/
 Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins page, activate the following
 plugins:
 
-
-- For the standard environment
   - Batcache Manager
   - Google App Engine for WordPress (also set the e-mail address in its
     settings page)
-- For the flexible environment
-  - Batcache Manager
-  - GCS media plugin
 
 After activating the plugins, try uploading a media object in a new post
 and confirm the image is uploaded to the GCS bucket by visiting the
@@ -177,7 +173,7 @@ $ vendor/bin/wp plugin update --all --path=wordpress
 $ vendor/bin/wp theme update --all --path=wordpress
 ```
 
-If you're using App Engine Standard, You may get the following error:
+If you get the following error:
 
 ```
 Failed opening required 'google/appengine/api/urlfetch_service_pb.php'

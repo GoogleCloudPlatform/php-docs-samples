@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,118 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Test;
 
-use GuzzleHttp\Client;
+namespace Google\Cloud\Samples\AppEngine\Flexible\WordPress;
 
-class DeployFlexTest extends \PHPUnit_Framework_TestCase
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
-    private $client;
+    use RunSetupCommandTrait;
+    use AppEngineDeploymentTrait;
 
-    const PROJECT_ENV = 'GOOGLE_PROJECT_ID';
-    const VERSION_ENV = 'GOOGLE_VERSION_ID';
-    const DB_PASSWORD_ENV = 'WP_DB_PASSWORD';
-
-    private static function getVersion()
+    public static function beforeDeploy()
     {
-        return "wp-flex-" . getenv(self::VERSION_ENV);
-    }
+        if (!($projectId = getenv('GOOGLE_PROJECT_ID'))
+            || !($dbInstance = getenv('WORDPRESS_DB_INSTANCE_NAME'))
+            || !($dbUser = getenv('WORDPRESS_DB_USER'))
+            || !($dbPassword = getenv('WORDPRESS_DB_PASSWORD'))) {
+            self::markTestSkipped('You must set GOOGLE_PROJECT_ID, '
+                . 'WORDPRESS_INSTANCE_NAME, and WORDPRESS_DB_PASSWORD');
+        }
 
-    private static function getTargetDir()
-    {
-        $tmp = sys_get_temp_dir();
-        $e2e_test_version = self::getVersion();
-        return "$tmp/$e2e_test_version";
-    }
-    public static function setUpBeforeClass()
-    {
-        if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
-            self::markTestSkipped(
-                'To run this test, set RUN_DEPLOYMENT_TESTS env to true.'
-            );
-        }
-        $project_id = getenv(self::PROJECT_ENV);
-        $e2e_test_version = getenv(self::VERSION_ENV);
-        $db_password = getenv(self::DB_PASSWORD_ENV);
-        if ($project_id === false) {
-            self::fail('Please set ' . self::PROJECT_ENV . ' env var.');
-        }
-        if ($e2e_test_version === false) {
-            self::fail('Please set ' . self::VERSION_ENV . ' env var.');
-        }
-        if ($db_password === false) {
-            self::fail('Please set ' . self::DB_PASSWORD_ENV . ' env var.');
-        }
-        $helper = __DIR__ . '/../wordpress-helper.php';
-        $target = self::getTargetDir();
-        $command = "php $helper setup -d $target "
-            . " -n -p $project_id "
-            . "--db_instance=wp --db_name=wp --db_user=wp "
-            . "--db_password=$db_password";
-        $wp_url = getenv('WP_DOWNLOAD_URL');
-        if ($wp_url !== false) {
-            $command .= " --wordpress_url=$wp_url";
-        }
-        exec($command);
-        self::deploy($project_id, self::getVersion());
-    }
+        $dir = self::runSetupCommand([
+            '--project_id' => $projectId,
+            '--db_instance' => $dbInstance,
+            '--db_user' => $dbUser,
+            '--db_password' => $dbPassword,
+            '--db_name' => getenv('WORDPRESS_DB_NAME') ?: 'wordpress_flex',
+        ]);
 
-    public static function deploy($project_id, $e2e_test_version)
-    {
-        $target = self::getTargetDir();
-        for ($i = 0; $i <= 3; $i++) {
-            exec(
-                "gcloud -q app deploy "
-                . "--version $e2e_test_version "
-                . "--project $project_id --no-promote "
-                . "$target/app.yaml $target/cron.yaml",
-                $output,
-                $ret
-            );
-            if ($ret === 0) {
-                return;
-            } else {
-                echo 'Retrying deployment';
-            }
-        }
-        self::fail('Deployment failed.');
-    }
-
-
-    public static function tearDownAfterClass()
-    {
-        for ($i = 0; $i <= 3; $i++) {
-            exec('gcloud -q app versions delete --service default '
-                 . self::getVersion()
-                 . ' --project '
-                 . getenv(self::PROJECT_ENV),
-                 $output,
-                 $ret
-            );
-            if ($ret === 0) {
-                return;
-            } else {
-                echo 'Retrying to delete the version';
-            }
-        }
-    }
-
-    public function setUp()
-    {
-        $url = sprintf('https://%s-dot-%s.appspot.com/',
-                       self::getVersion(),
-                       getenv(self::PROJECT_ENV));
-        $this->client = new Client(['base_uri' => $url]);
+        self::$gcloudWrapper->setDir($dir);
     }
 
     public function testIndex()
     {
         // Access the blog top page
         $resp = $this->client->get('');
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
+        $this->assertEquals('200', $resp->getStatusCode());
         $this->assertContains(
-            'I am very glad that you are testing WordPress instalation.',
-            $resp->getBody()->getContents());
+            'It looks like your WordPress installation is running on App '
+            . 'Engine Flexible!',
+            $resp->getBody()->getContents()
+        );
     }
 }

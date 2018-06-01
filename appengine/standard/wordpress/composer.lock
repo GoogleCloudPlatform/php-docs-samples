@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "d3f776505aebb2c0562627d0bcf468f19559868d"
+                "reference": "109cc5cb77ff28d334a9f9cd9b0191ce6ab3c1b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/d3f776505aebb2c0562627d0bcf468f19559868d",
-                "reference": "d3f776505aebb2c0562627d0bcf468f19559868d",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/109cc5cb77ff28d334a9f9cd9b0191ce6ab3c1b2",
+                "reference": "109cc5cb77ff28d334a9f9cd9b0191ce6ab3c1b2",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-06-01T00:31:52+00:00"
+            "time": "2018-06-01T20:04:50+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
