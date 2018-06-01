@@ -89,8 +89,12 @@ if (!GCECredentials::onGce()) {
         <?php if (isset($_GET['path'])): ?>
         <h3>Metadata for <code><?= $_GET['path'] ?></code>:</h3>
         <ul>
+            <?php if ('/token' == substr($_GET['path'], -6)): ?>
+            <li><em>the metadata value requested contains sensitive information and so will not be displayed here</em></li>
+            <?php else: ?>
             <li>With Google Cloud: <pre><?= request_metadata_using_google_cloud($_GET['path']) ?></pre></li>
             <li>With cURL: <pre><?= request_metadata_using_curl($_GET['path']) ?></pre></li>
+            <?php endif ?>
         </ul>
         <?php endif ?>
         <h3>All metadata keys:</h3>
