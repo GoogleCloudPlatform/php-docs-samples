@@ -43,5 +43,7 @@ function detect_text($path)
         }
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_text_detection]

@@ -44,5 +44,7 @@ function detect_image_property_gcs($path)
     } else {
         print('No Results.' . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_image_property_detection_gcs]

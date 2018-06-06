@@ -101,5 +101,7 @@ function detect_face($path, $outFile = null)
         call_user_func($imageWriteFunc[$ext], $outputImage, $outFile);
         printf('Output image written to %s' . PHP_EOL, $outFile);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_face_detection]

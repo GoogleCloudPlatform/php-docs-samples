@@ -38,5 +38,7 @@ function detect_label_gcs($path)
     } else {
         print('No label found' . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_label_detection_gcs]

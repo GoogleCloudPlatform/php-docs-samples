@@ -79,5 +79,7 @@ function detect_web($path)
             $entity->getDescription(),
             $entity->getScore());
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_web_detection]

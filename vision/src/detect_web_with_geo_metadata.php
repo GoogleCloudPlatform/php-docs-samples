@@ -52,5 +52,7 @@ function detect_web_with_geo_metadata($path)
             print(PHP_EOL);
         }
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_web_entities_include_geo_results]

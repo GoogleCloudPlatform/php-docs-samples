@@ -54,5 +54,7 @@ function detect_face_gcs($path)
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         print(PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_face_detection_gcs]

@@ -39,6 +39,7 @@ Vision API from PHP.
   text           Detect text in an image using Google Cloud Vision API
   crop-hints     Detect crop hints in an image using Google Cloud Vision API
   document-text  Detect document text in an image using Google Cloud Vision API
+  pdf            Detect text in a PDF/TIFF using Google Cloud Vision API
   web            Detect web entities in an image using Google Cloud Vision API
   web-geo        Detect web entities in an image with geo metadata using
                  Google Cloud Vision API

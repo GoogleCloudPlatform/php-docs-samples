@@ -35,5 +35,7 @@ function detect_landmark($path)
     foreach ($landmarks as $landmark) {
         print($landmark->getDescription() . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_landmark_detection]

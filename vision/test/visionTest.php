@@ -271,6 +271,16 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Bounds:', $output);
     }
 
+    public function testPdfGcs()
+    {
+        $this->requireCloudStorage();
+
+        $source = 'gs://' . $this->bucketName . '/HodgeConj.pdf';
+        $destination = 'gs://' . $this->bucketName . '/OCR_PDF_TEST_OUTPUT';
+        $output = $this->runCommand('pdf', $source, $destination);
+        $this->assertNotContains('error writing final output', $output);
+    }
+
     public function testDetectWebNoGeoCommand()
     {
         $path = __DIR__ . '/data/geotagged.jpg';
