@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\ErrorReporting;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Exception;
 # [START report_error_grpc]
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorContext;

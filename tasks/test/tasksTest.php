@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Tasks\Tests;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 

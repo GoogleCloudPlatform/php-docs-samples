@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class monitoringTest extends \PHPUnit_Framework_TestCase
