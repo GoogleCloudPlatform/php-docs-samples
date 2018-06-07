@@ -1,8 +1,10 @@
 <?php
 
+# [START gae_erroreporting_register_handler]
 # After running "composer require google/cloud-error-reporting", register the
 # error handler by including `prepend.php` in your application
 require __DIR__ . '/vendor/google/cloud-error-reporting/src/prepend.php';
+# [END gae_erroreporting_register_handler]
 
 // throw a test exception to trigger our exception handler
 if (isset($_GET['type'])) {

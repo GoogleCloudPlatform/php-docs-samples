@@ -47,5 +47,5 @@ $results = $database->execute('SELECT "Hello World" as test');
 foreach ($results as $row) {
     print($row['test'] . PHP_EOL);
 }
-// [END spanner_quickstart]
+
 return $results;
