@@ -21,7 +21,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Google\Auth\Credentials\GCECredentials;
 
-
 /**
  * This sample shows various ways to access the Metadata server, which provides
  * information about your running instance.

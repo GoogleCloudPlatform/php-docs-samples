@@ -13,14 +13,18 @@ if (isset($_GET['type'])) {
       . '</p>';
     switch ($_GET['type']) {
         case 'exception':
-            // Wrap the exception in a function so that we can see the function
-            // in the Stackdriver Error Reporting UI.
             print('Throwing a PHP Exception.');
             print($linkText);
-            function throwException() {
+            /**
+             * Wrap the exception in a function so that we can see the function
+             * in the Stackdriver Error Reporting UI.
+             */
+            function throwException()
+            {
                 throw new \Exception('This is from "throw new Exception()"');
             }
             throwException();
+            break;
         case 'error':
             print('Triggering a PHP Error.');
             print($linkText);
@@ -32,6 +36,7 @@ if (isset($_GET['type'])) {
             $filename = tempnam(sys_get_temp_dir(), 'php_syntax_error');
             file_put_contents($filename, "<?php syntax-error");
             require($filename);
+            break;
         default:
             exit('Invalid error type. Must be "exception", "error", or "fatal"');
     }

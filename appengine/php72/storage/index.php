@@ -39,7 +39,8 @@ if (!in_array('gs', stream_get_wrappers())) {
 if ($_SERVER['REQUEST_URI'] == '/write/public') {
     $contents = sprintf('new file written at %s', date('Y-m-d H:i:s'));
     $publicUrl = write_public($bucketName, 'public_file.txt', $contents);
-    header('Location: ' . $publicUrl); exit;
+    header('Location: ' . $publicUrl);
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -80,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             upload_file($bucketName);
             exit;
     }
-    header('Location: /'); exit;
+    header('Location: /');
+    exit;
 }
 
 $params = [];
@@ -253,13 +255,13 @@ if (file_exists($objects['metadata'])) {
             [<a href="https://cloud.google.com/appengine/docs/php/googlestorage/user_upload">docs</a>]:
         </h3>
 
-        <?php # [START user_upload_form] ?>
+        <?php # [START user_upload_form]?>
         <form action="/user/upload" enctype="multipart/form-data" method="post">
             Files to upload: <br>
            <input type="file" name="uploaded_files" size="40">
            <input type="submit" value="Send">
         </form>
-        <?php # [END user_upload_form] ?>
+        <?php # [END user_upload_form]?>
     </div>
 </html>
 
