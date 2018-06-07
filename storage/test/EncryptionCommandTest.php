@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Core\Exception\BadRequestException;
 use Google\Cloud\Samples\Storage\EncryptionCommand;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**

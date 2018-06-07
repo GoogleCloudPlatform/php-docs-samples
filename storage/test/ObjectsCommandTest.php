@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\ObjectsCommand;
 use Google\Cloud\Storage\StorageClient;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
