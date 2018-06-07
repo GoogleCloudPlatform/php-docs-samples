@@ -25,7 +25,8 @@ FLAKES=(
 )
 
 GRPC_ONLY_TESTS=(
-    appengine/standard/grpc
+    appengine/php55/grpc
+    appengine/php72/grpc
     spanner
     firestore
 )
