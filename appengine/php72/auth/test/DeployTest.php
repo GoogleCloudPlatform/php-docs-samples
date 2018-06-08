@@ -17,7 +17,6 @@
 namespace Google\Cloud\Test\Auth;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
-use Google\Cloud\TestUtils\FileUtil;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../../../testing/FileUtil.php';
