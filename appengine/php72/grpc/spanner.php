@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,10 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Spanner\V1\SpannerClient;
-
-# Imports the App Engine SDK
-use google\appengine\api\app_identity\AppIdentityService;
+use Google\Cloud\Spanner\SpannerClient;
 
 # Your Google Cloud Platform project ID
-$projectId = AppIdentityService::getApplicationId();
+$projectId = getenv('GOOGLE_CLOUD_PROJECT');
 
 # Instantiates a client
 $spanner = new SpannerClient([
@@ -33,21 +30,22 @@ $spanner = new SpannerClient([
 ]);
 
 # Your Cloud Spanner instance ID.
-$instanceId = 'your-instance-id';
+$instanceId = 'SPANNER_INSTANCE_ID';
+
+# Get a Cloud Spanner instance by ID.
+$instance = $spanner->instance($instanceId);
 
 # Your Cloud Spanner database ID.
-$databaseId = 'your-database-id';
+$databaseId = 'SPANNER_DATABASE_ID';
 
-# Create a database session.
-$databaseName = $spanner->databaseName($projectId, $instanceId, $databaseId);
-$session = $spanner->createSession($databaseName);
+# Get a Cloud Spanner database by ID.
+$database = $instance->database($databaseId);
 
 # Execute a simple SQL statement.
-$response = $spanner->executeSql($session->getName(), 'SELECT "Hello World" as test');
+$results = $database->execute('SELECT "Hello World" as test');
 
-# Print the results.
-foreach ($response->getRows() as $row) {
-    foreach ($row->getValues() as $value) {
-        print($value->getStringValue() . PHP_EOL);
-    }
+foreach ($results as $row) {
+    print($row['test'] . PHP_EOL);
 }
+
+return $results;

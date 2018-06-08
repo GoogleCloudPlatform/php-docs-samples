@@ -1,7 +1,7 @@
 {
     "require": {
-        "google/cloud-error-reporting": "^0.8",
-        "google/cloud-logging": "^1.9",
+        "google/cloud-logging": "^1.11",
+        "google/cloud-error-reporting": "^0.10.1",
         "silex/silex": "^2.0",
         "twig/twig": "^1.29"
     },

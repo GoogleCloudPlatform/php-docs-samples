@@ -1,0 +1,8 @@
+runtime: php72
+
+handlers:
+- url: /
+  script: index.php
+
+- url: /(monitoring|spanner)\.php
+  script: \1.php

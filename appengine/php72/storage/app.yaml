@@ -1,0 +1,8 @@
+runtime: php72
+
+handlers:
+- url: .*
+  script: index.php
+
+env_variables:
+  GOOGLE_STORAGE_BUCKET: <your-bucket-name>

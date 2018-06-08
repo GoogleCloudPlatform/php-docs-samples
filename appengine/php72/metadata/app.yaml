@@ -1,0 +1,5 @@
+runtime: php72
+
+handlers:
+- url: /
+  script: index.php

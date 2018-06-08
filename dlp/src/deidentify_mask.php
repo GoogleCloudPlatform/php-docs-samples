@@ -58,7 +58,8 @@ function deidentify_mask(
         ->setCharacterMaskConfig($maskConfig);
 
     $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
-        ->setPrimitiveTransformation($primitiveTransformation);
+        ->setPrimitiveTransformation($primitiveTransformation)
+        ->setInfoTypes($infoTypes);
 
     $infoTypeTransformations = (new InfoTypeTransformations())
         ->setTransformations([$infoTypeTransformation]);
@@ -77,9 +78,6 @@ function deidentify_mask(
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $item
     ]);
-
-    $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();
