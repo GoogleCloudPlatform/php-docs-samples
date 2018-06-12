@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START gae_cloudsql_connect]
+# [START example]
 // Connect to CloudSQL from App Engine.
 $dsn = getenv('CLOUDSQL_DSN');
 $user = getenv('CLOUDSQL_USER');
@@ -23,9 +23,7 @@ $password = getenv('CLOUDSQL_PASSWORD');
 if (!isset($dsn, $user) || false === $password) {
     throw new Exception('Set CLOUDSQL_DSN, CLOUDSQL_USER, and CLOUDSQL_PASSWORD environment variables');
 }
-# [END gae_cloudsql_connect]
 
-# [START gae_cloudsql_create_tables]
 // Create the PDO object to talk to CloudSQL
 $db = new PDO($dsn, $user, $password);
 
@@ -34,13 +32,11 @@ $stmt = $db->prepare('CREATE TABLE IF NOT EXISTS entries ('
     . 'guestName VARCHAR(255), '
     . 'content VARCHAR(255))');
 $result = $stmt->execute();
-# [END gae_cloudsql_create_tables]
 
 if (false === $result) {
     exit("Error: " . $stmt->errorInfo()[2]);
 }
 
-# [START gae_cloudsql_insert]
 // Insert a new row into the guestbook on POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $db->prepare('INSERT INTO entries (guestName, content) VALUES (:name, :content)');
@@ -52,15 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         print("Error: " . $stmt->errorInfo()[2]);
     }
 }
-# [END gae_cloudsql_insert]
 
-# [START gae_cloudsql_query]
 // Show existing guestbook entries.
 $results = $db->query('SELECT * from entries');
-# [END gae_cloudsql_query]
 
 ?>
-<?php # [START gae_cloudsql_results] ?>
+<?php ?>
 <html>
     <body>
         <?php if ($results->rowCount() > 0): ?>
@@ -78,4 +71,4 @@ $results = $db->query('SELECT * from entries');
         </form>
     </body>
 </html>
-<?php # [END gae_cloudsql_results] ?>
+<?php # [END example ?>
