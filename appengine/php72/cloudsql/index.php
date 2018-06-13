@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START example]
+# [START gae_cloudsql_example]
 // Connect to CloudSQL from App Engine.
 $dsn = getenv('CLOUDSQL_DSN');
 $user = getenv('CLOUDSQL_USER');
