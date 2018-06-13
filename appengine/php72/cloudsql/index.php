@@ -71,4 +71,4 @@ $results = $db->query('SELECT * from entries');
         </form>
     </body>
 </html>
-<?php # [END example ?>
+<?php # [END gae_cloudsql_example] ?>
