@@ -4,7 +4,7 @@
         "ext-zip": "*",
         "paragonie/random_compat": "^1.3",
         "symfony/console": "^3.0",
-        "google/cloud-tools": "dev-adds-misc-utility-functions"
+        "google/cloud-tools": "^0.7.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",
