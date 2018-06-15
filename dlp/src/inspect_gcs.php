@@ -21,6 +21,10 @@ namespace Google\Cloud\Samples\Dlp;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
+use Google\Cloud\Dlp\V2\CustomInfoType;
+use Google\Cloud\Dlp\V2\CustomInfoType_Dictionary;
+use Google\Cloud\Dlp\V2\CustomInfoType_Dictionary_WordList;
+use Google\Cloud\Dlp\V2\CustomInfoType_Regex;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
@@ -63,6 +67,28 @@ function inspect_gcs(
         ->setName('CREDIT_CARD_NUMBER');
     $infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
 
+    // Custom info type of doctor names.
+    $doctorNamesTypeName = (new InfoType())
+        ->setName('DOCTOR_NAMES');
+    $doctorNamesTypePhrases = ['Dr. Smith', 'Dr. Jones'];
+    $doctorNamesTypeWordList = (new CustomInfoType_Dictionary_WordList())
+        ->setWords($doctorNamesTypePhrases);
+    $doctorNamesTypeDictionary = (new CustomInfoType_Dictionary())
+        ->setWordList($doctorNamesTypeWordList);
+    $doctorNamesType = (new CustomInfoType())
+        ->setInfoType($doctorNamesTypeName)
+        ->setDictionary($doctorNamesTypeDictionary);
+    // Custom info type of medical record number.
+    $medicalRecordNumberTypeName = (new InfoType())
+        ->setName('MEDICAL_RECORD_NUMBER');
+    $medicalRecordNumberTypeRegex = (new CustomInfoType_Regex())
+        ->setPattern('\\d-\\d{6}-\\d{2}');
+    $medicalRecordNumberType = (new CustomInfoType())
+        ->setInfoType($medicalRecordNumberTypeName)
+        ->setRegex($medicalRecordNumberTypeRegex);
+    // The customInfoTypes to match
+    $customInfoTypes = [$doctorNamesType, $medicalRecordNumberType];
+
     // The minimum likelihood required before returning a match
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
@@ -84,7 +110,8 @@ function inspect_gcs(
     $inspectConfig = (new InspectConfig())
         ->setMinLikelihood($minLikelihood)
         ->setLimits($limits)
-        ->setInfoTypes($infoTypes);
+        ->setInfoTypes($infoTypes)
+        ->setCustomInfoTypes($customInfoTypes);
 
     // Construct the action to run when job completes
     $pubSubAction = (new Action_PublishToPubSub())
