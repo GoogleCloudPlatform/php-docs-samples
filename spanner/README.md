@@ -81,21 +81,34 @@ To run the Spanner Samples:
 
     Available commands:
       add-column                    Adds a new column to the Albums table in the example database.
-      create-database               Creates a database and tables for sample data.
-      create-index                  Adds a simple index to the example database.
-      create-storing-index          Adds an storing index to the example database.
-      help                          Displays help for a command
-      insert-data                   Inserts sample data into the given database.
-      list                          Lists commands
-      query-data                    Queries sample data from the database using SQL.
-      query-data-with-index         Queries sample data from the database using SQL and an index.
-      query-data-with-new-column    Queries sample data from the database using SQL.
-      read-data                     Reads sample data from the database.
-      read-data-with-index          Reads sample data from the database using an index.
-      read-data-with-storing-index  Reads sample data from the database using an index with a storing clause.
-      read-only-transaction         Reads data inside of a read-only transaction.
-      read-write-transaction        Performs a read-write transaction to update two sample records in the database.
-      update-data                   Updates sample data in the database.
+      add-column                           Adds a new column to the Albums table in the example database.
+      add-timestamp-column                 Adds a commit timestamp column to a table.
+      batch-query-data                     Batch queries sample data from the database using SQL.
+      create-database                      Creates a database and tables for sample data.
+      create-index                         Adds a simple index to the example database.
+      create-storing-index                 Adds an storing index to the example database.
+      create-table-timestamp               Creates a table with a commit timestamp column.
+      help                                 Displays help for a command
+      insert-data                          Inserts sample data into the given database.
+      insert-data-timestamp                Inserts data into a table with a commit timestamp column.
+      insert-struct-data                   Inserts sample data that can be used to test STRUCT parameters in queries.
+      list                                 Lists commands
+      query-data                           Queries sample data from the database using SQL.
+      query-data-timestamp                 Queries sample data from a database with a commit timestamp column.
+      query-data-with-array-of-struct      Queries sample data from the database with an array of struct.
+      query-data-with-index                Queries sample data from the database using SQL and an index.
+      query-data-with-nested-struct-field  Queries sample data from the database with a nested struct field value.
+      query-data-with-new-column           Queries sample data from the database using SQL.
+      query-data-with-struct               Queries sample data from the database with a struct.
+      query-data-with-struct-field         Queries sample data from the database with a struct field value.
+      read-data                            Reads sample data from the database.
+      read-data-with-index                 Reads sample data from the database using an index.
+      read-data-with-storing-index         Reads sample data from the database using an index with a storing clause.
+      read-only-transaction                Reads data inside of a read-only transaction.
+      read-stale-data                      Reads sample data from the database, with a maximum staleness of 3 seconds.
+      read-write-transaction               Performs a read-write transaction to update two sample records in the database.
+      update-data                          Updates sample data in the database.
+      update-data-timestamp                Updates sample data in a table with a commit timestamp column.
 
 
 ## Troubleshooting

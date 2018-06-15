@@ -307,6 +307,53 @@ class spannerTest extends TestCase
         $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testInsertStructData()
+    {
+        $output = $this->runCommand('insert-struct-data');
+        $this->assertEquals('Inserted data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testInsertStructData
+     */
+    public function testQueryDataWithStruct()
+    {
+        $output = $this->runCommand('query-data-with-struct');
+        $this->assertContains('SingerId: 6', $output);
+    }
+
+    /**
+     * @depends testInsertStructData
+     */
+    public function testQueryDataWithArrayOfStruct()
+    {
+        $output = $this->runCommand('query-data-with-array-of-struct');
+        $this->assertContains('SingerId: 6', $output);
+        $this->assertContains('SingerId: 7', $output);
+        $this->assertContains('SingerId: 8', $output);
+    }
+
+    /**
+     * @depends testInsertStructData
+     */
+    public function testQueryDataWithStructField()
+    {
+        $output = $this->runCommand('query-data-with-struct-field');
+        $this->assertContains('SingerId: 6', $output);
+    }
+
+    /**
+     * @depends testInsertStructData
+     */
+    public function testQueryDataWithNestedStructField()
+    {
+        $output = $this->runCommand('query-data-with-nested-struct-field');
+        $this->assertContains('SingerId: 6 SongName: Imagination', $output);
+        $this->assertContains('SingerId: 9 SongName: Imagination', $output);
+    }
 
     private function runCommand($commandName)
     {
