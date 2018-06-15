@@ -91,6 +91,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'path' => __DIR__ . '/data/test.txt'
         ]);
         $this->assertContains('PERSON_NAME', $output);
+        $this->assertContains('MEDICAL_RECORD_NUMBER', $output);
+        $this->assertContains('DOCTOR_NAMES', $output);
 
         // inspect an image file with results
         $output = $this->runCommand('inspect-file', [
@@ -123,6 +125,14 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'string' => 'The name Zolo is not very common.'
         ]);
         $this->assertContains('No findings', $output);
+
+        // inspect a string with custom info types
+        $output = $this->runCommand('inspect-string', [
+            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'string' => 'The attending doctor for patient 0-256334-12 is Dr. Smith.'
+        ]);
+        $this->assertContains('MEDICAL_RECORD_NUMBER', $output);
+        $this->assertContains('DOCTOR_NAMES', $output);
     }
 
     public function testListInfoTypes()
