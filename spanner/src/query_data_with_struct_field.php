@@ -27,8 +27,6 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\StructType;
-use Google\Cloud\Spanner\StructValue;
-
 
 /**
  * Queries sample data from the database using a struct field value.
