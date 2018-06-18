@@ -16,6 +16,8 @@ env_variables:
   CLOUDSQL_DSN: "pgsql:dbname=DATABASE;host=/cloudsql/CONNECTION_NAME"
 # [END gae_cloudsql_postgres_env]
 
+# [START gae_cloudsql_postgres_settings]
 # Use the connection name obtained when configuring your Cloud SQL instance.
 beta_settings:
     cloud_sql_instances: "CONNECTION_NAME"
+# [END gae_cloudsql_postgres_settings]
