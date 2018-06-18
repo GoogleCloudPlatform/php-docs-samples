@@ -24,8 +24,6 @@ use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange_Period;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../testing/FileUtil.php';
-
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
