@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "52007e2643b53459943cbd184e404483",
+    "content-hash": "9153c8f2b05bcda518cf04eba66ee5d6",
     "packages": [
         {
             "name": "cache/adapter-common",
@@ -721,16 +721,16 @@
         },
         {
             "name": "opencensus/opencensus",
-            "version": "v0.5.0",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/census-instrumentation/opencensus-php.git",
-                "reference": "cd2b4d574488382e37e4e49d998947f54fa6c14c"
+                "reference": "21824d2d1581bb34993551d69c5819bdff704911"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/census-instrumentation/opencensus-php/zipball/cd2b4d574488382e37e4e49d998947f54fa6c14c",
-                "reference": "cd2b4d574488382e37e4e49d998947f54fa6c14c",
+                "url": "https://api.github.com/repos/census-instrumentation/opencensus-php/zipball/21824d2d1581bb34993551d69c5819bdff704911",
+                "reference": "21824d2d1581bb34993551d69c5819bdff704911",
                 "shasum": ""
             },
             "require": {
@@ -777,7 +777,7 @@
                 }
             ],
             "description": "OpenCensus Trace Client for PHP",
-            "time": "2018-04-25T23:22:04+00:00"
+            "time": "2018-06-19T18:15:12+00:00"
         },
         {
             "name": "opencensus/opencensus-exporter-stackdriver",
@@ -1189,16 +1189,16 @@
     "packages-dev": [
         {
             "name": "google/cloud-tools",
-            "version": "v0.7.0",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "c8dcd0477a0fabe44a007d4d621850ddb0d25a34"
+                "reference": "06baa4e321247d2a59058eaf96f776e8c44e0e19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/c8dcd0477a0fabe44a007d4d621850ddb0d25a34",
-                "reference": "c8dcd0477a0fabe44a007d4d621850ddb0d25a34",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/06baa4e321247d2a59058eaf96f776e8c44e0e19",
+                "reference": "06baa4e321247d2a59058eaf96f776e8c44e0e19",
                 "shasum": ""
             },
             "require": {
@@ -1239,7 +1239,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-06-07T19:04:38+00:00"
+            "time": "2018-06-18T20:07:48+00:00"
         },
         {
             "name": "symfony/browser-kit",
