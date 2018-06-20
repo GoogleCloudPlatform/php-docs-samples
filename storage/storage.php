@@ -347,7 +347,7 @@ EOF
     )
     ->addArgument('project', InputArgument::REQUIRED, 'Your billable Google Cloud Project ID')
     ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
-    ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID to use as the default KMS key.')
+    ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID to use to encrypt object server side.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $bucketName = $input->getArgument('bucket');
@@ -368,7 +368,7 @@ EOF
     ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
     ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
     ->addArgument('upload-from', InputArgument::REQUIRED, 'Path to the file to upload')
-    ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID to use as the default KMS key.')
+    ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID used to encrypt the object.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $bucketName = $input->getArgument('bucket');

@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $bucketName Name of your Google Cloud Storage bucket.
- * @param string $kmsKeyName KMS key ID to use as the default KMS key.
+ * @param string $kmsKeyName KMS key ID to use to encrypt objects server side.
  *
  * @return void
  */
