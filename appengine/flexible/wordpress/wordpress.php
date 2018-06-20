@@ -54,7 +54,7 @@ $application->add(new Command('setup'))
         $params = $dbParams + $wordpress->generateRandomValueParams();
 
         // copy all the sample files into the project dir and replace parameters
-        $wordpress->copyFiles([
+        $wordpress->copyFiles(__DIR__ . '/files', [
             'app.yaml' => '/',
             'composer.json' => '/',
             'cron.yaml' => '/',
@@ -62,7 +62,7 @@ $application->add(new Command('setup'))
             'php.ini' => '/',
             'wp-cli.yml' => '/',
             'wp-config.php' => '/wordpress/',
-        ], __DIR__ . '/files', $params);
+        ], $params);
 
         // run composer in the project directory
         $wordpress->runComposer();
