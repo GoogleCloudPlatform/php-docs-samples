@@ -1,8 +1,7 @@
 # Hello World on App Engine for PHP 7.2
 
-This sample application demonstrates how to access
-[Compute Metadata](https://cloud.google.com/compute/docs/storing-retrieving-metadata)
-from App Engine.
+This sample demonstrates how to deploy a *very* basic application to Google
+App Engine for PHP 7.2.
 
 ## Setup
 
