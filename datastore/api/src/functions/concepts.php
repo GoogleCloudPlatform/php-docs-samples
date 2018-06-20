@@ -18,9 +18,7 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use DateTime;
-// [START datastore_use]
 use Google\Cloud\Datastore\DatastoreClient;
-// [END datastore_use]
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\EntityIterator;
 use Google\Cloud\Datastore\Key;
@@ -33,9 +31,7 @@ use Google\Cloud\Datastore\Query\Query;
  */
 function initialize_client()
 {
-    // [START datastore_initialize_client]
     $datastore = new DatastoreClient();
-    // [END datastore_initialize_client]
     return $datastore;
 }
 
