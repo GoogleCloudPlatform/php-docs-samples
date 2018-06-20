@@ -89,6 +89,10 @@ export GOOGLE_PUBSUB_TOPIC=php-example-topic
 export GOOGLE_SPANNER_INSTANCE_ID=
 export GOOGLE_SPANNER_DATABASE_ID=test-database
 
+# Storage
+export GOOGLE_STORAGE_OBJECT=storage/test_data.csv
+export GOOGLE_STORAGE_KMS_KEYNAME=projects/$GOOGLE_PROJECT_ID/locations/us/keyRings/$GOOGLE_KMS_KEYRING/cryptoKeys/storage-bucket
+
 # Tasks
 export CLOUD_TASKS_APPENGINE_QUEUE=
 export CLOUD_TASKS_LOCATION=

@@ -54,7 +54,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
         $appYamlContents = file_get_contents('app.yaml');
         $appYaml = Yaml::parse($appYamlContents);
-        $appYaml['env_variables']['GOOGLE_STORAGE_BUCKET'] = $bucketName;
+        $appYaml['env_variables']['GOOGLE_STORAGE_BUCKET'] = $bucketName . '/storage';
         file_put_contents('app.yaml', Yaml::dump($appYaml));
     }
 

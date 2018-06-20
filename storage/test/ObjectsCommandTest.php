@@ -71,18 +71,21 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
         if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
             $this->markTestSkipped('No storage bucket name.');
         }
+        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
+            $this->markTestSkipped('No storage object name.');
+        }
 
         ob_start();
         $this->commandTester->execute(
             [
                 'bucket' => $bucketName,
-                '--prefix' => 'storage/test_data.csv'
+                '--prefix' => $objectName,
             ],
             ['interactive' => false]
         );
         $output = ob_get_clean();
 
-        $this->assertEquals(1, substr_count($output, 'Object: '));
+        $this->assertGreaterThan(0, substr_count($output, 'Object: '));
     }
 
     public function testManageObject()

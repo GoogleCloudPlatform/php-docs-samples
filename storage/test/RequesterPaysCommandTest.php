@@ -133,7 +133,11 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
         }
 
-        $destination = $objectName;
+        // Download to a temp file
+        $destination = implode(DIRECTORY_SEPARATOR, [
+            sys_get_temp_dir(),
+            basename($objectName)
+        ]);
 
         $this->commandTester->execute(
             [

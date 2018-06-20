@@ -68,7 +68,7 @@ class EncryptionCommandTest extends \PHPUnit_Framework_TestCase
         if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
             $this->markTestSkipped('No storage object name.');
         }
-        $objectName = 'encrypted_' . $objectName;
+        $objectName .= '.encrypted';
         $key = base64_encode(random_bytes(32));
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $uploadFromBasename = basename($uploadFrom);
@@ -119,7 +119,7 @@ EOF;
         if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
             $this->markTestSkipped('No storage object name.');
         }
-        $objectName = 'encrypted_' . $objectName;
+        $objectName .= '.encrypted';
         $key = base64_encode(random_bytes(32));
         $newKey = base64_encode(random_bytes(32));
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
@@ -182,7 +182,7 @@ EOF;
         if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
             $this->markTestSkipped('No storage object name.');
         }
-        $objectName = 'encrypted_' . $objectName;
+        $objectName .= '.encrypted';
         $invalidKey = base64_encode(random_bytes(32));
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
 
