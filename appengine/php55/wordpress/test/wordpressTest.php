@@ -17,8 +17,6 @@
 
 namespace Google\Cloud\Samples\AppEngine\Standard\WordPress;
 
-use Symfony\Component\Console\Tester\CommandTester;
-
 class wordpressTest extends \PHPUnit_Framework_TestCase
 {
     use RunSetupCommandTrait;

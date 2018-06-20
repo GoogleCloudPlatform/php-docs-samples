@@ -22,7 +22,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\OutputOption;
 use Google\Cloud\Utils\WordPressProject;
 
 $application = new Application('Wordpress Helper');
@@ -38,7 +37,7 @@ $application->add(new Command('setup'))
     ->addOption('local_db_user', null, InputOption::VALUE_REQUIRED, 'Local SQL database username')
     ->addOption('local_db_password', null, InputOption::VALUE_REQUIRED, 'Local SQL database password')
     ->addOption('wordpress_url', null, InputOption::VALUE_REQUIRED, 'URL of the WordPress archive', WordPressProject::LATEST_WP)
-    ->setCode(function(InputInterface $input, OutputInterface $output) {
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
         $wordpress = new WordPressProject($input, $output);
 
         // Run the wizard to prompt user for project and database parameters.
