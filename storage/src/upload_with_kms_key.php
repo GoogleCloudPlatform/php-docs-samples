@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of the object.
  * @param string $source the path to the file to upload.
- * @param string $kmsKeyName KMS key ID used to encrypt the object.
+ * @param string $kmsKeyName KMS key ID used to encrypt objects server side.
  *
  * @return Psr\Http\Message\StreamInterface
  */
