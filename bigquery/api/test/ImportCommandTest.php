@@ -186,7 +186,7 @@ class ImportCommandTest extends TestCase
             $this->markTestSkipped('No bigquery dataset name');
         }
 
-        $tableId = sprintf('test_table_%s', time());
+        $tableId = sprintf('test_table_%s_%s', time(), rand());
         $this->createTempTable($this->projectId, $this->datasetId, $tableId);
 
         $questionHelper = $this->getMockBuilder('Symfony\Component\Console\Helper\QuestionHelper')
@@ -249,7 +249,7 @@ class ImportCommandTest extends TestCase
         if (0 === strpos($source, 'gs://') && !$this->gcsBucket) {
             $this->markTestSkipped('No Cloud Storage bucket');
         }
-        $this->tempTableId = $tableId = sprintf('test_table_%s', time());
+        $this->tempTableId = $tableId = sprintf('test_table_%s_%s', time(), rand());
         if ($createTable) {
             $this->createTempTable($this->projectId, $this->datasetId, $tableId);
         }
