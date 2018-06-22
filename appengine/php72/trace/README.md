@@ -1,6 +1,6 @@
-# App Engine for PHP 7.2 Error Reporting samples
+# App Engine for PHP 7.2 Stackdriver Trace samples
 
-This app demonstrates how to report errors on on App Engine for PHP 7.2.
+This app demonstrates how to set up Stackdriver Trace on App Engine for PHP 7.2.
 
 ## Setup
 
@@ -17,19 +17,18 @@ This app demonstrates how to report errors on on App Engine for PHP 7.2.
 
 ### Run Locally
 
-You can run the sample locally using PHP's build-in web server:
+You can run these samples locally using PHP's build-in web server:
 
 ```
 # export environemnt variables locally which are set by app engine when deployed
 export GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
-export GAE_SERVICE=local
-export GAE_VERSION=testing
 
 # Run PHP's built-in web server
 php -S localhost:8000
 ```
 
-Browse to `localhost:8000` to see a list of examples to execute.
+You will then be able to see your application traces in the
+[Trace UI](https://console.cloud.google.com/traces/overview).
 
 ### Deploy with gcloud
 
@@ -42,4 +41,5 @@ gcloud app browse
 ```
 
 The last command will open `https://{YOUR_PROJECT_ID}.appspot.com/`
-in your browser. Browse to `/` to see a list of examples to execute.
+in your browser. Browse to `/` to execute a trace. You will then be able to see
+your traces in the [Trace UI](https://console.cloud.google.com/traces/overview).
