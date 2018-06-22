@@ -25,8 +25,11 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
  * Finds labels in the video.
  *
  * @param string $path File path to a video file to analyze.
+ * @param array $options optional Array of options to pass to
+ *                       OperationResponse::pollUntilComplete. This is useful
+ *                       for increasing the "pollingIntervalSeconds" option.
  */
-function analyze_labels_file($path)
+function analyze_labels_file($path, array $options = [])
 {
     # Instantiate a client.
     $video = new VideoIntelligenceServiceClient();
@@ -41,7 +44,7 @@ function analyze_labels_file($path)
     ]);
 
     # Wait for the request to complete.
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete($options);
 
     # Print the results.
     if ($operation->operationSucceeded()) {

@@ -25,9 +25,12 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
  * Analyze explicit content in the video.
  *
  * @param string $uri The cloud storage object to analyze. Must be formatted
- *                    like gs://bucketname/objectname
+ *                    like gs://bucketname/objectname.
+ * @param array $options optional Array of options to pass to
+ *                       OperationResponse::pollUntilComplete. This is useful
+ *                       for increasing the "pollingIntervalSeconds" option.
  */
-function analyze_explicit_content($uri)
+function analyze_explicit_content($uri, array $options = [])
 {
     # Instantiate a client.
     $video = new VideoIntelligenceServiceClient();
@@ -39,7 +42,7 @@ function analyze_explicit_content($uri)
     ]);
 
     # Wait for the request to complete.
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete($options);
 
     # Print the result.
     if ($operation->operationSucceeded()) {
