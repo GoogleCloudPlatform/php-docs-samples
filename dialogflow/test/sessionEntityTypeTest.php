@@ -15,33 +15,21 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Dialogflow;
-
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for session entity type management commands.
  */
 class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
 {
-    private static $projectId;
+    use DialogFlowTestTrait;
+
     private static $entityTypeDisplayName;
     private static $sessionId = 'fake_session_for_testing';
     private static $entityValues = ['fake_entity_value_1', 'fake_entity_value_2'];
 
     public static function setUpBeforeClass()
     {
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return self::$markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::$markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
-
         self::$entityTypeDisplayName = 'fake_display_name_for_testing_' . time();
     }
 
@@ -82,20 +70,5 @@ class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertNotContains(self::$entityTypeDisplayName, $output);
-    }
-
-    private function runCommand($commandName, $args=[])
-    {
-        $application = require __DIR__ . '/../dialogflow.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute(
-            $args + [
-                'project-id' => self::$projectId
-            ],
-            ['interactive' => false]
-        );
-        return ob_get_clean();
     }
 }

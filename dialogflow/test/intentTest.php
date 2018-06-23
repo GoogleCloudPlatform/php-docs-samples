@@ -15,17 +15,15 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Dialogflow;
-
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for intent management commands.
  */
 class intentTest extends \PHPUnit_Framework_TestCase
 {
-    private static $projectId;
+    use DialogFlowTestTrait;
+
     private static $displayName;
     private static $messageTexts = ['fake_message_for_testing_1', 'fake_message_for_testing_2'];
     private static $trainingPhraseParts = ['fake_phrase_1', 'fake_phrase_2'];
@@ -33,16 +31,6 @@ class intentTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$displayName = 'fake_display_name_for_testing_' . time();
-
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
     }
 
     public function testCreateIntent()
@@ -71,20 +59,5 @@ class intentTest extends \PHPUnit_Framework_TestCase
         $output = $this->runCommand('intent-list');
 
         $this->assertNotContains(self::$displayName, $output);
-    }
-
-    private function runCommand($commandName, $args=[])
-    {
-        $application = require __DIR__ . '/../dialogflow.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute(
-            $args + [
-                'project-id' => self::$projectId
-            ],
-            ['interactive' => false]
-        );
-        return ob_get_clean();
     }
 }

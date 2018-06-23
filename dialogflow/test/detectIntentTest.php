@@ -15,33 +15,21 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Dialogflow;
-
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for detect intent commands.
  */
 class detectIntentTest extends \PHPUnit_Framework_TestCase
 {
-    private static $projectId;
+    use DialogFlowTestTrait;
+
     private static $audioFilePath;
     private static $texts = ['hello', 'book a meeting room', 'mountain view'];
 
     public static function setUpBeforeClass()
     {
         self::$audioFilePath = realpath(__DIR__ . '/../resources/book_a_room.wav');
-
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return self::$markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::$markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
     }
 
     public function testDetectText()
@@ -72,20 +60,5 @@ class detectIntentTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertContains('would you like to reserve a room', $output);
-    }
-
-    private function runCommand($commandName, $args=[])
-    {
-        $application = require __DIR__ . '/../dialogflow.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute(
-            $args + [
-                'project-id' => self::$projectId
-            ],
-            ['interactive' => false]
-        );
-        return ob_get_clean();
     }
 }

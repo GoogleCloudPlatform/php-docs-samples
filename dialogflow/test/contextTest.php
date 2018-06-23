@@ -15,40 +15,32 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Dialogflow;
-
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for context management commands.
  */
 class contextTest extends \PHPUnit_Framework_TestCase
 {
-    private static $projectId;
+    use DialogFlowTestTrait;
+
     private static $contextId;
     private static $sessionId = 'fake_session_for_testing';
 
     public static function setUpBeforeClass()
     {
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
         self::$contextId = 'fake_context_for_testing_' . time();
     }
 
     public function testCreateContext()
     {
         $this->runCommand('context-create', [
-            'context-id' => self::$contextId
+            'context-id' => self::$contextId,
+            '--session-id' => self::$sessionId,
         ]);
-        $output = $this->runCommand('context-list');
+        $output = $this->runCommand('context-list', [
+            '--session-id' => self::$sessionId,
+        ]);
 
         $this->assertContains(self::$contextId, $output);
     }
@@ -57,26 +49,13 @@ class contextTest extends \PHPUnit_Framework_TestCase
     public function testDeleteContext()
     {
         $this->runCommand('context-delete', [
-            'context-id' => self::$contextId
+            'context-id' => self::$contextId,
+            '--session-id' => self::$sessionId,
         ]);
-        $output = $this->runCommand('context-list');
+        $output = $this->runCommand('context-list', [
+            '--session-id' => self::$sessionId,
+        ]);
 
         $this->assertNotContains(self::$contextId, $output);
-    }
-
-    private function runCommand($commandName, $args=[])
-    {
-        $application = require __DIR__ . '/../dialogflow.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute(
-            $args + [
-                'project-id' => self::$projectId,
-                '--session-id' => self::$sessionId
-            ],
-            ['interactive' => false]
-        );
-        return ob_get_clean();
     }
 }
