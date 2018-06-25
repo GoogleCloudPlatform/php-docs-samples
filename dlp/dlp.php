@@ -276,6 +276,7 @@ $application->add(new Command('create-trigger'))
     ->addArgument('trigger-id', InputArgument::OPTIONAL, 'The name of the trigger to be created', '')
     ->addArgument('display-name', InputArgument::OPTIONAL, 'The human-readable name to give the trigger', '')
     ->addArgument('description', InputArgument::OPTIONAL, 'A description for the trigger to be created', '')
+    ->addArgument('auto-populate-timespan', InputArgument::OPTIONAL, 'Limit scan to new content only')
     ->addArgument(
         'max-findings',
         InputArgument::OPTIONAL,
@@ -291,7 +292,8 @@ $application->add(new Command('create-trigger'))
             $input->getArgument('display-name'),
             $input->getArgument('description'),
             (int) $input->getArgument('frequency'),
-            (int) $input->getArgument('max-findings')
+            (int) $input->getArgument('max-findings'),
+            (bool) $input->getArgument('auto-populate-timespan')
         );
     });
 
