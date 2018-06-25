@@ -44,6 +44,7 @@ use Google\Protobuf\Duration;
  * @param string $description (Optional) A description for the trigger to be created
  * @param int $scanPeriod (Optional) How often to wait between scans, in days (minimum = 1 day)
  * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
+ * @param bool $autoPopulateTimespan (Optional) Automatically limit scan to new content only
  */
 
 function create_trigger(
