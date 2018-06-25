@@ -45,11 +45,14 @@ function list_inspect_templates($callingProjectId)
         printf('  Description: %s' . PHP_EOL, $template->getDescription());
 
         $inspectConfig = $template->getInspectConfig();
-        printf('  Minimum likelihood: %s' . PHP_EOL, $inspectConfig->getMinLikelihood());
-        printf('  Include quotes: %s' . PHP_EOL, $inspectConfig->getIncludeQuote());
-
-        $limits = $inspectConfig->getLimits();
-        printf('  Max findings per request: %s' . PHP_EOL, $limits->getMaxFindingsPerRequest());
+        if ($inspectConfig === NULL) {
+            print('  No inspect config.' . PHP_EOL);
+        } else {
+            printf('  Minimum likelihood: %s' . PHP_EOL, $inspectConfig->getMinLikelihood());
+            printf('  Include quotes: %s' . PHP_EOL, $inspectConfig->getIncludeQuote());
+            $limits = $inspectConfig->getLimits();
+            printf('  Max findings per request: %s' . PHP_EOL, $limits->getMaxFindingsPerRequest());
+        }
     }
 }
 // [END dlp_list_inspect_templates]
