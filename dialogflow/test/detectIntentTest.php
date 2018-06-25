@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
  */
 class detectIntentTest extends \PHPUnit_Framework_TestCase
 {
-    use DialogFlowTestTrait;
+    use DialogflowTestTrait;
 
     private static $audioFilePath;
     private static $texts = ['hello', 'book a meeting room', 'mountain view'];

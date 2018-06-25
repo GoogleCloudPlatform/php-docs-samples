@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
  */
 class entityTypeTest extends \PHPUnit_Framework_TestCase
 {
-    use DialogFlowTestTrait;
+    use DialogflowTestTrait;
 
     private static $entityTypeDisplayName;
 

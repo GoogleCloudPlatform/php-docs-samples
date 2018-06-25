@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
  */
 class entityTest extends \PHPUnit_Framework_TestCase
 {
-    use DialogFlowTestTrait;
+    use DialogflowTestTrait;
 
     private static $entityTypeId = 'e57238e2-e692-44ea-9216-6be1b2332e2a';
     private static $entityValue1 = 'fake_entit_for_testing_1';

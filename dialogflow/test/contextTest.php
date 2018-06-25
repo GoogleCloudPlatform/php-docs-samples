@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
  */
 class contextTest extends \PHPUnit_Framework_TestCase
 {
-    use DialogFlowTestTrait;
+    use DialogflowTestTrait;
 
     private static $contextId;
     private static $sessionId = 'fake_session_for_testing';

@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 use Google\Cloud\Core\ExponentialBackoff;
 use Symfony\Component\Console\Tester\CommandTester;
 
-trait DialogFlowTestTrait
+trait DialogflowTestTrait
 {
     private static $projectId;
     private static $backoff;
@@ -56,3 +56,4 @@ trait DialogFlowTestTrait
         });
     }
 }
+

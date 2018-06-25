@@ -22,7 +22,7 @@ namespace Google\Cloud\Samples\Dialogflow;
  */
 class intentTest extends \PHPUnit_Framework_TestCase
 {
-    use DialogFlowTestTrait;
+    use DialogflowTestTrait;
 
     private static $displayName;
     private static $messageTexts = ['fake_message_for_testing_1', 'fake_message_for_testing_2'];
