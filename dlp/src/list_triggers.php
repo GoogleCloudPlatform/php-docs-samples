@@ -44,6 +44,9 @@ function list_triggers($callingProjectId)
         printf('  Description: %s' . PHP_EOL, $trigger->getDescription());
         printf('  Status: %s' . PHP_EOL, $trigger->getStatus());
         printf('  Error count: %s' . PHP_EOL, count($trigger->getErrors()));
+        printf('  Auto-populates timespan config: %s' . PHP_EOL, ($trigger->
+            getInspectJob()->getStorageConfig()->getTimespanConfig()->
+            getEnableAutoPopulationOfTimespanConfig() ? 'yes' : 'no'));
     }
 }
 # [END dlp_list_triggers]

@@ -242,6 +242,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Trigger ' . $fullTriggerId, $output);
         $this->assertContains('Display Name: ' . $displayName, $output);
         $this->assertContains('Description: ' . $description, $output);
+        $this->assertContains('Auto-populates timespan config: yes', $output);
 
         $output = $this->runCommand('delete-trigger', [
             'trigger-id' => $fullTriggerId
