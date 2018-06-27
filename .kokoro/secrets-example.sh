@@ -3,7 +3,7 @@
 ################################################################################
 # Run the following gcloud command to decrypt secrets.sh.enc as follows:       #
 #                                                                              #
-# gcloud kms decrypt -location=global --keyring=ci --key=ci \                  #
+# gcloud kms decrypt --location=global --keyring=ci --key=ci \                 #
 #   --ciphertext-file=.kokoro/secrets.sh.enc \                                 #
 #   --plaintext-file=.kokoro/secrets.sh                                        #
 #                                                                              #
@@ -12,7 +12,6 @@
 
 # General
 export GOOGLE_PROJECT_ID=
-export GOOGLE_API_KEY=
 export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
 export GOOGLE_CLIENT_ID=
 export GOOGLE_CLIENT_SECRET=

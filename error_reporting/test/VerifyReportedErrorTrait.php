@@ -26,7 +26,7 @@ trait VerifyReportedErrorTrait
 {
     use EventuallyConsistentTestTrait;
 
-    private function verifyReportedError($projectId, $message, $retryCount = 5)
+    private function verifyReportedError($projectId, $message, $retryCount = 6)
     {
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->projectName($projectId);
@@ -42,10 +42,13 @@ trait VerifyReportedErrorTrait
             $message
         ) {
             $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange);
+            $response = $errorStats->listGroupStats($projectName, $timeRange, [
+                'pageSize' => 100,
+            ]);
             foreach ($response->iterateAllElements() as $groupStat) {
                 $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId(), [
                     'timeRange' => $timeRange,
+                    'pageSize' => 100,
                 ]);
                 foreach ($response->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();

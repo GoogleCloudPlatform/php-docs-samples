@@ -17,6 +17,9 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
+use Google\ApiCore\ApiException;
+use Google\Rpc\Code;
+use Google\Cloud\Core\ExponentialBackoff;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -396,12 +399,17 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $command = $application->get($commandName);
         $commandTester = new CommandTester($command);
 
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]
-        );
+        // run in exponential backoff in case of Resource Exhausted errors.
+        $backoff = new ExponentialBackoff(5, function ($exception) {
+            if ($exception instanceof ApiException) {
+                return $exception->getCode() == Code::RESOURCE_EXHAUSTED;
+            }
+        });
 
-        return ob_get_clean();
+        return $backoff->execute(function () use ($commandTester, $args) {
+            ob_start();
+            $commandTester->execute($args, ['interactive' => false]);
+            return ob_get_clean();
+        });
     }
 }

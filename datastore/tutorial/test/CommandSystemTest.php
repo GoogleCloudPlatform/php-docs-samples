@@ -19,12 +19,15 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Key;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CommandSystemTest extends TestCase
 {
+    use EventuallyConsistentTestTrait;
+
     /* @var $keys array<Key> */
     private $keys;
 
@@ -148,14 +151,11 @@ class CommandSystemTest extends TestCase
 
         // Test ListTasksCommand
         $commandTester = new CommandTester($application->get('list-tasks'));
-        $commandTester->execute(
-            [],
-            ['interactive' => false]
-        );
-        $output = $commandTester->getDisplay();
-        $result = preg_match('/run tests twice/', $output);
-        $this->assertEquals(1, $result);
-        $result = preg_match('/run tests three times/', $output);
-        $this->assertEquals(1, $result);
+        $this->runEventuallyConsistentTest(function () use ($commandTester) {
+            $commandTester->execute([], ['interactive' => false]);
+            $output = $commandTester->getDisplay();
+            $this->assertRegExp('/run tests twice/', $output);
+            $this->assertRegExp('/run tests three times/', $output);
+        });
     }
 }

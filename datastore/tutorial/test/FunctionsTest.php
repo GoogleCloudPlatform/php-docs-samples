@@ -34,6 +34,8 @@ class FunctionsTest extends TestCase
     /* @var $datastore DatastoreClient */
     protected static $datastore;
 
+    protected static $taskDesc;
+
     public static function setUpBeforeClass()
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
@@ -106,7 +108,7 @@ class FunctionsTest extends TestCase
 
     public function tearDown()
     {
-        if (! empty(self::$keys)) {
+        if (!empty(self::$keys)) {
             self::$datastore->deleteBatch(self::$keys);
         }
     }

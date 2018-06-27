@@ -23,6 +23,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
 
 $application = new Application('Cloud Video Intelligence');
 
@@ -32,6 +33,12 @@ $inputDefinition = new InputDefinition([
         InputArgument::REQUIRED,
         'Google Cloud Storage URI pointing to a video.'
     ),
+    new InputOption(
+        'polling-interval-seconds',
+        '',
+        InputOption::VALUE_REQUIRED,
+        'Polling interval in seconds to waiting for a Video API response.'
+    ),
 ]);
 
 $application->add(new Command('labels'))
@@ -39,17 +46,21 @@ $application->add(new Command('labels'))
     ->setDescription('Detect labels in video using the Video Intelligence API')
     ->setCode(function ($input, $output) {
         analyze_labels(
-            $input->getArgument('uri')
+            $input->getArgument('uri'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
         );
     });
 
 $application->add(new Command('labels-in-file'))
     ->addArgument('file', InputArgument::REQUIRED,
         'Path to a local video file.')
+    ->addOption('polling-interval-seconds', '', InputOption::VALUE_REQUIRED,
+        'Polling interval in seconds to waiting for a Video API response.')
     ->setDescription('Detect labels in a file using the Video Intelligence API')
     ->setCode(function ($input, $output) {
         analyze_labels_file(
-            $input->getArgument('file')
+            $input->getArgument('file'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
         );
     });
 
@@ -58,7 +69,8 @@ $application->add(new Command('explicit-content'))
     ->setDescription('Detect explicit content in video using the Video Intelligence API')
     ->setCode(function ($input, $output) {
         analyze_explicit_content(
-            $input->getArgument('uri')
+            $input->getArgument('uri'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
         );
     });
 
@@ -67,7 +79,8 @@ $application->add(new Command('shots'))
     ->setDescription('Detect shots in video using the Video Intelligence API')
     ->setCode(function ($input, $output) {
         analyze_shots(
-            $input->getArgument('uri')
+            $input->getArgument('uri'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
         );
     });
 

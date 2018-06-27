@@ -33,7 +33,7 @@ function context_list($projectId, $sessionId)
         printf('Context name: %s' . PHP_EOL, $context->getName());
         printf('Lifespan count: %d' . PHP_EOL, $context->getLifespanCount());
     }
-    
+
     $contextsClient->close();
 }
 // [END dialogflow_list_context]
