@@ -1,5 +1,10 @@
 runtime: php72
 
+# Defaults to "serve index.php" and "serve public/index.php". Can be used to
+# serve a custom PHP front controller (e.g. "serve backend/index.php") or to
+# run a long-running PHP script as a worker process (e.g. "php worker.php").
+entrypoint: serve wordpress/gae-app.php
+
 handlers:
 - url: /(.*\.(htm|html|css|js))
   static_files: wordpress/\1
@@ -21,30 +26,8 @@ handlers:
   upload: wordpress/wp-includes/images/media/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
   application_readable: true
 
-- url: /wp-admin/(.+)
-  script: wordpress/wp-admin/\1
-  secure: always
-
-- url: /wp-admin/
-  script: wordpress/wp-admin/index.php
-  secure: always
-
-- url: /wp-login.php
-  script: wordpress/wp-login.php
-  secure: always
-
-- url: /wp-cron.php
-  script: wordpress/wp-cron.php
-  login: admin
-
-- url: /xmlrpc.php
-  script: wordpress/xmlrpc.php
-
-- url: /wp-(.+).php
-  script: wordpress/wp-\1.php
-
-- url: /(.+)?/?
-  script: wordpress/index.php
+- url: .*
+  script: auto
 
 beta_settings:
   cloud_sql_instances: "YOUR_DB_CONNECTION"

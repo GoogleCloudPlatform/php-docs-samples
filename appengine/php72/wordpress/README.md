@@ -1,7 +1,7 @@
-# A helper command for running WordPress on Google Cloud Platform
+# Deploy WordPress to App Engine for PHP 7.2
 
 This is a small command line tool for downloading and configuring
-WordPress for Google Cloud Platform. The script allows you to create a
+WordPress on App Engine for PHP 7.2. The script allows you to create a
 working WordPress project for the
 [App Engine standard environment][appengine-standard]. For deploying
 WordPress to the [App Engine flexible environment][appengine-flexible],
@@ -15,7 +15,6 @@ refer to the example at [appengine/standard/wordpress][../../flexible/wordpress]
 * [Enable Cloud SQL API][cloud-sql-api-enable]
 * Install [Google Cloud SDK][gcloud-sdk]
 * Install the [mysql-client][mysql-client] command line tool
-* [Install Memcache][memcache-installation]
 
 ## Project preparation
 
@@ -191,8 +190,6 @@ Enjoy your WordPress installation!
 [appengine-standard]: https://cloud.google.com/appengine/docs/about-the-standard-environment
 [appengine-flexible]: https://cloud.google.com/appengine/docs/flexible/
 [sql-settings]: https://console.cloud.google.com/sql/instances
-[memcache-dashboard]: https://console.cloud.google.com/appengine/memcache
-[memcache-installation]: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-memcache-on-ubuntu-12-04#install-memcache
 [mysql-client]: https://dev.mysql.com/doc/refman/5.7/en/mysql.html
 [composer]: https://getcomposer.org/
 [cloud-console]: https://console.cloud.google.com/
