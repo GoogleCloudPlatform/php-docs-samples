@@ -45,7 +45,7 @@ function list_inspect_templates($callingProjectId)
         printf('  Description: %s' . PHP_EOL, $template->getDescription());
 
         $inspectConfig = $template->getInspectConfig();
-        if ($inspectConfig === NULL) {
+        if ($inspectConfig === null) {
             print('  No inspect config.' . PHP_EOL);
         } else {
             printf('  Minimum likelihood: %s' . PHP_EOL, $inspectConfig->getMinLikelihood());
