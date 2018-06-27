@@ -28,21 +28,30 @@ use Symfony\Component\Console\Tester\CommandTester;
 class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected static $hasCredentials;
+    protected static $bucket;
     protected $commandTester;
-    protected $storage;
 
     public static function setUpBeforeClass()
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
+        $storage = new StorageClient();
+
+        // create the bucket
+        $bucketName = sprintf('%s-test-bucket-%s', getenv('GOOGLE_PROJECT_ID'), time());
+        self::$bucket = $storage->createBucket();
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::$storage->bucket(self::$bucket->name())->delete();
     }
 
     public function setUp()
     {
         $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('bucket-acl'));
-        $this->storage = new StorageClient();
     }
 
     public function testBucketAcl()
@@ -50,13 +59,10 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
 
         $this->commandTester->execute(
             [
-                'bucket' => $bucketName,
+                'bucket' => self::$bucket->name(),
             ],
             ['interactive' => false]
         );
@@ -69,16 +75,13 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
 
-        $bucket = $this->storage->bucket($bucketName);
+        $bucket = $storage->bucket(self::$bucket->name());
         $acl = $bucket->acl();
 
         $this->commandTester->execute(
             [
-                'bucket' => $bucketName,
+                'bucket' => self::$bucket->name(),
                 '--entity' => 'allAuthenticatedUsers',
                 '--create' => true,
             ],
@@ -91,7 +94,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->commandTester->execute(
             [
-                'bucket' => $bucketName,
+                'bucket' => self::$bucket->name(),
                 '--entity' => 'allAuthenticatedUsers',
             ],
             ['interactive' => false]
@@ -99,7 +102,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->commandTester->execute(
             [
-                'bucket' => $bucketName,
+                'bucket' => self::$bucket->name(),
                 '--entity' => 'allAuthenticatedUsers',
                 '--delete' => true,
             ],
@@ -113,7 +116,7 @@ class BucketAclCommandTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(true);
         }
 
-        $bucketUrl = sprintf('gs://%s', $bucketName);
+        $bucketUrl = sprintf('gs://%s', self::$bucket->name());
         $outputString = <<<EOF
 Added allAuthenticatedUsers (READER) to $bucketUrl ACL
 allAuthenticatedUsers: READER
