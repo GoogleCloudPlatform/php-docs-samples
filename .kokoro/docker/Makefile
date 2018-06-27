@@ -14,6 +14,9 @@
 php56:
 	mkdir -p php56
 	sed -e 's/PHP_VERSION/php56/g' Dockerfile.template > php56/Dockerfile
+	echo "# Add steps specific to PHP 5.6" >> php56/Dockerfile
+	echo "RUN apt-get install -y php5-cgi" >> php56/Dockerfile
+	echo "RUN rm /opt/php56/lib/ext.enabled/ext-memcache.ini" >> php56/Dockerfile
 	echo "ENV RUN_DEVSERVER_TESTS=true" >> php56/Dockerfile
 	echo "ENV RUN_CS_FIXER=true\n" >> php56/Dockerfile
 
