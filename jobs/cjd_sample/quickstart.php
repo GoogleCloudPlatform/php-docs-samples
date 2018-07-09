@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ $companies = $jobs->companies->listCompanies();
 // Print the companies
 echo 'Companies: ' . PHP_EOL;
 foreach ($companies as $company) {
-    echo $company->name . PHP_EOL;
+    echo $company->displayName . PHP_EOL;
 }
 # [END quickstart]
 return $companies;
