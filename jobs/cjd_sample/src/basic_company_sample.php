@@ -147,7 +147,7 @@ final class BasicCompanySample extends Command
     protected function configure()
     {
         $this
-            ->setName('basic-company-sample')
+            ->setName('basic-company')
             ->setDescription('Run basic company sample script to create, update, and delete a company.');
     }
 

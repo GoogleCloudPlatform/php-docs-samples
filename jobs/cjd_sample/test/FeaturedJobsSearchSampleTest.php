@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Jobs;
 
 use Symfony\Component\Console\Tester\CommandTester;
 
-class LocationSearchSampleTest extends \PHPUnit_Framework_TestCase
+class FeaturedJobsSearchSampleTest extends \PHPUnit_Framework_TestCase
 {
     private $commandTester;
 
@@ -31,16 +31,12 @@ class LocationSearchSampleTest extends \PHPUnit_Framework_TestCase
         }
 
         $application = require __DIR__ . '/../cjd_sample.php';
-        $this->commandTester = new CommandTester($application->get('location-search-sample'));
+        $this->commandTester = new CommandTester($application->get('featured-jobs-search'));
     }
 
-    public function testLocationSearchSample()
+    public function testFeaturedJobsSearchSample()
     {
         $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*/s');
+        $this->expectOutputRegex('/matchingJobs/');
     }
 }

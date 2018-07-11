@@ -336,7 +336,7 @@ final class GeneralSearchSample extends Command
     protected function configure()
     {
         $this
-            ->setName('general-search-sample')
+            ->setName('general-search')
             ->setDescription('Run general search sample script to do search with different filters.');
     }
 
