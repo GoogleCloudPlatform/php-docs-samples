@@ -129,7 +129,8 @@ final class BasicJobSample extends Command
      * @param Google_Service_JobService_Job $jobToBeUpdated
      * @return Google_Service_JobService_Job
      */
-    public static function update_job_with_field_mask(string $jobName, string $fieldMask, Google_Service_JobService_Job $jobToBeUpdated)
+    public static function update_job_with_field_mask(string $jobName, string $fieldMask,
+                                                      Google_Service_JobService_Job $jobToBeUpdated)
     {
         $jobService = JobServiceConnector::get_job_service();
 

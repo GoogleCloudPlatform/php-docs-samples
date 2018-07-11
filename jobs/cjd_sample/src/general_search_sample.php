@@ -364,7 +364,7 @@ final class GeneralSearchSample extends Command
         $jobName = BasicJobSample::create_job($jobToBeCreated)->getName();
 
         // Wait several seconds for post processing.
-        sleep(20);
+        sleep(10);
         self::basic_search_jobs($companyName, 'Systems Administrator');
         self::category_filter_search($companyName, 'COMPUTER_AND_IT');
         self::date_range_search($companyName, 'PAST_24_HOURS');
