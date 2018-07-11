@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-
 use Google_Service_JobService_JobQuery;
 use Google_Service_JobService_LocationFilter;
 use Google_Service_JobService_RequestMetadata;
@@ -95,9 +94,12 @@ final class LocationSearchSample extends Command
      * @param string $keyword
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function keyword_location_search(string $companyName = null, string $location, float $distance,
-                                                   string $keyword)
-    {
+    public static function keyword_location_search(
+        string $companyName = null,
+        string $location,
+        float $distance,
+        string $keyword
+    ) {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
         // Make sure to hash your userID
@@ -182,9 +184,12 @@ final class LocationSearchSample extends Command
      * @param string $location2
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function multi_locations_search(string $companyName = null, string $location1, float $distance1,
-                                                  string $location2)
-    {
+    public static function multi_locations_search(
+        string $companyName = null,
+        string $location1,
+        float $distance1,
+        string $location2
+    ) {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
         // Make sure to hash your userID
@@ -260,7 +265,6 @@ final class LocationSearchSample extends Command
 
         var_export($response);
         return $response;
-
     }
 
     # [END broadening_location_search]
@@ -272,16 +276,20 @@ final class LocationSearchSample extends Command
             ->setDescription('Run location search sample script to do location search.')
             ->addOption('location', null, InputOption::VALUE_OPTIONAL, 'The location to search.', 'Mountain View, CA')
             ->addOption('distance', null, InputOption::VALUE_OPTIONAL, 'Distance in miles to search.', 0.5)
-            ->addOption('keyword',
+            ->addOption(
+                'keyword',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'The keyword used in keyword search sample',
-                'Software Engineer')
-            ->addOption('location2',
+                'Software Engineer'
+            )
+            ->addOption(
+                'location2',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Second location in multiple locations search sample',
-                'Sunnyvale, CA');
+                'Sunnyvale, CA'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

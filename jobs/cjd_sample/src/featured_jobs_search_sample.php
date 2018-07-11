@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-
 use Google_Service_JobService_Job;
 use Google_Service_JobService_JobQuery;
 use Google_Service_JobService_RequestMetadata;

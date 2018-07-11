@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-
 use Symfony\Component\Console\Tester\CommandTester;
 
 class GeneralSearchSampleTest extends \PHPUnit_Framework_TestCase
@@ -31,7 +30,7 @@ class GeneralSearchSampleTest extends \PHPUnit_Framework_TestCase
         }
 
         $application = require __DIR__ . '/../cjd_sample.php';
-        $this->commandTester = new CommandTester($application->get('general-search-sample'));
+        $this->commandTester = new CommandTester($application->get('general-search'));
     }
 
     public function testGeneralSearchSample()

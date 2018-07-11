@@ -26,6 +26,7 @@ $application = new Application('Cloud Job Discovery');
 $application->add(new AutoCompleteSample());
 $application->add(new BasicCompanySample());
 $application->add(new BasicJobSample());
+$application->add(new BatchOperationSample());
 $application->add(new FeaturedJobsSearchSample());
 $application->add(new GeneralSearchSample());
 $application->add(new LocationSearchSample());
