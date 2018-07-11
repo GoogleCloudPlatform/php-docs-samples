@@ -121,7 +121,8 @@ final class BasicCompanySample extends Command
      * @param Google_Service_JobService_Company $companyToBeUpdated
      * @return Google_Service_JobService_Company
      */
-    public static function update_company_with_field_mask(string $companyName, string $fieldMask, Google_Service_JobService_Company $companyToBeUpdated)
+    public static function update_company_with_field_mask(string $companyName, string $fieldMask,
+                                                          Google_Service_JobService_Company $companyToBeUpdated)
     {
         $jobService = JobServiceConnector::get_job_service();
 

@@ -26,6 +26,7 @@ $application = new Application('Cloud Job Discovery');
 $application->add(new BasicCompanySample());
 $application->add(new BasicJobSample());
 $application->add(new GeneralSearchSample());
+$application->add(new LocationSearchSample());
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
