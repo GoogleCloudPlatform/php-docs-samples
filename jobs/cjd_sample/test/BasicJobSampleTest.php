@@ -33,7 +33,7 @@ class BasicJobSampleTest extends \PHPUnit_Framework_TestCase
         $this->commandTester = new CommandTester($application->get('basic-job-sample'));
     }
 
-    public function testBasicCompanySample()
+    public function testBasicJobSample()
     {
         $this->commandTester->execute([], ['interactive' => false]);
         $this->expectOutputRegex('/Job generated:.*Job created:.*Job existed:.*Job updated:'
