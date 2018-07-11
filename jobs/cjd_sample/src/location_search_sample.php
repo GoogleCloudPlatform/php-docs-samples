@@ -52,7 +52,7 @@ final class LocationSearchSample extends Command
      * @param float $distance
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function basic_location_search(string $companyName, string $location, float $distance)
+    public static function basic_location_search(string $companyName = null, string $location, float $distance)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -95,7 +95,7 @@ final class LocationSearchSample extends Command
      * @param string $keyword
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function keyword_location_search(string $companyName, string $location, float $distance,
+    public static function keyword_location_search(string $companyName = null, string $location, float $distance,
                                                    string $keyword)
     {
         // Make sure to set the requestMetadata the same as the associated search request
@@ -139,7 +139,7 @@ final class LocationSearchSample extends Command
      * @param string $location
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function city_location_search(string $companyName, string $location)
+    public static function city_location_search(string $companyName = null, string $location)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -182,7 +182,7 @@ final class LocationSearchSample extends Command
      * @param string $location2
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function multi_locations_search(string $companyName, string $location1, float $distance1,
+    public static function multi_locations_search(string $companyName = null, string $location1, float $distance1,
                                                   string $location2)
     {
         // Make sure to set the requestMetadata the same as the associated search request
@@ -228,7 +228,7 @@ final class LocationSearchSample extends Command
      * @param string $location
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function broadening_location_search(string $companyName, string $location)
+    public static function broadening_location_search(string $companyName = null, string $location)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();

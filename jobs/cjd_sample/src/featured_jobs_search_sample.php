@@ -68,7 +68,7 @@ final class FeaturedJobsSearchSample extends Command
      * @param string $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function search_featured_jobs(string $companyName)
+    public static function search_featured_jobs(string $companyName = null)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
