@@ -23,11 +23,12 @@ use Symfony\Component\Console\Application;
 
 $application = new Application('Cloud Job Discovery');
 
+$application->add(new AutoCompleteSample());
 $application->add(new BasicCompanySample());
 $application->add(new BasicJobSample());
+$application->add(new FeaturedJobsSearchSample());
 $application->add(new GeneralSearchSample());
 $application->add(new LocationSearchSample());
-$application->add(new FeaturedJobsSearchSample());
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {

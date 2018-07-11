@@ -58,7 +58,7 @@ final class GeneralSearchSample extends Command
      * @param string $query
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function basic_search_jobs(string $companyName, string $query)
+    public static function basic_search_jobs(string $companyName = null, string $query)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -97,7 +97,7 @@ final class GeneralSearchSample extends Command
      * @param string ...$categories
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function category_filter_search(string $companyName, string ...$categories)
+    public static function category_filter_search(string $companyName = null, string ...$categories)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -135,7 +135,7 @@ final class GeneralSearchSample extends Command
      * @param string ...$employmentTypes
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function employment_types_search(string $companyName, string ...$employmentTypes)
+    public static function employment_types_search(string $companyName = null, string ...$employmentTypes)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -173,7 +173,7 @@ final class GeneralSearchSample extends Command
      * @param string $dateRange
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function date_range_search(string $companyName, string $dateRange)
+    public static function date_range_search(string $companyName = null, string $dateRange)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -211,7 +211,7 @@ final class GeneralSearchSample extends Command
      * @param string ...$languageCodes
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function language_code_search(string $companyName, string ...$languageCodes)
+    public static function language_code_search(string $companyName = null, string ...$languageCodes)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -249,7 +249,7 @@ final class GeneralSearchSample extends Command
      * @param string ...$companyDisplayNames
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function company_display_name_search(string $companyName, string ...$companyDisplayNames)
+    public static function company_display_name_search(string $companyName = null, string ...$companyDisplayNames)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -286,7 +286,7 @@ final class GeneralSearchSample extends Command
      * @param string $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function compensation_search(string $companyName)
+    public static function compensation_search(string $companyName = null)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
