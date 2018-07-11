@@ -27,6 +27,7 @@ $application->add(new BasicCompanySample());
 $application->add(new BasicJobSample());
 $application->add(new GeneralSearchSample());
 $application->add(new LocationSearchSample());
+$application->add(new FeaturedJobsSearchSample());
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {

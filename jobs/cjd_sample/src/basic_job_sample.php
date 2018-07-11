@@ -159,7 +159,7 @@ final class BasicJobSample extends Command
     protected function configure()
     {
         $this
-            ->setName('basic-job-sample')
+            ->setName('basic-job')
             ->setDescription('Run basic job sample script to create, update, and delete a job.');
     }
 
