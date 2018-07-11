@@ -5,15 +5,16 @@
         "symfony/console": " ^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.0"
+        "phpunit/phpunit": "~4.0"
     },
     "autoload": {
         "psr-4": {
             "Google\\Cloud\\Samples\\Language\\": "src/"
         },
         "files": [
-            "src/basic_job_sample.php",
             "src/basic_company_sample.php",
+            "src/basic_job_sample.php",
+            "src/general_search_sample.php",
             "src/job_service_connector.php"
         ]
     }
