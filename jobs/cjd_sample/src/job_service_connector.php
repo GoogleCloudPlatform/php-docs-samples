@@ -8,13 +8,11 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-
 use Google_Client;
 use Google_Service_JobService;
 
 final class JobServiceConnector
 {
-
     private static $jobService;
 
     private static function create_job_service()
@@ -35,8 +33,8 @@ final class JobServiceConnector
     public static function get_job_service()
     {
         if (!isset($jobService)) {
-            $jobService = self::create_job_service();
+            self::$jobService = self::create_job_service();
         }
-        return $jobService;
+        return self::$jobService;
     }
 }

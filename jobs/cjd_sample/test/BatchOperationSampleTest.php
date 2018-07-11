@@ -17,9 +17,10 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+
 use Symfony\Component\Console\Tester\CommandTester;
 
-class LocationSearchSampleTest extends \PHPUnit_Framework_TestCase
+class BatchOperationSampleTest extends \PHPUnit_Framework_TestCase
 {
     private $commandTester;
 
@@ -30,16 +31,14 @@ class LocationSearchSampleTest extends \PHPUnit_Framework_TestCase
         }
 
         $application = require __DIR__ . '/../cjd_sample.php';
-        $this->commandTester = new CommandTester($application->get('location-search'));
+        $this->commandTester = new CommandTester($application->get('batch-operation'));
     }
 
-    public function testLocationSearchSample()
+    public function testBatchOperationSample()
     {
         $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*'
-            . 'appliedJobLocationFilters.*matchingJobs.*/s');
+        $this->expectOutputRegex('/Company generated:.*Company created:.*Create Job:.*Create Job:.*'
+            . 'Update Job:.*Engineer in Mountain View.*Update Job:.*Engineer in Mountain View.*'
+            . 'Job deleted.*Job Deleted.*Company deleted./s');
     }
 }

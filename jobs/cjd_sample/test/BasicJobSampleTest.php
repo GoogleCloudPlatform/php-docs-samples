@@ -30,7 +30,7 @@ class BasicJobSampleTest extends \PHPUnit_Framework_TestCase
         }
 
         $application = require __DIR__ . '/../cjd_sample.php';
-        $this->commandTester = new CommandTester($application->get('basic-job-sample'));
+        $this->commandTester = new CommandTester($application->get('basic-job'));
     }
 
     public function testBasicJobSample()
