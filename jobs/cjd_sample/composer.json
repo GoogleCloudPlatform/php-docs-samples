@@ -17,9 +17,11 @@
             "src/basic_job_sample.php",
             "src/batch_operation_sample.php",
             "src/commute_search_sample.php",
+            "src/custom_attribute_sample.php",
             "src/email_alert_search_sample.php",
             "src/featured_jobs_search_sample.php",
             "src/general_search_sample.php",
+            "src/histogram_sample.php",
             "src/job_service_connector.php",
             "src/location_search_sample.php"
         ]
