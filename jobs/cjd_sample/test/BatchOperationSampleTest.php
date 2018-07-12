@@ -39,6 +39,6 @@ class BatchOperationSampleTest extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute([], ['interactive' => false]);
         $this->expectOutputRegex('/Company generated:.*Company created:.*Create Job:.*Create Job:.*'
             . 'Update Job:.*Engineer in Mountain View.*Update Job:.*Engineer in Mountain View.*'
-            . 'Job deleted.*Job Deleted.*Company deleted./s');
+            . 'Job deleted.*Job deleted.*Company deleted./s');
     }
 }
