@@ -1,16 +1,12 @@
 {
     "require": {
         "google/apiclient": "^2.1",
-        "google/apiclient-services": "^0.64",
         "symfony/console": " ^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Language\\": "src/"
-        },
         "files": [
             "src/auto_complete_sample.php",
             "src/basic_company_sample.php",
