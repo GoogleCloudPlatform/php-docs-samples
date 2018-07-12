@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+use Google_Service_JobService_CompleteQueryResponse;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,6 +32,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class AutoCompleteSample extends Command
 {
     # [START auto_complete_job_title]
+    /**
+     * Auto completes job titles within given companyName.
+     *
+     * @param string|null $companyName
+     * @param string $query
+     * @return Google_Service_JobService_CompleteQueryResponse
+     */
     public static function job_title_auto_complete(string $companyName = null, string $query)
     {
         $optParams = array(
@@ -52,6 +60,13 @@ final class AutoCompleteSample extends Command
     # [END auto_complete_job_title]
 
     # [START auto_complete_default]
+    /**
+     * Auto completes job titles within given companyName.
+     *
+     * @param string|null $companyName
+     * @param string $query
+     * @return Google_Service_JobService_CompleteQueryResponse
+     */
     public static function default_auto_complete(string $companyName = null, string $query)
     {
         $optParams = array(

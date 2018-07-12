@@ -23,6 +23,7 @@ use Google_Service_JobService_HistogramFacets;
 use Google_Service_JobService_JobQuery;
 use Google_Service_JobService_RequestMetadata;
 use Google_Service_JobService_SearchJobsRequest;
+use Google_Service_JobService_SearchJobsResponse;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,6 +34,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class HistogramSample extends Command
 {
     # [START histogram_search]
+    /**
+     * Histogram search.
+     *
+     * @param string|null $companyName
+     * @return Google_Service_JobService_SearchJobsResponse
+     */
     public static function histogram_search(string $companyName = null)
     {
         // Make sure to set the requestMetadata the same as the associated search request

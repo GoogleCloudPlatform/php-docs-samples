@@ -64,7 +64,7 @@ final class FeaturedJobsSearchSample extends Command
     /**
      * Searches featured jobs.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
     public static function search_featured_jobs(string $companyName = null)

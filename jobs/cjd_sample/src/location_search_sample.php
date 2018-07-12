@@ -46,7 +46,7 @@ final class LocationSearchSample extends Command
     /**
      * Basic location search.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $location
      * @param float $distance
      * @return Google_Service_JobService_SearchJobsResponse
@@ -88,7 +88,7 @@ final class LocationSearchSample extends Command
     /**
      * Keyword location search.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $location
      * @param float $distance
      * @param string $keyword
@@ -99,7 +99,8 @@ final class LocationSearchSample extends Command
         string $location,
         float $distance,
         string $keyword
-    ) {
+    )
+    {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
         // Make sure to hash your userID
@@ -137,7 +138,7 @@ final class LocationSearchSample extends Command
     /**
      * City location search.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $location
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -178,7 +179,7 @@ final class LocationSearchSample extends Command
     /**
      * Multiple locations search.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $location1
      * @param float $distance1
      * @param string $location2
@@ -189,7 +190,8 @@ final class LocationSearchSample extends Command
         string $location1,
         float $distance1,
         string $location2
-    ) {
+    )
+    {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
         // Make sure to hash your userID
@@ -229,7 +231,7 @@ final class LocationSearchSample extends Command
     /**
      * Broadening location search.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $location
      * @return Google_Service_JobService_SearchJobsResponse
      */

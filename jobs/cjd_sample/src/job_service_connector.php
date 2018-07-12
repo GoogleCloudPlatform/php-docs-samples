@@ -30,6 +30,11 @@ final class JobServiceConnector
         return $jobService;
     }
 
+    /**
+     * Gets Google_Service_JobService.
+     *
+     * @return Google_Service_JobService
+     */
     public static function get_job_service()
     {
         if (!isset($jobService)) {

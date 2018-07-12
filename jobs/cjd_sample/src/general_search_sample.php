@@ -53,7 +53,7 @@ final class GeneralSearchSample extends Command
     /**
      * Simple job search with keyword.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $query
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -92,7 +92,7 @@ final class GeneralSearchSample extends Command
     /**
      * Search on category filter.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string ...$categories
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -130,7 +130,7 @@ final class GeneralSearchSample extends Command
     /**
      * Search on employment types.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string ...$employmentTypes
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -168,7 +168,7 @@ final class GeneralSearchSample extends Command
     /**
      * Search by date range.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string $dateRange
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -206,7 +206,7 @@ final class GeneralSearchSample extends Command
     /**
      * Search by language code.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string ...$languageCodes
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -244,7 +244,7 @@ final class GeneralSearchSample extends Command
     /**
      * Search on company display name.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @param string ...$companyDisplayNames
      * @return Google_Service_JobService_SearchJobsResponse
      */
@@ -282,7 +282,7 @@ final class GeneralSearchSample extends Command
     /**
      * Search on compensation.
      *
-     * @param string $companyName
+     * @param string|null $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
     public static function compensation_search(string $companyName = null)

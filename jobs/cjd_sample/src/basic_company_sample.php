@@ -125,7 +125,8 @@ final class BasicCompanySample extends Command
         string $companyName,
         string $fieldMask,
         Google_Service_JobService_Company $companyToBeUpdated
-    ) {
+    )
+    {
         $jobService = JobServiceConnector::get_job_service();
 
         $optParams = array('updateCompanyFields' => $fieldMask);
@@ -136,6 +137,11 @@ final class BasicCompanySample extends Command
     # [END update_company_with_field_mask]
 
     # [START delete_company]
+    /**
+     * Deletes a company.
+     *
+     * @param string $companyName
+     */
     public static function delete_company(string $companyName)
     {
         $jobService = JobServiceConnector::get_job_service();
