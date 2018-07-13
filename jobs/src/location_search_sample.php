@@ -17,6 +17,8 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+use Google_Client;
+use Google_Service_JobService;
 use Google_Service_JobService_JobQuery;
 use Google_Service_JobService_LocationFilter;
 use Google_Service_JobService_RequestMetadata;
@@ -42,7 +44,42 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class LocationSearchSample extends Command
 {
+    private static $jobService;
+
+    /**
+     * Creates a Google_Service_JobService with default application credentials.
+     * @return Google_Service_JobService
+     */
+    private static function create_job_service()
+    {
+        // Instantiate the client
+        $client = new Google_Client();
+
+        // Authorize the client using Application Default Credentials
+        // @see https://developers.google.com/identity/protocols/application-default-credentials
+        $client->useApplicationDefaultCredentials();
+        $client->setScopes(array('https://www.googleapis.com/auth/jobs'));
+
+        // Instantiate the Cloud Job Discovery Service API
+        $jobService = new Google_Service_JobService($client);
+        return $jobService;
+    }
+
+    /**
+     * Gets Google_Service_JobService.
+     *
+     * @return Google_Service_JobService
+     */
+    private static function get_job_service()
+    {
+        if (!isset(self::$jobService)) {
+            self::$jobService = self::create_job_service();
+        }
+        return self::$jobService;
+    }
+
     # [START basic_location_search]
+
     /**
      * Basic location search.
      *
@@ -76,7 +113,7 @@ final class LocationSearchSample extends Command
         $searchRequest->setQuery($jobQuery);
         $searchRequest->setMode('JOB_SEARCH');
 
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
         $response = $jobService->jobs->search($searchRequest);
 
         var_export($response);
@@ -99,8 +136,7 @@ final class LocationSearchSample extends Command
         string $location,
         float $distance,
         string $keyword
-    )
-    {
+    ) {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
         // Make sure to hash your userID
@@ -126,7 +162,7 @@ final class LocationSearchSample extends Command
         $searchRequest->setQuery($jobQuery);
         $searchRequest->setMode('JOB_SEARCH');
 
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
         $response = $jobService->jobs->search($searchRequest);
 
         var_export($response);
@@ -167,7 +203,7 @@ final class LocationSearchSample extends Command
         $searchRequest->setQuery($jobQuery);
         $searchRequest->setMode('JOB_SEARCH');
 
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
         $response = $jobService->jobs->search($searchRequest);
 
         var_export($response);
@@ -190,8 +226,7 @@ final class LocationSearchSample extends Command
         string $location1,
         float $distance1,
         string $location2
-    )
-    {
+    ) {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
         // Make sure to hash your userID
@@ -219,7 +254,7 @@ final class LocationSearchSample extends Command
         $searchRequest->setQuery($jobQuery);
         $searchRequest->setMode('JOB_SEARCH');
 
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
         $response = $jobService->jobs->search($searchRequest);
 
         var_export($response);
@@ -262,7 +297,7 @@ final class LocationSearchSample extends Command
         $searchRequest->setEnableBroadening(true);
         $searchRequest->setMode('JOB_SEARCH');
 
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
         $response = $jobService->jobs->search($searchRequest);
 
         var_export($response);

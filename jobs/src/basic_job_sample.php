@@ -17,6 +17,8 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+use Google_Client;
+use Google_Service_JobService;
 use Google_Service_JobService_CreateJobRequest;
 use Google_Service_JobService_Job;
 use Google_Service_JobService_UpdateJobRequest;
@@ -41,7 +43,42 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class BasicJobSample extends Command
 {
+    private static $jobService;
+
+    /**
+     * Creates a Google_Service_JobService with default application credentials.
+     * @return Google_Service_JobService
+     */
+    private static function create_job_service()
+    {
+        // Instantiate the client
+        $client = new Google_Client();
+
+        // Authorize the client using Application Default Credentials
+        // @see https://developers.google.com/identity/protocols/application-default-credentials
+        $client->useApplicationDefaultCredentials();
+        $client->setScopes(array('https://www.googleapis.com/auth/jobs'));
+
+        // Instantiate the Cloud Job Discovery Service API
+        $jobService = new Google_Service_JobService($client);
+        return $jobService;
+    }
+
+    /**
+     * Gets Google_Service_JobService.
+     *
+     * @return Google_Service_JobService
+     */
+    private static function get_job_service()
+    {
+        if (!isset(self::$jobService)) {
+            self::$jobService = self::create_job_service();
+        }
+        return self::$jobService;
+    }
+
     # [START basic_job]
+
     /**
      * Generates a basic job with given companyName.
      *
@@ -73,7 +110,7 @@ final class BasicJobSample extends Command
      */
     public static function create_job(Google_Service_JobService_Job $jobToBeCreated)
     {
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
 
         $createJobRequest = new Google_Service_JobService_CreateJobRequest();
         $createJobRequest->setJob($jobToBeCreated);
@@ -92,7 +129,7 @@ final class BasicJobSample extends Command
      */
     public static function get_job(string $jobName)
     {
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
 
         $jobExisted = $jobService->jobs->get($jobName);
         printf("Job existed:\n%s\n", var_export($jobExisted, true));
@@ -110,7 +147,7 @@ final class BasicJobSample extends Command
      */
     public static function update_job(string $jobName, Google_Service_JobService_Job $jobToBeUpdated)
     {
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
 
         $updateJobRequest = new Google_Service_JobService_UpdateJobRequest();
         $updateJobRequest->setJob($jobToBeUpdated);
@@ -134,7 +171,7 @@ final class BasicJobSample extends Command
         string $fieldMask,
         Google_Service_JobService_Job $jobToBeUpdated
     ) {
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
 
         $updateJobRequest = new Google_Service_JobService_UpdateJobRequest();
         $updateJobRequest->setJob($jobToBeUpdated);
@@ -149,7 +186,7 @@ final class BasicJobSample extends Command
     # [START delete_job]
     public static function delete_job(string $jobName)
     {
-        $jobService = JobServiceConnector::get_job_service();
+        $jobService = self::get_job_service();
 
         $jobService->jobs->delete($jobName);
         echo 'Job deleted' . PHP_EOL;
