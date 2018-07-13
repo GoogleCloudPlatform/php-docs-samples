@@ -30,7 +30,7 @@ class BatchOperationSampleTest extends \PHPUnit_Framework_TestCase
             return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
         }
 
-        $application = require __DIR__ . '/../cjd_sample.php';
+        $application = require __DIR__ . '/../jobs.php';
         $this->commandTester = new CommandTester($application->get('batch-operation'));
     }
 
