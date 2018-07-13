@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-
 use Symfony\Component\Console\Tester\CommandTester;
 
 class HistogramSampleTest extends \PHPUnit_Framework_TestCase
