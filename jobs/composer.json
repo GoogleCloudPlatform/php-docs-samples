@@ -18,7 +18,6 @@
             "src/featured_jobs_search_sample.php",
             "src/general_search_sample.php",
             "src/histogram_sample.php",
-            "src/job_service_connector.php",
             "src/location_search_sample.php"
         ]
     }
