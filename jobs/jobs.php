@@ -21,7 +21,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 
-$application = new Application('Cloud Job Discovery');
+$application = new Application('Google Cloud Job Discovery');
 
 $application->add(new AutoCompleteSample());
 $application->add(new BasicCompanySample());
