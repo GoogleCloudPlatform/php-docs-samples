@@ -28,6 +28,3 @@ handlers:
 
 - url: .*
   script: auto
-
-beta_settings:
-  cloud_sql_instances: "YOUR_DB_CONNECTION"
