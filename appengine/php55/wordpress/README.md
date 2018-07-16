@@ -5,7 +5,7 @@ WordPress for Google Cloud Platform. The script allows you to create a
 working WordPress project for the
 [App Engine standard environment][appengine-standard]. For deploying
 WordPress to the [App Engine flexible environment][appengine-flexible],
-refer to the example at [appengine/standard/wordpress][../../flexible/wordpress]
+refer to the example at [appengine/standard/wordpress](../../flexible/wordpress)
 
 ## Common Prerequisites
 
