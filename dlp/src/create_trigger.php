@@ -28,6 +28,7 @@ use Google\Cloud\Dlp\V2\Schedule;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
 use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\StorageConfig_TimespanConfig;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
@@ -43,6 +44,7 @@ use Google\Protobuf\Duration;
  * @param string $description (Optional) A description for the trigger to be created
  * @param int $scanPeriod (Optional) How often to wait between scans, in days (minimum = 1 day)
  * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
+ * @param bool $autoPopulateTimespan (Optional) Automatically limit scan to new content only
  */
 
 function create_trigger(
@@ -52,7 +54,8 @@ function create_trigger(
     $displayName = '',
     $description = '',
     $scanPeriod = 1,
-    $maxFindings = 0
+    $maxFindings = 0,
+    $autoPopulateTimespan = false
 ) {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -95,8 +98,13 @@ function create_trigger(
     $storageOptions = (new CloudStorageOptions())
         ->setFileSet($fileSet);
 
+    // Auto-populate start and end times in order to scan new objects only.
+    $timespanConfig = (new StorageConfig_TimespanConfig())
+        ->setEnableAutoPopulationOfTimespanConfig($autoPopulateTimespan);
+
     $storageConfig = (new StorageConfig())
-        ->setCloudStorageOptions($storageOptions);
+        ->setCloudStorageOptions($storageOptions)
+        ->setTimespanConfig($timespanConfig);
 
     // Construct the jobConfig object
     $jobConfig = (new InspectJobConfig())
