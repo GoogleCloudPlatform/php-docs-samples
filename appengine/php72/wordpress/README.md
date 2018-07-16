@@ -150,12 +150,13 @@ Dashboard. You can also use the `wp-cli` utility as follows (be sure to keep
 the cloud SQL proxy running):
 
 ```
-# To update Wordpress itself
+# Install the wp-cli utility
+$ composer require wp-cli/wp-cli
+# Now you can run the "wp" command to update Wordpress itself
 $ vendor/bin/wp core update --path=wordpress
-# To update all the plugins
-$ vendor/bin/wp plugin update --all --path=wordpress
-# To update all the themes
-$ vendor/bin/wp theme update --all --path=wordpress
+# You can also update all the plugins and themes
+$ vendor/bin/wp plugin update --all
+$ vendor/bin/wp theme update --all
 ```
 
 If you get the following error:

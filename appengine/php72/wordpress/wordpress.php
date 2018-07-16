@@ -30,23 +30,26 @@ $application->add(new Command('setup'))
     ->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Directory for the new project', WordPressProject::DEFAULT_DIR)
     ->addOption('project_id', null, InputOption::VALUE_REQUIRED, 'Google Cloud project id')
     ->addOption('db_region', null, InputOption::VALUE_REQUIRED, 'Cloud SQL region')
-    ->addOption('db_instance', null, InputOption::VALUE_REQUIRED, 'Cloud SQL instance id', 'wp')
-    ->addOption('db_name', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database name', 'wp')
-    ->addOption('db_user', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database username', 'wp')
+    ->addOption('db_instance', null, InputOption::VALUE_REQUIRED, 'Cloud SQL instance id')
+    ->addOption('db_name', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database name')
+    ->addOption('db_user', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database username')
     ->addOption('db_password', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database password')
     ->addOption('local_db_user', null, InputOption::VALUE_REQUIRED, 'Local SQL database username')
     ->addOption('local_db_password', null, InputOption::VALUE_REQUIRED, 'Local SQL database password')
     ->addOption('wordpress_url', null, InputOption::VALUE_REQUIRED, 'URL of the WordPress archive', WordPressProject::LATEST_WP)
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $wordpress = new WordPressProject($input, $output);
-
         // Run the wizard to prompt user for project and database parameters.
-        $dir = $wordpress->initializeProject();
-        $dbParams = $wordpress->initializeDatabase();
+        $dir = $wordpress->promptForProjectDir();
 
-        // download wordpress and plugins
-        $wordpress->downloadWordpress();
+        // download wordpress
+        $wordpress->downloadWordpress($dir);
+
+        // initialize the project and download the plugins
+        $wordpress->initializeProject($dir);
         $wordpress->downloadGcsPlugin();
+
+        $dbParams = $wordpress->initializeDatabase();
 
         // populate random key params
         $params = $dbParams + $wordpress->generateRandomValueParams();
@@ -54,16 +57,11 @@ $application->add(new Command('setup'))
         // copy all the sample files into the project dir and replace parameters
         $wordpress->copyFiles(__DIR__ . '/files', [
             'app.yaml' => '/',
-            'composer.json' => '/',
             'cron.yaml' => '/',
             'php.ini' => '/',
-            'wp-cli.yml' => '/',
-            'gae-app.php' => '/wordpress/',
-            'wp-config.php' => '/wordpress/',
+            'gae-app.php' => '/',
+            'wp-config.php' => '/',
         ], $params);
-
-        // run composer in the project directory
-        $wordpress->runComposer();
 
         $output->writeln("<info>Your WordPress project is ready at $dir</info>");
     });
