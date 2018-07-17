@@ -106,9 +106,9 @@ If you are migrating an existing project to Google Cloud, you can use the
 $ php wordpress.php update path/to/your-wordpress-site
 ```
 
-The command asks you several questions, please answer them. Then you'll have a
-new WordPress project. This will copy the files in the [`files`](files/)
-directory and write the proper configuration.
+The command asks you several questions, please answer them. This will copy the
+files in the [`files`](files/) directory and write the proper configuration.
+Then your WordPress project will be ready to deploy to Google Cloud!
 
 ## Deploy to Google Cloud
 
