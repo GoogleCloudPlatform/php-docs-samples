@@ -67,7 +67,7 @@ class DeployTest extends TestCase
         if (!getenv('GOOGLE_SPANNER_INSTANCE_ID')
             || !getenv('GOOGLE_SPANNER_DATABASE_ID')) {
             $this->markTestSkipped('Set the GOOGLE_SPANNER_INSTANCE_ID and ' .
-                'SPANNER_DATABASE_ID environment variables to run the Cloud ' .
+                'GOOGLE_SPANNER_DATABASE_ID environment variables to run the Cloud ' .
                 'Spanner tests.');
         }
         // Access the modules app top page.

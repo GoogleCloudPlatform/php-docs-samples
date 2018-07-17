@@ -15,3 +15,7 @@
 
 # PHP Composer dependencies:
 vendor/
+
+composer.json
+composer.lock
+vendor/

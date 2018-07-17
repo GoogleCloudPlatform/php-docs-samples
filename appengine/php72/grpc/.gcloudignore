@@ -14,4 +14,8 @@
 .gitignore
 
 # PHP Composer dependencies:
-# vendor/
+vendor/
+
+# Temporary: dodge graph error?
+composer.json
+composer.lock
