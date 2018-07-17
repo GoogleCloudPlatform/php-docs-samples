@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff382c4bfbffe03ee368466156eefce3",
+    "content-hash": "a3aff306b7db24fb6db42b4a8e14a746",
     "packages": [
         {
             "name": "google/cloud-tools",
-            "version": "dev-allow-for-custom-wordpress-dir",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "23e51fb4a439195a2ee30efd9eac196f37b8d159"
+                "reference": "51a51c83dfc2e38b3174f989892b02f8d743951e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/23e51fb4a439195a2ee30efd9eac196f37b8d159",
-                "reference": "23e51fb4a439195a2ee30efd9eac196f37b8d159",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/51a51c83dfc2e38b3174f989892b02f8d743951e",
+                "reference": "51a51c83dfc2e38b3174f989892b02f8d743951e",
                 "shasum": ""
             },
             "require": {
@@ -62,7 +62,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-07-16T20:20:09+00:00"
+            "time": "2018-07-17T18:55:51+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2040,9 +2040,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "google/cloud-tools": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

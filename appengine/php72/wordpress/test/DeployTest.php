@@ -18,11 +18,14 @@
 namespace Google\Cloud\Samples\AppEngine\Php72\WordPress;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 class DeployTest extends \PHPUnit_Framework_TestCase
 {
-    use RunSetupCommandTrait;
+    use ExecuteCommandTrait;
     use AppEngineDeploymentTrait;
+
+    private static $commandFile = __DIR__ . '/../wordpress.php';
 
     public static function beforeDeploy()
     {
@@ -34,7 +37,9 @@ class DeployTest extends \PHPUnit_Framework_TestCase
                 . 'WORDPRESS_INSTANCE_NAME, and WORDPRESS_DB_PASSWORD');
         }
 
-        $dir = self::runSetupCommand([
+        $dir = sprintf('%s/wp-gae-php72-%s', sys_get_temp_dir(), time());
+        $this->runCommand('create', [
+            '--dir' => $dir,
             '--project_id' => $projectId,
             '--db_instance' => $dbInstance,
             '--db_user' => $dbUser,

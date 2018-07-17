@@ -4,7 +4,10 @@ function get_real_file_to_load($full_request_uri)
 {
     $request_uri = @parse_url($full_request_uri)['path'];
 
-    if ($request_uri === '/wp-admin/' || $request_uri === '/wp-admin') {
+    if ($request_uri === '/wp-admin') {
+        header('Location: /wp-admin/');
+        exit;
+    } elseif ($request_uri === '/wp-admin/') {
         return '/wp-admin/index.php';
     } elseif (is_file(__DIR__ . $request_uri)) {
         return $request_uri;

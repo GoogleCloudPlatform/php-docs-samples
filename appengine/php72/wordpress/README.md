@@ -40,15 +40,15 @@ $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
 
 ### Create and configure a Cloud SQL for MySQL 2nd generation instance
 
-Note: In this guide, we use `wp` for various resource names; the instance
+Note: In this guide, we use `wordpress` for various resource names; the instance
 name, the database name, and the user name.
 
 Create a new Cloud SQL for MySQL Second Generation instance with the following
 command:
 
-```
-$ gcloud sql instances create wp \
-  --activation-policy=ALWAYS \
+```sh
+$ gcloud sql instances create wordpress \
+    --activation-policy=ALWAYS \
     --tier=db-n1-standard-1
 ```
 
@@ -61,68 +61,61 @@ for more details.
 
 Then change the root password for your instance:
 
-```
-$ gcloud sql users set-password root % \
-  --instance wp --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
-```
-
-To access this MySQL instance, use Cloud SQL Proxy. [Download][cloud-sql-proxy-download]
-it to your local computer and make it executable.
-
-Go to the [the Credentials section][credentials-section] of your project in the
-Console. Click 'Create credentials' and then click 'Service account key.' For
-the Service account, select 'App Engine app default service account.' Then
-click 'Create' to create and download the JSON service account key to your
-local machine. Save it to a safe place.
-
-Run the proxy by the following command:
-
-```
-$ cloud_sql_proxy \
-  -dir /tmp/cloudsql \
-    -instances=YOUR_PROJECT_ID:us-central1:wp=tcp:3306 \
-      -credential_file=PATH_TO_YOUR_SERVICE_ACCOUNT_JSON_FILE
+```sh
+$ gcloud sql users set-password root \
+    --host=% \
+    --instance wordpress \
+    --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
 
-Now you can access the Cloud SQL instance with the MySQL client in a separate
-command line tab. Create a new database and a user as follows:
+You will also need to create the database you want your WordPress site to use:
 
-```
-$ mysql -h 127.0.0.1 -u root -p
-mysql> create database wp;
-mysql> create user 'wp'@'%' identified by 'PASSWORD'; // Don't use this password!
-mysql> grant all on wp.* to 'wp'@'%';
-mysql> exit
+```sh
+$ gcloud sql databases create wordpress --instance wordpress
 ```
 
-## How to use
+## SetUp
 
 First install the dependencies in this directory as follows:
 
-```
+```sh
 $ composer install
 ```
 
 If it complains about extensions, please install `phar` and `zip` PHP
 extensions and retry.
 
-Then run the helper command.
+### Create a new WordPress Project
 
-```
-$ php wordpress.php setup
+To download WordPress and set it up for Google Cloud, run the `create` command:
+
+```sh
+$ php wordpress.php create
 ```
 
 The command asks you several questions, please answer them. Then you'll have a
 new WordPress project. By default it will create `my-wordpress-project` in the
 current directory.
 
-## Deployment
+### Update an existing WordPress Project
+
+If you are migrating an existing project to Google Cloud, you can use the
+`update` command:
+
+```sh
+$ php wordpress.php update path/to/your-wordpress-site
+```
+
+The command asks you several questions, please answer them. Then you'll have a
+new WordPress project. This will copy the files in the [`files`](files/)
+directory and write the proper configuration.
+
+## Deploy to Google Cloud
 
 CD into your WordPress project directory and run the following command to
 deploy:
 
-```
-$ cd my-wordpress-project
+```sh
 $ gcloud app deploy \
     --promote --stop-previous-version app.yaml cron.yaml
 ```
@@ -138,6 +131,36 @@ Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins p
 After activating the plugins, try uploading a media object in a new post
 and confirm the image is uploaded to the GCS bucket by visiting the
 [Google Cloud console's Storage page][cloud-storage-console].
+
+## Local Development
+
+To access this MySQL instance, use Cloud SQL Proxy. [Download][cloud-sql-proxy-download]
+it to your local computer and make it executable.
+
+Go to the [the Credentials section][credentials-section] of your project in the
+Console. Click 'Create credentials' and then click 'Service account key.' For
+the Service account, select 'App Engine app default service account.' Then
+click 'Create' to create and download the JSON service account key to your
+local machine. Save it to a safe place.
+
+Run the proxy by the following command:
+
+```sh
+$ cloud_sql_proxy \
+    -dir /cloudsql \
+    -instances=YOUR_PROJECT_ID:us-central1:wordpress \
+    -credential_file=/path/to/YOUR_SERVICE_ACCOUNT_JSON_FILE.json
+```
+
+Now you can access the Cloud SQL instance with the MySQL client in a separate
+command line tab.
+
+```
+$ mysql --socket /cloudsql/YOUR_PROJECT_ID:us-central1:wordpress -u root -p
+mysql> use database wordpress;
+mysql> show tables;
+mysql> exit
+```
 
 ## Various workflows
 

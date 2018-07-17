@@ -19,23 +19,31 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Google\Cloud\Utils\WordPressProject;
 
+$application = new Application('Cloud Video Intelligence');
+
+$wordPressOptions = new InputDefinition([
+    new InputOption('project_id', null, InputOption::VALUE_REQUIRED, 'Google Cloud project id'),
+    new InputOption('db_region', null, InputOption::VALUE_REQUIRED, 'Cloud SQL region'),
+    new InputOption('db_instance', null, InputOption::VALUE_REQUIRED, 'Cloud SQL instance id'),
+    new InputOption('db_name', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database name'),
+    new InputOption('db_user', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database username'),
+    new InputOption('db_password', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database password'),
+    new InputOption('local_db_user', null, InputOption::VALUE_REQUIRED, 'Local SQL database username'),
+    new InputOption('local_db_password', null, InputOption::VALUE_REQUIRED, 'Local SQL database password'),
+]);
+
 $application = new Application('Wordpress Helper');
-$application->add(new Command('setup'))
-    ->setDescription('Setup WordPress on GCP')
+$application->add(new Command('create'))
+    ->setDescription('Create a new WordPress site for Google Cloud')
+    ->setDefinition(clone $wordPressOptions)
     ->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Directory for the new project', WordPressProject::DEFAULT_DIR)
-    ->addOption('project_id', null, InputOption::VALUE_REQUIRED, 'Google Cloud project id')
-    ->addOption('db_region', null, InputOption::VALUE_REQUIRED, 'Cloud SQL region')
-    ->addOption('db_instance', null, InputOption::VALUE_REQUIRED, 'Cloud SQL instance id')
-    ->addOption('db_name', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database name')
-    ->addOption('db_user', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database username')
-    ->addOption('db_password', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database password')
-    ->addOption('local_db_user', null, InputOption::VALUE_REQUIRED, 'Local SQL database username')
-    ->addOption('local_db_password', null, InputOption::VALUE_REQUIRED, 'Local SQL database password')
     ->addOption('wordpress_url', null, InputOption::VALUE_REQUIRED, 'URL of the WordPress archive', WordPressProject::LATEST_WP)
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $wordpress = new WordPressProject($input, $output);
@@ -64,6 +72,39 @@ $application->add(new Command('setup'))
         ], $params);
 
         $output->writeln("<info>Your WordPress project is ready at $dir</info>");
+    });
+
+$application->add(new Command('update'))
+    ->setDescription('Update an existing WordPress site for Google Clud')
+    ->setDefinition(clone $wordPressOptions)
+    ->addArgument('dir', InputArgument::REQUIRED, 'Directory for the existing project')
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+        // use the supplied dir for the wordpress project
+        $dir = $input->getArgument('dir');
+
+        $wordpress = new WordPressProject($input, $output);
+        $wordpress->initializeProject($dir);
+
+        // Download the plugins if they don't exist
+        if (!file_exists($dir . '/wp-content/plugins/gcs')) {
+            $wordpress->downloadGcsPlugin();
+        }
+
+        $dbParams = $wordpress->initializeDatabase();
+
+        // populate random key params
+        $params = $dbParams + $wordpress->generateRandomValueParams();
+
+        // copy all the sample files into the project dir and replace parameters
+        $wordpress->copyFiles(__DIR__ . '/files', [
+            'app.yaml' => '/',
+            'cron.yaml' => '/',
+            'php.ini' => '/',
+            'gae-app.php' => '/',
+            'wp-config.php' => '/',
+        ], $params);
+
+        $output->writeln("<info>Your WordPress project has been updated at $dir</info>");
     });
 
 if (getenv('PHPUNIT_TESTS') === '1') {
