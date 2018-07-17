@@ -38,7 +38,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
         }
 
         $dir = sprintf('%s/wp-gae-php72-%s', sys_get_temp_dir(), time());
-        $this->runCommand('create', [
+        self::runCommand('create', [
             '--dir' => $dir,
             '--project_id' => $projectId,
             '--db_instance' => $dbInstance,

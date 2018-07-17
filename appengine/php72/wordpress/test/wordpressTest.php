@@ -16,6 +16,7 @@
  */
 
 namespace Google\Cloud\Samples\AppEngine\Php72\WordPress;
+
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 class wordpressTest extends \PHPUnit_Framework_TestCase
