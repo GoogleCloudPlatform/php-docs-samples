@@ -40,8 +40,8 @@ $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
 
 ### Create and configure a Cloud SQL for MySQL 2nd generation instance
 
-Note: In this guide, we use `wordpress` for various resource names; the instance
-name, the database name, and the user name.
+Note: In this guide, we use `wordpress` for the instance name and the database
+name. We use `root` for the database user name.
 
 Create a new Cloud SQL for MySQL Second Generation instance with the following
 command:
