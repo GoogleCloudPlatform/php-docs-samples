@@ -83,7 +83,7 @@ final class BatchOperationSample extends Command
      * @param string $companyName
      * @return array
      */
-    public static function batch_create_jobs(string $companyName)
+    public static function batch_create_jobs($companyName)
     {
         $jobService = self::get_job_service();
         $jobService->getClient()->setUseBatch(true);
@@ -137,10 +137,10 @@ final class BatchOperationSample extends Command
     /**
      * Updates jobs in batch.
      *
-     * @param Google_Service_JobService_Job ...$jobsToBeUpdated
+     * @param Google_Service_JobService_Job[] $jobsToBeUpdated
      * @return array
      */
-    public static function batch_job_update(Google_Service_JobService_Job ...$jobsToBeUpdated)
+    public static function batch_job_update(array $jobsToBeUpdated)
     {
         $jobService = self::get_job_service();
         $jobService->getClient()->setUseBatch(true);
@@ -189,9 +189,9 @@ final class BatchOperationSample extends Command
     /**
      * Deletes jobs in batch.
      *
-     * @param Google_Service_JobService_Job ...$jobsToBeDeleted
+     * @param Google_Service_JobService_Job[] $jobsToBeDeleted
      */
-    public static function batch_delete_jobs(Google_Service_JobService_Job ...$jobsToBeDeleted)
+    public static function batch_delete_jobs(array $jobsToBeDeleted)
     {
         $jobService = self::get_job_service();
         $jobService->getClient()->setUseBatch(true);
@@ -234,10 +234,10 @@ final class BatchOperationSample extends Command
         $createdJobs = self::batch_create_jobs($companyName);
 
         // Batch update jobs.
-        $updatedJobs = self::batch_job_update(...$createdJobs);
+        $updatedJobs = self::batch_job_update($createdJobs);
 
         // Batch delete jobs.
-        self::batch_delete_jobs(...$updatedJobs);
+        self::batch_delete_jobs($updatedJobs);
 
         BasicCompanySample::delete_company($companyName);
     }

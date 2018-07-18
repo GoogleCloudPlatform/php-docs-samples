@@ -76,7 +76,7 @@ final class AutoCompleteSample extends Command
      * @param string $query
      * @return Google_Service_JobService_CompleteQueryResponse
      */
-    public static function job_title_auto_complete(string $companyName = null, string $query)
+    public static function job_title_auto_complete($companyName = null, $query)
     {
         $optParams = array(
             'query' => $query,
@@ -104,7 +104,7 @@ final class AutoCompleteSample extends Command
      * @param string $query
      * @return Google_Service_JobService_CompleteQueryResponse
      */
-    public static function default_auto_complete(string $companyName = null, string $query)
+    public static function default_auto_complete($companyName = null, $query)
     {
         $optParams = array(
             'query' => $query,

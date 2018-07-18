@@ -93,7 +93,7 @@ final class GeneralSearchSample extends Command
      * @param string $query
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function basic_search_jobs(string $companyName = null, string $query)
+    public static function basic_search_jobs($companyName = null, $query)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -129,10 +129,10 @@ final class GeneralSearchSample extends Command
      * Search on category filter.
      *
      * @param string|null $companyName
-     * @param string ...$categories
+     * @param string[] $categories
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function category_filter_search(string $companyName = null, string ...$categories)
+    public static function category_filter_search($companyName = null, array $categories)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -144,7 +144,7 @@ final class GeneralSearchSample extends Command
         $requestMetadata->setDomain('www.google.com');
 
         $jobQuery = new Google_Service_JobService_JobQuery();
-        $jobQuery->setCategories(array($categories));
+        $jobQuery->setCategories($categories);
         if (isset($companyName)) {
             $jobQuery->setCompanyNames(array($companyName));
         }
@@ -401,7 +401,7 @@ final class GeneralSearchSample extends Command
         // Wait several seconds for post processing.
         sleep(10);
         self::basic_search_jobs($companyName, 'Systems Administrator');
-        self::category_filter_search($companyName, 'COMPUTER_AND_IT');
+        self::category_filter_search($companyName, ['COMPUTER_AND_IT']);
         self::date_range_search($companyName, 'PAST_24_HOURS');
         self::employment_types_search($companyName, 'FULL_TIME', 'CONTRACTOR', 'PER_DIEM');
         self::company_display_name_search($companyName, 'Google');

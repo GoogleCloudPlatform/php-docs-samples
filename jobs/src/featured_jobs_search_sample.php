@@ -79,7 +79,7 @@ final class FeaturedJobsSearchSample extends Command
      * @param string $companyName
      * @return Google_Service_JobService_Job
      */
-    public static function generate_featured_job(string $companyName)
+    public static function generate_featured_job($companyName)
     {
         $requisitionId = 'featuredJob:' . rand();
 
@@ -104,7 +104,7 @@ final class FeaturedJobsSearchSample extends Command
      * @param string|null $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function search_featured_jobs(string $companyName = null)
+    public static function search_featured_jobs($companyName = null)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();

@@ -76,7 +76,7 @@ final class HistogramSample extends Command
      * @param string|null $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function histogram_search(string $companyName = null)
+    public static function histogram_search($companyName = null)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();

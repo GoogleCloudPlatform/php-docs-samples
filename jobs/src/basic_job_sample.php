@@ -85,7 +85,7 @@ final class BasicJobSample extends Command
      * @param string $companyName
      * @return Google_Service_JobService_Job
      */
-    public static function generate_job_with_required_fields(string $companyName)
+    public static function generate_job_with_required_fields($companyName)
     {
         $requisitionId = 'jobWithRequiredFields:' . rand();
 
@@ -127,7 +127,7 @@ final class BasicJobSample extends Command
      * @param string $jobName
      * @return Google_Service_JobService_Job
      */
-    public static function get_job(string $jobName)
+    public static function get_job($jobName)
     {
         $jobService = self::get_job_service();
 
@@ -145,7 +145,7 @@ final class BasicJobSample extends Command
      * @param Google_Service_JobService_Job $jobToBeUpdated
      * @return Google_Service_JobService_Job
      */
-    public static function update_job(string $jobName, Google_Service_JobService_Job $jobToBeUpdated)
+    public static function update_job($jobName, Google_Service_JobService_Job $jobToBeUpdated)
     {
         $jobService = self::get_job_service();
 
@@ -167,8 +167,8 @@ final class BasicJobSample extends Command
      * @return Google_Service_JobService_Job
      */
     public static function update_job_with_field_mask(
-        string $jobName,
-        string $fieldMask,
+        $jobName,
+        $fieldMask,
         Google_Service_JobService_Job $jobToBeUpdated
     ) {
         $jobService = self::get_job_service();
@@ -184,7 +184,7 @@ final class BasicJobSample extends Command
     # [END update_job_with_field_mask]
 
     # [START delete_job]
-    public static function delete_job(string $jobName)
+    public static function delete_job($jobName)
     {
         $jobService = self::get_job_service();
 

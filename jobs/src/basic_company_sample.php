@@ -120,7 +120,7 @@ final class BasicCompanySample extends Command
      * @param string $companyName
      * @return Google_Service_JobService_Company
      */
-    public static function get_company(string $companyName)
+    public static function get_company($companyName)
     {
         $jobService = self::get_job_service();
 
@@ -138,7 +138,7 @@ final class BasicCompanySample extends Command
      * @param Google_Service_JobService_Company $companyToBeUpdated
      * @return Google_Service_JobService_Company
      */
-    public static function update_company(string $companyName, Google_Service_JobService_Company $companyToBeUpdated)
+    public static function update_company($companyName, Google_Service_JobService_Company $companyToBeUpdated)
     {
         $jobService = self::get_job_service();
 
@@ -158,8 +158,8 @@ final class BasicCompanySample extends Command
      * @return Google_Service_JobService_Company
      */
     public static function update_company_with_field_mask(
-        string $companyName,
-        string $fieldMask,
+        $companyName,
+        $fieldMask,
         Google_Service_JobService_Company $companyToBeUpdated
     ) {
         $jobService = self::get_job_service();
@@ -177,7 +177,7 @@ final class BasicCompanySample extends Command
      *
      * @param string $companyName
      */
-    public static function delete_company(string $companyName)
+    public static function delete_company($companyName)
     {
         $jobService = self::get_job_service();
 

@@ -81,7 +81,7 @@ final class CustomAttributeSample extends Command
      * @param string $companyName
      * @return Google_Service_JobService_Job
      */
-    public static function generate_job_with_a_custom_attribute(string $companyName)
+    public static function generate_job_with_a_custom_attribute($companyName)
     {
         $requisitionId = 'jobWithACustomAttribute:' . rand();
 
