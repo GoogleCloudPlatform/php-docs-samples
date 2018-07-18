@@ -22,7 +22,6 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\Samples\Storage\BucketAclCommand;
 use Google\Cloud\Storage\StorageClient;
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for BucketAclCommand.

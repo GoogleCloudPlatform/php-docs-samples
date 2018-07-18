@@ -59,7 +59,6 @@ class DeployPostgresTest extends \PHPUnit_Framework_TestCase
         $appYaml = Yaml::parse($appYamlContents);
         $appYaml['env_variables']['CLOUDSQL_USER'] = $user;
         $appYaml['env_variables']['CLOUDSQL_PASSWORD'] = $password;
-        $appYaml['beta_settings']['cloud_sql_instances'] = $connectionName;
         $appYaml['env_variables']['CLOUDSQL_DSN'] = str_replace(
             ['DATABASE', 'CONNECTION_NAME'],
             [$database, $connectionName],
