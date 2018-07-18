@@ -38,7 +38,7 @@ $companies = $jobs->companies->listCompanies();
 // Print the companies
 echo 'Companies: ' . PHP_EOL;
 foreach ($companies as $company) {
-    echo $company->displayName . PHP_EOL;
+    echo json_encode($company->toSimpleObject(), JSON_PRETTY_PRINT) . PHP_EOL;
 }
 # [END quickstart]
 return $companies;
