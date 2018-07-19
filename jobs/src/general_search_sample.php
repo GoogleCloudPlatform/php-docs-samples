@@ -167,10 +167,10 @@ final class GeneralSearchSample extends Command
      * Search on employment types.
      *
      * @param string|null $companyName
-     * @param string ...$employmentTypes
+     * @param string[] $employmentTypes
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function employment_types_search(string $companyName = null, string ...$employmentTypes)
+    public static function employment_types_search($companyName = null, array $employmentTypes)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -182,7 +182,7 @@ final class GeneralSearchSample extends Command
         $requestMetadata->setDomain('www.google.com');
 
         $jobQuery = new Google_Service_JobService_JobQuery();
-        $jobQuery->setEmploymentTypes(array($employmentTypes));
+        $jobQuery->setEmploymentTypes($employmentTypes);
         if (isset($companyName)) {
             $jobQuery->setCompanyNames(array($companyName));
         }
@@ -208,7 +208,7 @@ final class GeneralSearchSample extends Command
      * @param string $dateRange
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function date_range_search(string $companyName = null, string $dateRange)
+    public static function date_range_search($companyName = null, $dateRange)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -243,10 +243,10 @@ final class GeneralSearchSample extends Command
      * Search by language code.
      *
      * @param string|null $companyName
-     * @param string ...$languageCodes
+     * @param string[] $languageCodes
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function language_code_search(string $companyName = null, string ...$languageCodes)
+    public static function language_code_search($companyName = null, array $languageCodes)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -258,7 +258,7 @@ final class GeneralSearchSample extends Command
         $requestMetadata->setDomain('www.google.com');
 
         $jobQuery = new Google_Service_JobService_JobQuery();
-        $jobQuery->setLanguageCodes(array($languageCodes));
+        $jobQuery->setLanguageCodes($languageCodes);
         if (isset($companyName)) {
             $jobQuery->setCompanyNames(array($companyName));
         }
@@ -281,10 +281,10 @@ final class GeneralSearchSample extends Command
      * Search on company display name.
      *
      * @param string|null $companyName
-     * @param string ...$companyDisplayNames
+     * @param string[] $companyDisplayNames
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function company_display_name_search(string $companyName = null, string ...$companyDisplayNames)
+    public static function company_display_name_search($companyName = null, array $companyDisplayNames)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -297,8 +297,8 @@ final class GeneralSearchSample extends Command
 
         $jobQuery = new Google_Service_JobService_JobQuery();
         $jobQuery->setCompanyDisplayNames($companyDisplayNames);
-        if (isset($companyName)) {
-            $jobQuery->setCompanyNames(array($companyName));
+        if (!empty($companyName)) {
+            $jobQuery->setCompanyNames($companyName);
         }
 
         $searchRequest = new Google_Service_JobService_SearchJobsRequest();
@@ -321,7 +321,7 @@ final class GeneralSearchSample extends Command
      * @param string|null $companyName
      * @return Google_Service_JobService_SearchJobsResponse
      */
-    public static function compensation_search(string $companyName = null)
+    public static function compensation_search($companyName = null)
     {
         // Make sure to set the requestMetadata the same as the associated search request
         $requestMetadata = new Google_Service_JobService_RequestMetadata();
@@ -403,10 +403,10 @@ final class GeneralSearchSample extends Command
         self::basic_search_jobs($companyName, 'Systems Administrator');
         self::category_filter_search($companyName, ['COMPUTER_AND_IT']);
         self::date_range_search($companyName, 'PAST_24_HOURS');
-        self::employment_types_search($companyName, 'FULL_TIME', 'CONTRACTOR', 'PER_DIEM');
-        self::company_display_name_search($companyName, 'Google');
+        self::employment_types_search($companyName, ['FULL_TIME', 'CONTRACTOR', 'PER_DIEM']);
+        self::company_display_name_search($companyName, ['Google']);
         self::compensation_search($companyName);
-        self::language_code_search($companyName, 'pt-BR', 'en-US');
+        self::language_code_search($companyName, ['pt-BR', 'en-US']);
 
         BasicJobSample::delete_job($jobName);
         BasicCompanySample::delete_company($companyName);
