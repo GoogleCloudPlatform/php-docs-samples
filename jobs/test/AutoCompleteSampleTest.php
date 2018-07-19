@@ -36,8 +36,10 @@ class AutoCompleteSampleTest extends \PHPUnit_Framework_TestCase
     public function testAutoCompleteSample()
     {
         $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/completionResults.*\'suggestion\' => \'Google\',\s+\'type\' => \'COMPANY_NAME\','
-            . '.*completionResults.*\'suggestion\' => \'Software Engineer\',\s+\'type\' => \'JOB_TITLE\',.*'
-            . '.*completionResults.*\'suggestion\' => \'Software Engineer\',\s+\'type\' => \'JOB_TITLE\',/s');
+        $this->expectOutputRegex('/completionResults.*"suggestion"\s*:\s*"Google",\s+"type"\s*:\s*"COMPANY_NAME"/s');
+        $this->assertEquals(2,
+            preg_match_all('/"suggestion"\s*:\s*"Software Engineer",\s+"type"\s*:\s*"JOB_TITLE"/s',
+                $this->getActualOutput()),
+            2);
     }
 }
