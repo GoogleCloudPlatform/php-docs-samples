@@ -36,7 +36,9 @@ class LocationSearchSampleTest extends \PHPUnit_Framework_TestCase
     public function testLocationSearchSample()
     {
         $this->commandTester->execute([], ['interactive' => false]);
-        $this->setOutputCallback(function() {}); // disable output
+        $this->setOutputCallback(function () {
+            // disable output
+        });
         $this->assertEquals(5, substr_count($this->getActualOutput(), 'appliedJobLocationFilters'));
         $this->assertEquals(5, substr_count($this->getActualOutput(), 'matchingJobs'));
     }
