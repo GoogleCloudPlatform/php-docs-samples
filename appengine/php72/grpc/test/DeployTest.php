@@ -97,4 +97,19 @@ class DeployTest extends TestCase
             'Successfully submitted a time series',
             $resp->getBody()->getContents());
     }
+
+    public function testSpeech()
+    {
+        // Access the modules app top page.
+        try {
+            $resp = $this->client->get('/speech.php');
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            $this->fail($e->getResponse()->getBody());
+        }
+        $this->assertEquals('200', $resp->getStatusCode(),
+                            'top page status code');
+        $this->assertContains(
+            'Transcription: how old is the Brooklyn Bridge',
+            $resp->getBody()->getContents());
+    }
 }

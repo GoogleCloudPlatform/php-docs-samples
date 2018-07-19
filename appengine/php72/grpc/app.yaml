@@ -1,8 +1,9 @@
 runtime: php72
+instance_class: F2
 
 handlers:
 - url: /
-  script: index.php
+  script: auto
 
-- url: /(monitoring|spanner)\.php
-  script: \1.php
+- url: /(monitoring|spanner|speech)\.php
+  script: auto
