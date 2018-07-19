@@ -36,6 +36,7 @@ class CommuteSearchSampleTest extends \PHPUnit_Framework_TestCase
     public function testFeaturedJobsSearchSample()
     {
         $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/.*appliedCommuteFilter.*1600 Amphitheatre Pkwy.*/s');
+        $this->expectOutputRegex('/1600 Amphitheatre Pkwy/');
+        $this->expectOutputRegex('/appliedCommuteFilter/');
     }
 }
