@@ -30,10 +30,15 @@ $client->setScopes(array(
 ));
 
 // Instantiate the Cloud Job Discovery Service API
-$jobs = new Google_Service_JobService($client);
+$cloudTalentSolutionClient = new Google_Service_CloudTalentSolution($client);
+$projectId = getenv('GOOGLE_PROJECT_ID');
+$parent = sprintf('projects/%s', $projectId);
 
 // list companies
-$companies = $jobs->companies->listCompanies();
+$companies = $cloudTalentSolutionClient->projects_companies->listProjectsCompanies(
+	$projectId,
+    array('parent' => $parent)
+);
 
 // Print the companies
 echo 'Companies: ' . PHP_EOL;
