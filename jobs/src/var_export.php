@@ -1,6 +1,7 @@
 <?php
 
 namespace Google\Cloud\Samples\Jobs;
+
 use Google_Model;
 
 /**
