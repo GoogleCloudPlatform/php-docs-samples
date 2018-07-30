@@ -22,23 +22,24 @@
  */
 use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Storage\StorageClient;
-use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
 
-$app = new Application();
+$app = new Slim\App([
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+]);
 
-// register twig
-$app->register(new TwigServiceProvider(), array(
-    'twig.path' => __DIR__ . '/../templates',
-    'twig.options' => array(
-        'strict_variables' => false,
-    ),
-));
+// Get container
+$container = $app->getContainer();
 
-// Cloud Storage
-$app['cloud_storage_bucket'] = function ($app) {
-    $bucketName = getenv('GOOGLE_BUCKET_NAME');
+// Register Twig
+$container['view'] = function ($container) {
+    return new Slim\Views\Twig(__DIR__ . '/../templates');
+};
 
+// Cloud Storage bucket
+$container['bucket'] = function ($container) {
+    $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
     $storage = new StorageClient([
         'projectId' => $projectId,
     ]);
@@ -46,7 +47,7 @@ $app['cloud_storage_bucket'] = function ($app) {
 };
 
 // Get the Cloud SQL MySQL connection object
-$app['cloud_sql'] = function ($app) {
+$container['cloudsql'] = function ($container) {
     // Data Model
     $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
     $connection = getenv('CLOUDSQL_CONNECTION_NAME');
@@ -57,20 +58,5 @@ $app['cloud_sql'] = function ($app) {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return new CloudSql($pdo);
 };
-
-// Turn on debug locally
-if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
-    || php_sapi_name() === 'cli-server'
-) {
-    $app['debug'] = true;
-} else {
-    $app['debug'] = filter_var(
-        getenv('BOOKSHELF_DEBUG'),
-        FILTER_VALIDATE_BOOLEAN
-    );
-}
-
-// add service parameters
-$app['bookshelf.page_size'] = 10;
 
 return $app;
