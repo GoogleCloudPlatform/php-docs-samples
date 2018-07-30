@@ -60,4 +60,3 @@ foreach ($strm->closeWriteAndReadAll() as $response) {
         }
     }
 }
-
