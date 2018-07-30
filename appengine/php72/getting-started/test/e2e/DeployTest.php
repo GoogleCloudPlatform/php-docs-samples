@@ -22,9 +22,9 @@ use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Yaml\Dumper;
 
 /**
- * Class CloudSqlTest
+ * Class DeployTest
  */
-class CloudSqlTest extends E2eTest
+class DeployTest extends E2eTest
 {
     use TestTrait,
         AppEngineDeploymentTrait,

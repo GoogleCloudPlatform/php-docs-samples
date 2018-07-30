@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf\DataModel;
+namespace Google\Cloud\Samples\AppEngine\GettingStarted;
 
 use PDO;
 
 /**
  * Class CloudSql is a wrapper for making calls to a Cloud SQL MySQL database.
  */
-class CloudSql
+class CloudSqlDataModel
 {
     private $dsn;
     private $user;

@@ -23,12 +23,11 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Storage\Bucket;
 
 $app->get('/', function (Request $request, Response $response) {
     return $response->withRedirect('/books/');
-});
+})->setName('home');
 
 // [START index]
 $app->get('/books/', function (Request $request, Response $response) {
@@ -39,7 +38,7 @@ $app->get('/books/', function (Request $request, Response $response) {
         'books' => $bookList['books'],
         'next_page_token' => $bookList['cursor'],
     ]);
-});
+})->setName('books');
 // [END index]
 
 // [START add]

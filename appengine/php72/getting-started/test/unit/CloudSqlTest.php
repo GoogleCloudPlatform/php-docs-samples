@@ -14,32 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf\DataModel;
+namespace Google\Cloud\Test\GettingStarted;
 
-use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
 use PDO;
 
 class CloudSqlTest extends \PHPUnit_Framework_TestCase
 {
-    use GetConfigTrait;
     use TestTrait;
 
     public function setUp()
     {
-        $config = $this->getConfig();
+        $connection = $this->requireEnv('CLOUDSQL_CONNECTION_NAME');
+        $dbUser = $this->requireEnv('CLOUDSQL_USER');
+        $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
+        $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
+        $dsn = "mysql:unix_socket=/cloudsql/${connection};dbname=${dbName}";
 
-        $mysql_dsn_local = sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s',
-            $config['mysql_port'],
-            $config['mysql_database_name']);
+        $pdo = new Pdo($dsn, $dbUser, $dbPass);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $pdo = new Pdo(
-            $mysql_dsn_local,
-            $config['mysql_user'],
-            $config['mysql_password']
-        );
-
-        $this->model = new CloudSql($pdo);
+        $this->model = new CloudSqlDataModel($pdo);
     }
 
     public function testDataModel()

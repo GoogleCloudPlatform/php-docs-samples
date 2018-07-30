@@ -20,7 +20,7 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
 use Google\Cloud\Storage\StorageClient;
 
 $app = new Slim\App([
@@ -56,7 +56,7 @@ $container['cloudsql'] = function ($container) {
     $password = getenv('CLOUDSQL_PASSWORD');
     $pdo = new PDO($dsn, $user, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    return new CloudSql($pdo);
+    return new CloudSqlDataModel($pdo);
 };
 
 return $app;
