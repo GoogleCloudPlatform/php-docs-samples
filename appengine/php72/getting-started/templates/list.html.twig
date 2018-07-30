@@ -24,11 +24,9 @@
   Add book
 </a>
 
-{# [START book_list] #}
 {% for book in books %}
 <div class="media">
   <a href="/books/{{book.id}}">
-    {# [START book_image] #}
     <div class="media-left">
       {% if book.image_url %}
         <img src="{{book.image_url}}">
@@ -36,7 +34,6 @@
         <img src="http://placekitten.com/g/128/192">
       {% endif %}
     </div>
-    {# [END book_image] #}
     <div class="media-body">
       <h4>{{book.title}}</h4>
       <p>{{book.author}}</p>
@@ -46,7 +43,6 @@
 {% else %}
 <p>No books found</p>
 {% endfor %}
-{# [END book_list] #}
 
 {% if next_page_token %}
 <nav>

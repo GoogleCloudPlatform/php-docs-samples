@@ -26,11 +26,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Google\Cloud\Storage\Bucket;
 
 $app->get('/', function (Request $request, Response $response) {
-    return $response->withRedirect('/books/');
+    return $response->withRedirect('/books');
 })->setName('home');
 
-// [START index]
-$app->get('/books/', function (Request $request, Response $response) {
+$app->get('/books', function (Request $request, Response $response) {
     $token = $request->getQueryParam('page_token');
     $bookList = $this->cloudsql->listBooks(10, $token);
 
@@ -39,9 +38,7 @@ $app->get('/books/', function (Request $request, Response $response) {
         'next_page_token' => $bookList['cursor'],
     ]);
 })->setName('books');
-// [END index]
 
-// [START add]
 $app->get('/books/add', function (Request $request, Response $response) {
     return $this->view->render($response, 'form.html.twig', [
         'action' => 'Add',
@@ -53,7 +50,7 @@ $app->post('/books/add', function (Request $request, Response $response) {
     $book = $request->getParsedBody();
     $files = $request->getUploadedFiles();
     if ($files['image']->getSize()) {
-        // Store the
+        // Store the uploaded files in a Cloud Storage object.
         $image = $files['image'];
         $object = $this->bucket->upload($image->getStream(), [
             'metadata' => ['contentType' => $image->getClientMediaType()],
@@ -65,9 +62,7 @@ $app->post('/books/add', function (Request $request, Response $response) {
 
     return $response->withRedirect("/books/$id");
 });
-// [END add]
 
-// [START show]
 $app->get('/books/{id}', function (Request $request, Response $response, $args) {
     $book = $this->cloudsql->read($args['id']);
     if (!$book) {
@@ -75,9 +70,7 @@ $app->get('/books/{id}', function (Request $request, Response $response, $args) 
     }
     return $this->view->render($response, 'view.html.twig', ['book' => $book]);
 });
-// [END show]
 
-// [START edit]
 $app->get('/books/{id}/edit', function (Request $request, Response $response, $args) {
     $book = $this->cloudsql->read($args['id']);
     if (!$book) {
@@ -96,41 +89,47 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
     }
     $book = $request->getParsedBody();
     $book['id'] = $args['id'];
-    // [START add_image]
     $files = $request->getUploadedFiles();
     if ($files['image']->getSize()) {
         $image = $files['image'];
-        $object = $this->bucket->upload($image->getStream(), [
-            'metadata' => ['contentType' => $image->getClientMediaType()],
+        $bucket = $this->bucket;
+        $imageStream = $image->getStream();
+        $imageContentType = $image->getClientMediaType();
+        // [START upload_image]
+        // Set your own image file path and content type below to upload an
+        // image to Clould Storage.
+        // $imageStream = fopen('/path/to/your_image.jpg', 'r');
+        // $imageContentType = 'image/jpg';
+        $object = $bucket->upload($imageStream, [
+            'metadata' => ['contentType' => $imageContentType],
             'predefinedAcl' => 'publicRead',
         ]);
-        $book['image_url'] = $object->info()['mediaLink'];
+        $imageUrl = $object->info()['mediaLink'];
+        // [END upload_image]
+        $book['image_url'] = $imageUrl;
     }
-    // [END add_image]
     if ($this->cloudsql->update($book)) {
         return $response->withRedirect("/books/$args[id]");
     }
 
     return new Response('Could not update book');
 });
-// [END edit]
 
-// [START delete]
 $app->post('/books/{id}/delete', function (Request $request, Response $response, $args) {;
     $book = $this->cloudsql->read($args['id']);
     if ($book) {
         $this->cloudsql->delete($args['id']);
-        // [START delete_image]
         if (!empty($book['image_url'])) {
+            $objectName = parse_url(basename($book['image_url']), PHP_URL_PATH);
+            $bucket = $this->bucket;
             // get bucket name from image
-            $name = parse_url(basename($book['image_url']), PHP_URL_PATH);
-            $object = $this->bucket->object($name);
+            // [START delete_image]
+            $object = $bucket->object($objectName);
             $object->delete();
+            // [END delete_image]
         }
-        // [END delete_image]
         return $response->withRedirect('/books/');
     }
 
     return $response->withStatus(404);
 });
-// [END delete]

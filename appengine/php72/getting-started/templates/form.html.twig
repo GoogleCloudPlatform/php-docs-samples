@@ -14,7 +14,6 @@
 # limitations under the License.
 #}
 
-{# [START book_form] #}
 {% extends "base.html.twig" %}
 
 {% block content %}
@@ -42,7 +41,6 @@
     <textarea name="description" id="description" class="form-control">{{book.description}}</textarea>
   </div>
 
-  {# [START book_form_image] #}
   <div class="form-group">
     <label for="image">Cover Image</label>
     <input type="file" name="image" id="image" class="form-control"/>
@@ -52,10 +50,8 @@
     <label for="image_url">Cover Image URL</label>
     <input type="text" name="image_url" id="image_url" value="{{book.image_url}}" class="form-control"/>
   </div>
-  {# [END book_form_image] #}
 
   <button id="submit" type="submit" class="btn btn-success">Save</button>
 </form>
 
 {% endblock %}
-{# [END book_form] #}

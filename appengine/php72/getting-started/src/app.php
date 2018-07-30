@@ -40,21 +40,35 @@ $container['view'] = function ($container) {
 // Cloud Storage bucket
 $container['bucket'] = function ($container) {
     $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
+    // [START setup_storage_client]
+    // Your Google Cloud Storage bucket name and Project ID can be configured
+    // however fits your application best.
+    // $projectId = 'YOUR_PROJECT_ID';
+    // $bucketName = 'YOUR_BUCKET_NAME';
     $storage = new StorageClient([
         'projectId' => $projectId,
     ]);
-    return $storage->bucket($bucketName);
+    $bucket = $storage->bucket($bucketName);
+    // [END setup_storage_client]
+    return $bucket;
 };
 
 // Get the Cloud SQL MySQL connection object
 $container['cloudsql'] = function ($container) {
     // Data Model
     $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-    $connection = getenv('CLOUDSQL_CONNECTION_NAME');
-    $dsn = "mysql:unix_socket=/cloudsql/${connection};dbname=${dbName}";
-    $user = getenv('CLOUDSQL_USER');
-    $password = getenv('CLOUDSQL_PASSWORD');
-    $pdo = new PDO($dsn, $user, $password);
+    $dbConn = getenv('CLOUDSQL_CONNECTION_NAME');
+    $dbUser = getenv('CLOUDSQL_USER');
+    $dbPass = getenv('CLOUDSQL_PASSWORD');
+    // [START setup_cloudsql_client]
+    // Fill the variables below to match your Cloud SQL configuration.
+    // $dbConn = 'YOUR_CLOUDSQL_CONNECTION_NAME';
+    // $dbName = 'YOUR_CLOUDSQL_DATABASE_NAME';
+    // $dbUser = 'YOUR_CLOUDSQL_USER';
+    // $dbPass = 'YOUR_CLOUDSQL_PASSWORD';
+    $dsn = "mysql:unix_socket=/cloudsql/${dbConn};dbname=${dbName}";
+    $pdo = new PDO($dsn, $dbUser, $dbPass);
+    // [END setup_cloudsql_client]
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return new CloudSqlDataModel($pdo);
 };

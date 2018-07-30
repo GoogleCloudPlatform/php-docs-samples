@@ -71,19 +71,20 @@ class CloudSqlDataModel
         }
     }
 
-    public function listBooks($limit = 10, $cursor = null)
+    public function listBooks($limit = 10, $cursor = 0)
     {
-        if ($cursor) {
-            $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id' .
-                ' LIMIT :limit';
-            $statement = $this->pdo->prepare($query);
-            $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
-        } else {
-            $query = 'SELECT * FROM books ORDER BY id LIMIT :limit';
-            $statement = $this->pdo->prepare($query);
-        }
-        $statement->bindValue(':limit', $limit + 1, PDO::PARAM_INT);
+        $pdo = $this->pdo;
+        // [START run_cloudsql_query_multiple_rows]
+        $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id LIMIT :limit';
+        $statement = $pdo->prepare($query);
+        $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
+        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
         $statement->execute();
+        // Uncomment this while loop to output the results
+        // while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        //     var_dump($row);
+        // }
+        // [END run_cloudsql_query_multiple_rows]
         $rows = array();
         $last_row = null;
         $new_cursor = null;
@@ -125,11 +126,14 @@ class CloudSqlDataModel
 
     public function read($id)
     {
-        $statement = $this->pdo->prepare('SELECT * FROM books WHERE id = :id');
+        $pdo = $this->pdo;
+        // [START run_cloudsql_query]
+        $statement = $pdo->prepare('SELECT * FROM books WHERE id = :id');
         $statement->bindValue('id', $id, PDO::PARAM_INT);
         $statement->execute();
-
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        // [START run_cloudsql_query]
+        return $result;
     }
 
     public function update($book)

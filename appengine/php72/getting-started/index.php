@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 
-// [START index_php]
 require_once __DIR__ . '/vendor/autoload.php';
 
-/** @var Silex\Application $app */
+/** @var Slim\App $app */
 $app = require __DIR__ . '/src/app.php';
 require __DIR__ . '/src/controllers.php';
 

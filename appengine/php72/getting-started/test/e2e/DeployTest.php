@@ -24,11 +24,10 @@ use Symfony\Component\Yaml\Dumper;
 /**
  * Class DeployTest
  */
-class DeployTest extends E2eTest
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use TestTrait,
-        AppEngineDeploymentTrait,
-        GetConfigTrait;
+        AppEngineDeploymentTrait;
 
     private static function beforeDeploy()
     {
