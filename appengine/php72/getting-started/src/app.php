@@ -37,8 +37,7 @@ $app->register(new TwigServiceProvider(), array(
 
 // Cloud Storage
 $app['cloud_storage_bucket'] = function ($app) {
-    $projectId = getenv('GOOGLE_CLOUD_PROJECT');
-    $bucketName = $projectId . '.appspot.com';
+    $bucketName = getenv('GOOGLE_BUCKET_NAME');
 
     $storage = new StorageClient([
         'projectId' => $projectId,
