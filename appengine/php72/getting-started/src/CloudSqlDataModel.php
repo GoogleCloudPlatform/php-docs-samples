@@ -132,7 +132,7 @@ class CloudSqlDataModel
         $statement->bindValue('id', $id, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        // [START run_cloudsql_query]
+        // [END run_cloudsql_query]
         return $result;
     }
 
