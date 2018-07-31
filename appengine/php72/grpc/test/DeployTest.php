@@ -67,7 +67,7 @@ class DeployTest extends TestCase
         if (!getenv('GOOGLE_SPANNER_INSTANCE_ID')
             || !getenv('GOOGLE_SPANNER_DATABASE_ID')) {
             $this->markTestSkipped('Set the GOOGLE_SPANNER_INSTANCE_ID and ' .
-                'SPANNER_DATABASE_ID environment variables to run the Cloud ' .
+                'GOOGLE_SPANNER_DATABASE_ID environment variables to run the Cloud ' .
                 'Spanner tests.');
         }
         // Access the modules app top page.
@@ -95,6 +95,21 @@ class DeployTest extends TestCase
                             'top page status code');
         $this->assertContains(
             'Successfully submitted a time series',
+            $resp->getBody()->getContents());
+    }
+
+    public function testSpeech()
+    {
+        // Access the modules app top page.
+        try {
+            $resp = $this->client->get('/speech.php');
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            $this->fail($e->getResponse()->getBody());
+        }
+        $this->assertEquals('200', $resp->getStatusCode(),
+                            'top page status code');
+        $this->assertContains(
+            'Transcription: how old is the Brooklyn Bridge',
             $resp->getBody()->getContents());
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "43c9c69a11c1651c836b757e425d5b58",
+    "content-hash": "2a0712262c14ce3bd7c7b25bf0459ca3",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -101,16 +101,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.20.3",
+            "version": "v1.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-core.git",
-                "reference": "64e356d4a988c186b1386efcbbfb5bbc4f4d3ede"
+                "reference": "4dee63d2baf793d3798cc7e420004102a49b0a71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/64e356d4a988c186b1386efcbbfb5bbc4f4d3ede",
-                "reference": "64e356d4a988c186b1386efcbbfb5bbc4f4d3ede",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-core/zipball/4dee63d2baf793d3798cc7e420004102a49b0a71",
+                "reference": "4dee63d2baf793d3798cc7e420004102a49b0a71",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
-                "google/gax": "^0.33",
+                "google/gax": "^0.36",
                 "opis/closure": "^3",
                 "phpdocumentor/reflection": "^3.0",
                 "phpunit/phpunit": "^4.8|^5.0",
@@ -156,25 +156,24 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2018-05-24T20:25:11+00:00"
+            "time": "2018-07-19T17:51:07+00:00"
         },
         {
             "name": "google/cloud-monitoring",
-            "version": "v0.10.0",
+            "version": "v0.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-monitoring.git",
-                "reference": "4d23fae00b1dfc569e55f294f81e720de62a9555"
+                "reference": "bafb52d63204fea29f460a106470757dc5c7bd45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-monitoring/zipball/4d23fae00b1dfc569e55f294f81e720de62a9555",
-                "reference": "4d23fae00b1dfc569e55f294f81e720de62a9555",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-monitoring/zipball/bafb52d63204fea29f460a106470757dc5c7bd45",
+                "reference": "bafb52d63204fea29f460a106470757dc5c7bd45",
                 "shasum": ""
             },
             "require": {
-                "google/gax": "^0.33",
-                "google/proto-client": "^0.39"
+                "google/gax": "^0.36"
             },
             "require-dev": {
                 "google/cloud-core": "^1.14",
@@ -195,7 +194,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Google\\Cloud\\Monitoring\\": "src"
+                    "Google\\Cloud\\Monitoring\\": "src",
+                    "GPBMetadata\\Google\\Monitoring\\": "metadata"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -203,27 +203,26 @@
                 "Apache-2.0"
             ],
             "description": "Stackdriver Monitoring Client for PHP",
-            "time": "2018-05-24T20:25:11+00:00"
+            "time": "2018-07-19T17:51:07+00:00"
         },
         {
             "name": "google/cloud-spanner",
-            "version": "v1.5.0",
+            "version": "v1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-spanner.git",
-                "reference": "952c8ed4cf0bae6daf6c99edabed52c228488842"
+                "reference": "702812c54794542567b4a23f9b79d147cb671682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-spanner/zipball/952c8ed4cf0bae6daf6c99edabed52c228488842",
-                "reference": "952c8ed4cf0bae6daf6c99edabed52c228488842",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-spanner/zipball/702812c54794542567b4a23f9b79d147cb671682",
+                "reference": "702812c54794542567b4a23f9b79d147cb671682",
                 "shasum": ""
             },
             "require": {
                 "ext-grpc": "*",
                 "google/cloud-core": "^1.14",
-                "google/gax": "^0.33",
-                "google/proto-client": "^0.39"
+                "google/gax": "^0.36"
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
@@ -246,7 +245,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Google\\Cloud\\Spanner\\": "src"
+                    "Google\\Cloud\\Spanner\\": "src",
+                    "GPBMetadata\\Google\\Spanner\\": "metadata"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -254,20 +254,71 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Spanner Client for PHP",
-            "time": "2018-05-24T20:25:11+00:00"
+            "time": "2018-07-19T17:51:07+00:00"
         },
         {
-            "name": "google/gax",
-            "version": "0.33.0",
+            "name": "google/cloud-speech",
+            "version": "v0.15.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "9f975d6ebf2b7c7a064c22e3f7fc6818052fd387"
+                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-speech.git",
+                "reference": "154061a2bad5715d81ae7f3eb67d2e0cdaabd4a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9f975d6ebf2b7c7a064c22e3f7fc6818052fd387",
-                "reference": "9f975d6ebf2b7c7a064c22e3f7fc6818052fd387",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-speech/zipball/154061a2bad5715d81ae7f3eb67d2e0cdaabd4a0",
+                "reference": "154061a2bad5715d81ae7f3eb67d2e0cdaabd4a0",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-core": "^1.14",
+                "google/gax": "^0.36"
+            },
+            "require-dev": {
+                "erusev/parsedown": "^1.6",
+                "google/cloud-storage": "^1.3",
+                "phpdocumentor/reflection": "^3.0",
+                "phpunit/phpunit": "^4.8|^5.0",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "suggest": {
+                "ext-grpc": "The gRPC extension enables use of the performant gRPC transport",
+                "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions."
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-speech",
+                    "target": "GoogleCloudPlatform/google-cloud-php-speech.git",
+                    "path": "Speech",
+                    "entry": "src/SpeechClient.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\Speech\\": "src",
+                    "GPBMetadata\\Google\\Cloud\\Speech\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Cloud Speech Client for PHP",
+            "time": "2018-07-19T17:51:07+00:00"
+        },
+        {
+            "name": "google/gax",
+            "version": "0.36.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/gax-php.git",
+                "reference": "9dd3911738aaf61bafd861917820317402cba798"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9dd3911738aaf61bafd861917820317402cba798",
+                "reference": "9dd3911738aaf61bafd861917820317402cba798",
                 "shasum": ""
             },
             "require": {
@@ -280,6 +331,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8.36",
+                "sami/sami": "*",
                 "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
@@ -305,60 +357,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-05-24T17:47:50+00:00"
-        },
-        {
-            "name": "google/proto-client",
-            "version": "0.39.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/googleapis/proto-client-php.git",
-                "reference": "a9e1f93e443216583d05bc87d931646ccd630b28"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/proto-client-php/zipball/a9e1f93e443216583d05bc87d931646ccd630b28",
-                "reference": "a9e1f93e443216583d05bc87d931646ccd630b28",
-                "shasum": ""
-            },
-            "require": {
-                "google/protobuf": "^3.4",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "google/gax": ">=0.25.0",
-                "phpunit/phpunit": "^4.8.36"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Google\\": "src/Google/",
-                    "GPBMetadata\\": "src/GPBMetadata/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Generated proto and gRPC classes for Google Cloud Platform in PHP",
-            "homepage": "https://github.com/googleapis/proto-client-php",
-            "keywords": [
-                "google"
-            ],
-            "time": "2018-05-24T16:41:41+00:00"
+            "time": "2018-07-18T21:57:44+00:00"
         },
         {
             "name": "google/protobuf",
-            "version": "v3.5.2",
+            "version": "v3.6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/protobuf.git",
-                "reference": "b5fbb742af122b565925987e65c08957739976a7"
+                "reference": "ce044817c7ba0aea27c3fd8e496635d94d20a755"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/protobuf/zipball/b5fbb742af122b565925987e65c08957739976a7",
-                "reference": "b5fbb742af122b565925987e65c08957739976a7",
+                "url": "https://api.github.com/repos/google/protobuf/zipball/ce044817c7ba0aea27c3fd8e496635d94d20a755",
+                "reference": "ce044817c7ba0aea27c3fd8e496635d94d20a755",
                 "shasum": ""
             },
             "require": {
@@ -386,20 +398,20 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2018-03-06T03:54:18+00:00"
+            "time": "2018-06-08T01:16:44+00:00"
         },
         {
             "name": "grpc/grpc",
-            "version": "1.12.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/grpc/grpc-php.git",
-                "reference": "ad3f6a2bb47475a32a7cdf23da3f67957e0e5aab"
+                "reference": "8ff8ed6a99803b4e2396ce63b289cad4b4c40d39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/ad3f6a2bb47475a32a7cdf23da3f67957e0e5aab",
-                "reference": "ad3f6a2bb47475a32a7cdf23da3f67957e0e5aab",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/8ff8ed6a99803b4e2396ce63b289cad4b4c40d39",
+                "reference": "8ff8ed6a99803b4e2396ce63b289cad4b4c40d39",
                 "shasum": ""
             },
             "require": {
@@ -427,7 +439,7 @@
             "keywords": [
                 "rpc"
             ],
-            "time": "2018-05-15T22:09:16+00:00"
+            "time": "2018-06-28T22:47:39+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1031,16 +1043,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.12",
+            "version": "v2.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
+                "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
-                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/29af24f25bab834fcbb38ad2a69fa93b867e070d",
+                "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d",
                 "shasum": ""
             },
             "require": {
@@ -1072,10 +1084,11 @@
             "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
             "keywords": [
                 "csprng",
+                "polyfill",
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-04-04T21:24:14+00:00"
+            "time": "2018-07-04T16:31:37+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2191,7 +2204,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
@@ -2248,16 +2261,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "36f83f642443c46f3cf751d4d2ee5d047d757a27"
+                "reference": "1b97071a26d028c9bd4588264e101e14f6e7cd00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/36f83f642443c46f3cf751d4d2ee5d047d757a27",
-                "reference": "36f83f642443c46f3cf751d4d2ee5d047d757a27",
+                "url": "https://api.github.com/repos/symfony/console/zipball/1b97071a26d028c9bd4588264e101e14f6e7cd00",
+                "reference": "1b97071a26d028c9bd4588264e101e14f6e7cd00",
                 "shasum": ""
             },
             "require": {
@@ -2313,20 +2326,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16T08:49:21+00:00"
+            "time": "2018-05-23T05:02:55+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "b28fd73fefbac341f673f5efd707d539d6a19f68"
+                "reference": "47e6788c5b151cf0cfdf3329116bf33800632d75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/b28fd73fefbac341f673f5efd707d539d6a19f68",
-                "reference": "b28fd73fefbac341f673f5efd707d539d6a19f68",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/47e6788c5b151cf0cfdf3329116bf33800632d75",
+                "reference": "47e6788c5b151cf0cfdf3329116bf33800632d75",
                 "shasum": ""
             },
             "require": {
@@ -2369,11 +2382,11 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16T14:03:39+00:00"
+            "time": "2018-06-25T11:10:40+00:00"
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
@@ -2430,16 +2443,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "8e03ca3fa52a0f56b87506f38cf7bd3f9442b3a0"
+                "reference": "8a721a5f2553c6c3482b1c5b22ed60fe94dd63ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/8e03ca3fa52a0f56b87506f38cf7bd3f9442b3a0",
-                "reference": "8e03ca3fa52a0f56b87506f38cf7bd3f9442b3a0",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/8a721a5f2553c6c3482b1c5b22ed60fe94dd63ed",
+                "reference": "8a721a5f2553c6c3482b1c5b22ed60fe94dd63ed",
                 "shasum": ""
             },
             "require": {
@@ -2476,7 +2489,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16T08:49:21+00:00"
+            "time": "2018-06-21T11:10:19+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2594,16 +2607,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "4cbf2db9abcb01486a21b7a059e03a62fae63187"
+                "reference": "acc5a37c706ace827962851b69705b24e71ca17c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/4cbf2db9abcb01486a21b7a059e03a62fae63187",
-                "reference": "4cbf2db9abcb01486a21b7a059e03a62fae63187",
+                "url": "https://api.github.com/repos/symfony/process/zipball/acc5a37c706ace827962851b69705b24e71ca17c",
+                "reference": "acc5a37c706ace827962851b69705b24e71ca17c",
                 "shasum": ""
             },
             "require": {
@@ -2639,11 +2652,11 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16T08:49:21+00:00"
+            "time": "2018-05-30T04:24:30+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.10",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -2702,20 +2715,21 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.35.3",
+            "version": "v1.35.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "b48680b6eb7d16b5025b9bfc4108d86f6b8af86f"
+                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b48680b6eb7d16b5025b9bfc4108d86f6b8af86f",
-                "reference": "b48680b6eb7d16b5025b9bfc4108d86f6b8af86f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
+                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.3.3",
+                "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
@@ -2754,16 +2768,16 @@
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "http://twig.sensiolabs.org/contributors",
+                    "homepage": "https://twig.symfony.com/contributors",
                     "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
-            "homepage": "http://twig.sensiolabs.org",
+            "homepage": "https://twig.symfony.com",
             "keywords": [
                 "templating"
             ],
-            "time": "2018-03-20T04:25:58+00:00"
+            "time": "2018-07-13T07:12:17+00:00"
         },
         {
             "name": "webmozart/assert",
