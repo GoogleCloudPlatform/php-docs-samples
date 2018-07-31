@@ -1,3 +1,4 @@
+# [START app_yaml]
 runtime: php72
 instance_class: F2
 
@@ -9,3 +10,4 @@ env_variables:
     CLOUDSQL_PASSWORD: ""
     ## Uncomment to give your database a name other than "bookshelf"
     # CLOUDSQL_DATABASE_NAME: ""
+# [END app_yaml]
