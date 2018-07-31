@@ -21,7 +21,9 @@
  * Follows Silex Skeleton pattern.
  */
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
+[START storage_client_import]
 use Google\Cloud\Storage\StorageClient;
+[END storage_client_import]
 
 $app = new Slim\App([
     'settings' => [
