@@ -97,7 +97,7 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
         $imageContentType = $image->getClientMediaType();
         // [START upload_image]
         // Set your own image file path and content type below to upload an
-        // image to Clould Storage.
+        // image to Cloud Storage.
         // $imageStream = fopen('/path/to/your_image.jpg', 'r');
         // $imageContentType = 'image/jpg';
         $object = $bucket->upload($imageStream, [
