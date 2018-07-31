@@ -3,10 +3,6 @@
 
 runtime: php72
 
-handlers:
-- url: /
-  script: index.php
-
 # [START gae_cloudsql_postgres_env]
 env_variables:
   # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
@@ -15,9 +11,3 @@ env_variables:
   CLOUDSQL_PASSWORD: PASSWORD
   CLOUDSQL_DSN: "pgsql:dbname=DATABASE;host=/cloudsql/CONNECTION_NAME"
 # [END gae_cloudsql_postgres_env]
-
-# [START gae_cloudsql_postgres_settings]
-# Use the connection name obtained when configuring your Cloud SQL instance.
-beta_settings:
-    cloud_sql_instances: "CONNECTION_NAME"
-# [END gae_cloudsql_postgres_settings]

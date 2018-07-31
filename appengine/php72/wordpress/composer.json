@@ -1,0 +1,12 @@
+{
+    "require": {
+        "ext-phar": "*",
+        "ext-zip": "*",
+        "paragonie/random_compat": "^1.3",
+        "symfony/console": "^3.0",
+        "google/cloud-tools": "^0.8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    }
+}

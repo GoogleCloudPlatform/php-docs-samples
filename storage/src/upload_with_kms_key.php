@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START upload_with_kms_key]
+# [START storage_upload_with_kms_key]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -54,4 +54,4 @@ function upload_with_kms_key($projectId, $bucketName, $objectName, $source, $kms
         $objectName,
         $kmsKeyName);
 }
-# [END upload_with_kms_key]
+# [END storage_upload_with_kms_key]

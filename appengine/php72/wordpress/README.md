@@ -1,11 +1,11 @@
-# A helper command for running WordPress on Google Cloud Platform
+# Deploy WordPress to App Engine for PHP 7.2
 
 This is a small command line tool for downloading and configuring
-WordPress for Google Cloud Platform. The script allows you to create a
+WordPress on App Engine for PHP 7.2. The script allows you to create a
 working WordPress project for the
 [App Engine standard environment][appengine-standard]. For deploying
 WordPress to the [App Engine flexible environment][appengine-flexible],
-refer to the example at [appengine/standard/wordpress](../../flexible/wordpress)
+refer to the example at [appengine/standard/wordpress][../../flexible/wordpress]
 
 ## Common Prerequisites
 
@@ -15,7 +15,6 @@ refer to the example at [appengine/standard/wordpress](../../flexible/wordpress)
 * [Enable Cloud SQL API][cloud-sql-api-enable]
 * Install [Google Cloud SDK][gcloud-sdk]
 * Install the [mysql-client][mysql-client] command line tool
-* [Install Memcache][memcache-installation]
 
 ## Project preparation
 
@@ -41,15 +40,15 @@ $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
 
 ### Create and configure a Cloud SQL for MySQL 2nd generation instance
 
-Note: In this guide, we use `wp` for various resource names; the instance
-name, the database name, and the user name.
+Note: In this guide, we use `wordpress` for the instance name and the database
+name. We use `root` for the database user name.
 
 Create a new Cloud SQL for MySQL Second Generation instance with the following
 command:
 
-```
-$ gcloud sql instances create wp \
-  --activation-policy=ALWAYS \
+```sh
+$ gcloud sql instances create wordpress \
+    --activation-policy=ALWAYS \
     --tier=db-n1-standard-1
 ```
 
@@ -62,10 +61,78 @@ for more details.
 
 Then change the root password for your instance:
 
+```sh
+$ gcloud sql users set-password root \
+    --host=% \
+    --instance wordpress \
+    --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
-$ gcloud sql users set-password root % \
-  --instance wp --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
+
+You will also need to create the database you want your WordPress site to use:
+
+```sh
+$ gcloud sql databases create wordpress --instance wordpress
 ```
+
+## SetUp
+
+First install the dependencies in this directory as follows:
+
+```sh
+$ composer install
+```
+
+If it complains about extensions, please install `phar` and `zip` PHP
+extensions and retry.
+
+### Create a new WordPress Project
+
+To download WordPress and set it up for Google Cloud, run the `create` command:
+
+```sh
+$ php wordpress.php create
+```
+
+The command asks you several questions, please answer them. Then you'll have a
+new WordPress project. By default it will create `my-wordpress-project` in the
+current directory.
+
+### Update an existing WordPress Project
+
+If you are migrating an existing project to Google Cloud, you can use the
+`update` command:
+
+```sh
+$ php wordpress.php update path/to/your-wordpress-site
+```
+
+The command asks you several questions, please answer them. This will copy the
+files in the [`files`](files/) directory and write the proper configuration.
+Then your WordPress project will be ready to deploy to Google Cloud!
+
+## Deploy to Google Cloud
+
+CD into your WordPress project directory and run the following command to
+deploy:
+
+```sh
+$ gcloud app deploy \
+    --promote --stop-previous-version app.yaml cron.yaml
+```
+
+Then access your site, and continue the installation step. The URL is:
+https://PROJECT_ID.appspot.com/
+
+Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins page, activate the following plugins:
+
+  - Google App Engine for WordPress (also set the e-mail address in its
+    settings page)
+
+After activating the plugins, try uploading a media object in a new post
+and confirm the image is uploaded to the GCS bucket by visiting the
+[Google Cloud console's Storage page][cloud-storage-console].
+
+## Local Development
 
 To access this MySQL instance, use Cloud SQL Proxy. [Download][cloud-sql-proxy-download]
 it to your local computer and make it executable.
@@ -78,77 +145,22 @@ local machine. Save it to a safe place.
 
 Run the proxy by the following command:
 
-```
+```sh
 $ cloud_sql_proxy \
-  -dir /tmp/cloudsql \
-    -instances=YOUR_PROJECT_ID:us-central1:wp=tcp:3306 \
-      -credential_file=PATH_TO_YOUR_SERVICE_ACCOUNT_JSON_FILE
+    -dir /cloudsql \
+    -instances=YOUR_PROJECT_ID:us-central1:wordpress \
+    -credential_file=/path/to/YOUR_SERVICE_ACCOUNT_JSON_FILE.json
 ```
 
 Now you can access the Cloud SQL instance with the MySQL client in a separate
-command line tab. Create a new database and a user as follows:
+command line tab.
 
 ```
-$ mysql -h 127.0.0.1 -u root -p
-mysql> create database wp;
-mysql> create user 'wp'@'%' identified by 'PASSWORD'; // Don't use this password!
-mysql> grant all on wp.* to 'wp'@'%';
+$ mysql --socket /cloudsql/YOUR_PROJECT_ID:us-central1:wordpress -u root -p
+mysql> use database wordpress;
+mysql> show tables;
 mysql> exit
 ```
-
-## How to use
-
-First install the dependencies in this directory as follows:
-
-```
-$ composer install
-```
-
-If it complains about extensions, please install `phar` and `zip` PHP
-extensions and retry.
-
-Then run the helper command.
-
-```
-$ php wordpress.php setup
-```
-
-The command asks you several questions, please answer them. Then you'll have a
-new WordPress project. By default it will create `my-wordpress-project` in the
-current directory.
-
-## Deployment
-
-CD into your WordPress project directory and run the following command to
-deploy:
-
-```
-$ cd my-wordpress-project
-$ gcloud app deploy \
-    --promote --stop-previous-version app.yaml cron.yaml
-```
-
-Then access your site, and continue the installation step. The URL is:
-https://PROJECT_ID.appspot.com/
-
-Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins page, activate the following
-plugins:
-
-  - Batcache Manager
-  - Google App Engine for WordPress (also set the e-mail address in its
-    settings page)
-
-## Check if the Batcache plugin is working
-
-On the plugin page in the WordPress dashboard, click on the Drop-ins tab near
-the top. You should see 2 drop-ins are activated: `advanced-cache.php` and
-`object-cache.php`.
-
-To make sure it’s really working, you can open an incognito window and
-visit the site because the cache plugin only serves from cache to
-anonymous users. Then go to
-[the memcache dashboard in the Cloud Console][memcache-dashboard] and
-check the hit ratio and number of items in cache.
 
 ## Various workflows
 
@@ -161,12 +173,13 @@ Dashboard. You can also use the `wp-cli` utility as follows (be sure to keep
 the cloud SQL proxy running):
 
 ```
-# To update Wordpress itself
+# Install the wp-cli utility
+$ composer require wp-cli/wp-cli
+# Now you can run the "wp" command to update Wordpress itself
 $ vendor/bin/wp core update --path=wordpress
-# To update all the plugins
-$ vendor/bin/wp plugin update --all --path=wordpress
-# To update all the themes
-$ vendor/bin/wp theme update --all --path=wordpress
+# You can also update all the plugins and themes
+$ vendor/bin/wp plugin update --all
+$ vendor/bin/wp theme update --all
 ```
 
 If you get the following error:
@@ -201,8 +214,6 @@ Enjoy your WordPress installation!
 [appengine-standard]: https://cloud.google.com/appengine/docs/about-the-standard-environment
 [appengine-flexible]: https://cloud.google.com/appengine/docs/flexible/
 [sql-settings]: https://console.cloud.google.com/sql/instances
-[memcache-dashboard]: https://console.cloud.google.com/appengine/memcache
-[memcache-installation]: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-memcache-on-ubuntu-12-04#install-memcache
 [mysql-client]: https://dev.mysql.com/doc/refman/5.7/en/mysql.html
 [composer]: https://getcomposer.org/
 [cloud-console]: https://console.cloud.google.com/

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START enable_default_kms_key]
+# [START storage_set_bucket_default_kms_key]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -50,4 +50,4 @@ function enable_default_kms_key($projectId, $bucketName, $kmsKeyName)
         $bucketName,
         $bucket->info()['encryption']['defaultKmsKeyName']);
 }
-# [END enable_default_kms_key]
+# [END storage_set_bucket_default_kms_key]
