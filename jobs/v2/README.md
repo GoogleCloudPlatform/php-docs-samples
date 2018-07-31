@@ -1,12 +1,12 @@
-# Google Cloud Job Discovery API Samples
+# Google Cloud Talent Solution API Samples
 
 ## Description
 
-These samples show how to use the [Google Cloud Job Discovery API]
-(https://cloud.google.com/job-discovery/).
+These samples show how to use the [Google Cloud Talent Solution API]
+(https://cloud.google.com/talent-solution/job-search/docs).
 
 ## Build and Run
-1.  **Enable APIs** - [Enable the Job Discovery API](https://console.cloud.google.com/flows/enableapi?apiid=jobs.googleapis.com)
+1.  **Enable APIs** - [Enable the Talent Solution API](https://console.cloud.google.com/flows/enableapi?apiid=jobs.googleapis.com)
     and create a new project or select an existing project.
 2.  **Activate your Credentials** - If you do not already have an active set of credentials, create and download a [JSON Service Account key](https://pantheon.corp.google.com/apis/credentials/serviceaccountkey). Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` as the path to the downloaded JSON file.
 3.  **Clone the repo** and cd into this directory
