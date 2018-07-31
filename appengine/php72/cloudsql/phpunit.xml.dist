@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit>
+<phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
         <testsuite name="AppEngine for PHP 7.2 Cloud SQL test">
             <directory>test</directory>

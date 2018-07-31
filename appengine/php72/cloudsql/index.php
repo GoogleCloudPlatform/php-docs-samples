@@ -15,45 +15,53 @@
  * limitations under the License.
  */
 
-# [START gae_cloudsql_example]
-// Connect to CloudSQL from App Engine.
 $dsn = getenv('CLOUDSQL_DSN');
 $user = getenv('CLOUDSQL_USER');
 $password = getenv('CLOUDSQL_PASSWORD');
+
+// Ensure the required environment variables are set to run the application
 if (!isset($dsn, $user) || false === $password) {
     throw new Exception('Set CLOUDSQL_DSN, CLOUDSQL_USER, and CLOUDSQL_PASSWORD environment variables');
 }
 
-// Create the PDO object to talk to CloudSQL
+# [START gae_cloudsql_example]
+// Create the PDO object to talk to CloudSQL. Use the following variables:
+//
+// $dsn = "mysql:dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME";
+// $user = 'YOUR_CLOUDSQL_USER';
+// $password = 'YOUR_CLOUDSQL_PASSWORD';
+//
+// If the unix socket is unavailable, try to connect using TCP. This will work
+// if you're running a local MySQL server or using the Cloud SQL proxy, for example:
+//
+//     $ cloud_sql_proxy -instances=your-connection-name=tcp:3306
+//
+// This will mean your DSN for connecting locally to Cloud SQL would look like this:
+//
+// $dsn = "mysql:dbname=DATABASE;host=127.0.0.1";
+//
 $db = new PDO($dsn, $user, $password);
 
 // create the tables if they don't exist
-$stmt = $db->prepare('CREATE TABLE IF NOT EXISTS entries ('
-    . 'guestName VARCHAR(255), '
-    . 'content VARCHAR(255))');
-$result = $stmt->execute();
-
-if (false === $result) {
-    exit("Error: " . $stmt->errorInfo()[2]);
-}
+$sql = 'CREATE TABLE IF NOT EXISTS entries (guestName VARCHAR(255), content VARCHAR(255))';
+$stmt = $db->prepare($sql);
+$stmt->execute();
 
 // Insert a new row into the guestbook on POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $db->prepare('INSERT INTO entries (guestName, content) VALUES (:name, :content)');
-    $result = $stmt->execute([
+    $stmt->execute([
         ':name' => $_POST['name'],
         ':content' => $_POST['content'],
     ]);
-    if (false === $result) {
-        print("Error: " . $stmt->errorInfo()[2]);
-    }
 }
 
-// Show existing guestbook entries.
+// Query existing guestbook entries.
 $results = $db->query('SELECT * from entries');
 
+# [END gae_cloudsql_example]
 ?>
-<?php ?>
+
 <html>
     <body>
         <?php if ($results->rowCount() > 0): ?>
@@ -71,4 +79,3 @@ $results = $db->query('SELECT * from entries');
         </form>
     </body>
 </html>
-<?php # [END gae_cloudsql_example]?>

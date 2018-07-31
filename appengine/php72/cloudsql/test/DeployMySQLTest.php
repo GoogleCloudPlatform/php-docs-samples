@@ -48,7 +48,7 @@ class DeployMySQLTest extends \PHPUnit_Framework_TestCase
             || (!$database = getenv('CLOUDSQL_DATABASE'))
             || false === $password = getenv('CLOUDSQL_PASSWORD')) {
             self::markTestSkipped('Set the CLOUDSQL_CONNECTION_NAME_MYSQL, CLOUDSQL_USER'
-                . 'CLOUDSQL_DATABASE, and CLOUDSQL_PASSWORD environment variables');
+                . ' CLOUDSQL_DATABASE, and CLOUDSQL_PASSWORD environment variables');
         }
 
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
