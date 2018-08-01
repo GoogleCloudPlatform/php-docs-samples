@@ -115,7 +115,7 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
     return new Response('Could not update book');
 });
 
-$app->post('/books/{id}/delete', function (Request $request, Response $response, $args) {;
+$app->post('/books/{id}/delete', function (Request $request, Response $response, $args) {
     $book = $this->cloudsql->read($args['id']);
     if ($book) {
         $this->cloudsql->delete($args['id']);

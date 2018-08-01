@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Yaml\Dumper;
 
 /**
  * Class DeployTest
