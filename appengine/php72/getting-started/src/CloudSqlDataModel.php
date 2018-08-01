@@ -113,6 +113,7 @@ class CloudSqlDataModel
         $placeHolders = array_map(function ($key) {
             return ":$key";
         }, $names);
+        // [START cloudsql_write]
         $sql = sprintf(
             'INSERT INTO books (%s) VALUES (%s)',
             implode(', ', $names),
@@ -120,7 +121,7 @@ class CloudSqlDataModel
         );
         $statement = $this->pdo->prepare($sql);
         $statement->execute($book);
-
+        // [END cloudsql_write]
         return $this->pdo->lastInsertId();
     }
 
