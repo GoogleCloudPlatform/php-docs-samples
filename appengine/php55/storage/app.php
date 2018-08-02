@@ -40,7 +40,7 @@ $app->get('/', function () use ($app) {
 
     # [START user_upload]
     $options = ['gs_bucket_name' => $my_bucket];
-    $upload_url = CloudStorageTools::createUploadUrl('/upload/handler', $options);
+    $upload_url = CloudStorageTools::createUploadUrl('/upload_handler.php', $options);
     # [END user_upload]
 
     $buckets = [
