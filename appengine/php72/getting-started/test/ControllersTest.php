@@ -35,8 +35,8 @@ class ControllersTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $app = require __DIR__ . '/../../src/app.php';
-        require __DIR__ . '/../../src/controllers.php';
+        $app = require __DIR__ . '/../src/app.php';
+        require __DIR__ . '/../src/controllers.php';
 
         // Mock CloudSql dependency
         $container = $app->getContainer();
@@ -48,11 +48,7 @@ class ControllersTest extends PHPUnit_Framework_TestCase
     public function testRoot()
     {
         $action = $this->getAction('home');
-        $environment = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/echo',
-            'QUERY_STRING'=>'foo=bar']
-        );
+        $environment = Environment::mock();
         $request = Request::createFromEnvironment($environment);
         $response = $action($request, new Response());
 
@@ -61,9 +57,11 @@ class ControllersTest extends PHPUnit_Framework_TestCase
 
     // public function testPaging()
     // {
-    //     $client = $this->createClient();
-    //     $client->followRedirects();
-    //     $crawler = $client->request('GET', '/books');
+    //     $action = $this->getAction('books');
+    //     $environment = Environment::mock();
+
+    //     $request = Request::createFromEnvironment($environment);
+    //     $response = $action($request, new Response());
 
     //     $editLink = $crawler
     //         ->filter('a:contains("Add")') // find all links with the text "Add"

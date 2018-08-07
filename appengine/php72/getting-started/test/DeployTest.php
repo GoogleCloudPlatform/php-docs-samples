@@ -19,6 +19,10 @@ namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\FileUtil;
+use Symfony\Component\Yaml\Yaml;
+
+require_once __DIR__ . '/../../../../testing/FileUtil.php';
 
 /**
  * Class DeployTest
@@ -30,15 +34,23 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     private static function beforeDeploy()
     {
-        // Copy `app.yaml` and set environment variables
-        $config = self::getConfig();
-        $appYamlPath = __DIR__ . '/../../app.yaml';
-        $appYaml = file_get_contents(__DIR__ . '/../app-e2e.yaml');
-        file_put_contents($appYamlPath, str_replace(
-            ['# ', 'CLOUDSQL_CONNECTION_NAME'],
-            ['', $config['mysql_connection_name']],
-            $appYaml
-        ));
+        $bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
+        $connection = self::requireEnv('CLOUDSQL_CONNECTION_NAME');
+        $dbUser = self::requireEnv('CLOUDSQL_USER');
+        $dbPass = self::requireEnv('CLOUDSQL_PASSWORD');
+        $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
+
+        $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
+        self::$gcloudWrapper->setDir($tmpDir);
+        chdir($tmpDir);
+
+        $appYaml = Yaml::parse(file_get_contents($tmpDir . '/app.yaml'));
+        $appYaml['env_variables']['GOOGLE_STORAGE_BUCKET'] = $bucketName;
+        $appYaml['env_variables']['CLOUDSQL_USER'] = $dbUser;
+        $appYaml['env_variables']['CLOUDSQL_PASSWORD'] = $dbPass;
+        $appYaml['env_variables']['CLOUDSQL_DATABASE_NAME'] = $dbName;
+
+        file_put_contents($tmpDir . '/app.yaml', Yaml::dump($appYaml));
     }
 
     public function testIndex()
