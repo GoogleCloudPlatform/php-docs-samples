@@ -86,21 +86,16 @@ class CloudSqlDataModel
         // }
         // [END run_cloudsql_query_multiple_rows]
         $rows = array();
-        $last_row = null;
-        $new_cursor = null;
+        $nextCursor = null;
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            array_push($rows, $row);
             if (count($rows) == $limit) {
-                $new_cursor = $last_row['id'];
+                $nextCursor = $row['id'];
                 break;
             }
-            array_push($rows, $row);
-            $last_row = $row;
         }
 
-        return array(
-            'books' => $rows,
-            'cursor' => $new_cursor,
-        );
+        return ['books' => $rows, 'cursor' => $nextCursor];
     }
 
     public function create($book, $id = null)

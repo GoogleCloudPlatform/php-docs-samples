@@ -30,7 +30,7 @@ $app->get('/', function (Request $request, Response $response) {
 })->setName('home');
 
 $app->get('/books', function (Request $request, Response $response) {
-    $token = $request->getQueryParam('page_token');
+    $token = (int) $request->getQueryParam('page_token');
     $bookList = $this->cloudsql->listBooks(10, $token);
 
     return $this->view->render($response, 'list.html.twig', [
@@ -128,7 +128,7 @@ $app->post('/books/{id}/delete', function (Request $request, Response $response,
             $object->delete();
             // [END delete_image]
         }
-        return $response->withRedirect('/books/');
+        return $response->withRedirect('/books');
     }
 
     return $response->withStatus(404);

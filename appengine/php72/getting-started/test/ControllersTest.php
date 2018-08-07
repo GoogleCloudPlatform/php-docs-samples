@@ -130,7 +130,7 @@ class ControllersTest extends PHPUnit_Framework_TestCase
     // {
     //     $client = $this->createClient();
     //     $client->followRedirects();
-    //     $crawler = $client->request('GET', '/books/');
+    //     $crawler = $client->request('GET', '/books');
 
     //     $editLink = $crawler
     //         ->filter('a:contains("Add")') // find all links with the text "Add"
