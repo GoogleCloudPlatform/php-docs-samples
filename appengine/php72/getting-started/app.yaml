@@ -5,7 +5,7 @@ runtime: php72
 instance_class: F2
 
 env_variables:
-    GOOGLE_BUCKET_NAME: ""
+    GOOGLE_STORAGE_BUCKET: ""
     # populate these to use the "mysql" or "postres" backends
     CLOUDSQL_CONNECTION_NAME: ""
     CLOUDSQL_USER: ""
