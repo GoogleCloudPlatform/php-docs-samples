@@ -27,9 +27,9 @@ if (!isset($dsn, $user) || false === $password) {
 # [START gae_cloudsql_example]
 // Create the PDO object to talk to CloudSQL. Use the following variables:
 //
-// $dsn = "mysql:dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME";
-// $user = 'YOUR_CLOUDSQL_USER';
-// $password = 'YOUR_CLOUDSQL_PASSWORD';
+//     $dsn = "mysql:dbname=DATABASE;unix_socket=/cloudsql/CONNECTION_NAME";
+//     $user = 'YOUR_CLOUDSQL_USER';
+//     $password = 'YOUR_CLOUDSQL_PASSWORD';
 //
 // If the unix socket is unavailable, try to connect using TCP. This will work
 // if you're running a local MySQL server or using the Cloud SQL proxy, for example:
@@ -38,7 +38,9 @@ if (!isset($dsn, $user) || false === $password) {
 //
 // This will mean your DSN for connecting locally to Cloud SQL would look like this:
 //
-// $dsn = "mysql:dbname=DATABASE;host=127.0.0.1";
+//     $dsn = "mysql:dbname=DATABASE;host=127.0.0.1";
+//
+// For PostgreSQL examples see `app-postgres.yaml`
 //
 $db = new PDO($dsn, $user, $password);
 
@@ -59,6 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Query existing guestbook entries.
 $results = $db->query('SELECT * from entries');
 
+// Now you can use the PDOStatement object to print or iterate over the results:
+//
+//     var_dump($results->fetchAll(PDO::FETCH_ASSOC));
+//
 # [END gae_cloudsql_example]
 ?>
 
