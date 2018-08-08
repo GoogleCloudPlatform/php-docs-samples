@@ -1,3 +1,6 @@
+# See https://cloud.google.com/appengine/docs/standard/php/config/appref for a
+# complete list of `app.yaml` directives.
+
 runtime: php72
 instance_class: F2
 

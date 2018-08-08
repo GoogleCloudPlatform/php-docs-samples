@@ -15,6 +15,12 @@
  * limitations under the License.
  */
 
+/**
+ * This front controller is called by the App Engine web server to handle all
+ * incoming requests. To change this, you will need to modify the "entrypoint"
+ * directive in `app.yaml`.
+ * @see https://cloud.google.com/appengine/docs/standard/php/config/appref
+ */
 require_once __DIR__ . '/vendor/autoload.php';
 
 /** @var Slim\App $app */
