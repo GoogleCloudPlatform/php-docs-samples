@@ -3,6 +3,7 @@
         "slim/slim": " ^3.0"
     },
     "require-dev": {
-        "google/cloud-tools": "^0.8.1"
+        "google/cloud-tools": "^0.8.1",
+        "phpunit/phpunit": "^5"
     }
 }
