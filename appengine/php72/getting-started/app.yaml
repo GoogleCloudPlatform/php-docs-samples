@@ -1,0 +1,14 @@
+# See https://cloud.google.com/appengine/docs/standard/php/config/appref for a
+# complete list of `app.yaml` directives.
+
+runtime: php72
+instance_class: F2
+
+env_variables:
+    GOOGLE_BUCKET_NAME: ""
+    # populate these to use the "mysql" or "postres" backends
+    CLOUDSQL_CONNECTION_NAME: ""
+    CLOUDSQL_USER: ""
+    CLOUDSQL_PASSWORD: ""
+    ## Uncomment to give your database a name other than "bookshelf"
+    # CLOUDSQL_DATABASE_NAME: ""
