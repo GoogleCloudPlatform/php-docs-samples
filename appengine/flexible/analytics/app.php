@@ -29,7 +29,7 @@ $app->get('/', function (Application $app, Request $request) {
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
     $trackingId = $app['GA_TRACKING_ID'];
-    # [START track_event]
+    # [START gae_flex_analytics_track_event]
     $baseUri = 'http://www.google-analytics.com/';
     $client = new GuzzleHttp\Client(['base_uri' => $baseUri]);
     $formData = [
@@ -45,7 +45,7 @@ $app->get('/', function (Application $app, Request $request) {
         'ev' => 0,  # Event value, must be an integer
     ];
     $response = $client->request('POST', 'collect', ['form_params' => $formData]);
-    # [END track_event]
+    # [END gae_flex_analytics_track_event]
     return $twig->render('index.html.twig', [
             'base_uri' => $baseUri,
             'response_code' => $response->getStatusCode(),
