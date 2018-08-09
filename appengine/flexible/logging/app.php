@@ -33,7 +33,6 @@ $app->get('/', function () use ($app) {
         return 'Set the GOOGLE_PROJECT_ID environment variable to run locally';
     }
     $projectId = $app['project_id'];
-    # [START list_entries]
     $logging = new LoggingClient([
         'projectId' => $projectId
     ]);
@@ -42,14 +41,13 @@ $app->get('/', function () use ($app) {
         'pageSize' => 10,
         'orderBy' => 'timestamp desc'
     ]);
-    # [END list_entries]
     return $app['twig']->render('index.html.twig', ['logs' => $logs]);
 });
 
 $app->post('/log', function (Request $request) use ($app) {
     $projectId = $app['project_id'];
     $text = $request->get('text');
-    # [START write_log]
+    # [START gae_flex_configure_logging]
     # [START creating_psr3_logger]
     $logging = new LoggingClient([
         'projectId' => $projectId
@@ -57,7 +55,7 @@ $app->post('/log', function (Request $request) use ($app) {
     $logger = $logging->psrLogger('app');
     # [END creating_psr3_logger]
     $logger->notice($text);
-    # [END write_log]
+    # [END gae_flex_configure_logging]
     return $app->redirect('/');
 });
 

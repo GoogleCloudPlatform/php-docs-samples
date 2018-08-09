@@ -22,10 +22,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 $app = require_once __DIR__ . '/app.php';
 
 $app['project_id'] = getenv('GOOGLE_PROJECT_ID') ?: getenv('GCLOUD_PROJECT');
-# [START pubsub_variables]
+# [START gae_flex_pubsub_env]
 $app['topic'] = 'php-example-topic';
 $app['subscription'] = 'php-example-subscription';
-# [END pubsub_variables]
+# [END gae_flex_pubsub_env]
 $app['debug'] = true;
 
 $app->run();
