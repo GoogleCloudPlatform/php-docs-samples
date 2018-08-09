@@ -25,11 +25,11 @@ $app = new Application();
 
 $app['datastore'] = function () use ($app) {
     $projectId = $app['project_id'];
-    # [START create_client]
+    # [START gae_flex_datastore_client]
     $datastore = new DatastoreClient([
         'projectId' => $projectId
     ]);
-    # [END create_client]
+    # [END gae_flex_datastore_client]
     return $datastore;
 };
 
@@ -43,7 +43,7 @@ $app->get('/', function (Application $app, Request $request) {
     // determine the user's IP
     $user_ip = get_user_ip($request);
 
-    # [START insert_entity]
+    # [START gae_flex_datastore_entity]
     // Create an entity to insert into datastore.
     $key = $datastore->key('visit');
     $entity = $datastore->entity($key, [
@@ -51,9 +51,9 @@ $app->get('/', function (Application $app, Request $request) {
         'timestamp' => new DateTime(),
     ]);
     $datastore->insert($entity);
-    # [END insert_entity]
+    # [END gae_flex_datastore_entity]
 
-    # [START run_query]
+    # [START gae_flex_datastore_query]
     // Query recent visits.
     $query = $datastore->query()
         ->kind('visit')
@@ -66,7 +66,7 @@ $app->get('/', function (Application $app, Request $request) {
             $entity['timestamp']->format('Y-m-d H:i:s'),
             $entity['user_ip']);
     }
-    # [END run_query]
+    # [END gae_flex_datastore_query]
     array_unshift($visits, "Last 10 visits:");
     return new Response(implode("\n", $visits), 200,
         ['Content-Type' => 'text/plain']);
