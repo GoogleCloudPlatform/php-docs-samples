@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app = new Application();
 
-# [START receive_call]
+# [START gae_flex_twilio_receive_call]
 /***
  * Answers a call and replies with a simple greeting.
  */
@@ -34,9 +34,9 @@ $app->post('/call/receive', function () use ($app) {
         ['Content-Type' => 'application/xml']
     );
 });
-# [END receive_call]
+# [END gae_flex_twilio_receive_call]
 
-# [START send_sms]
+# [START gae_flex_twilio_send_sms]
 /***
  * Send an sms.
  */
@@ -52,9 +52,9 @@ $app->post('/sms/send', function (Request $request) use ($app) {
     );
     return sprintf('Message ID: %s, Message Body: %s', $sms->sid, $sms->body);
 });
-# [END send_sms]
+# [END gae_flex_twilio_send_sms]
 
-# [START receive_sms]
+# [START gae_flex_twilio_receive_sms]
 /***
  * Receive an sms.
  */
@@ -70,6 +70,6 @@ $app->post('/sms/receive', function (Request $request) use ($app) {
         ['Content-Type' => 'application/xml']
     );
 });
-# [END receive_sms]
+# [END gae_flex_twilio_receive_sms]
 
 return $app;
