@@ -34,7 +34,7 @@ $app['memcached'] = function () {
     }
     $username = getenv('MEMCACHE_USERNAME');
     $password = getenv('MEMCACHE_PASSWORD');
-    # [START memcached]
+    # [START gae_flex_redislabs_memcache]
     // $host = 'YOUR_MEMCACHE_HOST';
     // $port = 'YOUR_MEMCACHE_PORT';
     // $username = 'OPTIONAL_MEMCACHE_USERNAME';
@@ -47,7 +47,7 @@ $app['memcached'] = function () {
     if (!$memcached->addServer($host, $port)) {
         throw new Exception("Failed to add server $host:$port");
     }
-    # [END memcached]
+    # [END gae_flex_redislabs_memcache]
     return $memcached;
 };
 

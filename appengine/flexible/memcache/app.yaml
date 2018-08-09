@@ -4,7 +4,7 @@ vm: true
 runtime_config:
   document_root: web
 
-# [START env_variables]
+# [START gae_flex_redislabs_memcache_yaml]
 env_variables:
   # If you are using the App Engine Memcache service (currently in alpha),
   # uncomment this section and comment out the other Memcache variables.
@@ -14,4 +14,4 @@ env_variables:
   # fill in these values with your username and password.
   MEMCACHE_USERNAME: ""
   MEMCACHE_PASSWORD: ""
-# [END env_variables]
+# [END gae_flex_redislabs_memcache_yaml]
