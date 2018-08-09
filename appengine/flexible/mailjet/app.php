@@ -41,7 +41,7 @@ $app->post('/send', function () use ($app) {
     $mailjet = $app['mailjet'];
     $recipient = $request->get('recipient');
 
-    # [START send_email]
+    # [START gae_flex_mailjet_send_message]
     $body = [
         'FromEmail' => "test@example.com",
         'FromName' => "Testing Mailjet",
@@ -66,7 +66,7 @@ $app->post('/send', function () use ($app) {
     }
 
     return 'Error: ' . print_r($response->getStatus(), true);
-    # [END send_email]
+    # [END gae_flex_mailjet_send_message]
 });
 
 $app['mailjet'] = function () use ($app) {
@@ -76,9 +76,9 @@ $app['mailjet'] = function () use ($app) {
     $mailjetApiKey = $app['mailjet.api_key'];
     $mailjetSecret = $app['mailjet.secret'];
 
-    # [START mailjet_client]
+    # [START gae_flex_mailjet_config]
     $mailjet = new Mailjet\Client($mailjetApiKey, $mailjetSecret);
-    # [END mailjet_client]
+    # [END gae_flex_mailjet_config]
 
     return $mailjet;
 };
