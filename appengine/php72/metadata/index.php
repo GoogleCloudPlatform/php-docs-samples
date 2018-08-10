@@ -37,9 +37,9 @@ use Google\Auth\Credentials\GCECredentials;
 function request_metadata_using_google_cloud($metadataKey)
 {
     $metadata = new Google\Cloud\Core\Compute\Metadata();
-    $externalIp = $metadata->get($metadataKey);
+    $metadataValue = $metadata->get($metadataKey);
 
-    return $externalIp;
+    return $metadataValue;
 }
 
 /**
