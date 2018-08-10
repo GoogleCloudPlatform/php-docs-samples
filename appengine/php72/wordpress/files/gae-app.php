@@ -4,19 +4,23 @@ function get_real_file_to_load($full_request_uri)
 {
     $request_uri = @parse_url($full_request_uri)['path'];
 
+    // Redirect /wp-admin to /wp-admin/ (adds a trailing slash)
     if ($request_uri === '/wp-admin') {
         header('Location: /wp-admin/');
         exit;
     }
 
+    // Serve up "index.php" when /wp-admin/ is requested
     if ($request_uri === '/wp-admin/') {
         return '/wp-admin/index.php';
     }
 
+    // Load the file requested if it exists
     if (is_file(__DIR__ . $request_uri)) {
         return $request_uri;
     }
 
+    // Send everything else through index.php
     return '/index.php';
 }
 
