@@ -41,6 +41,7 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+# [START google-app-engine-deployment]
 /*
 |--------------------------------------------------------------------------
 | Set Storage Path
@@ -53,6 +54,7 @@ $app->singleton(
 */
 
 $app->useStoragePath(env('APP_STORAGE', base_path() . '/storage'));
+# [END google-app-engine-deployment]
 
 /*
 |--------------------------------------------------------------------------

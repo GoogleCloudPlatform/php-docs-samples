@@ -40,7 +40,11 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
 
 1. Copy the [`bootstrap/app.php`](bootstrap/app.php) and
   [`config/view.php`](config/view.php) files included in this sample into the
-  corresponding directories of your Laravel application.
+  corresponding directories of your Laravel application. These two files ensure
+  your Laravel application writes to `/tmp` for caching in production.
+
+  > If you are using an existing Laravel application, just copy the
+  `google-app-engine-deployment` blocks from these files.
 
 1. Replace `YOUR_APP_KEY` in `app.yaml` with an application key you generate
   with the following command:

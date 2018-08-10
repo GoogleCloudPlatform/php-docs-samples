@@ -17,6 +17,7 @@ return [
         resource_path('views'),
     ],
 
+    # [START google-app-engine-deployment]
     /*
     |--------------------------------------------------------------------------
     | Compiled View Path
@@ -29,5 +30,5 @@ return [
     */
 
     'compiled' => storage_path(),
-
+    # [END google-app-engine-deployment]
 ];
