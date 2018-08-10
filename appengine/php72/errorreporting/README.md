@@ -1,6 +1,26 @@
 # App Engine for PHP 7.2 Error Reporting samples
 
-This app demonstrates how to report errors on on App Engine for PHP 7.2.
+This app demonstrates how to report errors on App Engine for PHP 7.2 and shows how 
+different PHP error types are handled.
+
+To set up **error reporting** in your App Engine PHP 7.2 application, simply follow
+these two steps:
+
+1. Install the Google Cloud Error Reporting client library
+   ```sh
+   composer require google/cloud-error-reporting
+   ```
+2. Create a `php.ini` file in the root of your project and set 
+   `auto_prepend_file` to the following:
+    ```ini
+    ; in php.ini
+    auto_prepend_file=/srv/vendor/google/cloud-error-reporting/src/prepend.php
+    ```
+    
+The [`prepend.php`][prepend] file will be executed prior to each request, which 
+registers the client library's error handler.
+
+[prepend]: https://github.com/GoogleCloudPlatform/google-cloud-php-errorreporting/blob/master/src/prepend.php
 
 ## Setup
 
