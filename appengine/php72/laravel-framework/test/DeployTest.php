@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,17 +33,6 @@ class DeployTest extends TestCase
         $tmpDir = self::createLaravelProject();
         copy(__DIR__ . '/../app.yaml', $tmpDir . '/app.yaml');
         self::addAppKeyToAppYaml($tmpDir);
-    }
-
-    private static function addPostAutoloadCommands($targetDir)
-    {
-        $contents = file_get_contents($targetDir . '/composer.json');
-        $json = json_decode($contents, true);
-        $json['scripts']['post-autoload-dump'][] = 'php artisan cache:clear';
-        $json['scripts']['post-autoload-dump'][] = 'php artisan config:clear';
-        $json['scripts']['post-autoload-dump'][] = 'php artisan view:clear';
-        $newContents = json_encode($json, JSON_PRETTY_PRINT);
-        file_put_contents($targetDir . '/composer.json', $newContents);
     }
 
     public function testHomepage()

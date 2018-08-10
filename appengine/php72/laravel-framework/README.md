@@ -75,7 +75,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
    The Cloud SQL proxy is used to connect to your Cloud SQL instance when running
    locally.
 
-1. Use the [Cloud SDK][cloud_sdk] from the command line to run the following command. Copy
+1. Use the [Google Cloud SDK][cloud_sdk] from the command line to run the following command. Copy
    the `connectionName` value for the next step. Replace `YOUR_INSTANCE_NAME` with the name
    of your instance:
 
@@ -86,8 +86,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 
         cloud_sql_proxy -instances=YOUR_INSTANCE_CONNECTION_NAME=tcp:3306
 
-1. Use `gcloud`, or a MySQL client, to connect to your instance and create a
-  database for the application.
+1. Use `gcloud` to create a database for the application.
 
         gcloud sql databases create laravel --instance=YOUR_INSTANCE_NAME
 
@@ -112,7 +111,6 @@ Laravel, you need to manually add the `DB_SOCKET` value to
           CACHE_DRIVER: database
           SESSION_DRIVER: database
           ## Set these environment variables according to your CloudSQL configuration.
-          DB_HOST: localhost
           DB_DATABASE: laravel
           DB_USERNAME: root
           DB_PASSWORD: YOUR_DB_PASSWORD

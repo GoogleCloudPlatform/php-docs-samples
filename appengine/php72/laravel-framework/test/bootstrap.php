@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,5 +17,4 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../../../testing/ExecuteCommandTrait.php';
 require_once __DIR__ . '/../../../../testing/FileUtil.php';
-require_once __DIR__ . '/../../../../testing/ExecuteCommandTrait.php';
 require_once __DIR__ . '/DeployLaravelTrait.php';
