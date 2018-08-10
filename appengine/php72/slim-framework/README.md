@@ -9,9 +9,7 @@ Before running this sample:
 
 ### Create a project (if you haven't already)
 
-- Go to
-  [Google Developers Console][console]
-  and create a new project.
+- Go to [Google Developers Console][console] and create a new project.
 
 ## Deploy to App Engine
 
@@ -31,7 +29,7 @@ in your browser.
 The application consists of three components:
 
  1. An [`app.yaml`](app.yaml) which sets your application runtime to be `php72`.
- 2. A [`composer.json`](composer.json) which declares your application's dependencies
+ 2. A [`composer.json`](composer.json) which declares your application's dependencies.
  3. An [`index.php`](index.php) which handles all the requests which get routed to your app.
 
 The `index.php` file is the most important. All applications running on App Engine

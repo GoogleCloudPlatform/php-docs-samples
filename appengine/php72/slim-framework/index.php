@@ -25,6 +25,7 @@ require 'vendor/autoload.php';
 $app = new Slim\App();
 $app->get('/', function ($request, $response) {
     // Use the Null Coalesce Operator in PHP7
+    // http://php.net/manual/en/language.operators.comparison.php#language.operators.comparison.coalesce
     $name = $request->getQueryParams()['name'] ?? 'World';
     return $response->getBody()->write("Hello, $name!");
 });
