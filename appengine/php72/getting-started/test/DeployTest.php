@@ -46,6 +46,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
         $appYaml = Yaml::parse(file_get_contents($tmpDir . '/app.yaml'));
         $appYaml['env_variables']['GOOGLE_STORAGE_BUCKET'] = $bucketName;
+        $appYaml['env_variables']['CLOUDSQL_CONNECTION_NAME'] = $connection;
         $appYaml['env_variables']['CLOUDSQL_USER'] = $dbUser;
         $appYaml['env_variables']['CLOUDSQL_PASSWORD'] = $dbPass;
         $appYaml['env_variables']['CLOUDSQL_DATABASE_NAME'] = $dbName;
