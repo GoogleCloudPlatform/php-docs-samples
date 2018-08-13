@@ -1,0 +1,7 @@
+{
+    "require-dev": {
+        "google/cloud-tools": "^0.8.1",
+        "symfony\/process": "~2.8|~3.0",
+        "monolog\/monolog": "^1.19"
+    }
+}
