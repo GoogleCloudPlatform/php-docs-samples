@@ -2,13 +2,12 @@
 
 # [START gae_erroreporting_register_handler]
 # After running "composer require google/cloud-error-reporting", register the
-# error handler by including `prepend.php` in your application.
-# This can also be done in `php.ini` using `auto_prepend_file`:
+# error handler by including `prepend.php` in your application. This is most
+# easily done in `php.ini` using `auto_prepend_file`:
 #
 #    ; in your application's php.ini:
 #    auto_prepend_file=/srv/vendor/google/cloud-error-reporting/src/prepend.php
 #
-require __DIR__ . '/vendor/google/cloud-error-reporting/src/prepend.php';
 # [END gae_erroreporting_register_handler]
 
 // throw a test exception to trigger our exception handler
