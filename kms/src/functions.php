@@ -41,10 +41,10 @@ use Google_Service_CloudKMS_UpdateCryptoKeyPrimaryVersionRequest;
  *        "serviceAccount:$serviceAccountEmail"
  * @param string $role Must be in the format "roles/$role",
  *        "organizations/$organizationId/roles/$role", or "projects/$projectId/roles/$role"
- * @param string $locationId [optional]
+ * @param string $locationId
  * @return null
  */
-function add_member_to_cryptokey_policy($projectId, $keyRingId, $cryptoKeyId, $member, $role, $locationId = 'global')
+function add_member_to_cryptokey_policy($projectId, $keyRingId, $cryptoKeyId, $member, $role, $locationId)
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();
