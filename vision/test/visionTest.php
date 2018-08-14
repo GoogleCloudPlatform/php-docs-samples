@@ -276,9 +276,9 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->requireCloudStorage();
 
         $source = 'gs://' . $this->bucketName . '/HodgeConj.pdf';
-        $destination = 'gs://' . $this->bucketName . '/OCR_PDF_TEST_OUTPUT';
+        $destination = 'gs://' . $this->bucketName . '/OCR_PDF_TEST_OUTPUT/';
         $output = $this->runCommand('pdf', $source, $destination);
-        $this->assertNotContains('error writing final output', $output);
+        $this->assertContains('Output files:', $output);
     }
 
     public function testDetectWebNoGeoCommand()
