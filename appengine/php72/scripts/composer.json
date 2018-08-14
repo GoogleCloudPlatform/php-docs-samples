@@ -1,0 +1,57 @@
+{
+    "scripts": {
+        "post-update-cmd": [
+            "echo POST-UPDATE-CMD"
+        ],
+        "pre-update-cmd": [
+            "echo PRE-UPDATE-CMD"
+        ],
+        "post-install-cmd": [
+            "echo POST-INSTALL-CMD"
+        ],
+        "pre-install-cmd": [
+            "echo PRE-INSTALL-CMD"
+        ],
+        "post-status-cmd": [
+            "echo POST-STATUS-CMD"
+        ],
+        "pre-archive-cmd": [
+            "echo PRE-ARCHIVE-CMD"
+        ],
+        "post-archive-cmd": [
+            "echo POST-ARCHIVE-CMD"
+        ],
+        "pre-autoload-dump": [
+            "echo PRE-AUTOLOAD-DUMP"
+        ],
+        "post-autoload-dump": [
+            "echo POST-AUTOLOAD-DUMP",
+            "php post_update_cmd.php",
+            "# pecl install swoole",
+            "# cp /usr/lib/php/extensions/no-debug-non-zts-20170718/swoole.so .",
+            "pecl install swoole",
+            "gcloud kms decrypt --location=global --keyring=ci --key=ci --ciphertext-file=secrets.txt.enc --plaintext-file=secrets.txt"
+        ],
+        "pre-dependency-solving": [
+            "echo PRE-DEPENDENCY-SOLVING"
+        ],
+        "post-dependency-solving": [
+            "echo POST-DEPENDENCY-SOLVING"
+        ],
+        "pre-package-install": [
+            "echo PRE-PACKAGE-INSTALL"
+        ],
+        "post-package-install": [
+            "echo POST-PACKAGE-INSTALL"
+        ],
+        "pre-package-update": [
+            "echo PRE-PACKAGE-UPDATE"
+        ],
+        "post-package-update": [
+            "echo POST-PACKAGE-UPDATE"
+        ],
+        "on-appengine-deploy": [
+            "echo POST-PACKAGE-UPDATE"
+        ]
+    }
+}
