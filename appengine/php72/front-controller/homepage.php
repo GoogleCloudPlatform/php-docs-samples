@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A list of routes for our homepage. This is really only here to demonstrate
+ * A list of links to display on the homepage. This is really only here to demonstrate
  * that PHP is being executed.
  */
 $links = ['contact.php'];
