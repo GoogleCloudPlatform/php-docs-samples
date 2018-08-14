@@ -17,10 +17,9 @@
 // [START vision_face_detection]
 namespace Google\Cloud\Samples\Vision;
 
-// [START vision_face_detection_tutorial_client]
+// [START vision_face_detection_tutorial_imports]
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// [END vision_face_detection_tutorial_client]
+// [END vision_face_detection_tutorial_imports]
 
 function detect_face($path, $outFile = null)
 {
