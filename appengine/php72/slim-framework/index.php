@@ -22,6 +22,7 @@
  */
 require 'vendor/autoload.php';
 
+# [START gae_slim_front_controller]
 $app = new Slim\App();
 $app->get('/', function ($request, $response) {
     // Use the Null Coalesce Operator in PHP7
@@ -30,3 +31,4 @@ $app->get('/', function ($request, $response) {
     return $response->getBody()->write("Hello, $name!");
 });
 $app->run();
+# [END gae_slim_front_controller]
