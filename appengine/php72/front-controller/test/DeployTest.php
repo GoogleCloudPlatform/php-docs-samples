@@ -29,13 +29,23 @@ class DeployTest extends TestCase
         // Access the homepage.
         $response = $this->client->get('');
         $this->assertEquals('200', $response->getStatusCode());
+    }
 
-        // Access the helloworld page.
-        $response = $this->client->get('/admin.php');
-        $this->assertEquals('200', $response->getStatusCode());
-
+    /**
+     * @expectedException GuzzleHttp\Exception\ClientException
+     * @expectedExceptionMessage 404 Not Found
+     */
+    public function testHomepagePhpIs404()
+    {
         // ensure homepage.php is a 404.
         $response = $this->client->get('/homepage.php');
         $this->assertEquals('404', $response->getStatusCode());
+    }
+
+    public function testContact()
+    {
+        // Access the helloworld page.
+        $response = $this->client->get('/contact.php');
+        $this->assertEquals('200', $response->getStatusCode());
     }
 }
