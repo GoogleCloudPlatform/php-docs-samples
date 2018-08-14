@@ -28,13 +28,13 @@ function detect_face($path, $outFile = null)
     $imageAnnotator = new ImageAnnotatorClient();
     // [END vision_face_detection_tutorial_client]
 
-    // [START vision_face_detection_send_request]
+    // [START vision_face_detection_tutorial_send_request]
     # annotate the image
     // $path = 'path/to/your/image.jpg'
     $image = file_get_contents($path);
     $response = $imageAnnotator->faceDetection($image);
     $faces = $response->getFaceAnnotations();
-    // [END vision_face_detection_send_request]
+    // [END vision_face_detection_tutorial_send_request]
 
     # names of likelihood from google.cloud.vision.enums
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -61,7 +61,7 @@ function detect_face($path, $outFile = null)
         print(PHP_EOL);
     }
 
-    # [START vision_face_detection_process_response]
+    # [START vision_face_detection_tutorial_process_response]
     # draw box around faces
     if ($faces && $outFile) {
         $imageCreateFunc = [
@@ -96,10 +96,10 @@ function detect_face($path, $outFile = null)
                 imagerectangle($outputImage, $x1, $y1, $x2, $y2, 0x00ff00);
             }
         }
-        # [END vision_face_detection_process_response]
-        # [START vision_face_detection_run_application]
+        # [END vision_face_detection_tutorial_process_response]
+        # [START vision_face_detection_tutorial_run_application]
         call_user_func($imageWriteFunc[$ext], $outputImage, $outFile);
         printf('Output image written to %s' . PHP_EOL, $outFile);
-        # [END vision_face_detection_run_application]
+        # [END vision_face_detection_tutorial_run_application]
     }
 }
