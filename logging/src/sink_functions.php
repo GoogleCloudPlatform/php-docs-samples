@@ -23,7 +23,7 @@ use Google\Cloud\Logging\LoggingClient;
 
 // [END logging_use]
 
-// [START create_sink]
+// [START logging_create_sink]
 /** Create a log sink.
  *
  * @param string $projectId The Google project ID.
@@ -41,9 +41,9 @@ function create_sink($projectId, $sinkName, $destination, $filterString)
     );
     printf("Created a sink '%s'." . PHP_EOL, $sinkName);
 }
-// [END create_sink]
+// [END logging_create_sink]
 
-// [START delete_sink]
+// [START logging_delete_sink]
 /** Delete a log sink.
  *
  * @param string $projectId The Google project ID.
@@ -55,9 +55,9 @@ function delete_sink($projectId, $sinkName)
     $logging->sink($sinkName)->delete();
     printf("Deleted a sink '%s'." . PHP_EOL, $sinkName);
 }
-// [END delete_sink]
+// [END logging_delete_sink]
 
-// [START list_sinks]
+// [START logging_list_sinks]
 /**
  * List log sinks.
  *
@@ -76,10 +76,10 @@ function list_sinks($projectId)
         print PHP_EOL;
     }
 }
-// [END list_sinks]
+// [END logging_list_sinks]
 
 
-// [START update_sink]
+// [START logging_update_sink]
 /**
  * Update a log sink.
  *
@@ -94,4 +94,4 @@ function update_sink($projectId, $sinkName, $filterString)
     $sink->update(['filter' => $filterString]);
     printf("Updated a sink '%s'." . PHP_EOL, $sinkName);
 }
-// [END update_sink]
+// [END logging_update_sink]
