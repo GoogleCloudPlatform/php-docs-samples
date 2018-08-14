@@ -7,7 +7,7 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Dialogflow 
+This command-line application demonstrates how to invoke Dialogflow 
 API from PHP.
 
 ## Before you begin
