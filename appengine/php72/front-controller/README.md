@@ -1,7 +1,12 @@
 # App Engine for PHP 7.2 Front Controller sample
 
 This app demonstrates how to implement a simple front controller for legacy
-projects.
+projects. The main code sample lies in [`index.php`](index.php#L13). This is one
+example of a front controller. See here for more examples:
+
+ * [front controller implementation using the Slim Framework](../php72/slim-framework/index.php#L26)
+ * [front controller implementation for WordPress](../wordpress/files/gae-app.php#L3)
+ * [front controller implementation using regular expressions](../grpc/index.php#L11)
 
 ## Setup
 
