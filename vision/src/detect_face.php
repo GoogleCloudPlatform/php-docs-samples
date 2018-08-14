@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+// [START vision_face_detection]
 namespace Google\Cloud\Samples\Vision;
 
 // [START vision_face_detection_tutorial_client]
@@ -60,6 +60,7 @@ function detect_face($path, $outFile = null)
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         print(PHP_EOL);
     }
+    // [END vision_face_detection]
 
     # [START vision_face_detection_tutorial_process_response]
     # draw box around faces
@@ -102,4 +103,6 @@ function detect_face($path, $outFile = null)
         printf('Output image written to %s' . PHP_EOL, $outFile);
         # [END vision_face_detection_tutorial_run_application]
     }
+    // [START vision_face_detection]
 }
+// [END vision_face_detection]
