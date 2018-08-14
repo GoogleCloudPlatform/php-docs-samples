@@ -73,26 +73,25 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 
 1. Follow the instructions to set up a
    [Google Cloud SQL Second Generation instance for MySQL][cloudsql-create].
+   Keep track of your instance name and password, as they
+   will be used below.
 
 1. Follow the instructions to
    [install the Cloud SQL proxy client on your local machine][cloudsql-install].
    The Cloud SQL proxy is used to connect to your Cloud SQL instance when running
    locally.
 
-1. Use the [Google Cloud SDK][cloud_sdk] from the command line to run the following command. Copy
-   the `connectionName` value for the next step. Replace `YOUR_INSTANCE_NAME` with the name
-   of your instance:
+   * Use the [Google Cloud SDK][cloud_sdk] from the command line to run the following command. Copy the `connectionName` value for the next step. Replace `YOUR_INSTANCE_NAME` with the name of your instance:
 
-        gcloud sql instances describe YOUR_INSTANCE_NAME
+            gcloud sql instances describe YOUR_INSTANCE_NAME | grep connectionName
 
-1. Start the Cloud SQL proxy and replace `YOUR_INSTANCE_CONNECTION_NAME` with
-   the connection name you retrieved in the previous step:
+    * Start the Cloud SQL proxy and replace `YOUR_CONNECTION_NAME` with the connection name you retrieved in the previous step.
 
-        cloud_sql_proxy -instances=YOUR_INSTANCE_CONNECTION_NAME=tcp:3306
+            cloud_sql_proxy -instances=YOUR_CONNECTION_NAME=tcp:3306
 
-1. Use `gcloud` to create a database for the application.
+    * Use `gcloud` to create a database for the application.
 
-        gcloud sql databases create laravel --instance=YOUR_INSTANCE_NAME
+            gcloud sql databases create laravel --instance=YOUR_INSTANCE_NAME
 
 1. Run the database migrations for Laravel. This can be done locally by setting
   your parameters in `.env` or by passing them in as environment variables. Be
@@ -101,7 +100,8 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 
         # create a migration for the session table
         php artisan session:table
-        DB_DATABASE=laravel DB_USERNAME=root DB_PASSWORD=YOUR_DB_PASSWORD php artisan migrate --force
+        export DB_DATABASE=laravel DB_USERNAME=root DB_PASSWORD=YOUR_DB_PASSWORD
+        php artisan migrate --force
 
 1. Modify your `app.yaml` file with the following contents:
 
@@ -118,9 +118,9 @@ Laravel, you need to manually add the `DB_SOCKET` value to
           DB_DATABASE: laravel
           DB_USERNAME: root
           DB_PASSWORD: YOUR_DB_PASSWORD
-          DB_SOCKET: "/cloudsql/YOUR_CLOUDSQL_CONNECTION_NAME"
+          DB_SOCKET: "/cloudsql/YOUR_CONNECTION_NAME"
 
-1. Replace each instance of `YOUR_DB_PASSWORD` and `YOUR_CLOUDSQL_CONNECTION_NAME`
+1. Replace each instance of `YOUR_DB_PASSWORD` and `YOUR_CONNECTION_NAME`
    with the values you created for your Cloud SQL instance above.
 
 [php-gcp]: https://cloud.google.com/php
@@ -130,4 +130,3 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 [cloud_sdk]: https://cloud.google.com/sdk/
 [cloudsql-create]: https://cloud.google.com/sql/docs/mysql/create-instance
 [cloudsql-install]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
-
