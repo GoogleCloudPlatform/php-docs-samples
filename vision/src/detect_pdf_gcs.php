@@ -75,12 +75,17 @@ function detect_pdf_gcs($path, $output)
     $bucketName = $match[1];
     $prefix = $match[2];
 
-    # list objects with the given prefix.
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $options = ['prefix' => $prefix];
-    print('Output files:' . PHP_EOL);
     $objects = $bucket->objects($options);
+
+    # save first object for sample below
+    $objects->next();
+    $firstObject = $objects->current();
+
+    # list objects with the given prefix.
+    print('Output files:' . PHP_EOL);
     foreach ($objects as $object) {
         print($object->name() . PHP_EOL);
     }
@@ -88,7 +93,7 @@ function detect_pdf_gcs($path, $output)
     # process the first output file from GCS.
     # since we specified batch_size=2, the first response contains
     # the first two pages of the input file.
-    $jsonString = $objects[0]->downloadAsString();
+    $jsonString = $firstObject->downloadAsString();
     $firstBatch = new AnnotateFileResponse();
     $firstBatch->mergeFromJsonString($jsonString);
 
