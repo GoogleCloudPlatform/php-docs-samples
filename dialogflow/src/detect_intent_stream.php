@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START dialogflow_detect_intent_stream]
+// [START dialogflow_detect_intent_streaming]
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\SessionsClient;
@@ -104,4 +104,4 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
 
     $sessionsClient->close();
 }
-// [END dialogflow_detect_intent_stream]
+// [END dialogflow_detect_intent_streaming]
