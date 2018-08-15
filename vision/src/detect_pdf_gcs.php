@@ -34,33 +34,32 @@ use Google\Cloud\Vision\V1\OutputConfig;
 function detect_pdf_gcs($path, $output)
 {
     # select ocr feature
-    $feature = new Feature();
-    $feature->setType(Feature_Type::DOCUMENT_TEXT_DETECTION);
-    $features = [$feature];
+    $feature = (new Feature())
+        ->setType(Feature_Type::DOCUMENT_TEXT_DETECTION);
 
     # set $path (file to OCR) as source
-    $gcsSource = new GcsSource();
-    $gcsSource->setUri($path);
-    $inputConfig = new InputConfig();
-    $inputConfig->setGcsSource($gcsSource);
+    $gcsSource = (new GcsSource())
+        ->setUri($path);
     # supported mime_types are: 'application/pdf' and 'image/tiff'
     $mimeType = 'application/pdf';
-    $inputConfig->setMimeType($mimeType);
+    $inputConfig = (new InputConfig())
+        ->setGcsSource($gcsSource)
+        ->setMimeType($mimeType);
 
     # set $output as destination
-    $gcsDestination = new GcsDestination();
-    $gcsDestination->setUri($output);
-    $outputConfig = new OutputConfig();
-    $outputConfig->setGcsDestination($gcsDestination);
+    $gcsDestination = (new GcsDestination())
+        ->setUri($output);
     # how many pages should be grouped into each json output file.
     $batchSize = 2;
-    $outputConfig->setBatchSize($batchSize);
+    $outputConfig = (new OutputConfig())
+        ->setGcsDestination($gcsDestination)
+        ->setBatchSize($batchSize);
 
     # prepare request using configs set above
-    $request = new AsyncAnnotateFileRequest();
-    $request->setFeatures($features);
-    $request->setInputConfig($inputConfig);
-    $request->setOutputConfig($outputConfig);
+    $request = (new AsyncAnnotateFileRequest())
+        ->setFeatures([$feature])
+        ->setInputConfig($inputConfig)
+        ->setOutputConfig($outputConfig);
     $requests = [$request];
 
     # make request
