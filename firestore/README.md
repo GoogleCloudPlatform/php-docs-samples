@@ -51,13 +51,6 @@ authentication:
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 
-1. Create a service account at the
-[Service account section in the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts/)
-
-1. Download the json key file of the service account.
-
-1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
-
 ## Samples
 
 To run the Cloud Firestore Samples:
