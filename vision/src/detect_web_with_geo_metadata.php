@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START vision_web_entities_include_geo_results]
+// [START vision_web_detection_include_geo]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -53,4 +53,4 @@ function detect_web_with_geo_metadata($path)
         }
     }
 }
-// [END vision_web_entities_include_geo_results]
+// [END vision_web_detection_include_geo]
