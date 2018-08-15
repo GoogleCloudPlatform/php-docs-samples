@@ -47,5 +47,7 @@ function detect_crop_hints($path)
     } else {
         print('No crop hints' . PHP_EOL);
     }
+    
+    $imageAnnotator->close();
 }
 // [END vision_crop_hint_detection]

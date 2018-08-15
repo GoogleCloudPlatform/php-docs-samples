@@ -34,5 +34,7 @@ function detect_logo_gcs($path)
     foreach ($logos as $logo) {
         print($logo->getDescription() . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_logo_detection_gcs]

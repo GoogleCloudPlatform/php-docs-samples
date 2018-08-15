@@ -40,5 +40,7 @@ function detect_image_property($path)
         printf("Blue: %s" . PHP_EOL, $color->getBlue());
         print(PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_image_property_detection]

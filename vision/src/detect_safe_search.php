@@ -46,5 +46,7 @@ function detect_safe_search($path)
     printf("Spoof: %s" . PHP_EOL, $likelihoodName[$spoof]);
     printf("Violence: %s" . PHP_EOL, $likelihoodName[$violence]);
     printf("Racy: %s" . PHP_EOL, $likelihoodName[$racy]);
+
+    $imageAnnotator->close();
 }
 // [END vision_safe_search_detection]

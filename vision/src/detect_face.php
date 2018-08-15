@@ -103,6 +103,8 @@ function detect_face($path, $outFile = null)
         printf('Output image written to %s' . PHP_EOL, $outFile);
         # [END vision_face_detection_tutorial_run_application]
     }
+
+    $imageAnnotator->close();
     // [START vision_face_detection]
 }
 // [END vision_face_detection]

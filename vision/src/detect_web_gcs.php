@@ -81,5 +81,7 @@ function detect_web_gcs($path)
     } else {
         print('No Results.' . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_web_detection_gcs]

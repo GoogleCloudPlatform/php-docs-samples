@@ -63,5 +63,7 @@ function detect_document_text($path)
     } else {
         print('No text found' . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_fulltext_detection]

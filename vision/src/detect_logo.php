@@ -35,5 +35,7 @@ function detect_logo($path)
     foreach ($logos as $logo) {
         print($logo->getDescription() . PHP_EOL);
     }
+
+    $imageAnnotator->close();
 }
 // [END vision_logo_detection]
