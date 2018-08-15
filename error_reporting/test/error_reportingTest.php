@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\ErrorReporting;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class error_reportingTest extends TestCase

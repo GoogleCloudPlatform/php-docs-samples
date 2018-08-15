@@ -1,0 +1,13 @@
+# This app.yaml is for deploying to instances of Cloud SQL running PostgreSQL.
+# See the default app.yaml for running Cloud SQL with MySQL.
+
+# [START gae_cloudsql_postgres_env]
+runtime: php72
+
+env_variables:
+  # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
+  # values obtained when configuring your Cloud SQL instance.
+  CLOUDSQL_USER: USER
+  CLOUDSQL_PASSWORD: PASSWORD
+  CLOUDSQL_DSN: "pgsql:dbname=DATABASE;host=/cloudsql/CONNECTION_NAME"
+# [END gae_cloudsql_postgres_env]

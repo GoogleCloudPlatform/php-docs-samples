@@ -336,6 +336,48 @@ EOF
         }
     });
 
+$application->add(new Command('enable-default-kms-key'))
+    ->setDescription('Enable default KMS encryption for a bucket.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command enables default KMS encryption for bucket.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('project', InputArgument::REQUIRED, 'Your billable Google Cloud Project ID')
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID to use as the default KMS key.')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        $bucketName = $input->getArgument('bucket');
+        $kmsKeyName = $input->getArgument('kms-key-name');
+        enable_default_kms_key($projectId, $bucketName, $kmsKeyName);
+    });
+
+$application->add(new Command('upload-with-kms-key'))
+    ->setDescription('Upload a file using KMS encryption.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command uploads a file using KMS encryption.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('project', InputArgument::REQUIRED, 'Your billable Google Cloud Project ID')
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('upload-from', InputArgument::REQUIRED, 'Path to the file to upload')
+    ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID used to encrypt objects server side.')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        $bucketName = $input->getArgument('bucket');
+        $objectName = $input->getArgument('object');
+        $uploadFrom = $input->getArgument('upload-from');
+        $kmsKeyName = $input->getArgument('kms-key-name');
+        upload_with_kms_key($projectId, $bucketName, $objectName, $uploadFrom, $kmsKeyName);
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

@@ -288,6 +288,66 @@ $application->add((new Command('query-data-timestamp'))
     })
 );
 
+// Insert struct data command
+$application->add((new Command('insert-struct-data'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Inserts sample data that can be used to test STRUCT parameters in queries.')
+    ->setCode(function ($input, $output) {
+        insert_struct_data(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with struct command
+$application->add((new Command('query-data-with-struct'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from the database with a struct.')
+    ->setCode(function ($input, $output) {
+        query_data_with_struct(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with array of struct command
+$application->add((new Command('query-data-with-array-of-struct'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from the database with an array of struct.')
+    ->setCode(function ($input, $output) {
+        query_data_with_array_of_struct(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with struct field
+$application->add((new Command('query-data-with-struct-field'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from the database with a struct field value.')
+    ->setCode(function ($input, $output) {
+        query_data_with_struct_field(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query data with nested struct field
+$application->add((new Command('query-data-with-nested-struct-field'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data from the database with a nested struct field value.')
+    ->setCode(function ($input, $output) {
+        query_data_with_nested_struct_field(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

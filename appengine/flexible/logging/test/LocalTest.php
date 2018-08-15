@@ -25,10 +25,6 @@ class LocalTest extends WebTestCase
         if (!getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');
         }
-        if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
-            $this->markTestSkipped('No secret available');
-            // TODO: Make the test runnable without secret
-        }
         parent::setUp();
         $this->client = $this->createClient();
     }

@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Language\Tests;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**

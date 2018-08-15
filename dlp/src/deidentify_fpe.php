@@ -85,7 +85,8 @@ function deidentify_fpe(
         ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
     $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
-        ->setPrimitiveTransformation($primitiveTransformation);
+        ->setPrimitiveTransformation($primitiveTransformation)
+        ->setInfoTypes($infoTypes);
 
     $infoTypeTransformations = (new InfoTypeTransformations())
         ->setTransformations([$infoTypeTransformation]);
@@ -104,9 +105,6 @@ function deidentify_fpe(
         'deidentifyConfig' => $deidentifyConfig,
         'item' => $content
     ]);
-
-    $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();

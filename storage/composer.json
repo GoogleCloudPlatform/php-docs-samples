@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-storage": "^1.2",
+        "google/cloud-storage": "^1.5.2",
         "paragonie/random_compat": "^2.0",
         "symfony/console": " ^3.0"
     },
@@ -18,8 +18,12 @@
             "src/delete_bucket_default_acl.php",
             "src/delete_object.php",
             "src/delete_object_acl.php",
+            "src/disable_requester_pays.php",
             "src/download_encrypted_object.php",
+            "src/download_file_requester_pays.php",
             "src/download_object.php",
+            "src/enable_default_kms_key.php",
+            "src/enable_requester_pays.php",
             "src/object_metadata.php",
             "src/generate_encryption_key.php",
             "src/get_bucket_acl.php",
@@ -29,6 +33,7 @@
             "src/get_bucket_labels.php",
             "src/get_object_acl.php",
             "src/get_object_acl_for_entity.php",
+            "src/get_requester_pays_status.php",
             "src/list_buckets.php",
             "src/list_objects.php",
             "src/list_objects_with_prefix.php",
@@ -39,14 +44,12 @@
             "src/rotate_encryption_key.php",
             "src/upload_encrypted_object.php",
             "src/upload_object.php",
-            "src/view_bucket_iam_members.php",
-            "src/enable_requester_pays.php",
-            "src/disable_requester_pays.php",
-            "src/get_requester_pays_status.php",
-            "src/download_file_requester_pays.php"
+            "src/upload_with_kms_key.php",
+            "src/view_bucket_iam_members.php"
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "~4"
+        "phpunit/phpunit": "~5",
+        "google/cloud-tools": "^0.8"
     }
 }

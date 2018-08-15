@@ -15,45 +15,34 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Dialogflow;
-
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for entity management commands.
  */
 class entityTest extends \PHPUnit_Framework_TestCase
 {
-    private static $projectId;
+    use DialogflowTestTrait;
+
     private static $entityTypeId = 'e57238e2-e692-44ea-9216-6be1b2332e2a';
     private static $entityValue1 = 'fake_entit_for_testing_1';
     private static $entityValue2 = 'fake_entit_for_testing_2';
     private static $synonyms = ['fake_synonym_for_testing_1', 'fake_synonym_for_testing_2'];
 
-    public static function setUpBeforeClass()
-    {
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            return $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
-    }
-
     public function testCreateEntity()
     {
         $this->runCommand('entity-create', [
-            'entity-value' => self::$entityValue1
+            'entity-value' => self::$entityValue1,
+            'entity-type-id' => self::$entityTypeId,
         ]);
         $this->runCommand('entity-create', [
             'entity-value' => self::$entityValue2,
-            'synonyms' => self::$synonyms
+            'synonyms' => self::$synonyms,
+            'entity-type-id' => self::$entityTypeId,
         ]);
-        $output = $this->runCommand('entity-list');
+        $output = $this->runCommand('entity-list', [
+            'entity-type-id' => self::$entityTypeId,
+        ]);
 
         $this->assertContains(self::$entityValue1, $output);
         $this->assertContains(self::$entityValue2, $output);
@@ -66,30 +55,18 @@ class entityTest extends \PHPUnit_Framework_TestCase
     public function testDeleteEntity()
     {
         $this->runCommand('entity-delete', [
-            'entity-value' => self::$entityValue1
+            'entity-value' => self::$entityValue1,
+            'entity-type-id' => self::$entityTypeId
         ]);
         $this->runCommand('entity-delete', [
-            'entity-value' => self::$entityValue2
+            'entity-value' => self::$entityValue2,
+            'entity-type-id' => self::$entityTypeId
         ]);
-        $output = $this->runCommand('entity-list');
+        $output = $this->runCommand('entity-list', [
+            'entity-type-id' => self::$entityTypeId,
+        ]);
 
         $this->assertNotContains(self::$entityValue1, $output);
         $this->assertNotContains(self::$entityValue2, $output);
-    }
-
-    private function runCommand($commandName, $args=[])
-    {
-        $application = require __DIR__ . '/../dialogflow.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute(
-            $args + [
-                'project-id' => self::$projectId,
-                'entity-type-id' => self::$entityTypeId
-            ],
-            ['interactive' => false]
-        );
-        return ob_get_clean();
     }
 }

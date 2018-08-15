@@ -17,6 +17,7 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
+use Exception;
 # [START dlp_k_map]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;

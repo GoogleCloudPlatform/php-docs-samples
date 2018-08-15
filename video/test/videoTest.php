@@ -79,11 +79,13 @@ class videoTest extends \PHPUnit_Framework_TestCase
         $command = $application->get($commandName);
         $commandTester = new CommandTester($command);
 
+        // Increase polling interval to 10 seconds to prevent exceeding quota.
+        $args['--polling-interval-seconds'] = 10;
+
         ob_start();
         $commandTester->execute(
             $args,
             ['interactive' => false]);
-
         return ob_get_clean();
     }
 }

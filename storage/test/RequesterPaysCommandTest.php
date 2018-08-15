@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\RequesterPaysCommand;
 use Google\Cloud\Storage\StorageClient;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -134,7 +133,11 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
         }
 
-        $destination = $objectName;
+        // Download to a temp file
+        $destination = implode(DIRECTORY_SEPARATOR, [
+            sys_get_temp_dir(),
+            basename($objectName)
+        ]);
 
         $this->commandTester->execute(
             [

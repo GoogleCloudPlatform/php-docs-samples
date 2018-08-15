@@ -3,7 +3,7 @@
 ################################################################################
 # Run the following gcloud command to decrypt secrets.sh.enc as follows:       #
 #                                                                              #
-# gcloud kms decrypt -location=global --keyring=ci --key=ci \                  #
+# gcloud kms decrypt --location=global --keyring=ci --key=ci \                 #
 #   --ciphertext-file=.kokoro/secrets.sh.enc \                                 #
 #   --plaintext-file=.kokoro/secrets.sh                                        #
 #                                                                              #
@@ -12,7 +12,6 @@
 
 # General
 export GOOGLE_PROJECT_ID=
-export GOOGLE_API_KEY=
 export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
 export GOOGLE_CLIENT_ID=
 export GOOGLE_CLIENT_SECRET=
@@ -38,6 +37,10 @@ export GOOGLE_BIGQUERY_TABLE=test_table
 # CloudSQL
 export CLOUDSQL_CONNECTION_NAME_MYSQL=
 export CLOUDSQL_CONNECTION_NAME_POSTGRES=
+export CLOUDSQL_CONNECTION_NAME=$CLOUDSQL_CONNECTION_NAME_MYSQL
+export CLOUDSQL_DATABASE=
+export CLOUDSQL_USER=
+export CLOUDSQL_PASSWORD=
 export MYSQL_DSN=
 export MYSQL_DATABASE=
 export MYSQL_USER=
@@ -78,6 +81,10 @@ export GOOGLE_KMS_CRYPTOKEY=
 export GOOGLE_KMS_CRYPTOKEY_ALTERNATE=
 export GOOGLE_KMS_SERVICEACCOUNTEMAIL=
 
+# Memorystore
+export REDIS_HOST=
+export REDIS_PORT=
+
 # PubSub
 export GOOGLE_PUBSUB_SUBSCRIPTION=php-example-subscription
 export GOOGLE_PUBSUB_TOPIC=php-example-topic
@@ -86,7 +93,22 @@ export GOOGLE_PUBSUB_TOPIC=php-example-topic
 export GOOGLE_SPANNER_INSTANCE_ID=
 export GOOGLE_SPANNER_DATABASE_ID=test-database
 
+# Storage
+export GOOGLE_STORAGE_OBJECT=storage/test_data.csv
+export GOOGLE_STORAGE_KMS_KEYNAME=projects/$GOOGLE_PROJECT_ID/locations/us/keyRings/$GOOGLE_KMS_KEYRING/cryptoKeys/storage-bucket
+
 # Tasks
 export CLOUD_TASKS_APPENGINE_QUEUE=
 export CLOUD_TASKS_LOCATION=
 export CLOUD_TASKS_PULL_QUEUE=
+
+# WordPress
+export WORDPRESS_DB_INSTANCE_NAME=
+export WORDPRESS_DB_USER=$CLOUDSQL_USER
+export WORDPRESS_DB_PASSWORD=$CLOUDSQL_PASSWORD
+
+# Laravel
+export LARAVEL_CLOUDSQL_CONNECTION_NAME=$CLOUDSQL_CONNECTION_NAME_MYSQL
+export LARAVEL_DB_DATABASE=laravel
+export LARAVEL_DB_USERNAME=$CLOUDSQL_USER
+export LARAVEL_DB_PASSWORD=$CLOUDSQL_PASSWORD

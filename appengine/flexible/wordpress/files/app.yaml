@@ -1,0 +1,11 @@
+runtime: php
+env: flex
+
+beta_settings:
+  cloud_sql_instances: "YOUR_DB_CONNECTION"
+
+runtime_config:
+  document_root: wordpress
+
+env_variables:
+  WHITELIST_FUNCTIONS: escapeshellarg,escapeshellcmd,exec,pclose,popen,shell_exec,phpversion,php_uname

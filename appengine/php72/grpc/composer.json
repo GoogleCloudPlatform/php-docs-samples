@@ -1,0 +1,12 @@
+{
+    "require": {
+        "google/cloud-spanner": "^1.6",
+        "google/cloud-monitoring": "^0.11",
+        "google/cloud-speech": "^0.15"
+    },
+    "require-dev": {
+        "google/cloud-tools": "^0.6.7",
+        "paragonie/random_compat": "^2.0",
+        "phpunit/phpunit": "~5"
+    }
+}

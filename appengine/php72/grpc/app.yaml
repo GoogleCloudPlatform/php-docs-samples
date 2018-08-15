@@ -1,0 +1,8 @@
+runtime: php72
+
+handlers:
+- url: /
+  script: auto
+
+- url: /(monitoring|spanner|speech)\.php
+  script: auto

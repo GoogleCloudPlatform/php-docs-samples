@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.1",
+        "google/cloud-spanner": "^1.6",
         "symfony/console": "^3.2"
     },
     "require-dev": {
@@ -28,7 +28,12 @@
             "src/insert_data_with_timestamp_column.php",
             "src/add_timestamp_column.php",
             "src/update_data_with_timestamp_column.php",
-            "src/query_data_with_timestamp_column.php"
+            "src/query_data_with_timestamp_column.php",
+            "src/insert_struct_data.php",
+            "src/query_data_with_struct.php",
+            "src/query_data_with_array_of_struct.php",
+            "src/query_data_with_struct_field.php",
+            "src/query_data_with_nested_struct_field.php"
         ]
     }
 }
