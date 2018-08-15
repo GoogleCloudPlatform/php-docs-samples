@@ -30,7 +30,6 @@ use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
 use Google\Protobuf\Timestamp;
 
 /**
- * Adds a new column to the Albums table in the example database.
  * Example:
  * ```
  * read_timeseries_simple($projectId);

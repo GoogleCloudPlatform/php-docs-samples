@@ -28,6 +28,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
 
     private static $projectId;
     private static $metricId = 'custom.googleapis.com/stores/daily_sales';
+    private static $uptimeConfigName;
     private static $minutesAgo = 720;
 
     public static function setUpBeforeClass()
@@ -53,6 +54,55 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
             ]);
             $this->assertContains(self::$metricId, $output);
         }, self::RETRY_COUNT, true);
+    }
+
+    public function testCreateUptimeCheck()
+    {
+        $output = $this->runCommand('create-uptime-check');
+        $this->assertContains('Created an uptime check', $output);
+
+        $matched = preg_match('/Created an uptime check: (.*)/', $output, $matches);
+        $this->assertTrue((bool) $matched);
+        self::$uptimeConfigName = $matches[1];
+    }
+
+    /** @depends testCreateUptimeCheck */
+    public function testGetUptimeCheck()
+    {
+        $this->runEventuallyConsistentTest(function () {
+            $escapedName = addcslashes(self::$uptimeConfigName, '/');
+            $output = $this->runCommand('get-uptime-check', [
+                'config_name' => self::$uptimeConfigName,
+            ]);
+            $this->assertContains($escapedName, $output);
+        }, self::RETRY_COUNT, true);
+    }
+
+    /** @depends testGetUptimeCheck */
+    public function testListUptimeChecks()
+    {
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('list-uptime-checks');
+            $this->assertContains(self::$uptimeConfigName, $output);
+        });
+    }
+
+    /** @depends testCreateUptimeCheck */
+    public function testDeleteUptimeCheck()
+    {
+        $output = $this->runCommand('delete-uptime-check', [
+            'config_name' => self::$uptimeConfigName,
+        ]);
+        $this->assertContains('Deleted an uptime check', $output);
+        $this->assertContains(self::$uptimeConfigName, $output);
+    }
+
+    public function testListUptimeCheckIPs()
+    {
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('list-uptime-check-ips');
+            $this->assertContains('ip address: ', $output);
+        });
     }
 
     /** @depends testCreateMetric */

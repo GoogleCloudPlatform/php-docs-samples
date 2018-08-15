@@ -23,29 +23,29 @@
 
 namespace Google\Cloud\Samples\Monitoring;
 
-// [START monitoring_list_descriptors]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+// [START monitoring_uptime_check_list_configs]
+use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
 
 /**
  * Example:
  * ```
- * list_descriptors($projectId);
+ * list_uptime_checks($projectId);
  * ```
- *
- * @param string $projectId Your project ID
  */
-function list_descriptors($projectId)
+function list_uptime_checks($projectId)
 {
-    $metrics = new MetricServiceClient([
+    $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
-    $descriptors = $metrics->listMetricDescriptors($projectName);
+    $pages = $uptimeCheckClient->listUptimeCheckConfigs(
+        $uptimeCheckClient->projectName($projectId)
+    );
 
-    printf('Metric Descriptors:' . PHP_EOL);
-    foreach ($descriptors->iterateAllElements() as $descriptor) {
-        printf($descriptor->getName() . PHP_EOL);
+    foreach ($pages->iteratePages() as $page) {
+        foreach ($page as $uptimeCheck) {
+            print($uptimeCheck->getName() . PHP_EOL);
+        }
     }
 }
-// [END monitoring_list_descriptors]
+// [END monitoring_uptime_check_list_configs]

@@ -27,7 +27,6 @@ namespace Google\Cloud\Samples\Monitoring;
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
 
 /**
- * Adds a new column to the Albums table in the example database.
  * Example:
  * ```
  * get_descriptor($projectId);

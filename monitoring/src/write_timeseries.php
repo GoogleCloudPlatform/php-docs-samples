@@ -34,7 +34,6 @@ use Google\Cloud\Monitoring\V3\TypedValue;
 use Google\Protobuf\Timestamp;
 
 /**
- * Adds a new column to the Albums table in the example database.
  * Example:
  * ```
  * write_timeseries($projectId);

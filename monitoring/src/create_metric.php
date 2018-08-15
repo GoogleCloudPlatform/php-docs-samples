@@ -32,7 +32,7 @@ use Google\Api\MetricDescriptor_MetricKind;
 use Google\Api\MetricDescriptor_ValueType;
 
 /**
- * Adds a new column to the Albums table in the example database.
+ * Create a new metric in Stackdriver Monitoring.
  * Example:
  * ```
  * create_metric($projectId);

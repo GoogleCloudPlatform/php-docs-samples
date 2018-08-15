@@ -23,29 +23,26 @@
 
 namespace Google\Cloud\Samples\Monitoring;
 
-// [START monitoring_list_descriptors]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+// [START monitoring_uptime_check_delete]
+use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
 
 /**
  * Example:
  * ```
- * list_descriptors($projectId);
+ * delete_uptime_check($projectId, $configName);
  * ```
  *
  * @param string $projectId Your project ID
+ * @param string $configName
  */
-function list_descriptors($projectId)
+function delete_uptime_check($projectId, $configName)
 {
-    $metrics = new MetricServiceClient([
+    $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
-    $descriptors = $metrics->listMetricDescriptors($projectName);
+    $uptimeCheckClient->deleteUptimeCheckConfig($configName);
 
-    printf('Metric Descriptors:' . PHP_EOL);
-    foreach ($descriptors->iterateAllElements() as $descriptor) {
-        printf($descriptor->getName() . PHP_EOL);
-    }
+    printf('Deleted an uptime check: ' . $configName . PHP_EOL);
 }
-// [END monitoring_list_descriptors]
+// [END monitoring_uptime_check_delete]

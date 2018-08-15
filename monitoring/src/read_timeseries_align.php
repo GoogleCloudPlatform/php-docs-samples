@@ -33,7 +33,6 @@ use Google\Protobuf\Duration;
 use Google\Protobuf\Timestamp;
 
 /**
- * Adds a new column to the Albums table in the example database.
  * Example:
  * ```
  * read_timeseries_align($projectId);
