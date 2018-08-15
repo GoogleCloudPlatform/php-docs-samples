@@ -18,7 +18,7 @@
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-# [START videointelligence_quickstart]
+# [START video_quickstart]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
@@ -57,4 +57,4 @@ if ($operation->operationSucceeded()) {
 } else {
     print_r($operation->getError());
 }
-# [END videointelligence_quickstart]
+# [END video_quickstart]
