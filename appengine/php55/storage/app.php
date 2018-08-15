@@ -40,7 +40,7 @@ $app->get('/', function () use ($app) {
 
     # [START user_upload]
     $options = ['gs_bucket_name' => $my_bucket];
-    $upload_url = CloudStorageTools::createUploadUrl('/upload/handler', $options);
+    $upload_url = CloudStorageTools::createUploadUrl('/upload_handler.php', $options);
     # [END user_upload]
 
     $buckets = [
@@ -241,7 +241,7 @@ $app->get('/write/public', function () use ($app) {
  * Handle an uploaded file.
  * @see https://cloud.google.com/appengine/docs/php/googlestorage/user_upload#implementing_file_uploads
  */
-$app->post('/upload/handler', function () use ($app) {
+$app->post('/upload_handler.php', function () use ($app) {
     $my_bucket = $app['bucket_name'];
     # [START move_uploaded_file]
     $file_name = $_FILES['uploaded_files']['name'];
