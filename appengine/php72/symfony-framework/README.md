@@ -36,8 +36,8 @@ Welcome page.
 
 ## Deploy
 
-1.  Copy the [`app.yaml`](app.yaml) file in this directory into the root of your
-    project and replace `YOUR_APP_SECRET` with a new secret or the generated
+1.  Copy the [`app.yaml`](app.yaml) file from this repository into the root of
+    your project and replace `YOUR_APP_SECRET` with a new secret or the generated
     secret in `.env`:
 
     ```yaml
@@ -80,7 +80,7 @@ Welcome page.
     }
     ```
 
-1. Run the following command to deploy your app:
+1. Deploy your application to App Engine:
 
         gcloud app deploy
 
@@ -91,7 +91,7 @@ Welcome page.
 
 Next, connect your symfony demo application with a [Cloud SQL][cloudsql]
 database. This tutorial uses the database name `symfonydb` and the username
-`root`, but you can change this to be whatever you like.
+`root`, but you can use whatever you like.
 
 ### Setup
 
@@ -114,12 +114,12 @@ database. This tutorial uses the database name `symfonydb` and the username
       command. Copy the `connectionName` value for the next step. Replace
       `INSTANCE_NAME` with the name of your instance:
 
-        gcloud sql instances describe INSTANCE_NAME
+          gcloud sql instances describe INSTANCE_NAME
 
     * Start the Cloud SQL proxy and replace `INSTANCE_CONNECTION_NAME` with
       the connection name you retrieved in the previous step:
 
-        cloud_sql_proxy -instances=INSTANCE_CONNECTION_NAME=tcp:3306 &
+          cloud_sql_proxy -instances=INSTANCE_CONNECTION_NAME=tcp:3306 &
 
     **Note:** Include the `-credential_file` option when using the proxy, or
     authenticate with `gcloud`, to ensure proper authentication.
@@ -167,10 +167,6 @@ database. This tutorial uses the database name `symfonydb` and the username
     ```
 
 ### Run
-
-1.  In order to test that our connection is working, modify the Default
-    Controller in `src/AppBundle/Controller/DefaultController.php` so that it
-    validates our Doctrine connection:
 
 1.  Now you can run locally and verify the connection works as expected.
 
