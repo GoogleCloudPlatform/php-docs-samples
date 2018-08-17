@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 use Exception;
-# [START transcribe_async]
+# [START speech_transcribe_async]
 use Google\Cloud\Speech\SpeechClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
@@ -75,4 +75,4 @@ function transcribe_async($audioFile, $languageCode = 'en-US', $options = [])
         }
     }
 }
-# [END transcribe_async]
+# [END speech_transcribe_async]
