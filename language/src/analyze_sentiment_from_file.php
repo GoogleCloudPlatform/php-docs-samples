@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_sentiment_from_file]
+# [START language_sentiment_file_gcs]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
@@ -67,4 +67,4 @@ function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null
         printf(PHP_EOL);
     }
 }
-# [END analyze_sentiment_from_file]
+# [END language_sentiment_file_gcs]
