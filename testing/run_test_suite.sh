@@ -98,9 +98,14 @@ do
         composer -q install
     fi
     if [ $? != 0 ]; then
-        # Run composer without "-q"
-        composer install
-        echo "${DIR}: failed" >> "${FAILED_FILE}"
+        # If the PHP required version is too low, skip the test
+        if composer check-platform-reqs | grep failed ; then
+            echo "Skipping tests in $DIR\n"
+        else
+            # Run composer without "-q"
+            composer install
+            echo "${DIR}: failed" >> "${FAILED_FILE}"
+        fi
     else
         echo "running phpunit in ${DIR}"
         if [[ "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
