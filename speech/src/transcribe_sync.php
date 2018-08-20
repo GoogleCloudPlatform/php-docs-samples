@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START transcribe_sync]
+# [START speech_transcribe_sync]
 use Google\Cloud\Speech\SpeechClient;
 
 /**
@@ -60,4 +60,4 @@ function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
         printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
     }
 }
-# [END transcribe_sync]
+# [END speech_transcribe_sync]

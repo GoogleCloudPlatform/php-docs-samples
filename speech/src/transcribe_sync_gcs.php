@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START transcribe_sync_gcs]
+# [START speech_transcribe_sync_gcs]
 use Google\Cloud\Speech\SpeechClient;
 use Google\Cloud\Storage\StorageClient;
 
@@ -65,4 +65,4 @@ function transcribe_sync_gcs($bucketName, $objectName, $languageCode = 'en-US', 
         printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
     }
 }
-# [END transcribe_sync_gcs]
+# [END speech_transcribe_sync_gcs]

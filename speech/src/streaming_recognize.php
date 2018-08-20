@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START streaming_recognize]
+# [START speech_transcribe_streaming]
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
@@ -89,4 +89,4 @@ function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHe
         $speechClient->close();
     }
 }
-# [END streaming_recognize]
+# [END speech_transcribe_streaming]

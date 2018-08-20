@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Speech;
 
 use Exception;
-# [START transcribe_async_gcs]
+# [START speech_transcribe_async_gcs]
 use Google\Cloud\Speech\SpeechClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
@@ -81,4 +81,4 @@ function transcribe_async_gcs($bucketName, $objectName, $languageCode = 'en-US',
         }
     }
 }
-# [END transcribe_async_gcs]
+# [END speech_transcribe_async_gcs]
