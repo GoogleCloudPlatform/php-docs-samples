@@ -99,7 +99,7 @@ do
     fi
     if [ $? != 0 ]; then
         # If the PHP required version is too low, skip the test
-        if composer check-platform-reqs | grep failed ; then
+        if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
             echo "Skipping tests in $DIR\n"
         else
             # Run composer without "-q"
