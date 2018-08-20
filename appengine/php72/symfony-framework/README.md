@@ -1,14 +1,18 @@
-## Symfony
+## Run Symfony on App Engine Standard for PHP 7.2
 
-> [Symfony][symfony] is a set of PHP Components, a Web Application framework, a
-> Philosophy, and a Community — all working together in harmony.
->
-> – symfony.com
+This tutorial will walk you through how to create and deploy a Symfony project
+to App Engine Standard for PHP 7.2. You will learn how to:
 
-You can check out [PHP on Google Cloud Platform][php-gcp] to get an
-overview of PHP itself and learn ways to run PHP apps on Google Cloud
-Platform.
+1. Create a [Symfony][symfony] project
+1. Configure it to run in the App Engine environment
+1. Deploy it to App Engine
+1. Set up a [Cloud SQL][cloud-sql] database
+1. Configure Doctrine to communicate with Cloud SQL
 
+> **Note**: This repository is just a tutorial and is not a Symfony project in 
+  and of itself. The steps will require you to set up a new Symfony project in a
+  separate directory.
+  
 ## Prerequisites
 
 1. [Create a project][create-project] in the Google Cloud Platform Console
