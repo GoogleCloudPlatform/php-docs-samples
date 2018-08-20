@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_syntax]
+# [START language_syntax_text]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
@@ -55,4 +55,4 @@ function analyze_syntax($text, $projectId = null)
         printf(PHP_EOL);
     }
 }
-# [END analyze_syntax]
+# [END language_syntax_text]

@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_entities]
+# [START language_entities_text]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
@@ -61,4 +61,4 @@ function analyze_entities($text, $projectId = null)
         printf(PHP_EOL);
     }
 }
-# [END analyze_entities]
+# [END language_entities_text]
