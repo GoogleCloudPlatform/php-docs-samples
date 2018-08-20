@@ -1,4 +1,4 @@
-# Slim Example for App Engine for PHP 7.2
+# Slim Framework on App Engine for PHP 7.2
 
 This sample demonstrates how to deploy a *very* basic [Slim][slim] application to
 [Google App Engine for PHP 7.2][appengine-php]. For a more complete guide, follow

@@ -1,12 +1,7 @@
-# Deploy WordPress to App Engine for PHP 7.2
+# WordPress on App Engine Standard for PHP 7.2
 
-This is a small command line tool for downloading and configuring
-WordPress on App Engine for PHP 7.2. The script allows you to create a
-working WordPress project for the
-[App Engine standard environment][appengine-standard]. For deploying
-WordPress to the [App Engine flexible environment][appengine-flexible],
-refer to the example at [appengine/standard/wordpress][../../flexible/wordpress]
-
+This is a simple command-line tool for downloading and configuring
+WordPress on App Engine Standard for PHP 7.2.
 ## Common Prerequisites
 
 * Install [Composer][composer]
@@ -123,12 +118,11 @@ $ gcloud app deploy \
 Then access your site, and continue the installation step. The URL is:
 https://PROJECT_ID.appspot.com/
 
-Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins page, activate the following plugins:
+Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins
+page, activate the `Google App Engine for WordPress` plugin. Also set your
+e-mail address in its settings page.
 
-  - Google App Engine for WordPress (also set the e-mail address in its
-    settings page)
-
-After activating the plugins, try uploading a media object in a new post
+After activating the plugin, try uploading a media object in a new post
 and confirm the image is uploaded to the GCS bucket by visiting the
 [Google Cloud console's Storage page][cloud-storage-console].
 
@@ -162,15 +156,15 @@ mysql> show tables;
 mysql> exit
 ```
 
-## Various workflows
+## Various Workflows
 
-### Install/Update Wordpress, plugins, and themes
+### Install and Update WordPress, Plugins, and Themes
 
-Because the wp-content directory on the server is read-only, you have
-to do this locally. Run WordPress locally and update plugins/themes in
-the local Dashboard, then deploy, then activate them in the production
-Dashboard. You can also use the `wp-cli` utility as follows (be sure to keep
-the cloud SQL proxy running):
+Because the `wp-content` directory on the server is read-only, you have
+to perform all code updates locally. Run WordPress locally and update the
+plugins and themes in the local Dashboard, deploy the code to production, then
+activate them in the production Dashboard. You can also use the `wp-cli` utility
+as follows (be sure to keep the Cloud SQL proxy running):
 
 ```
 # Install the wp-cli utility
@@ -184,35 +178,25 @@ $ vendor/bin/wp theme update --all
 
 If you get the following error:
 
-```
+```sh
 Failed opening required 'google/appengine/api/urlfetch_service_pb.php'
 ```
 
 You can set a `WP_CLI_PHP_ARGS` environment variable to add
 `include_path` PHP configuration for wp-cli.
 
-```
+```sh
 $ export WP_CLI_PHP_ARGS='-d include_path=vendor/google/appengine-php-sdk'
 ```
 
 Then try the above commands again.
 
-### Remove plugins/themes
+### Remove Plugins and Themes
 
-First Deactivate them in the production Dashboard, then remove them
+First deactivate them in the production Dashboard, then remove them
 completely locally. The next deployment will remove those files from
 the production environment.
 
-### Update the base image
-
-We sometimes release a security update for
-[the php-docker image][php-docker]. You have to re-deploy your
-WordPress instance to get the security update.
-
-Enjoy your WordPress installation!
-
-[appengine-standard]: https://cloud.google.com/appengine/docs/about-the-standard-environment
-[appengine-flexible]: https://cloud.google.com/appengine/docs/flexible/
 [sql-settings]: https://console.cloud.google.com/sql/instances
 [mysql-client]: https://dev.mysql.com/doc/refman/5.7/en/mysql.html
 [composer]: https://getcomposer.org/
@@ -223,4 +207,3 @@ Enjoy your WordPress installation!
 [gcloud-sdk]: https://cloud.google.com/sdk/
 [cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
 [credentials-section]: https://console.cloud.google.com/apis/credentials/
-[php-docker]: https://github.com/googlecloudplatform/php-docker

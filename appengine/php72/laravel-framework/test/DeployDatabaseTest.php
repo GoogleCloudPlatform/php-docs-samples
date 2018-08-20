@@ -21,7 +21,7 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class DeployDatabaseSessionTest extends TestCase
+class DeployDatabaseTest extends TestCase
 {
     use TestTrait;
     use DeployLaravelTrait;
