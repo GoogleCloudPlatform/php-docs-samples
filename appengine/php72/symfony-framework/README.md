@@ -22,7 +22,8 @@ This tutorial uses the [Symfony Demo][symfony-demo] application. Run the
 following command to install it:
 
 ```sh
-composer create-project symfony/symfony-demo:^1.2
+PROJECT_DIR='symfony-on-appengine'
+composer create-project symfony/symfony-demo:^1.2 $PROJECT_DIR
 ```
 
 ## Run
@@ -32,13 +33,24 @@ composer create-project symfony/symfony-demo:^1.2
         php bin/console server:run
 
 1. Visit [http://localhost:8000](http://localhost:8000) to see the Symfony
-Welcome page.
+   Welcome page.
 
 ## Deploy
 
-1.  Copy the [`app.yaml`](app.yaml) file from this repository into the root of
-    your project and replace `YOUR_APP_SECRET` with a new secret or the generated
-    secret in `.env`:
+1. Remove the `scripts` section from `composer.json` in the root of your
+   project. You can do this manually, or by running the following line of code
+   below in the root of your Symfony project:
+
+   ```sh
+   php -r "file_put_contents('composer.json', json_encode(array_diff_key(json_decode(file_get_contents('composer.json'), true), ['scripts' => 1]), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));"
+   ```
+
+   > **Note**: The composer scripts run on the [Cloud Build][cloud-build] server.
+    This is a temporary fix to prevent errors prior to deployment.
+
+1. Copy the [`app.yaml`](app.yaml) file from this repository into the root of
+   your project and replace `YOUR_APP_SECRET` with a new secret or the generated
+   secret in `.env`:
 
     ```yaml
     runtime: php72
@@ -51,9 +63,12 @@ Welcome page.
     # ...
     ```
 
-1. Set the cache and log directories to `/tmp` in production. This is because
-   App Engine's file system is **read-only**. Modify the functions `getCacheDir`
-   and `getLogDir` to the following in `src/Kernel.php`:
+    > **NOTE** Read more about the [env][symfony-env] and [secret][symfony-secret]
+    parameters in Symfony's documentation.
+
+1. [Override the cache and log directories][symfony-override-cache] so that
+   they use `/tmp` in production. This is done by modifying the functions
+   `getCacheDir` and `getLogDir` to the following in `src/Kernel.php`:
 
 
     ```php
@@ -68,6 +83,7 @@ Welcome page.
             }
             return $this->getProjectDir() . '/var/cache/' . $this->environment;
         }
+
         public function getLogDir()
         {
             if ($this->environment === 'prod') {
@@ -80,6 +96,8 @@ Welcome page.
     }
     ```
 
+    > **NOTE**: This is required because App Engine's file system is **read-only**.
+
 1. Deploy your application to App Engine:
 
         gcloud app deploy
@@ -87,30 +105,35 @@ Welcome page.
 1. Visit `http://YOUR_PROJECT_ID.appspot.com` to see the Symfony demo landing
    page.
 
+The homepage will load when you view your application, but browsing to any of
+the other demo pages will result in a **500** error. This is because you haven't
+set up a database yet. Let's do that now!
+
 ## Connect to Cloud SQL with Doctrine
 
-Next, connect your symfony demo application with a [Cloud SQL][cloudsql]
+Next, connect your Symfony demo application with a [Cloud SQL][cloud-sql]
 database. This tutorial uses the database name `symfonydb` and the username
 `root`, but you can use whatever you like.
 
 ### Setup
 
 1. Follow the instructions to set up a
-   [Google Cloud SQL Second Generation instance for MySQL][cloudsql-create].
+   [Google Cloud SQL Second Generation instance for MySQL][cloud-sql-create].
 
 1. Create a database for your Symfony application. Replace `INSTANCE_NAME`
    with the name of your instance:
 
        gcloud sql databases create symfonydb --instance=INSTANCE_NAME
 
-1. Enable the [CloudSQL APIs][cloudsql-apis] in your project.
+1. Enable the [Cloud SQL APIs][cloud-sql-apis] in your project.
 
 1. Follow the instructions to
-   [install and run the Cloud SQL proxy client on your local machine][cloudsql-install].
+   [install and run the Cloud SQL proxy client on your local machine][cloud-sql-install].
    The Cloud SQL proxy is used to connect to your Cloud SQL instance when
-   running locally.
+   running locally. This is so you can run database migrations locally to set up
+   your production database.
 
-    * Use the [Cloud SDK][cloud_sdk] from the command line to run the following
+    * Use the [Cloud SDK][cloud-sdk] from the command line to run the following
       command. Copy the `connectionName` value for the next step. Replace
       `INSTANCE_NAME` with the name of your instance:
 
@@ -140,7 +163,7 @@ database. This tutorial uses the database name `symfonydb` and the username
         # ...
     ```
 
-1.  Use the symfony CLI to connect to your instance and create a database for
+1.  Use the Symfony CLI to connect to your instance and create a database for
     the application. Be sure to replace `DB_PASSWORD` with the root password you
     configured:
 
@@ -184,11 +207,12 @@ database. This tutorial uses the database name `symfonydb` and the username
 1. View a [Symfony Demo Application][symfony-sample-app] for App Engine Flex.
 
 [php-gcp]: https://cloud.google.com/php
-[cloud_sdk]: https://cloud.google.com/sdk/
-[cloudsql]: https://cloud.google.com/sql/docs/
-[cloudsql-create]: https://cloud.google.com/sql/docs/mysql/create-instance
-[cloudsql-install]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
-[cloudsql-apis]:https://pantheon.corp.google.com/apis/library/sqladmin.googleapis.com/?pro
+[cloud-sdk]: https://cloud.google.com/sdk/
+[cloud-build]: https://cloud.google.com/cloud-build/
+[cloud-sql]: https://cloud.google.com/sql/docs/
+[cloud-sql-create]: https://cloud.google.com/sql/docs/mysql/create-instance
+[cloud-sql-install]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
+[cloud-sql-apis]:https://pantheon.corp.google.com/apis/library/sqladmin.googleapis.com/?pro
 [create-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 [enable-billing]: https://support.google.com/cloud/answer/6293499?hl=en
 [php-gcp]: https://cloud.google.com/php
@@ -199,3 +223,6 @@ database. This tutorial uses the database name `symfonydb` and the username
 [symfony-doctrine]: https://symfony.com/doc/current/doctrine.html
 [symfony-sample-app]: https://github.com/bshaffer/symfony-on-app-engine-flex
 [symfony-demo]: https://github.com/symfony/demo
+[symfony-secret]: http://symfony.com/doc/current/reference/configuration/framework.html#secret
+[symfony-env]: https://symfony.com/doc/current/configuration/environments.html#executing-an-application-in-different-environments
+[symfony-override-cache]: https://symfony.com/doc/current/configuration/override_dir_structure.html#override-the-cache-directory
