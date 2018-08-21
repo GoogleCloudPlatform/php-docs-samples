@@ -5,7 +5,7 @@ runtime_config:
   document_root: .
 
 # [START gae_flex_twilio_env]
-gae_flex_twilio_env:
+env_variables:
     TWILIO_ACCOUNT_SID: your-account-sid
     TWILIO_AUTH_TOKEN: your-auth-token
     TWILIO_FROM_NUMBER: your-twilio-number
