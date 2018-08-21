@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_syntax_file_gcs]
+# [START language_syntax_gcs]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
@@ -62,4 +62,4 @@ function analyze_syntax_from_file($bucketName, $objectName, $projectId = null)
         printf(PHP_EOL);
     }
 }
-# [END language_syntax_file_gcs]
+# [END language_syntax_gcs]
