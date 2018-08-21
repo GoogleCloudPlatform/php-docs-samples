@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_entity_sentiment_file_gcs]
+# [START language_entity_sentiment_gcs]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
@@ -62,4 +62,4 @@ function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = nul
         printf(PHP_EOL);
     }
 }
-# [END language_entity_sentiment_file_gcs]
+# [END language_entity_sentiment_gcs]

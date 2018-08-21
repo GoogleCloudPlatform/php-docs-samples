@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_classify_file_gcs]
+# [START language_classify_gcs]
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\LanguageClient;
@@ -54,4 +54,4 @@ function classify_text_from_file($cloud_storage_uri, $projectId = null)
         printf(PHP_EOL);
     }
 }
-# [END language_classify_file_gcs]
+# [END language_classify_gcs]
