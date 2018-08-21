@@ -12,8 +12,12 @@ This directory contains samples for Google Cloud Spanner.
 horizontally-scaling database with consistent global transactions and SQL
 semantics.
 
+See [Getting Started in PHP][getting-started-php]
+for a walkthrough of these samples.
+
 [spanner]: https://cloud.google.com/spanner/docs
 [newsql]: https://en.wikipedia.org/wiki/NewSQL
+[getting-started-php]: https://cloud.google.com/spanner/docs/getting-started/php/
 
 ## Setup
 

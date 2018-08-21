@@ -184,7 +184,7 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('query-data-with-index');
         $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
     }
 
     /**
