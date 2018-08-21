@@ -1,7 +1,7 @@
 # Stackdriver Error Reporting on App Engine Standard for PHP 7.2
 
-This app demonstrates how to report errors on App Engine Standard for PHP 7.2
-and shows how different PHP error types are handled.
+This application demonstrates how to report errors on App Engine Standard for
+PHP 7.2. It also demonstrates how different PHP error types are handled.
 
 To set up **error reporting** in your App Engine PHP 7.2 application, simply follow
 these two steps:
@@ -30,7 +30,7 @@ included to register the error handler:
 require_once __DIR__ . '/vendor/google/cloud-error-reporting/src/prepend.php';
 ```
 
-## Setup
+## Setup the sample
 
 - Install [`composer`](https://getcomposer.org)
 - Install dependencies by running:
@@ -39,9 +39,9 @@ require_once __DIR__ . '/vendor/google/cloud-error-reporting/src/prepend.php';
     ```
 - Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
 
-## Deploy
+## Deploy the sample
 
-### Deploy with gcloud
+### Deploy with `gcloud`
 
 Deploy the samples by doing the following:
 

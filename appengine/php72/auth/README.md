@@ -33,11 +33,3 @@ will work for any Google Cloud API.
 1.  Run PHP's built-in web server with the command `php -S localhost:8000` and
     then view the application in your browser at
     [http://localhost:8000](http://localhost:8000).
-
-## Contributing changes
-
-* See [CONTRIBUTING.md](../CONTRIBUTING.md)
-
-## Licensing
-
-* See [LICENSE](../LICENSE)
