@@ -88,8 +88,8 @@ class spannerTest extends TestCase
     public function testQueryData()
     {
         $output = $this->runCommand('query-data');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
         $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
         $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
@@ -117,8 +117,8 @@ class spannerTest extends TestCase
     public function testReadData()
     {
         $output = $this->runCommand('read-data');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
         $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
         $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
@@ -184,7 +184,7 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('query-data-with-index');
         $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
     }
 
     /**
@@ -194,8 +194,8 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('read-data-with-index');
 
-        $this->assertContains('AlbumId: 2, AlbumTitle: Total Junk', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
         $this->assertContains('AlbumId: 1, AlbumTitle: Green', $output);
         $this->assertContains('AlbumId: 3, AlbumTitle: Terrified', $output);
         $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
@@ -218,10 +218,10 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('read-data-with-storing-index');
         $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace, MarketingBudget:', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Go, Go, Go, MarketingBudget:', $output);
+        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go, MarketingBudget:', $output);
         $this->assertContains('AlbumId: 1, AlbumTitle: Green, MarketingBudget:', $output);
         $this->assertContains('AlbumId: 3, AlbumTitle: Terrified, MarketingBudget:', $output);
-        $this->assertContains('AlbumId: 2, AlbumTitle: Total Junk, MarketingBudget:', $output);
+        $this->assertContains('AlbumId: 1, AlbumTitle: Total Junk, MarketingBudget:', $output);
     }
 
     /**
@@ -230,8 +230,8 @@ class spannerTest extends TestCase
     public function testReadOnlyTransaction()
     {
         $output = $this->runCommand('read-only-transaction');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
         $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
         $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
@@ -249,13 +249,13 @@ class spannerTest extends TestCase
             sleep(16 - $elapsed);
         }
         $output = $this->runCommand('read-stale-data');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
         $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
         $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
         $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
-    
+
     /**
      * @depends testReadStaleData
      */
@@ -265,7 +265,7 @@ class spannerTest extends TestCase
         $this->assertContains('Waiting for operation to complete...', $output);
         $this->assertContains('Created Performances table in database test-', $output);
     }
-    
+
     /**
      * @depends testCreateTableTimestamp
      */
@@ -274,7 +274,7 @@ class spannerTest extends TestCase
         $output = $this->runCommand('insert-data-timestamp');
         $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
-    
+
     /**
      * @depends testInsertDataTimestamp
      */
@@ -284,7 +284,7 @@ class spannerTest extends TestCase
         $this->assertContains('Waiting for operation to complete...', $output);
         $this->assertContains('Added LastUpdateTime as a commit timestamp column in Albums table', $output);
     }
-    
+
     /**
      * @depends testAddTimestampColumn
      */
@@ -293,7 +293,7 @@ class spannerTest extends TestCase
         $output = $this->runCommand('update-data-timestamp');
         $this->assertEquals('Updated data.' . PHP_EOL, $output);
     }
-    
+
     /**
      * @depends testUpdateDataTimestamp
      */
