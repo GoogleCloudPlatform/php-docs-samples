@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * This file handles all routing for a WordPress project running on App Engine.
+ * It serves up the appropriate PHP file depending on the request URI.
+ * 
+ * @see https://cloud.google.com/appengine/docs/standard/php7/runtime#application_startup
+ */
+
+/**
+ * Function to return a PHP file to load based on the request URI.
+ *
+ * @param string $full_request_uri The request URI derivded from $_SERVER['REQUEST_URI'].
+ */
 function get_real_file_to_load($full_request_uri)
 {
     $request_uri = @parse_url($full_request_uri)['path'];

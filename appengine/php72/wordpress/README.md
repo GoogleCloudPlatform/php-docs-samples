@@ -4,81 +4,61 @@ This is a simple command-line tool for downloading and configuring
 WordPress on App Engine Standard for PHP 7.2.
 ## Common Prerequisites
 
-* Install [Composer][composer]
 * Create a new Cloud Project using the [Cloud Console][cloud-console]
 * Enable Billing on that project
-* [Enable Cloud SQL API][cloud-sql-api-enable]
 * Install [Google Cloud SDK][gcloud-sdk]
-* Install the [mysql-client][mysql-client] command line tool
+* [Enable Cloud SQL API][cloud-sql-api-enable]
+* Install [Composer][composer]
 
-## Project preparation
+### Create and configure a Cloud SQL for MySQL instance
 
-Configure Google Cloud SDK with your account and the appropriate project ID:
-
-```
-$ gcloud init
-```
-
-Create an App Engine application within your new project:
-
-```
-$ gcloud app create
-```
-
-Then configure the App Engine default GCS bucket for later use. The default App
-Engine bucket is named YOUR_PROJECT_ID.appspot.com. Change the default Access
-Control List (ACL) of that bucket as follows:
-
-```
-$ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
-```
-
-### Create and configure a Cloud SQL for MySQL 2nd generation instance
-
-Note: In this guide, we use `wordpress` for the instance name and the database
+> **Note**: In this guide, we use `wordpress` for the instance name and the database
 name. We use `root` for the database user name.
 
-Create a new Cloud SQL for MySQL Second Generation instance with the following
+1. Create a new Cloud SQL for MySQL Second Generation instance with the following
 command:
+    ```sh
+    $ gcloud sql instances create wordpress \
+        --activation-policy=ALWAYS \
+        --tier=db-n1-standard-1
+    ```
+    > **Note**: you can choose `db-f1-micro` or `db-g1-small` instead of
+    `db-n1-standard-1` for the Cloud SQL machine type, especially for the
+    development or testing purpose. However, those machine types are not
+    recommended for production use and are not eligible for Cloud SQL SLA
+    coverage. See our [Cloud SQL SLA](https://cloud.google.com/sql/sla)
+    for more details.
 
-```sh
-$ gcloud sql instances create wordpress \
-    --activation-policy=ALWAYS \
-    --tier=db-n1-standard-1
-```
+1. Next, create the database you want your WordPress site to use:
+    ```sh
+    $ gcloud sql databases create wordpress --instance wordpress
+    ```
+1. Finally, change the root password for your instance:
+    ```sh
+    $ gcloud sql users set-password root \
+        --host=% \
+        --instance wordpress \
+        --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
+    ```
 
-Note: you can choose `db-f1-micro` or `db-g1-small` instead of
-`db-n1-standard-1` for the Cloud SQL machine type, especially for the
-development or testing purpose. However, those machine types are not
-recommended for production use and are not eligible for Cloud SQL SLA
-coverage. See our [Cloud SQL SLA](https://cloud.google.com/sql/sla)
-for more details.
+## Create or Update a WordPress project for App Engine
 
-Then change the root password for your instance:
+The `wordpress.php` command provides a convenient way for you to to either create
+a new WordPress project or add the required configuration to an existing one.
 
-```sh
-$ gcloud sql users set-password root \
-    --host=% \
-    --instance wordpress \
-    --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
-```
+### Setup
 
-You will also need to create the database you want your WordPress site to use:
-
-```sh
-$ gcloud sql databases create wordpress --instance wordpress
-```
-
-## SetUp
-
-First install the dependencies in this directory as follows:
-
-```sh
-$ composer install
-```
-
-If it complains about extensions, please install `phar` and `zip` PHP
-extensions and retry.
+1. Download this repository and `cd` into the `appengine/php72/wordpress` directory
+    ```sh
+    $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples.git
+    $ cd php-docs-samples/appengine/php72/wordpress
+    ```
+1. Install the dependencies in this directory using composer
+    ```sh
+    $ composer install
+    ```
+    > **Note** If you receive an error about extensions, install `phar` and `zip` PHP
+    extensions and retry.
 
 ### Create a new WordPress Project
 
@@ -91,6 +71,8 @@ $ php wordpress.php create
 The command asks you several questions, please answer them. Then you'll have a
 new WordPress project. By default it will create `my-wordpress-project` in the
 current directory.
+
+> **Note**: To determine the region your database is in `gcloud app describe`
 
 ### Update an existing WordPress Project
 
@@ -111,16 +93,27 @@ CD into your WordPress project directory and run the following command to
 deploy:
 
 ```sh
-$ gcloud app deploy \
-    --promote --stop-previous-version app.yaml cron.yaml
+$ gcloud app deploy app.yaml cron.yaml
 ```
 
 Then access your site, and continue the installation step. The URL is:
 https://PROJECT_ID.appspot.com/
 
-Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the Plugins
-page, activate the `Google App Engine for WordPress` plugin. Also set your
-e-mail address in its settings page.
+### Enable the Google Cloud Storage plugin
+
+To use the [Google Cloud Storage plugin][gcs-plugin] for media uploads, follow
+these steps.
+
+1. Configure the App Engine default GCS bucket for later use. The default App
+   Engine bucket is named YOUR_PROJECT_ID.appspot.com. Change the default Access
+   Control List (ACL) of that bucket as follows:
+    ```
+    $ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
+    ```
+1. Go to the Dashboard at https://PROJECT_ID.appspot.com/wp-admin. On the
+   Plugins page, activate the `Google Cloud Storage plugin`.
+1. In the plugins Settings page, set your Bucket name to the bucket you
+   configured in Step 1.
 
 After activating the plugin, try uploading a media object in a new post
 and confirm the image is uploaded to the GCS bucket by visiting the
@@ -207,3 +200,4 @@ the production environment.
 [gcloud-sdk]: https://cloud.google.com/sdk/
 [cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
 [credentials-section]: https://console.cloud.google.com/apis/credentials/
+[gcs-plugin]: https://wordpress.org/plugins/gcs/
