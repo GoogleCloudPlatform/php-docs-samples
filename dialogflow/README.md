@@ -2,12 +2,12 @@
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
-[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=dialogflow
 
 ## Description
 
-This command-line application demonstrates how to invoke Dialogflow 
+This command-line application demonstrates how to invoke Dialogflow
 API from PHP.
 
 ## Before you begin
@@ -126,7 +126,7 @@ Examples:
   php dialogflow.php context-delete -s SESSION_ID PROJECT_ID test-context-id
 
 Commands:
-  session-entity-type-list       
+  session-entity-type-list
   session-entity-type-create
   session-entity-type-delete
 
@@ -187,7 +187,7 @@ Examples:
   php dialogflow.php entity-type-delete PROJECT_ID e57238e2-e692-44ea-9216-6be1b2332e2a
 
 Commands:
-  entity-type-list       
+  entity-type-list
   entity-type-create
   entity-type-delete
 
@@ -217,7 +217,7 @@ Examples:
   php dialogflow.php entity-delete PROJECT_ID e57238e2-e692-44ea-9216-6be1b2332e2a new_room
 
 Commands:
-  entity-list       
+  entity-list
   entity-create
   entity-delete
 
@@ -245,7 +245,7 @@ Examples:
   php dialogflow.php session-entity-type-delete -s SESSION_ID PROJECT_ID room
 
 Commands:
-  session-entity-type-list       
+  session-entity-type-list
   session-entity-type-create
   session-entity-type-delete
 
