@@ -1,7 +1,7 @@
-# App Engine for PHP 7.2 Front Controller sample
+# Front Controllers on App Engine Standard for PHP 7.2
 
 This app demonstrates how to implement a simple front controller for legacy
-projects. The main code sample lies in [`index.php`](index.php#L13). This is one
+projects. The main code sample is in [`index.php`](index.php#L13). This is one
 example of a front controller. See here for more examples:
 
  * [front controller implementation using the Slim Framework](../slim-framework/index.php#L26)

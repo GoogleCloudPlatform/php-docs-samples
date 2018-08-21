@@ -1,6 +1,7 @@
-# App Engine for PHP 7.2 Stackdriver Trace samples
+# Stackdriver Trace on App Engine Standard for PHP 7.2
 
-This app demonstrates how to set up Stackdriver Trace on App Engine for PHP 7.2.
+This app demonstrates how to set up Stackdriver Trace on App Engine Standard
+for PHP 7.2.
 
 ## Setup
 

@@ -1,6 +1,6 @@
-# Cloud Storage & Google App Engine
+# Cloud Storage on App Engine Standard for PHP 7.2
 
-This sample application demonstrates how to use [Cloud Storage with Google App Engine](https://cloud.google.com/appengine/docs/php/googlestorage/).
+This sample application demonstrates how to use [Cloud Storage on App Engine for PHP 7.2](https://cloud.google.com/appengine/docs/standard/php7/using-cloud-storage).
 
 ## Setup
 

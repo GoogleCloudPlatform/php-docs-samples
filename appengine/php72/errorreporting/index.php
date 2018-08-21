@@ -10,6 +10,11 @@
 #
 # [END gae_erroreporting_register_handler]
 
+# Uncomment this line if you'd like to include `prepend.php` manually instead of
+# using `php.ini`:
+#
+#    require_once 'vendor/google/cloud-error-reporting/src/prepend.php';
+#
 // throw a test exception to trigger our exception handler
 if (isset($_GET['type'])) {
     $linkText = '<p>This should now be visible in the '

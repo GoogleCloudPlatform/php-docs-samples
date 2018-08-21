@@ -1,12 +1,15 @@
-# Cloud SQL & Google App Engine
+# Cloud SQL on App Engine Standard for PHP 7.2
 
-This sample application demonstrates how to use [Cloud SQL with Google App Engine](https://cloud.google.com/appengine/docs/php/cloud-sql/).
+This sample application demonstrates how to use [Cloud SQL on App Engine for PHP 7.2](https://cloud.google.com/appengine/docs/standard/php7/using-cloud-sql).
 
 ## Setup
 
 Before you can run or deploy the sample, you will need to do the following:
 
-1. Create a [Second Generation Cloud SQL](https://cloud.google.com/sql/docs/create-instance) instance. You can do this from the [Cloud Console](https://console.developers.google.com) or via the [Cloud SDK](https://cloud.google.com/sdk). To create it via the SDK use the following command:
+1. Create a [Second Generation Cloud SQL](https://cloud.google.com/sql/docs/create-instance)
+   instance. You can do this from the [Cloud Console](https://console.developers.google.com)
+   or via the [Cloud SDK](https://cloud.google.com/sdk). To create it via the
+   SDK use the following command:
 
         $ gcloud sql instances create YOUR_INSTANCE_NAME
 

@@ -1,8 +1,8 @@
-# Slim Example for App Engine for PHP 7.2
+# Slim Framework on App Engine for PHP 7.2
 
 This sample demonstrates how to deploy a *very* basic [Slim][slim] application to
 [Google App Engine for PHP 7.2][appengine-php]. For a more complete guide, follow
-the [getting started](../getting-started) tutorial.
+the [Building an App][building-an-app] tutorial.
 
 ## Setup
 
@@ -40,3 +40,4 @@ for PHP 7.2 require use of a [front controller][front-controller] file.
 [slim]: https://www.slimframework.com/
 [appengine-php]: https://cloud.google.com/appengine/docs/standard/php/
 [front-controller]: https://stackoverflow.com/questions/6890200/what-is-a-front-controller-and-how-is-it-implemented-in-php
+[building-an-app]: https://cloud.google.com/appengine/docs/standard/php7/building-app/

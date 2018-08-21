@@ -1,5 +1,4 @@
-Laravel on App Engine for PHP 7.2
-=================================
+# Laravel Framework on App Engine Standard for PHP 7.2
 
 [Laravel][laravel] is an open source web framework for PHP developers that encourages the use of the model-view-controller (MVC) pattern.
 
@@ -65,7 +64,7 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
 
     ![Laravel welcome page][laravel-welcome]
 
-## Set up Database Sessions
+## Set up Database Sessions with Cloud SQL
 
 **Note**: This section only works with Laravel 5.4.16. To use earlier versions of
 Laravel, you need to manually add the `DB_SOCKET` value to
@@ -103,7 +102,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
         export DB_DATABASE=laravel DB_USERNAME=root DB_PASSWORD=YOUR_DB_PASSWORD
         php artisan migrate --force
 
-1. Modify your `app.yaml` file with the following contents:
+1. Modify your `app.yaml` file with contents from [`app-dbsessions.yaml`](app-dbsessions.yaml):
 
         runtime: php72
 
