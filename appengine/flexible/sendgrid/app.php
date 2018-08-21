@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+ # [START gae_flex_sendgrid]
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +39,6 @@ $app->post('/', function (Request $request) use ($app) {
     $sendgridSender = $app['sendgrid.sender'];
     $sendgridApiKey = $app['sendgrid.api_key'];
     $sendgridRecipient = $request->get('recipient');
-    # [START send_mail]
     // $sendgridApiKey = 'YOUR_SENDGRID_APIKEY';
     // $sendgridSender = 'an-email-to-send-from@example.com';
     // $sendgridRecipient = 'some-recipient@example.com';
@@ -49,7 +50,6 @@ $app->post('/', function (Request $request) use ($app) {
     // send the email
     $sendgrid = new SendGrid($sendgridApiKey);
     $response = $sendgrid->client->mail()->send()->post($mail);
-    # [END send_mail]
     if ($response->statusCode() < 200 || $response->statusCode() >= 300) {
         return new Response($response->body(), $response->statusCode());
     }
@@ -57,3 +57,4 @@ $app->post('/', function (Request $request) use ($app) {
 });
 
 return $app;
+# [END gae_flex_sendgrid]

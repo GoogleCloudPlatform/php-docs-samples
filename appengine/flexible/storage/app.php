@@ -15,10 +15,8 @@
  * limitations under the License.
  */
 
-# [START app]
-# [START import_client]
+# [START gae_flex_storage_app]
 use Google\Cloud\Storage\StorageClient;
-# [END import_client]
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -59,25 +57,21 @@ $app->post('/write', function (Request $request) use ($app) {
     $bucketName = $app['bucket_name'];
     $objectName = $app['object_name'];
     $content = $request->get('content');
-    # [START write]
     $metadata = ['contentType' => 'text/plain'];
     $storage->bucket($bucketName)->upload($content, [
         'name' => $objectName,
         'metadata' => $metadata,
     ]);
-    # [END write]
     return $app->redirect('/');
 });
 
 $app['storage'] = function () use ($app) {
     $projectId = $app['project_id'];
-    # [START create_client]
     $storage = new StorageClient([
         'projectId' => $projectId
     ]);
-    # [END create_client]
     return $storage;
 };
-# [END app]
+# [END gae_flex_storage_app]
 
 return $app;

@@ -50,7 +50,7 @@ $app->get('/fetch_messages', function () use ($app) {
     if ($pushKeys) {
         $datastore->deleteBatch($pushKeys);
     }
-    # [START pull]
+    # [START gae_flex_pubsub_index]
     // get PULL pubsub messages
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
@@ -65,12 +65,11 @@ $app->get('/fetch_messages', function () use ($app) {
     if ($pullMessages) {
         $subscription->acknowledgeBatch($pullMessages);
     }
-    # [END pull]
+    # [END gae_flex_pubsub_index]
     return new JsonResponse($messages);
 });
 
 $app->post('/receive_message', function () use ($app) {
-    # [START receive]
     // pull the message from the post body
     $json = $app['request']->getContent();
     $request = json_decode($json, true);
@@ -80,7 +79,6 @@ $app->post('/receive_message', function () use ($app) {
     ) {
         return new Response('', 400);
     }
-    # [END receive]
     // store the push message in datastore
     $datastore = $app['datastore'];
     $message = $datastore->entity('PubSubPushMessage', [
@@ -93,7 +91,7 @@ $app->post('/receive_message', function () use ($app) {
 $app->post('/send_message', function () use ($app) {
     $projectId = $app['project_id'];
     $topicName = $app['topic'];
-    # [START send]
+    # [START gae_flex_pubsub_push]
     if ($message = $app['request']->get('message')) {
         // Publish the pubsub message to the topic
         $pubsub = new PubSubClient([
@@ -103,7 +101,7 @@ $app->post('/send_message', function () use ($app) {
         $response = $topic->publish(['data' => $message]);
         return new Response('', 204);
     }
-    # [END send]
+    # [END gae_flex_pubsub_push]
     return new Response('', 400);
 });
 

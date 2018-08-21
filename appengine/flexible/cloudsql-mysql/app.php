@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START example]
+# [START gae_flex_mysql_app]
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,6 +71,6 @@ $app->get('/', function (Application $app, Request $request) {
     return new Response(implode("\n", $visits), 200,
         ['Content-Type' => 'text/plain']);
 });
-# [END example]
+# [END gae_flex_mysql_app]
 
 return $app;

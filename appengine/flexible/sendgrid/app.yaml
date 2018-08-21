@@ -4,8 +4,8 @@ env: flex
 runtime_config:
   document_root: .
 
-# [START env_variables]
+# [START gae_flex_sendgrid_yaml]
 env_variables:
   SENDGRID_APIKEY: your-sendgrid-api-key
   SENDGRID_SENDER: your-sendgrid-sender
-# [END env_variables]
+# [END gae_flex_sendgrid_yaml]
