@@ -72,7 +72,7 @@ The command asks you several questions, please answer them. Then you'll have a
 new WordPress project. By default it will create `my-wordpress-project` in the
 current directory.
 
-> **Note**: To determine the region your database is in `gcloud app describe`
+> **Note**: To determine the region your database is in, run `gcloud app describe`
 
 ### Update an existing WordPress Project
 
