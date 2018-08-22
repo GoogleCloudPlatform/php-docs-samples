@@ -64,6 +64,7 @@ $application->add(new Command('create'))
 
         // copy all the sample files into the project dir and replace parameters
         $wordpress->copyFiles(__DIR__ . '/files', [
+            '.gcloudignore' => '/',
             'app.yaml' => '/',
             'cron.yaml' => '/',
             'php.ini' => '/',
