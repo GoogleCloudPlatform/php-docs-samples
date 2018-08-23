@@ -38,7 +38,7 @@ $app->get('/', function (Application $app, Request $request) {
 $app->post('/', function (Application $app, Request $request) {
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
-    # [START who_count]
+    # [START gae_memcache_who_count]
     $memcache = new Memcached;
     $memcache->set('who', $request->get('who'));
     return $twig->render('memcache.html.twig', [
@@ -46,38 +46,23 @@ $app->post('/', function (Application $app, Request $request) {
         'count' => $memcache->increment('count', 1, 0),
         'host' => $request->getHost(),
     ]);
-    # [END who_count]
+    # [END gae_memcache_who_count]
 });
 
 // Simple HTTP GET and PUT operators.
 $app->get('/memcache/{key}', function ($key) {
-    # [START memcache_get]
+    # [START gae_memcache_get]
     $memcache = new Memcache;
     return $memcache->get($key);
-    # [END memcache_get]
+    # [END gae_memcache_get]
 });
 
 $app->put('/memcache/{key}', function ($key, Request $request) {
-    # [START memcache_put]
+    # [START gae_memcache_put]
     $memcache = new Memcache;
     $value = $request->getContent();
     return $memcache->set($key, $value);
     # [END memcache_put]
-});
-
-$app->get('/memcached/{key}', function ($key) {
-    # [START memcached_get]
-    $memcache = new Memcached;
-    return $memcache->get($key);
-    # [END memcached_get]
-});
-
-$app->put('/memcached/{key}', function ($key, Request $request) {
-    # [START memcached_put]
-    $memcache = new Memcached;
-    $value = $request->getContent();
-    return $memcache->set($key, $value);
-    # [END memcached_put]
 });
 
 return $app;

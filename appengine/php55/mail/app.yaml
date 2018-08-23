@@ -17,22 +17,18 @@ threadsafe: yes
 api_version: 1
 
 inbound_services:
-# [START mail_service]
+# [START gae_mail_api_service]
 - mail
-# [END mail_service]
-# [START bounce_service]
+# [END gae_mail_api_service]
 - mail_bounce
-# [END bounce_service]
 handlers:
-# [START incoming_handler]
+# [START gae_mail_api_incoming_handler]
 - url: /_ah/mail/.+
   script: handle_incoming_email.php
   login: admin
-# [END incoming_handler]
-# [START bounce_handler]
+# [END gae_mail_api_incoming_handler]
 - url: /_ah/bounce
   script: handle_bounced_email.php
   login: admin
-# [END bounce_handler]
 - url: .*
   script: index.php
