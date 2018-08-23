@@ -65,13 +65,11 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
-        // [START stackdriver_channel_definition ]
         'stackdriver' => [
             'driver' => 'custom',
             'via' => App\Logging\CreateCustomLogger::class,
             'level' => 'debug',
         ],
-        // [END stackdriver_channel_definition ]
 
     ],
 

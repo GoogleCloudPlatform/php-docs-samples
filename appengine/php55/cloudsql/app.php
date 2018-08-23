@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START all]
+# [START gae_php_mysql_app]
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,12 +71,11 @@ $app['database'] = function () use ($app) {
 
     return $db;
 };
-# [END all]
+# [END gae_php_mysql_app]
 
 $app->get('create_tables', function () use ($app) {
     /** @var PDO $db */
     $db = $app['database'];
-    # [START create_tables]
     // create the tables
     $stmt = $db->prepare('CREATE TABLE IF NOT EXISTS entries ('
         . 'entryID INT NOT NULL AUTO_INCREMENT, '
@@ -84,7 +83,6 @@ $app->get('create_tables', function () use ($app) {
         . 'content VARCHAR(255), '
         . 'PRIMARY KEY(entryID))');
     $result = $stmt->execute();
-    # [END create_tables]
 
     if (false === $result) {
         return sprintf("Error: %s\n", $stmt->errorInfo()[2]);
