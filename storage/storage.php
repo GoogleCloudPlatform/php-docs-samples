@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Google\Cloud\Samples\Storage;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -146,6 +147,64 @@ EOF
         }
     });
 
+
+// Create Buckets command
+$application->add(new Command('bucketlock'))
+    ->setDescription('Manage Cloud Storage retention policies')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command manages Cloud Storage retention policies.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::OPTIONAL, 'The Cloud Storage object name')
+    ->addArgument('retention-period', InputArgument::OPTIONAL, 'The length of the retention period')
+    ->addOption('set-retention-policy', null, InputOption::VALUE_NONE, 'Set the retention policy')
+    ->addOption('remove-retention-policy', null, InputOption::VALUE_NONE, 'Remove the retention policy')
+    ->addOption('lock-retention-policy', null, InputOption::VALUE_NONE, 'Lock the retention policy')
+    ->addOption('set-event-based-hold', null, InputOption::VALUE_NONE, 'Set an event based hold')
+    ->addOption('release-event-based-hold', null, InputOption::VALUE_NONE, 'Release an event based hold')
+    ->addOption('enable-default-event-based-hold', null, InputOption::VALUE_NONE, 'Enable default event based hold')
+    ->addOption('disable-default-event-based-hold', null, InputOption::VALUE_NONE, 'Disable default event based hold')
+    ->addOption('set-temporary-hold', null, InputOption::VALUE_NONE, 'Set a temporary hold')
+    ->addOption('release-temporary-hold', null, InputOption::VALUE_NONE, 'Release a temporary hold')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        if ($bucketName) {
+            if ($input->getOption('remove-retention-policy')) {
+                remove_retention_policy($bucketName);
+            } elseif ($input->getOption('lock-retention-policy')) {
+                lock_retention_policy($bucketName);
+            } elseif ($input->getOption('enable-default-event-based-hold')) {
+                enable_default_event_based_hold($bucketName);
+            } elseif ($input->getOption('disable-default-event-based-hold')) {
+                disable_default_event_based_hold($bucketName);
+            } elseif ($input->getOption('set-retention-policy')) {
+                if ($retentionPeriod = $input->getArgument('retention-period')) {
+                    set_retention_policy($bucketName, $retentionPeriod);
+                } else {
+                    throw new \Exception('Supply a retention period');
+                }
+            } elseif ($objectName = $input->getArgument('object')) {
+                if ($input->getOption('set-event-based-hold')) {
+                    set_event_based_hold($bucketName, $objectName);
+                } elseif ($input->getOption('release-event-based-hold')) {
+                    release_event_based_hold($bucketName, $objectName);
+                } elseif ($input->getOption('set-temporary-hold')) {
+                    set_temporary_hold($bucketName, $objectName);
+                } elseif ($input->getOption('release-temporary-hold')) {
+                    release_temporary_hold($bucketName, $objectName);
+                }
+            } else {
+                throw new \Exception('Supply an object name');
+            }
+        } else {
+            throw new \Exception('Supply a bucket name');
+        }
+    });
+
 // Create Encryption command
 $application->add(new Command('encryption'))
     ->setDescription('Upload and download Cloud Storage objects with encryption')
@@ -238,7 +297,7 @@ EOF
     ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
     ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
     ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'Add or filter by a user')
-    ->addOption('role', null, InputOption::VALUE_REQUIRED, 'One of OWNER, READER, or WRITER','READER')
+    ->addOption('role', null, InputOption::VALUE_REQUIRED, 'One of OWNER, READER, or WRITER', 'READER')
     ->addOption('create', null, InputOption::VALUE_NONE, 'Create an ACL for the supplied user')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Remove a user from the ACL')
     ->setCode(function ($input, $output) {
