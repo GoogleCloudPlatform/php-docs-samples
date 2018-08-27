@@ -62,7 +62,18 @@ $app->put('/memcache/{key}', function ($key, Request $request) {
     $memcache = new Memcache;
     $value = $request->getContent();
     return $memcache->set($key, $value);
-    # [END memcache_put]
+    # [END gae_memcache_put]
+});
+
+$app->get('/memcached/{key}', function ($key) {
+    $memcache = new Memcached;
+    return $memcache->get($key);
+});
+
+$app->put('/memcached/{key}', function ($key, Request $request) {
+    $memcache = new Memcached;
+    $value = $request->getContent();
+    return $memcache->set($key, $value);
 });
 
 return $app;
