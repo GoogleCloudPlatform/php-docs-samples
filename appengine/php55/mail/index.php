@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START all]
+// [START gae_mail_api]
 use google\appengine\api\mail\Message;
 
 // Notice that $image_content_id is the optional Content-ID header value of the
@@ -37,4 +37,4 @@ try {
 } catch (InvalidArgumentException $e) {
     echo 'There was an error';
 }
-// [END all]
+// [END gae_mail_api]

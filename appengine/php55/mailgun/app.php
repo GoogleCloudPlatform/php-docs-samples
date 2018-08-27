@@ -52,7 +52,6 @@ $app['send_message.simple'] = $app->protect(function (
     $mailgunDomain,
     $mailgunApiKey
 ) {
-    # [START simple_message]
     // Instantiate the client.
     $httpClient = new Http\Adapter\Guzzle6\Client();
     $mailgunClient = new Mailgun\Mailgun($mailgunApiKey, $httpClient);
@@ -64,7 +63,6 @@ $app['send_message.simple'] = $app->protect(function (
         'subject' => 'Hello',
         'text' => 'Testing some Mailgun awesomeness!',
     ));
-    # [END simple_message]
     return $result;
 });
 
@@ -75,7 +73,6 @@ $app['send_message.complex'] = $app->protect(function (
     $cc = '',
     $bcc = ''
 ) {
-    # [START complex_message]
     // Instantiate the client.
     $httpClient = new Http\Adapter\Guzzle6\Client();
     $mailgunClient = new Mailgun\Mailgun($mailgunApiKey, $httpClient);
@@ -101,7 +98,6 @@ $app['send_message.complex'] = $app->protect(function (
     $result = $mailgunClient->sendMessage($mailgunDomain, $postData, array(
         'attachment' => array($fileAttachment, $fileAttachment),
     ));
-    # [END complex_message]
     return $result;
 });
 

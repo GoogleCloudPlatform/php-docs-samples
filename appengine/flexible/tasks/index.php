@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-// [START example_task_handler]
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
@@ -46,4 +45,3 @@ if (getenv('PHPUNIT_TESTS') === '1') {
 }
 
 $app->run();
-// [END example_task_handler]

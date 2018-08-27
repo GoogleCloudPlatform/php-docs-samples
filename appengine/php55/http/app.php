@@ -34,7 +34,7 @@ $app->post('/request/file', function () use ($app) {
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
 
-    # [START http_bin]
+    # [START gae_issue_request_http_bin]
     $url = 'http://httpbin.org/post?query=update';
     $data = ['data' => 'this', 'data2' => 'that'];
     $headers = "accept: */*\r\n" .
@@ -51,7 +51,7 @@ $app->post('/request/file', function () use ($app) {
     ];
     $context = stream_context_create($context);
     $result = file_get_contents($url, false, $context);
-    # [END http_bin]
+    # [END gae_issue_request_http_bin]
     return $twig->render('http.html.twig', ['file_result' => $result]);
 });
 
@@ -64,7 +64,7 @@ $app->post('/request/curl', function () use ($app) {
         throw new \Exception('You must enable cURL or cURLite in php.ini');
     }
 
-    # [START curl_request]
+    # [START gae_issue_request_curl_request]
     $url = 'http://httpbin.org/post?query=update';
     $data = ['data' => 'this', 'data2' => 'that'];
     $headers = [
@@ -92,7 +92,7 @@ $app->post('/request/curl', function () use ($app) {
 
     // close connection
     curl_close($ch);
-    # [END curl_request]
+    # [END gae_issue_request_curl_request]
     return $twig->render('http.html.twig', ['curl_result' => $result]);
 });
 
@@ -100,7 +100,7 @@ $app->post('/request/guzzle', function () use ($app) {
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
 
-    # [START guzzle_request]
+    # [START gae_issue_request_guzzle_request]
     $url = 'http://httpbin.org/post?query=update';
     $data = ['data' => 'this', 'data2' => 'that'];
     $headers = [
@@ -113,7 +113,7 @@ $app->post('/request/guzzle', function () use ($app) {
     $guzzle = new GuzzleHttp\Client;
     $request = new GuzzleHttp\Psr7\Request('POST', $url, $headers, http_build_query($data));
     $result = $guzzle->send($request);
-    # [END guzzle_request]
+    # [END gae_issue_request_guzzle_request]
 
     return $twig->render('http.html.twig', ['guzzle_result' => $result->getBody()]);
 });

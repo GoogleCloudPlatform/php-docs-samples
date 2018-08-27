@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-# [START app]
 use Silex\Application;
 
-# [START metadata]
+# [START gae_flex_metadata]
 function get_external_ip_using_google_cloud()
 {
     $metadata = new Google\Cloud\Core\Compute\Metadata();
@@ -38,7 +37,7 @@ function get_external_ip_using_curl()
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     return curl_exec($ch);
 }
-# [END metadata]
+# [END gae_flex_metadata]
 
 // create the Silex application
 $app = new Application();
@@ -56,6 +55,5 @@ $app->get('/curl', function () use ($app) {
     }
     return sprintf('External IP: %s', $externalIp);
 });
-# [END app]
 
 return $app;
