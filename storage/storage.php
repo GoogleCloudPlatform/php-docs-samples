@@ -148,7 +148,7 @@ EOF
     });
 
 
-// Create Buckets command
+// Set Bucket Lock commands
 $application->add(new Command('bucketlock'))
     ->setDescription('Manage Cloud Storage retention policies')
     ->setHelp(<<<EOF
@@ -160,7 +160,7 @@ EOF
     )
     ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
     ->addArgument('object', InputArgument::OPTIONAL, 'The Cloud Storage object name')
-    ->addArgument('retention-period', InputArgument::OPTIONAL, 'The length of the retention period')
+    ->addArgument('retention-period', InputArgument::OPTIONAL, 'The length of the retention period in seconds')
     ->addOption('set-retention-policy', null, InputOption::VALUE_NONE, 'Set the retention policy')
     ->addOption('remove-retention-policy', null, InputOption::VALUE_NONE, 'Remove the retention policy')
     ->addOption('lock-retention-policy', null, InputOption::VALUE_NONE, 'Lock the retention policy')

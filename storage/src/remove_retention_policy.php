@@ -37,9 +37,16 @@ function remove_retention_policy($bucketName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
+    $bucket->reload();
+
+    if ($bucket->info()['retentionPolicy']['isLocked']) {
+        printf('Unable to remove retention period as retention policy is locked.' . PHP_EOL);
+        return;
+    }
+
     $bucket->update([
-        'retentionPolicy' => [
-        ]]);
+        'retentionPolicy' => []
+    ]);
     printf('Removed bucket %s retention policy' . PHP_EOL, $bucketName);
 }
 # [END storage_remove_retention_policy]

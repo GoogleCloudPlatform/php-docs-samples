@@ -82,7 +82,7 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->bucket->reload();
 
-        $this->assertNull($this->bucket->info()['retentionPolicy']['isLocked']);
+        $this->assertFalse($this->bucket->info()['retentionPolicy']['isLocked']);
         $this->assertNotNull($this->bucket->info()['retentionPolicy']['effectiveTime']);
         $this->assertEquals($this->bucket->info()['retentionPolicy']['retentionPeriod'], $retentionPeriod);
 
