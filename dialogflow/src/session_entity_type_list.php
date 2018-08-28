@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START dialogflow_list_session_entity_type]
+// [START dialogflow_list_session_entity_types]
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
@@ -32,4 +32,4 @@ function session_entity_type_list($projectId, $sessionId)
     }
     $sessionEntityTypesClient->close();
 }
-// [END dialogflow_list_session_entity_type]
+// [END dialogflow_list_session_entity_types]
