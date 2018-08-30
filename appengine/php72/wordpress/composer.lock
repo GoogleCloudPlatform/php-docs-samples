@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "34a058fcc021bec36c30c9fd9b03df09efa78132"
+                "reference": "4c4ba98814ce8ed4c6652cb6dbbe1249da6934eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/34a058fcc021bec36c30c9fd9b03df09efa78132",
-                "reference": "34a058fcc021bec36c30c9fd9b03df09efa78132",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/4c4ba98814ce8ed4c6652cb6dbbe1249da6934eb",
+                "reference": "4c4ba98814ce8ed4c6652cb6dbbe1249da6934eb",
                 "shasum": ""
             },
             "require": {
