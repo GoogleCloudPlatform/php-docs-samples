@@ -47,23 +47,17 @@ class spannerTest extends TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             self::markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
+        if (!$instanceId = getenv('GOOGLE_SPANNER_INSTANCE_ID')) {
+            self::markTestSkipped('GOOGLE_PROJECT_ID must be set.');
+        }
 
         $spanner = new SpannerClient([
             'projectId' => $projectId,
         ]);
 
-        self::$instanceId = self::$databaseId = 'test-' . time() . rand();
-        $configurationId = "projects/$projectId/instanceConfigs/regional-us-central1";
-
-        $configuration = $spanner->instanceConfiguration($configurationId);
-        $instance = $spanner->instance(self::$instanceId);
-
-        $operation = $instance->create($configuration);
-        if (!$operation->pollUntilComplete()) {
-            throw new \Exception($operation->error()['message']);
-        }
-
-        self::$instance = $instance;
+        self::$databaseId = 'test-' . time() . rand();
+        self::$instanceId = $instanceId;
+        self::$instance = $spanner->instance(self::$instanceId);
     }
 
     public function testCreateDatabase()
@@ -374,8 +368,10 @@ class spannerTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (self::$instance && !getenv('GOOGLE_SPANNER_KEEP_INSTANCE')) {
-            self::$instance->delete();
+        if (self::$instance) {
+            // Clean up database
+            $database = self::$instance->database(self::$databaseId);
+            $database->drop();
         }
     }
 }
