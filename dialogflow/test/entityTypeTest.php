@@ -28,7 +28,7 @@ class entityTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        self::$entityTypeDisplayName = 'fake_display_name_for_testing_' . time();
+        self::$entityTypeDisplayName = 'fake_display_name_for_testing' . time();
     }
 
     public function testCreateEntityType()
