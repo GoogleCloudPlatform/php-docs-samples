@@ -348,6 +348,127 @@ $application->add((new Command('query-data-with-nested-struct-field'))
     })
 );
 
+// Insert data with DML
+$application->add((new Command('insert-data-with-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Inserts sample data into the given database with a DML statement.')
+    ->setCode(function ($input, $output) {
+        insert_data_with_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update data with DML
+$application->add((new Command('update-data-with-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates sample data into the given database with a DML statement.')
+    ->setCode(function ($input, $output) {
+        update_data_with_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Delete data with DML
+$application->add((new Command('delete-data-with-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Remove sample data from the given database with a DML statement.')
+    ->setCode(function ($input, $output) {
+        delete_data_with_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update data with DML Timestamp
+$application->add((new Command('update-data-with-dml-timestamp'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Update sample data from the given database with a DML statement and timestamp.')
+    ->setCode(function ($input, $output) {
+        update_data_with_dml_timestamp(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Write Read with DML
+$application->add((new Command('write-read-with-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Writes then reads data inside a Transaction with a DML statement.')
+    ->setCode(function ($input, $output) {
+        write_read_with_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update Data with DML Structs
+$application->add((new Command('update-data-with-dml-structs'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates data using DML statement with structs.')
+    ->setCode(function ($input, $output) {
+        update_data_with_dml_structs(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Write Data with DML
+$application->add((new Command('write-data-with-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Writes sample data into the given database with a DML statement.')
+    ->setCode(function ($input, $output) {
+        write_data_with_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Write Data with DML Transaction
+$application->add((new Command('write-data-with-dml-transaction'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Performs a read-write transaction to update two sample records in the database.')
+    ->setCode(function ($input, $output) {
+        write_data_with_dml_transaction(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update Data with Partitioned DML
+$application->add((new Command('update-data-with-partitioned-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates sample data in the database by partition with a DML statement.')
+    ->setCode(function ($input, $output) {
+        update_data_with_partitioned_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Delete Data with Partitioned DML
+$application->add((new Command('deleted-data-with-partitioned-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Deletes sample data in the database by partition with a DML statement.')
+    ->setCode(function ($input, $output) {
+        delete_data_with_partitioned_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
