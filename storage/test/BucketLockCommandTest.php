@@ -42,7 +42,7 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('bucketlock'));
+        $this->commandTester = new CommandTester($application->get('bucket-lock'));
         $this->storage = new StorageClient();
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');

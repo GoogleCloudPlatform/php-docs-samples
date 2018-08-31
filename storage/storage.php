@@ -149,7 +149,7 @@ EOF
 
 
 // Set Bucket Lock commands
-$application->add(new Command('bucketlock'))
+$application->add(new Command('bucket-lock'))
     ->setDescription('Manage Cloud Storage retention policies')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage retention policies.
