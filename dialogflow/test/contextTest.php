@@ -29,7 +29,7 @@ class contextTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$contextId = 'fake_context_for_testing_' . time();
+        self::$contextId = 'fake_context' . time();
     }
 
     public function testCreateContext()
