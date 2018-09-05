@@ -89,14 +89,19 @@ Then your WordPress project will be ready to deploy to Google Cloud!
 
 ## Deploy to Google Cloud
 
-CD into your WordPress project directory and run the following command to
-deploy:
+`cd` into the root of your WordPress project. 
+
+```sh
+$ cd my-wordpress-project
+```
+
+Run the following command to deploy your project to App Engine:
 
 ```sh
 $ gcloud app deploy app.yaml cron.yaml
 ```
 
-Then access your site, and continue the installation step. The URL is:
+Now you can access your site, and continue the installation step! The URL is
 https://PROJECT_ID.appspot.com/
 
 ### Enable the Google Cloud Storage plugin
