@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START dialogflow_list_intent]
+// [START dialogflow_list_intents]
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\IntentsClient;
@@ -51,4 +51,4 @@ function intent_list($projectId)
     }
     $intentsClient->close();
 }
-// [END dialogflow_list_intent]
+// [END dialogflow_list_intents]

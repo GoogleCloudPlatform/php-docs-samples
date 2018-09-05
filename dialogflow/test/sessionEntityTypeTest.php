@@ -30,7 +30,7 @@ class sessionEntityTypeTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$entityTypeDisplayName = 'fake_display_name_for_testing_' . time();
+        self::$entityTypeDisplayName = 'fake_display' . time();
     }
 
     public function testCreateSessionEntityType()
