@@ -9,22 +9,18 @@ handlers:
 - url: /(.*\.(htm|html|css|js))
   static_files: \1
   upload: .*\.(htm|html|css|js)$
-  application_readable: true
 
 - url: /wp-content/(.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg))
   static_files: wp-content/\1
   upload: wp-content/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
-  application_readable: true
 
 - url: /(.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg))
   static_files: \1
   upload: .*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
-  application_readable: true
 
 - url: /wp-includes/images/media/(.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg))
   static_files: wp-includes/images/media/\1
   upload: wp-includes/images/media/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
-  application_readable: true
 
 - url: .*
   script: auto

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c9f64dcecfb2ed38bf7602ba07569cc",
+    "content-hash": "650d3dc13efe96f99dd944fbd309fcc0",
     "packages": [
         {
             "name": "google/cloud-tools",
-            "version": "v0.8.4",
+            "version": "v0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-                "reference": "4c4ba98814ce8ed4c6652cb6dbbe1249da6934eb"
+                "reference": "5b84da11ba9297a15fdac37f4cb9970cce8a58d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/4c4ba98814ce8ed4c6652cb6dbbe1249da6934eb",
-                "reference": "4c4ba98814ce8ed4c6652cb6dbbe1249da6934eb",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/5b84da11ba9297a15fdac37f4cb9970cce8a58d9",
+                "reference": "5b84da11ba9297a15fdac37f4cb9970cce8a58d9",
                 "shasum": ""
             },
             "require": {
@@ -63,7 +63,7 @@
                 "gcp",
                 "test"
             ],
-            "time": "2018-08-30T22:07:36+00:00"
+            "time": "2018-09-06T23:29:03+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
