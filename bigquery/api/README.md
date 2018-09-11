@@ -2,7 +2,7 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google BigQuery from PHP.
+All code in the `snippets` directory demonstrate how to invoke Google BigQuery from PHP.
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the BigQuery API](https://console.cloud.google.com/flows/enableapi?apiid=bigquery)
@@ -12,27 +12,23 @@ This simple command-line application demonstrates how to invoke Google BigQuery 
     select "Create". Once downloaded, set the environment variable `GOOGLE_APPLICATION_CREDENTIALS`
     to the path of the JSON key that was downloaded.
 3.  **Clone the repo** and cd into this directory
-
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
     $ cd php-docs-samples/bigquery/api
-```
+    ```
+
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php bigquery.php`. The following commands are available:
-
+5.  Run `php snippets/SNIPPET_NAME.php`. The usage will print for each if no arguments
+    are provided:
     ```sh
-    browse-table  Browse a BigQuery table
-    datasets      List BigQuery datasets
-    export        Export data from a BigQuery table into a Cloud Storage bucket
-    import        Import data into a BigQuery table
-    projects      List BigQuery projects
-    query         Run a BigQuery query
-    schema        Create or delete a table schema in BigQuery
-    tables        List BigQuery tables
-6. Run `php bigquery.php COMMAND --help` to print information about the usage of each command.
-```
+    $ php snippets/create_dataset.php
+    Usage: php snippets/create_dataset.php PROJECT_ID DATASET_ID
+
+    $ php snippets/create_dataset.php your-project-id test_dataset_123
+    Created dataset test_dataset_123
+    ```
 
 ## Contributing changes
 

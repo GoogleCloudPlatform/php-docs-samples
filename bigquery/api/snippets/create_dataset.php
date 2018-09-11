@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,25 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-namespace Google\Cloud\Samples\BigQuery;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 3) {
+    return print("Usage: php snippets/create_dataset.php PROJECT_ID DATASET_ID\n");
+}
+list($_, $projectId, $datasetId) = $argv;
 
 # [START bigquery_create_dataset]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/**
- * @param string $projectId The Google project ID.
- * @param string $dataset   The BigQuery dataset ID.
- */
-function create_dataset($projectId, $datasetId)
-{
-    $bigQuery = new BigQueryClient([
-        'projectId' => $projectId,
-    ]);
-    $dataset = $bigQuery->createDataset($datasetId);
-    return $dataset;
-}
+/** Uncomment and populate these variables in your code */
+// $projectId = 'The Google project ID';
+// $datasetId = 'The BigQuery dataset ID';
+
+$bigQuery = new BigQueryClient([
+    'projectId' => $projectId,
+]);
+$dataset = $bigQuery->createDataset($datasetId);
+printf('Created dataset %s' . PHP_EOL, $datasetId);
 # [END bigquery_create_dataset]
+return $dataset;

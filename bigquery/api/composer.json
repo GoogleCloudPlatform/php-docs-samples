@@ -1,33 +1,10 @@
 {
     "require": {
-        "google/cloud-bigquery": "^1.0",
-        "google/cloud-storage": "^1.2",
-        "symfony/console": "^3.0"
+        "google/cloud-bigquery": "^1.4",
+        "google/cloud-storage": "^1.7"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
-        "google/cloud-tools": "^0.6",
-        "phpunit/phpunit": "~4.8"
-    },
-    "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\BigQuery\\": "src/"
-        },
-        "files": [
-            "src/functions/browse_table.php",
-            "src/functions/copy_table.php",
-            "src/functions/create_dataset.php",
-            "src/functions/create_table.php",
-            "src/functions/delete_table.php",
-            "src/functions/extract_table.php",
-            "src/functions/import_from_file.php",
-            "src/functions/import_from_storage.php",
-            "src/functions/insert_sql.php",
-            "src/functions/list_datasets.php",
-            "src/functions/list_tables.php",
-            "src/functions/run_query.php",
-            "src/functions/run_query_as_job.php",
-            "src/functions/stream_row.php"
-        ]
+        "google/cloud-tools": "^0.8",
+        "phpunit/phpunit": "~5"
     }
 }

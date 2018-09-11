@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\BigQuery;
+
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
+ */
+
+if (isset($argv)) {
+    return print("This file is for example only and cannot be executed\n");
+}
 
 /**
  * This file is to be used as an example only!
@@ -22,11 +31,14 @@ namespace Google\Cloud\Samples\BigQuery;
  * Usage:
  * ```
  * $projectId = 'Your Project ID';
- * $bigQuery = require '/path/to/bigquery_client.php';
+ * $bigQuery = require 'snippets/bigquery_client.php';
  * ```
  */
 # [START bigquery_client_default_credentials]
 use Google\Cloud\BigQuery\BigQueryClient;
+
+/** Uncomment and populate these variables in your code */
+//$projectId = 'The Google project ID';
 
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,

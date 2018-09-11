@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,27 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-namespace Google\Cloud\Samples\BigQuery;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
-# [START bigquery_list_datasets]
+if (count($argv) != 4) {
+    return print("Usage: php snippets/delete_table.php PROJECT_ID DATASET_ID TABLE_ID\n");
+}
+list($_, $projectId, $datasetId, $tableId) = $argv;
+
+# [START bigquery_delete_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/**
- * @param string $projectId The Google project ID.
- */
-function list_datasets($projectId)
-{
-    $bigQuery = new BigQueryClient([
-        'projectId' => $projectId,
-    ]);
-    $datasets = $bigQuery->datasets();
-    foreach ($datasets as $dataset) {
-        print($dataset->id() . PHP_EOL);
-    }
-}
-# [END bigquery_list_datasets]
+/** Uncomment and populate these variables in your code */
+// $projectId = 'The Google project ID';
+// $datasetId = 'The BigQuery dataset ID';
+// $tableId = 'The BigQuery table ID';
+
+$bigQuery = new BigQueryClient([
+    'projectId' => $projectId,
+]);
+$dataset = $bigQuery->dataset($datasetId);
+$table = $dataset->table($tableId);
+$table->delete();
+printf('Deleted table %s.%s' . PHP_EOL, $datasetId, $tableId);
+# [END bigquery_delete_table]
