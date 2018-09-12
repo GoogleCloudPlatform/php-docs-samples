@@ -30,8 +30,6 @@ if (count($argv) < 4 || count($argv) > 5) {
 list($_, $projectId, $datasetId, $tableId) = $argv;
 $maxResults = isset($argv[4]) ? $argv[4] : 10;
 
-# [START bigquery_paginate_table]
-
 /** Uncomment and populate these variables in your code */
 // $projectId = 'The Google project ID';
 // $datasetId = 'The BigQuery dataset ID';
@@ -48,5 +46,4 @@ do {
     $rows = require 'browse_table.php';
     $totalRows += $rows;
 } while ($rows && 0 === $totalRows % $maxResults && $shouldPaginateFunc());
-# [END bigquery_paginate_table]
 return $totalRows;
