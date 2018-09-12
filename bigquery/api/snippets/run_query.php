@@ -29,7 +29,6 @@ if (count($argv) != 3) {
 }
 list($_, $projectId, $query) = $argv;
 
-# [START bigquery_run_query]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /** Uncomment and populate these variables in your code */
@@ -50,4 +49,3 @@ foreach ($queryResults as $row) {
     }
 }
 printf('Found %s row(s)' . PHP_EOL, $i);
-# [END bigquery_run_query]
