@@ -30,7 +30,6 @@ if (count($argv) != 4) {
 
 list($_, $projectId, $datasetId, $source) = $argv;
 
-# [START bigquery_insert_sql]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /** Uncomment and populate these variables in your code */
@@ -53,4 +52,3 @@ while ($line = fgets($file)) {
     $bigQuery->runQuery($queryConfig);
 }
 print('Data imported successfully' . PHP_EOL);
-# [END bigquery_insert_sql]
