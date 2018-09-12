@@ -30,7 +30,7 @@ if (count($argv) < 4 || count($argv) > 5) {
 list($_, $projectId, $datasetId, $tableId) = $argv;
 $fields = isset($argv[4]) ? json_decode($argv[4]) : [['name' => 'field1', 'type' => 'string']];
 
-# [START bigquery_create_dataset]
+# [START bigquery_create_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /** Uncomment and populate these variables in your code */
