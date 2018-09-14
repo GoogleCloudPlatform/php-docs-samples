@@ -28,7 +28,7 @@ if (count($argv) != 3) {
 }
 
 list($_, $projectId, $datasetId) = $argv;
-# [START bigquery_load_table_gcs_csv]
+# [START bigquery_load_table_gcs_json]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
@@ -70,4 +70,4 @@ if (isset($job->info()['status']['errorResult'])) {
 } else {
     print('Data imported successfully' . PHP_EOL);
 }
-# [END bigquery_load_table_gcs_csv]
+# [END bigquery_load_table_gcs_json]
