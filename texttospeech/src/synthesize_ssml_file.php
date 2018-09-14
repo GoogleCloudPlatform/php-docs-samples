@@ -25,7 +25,7 @@ use Google\Cloud\V1\SynthesisInput;
 use Google\Cloud\V1\TextToSpeechClient;
 use Google\Cloud\V1\VoiceSelectionParams;
 
-function synthesize_ssml_tile($path)
+function synthesize_ssml_file($path)
 {
     // create client object
     $client = new TextToSpeechClient();
