@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use PHPUnit\Framework\TestCase;
+
 class quickstartTest extends PHPUnit_Framework_TestCase
 {
     public function testQuickstart()
@@ -28,7 +28,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         );
         file_put_contents($file, $contents);
         // invoke quickstart.php
-        $labels = include $file;
+        $audioContent = include $file;
         // make sure it looks correct
         $this->assertTrue(strlen($audioContent) > 0);
     }

@@ -20,7 +20,12 @@
 require __DIR__ . '/vendor/autoload.php';
 
 // imports the Google Cloud client library
-use Google\Cloud\Speech\SpeechClient;
+use Google\Cloud\V1\AudioConfig;
+use Google\Cloud\V1\AudioEncoding;
+use Google\Cloud\V1\SsmlVoiceGender;
+use Google\Cloud\V1\SynthesisInput;
+use Google\Cloud\V1\TextToSpeechClient;
+use Google\Cloud\V1\VoiceSelectionParams;
 
 // instantiates a client
 $client = new TextToSpeechClient();

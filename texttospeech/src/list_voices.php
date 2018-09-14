@@ -38,7 +38,7 @@ function list_voice()
         }
 
         // SSML voice gender values from TextToSpeech\V1\SsmlVoiceGender
-        $ssmlVoiceGender = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE', 'FEMALE', 
+        $ssmlVoiceGender = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE', 'FEMALE',
         'NEUTRAL'];
 
         // display the SSML voice gender
@@ -46,7 +46,7 @@ function list_voice()
         printf('SSML voice gender: %s' . PHP_EOL, $ssmlVoiceGender[$gender]);
 
         // display the natural hertz rate for this voice
-        printf('Natural Sample Rate Hertz: %d' . PHP_EOL, 
+        printf('Natural Sample Rate Hertz: %d' . PHP_EOL,
             $voice->getNaturalSampleRateHertz());
     }
 
