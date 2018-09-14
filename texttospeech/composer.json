@@ -1,0 +1,21 @@
+{
+    "require": {
+        "google/cloud-text-to-speech": "^0.1",
+        "symfony/console": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\TextToSpeech\\": "src/"
+        },
+        "files": [
+            "src/list_voices.php",
+            "src/synthesize_ssml.php",
+            "src/synthesize_ssml_file.php",
+            "src/synthesize_text.php",
+            "src/synthesize_text_file.php"
+        ]
+    }
+}
