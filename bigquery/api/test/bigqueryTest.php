@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\BigQuery\Tests;
 
+use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
@@ -31,14 +32,16 @@ class FunctionsTest extends TestCase
     use EventuallyConsistentTestTrait;
 
     private static $datasetId;
-    private static $tableId;
-    private static $tempTables = [];
+    private static $dataset;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        self::$projectId = $this->requireEnv('GOOGLE_PROJECT_ID');
-        self::$datasetId = $this->requireEnv('GOOGLE_BIGQUERY_DATASET');
-        self::$tableId = $this->requireEnv('GOOGLE_BIGQUERY_TABLE');
+        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+        $client = new BigQueryClient([
+            'projectId' => self::$projectId,
+        ]);
+        self::$datasetId = sprintf('temp_dataset_%s', time());
+        self::$dataset = $client->createDataset(self::$datasetId);
     }
 
     public function testBigQueryClient()
@@ -54,26 +57,27 @@ class FunctionsTest extends TestCase
 
     public function testBrowseTable()
     {
+        $tableId = $this->createTempTable();
         $output = $this->runSnippet('browse_table', [
             self::$datasetId,
-            self::$tableId,
+            $tableId,
         ]);
         $this->assertContains('Brent Shaffer', $output);
     }
 
     public function testCopyTable()
     {
+        $sourceTableId = $this->createTempTable();
         $destinationTableId = sprintf('test_copy_table_%s', time());
 
         // run the import
         $output = $this->runSnippet('copy_table', [
             self::$datasetId,
-            self::$tableId,
+            $sourceTableId,
             $destinationTableId,
         ]);
 
         $this->assertContains('Table copied successfully', $output);
-        self::$tempTables[] = $destinationTableId;
         $this->verifyTempTable($destinationTableId);
     }
 
@@ -111,11 +115,12 @@ class FunctionsTest extends TestCase
     public function testExtractTable($objectName, $format)
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $tableId = $this->createTempTable();
 
         // run the import
         $output = $this->runSnippet('extract_table', [
             self::$datasetId,
-            self::$tableId,
+            $tableId,
             $bucketName,
             $objectName,
             $format,
@@ -150,7 +155,7 @@ class FunctionsTest extends TestCase
     {
         $projectId = self::$projectId;
         $datasetId = self::$datasetId;
-        $tableId = self::$tableId;
+        $tableId = $this->createTempEmptyTable();
         $table = require __DIR__ . '/../snippets/get_table.php';
 
         $this->assertInstanceOf(
@@ -159,13 +164,12 @@ class FunctionsTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideImportFromFile
-     */
-    public function testImportFromFile($source)
+    public function testImportFromFile()
     {
+        $source = __DIR__ . '/data/test_data.csv';
+
         // create the temp table to import
-        $tempTableId = $this->createTempTable();
+        $tempTableId = $this->createTempEmptyTable();
 
         // run the import
         $output = $this->runSnippet('import_from_file', [
@@ -178,49 +182,43 @@ class FunctionsTest extends TestCase
         $this->verifyTempTable($tempTableId);
     }
 
-    public function provideImportFromFile()
-    {
-        return [
-            [__DIR__ . '/data/test_data.csv'],
-            [__DIR__ . '/data/test_data.json'],
-        ];
-    }
-
     /**
      * @dataProvider provideImportFromStorage
      */
-    public function testImportFromStorage($objectName, $createTable = true)
+    public function testImportFromStorage($snippet)
     {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-        $tempTableId = $createTable
-            ? $this->createTempTable()
-            : sprintf('test_table_%s_%s', time(), rand());
-
         // run the import
-        $output = $this->runSnippet('import_from_storage', [
+        $output = $this->runSnippet($snippet, [
             self::$datasetId,
-            $tempTableId,
-            $bucketName,
-            $objectName,
         ]);
 
         $this->assertContains('Data imported successfully', $output);
-        $this->verifyTempTable($tempTableId);
+        $tableId = 'us_states';
+
+        // verify table contents
+        $query = sprintf('SELECT * FROM `%s.%s`', self::$datasetId, $tableId);
+        $testFunction = function () use ($query) {
+            $output = $this->runSnippet('run_query', [$query]);
+            $this->assertContains('Washington', $output);
+        };
+
+        $this->runEventuallyConsistentTest($testFunction);
+        $table = self::$dataset->table($tableId);
+        $table->delete();
     }
 
     public function provideImportFromStorage()
     {
         return [
-            ['bigquery/test_data.csv'],
-            ['bigquery/test_data.json'],
-            ['bigquery/test_data.backup_info', false],
+            ['import_from_storage_csv'],
+            ['import_from_storage_json']
         ];
     }
 
     public function testInsertSql()
     {
         // create the temp table to import
-        $tempTableId = $this->createTempTable();
+        $tempTableId = $this->createTempEmptyTable();
 
         // Write a temp file so we use the temp table in the sql source
         file_put_contents(
@@ -249,13 +247,14 @@ class FunctionsTest extends TestCase
 
     public function testListTables()
     {
+        $this->createTempEmptyTable();
         $output = $this->runSnippet('list_tables', [self::$datasetId]);
         $this->assertContains('test_table', $output);
     }
 
     public function testStreamRow()
     {
-        $tempTableId = $this->createTempTable();
+        $tempTableId = $this->createTempEmptyTable();
 
         // run the import
         $output = $this->runSnippet('stream_row', [
@@ -270,9 +269,10 @@ class FunctionsTest extends TestCase
 
     public function testPaginateTable()
     {
+        $tableId = $this->createTempTable();
         $output = $this->runSnippet('paginate_table', [
             self::$datasetId,
-            self::$tableId,
+            $tableId,
             1
         ]);
         $this->assertContains('Brent Shaffer', $output);
@@ -291,10 +291,11 @@ class FunctionsTest extends TestCase
 
     public function testRunQueryAsJob()
     {
+        $tableId = $this->createTempTable();
         $query = sprintf(
             'SELECT * FROM `%s.%s` LIMIT 1',
             self::$datasetId,
-            self::$tableId
+            $tableId
         );
 
         $output = $this->runSnippet('run_query_as_job', [$query]);
@@ -309,7 +310,7 @@ class FunctionsTest extends TestCase
         return ob_get_clean();
     }
 
-    private function createTempTable()
+    private function createTempEmptyTable()
     {
         $tempTableId = sprintf('test_table_%s_%s', time(), rand());
         $this->runSnippet('create_table', [
@@ -320,7 +321,19 @@ class FunctionsTest extends TestCase
                 ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
             ])
         ]);
-        return self::$tempTables[] = $tempTableId;
+        return $tempTableId;
+    }
+
+    private function createTempTable()
+    {
+        $tempTableId = $this->createTempEmptyTable();
+        $source = __DIR__ . '/data/test_data.csv';
+        $output = $this->runSnippet('import_from_file', [
+            self::$datasetId,
+            $tempTableId,
+            $source,
+        ]);
+        return $tempTableId;
     }
 
     private function verifyTempTable($tempTableId)
@@ -334,15 +347,8 @@ class FunctionsTest extends TestCase
         $this->runEventuallyConsistentTest($testFunction);
     }
 
-    public function tearDown()
+    public static function tearDownAfterClass()
     {
-        if (self::$tempTables) {
-            while ($tempTableId = array_pop(self::$tempTables)) {
-                $this->runSnippet('delete_table', [
-                    self::$datasetId,
-                    $tempTableId
-                ]);
-            }
-        }
+        self::$dataset->delete(['deleteContents' => true]);
     }
 }

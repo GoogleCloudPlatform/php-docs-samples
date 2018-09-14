@@ -23,13 +23,11 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 6) {
-    return print("Usage: php snippets/import_from_storage.php PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME OBJECT_NAME\n");
+if (count($argv) != 3) {
+    return print("Usage: php snippets/import_from_storage.php PROJECT_ID DATASET_ID\n");
 }
 
-list($_, $projectId, $datasetId, $tableId, $bucketName, $objectName) = $argv;
-
+list($_, $projectId, $datasetId) = $argv;
 # [START bigquery_load_table_gcs_csv]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Storage\StorageClient;
@@ -38,29 +36,23 @@ use Google\Cloud\Core\ExponentialBackoff;
 /** Uncomment and populate these variables in your code */
 // $projectId  = 'The Google project ID';
 // $datasetId  = 'The BigQuery dataset ID';
-// $tableId    = 'The BigQuery table ID';
-// $bucketName = 'The Cloud Storage bucket Name';
-// $objectName = 'The Cloud Storage object Name';
 
 // instantiate the bigquery table service
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
 $dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-// load the storage object
-$storage = new StorageClient([
-    'projectId' => $projectId,
-]);
-$object = $storage->bucket($bucketName)->object($objectName);
+$table = $dataset->table('us_states');
+
 // create the import job
-$loadConfig = $table->loadFromStorage($object);
-// determine the source format from the object name
-if ('.backup_info' === substr($objectName, -12)) {
-    $loadConfig->sourceFormat('DATASTORE_BACKUP');
-} elseif ('.json' === substr($objectName, -5)) {
-    $loadConfig->sourceFormat('NEWLINE_DELIMITED_JSON');
-}
+$gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv';
+$schema = [
+    'fields' => [
+        ['name' => 'name', 'type' => 'string'],
+        ['name' => 'post_abbr', 'type' => 'string']
+    ]
+];
+$loadConfig = $table->loadFromStorage($gcsUri)->schema($schema)->skipLeadingRows(1);
 $job = $table->runJob($loadConfig);
 // poll the job until it is complete
 $backoff = new ExponentialBackoff(10);
