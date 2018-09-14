@@ -23,7 +23,7 @@ use Google\Cloud\Logging\LoggingClient;
 
 // [END logging_use]
 
-// [START write_log]
+// [START logging_write_log_entry]
 /** Write a log message via the Stackdriver Logging API.
  *
  * @param string $projectId The Google project ID.
@@ -45,9 +45,9 @@ function write_log($projectId, $loggerName, $message)
     $logger->write($entry);
     printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
 }
-// [END write_log]
+// [END logging_write_log_entry]
 
-// [START list_entries]
+// [START logging_list_log_entries]
 /** Return an iterator for listing log entries.
  *
  * @param string $projectId The Google project ID.
@@ -85,9 +85,9 @@ function list_entries($projectId, $loggerName)
         printf("%s : %s" . PHP_EOL, $entryInfo['timestamp'], $entryText);
     }
 }
-// [END list_entries]
+// [END logging_list_log_entries]
 
-// [START delete_logger]
+// [START logging_delete_log]
 /** Delete a logger and all its entries.
  *
  * @param string $projectId The Google project ID.
@@ -100,4 +100,4 @@ function delete_logger($projectId, $loggerName)
     $logger->delete();
     printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
 }
-// [END delete_logger]
+// [END logging_delete_log]

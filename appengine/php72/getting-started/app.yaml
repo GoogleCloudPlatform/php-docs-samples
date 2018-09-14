@@ -2,7 +2,6 @@
 # complete list of `app.yaml` directives.
 
 runtime: php72
-instance_class: F2
 
 env_variables:
     GOOGLE_STORAGE_BUCKET: ""
