@@ -18,12 +18,12 @@
 namespace Google\Cloud\Samples\TextToSpeech;
 
 // [START tts_synthesize_ssml]
-use Google\Cloud\V1\AudioConfig;
-use Google\Cloud\V1\AudioEncoding;
-use Google\Cloud\V1\SsmlVoiceGender;
-use Google\Cloud\V1\SynthesisInput;
-use Google\Cloud\V1\TextToSpeechClient;
-use Google\Cloud\V1\VoiceSelectionParams;
+use Google\Cloud\TextToSpeech\V1\AudioConfig;
+use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
+use Google\Cloud\TextToSpeech\V1\SynthesisInput;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 function synthesize_ssml($ssml)
 {

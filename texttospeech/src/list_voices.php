@@ -18,15 +18,16 @@
 namespace Google\Cloud\Samples\TextToSpeech;
 
 // [START tts_list_voices]
-use Google\Cloud\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
-function list_voice()
+function list_voices()
 {
     // create client object
     $client = new TextToSpeechClient();
 
     // perform list voices request
-    $voices = $client->listVoices();
+    $response = $client->listVoices();
+    $voices = $response->getVoices();
 
     foreach ($voices as $voice) {
         // display the voice's name. example: tpc-vocoded

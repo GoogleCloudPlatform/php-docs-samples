@@ -20,18 +20,18 @@
 require __DIR__ . '/vendor/autoload.php';
 
 // imports the Google Cloud client library
-use Google\Cloud\V1\AudioConfig;
-use Google\Cloud\V1\AudioEncoding;
-use Google\Cloud\V1\SsmlVoiceGender;
-use Google\Cloud\V1\SynthesisInput;
-use Google\Cloud\V1\TextToSpeechClient;
-use Google\Cloud\V1\VoiceSelectionParams;
+use Google\Cloud\TextToSpeech\V1\AudioConfig;
+use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
+use Google\Cloud\TextToSpeech\V1\SynthesisInput;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 // instantiates a client
 $client = new TextToSpeechClient();
 
 // sets text to be synthesised
-$syntehsis_input = (new SynthesisInput())
+$synthesis_input = (new SynthesisInput())
     ->setText('Hello, world!');
 
 // build the voice request, select the language code ("en-US") and the ssml
@@ -46,7 +46,7 @@ $audioConfig = (new AudioConfig())
 
 // perform text-to-speech request on the text input with selected voice
 // parameters and audio file type
-$response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
+$response = $client->synthesizeSpeech($synthesis_input, $voice, $audioConfig);
 $audioContent = $response->getAudioContent();
 
 // the response's audioContent is binary
