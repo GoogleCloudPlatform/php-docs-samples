@@ -35,7 +35,7 @@ $inputDefinitionFile = new InputDefinition([
 ]);
 
 
-$application->add(new Command('list_voices'))
+$application->add(new Command('list-voices'))
     ->setDescription('List the available voices')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command lists the available voices in
@@ -48,7 +48,7 @@ EOF
     }
 );
 
-$application->add((new Command('synthesize_ssml'))
+$application->add((new Command('synthesize-ssml'))
     ->setDefinition($inputDefinition)
     ->setDescription('Synthesizes speech from the input string of ssml')
     ->setHelp(<<<EOF
@@ -63,7 +63,7 @@ EOF
     })
 );
 
-$application->add((new Command('synthesize_text'))
+$application->add((new Command('synthesize-text'))
     ->setDefinition($inputDefinition)
     ->setDescription('Synthesizes speech from the input string of text')
     ->setHelp(<<<EOF
@@ -78,7 +78,7 @@ EOF
     })
 );
 
-$application->add((new Command('synthesize_ssml_file'))
+$application->add((new Command('synthesize-ssml-file'))
     ->setDefinition($inputDefinitionFile)
     ->setDescription('Synthesizes speech from the input file of ssml')
     ->setHelp(<<<EOF
@@ -93,7 +93,7 @@ EOF
     })
 );
 
-$application->add((new Command('synthesize_text_file'))
+$application->add((new Command('synthesize-text-file'))
     ->setDefinition($inputDefinitionFile)
     ->setDescription('Synthesizes speech from the input file of text')
     ->setHelp(<<<EOF

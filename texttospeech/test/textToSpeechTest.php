@@ -32,13 +32,13 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
     }
     public function testListVoices()
     {
-        $output = $this->runCommand('list_voices');
+        $output = $this->runCommand('list-voices');
         $this->assertContains('en-US', $output);
         $this->assertContains('FEMALE', $output);
     }
     public function testSynthesizeSsml()
     {
-        $output = $this->runCommand('synthesize_ssml', [
+        $output = $this->runCommand('synthesize-ssml', [
             'text' => '<speak>Hello there.</speak>'
         ]);
         $this->assertContains('Audio content written to', $output);
@@ -46,7 +46,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
     }
     public function testSynthesizeText()
     {
-        $output = $this->runCommand('synthesize_text', [
+        $output = $this->runCommand('synthesize-text', [
             'text' => 'hello there'
         ]);
         $this->assertContains('Audio content written to', $output);
@@ -55,7 +55,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
     public function testSynthesizeSsmlFile()
     {
         $path = __DIR__ . '/../resources/hello.ssml';
-        $output = $this->runCommand('synthesize_ssml_file', [
+        $output = $this->runCommand('synthesize-ssml-file', [
             'path' => $path
         ]);
         $this->assertContains('Audio content written to', $output);
@@ -64,7 +64,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
     public function testSynthesizeTextFile()
     {
         $path = __DIR__ . '/../resources/hello.txt';
-        $output = $this->runCommand('synthesize_text_file', [
+        $output = $this->runCommand('synthesize-text-file', [
             'path' => $path
         ]);
         $this->assertContains('Audio content written to', $output);
