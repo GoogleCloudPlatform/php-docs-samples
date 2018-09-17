@@ -172,7 +172,7 @@ class FunctionsTest extends TestCase
         $tempTableId = $this->createTempEmptyTable();
 
         // run the import
-        $output = $this->runSnippet('import_from_file', [
+        $output = $this->runSnippet('import_from_local_csv', [
             self::$datasetId,
             $tempTableId,
             $source,
@@ -328,7 +328,7 @@ class FunctionsTest extends TestCase
     {
         $tempTableId = $this->createTempEmptyTable();
         $source = __DIR__ . '/data/test_data.csv';
-        $output = $this->runSnippet('import_from_file', [
+        $output = $this->runSnippet('import_from_local_csv', [
             self::$datasetId,
             $tempTableId,
             $source,
