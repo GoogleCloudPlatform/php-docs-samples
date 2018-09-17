@@ -1,4 +1,4 @@
--- This file is used to test ../../src/functions/import_from_file.php
+-- This file is used to test ../../snippets/insert_sql.php
 -- These are comments.
 -- Each query to be executed should be on a single line.
 

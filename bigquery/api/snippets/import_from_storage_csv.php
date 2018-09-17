@@ -23,45 +23,40 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 5) {
-    return print("Usage: php snippets/import_from_file.php PROJECT_ID DATASET_ID TABLE_ID SOURCE\n");
+if (count($argv) != 3) {
+    return print("Usage: php snippets/import_from_storage.php PROJECT_ID DATASET_ID\n");
 }
 
-list($_, $projectId, $datasetId, $tableId, $source) = $argv;
-
-# [START bigquery_load_from_file]
+list($_, $projectId, $datasetId) = $argv;
+# [START bigquery_load_table_gcs_csv]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /** Uncomment and populate these variables in your code */
 // $projectId  = 'The Google project ID';
 // $datasetId  = 'The BigQuery dataset ID';
-// $tableId    = 'The BigQuery table ID';
-// $source     = 'The path to the source file to import';
 
 // instantiate the bigquery table service
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
 $dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
+$table = $dataset->table('us_states');
+
 // create the import job
-$loadConfig = $table->load(fopen($source, 'r'));
-// determine the source format from the object name
-$pathInfo = pathinfo($source) + ['extension' => null];
-if ('csv' === $pathInfo['extension']) {
-    $loadConfig->sourceFormat('CSV');
-} elseif ('json' === $pathInfo['extension']) {
-    $loadConfig->sourceFormat('NEWLINE_DELIMITED_JSON');
-} else {
-    throw new InvalidArgumentException('Source format unknown. Must be JSON or CSV');
-}
+$gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv';
+$schema = [
+    'fields' => [
+        ['name' => 'name', 'type' => 'string'],
+        ['name' => 'post_abbr', 'type' => 'string']
+    ]
+];
+$loadConfig = $table->loadFromStorage($gcsUri)->schema($schema)->skipLeadingRows(1);
 $job = $table->runJob($loadConfig);
 // poll the job until it is complete
 $backoff = new ExponentialBackoff(10);
 $backoff->execute(function () use ($job) {
-    printf('Waiting for job to complete' . PHP_EOL);
+    print('Waiting for job to complete' . PHP_EOL);
     $job->reload();
     if (!$job->isComplete()) {
         throw new Exception('Job has not yet completed', 500);
@@ -74,4 +69,4 @@ if (isset($job->info()['status']['errorResult'])) {
 } else {
     print('Data imported successfully' . PHP_EOL);
 }
-# [END bigquery_load_from_file]
+# [END bigquery_load_table_gcs_csv]
