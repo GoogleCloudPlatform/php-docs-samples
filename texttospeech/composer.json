@@ -7,9 +7,6 @@
         "phpunit/phpunit": "~4.8"
     },
     "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\TextToSpeech\\": "src/"
-        },
         "files": [
             "src/list_voices.php",
             "src/synthesize_ssml.php",

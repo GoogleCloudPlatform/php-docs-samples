@@ -2,7 +2,7 @@
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
-[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=texttospeech
 
 ## Description
@@ -21,7 +21,7 @@ This sample requires you to have authentication setup. Refer to the [Authenticat
 1. [Enable the Cloud Text-to-Speech API](https://console.cloud.google.com/flows/enableapi?apiid=texttospeech.googleapis.com).
 
 1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
-    Run `php composer.phar install` (if composer is installed locally) or `composer install`
+    Run `composer install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 
 ## Samples
