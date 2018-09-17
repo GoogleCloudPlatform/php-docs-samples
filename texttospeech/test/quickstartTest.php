@@ -21,7 +21,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
     {
         $file = sys_get_temp_dir() . '/tts_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
-        $contents = str_replace('__DIR__', sprintf('"%s/.."', __DIR__), 
+        $contents = str_replace('__DIR__', sprintf('"%s/.."', __DIR__),
             $contents);
         file_put_contents($file, $contents);
         // invoke quickstart.php

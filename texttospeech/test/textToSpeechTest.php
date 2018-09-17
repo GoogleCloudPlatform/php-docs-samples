@@ -43,6 +43,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
+        unlink('output.mp3');
     }
     public function testSynthesizeText()
     {
@@ -51,6 +52,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
+        unlink('output.mp3');
     }
     public function testSynthesizeSsmlFile()
     {
@@ -60,6 +62,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
+        unlink('output.mp3');
     }
     public function testSynthesizeTextFile()
     {
@@ -69,6 +72,7 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
+        unlink('output.mp3');
     }
     private function runCommand($commandName, array $args = [])
     {

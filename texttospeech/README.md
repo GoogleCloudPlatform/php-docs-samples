@@ -21,8 +21,7 @@ This sample requires you to have authentication setup. Refer to the [Authenticat
 1. [Enable the Cloud Text-to-Speech API](https://console.cloud.google.com/flows/enableapi?apiid=texttospeech.googleapis.com).
 
 1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
-    Run `composer install` (if composer is installed locally) or `composer install`
-    (if composer is installed globally).
+    Run `composer install` (if composer is installed globally).
 
 ## Samples
 
