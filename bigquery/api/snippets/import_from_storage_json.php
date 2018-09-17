@@ -30,7 +30,6 @@ if (count($argv) != 3) {
 list($_, $projectId, $datasetId) = $argv;
 # [START bigquery_load_table_gcs_json]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /** Uncomment and populate these variables in your code */
