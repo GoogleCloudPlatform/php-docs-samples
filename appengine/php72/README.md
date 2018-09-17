@@ -13,7 +13,8 @@
 
 * [Implementing `Google Auth`](auth)
 * [Connecting to `Cloud SQL`](cloudsql)
-* [Enabling `Cloud Error Reporting`](errorreporting)
+* [Enabling `Stackdriver Error Reporting`](errorreporting)
+* [Using `Stackdriver Logging`](logging)
 * [Implementing a `front controller`](front-controller)
 * [Making `gRPC` calls](grpc)
 * [Using the `Metadata` server](metadata)
