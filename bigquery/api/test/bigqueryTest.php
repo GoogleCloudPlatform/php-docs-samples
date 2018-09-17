@@ -242,14 +242,14 @@ class FunctionsTest extends TestCase
     public function testListDatasets()
     {
         $output = $this->runSnippet('list_datasets');
-        $this->assertContains('test_dataset', $output);
+        $this->assertContains(self::$datasetId, $output);
     }
 
     public function testListTables()
     {
-        $this->createTempEmptyTable();
+        $tempTableId = $this->createTempEmptyTable();
         $output = $this->runSnippet('list_tables', [self::$datasetId]);
-        $this->assertContains('test_table', $output);
+        $this->assertContains($tempTableId, $output);
     }
 
     public function testStreamRow()
