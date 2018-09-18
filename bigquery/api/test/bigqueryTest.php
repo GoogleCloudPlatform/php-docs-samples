@@ -218,6 +218,8 @@ class FunctionsTest extends TestCase
         return [
             ['import_from_storage_csv'],
             ['import_from_storage_json'],
+            ['import_from_storage_orc'],
+            ['import_from_storage_parquet'],
             ['import_from_storage_csv_autodetect'],
             ['import_from_storage_json_autodetect'],
         ];
