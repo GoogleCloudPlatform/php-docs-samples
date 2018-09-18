@@ -22,7 +22,7 @@ use Google\Cloud\Logging\LoggingClient;
 $logging = new LoggingClient();
 
 // Create a PSR-3-Compatible logger
-$logger = $logging->psrLogger('app');
+$logger = $logging->psrLogger('app', ['batchEnabled' => true]);
 
 // Log messages with varying log levels.
 $logger->info('This will show up as log level INFO');

@@ -14,7 +14,7 @@ these two steps:
     ```php
     use Google\Cloud\Logging\LoggingClient;
     $logging = new LoggingClient();
-    $logger = $logging->psrLogger('app');
+    $logger = $logging->psrLogger('app', ['batchEnabled' => true]);
     ```
 
 Now you can happily log anything you'd like, and they will show up on
