@@ -22,7 +22,7 @@ use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Vision\V1\AnnotateFileResponse;
 use Google\Cloud\Vision\V1\AsyncAnnotateFileRequest;
 use Google\Cloud\Vision\V1\Feature;
-use Google\Cloud\Vision\V1\Feature_Type;
+use Google\Cloud\Vision\V1\Feature\Type;
 use Google\Cloud\Vision\V1\GcsDestination;
 use Google\Cloud\Vision\V1\GcsSource;
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
