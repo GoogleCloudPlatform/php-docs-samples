@@ -362,8 +362,9 @@ class FunctionsTest extends TestCase
         $foundValue = false;
         foreach ($table->rows([]) as $row) {
             foreach ($row as $column => $value) {
-                if ($value == 'Washington')
+                if ($value == 'Washington') {
                     $foundValue = true;
+                }
             }
             $numRows++;
         }
