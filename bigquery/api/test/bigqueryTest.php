@@ -186,7 +186,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideImportFromStorage
      */
-    public function testImportFromStorage($snippet)
+    public function testImportFromStorage($snippet, $runTruncateSnippet = false)
     {
         // run the import
         $output = $this->runSnippet($snippet, [
@@ -199,27 +199,26 @@ class FunctionsTest extends TestCase
         // verify table contents
         $table = self::$dataset->table($tableId);
         self::$tempTables[] = $table;
-        $rows = $table->rows();
-        $numRows = 0;
-        $foundValue = false;
-        foreach ($table->rows([]) as $row) {
-            foreach ($row as $column => $value) {
-                if ($value == 'Washington')
-                    $foundValue = true;
-            }
-            $numRows++;
+        $this->verifyStatesTable($table);
+
+        if ($runTruncateSnippet) {
+            $truncateSnippet = sprintf('%s_truncate', $snippet);
+            $output = $this->runSnippet($truncateSnippet, [
+                self::$datasetId,
+                $tableId,
+            ]);
+            $this->assertContains('Data imported successfully', $output);
+            $this->verifyStatesTable($table);
         }
-        $this->assertTrue($foundValue);
-        $this->assertEquals($numRows, 50);
     }
 
     public function provideImportFromStorage()
     {
         return [
-            ['import_from_storage_csv'],
-            ['import_from_storage_json'],
-            ['import_from_storage_orc'],
-            ['import_from_storage_parquet'],
+            ['import_from_storage_csv', true],
+            ['import_from_storage_json', true],
+            ['import_from_storage_orc', true],
+            ['import_from_storage_parquet', true],
             ['import_from_storage_csv_autodetect'],
             ['import_from_storage_json_autodetect'],
         ];
@@ -355,6 +354,21 @@ class FunctionsTest extends TestCase
         };
 
         $this->runEventuallyConsistentTest($testFunction);
+    }
+
+    private function verifyStatesTable($table)
+    {
+        $numRows = 0;
+        $foundValue = false;
+        foreach ($table->rows([]) as $row) {
+            foreach ($row as $column => $value) {
+                if ($value == 'Washington')
+                    $foundValue = true;
+            }
+            $numRows++;
+        }
+        $this->assertTrue($foundValue);
+        $this->assertEquals($numRows, 50);
     }
 
     public function tearDown()
