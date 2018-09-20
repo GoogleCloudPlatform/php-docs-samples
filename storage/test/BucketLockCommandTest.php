@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage\BucketsCommand;
 use Google\Cloud\Storage\StorageClient;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -258,5 +257,4 @@ Temporary hold was released for {$this->object->name()}
 EOF;
         $this->expectOutputString($outputString);
     }
-
 }
