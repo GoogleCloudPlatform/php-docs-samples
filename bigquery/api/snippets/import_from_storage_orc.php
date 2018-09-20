@@ -23,23 +23,44 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-
 if (count($argv) != 3) {
     return printf("Usage: php %s PROJECT_ID DATASET_ID\n", __FILE__);
 }
-list($_, $projectId, $datasetId) = $argv;
 
-# [START bigquery_create_dataset]
+list($_, $projectId, $datasetId) = $argv;
+# [START bigquery_load_table_gcs_orc]
 use Google\Cloud\BigQuery\BigQueryClient;
+use Google\Cloud\Core\ExponentialBackoff;
 
 /** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
+// $projectId  = 'The Google project ID';
+// $datasetId  = 'The BigQuery dataset ID';
 
+// instantiate the bigquery table service
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
-$dataset = $bigQuery->createDataset($datasetId);
-printf('Created dataset %s' . PHP_EOL, $datasetId);
-# [END bigquery_create_dataset]
-return $dataset;
+$dataset = $bigQuery->dataset($datasetId);
+$table = $dataset->table('us_states');
+
+// create the import job
+$gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.orc';
+$loadConfig = $table->loadFromStorage($gcsUri)->sourceFormat('ORC');
+$job = $table->runJob($loadConfig);
+// poll the job until it is complete
+$backoff = new ExponentialBackoff(10);
+$backoff->execute(function () use ($job) {
+    print('Waiting for job to complete' . PHP_EOL);
+    $job->reload();
+    if (!$job->isComplete()) {
+        throw new Exception('Job has not yet completed', 500);
+    }
+});
+// check if the job has errors
+if (isset($job->info()['status']['errorResult'])) {
+    $error = $job->info()['status']['errorResult']['message'];
+    printf('Error running job: %s' . PHP_EOL, $error);
+} else {
+    print('Data imported successfully' . PHP_EOL);
+}
+# [END bigquery_load_table_gcs_orc]

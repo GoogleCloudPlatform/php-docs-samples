@@ -25,7 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return print("Usage: php snippets/delete_table.php PROJECT_ID DATASET_ID TABLE_ID\n");
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID\n", __FILE__);
 }
 list($_, $projectId, $datasetId, $tableId) = $argv;
 

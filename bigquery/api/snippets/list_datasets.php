@@ -25,7 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 2) {
-    return print("Usage: php snippets/list_datasets.php PROJECT_ID\n");
+    return printf("Usage: php %s PROJECT_ID\n", __FILE__);
 }
 
 list($_, $projectId) = $argv;

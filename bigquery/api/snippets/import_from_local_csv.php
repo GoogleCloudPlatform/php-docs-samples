@@ -25,7 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 5) {
-    return print("Usage: php snippets/import_from_local_csv.php PROJECT_ID DATASET_ID TABLE_ID SOURCE\n");
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID SOURCE\n", __FILE__);
 }
 
 list($_, $projectId, $datasetId, $tableId, $source) = $argv;

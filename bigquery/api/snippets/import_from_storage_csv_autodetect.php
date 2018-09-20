@@ -23,41 +23,30 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 6 || count($argv) > 7) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME OBJECT_NAME [FORMAT]\n", __FILE__);
+if (count($argv) != 3) {
+    return printf("Usage: php %s PROJECT_ID DATASET_ID\n", __FILE__);
 }
 
-list($_, $projectId, $datasetId, $tableId, $bucketName, $objectName) = $argv;
-$format = isset($argv[6]) ? $argv[6] : 'csv';
-
-# [START bigquery_extract_table]
+list($_, $projectId, $datasetId) = $argv;
+# [START bigquery_load_table_gcs_csv_autodetect]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /** Uncomment and populate these variables in your code */
 // $projectId  = 'The Google project ID';
 // $datasetId  = 'The BigQuery dataset ID';
-// $tableId    = 'The BigQuery table ID';
-// $bucketName = 'The Cloud Storage bucket Name';
-// $objectName = 'The Cloud Storage object Name';
-// $format     = 'The extract format, either "csv" or "json"';
 
+// instantiate the bigquery table service
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
 $dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-// load the storage object
-$storage = new StorageClient([
-    'projectId' => $projectId,
-]);
-$destinationObject = $storage->bucket($bucketName)->object($objectName);
-// create the extract job
-$options = ['destinationFormat' => $format];
-$extractConfig = $table->extract($destinationObject, $options);
-$job = $table->runJob($extractConfig);
+$table = $dataset->table('us_states');
+
+// create the import job
+$gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv';
+$loadConfig = $table->loadFromStorage($gcsUri)->autodetect(true)->skipLeadingRows(1);
+$job = $table->runJob($loadConfig);
 // poll the job until it is complete
 $backoff = new ExponentialBackoff(10);
 $backoff->execute(function () use ($job) {
@@ -72,6 +61,6 @@ if (isset($job->info()['status']['errorResult'])) {
     $error = $job->info()['status']['errorResult']['message'];
     printf('Error running job: %s' . PHP_EOL, $error);
 } else {
-    print('Data extracted successfully' . PHP_EOL);
+    print('Data imported successfully' . PHP_EOL);
 }
-# [END bigquery_extract_table]
+# [END bigquery_load_table_gcs_csv_autodetect]
