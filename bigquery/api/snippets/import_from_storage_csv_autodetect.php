@@ -24,7 +24,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) != 3) {
-    return print("Usage: php snippets/import_from_storage.php PROJECT_ID DATASET_ID\n");
+    return printf("Usage: php %s PROJECT_ID DATASET_ID\n", __FILE__);
 }
 
 list($_, $projectId, $datasetId) = $argv;

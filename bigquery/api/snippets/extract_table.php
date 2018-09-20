@@ -25,7 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 6 || count($argv) > 7) {
-    return print("Usage: php snippets/extract_table.php PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME OBJECT_NAME [FORMAT]\n");
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME OBJECT_NAME [FORMAT]\n", __FILE__);
 }
 
 list($_, $projectId, $datasetId, $tableId, $bucketName, $objectName) = $argv;

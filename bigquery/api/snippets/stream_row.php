@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\BigQuery;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 4 || count($argv) > 5) {
-    return print("Usage: php snippets/stream_row.php PROJECT_ID DATASET_ID TABLE_ID [DATA]\n");
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [DATA]\n", __FILE__);
 }
 list($_, $projectId, $datasetId, $tableId) = $argv;
 $data = isset($argv[4]) ? json_decode($argv[4], true) : ["field1" => "value1"];

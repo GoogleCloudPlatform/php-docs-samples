@@ -25,7 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return print("Usage: php snippets/insert_sql.php PROJECT_ID DATASET_ID SOURCE\n");
+    return printf("Usage: php %s PROJECT_ID DATASET_ID SOURCE\n", __FILE__);
 }
 
 list($_, $projectId, $datasetId, $source) = $argv;

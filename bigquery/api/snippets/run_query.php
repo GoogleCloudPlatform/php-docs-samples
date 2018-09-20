@@ -25,7 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 3) {
-    return print("Usage: php snippets/run_query.php PROJECT_ID SQL_QUERY\n");
+    return printf("Usage: php %s PROJECT_ID SQL_QUERY\n", __FILE__);
 }
 list($_, $projectId, $query) = $argv;
 
