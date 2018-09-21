@@ -48,7 +48,7 @@ class FunctionsTest extends TestCase
     public function testBigQueryClient()
     {
         $projectId = self::$projectId;
-        $bigQuery = require __DIR__ . '/../snippets/bigquery_client.php';
+        $bigQuery = require __DIR__ . '/../src/bigquery_client.php';
 
         $this->assertInstanceOf(
             \Google\Cloud\BigQuery\BigQueryClient::class,
@@ -78,8 +78,9 @@ class FunctionsTest extends TestCase
             $destinationTableId,
         ]);
 
+        $destinationTable = self::$dataset->table($destinationTableId);
         $this->assertContains('Table copied successfully', $output);
-        $this->verifyTempTable($destinationTableId);
+        $this->verifyTable($destinationTable, 'Brent Shaffer', 3);
     }
 
     public function testCreateAndDeleteDataset()
@@ -157,7 +158,7 @@ class FunctionsTest extends TestCase
         $projectId = self::$projectId;
         $datasetId = self::$datasetId;
         $tableId = $this->createTempEmptyTable();
-        $table = require __DIR__ . '/../snippets/get_table.php';
+        $table = require __DIR__ . '/../src/get_table.php';
 
         $this->assertInstanceOf(
             \Google\Cloud\BigQuery\Table::class,
@@ -179,8 +180,9 @@ class FunctionsTest extends TestCase
             $source,
         ]);
 
+        $tempTable = self::$dataset->table($tempTableId);
         $this->assertContains('Data imported successfully', $output);
-        $this->verifyTempTable($tempTableId);
+        $this->verifyTable($tempTable, 'Brent Shaffer', 3);
     }
 
     /**
@@ -199,7 +201,7 @@ class FunctionsTest extends TestCase
         // verify table contents
         $table = self::$dataset->table($tableId);
         self::$tempTables[] = $table;
-        $this->verifyStatesTable($table);
+        $this->verifyTable($table, 'Washington', 50);
 
         if ($runTruncateSnippet) {
             $truncateSnippet = sprintf('%s_truncate', $snippet);
@@ -208,7 +210,7 @@ class FunctionsTest extends TestCase
                 $tableId,
             ]);
             $this->assertContains('Data imported successfully', $output);
-            $this->verifyStatesTable($table);
+            $this->verifyTable($table, 'Washington', 50);
         }
     }
 
@@ -244,8 +246,9 @@ class FunctionsTest extends TestCase
             $tmpFile,
         ]);
 
+        $tempTable = self::$dataset->table($tempTableId);
         $this->assertContains('Data imported successfully', $output);
-        $this->verifyTempTable($tempTableId);
+        $this->verifyTable($tempTable, 'Brent Shaffer', 3);
     }
 
     public function testListDatasets()
@@ -272,8 +275,9 @@ class FunctionsTest extends TestCase
             json_encode(['name' => 'Brent Shaffer', 'title' => 'Developer'])
         ]);
 
+        $tempTable = self::$dataset->table($tempTableId);
         $this->assertcontains('Data streamed into BigQuery successfully', $output);
-        $this->verifyTempTable($tempTableId);
+        $this->verifyTable($tempTable, 'Brent Shaffer', 1);
     }
 
     public function testPaginateTable()
@@ -315,7 +319,7 @@ class FunctionsTest extends TestCase
     {
         $argv = array_merge([0, self::$projectId], $params);
         ob_start();
-        require __DIR__ . "/../snippets/$sampleName.php";
+        require __DIR__ . "/../src/$sampleName.php";
         return ob_get_clean();
     }
 
@@ -345,31 +349,23 @@ class FunctionsTest extends TestCase
         return $tempTableId;
     }
 
-    private function verifyTempTable($tempTableId)
+    private function verifyTable($table, $expectedValue, $expectedRowCount)
     {
-        $query = sprintf('SELECT * FROM `%s.%s`', self::$datasetId, $tempTableId);
-        $testFunction = function () use ($query) {
-            $output = $this->runSnippet('run_query', [$query]);
-            $this->assertContains('Brent Shaffer', $output);
-        };
-
-        $this->runEventuallyConsistentTest($testFunction);
-    }
-
-    private function verifyStatesTable($table)
-    {
-        $numRows = 0;
-        $foundValue = false;
-        foreach ($table->rows([]) as $row) {
-            foreach ($row as $column => $value) {
-                if ($value == 'Washington') {
-                    $foundValue = true;
+        $testFunction = function () use ($table, $expectedValue, $expectedRowCount) {
+            $numRows = 0;
+            $foundValue = false;
+            foreach ($table->rows([]) as $row) {
+                foreach ($row as $column => $value) {
+                    if ($value == $expectedValue) {
+                        $foundValue = true;
+                    }
                 }
+                $numRows++;
             }
-            $numRows++;
-        }
-        $this->assertTrue($foundValue);
-        $this->assertEquals($numRows, 50);
+            $this->assertTrue($foundValue);
+            $this->assertEquals($numRows, $expectedRowCount);
+        };
+        $this->runEventuallyConsistentTest($testFunction);
     }
 
     public function tearDown()
