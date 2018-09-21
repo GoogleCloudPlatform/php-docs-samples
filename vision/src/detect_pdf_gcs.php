@@ -35,7 +35,7 @@ function detect_pdf_gcs($path, $output)
 {
     # select ocr feature
     $feature = (new Feature())
-        ->setType(Feature_Type::DOCUMENT_TEXT_DETECTION);
+        ->setType(Type::DOCUMENT_TEXT_DETECTION);
 
     # set $path (file to OCR) as source
     $gcsSource = (new GcsSource())

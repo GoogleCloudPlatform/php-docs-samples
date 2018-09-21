@@ -29,13 +29,20 @@ function detect_object($path)
     # annotate the image
     $image = file_get_contents($path);
     $response = $imageAnnotator->objectLocalization($image);
-    $logos = $response->getLocalizedObjectAnnotations();
+    $objects = $response->getLocalizedObjectAnnotations();
 
-    // TODO
-    // printf('%d logos found:' . PHP_EOL, count($logos));
-    // foreach ($logos as $logo) {
-    //     print($logo->getDescription() . PHP_EOL);
-    // }
+    foreach ($objects as $object) {
+        $name = $object->getName();
+        $score = $object->getScore();
+        $vertices = $object->getBoundingPoly()->getNormalizedVertices();
+
+        printf('%s (confidence %d)):' . PHP_EOL, $name, $score);
+        print('normalized bounding polygon vertices: ');
+        foreach ($vertices as $vertex) {
+            printf(' (%d, %d)', $vertex->getX(), $vertex->getY());
+        }
+        print(PHP_EOL);
+    }
 
     $imageAnnotator->close();
 }
