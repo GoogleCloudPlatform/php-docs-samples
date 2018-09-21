@@ -170,6 +170,22 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Google', $output);
     }
 
+    public function testLocalizeObjectCommand()
+    {
+        $path = __DIR__ . '/data/puppies.jpg';
+        $output = $this->runCommand('localize-object', $path);
+        $this->assertContains('Dog', $output);
+    }
+
+    public function testLocalizeObjectCommandGcs()
+    {
+        $this->requireCloudStorage();
+
+        $path = 'gs://' . $this->bucketName . '/vision/puppies.jpg';
+        $output = $this->runCommand('localize-object', $path);
+        $this->assertContains('Dog', $output);
+    }
+
     public function testLogoCommandWithImageLackingLogo()
     {
         $path = __DIR__ . '/data/tower.jpg';

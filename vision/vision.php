@@ -305,6 +305,29 @@ EOF
     })
 );
 
+// localize object command
+$application->add((new Command('localize-object'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Localize object in an image using '
+                . 'Google Cloud Vision API')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command finds objects in an image using
+the Google Cloud Vision API.
+
+    <info>php %command.full_name% path/to/image.png</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $path = $input->getArgument('path');
+        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
+            detect_object_gcs($path);
+        } else {
+            detect_object($path);
+        }
+    })
+);
+
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
 }
