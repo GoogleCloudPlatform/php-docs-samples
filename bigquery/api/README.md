@@ -20,13 +20,13 @@ All code in the `snippets` directory demonstrate how to invoke Google BigQuery f
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php snippets/SNIPPET_NAME.php`. The usage will print for each if no arguments
+5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
     are provided:
     ```sh
-    $ php snippets/create_dataset.php
-    Usage: php snippets/create_dataset.php PROJECT_ID DATASET_ID
+    $ php src/create_dataset.php
+    Usage: php src/create_dataset.php PROJECT_ID DATASET_ID
 
-    $ php snippets/create_dataset.php your-project-id test_dataset_123
+    $ php src/create_dataset.php your-project-id test_dataset_123
     Created dataset test_dataset_123
     ```
 

@@ -31,7 +31,7 @@ if (isset($argv)) {
  * Usage:
  * ```
  * $projectId = 'Your Project ID';
- * $bigQuery = require 'snippets/bigquery_client.php';
+ * $bigQuery = require 'src/bigquery_client.php';
  * ```
  */
 # [START bigquery_client_default_credentials]

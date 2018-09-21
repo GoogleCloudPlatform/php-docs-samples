@@ -48,7 +48,7 @@ class FunctionsTest extends TestCase
     public function testBigQueryClient()
     {
         $projectId = self::$projectId;
-        $bigQuery = require __DIR__ . '/../snippets/bigquery_client.php';
+        $bigQuery = require __DIR__ . '/../src/bigquery_client.php';
 
         $this->assertInstanceOf(
             \Google\Cloud\BigQuery\BigQueryClient::class,
@@ -157,7 +157,7 @@ class FunctionsTest extends TestCase
         $projectId = self::$projectId;
         $datasetId = self::$datasetId;
         $tableId = $this->createTempEmptyTable();
-        $table = require __DIR__ . '/../snippets/get_table.php';
+        $table = require __DIR__ . '/../src/get_table.php';
 
         $this->assertInstanceOf(
             \Google\Cloud\BigQuery\Table::class,
@@ -315,7 +315,7 @@ class FunctionsTest extends TestCase
     {
         $argv = array_merge([0, self::$projectId], $params);
         ob_start();
-        require __DIR__ . "/../snippets/$sampleName.php";
+        require __DIR__ . "/../src/$sampleName.php";
         return ob_get_clean();
     }
 
