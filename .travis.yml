@@ -38,7 +38,8 @@ env:
     - PHP_CGI_PATH=/home/travis/.phpenv/shims/php-cgi
     - TEST_BUILD_DIR=$TRAVIS_BUILD_DIR
     # We use the envvar "IS_PULL_REQUEST" for both kokoro and travis
-    - IS_PULL_REQUEST=$TRAVIS_PULL_REQUEST_BRANCH
+    # This is always set to true so that we skip the full test suite in travis
+    - IS_PULL_REQUEST=true
 
 before_install:
   - git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools
