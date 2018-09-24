@@ -11,13 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 .PHONY: all build push php56 php70 php71 php72
+
+all:
+	make build
+	make push
+
 php56:
 	mkdir -p php56
 	sed -e 's/PHP_VERSION/php56/g' Dockerfile.template > php56/Dockerfile
 	echo "# Add steps specific to PHP 5.6" >> php56/Dockerfile
-	echo "RUN apt-get install -y php5-cgi" >> php56/Dockerfile
+	# echo "RUN apt-get install -y php5-cgi" >> php56/Dockerfile
 	echo "RUN rm /opt/php56/lib/ext.enabled/ext-memcached.ini" >> php56/Dockerfile
-	echo "ENV RUN_DEVSERVER_TESTS=true" >> php56/Dockerfile
 	echo "ENV RUN_CS_FIXER=true\n" >> php56/Dockerfile
 
 php70:
@@ -43,7 +47,3 @@ push:
 	docker push gcr.io/cloud-devrel-kokoro-resources/php70
 	docker push gcr.io/cloud-devrel-kokoro-resources/php71
 	docker push gcr.io/cloud-devrel-kokoro-resources/php72
-
-all:
-	make build
-	make push
