@@ -18,41 +18,38 @@
 namespace Google\Cloud\Samples\Language\Tests;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 /**
  * Unit Tests for language commands.
  */
 class languageTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $hasCredentials;
+    use TestTrait;
+    use ExecuteCommandTrait;
 
-    protected $gcsFile;
+    private static $commandFile = __DIR__ . '/../language.php';
 
-    public static function setUpBeforeClass()
+    public function gcsFile()
     {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
-
-    public function setUp()
-    {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        $this->gcsFile = sprintf('gs://%s/language/presidents.txt', getenv('GOOGLE_STORAGE_BUCKET'));
+        return sprintf(
+            'gs://%s/language/presidents.txt',
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
     }
 
     public function testAll()
     {
-        $output = $this->runCommand('all', 'Barack Obama lives in Washington D.C.');
+        $output = $this->runCommand('all', [
+            'content' => 'Barack Obama lives in Washington D.C.'
+        ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
         $this->assertContains('Name: Washington D.C.', $output);
-        $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -76,16 +73,15 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testAllFromStorageObject()
     {
-        $this->checkBucketName();
-
-        $output = $this->runCommand('all', $this->gcsFile);
+        $output = $this->runCommand('all', [
+            'content' => $this->gcsFile()
+        ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
         $this->assertContains('Name: Washington D.C.', $output);
-        $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -109,34 +105,36 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testEntities()
     {
-        $output = $this->runCommand('entities', 'Barack Obama lives in Washington D.C.');
+        $output = $this->runCommand('entities', [
+            'content' => 'Barack Obama lives in Washington D.C.'
+        ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
         $this->assertContains('Name: Washington D.C.', $output);
-        $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
     }
 
 
     public function testEntitiesFromStorageObject()
     {
-        $this->checkBucketName();
-
-        $output = $this->runCommand('entities', $this->gcsFile);
+        $output = $this->runCommand('entities', [
+            'content' => $this->gcsFile()
+        ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
         $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Barack_Obama', $output);
         $this->assertContains('Knowledge Graph MID:', $output);
         $this->assertContains('Name: Washington D.C.', $output);
-        $this->assertContains('Wikipedia URL: https://en.wikipedia.org/wiki/Washington,_D.C.', $output);
     }
 
     public function testSentiment()
     {
-        $output = $this->runCommand('sentiment', 'Barack Obama lives in Washington D.C.');
+        $output = $this->runCommand('sentiment', [
+            'content' => 'Barack Obama lives in Washington D.C.'
+        ]);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -149,9 +147,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testSentimentFromStorageObject()
     {
-        $this->checkBucketName();
-
-        $output = $this->runCommand('sentiment', $this->gcsFile);
+        $output = $this->runCommand('sentiment', [
+            'content' => $this->gcsFile()
+        ]);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
         $this->assertContains('Score:', $output);
@@ -163,7 +161,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testSyntax()
     {
-        $output = $this->runCommand('syntax', 'Barack Obama lives in Washington D.C.');
+        $output = $this->runCommand('syntax', [
+            'content' => 'Barack Obama lives in Washington D.C.'
+        ]);
         $this->assertContains('Token text: Barack', $output);
         $this->assertContains('Token part of speech: NOUN', $output);
         $this->assertContains('Token text: Obama', $output);
@@ -180,9 +180,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testSyntaxFromStorageObject()
     {
-        $this->checkBucketName();
-
-        $output = $this->runCommand('syntax', $this->gcsFile);
+        $output = $this->runCommand('syntax', [
+            'content' => $this->gcsFile()
+        ]);
         $this->assertContains('Token text: Barack', $output);
         $this->assertContains('Token part of speech: NOUN', $output);
         $this->assertContains('Token text: Obama', $output);
@@ -199,7 +199,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testEntitySentiment()
     {
-        $output = $this->runCommand('entity-sentiment', 'Barack Obama lives in Washington D.C.');
+        $output = $this->runCommand('entity-sentiment', [
+            'content' => 'Barack Obama lives in Washington D.C.'
+        ]);
         $this->assertContains('Entity Name: Barack Obama', $output);
         $this->assertContains('Entity Type: PERSON', $output);
         $this->assertContains('Entity Salience:', $output);
@@ -211,9 +213,9 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testEntitySentimentFromStorageObject()
     {
-        $this->checkBucketName();
-
-        $output = $this->runCommand('entity-sentiment', $this->gcsFile);
+        $output = $this->runCommand('entity-sentiment', [
+            'content' => $this->gcsFile()
+        ]);
         $this->assertContains('Entity Name: Barack Obama', $output);
         $this->assertContains('Entity Type: PERSON', $output);
         $this->assertContains('Entity Salience:', $output);
@@ -225,42 +227,21 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testClassifyText()
     {
-        $output = $this->runCommand(
-            'classify', 'The first two gubernatorial elections since ' .
-            'President Donald Trump took office went in favor of Democratic ' .
-            'candidates in Virginia and New Jersey.');
+        $output = $this->runCommand('classify', [
+            'content' => 'The first two gubernatorial elections since President '
+                . 'Donald Trump took office went in favor of Democratic '
+                . 'candidates in Virginia and New Jersey.'
+        ]);
         $this->assertContains('Category Name: /News/Politics', $output);
         $this->assertContains('Confidence:', $output);
     }
 
     public function testClassifyTextFromStorageObject()
     {
-        $this->checkBucketName();
-
-        $output = $this->runCommand('classify', $this->gcsFile);
+        $output = $this->runCommand('classify', [
+            'content' => $this->gcsFile()
+        ]);
         $this->assertContains('Category Name: /News/Politics', $output);
         $this->assertContains('Confidence:', $output);
-    }
-
-    private function runCommand($commandName, $content)
-    {
-        $application = require __DIR__ . '/../language.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute([
-            'content' => $content,
-        ], [
-            'interactive' => false
-        ]);
-        return ob_get_clean();
-    }
-
-    private function checkBucketName()
-    {
-        if (!getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Specify GOOGLE_STORAGE_BUCKET environment variable.');
-        }
     }
 }

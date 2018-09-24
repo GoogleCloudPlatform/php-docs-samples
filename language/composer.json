@@ -6,12 +6,10 @@
     },
     "minimum-stability": "dev",
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "google/cloud-tools": "dev-master"
     },
     "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Language\\": "src/"
-        },
         "files": [
             "src/analyze_all.php",
             "src/analyze_all_from_file.php",
