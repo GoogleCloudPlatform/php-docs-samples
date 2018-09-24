@@ -18,16 +18,17 @@
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\ApiCore\ApiException;
-use Google\Rpc\Code;
 use Google\Cloud\Core\ExponentialBackoff;
-use Symfony\Component\Console\Tester\CommandTester;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Rpc\Code;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for dlp commands.
  */
-class dlpTest extends \PHPUnit_Framework_TestCase
+class dlpTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;

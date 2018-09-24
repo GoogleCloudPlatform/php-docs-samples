@@ -21,6 +21,7 @@ use Google\Cloud\Samples\PubSub\IamCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtil\TestTrait;
 
 /**
  * Unit Tests for IamCommand.
