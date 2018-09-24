@@ -2,7 +2,7 @@
     "name": "google/dlp-sample",
     "type": "project",
     "require": {
-        "google/cloud-dlp": "^0.6",
+        "google/cloud-dlp": "^0.12",
         "google/cloud-pubsub": "^1.0",
         "symfony/console": "^3.3"
     },
@@ -35,6 +35,7 @@
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "~4"
+        "phpunit/phpunit": "^5",
+        "google/cloud-tools": "^0.8.5"
     }
 }

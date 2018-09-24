@@ -21,67 +21,67 @@ use Google\ApiCore\ApiException;
 use Google\Rpc\Code;
 use Google\Cloud\Core\ExponentialBackoff;
 use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 /**
  * Unit Tests for dlp commands.
  */
 class dlpTest extends \PHPUnit_Framework_TestCase
 {
-    public function checkEnv($var)
-    {
-        if (!getenv($var)) {
-            $this->markTestSkipped('Set the ' . $var . ' environment variable');
-        }
-    }
+    use TestTrait;
+    use ExecuteCommandTrait;
+
+    private static $commandFile = __DIR__ . '/../dlp.php';
 
     public function setUp()
     {
-        $this->checkEnv('GOOGLE_APPLICATION_CREDENTIALS');
+        $this->useResourceExhaustedBackoff(5);
     }
 
     public function testInspectDatastore()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('inspect-datastore', [
             'kind' => 'Person',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
-            'namespace' => 'DLP'
+            'topic-id' => $topicId,
+            'subscription-id' => $subId,
+            'namespace' => 'DLP',
+            'calling-project' => self::$projectId,
         ]);
         $this->assertContains('PERSON_NAME', $output);
     }
 
     public function testInspectBigquery()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('inspect-bigquery', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'data-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION')
+            'calling-project' => self::$projectId,
+            'data-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId
         ]);
         $this->assertContains('PERSON_NAME', $output);
     }
 
     public function testInspectGCS()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
-        $this->checkEnv('GOOGLE_STORAGE_BUCKET');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $output = $this->runCommand('inspect-gcs', [
-            'bucket-id' => getenv('GOOGLE_STORAGE_BUCKET'),
+            'bucket-id' => $bucketName,
             'file' => 'dlp/harmful.csv',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION')
+            'calling-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId
         ]);
         $this->assertContains('PERSON_NAME', $output);
     }
@@ -90,14 +90,14 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     {
         // inspect a text file with results
         $output = $this->runCommand('inspect-file', [
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'calling-project' => self::$projectId,
             'path' => __DIR__ . '/data/test.txt'
         ]);
         $this->assertContains('PERSON_NAME', $output);
 
         // inspect an image file with results
         $output = $this->runCommand('inspect-file', [
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'calling-project' => self::$projectId,
             'path' => __DIR__ . '/data/test.png'
         ]);
 
@@ -105,7 +105,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
         // inspect a file with no results
         $output = $this->runCommand('inspect-file', [
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'calling-project' => self::$projectId,
             'path' => __DIR__ . '/data/harmless.txt'
         ]);
         $this->assertContains('No findings', $output);
@@ -115,14 +115,14 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     {
         // inspect a string with results
         $output = $this->runCommand('inspect-string', [
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'calling-project' => self::$projectId,
             'string' => 'The name Robert is very common.'
         ]);
         $this->assertContains('PERSON_NAME', $output);
 
         // inspect a string with no results
         $output = $this->runCommand('inspect-string', [
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
+            'calling-project' => self::$projectId,
             'string' => 'The name Zolo is not very common.'
         ]);
         $this->assertContains('No findings', $output);
@@ -167,8 +167,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testDeidentifyDates()
     {
-        $this->checkEnv('DLP_DEID_KEY_NAME');
-        $this->checkEnv('DLP_DEID_WRAPPED_KEY');
+        $this->requireEnv('DLP_DEID_KEY_NAME');
+        $this->requireEnv('DLP_DEID_WRAPPED_KEY');
 
         $inputPath = dirname(__FILE__) . '/data/dates.csv';
         $outputPath = dirname(__FILE__) . '/data/results.temp.csv';
@@ -199,8 +199,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testDeidReidFPE()
     {
-        $this->checkEnv('DLP_DEID_KEY_NAME');
-        $this->checkEnv('DLP_DEID_WRAPPED_KEY');
+        $this->requireEnv('DLP_DEID_KEY_NAME');
+        $this->requireEnv('DLP_DEID_WRAPPED_KEY');
 
         $string = 'My SSN is 372819127.';
 
@@ -223,13 +223,12 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggers()
     {
-        $this->checkEnv('GOOGLE_STORAGE_BUCKET');
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
-        $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         $displayName = uniqid("My trigger display name ");
         $description = uniqid("My trigger description ");
         $triggerId = uniqid('my-php-test-trigger-');
-        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', getenv('GOOGLE_PROJECT_ID'), $triggerId);
+        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', self::$projectId, $triggerId);
 
         $output = $this->runCommand('create-trigger', [
             'bucket-name' => $bucketName,
@@ -258,7 +257,7 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
-        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', getenv('GOOGLE_PROJECT_ID'), $templateId);
+        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', self::$projectId, $templateId);
 
         $output  = $this->runCommand('create-inspect-template', [
             'template-id' => $templateId,
@@ -280,16 +279,16 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testNumericalStats()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('numerical-stats', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'data-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'calling-project' => self::$projectId,
+            'data-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId,
             'column-name' => 'Age'
         ]);
 
@@ -299,16 +298,16 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testCategoricalStats()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('categorical-stats', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'data-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'calling-project' => self::$projectId,
+            'data-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId,
             'column-name' => 'Gender'
         ]);
 
@@ -319,16 +318,16 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testKAnonymity()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('k-anonymity', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'data-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'calling-project' => self::$projectId,
+            'data-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId,
             'quasi-ids' => 'Age,Gender'
         ]);
         $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
@@ -337,16 +336,16 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testLDiversity()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('l-diversity', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'data-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'calling-project' => self::$projectId,
+            'data-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId,
             'quasi-ids' => 'Age,Gender',
             'sensitive-attribute' => 'Name'
         ]);
@@ -357,16 +356,16 @@ class dlpTest extends \PHPUnit_Framework_TestCase
 
     public function testKMap()
     {
-        $this->checkEnv('DLP_TOPIC');
-        $this->checkEnv('DLP_SUBSCRIPTION');
+        $topicId = $this->requireEnv('DLP_TOPIC');
+        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
 
         $output = $this->runCommand('k-map', [
             'dataset' => 'integration_tests_dlp',
             'table' => 'harmful',
-            'calling-project' => getenv('GOOGLE_PROJECT_ID'),
-            'data-project' => getenv('GOOGLE_PROJECT_ID'),
-            'topic-id' => getenv('DLP_TOPIC'),
-            'subscription-id' => getenv('DLP_SUBSCRIPTION'),
+            'calling-project' => self::$projectId,
+            'data-project' => self::$projectId,
+            'topic-id' => $topicId,
+            'subscription-id' => $subId,
             'region-code' => 'US',
             'quasi-ids' => 'Age,Gender',
             'info-types' => 'AGE,GENDER'
@@ -393,25 +392,5 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'job-id' => $jobId
         ]);
         $this->assertContains('Successfully deleted job ' . $jobId, $output);
-    }
-
-    private function runCommand($commandName, $args = [])
-    {
-        $application = require __DIR__ . '/../dlp.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        // run in exponential backoff in case of Resource Exhausted errors.
-        $backoff = new ExponentialBackoff(5, function ($exception) {
-            if ($exception instanceof ApiException) {
-                return $exception->getCode() == Code::RESOURCE_EXHAUSTED;
-            }
-        });
-
-        return $backoff->execute(function () use ($commandTester, $args) {
-            ob_start();
-            $commandTester->execute($args, ['interactive' => false]);
-            return ob_get_clean();
-        });
     }
 }
