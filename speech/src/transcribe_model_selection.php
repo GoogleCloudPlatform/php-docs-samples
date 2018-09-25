@@ -40,20 +40,20 @@ function transcribe_model_selection($speechFile, $model)
     fclose($handle);
 
     // set string as audio content
-    $audio = new RecognitionAudio();
-    $audio->setContent($content);
+    $audio = (new RecognitionAudio())
+        ->setContent($content);
 
     // set config
-    $config = new RecognitionConfig();
-    $config->setEncoding(AudioEncoding::LINEAR16);
-    $config->setSampleRateHertz(32000);
-    $config->setLanguageCode('en-US');
-    $config->setModel($model);
+    $config = (new RecognitionConfig())
+        ->setEncoding(AudioEncoding::LINEAR16)
+        ->setSampleRateHertz(32000)
+        ->setLanguageCode('en-US')
+        ->setModel($model);
 
     // create the speech client
     $client = new SpeechClient();
 
-    // Make the API call
+    // make the API call
     $response = $client->recognize($config, $audio);
     $results = $response->getResults();
 

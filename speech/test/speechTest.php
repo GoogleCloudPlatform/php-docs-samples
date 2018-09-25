@@ -42,9 +42,20 @@ class speechTest extends TestCase
         $this->assertEquals(base64_decode($base64Audio), stream_get_contents($audioFileResource));
     }
 
+    public function testTranscribeEnhanced()
+    {
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        $path = __DIR__ . '/data/commercial_mono.wav';
+        $output = $this->runCommand('transcribe-enhanced', [
+            'audio-file' => $path
+        ]);
+        $this->assertContains('Chrome',$output);
+    }
+
     public function testTranscribeModel()
     {
-
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
@@ -60,7 +71,6 @@ class speechTest extends TestCase
 
     public function testTranscribePunctuation()
     {
-
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }

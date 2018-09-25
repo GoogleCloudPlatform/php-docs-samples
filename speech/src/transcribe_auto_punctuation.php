@@ -23,14 +23,14 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-# [START speech_transcribe_model_selection]
+# [START speech_transcribe_auto_punctuation]
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 /**
- * Transcribe the given audio file synchronously with the selected model
+ * Transcribe the given audio file with auto punctuation enabled
  */
 function transcribe_auto_punctuation($path)
 {
@@ -40,20 +40,20 @@ function transcribe_auto_punctuation($path)
     fclose($handle);
 
     // set string as audio content
-    $audio = new RecognitionAudio();
-    $audio->setContent($content);
+    $audio = (new RecognitionAudio())
+        ->setContent($content);
 
     // set config
-    $config = new RecognitionConfig();
-    $config->setEncoding(AudioEncoding::LINEAR16);
-    $config->setSampleRateHertz(32000);
-    $config->setLanguageCode('en-US');
-    $config->setEnableAutomaticPunctuation(true);
+    $config = (new RecognitionConfig())
+        ->setEncoding(AudioEncoding::LINEAR16)
+        ->setSampleRateHertz(32000)
+        ->setLanguageCode('en-US')
+        ->setEnableAutomaticPunctuation(true);
 
     // create the speech client
     $client = new SpeechClient();
 
-    // Make the API call
+    // make the API call
     $response = $client->recognize($config, $audio);
     $results = $response->getResults();
 
@@ -69,4 +69,4 @@ function transcribe_auto_punctuation($path)
 
     $client->close();
 }
-# [END speech_transcribe_model_selection]
+# [END speech_transcribe_auto_punctuation]
