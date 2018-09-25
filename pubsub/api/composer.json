@@ -1,7 +1,7 @@
 {
     "require": {
         "php": ">=5.4",
-        "google/cloud-pubsub": "^0.12",
+        "google/cloud-pubsub": "^1.5",
         "symfony/console": " ^3.0"
     },
     "require-dev": {
