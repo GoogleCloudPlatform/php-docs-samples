@@ -75,7 +75,7 @@ EOF
     ->addArgument('message', InputArgument::OPTIONAL, 'A message to publish to the topic')
     ->addOption('create', null, InputOption::VALUE_NONE, 'Create the topic. ')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the topic. ')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $topicName = $input->getArgument('topic');
         if (empty($topicName)) {
@@ -107,7 +107,7 @@ EOF
     ->addOption('subscription', null, InputOption::VALUE_REQUIRED, 'The subscription name.')
     ->addOption('add-user', null, InputOption::VALUE_REQUIRED, 'Create the IAM for the supplied user email.')
     ->addOption('test', null, InputOption::VALUE_NONE, 'Test the IAM policy.')
-    ->setCode(function($input, $output) {
+    ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $topicName = $input->getOption('topic');
         $subscriptionName = $input->getOption('subscription');

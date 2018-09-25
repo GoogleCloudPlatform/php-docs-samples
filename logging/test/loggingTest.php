@@ -21,7 +21,6 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Functional tests for ListSinkCommand.

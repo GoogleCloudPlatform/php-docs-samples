@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Language\Tests;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
