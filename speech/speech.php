@@ -129,6 +129,22 @@ EOF
         transcribe_model_selection($audioFile, $modelName);
     });
 
+$application->add(new Command('transcribe-punctuation'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Transcribe an audio file, with proper punctuation, using Google Cloud Speech API')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command transcribes audio from a file, with 
+proper punctuation, using the Google Cloud Speech API.
+
+<info>php %command.full_name% audio_file.wav</info>
+
+EOF
+    )
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+        $path = $input->getArgument('audio-file');
+        transcribe_auto_punctuation($path);
+    });
+
 $application->add(new Command('transcribe-async'))
     ->setDefinition($inputDefinition)
     ->setDescription('Transcribe an audio file asynchronously using Google Cloud Speech API')

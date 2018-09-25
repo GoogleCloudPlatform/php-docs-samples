@@ -58,6 +58,19 @@ class speechTest extends TestCase
         $this->assertContains('how old is the Brooklyn Bridge',$output);
     }
 
+    public function testTranscribePunctuation()
+    {
+
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        $path = __DIR__ . '/data/audio32KHz.raw';
+        $output = $this->runCommand('transcribe-punctuation', [
+            'audio-file' => $path
+        ]);
+        $this->assertContains('How old is the Brooklyn Bridge?',$output);
+    }
+
     /** @dataProvider provideTranscribe */
     public function testTranscribe($command, $audioFile, $encoding, $sampleRate, $requireGrpc = false)
     {

@@ -54,6 +54,7 @@ To run the Speech Samples:
       transcribe-async-words  Transcribe an audio file asynchronously and print word time offsets using Google Cloud Speech API
       transcribe-gcs          Transcribe audio from a Storage Object using Google Cloud Speech API
       transcribe-model        Transcribe an audio file, with selected model, using Google Cloud Speech API
+      transcribe-punctuation  Transcribe an audio file with proper punctuation, using Google Cloud Speech API
       transcribe-stream       Transcribe a stream of audio using Google Cloud Speech API
       transcribe-words        Transcribe an audio file and print word time offsets using Google Cloud Speech API
 
