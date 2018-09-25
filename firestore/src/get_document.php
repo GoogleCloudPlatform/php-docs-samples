@@ -43,7 +43,7 @@ function get_document($projectId)
 
     if ($snapshot->exists()) {
         printf('Document data:' . PHP_EOL);
-        print_r($snapshot->fields());
+        print_r($snapshot->data());
     } else {
         printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
     }

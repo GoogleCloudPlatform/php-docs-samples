@@ -1,15 +1,13 @@
 {
     "require": {
-        "google/cloud-firestore": "^0.5",
+        "google/cloud-firestore": "~0.15",
         "symfony/console": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.0"
+        "phpunit/phpunit": "^5",
+        "google/cloud-tools": "^0.8.5"
     },
     "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Firestore\\": "src/"
-        },
         "files": [
             "src/initialize.php",
             "src/initialize_project_id.php",

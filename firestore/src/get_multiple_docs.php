@@ -44,7 +44,7 @@ function get_multiple_docs($projectId)
     foreach ($documents as $document) {
         if ($document->exists()) {
             printf('Document data for document %s:' . PHP_EOL, $document->id());
-            print_r($document->fields());
+            print_r($document->data());
             printf(PHP_EOL);
         } else {
             printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
