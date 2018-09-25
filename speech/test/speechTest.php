@@ -42,6 +42,22 @@ class speechTest extends TestCase
         $this->assertEquals(base64_decode($base64Audio), stream_get_contents($audioFileResource));
     }
 
+    public function testTranscribeModel()
+    {
+
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+        // $path = __DIR__ . '/data/gnome.wav';
+        $path = __DIR__ . '/data/audio32KHz.raw';
+        $output = $this->runCommand('transcribe-model', [
+            'audio-file' => $path,
+            '--model' => 'video'
+        ]);
+        // $this->assertContains('the weather outside is sunny',$output);
+        $this->assertContains('how old is the Brooklyn Bridge',$output);
+    }
+
     /** @dataProvider provideTranscribe */
     public function testTranscribe($command, $audioFile, $encoding, $sampleRate, $requireGrpc = false)
     {
