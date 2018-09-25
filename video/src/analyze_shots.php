@@ -33,7 +33,14 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 function analyze_shots($uri, array $options = [])
 {
     # Instantiate a client.
-    $video = new VideoIntelligenceServiceClient();
+    $video = new VideoIntelligenceServiceClient([
+        'httpHandler' => \Google\Auth\HttpHandler\HttpHandlerFactory::build(
+            new \GuzzleHttp\Client([
+                'proxy' => 'localhost:8888',
+                'verify' => false,
+            ])
+        )
+    ]);
 
     # Execute a request.
     $operation = $video->annotateVideo([
