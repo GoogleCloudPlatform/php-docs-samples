@@ -37,5 +37,9 @@ RUN gcloud config set app/promote_by_default false && \
     gcloud -q components install app-engine-php && \
     gcloud -q components update
 
+# Add PHP version-specific environment variables
+ENV GOOGLE_PROJECT_ID="php-docs-samples-PHP_VERSION"
+ENV FIRESTORE_PROJECT_ID="php-docs-samples-fs-PHP_VERSION"
+
 ENTRYPOINT /bin/bash
 

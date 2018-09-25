@@ -30,14 +30,14 @@ class firestoreTest extends TestCase
     use ExecuteCommandTrait;
 
     private static $commandFile = __DIR__ . '/../firestore.php';
-    private static $firestreProjectId;
+    private static $firestoreProjectId;
 
     public static function setUpBeforeClass()
     {
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        self::$firestreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
+        self::$firestoreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
     }
 
     public function testInitialize()
@@ -474,7 +474,7 @@ class firestoreTest extends TestCase
     private function runFirestoreCommand($commandName)
     {
         return $this->runCommand($commandName, [
-            'project' => self::$firestreProjectId
+            'project' => self::$firestoreProjectId
         ]);
     }
 }
