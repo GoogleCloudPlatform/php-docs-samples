@@ -32,14 +32,7 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 function analyze_labels_file($path, array $options = [])
 {
     # Instantiate a client.
-    $video = new VideoIntelligenceServiceClient([
-        'httpHandler' => \Google\Auth\HttpHandler\HttpHandlerFactory::build(
-            new \GuzzleHttp\Client([
-                'proxy' => 'localhost:8888',
-                'verify' => false,
-            ])
-        )
-    ]);
+    $video = new VideoIntelligenceServiceClient();
 
     # Read the local video file
     $inputContent = file_get_contents($path);

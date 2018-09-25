@@ -33,14 +33,7 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 function analyze_labels($uri, array $options = [])
 {
     # Instantiate a client.
-    $video = new VideoIntelligenceServiceClient([
-        'httpHandler' => \Google\Auth\HttpHandler\HttpHandlerFactory::build(
-            new \GuzzleHttp\Client([
-                'proxy' => 'localhost:8888',
-                'verify' => false,
-            ])
-        )
-    ]);
+    $video = new VideoIntelligenceServiceClient();
 
     # Execute a request.
     $operation = $video->annotateVideo([
