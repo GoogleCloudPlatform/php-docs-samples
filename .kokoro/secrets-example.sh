@@ -11,7 +11,8 @@
 ################################################################################
 
 # General
-export GOOGLE_PROJECT_ID=
+# This will be set by the Docker image
+# export GOOGLE_PROJECT_ID=
 export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
 export GOOGLE_CLIENT_ID=
 export GOOGLE_CLIENT_SECRET=
@@ -61,7 +62,8 @@ export DLP_DEID_WRAPPED_KEY=
 export DLP_DEID_KEY_NAME=projects/$GOOGLE_PROJECT_ID/locations/global/keyRings/ci/cryptoKeys/ci
 
 # Firestore
-export FIRESTORE_PROJECT_ID=
+# This will be set by the Docker image
+# export FIRESTORE_PROJECT_ID=
 
 # IAP
 export IAP_CLIENT_ID=
