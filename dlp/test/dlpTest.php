@@ -384,7 +384,6 @@ class dlpTest extends TestCase
         preg_match($jobIdRegex, $output, $jobIds);
         $jobId = $jobIds[0];
 
-
         $output = $this->runCommand('delete-job', [
             'job-id' => $jobId
         ]);
