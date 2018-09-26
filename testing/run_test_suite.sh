@@ -34,6 +34,15 @@ REST_TESTS=(
     video
 )
 
+# These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
+ALT_PROJECT_TESTS=(
+    dialogflow
+    dlp
+    kms
+    monitoring
+    video
+)
+
 GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
 
 TMP_REPORT_DIR=$(mktemp -d)
@@ -64,9 +73,14 @@ fi
 run_tests()
 {
     if [ -f "vendor/bin/phpunit" ]; then
-        vendor/bin/phpunit -v
+        CMD="vendor/bin/phpunit -v"
     else
-        phpunit -v
+        CMD="phpunit -v"
+    fi
+    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]]; then
+        GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID $CMD
+    else
+        $CMD
     fi
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
