@@ -39,7 +39,7 @@ ALT_PROJECT_TESTS=(
     #dialogflow
     dlp
     kms
-    #monitoring
+    monitoring
     video
 )
 
