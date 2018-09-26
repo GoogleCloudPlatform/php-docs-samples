@@ -36,10 +36,10 @@ REST_TESTS=(
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
 ALT_PROJECT_TESTS=(
-    dialogflow
-    dlp
+    #dialogflow
+    #dlp
     kms
-    monitoring
+    #monitoring
     video
 )
 
@@ -78,6 +78,7 @@ run_tests()
         CMD="phpunit -v"
     fi
     if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]]; then
+        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID...\n"
         GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID $CMD
     else
         $CMD

@@ -30,7 +30,6 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     use TestTrait;
 
     private static $commandFile = __DIR__ . '/../monitoring.php';
-    private static $projectId;
     private static $metricId = 'custom.googleapis.com/stores/daily_sales';
     private static $uptimeConfigName;
     private static $minutesAgo = 720;
