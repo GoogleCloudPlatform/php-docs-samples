@@ -20,7 +20,6 @@ php56:
 	mkdir -p php56
 	sed -e 's/PHP_VERSION/php56/g' Dockerfile.template > php56/Dockerfile
 	echo "# Add steps specific to PHP 5.6" >> php56/Dockerfile
-	# echo "RUN apt-get install -y php5-cgi" >> php56/Dockerfile
 	echo "RUN rm /opt/php56/lib/ext.enabled/ext-memcached.ini" >> php56/Dockerfile
 	echo "ENV RUN_CS_FIXER=true\n" >> php56/Dockerfile
 
@@ -34,9 +33,7 @@ php71:
 
 php72:
 	mkdir -p php72
-	sed -e 's/PHP_VERSION/php72/g' Dockerfile.template > php72/Dockerfile.tmp
-	sed -e 's/php-docs-samples-fs-php72/cloud-samples-tests-php-fire/g' php72/Dockerfile.tmp > php72/Dockerfile
-	rm php72/Dockerfile.tmp
+	sed -e 's/PHP_VERSION/php72/g' Dockerfile.template > php72/Dockerfile
 
 build:
 	make php56 && docker build php56 -t gcr.io/cloud-devrel-kokoro-resources/php56

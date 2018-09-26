@@ -16,6 +16,8 @@ export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
 export GOOGLE_CLIENT_ID=
 export GOOGLE_CLIENT_SECRET=
 export GCLOUD_PROJECT=$GOOGLE_PROJECT_ID
+# For running tests in separate projects
+export GOOGLE_ALT_PROJECT_ID=$GOOGLE_PROJECT_ID
 
 # AppEngine
 export MAILJET_APIKEY=
@@ -61,8 +63,7 @@ export DLP_DEID_WRAPPED_KEY=
 export DLP_DEID_KEY_NAME=projects/$GOOGLE_PROJECT_ID/locations/global/keyRings/ci/cryptoKeys/ci
 
 # Firestore
-# This will be set by the Docker image
-# export FIRESTORE_PROJECT_ID=
+export FIRESTORE_PROJECT_ID=
 
 # IAP
 export IAP_CLIENT_ID=

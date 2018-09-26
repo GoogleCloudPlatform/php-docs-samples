@@ -21,7 +21,7 @@ fi
 
 # directories known as flaky tests
 FLAKES=(
-    datastore/api
+    # Add directories here to run the tests but ignore them if they fail
 )
 
 # tests to run with grpc.so disabled
@@ -36,6 +36,7 @@ REST_TESTS=(
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
 ALT_PROJECT_TESTS=(
+    datastore/api
     dialogflow
     dlp
     kms

@@ -27,8 +27,8 @@ $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
 $options = [
-    'inputUri'=>'gs://demomaker/cat.mp4',
-    'features'=>[Feature::LABEL_DETECTION]
+    'inputUri' => 'gs://demomaker/cat.mp4',
+    'features' => [Feature::LABEL_DETECTION]
 ];
 $operation = $video->annotateVideo($options);
 
