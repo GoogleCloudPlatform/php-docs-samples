@@ -20,8 +20,9 @@ namespace Google\Cloud\Samples\Monitoring;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class monitoringTest extends \PHPUnit_Framework_TestCase
+class monitoringTest extends TestCase
 {
     const RETRY_COUNT = 5;
 
@@ -33,6 +34,12 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     private static $metricId = 'custom.googleapis.com/stores/daily_sales';
     private static $uptimeConfigName;
     private static $minutesAgo = 720;
+
+    // Make retry function longer because creating a metric takes a while
+    private function retrySleepFunc($attempts)
+    {
+        sleep(pow(2, $attempts+2));
+    }
 
     public function testCreateMetric()
     {

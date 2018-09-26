@@ -35,11 +35,13 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     private static $tempVersion;
     private $ring;
     private $key;
+    private $altKey;
 
     public function setUp()
     {
         $this->ring = $this->requireEnv('GOOGLE_KMS_KEYRING');
         $this->key = $this->requireEnv('GOOGLE_KMS_CRYPTOKEY');
+        $this->altKey = $this->requireEnv('GOOGLE_KMS_CRYPTOKEY_ALTERNATE');
     }
 
     public function testEncrypt()
@@ -357,7 +359,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             '--project' => self::$projectId,
         ]);
 
@@ -370,14 +372,14 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             '--create' => true,
             '--project' => self::$projectId,
         ]);
 
         $regex = sprintf(
             '/Created version (\d+) for cryptoKey %s in keyRing %s/' . PHP_EOL,
-            $this->key,
+            $this->altKey,
             $this->ring
         );
         $this->assertEquals(1, preg_match($regex, $output, $matches));
@@ -391,7 +393,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             'version' => self::$tempVersion,
             '--project' => self::$projectId,
         ]);
@@ -408,7 +410,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             'version' => self::$tempVersion,
             '--disable' => true,
             '--project' => self::$projectId,
@@ -417,7 +419,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(sprintf(
             'Disabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->key,
+            $this->altKey,
             $this->ring
         ), $output);
     }
@@ -429,7 +431,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             'version' => self::$tempVersion,
             '--enable' => true,
             '--project' => self::$projectId,
@@ -438,7 +440,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(sprintf(
             'Enabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->key,
+            $this->altKey,
             $this->ring
         ), $output);
     }
@@ -450,7 +452,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             'version' => self::$tempVersion,
             '--destroy' => true,
             '--project' => self::$projectId,
@@ -459,7 +461,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(sprintf(
             'Destroyed version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->key,
+            $this->altKey,
             $this->ring
         ), $output);
     }
@@ -471,7 +473,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             'version' => self::$tempVersion,
             '--restore' => true,
             '--project' => self::$projectId,
@@ -480,7 +482,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(sprintf(
             'Restored version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->key,
+            $this->altKey,
             $this->ring
         ), $output);
     }
@@ -492,7 +494,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('version', [
             'keyring' => $this->ring,
-            'cryptokey' => $this->key,
+            'cryptokey' => $this->altKey,
             'version' => self::$tempVersion,
             '--set-primary' => true,
             '--project' => self::$projectId,
@@ -501,7 +503,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(sprintf(
             'Set %s as primary version for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->key,
+            $this->altKey,
             $this->ring
         ), $output);
     }

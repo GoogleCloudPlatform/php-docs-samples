@@ -78,7 +78,7 @@ run_tests()
         CMD="phpunit -v"
     fi
     if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]]; then
-        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID..."
+        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
         GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID $CMD
     else
         $CMD
