@@ -50,8 +50,12 @@ function k_anonymity(
     $quasiIdNames
 ) {
     // Instantiate a client.
-    $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient();
+    $dlp = new DlpServiceClient([
+        'projectId' => $callingProjectId,
+    ]);
+    $pubsub = new PubSubClient([
+        'projectId' => $callingProjectId,
+    ]);
     $topic = $pubsub->topic($topicId);
 
     // Construct risk analysis config

@@ -51,8 +51,12 @@ function numerical_stats(
     $columnName
 ) {
     // Instantiate a client.
-    $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient();
+    $dlp = new DlpServiceClient([
+        'projectId' => $callingProjectId
+    ]);
+    $pubsub = new PubSubClient([
+        'projectId' => $callingProjectId
+    ]);
 
     // Construct risk analysis config
     $columnField = (new FieldId())
