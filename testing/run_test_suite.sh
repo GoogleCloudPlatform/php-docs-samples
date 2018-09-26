@@ -78,7 +78,7 @@ run_tests()
         CMD="phpunit -v"
     fi
     if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]]; then
-        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID...\n"
+        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID..."
         GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID $CMD
     else
         $CMD
@@ -100,7 +100,7 @@ do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
         if ! grep -q ^$DIR <<< "$FILES_CHANGED" ; then
-            echo "Skipping tests in $DIR\n"
+            echo "Skipping tests in $DIR"
             continue
         fi
     fi
@@ -115,7 +115,7 @@ do
     if [ $? != 0 ]; then
         # If the PHP required version is too low, skip the test
         if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
-            echo "Skipping tests in $DIR\n"
+            echo "Skipping tests in $DIR"
         else
             # Run composer without "-q"
             composer install
