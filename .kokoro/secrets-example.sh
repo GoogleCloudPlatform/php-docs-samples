@@ -11,8 +11,7 @@
 ################################################################################
 
 # General
-# This will be set by the Docker image
-# export GOOGLE_PROJECT_ID=
+export GOOGLE_PROJECT_ID=
 export GOOGLE_STORAGE_BUCKET=$GOOGLE_PROJECT_ID
 export GOOGLE_CLIENT_ID=
 export GOOGLE_CLIENT_SECRET=
@@ -98,6 +97,7 @@ export GOOGLE_SPANNER_DATABASE_ID=test-database
 # Storage
 export GOOGLE_STORAGE_OBJECT=storage/test_data.csv
 export GOOGLE_STORAGE_KMS_KEYNAME=projects/$GOOGLE_PROJECT_ID/locations/us/keyRings/$GOOGLE_KMS_KEYRING/cryptoKeys/storage-bucket
+export GOOGLE_REQUESTER_PAYS_STORAGE_BUCKET=$GOOGLE_STORAGE_BUCKET
 
 # Tasks
 export CLOUD_TASKS_APPENGINE_QUEUE=
