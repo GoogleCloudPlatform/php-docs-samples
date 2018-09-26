@@ -34,7 +34,9 @@ php71:
 
 php72:
 	mkdir -p php72
-	sed -e 's/PHP_VERSION/php72/g' Dockerfile.template > php72/Dockerfile
+	sed -e 's/PHP_VERSION/php72/g' Dockerfile.template > php72/Dockerfile.tmp
+	sed -e 's/php-docs-samples-fs-php72/cloud-samples-tests-php-fire/g' php72/Dockerfile.tmp > php72/Dockerfile
+	rm php72/Dockerfile.tmp
 
 build:
 	make php56 && docker build php56 -t gcr.io/cloud-devrel-kokoro-resources/php56
