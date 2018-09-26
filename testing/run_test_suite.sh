@@ -40,6 +40,7 @@ ALT_PROJECT_TESTS=(
     dlp
     kms
     monitoring
+    pubsub/api
     video
 )
 
