@@ -49,11 +49,10 @@ class loggingTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateSink()
     {
-        $bucket = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $output = $this->runCommand('create-sink', [
             'project' => self::$projectId,
             '--logger' => self::$loggerName,
-            '--bucket' => $bucket . '/logging',
+            '--bucket' => self::$projectId . '/logging',
             '--sink' => self::$sinkName,
         ]);
         $this->assertEquals(
