@@ -82,7 +82,7 @@ run_tests()
     else
         CMD="phpunit -v"
     fi
-    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ !-z "$GOOGLE_ALT_PROJECT_ID" ]; then
+    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
         echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
         GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET $CMD
     else
