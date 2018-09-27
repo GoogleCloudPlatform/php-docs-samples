@@ -17,26 +17,31 @@
  */
 namespace Google\Cloud\Samples\VideoIntelligence;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 /**
  * Unit Tests for video commands.
  */
-class videoTest extends \PHPUnit_Framework_TestCase
+class videoTest extends TestCase
 {
-    private static $gcsUri = 'gs://demomaker/cat.mp4';
+    use TestTrait;
+    use ExecuteCommandTrait;
+
+    private static $commandFile = __DIR__ . '/../video.php';
 
     public function setUp()
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
+        $this->useResourceExhaustedBackoff();
     }
 
     public function testAnalyzeLabels()
     {
-        $output = $this->runCommand('labels', ['uri' => self::$gcsUri]);
+        $output = $this->runCommand('labels', [
+            'uri' => $this->gcsUri(),
+            '--polling-interval-seconds' => 10,
+        ]);
         $this->assertContains('cat', $output);
         $this->assertContains('Video label description', $output);
         $this->assertContains('Shot label description', $output);
@@ -49,7 +54,8 @@ class videoTest extends \PHPUnit_Framework_TestCase
     public function testAnalyzeLabelsInFile()
     {
         $output = $this->runCommand('labels-in-file', [
-            'file' => __DIR__ . '/data/cat_shortened.mp4'
+            'file' => __DIR__ . '/data/cat_shortened.mp4',
+            '--polling-interval-seconds' => 10,
         ]);
         $this->assertContains('cat', $output);
         $this->assertContains('Video label description:', $output);
@@ -62,30 +68,28 @@ class videoTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyzeExplicitContent()
     {
-        $output = $this->runCommand('explicit-content', ['uri' => self::$gcsUri]);
+        $output = $this->runCommand('explicit-content', [
+            'uri' => $this->gcsUri(),
+            '--polling-interval-seconds' => 10,
+        ]);
         $this->assertContains('pornography:', $output);
     }
 
     public function testAnalyzeShots()
     {
-        $output = $this->runCommand('shots', ['uri' => self::$gcsUri]);
+        $output = $this->runCommand('shots', [
+            'uri' => $this->gcsUri(),
+            '--polling-interval-seconds' => 10,
+        ]);
         $this->assertContains('Shot:', $output);
         $this->assertContains(' to ', $output);
     }
 
-    private function runCommand($commandName, $args)
+    private function gcsUri()
     {
-        $application = require __DIR__ . '/../video.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        // Increase polling interval to 10 seconds to prevent exceeding quota.
-        $args['--polling-interval-seconds'] = 10;
-
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]);
-        return ob_get_clean();
+        return sprintf(
+            'gs://%s/video/cat_shortened.mp4',
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
     }
 }

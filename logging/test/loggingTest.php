@@ -18,55 +18,41 @@
 namespace Google\Cloud\Samples\Logging\Tests;
 
 use Google\Cloud\Logging\LoggingClient;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Functional tests for ListSinkCommand.
  */
 class loggingTest extends \PHPUnit_Framework_TestCase
 {
-    const RETRY_COUNT = 5;
-
+    use TestTrait;
+    use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
 
-    /* @var $hasCredentials boolean */
-    protected static $hasCredentials;
-    /* @var $sinkName string */
+    private static $commandFile = __DIR__ . '/../logging.php';
     protected static $sinkName;
-    /* @var $sinkName string */
-    protected static $loggerName;
-    /* @var $projectId mixed|string */
-    private $projectId;
+    protected static $loggerName = 'my_test_logger';
 
     public static function setUpBeforeClass()
     {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-        self::$loggerName = 'my_test_logger';
         self::$sinkName = sprintf("sink-%s", uniqid());
     }
 
     public function setUp()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-
-        if (!$this->projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('No project ID');
-        }
+        $this->useResourceExhaustedBackoff(5);
+        $this->catchAllExceptions = true;
+        $this->eventuallyConsistentRetryCount = 5;
     }
 
     public function testCreateSink()
     {
-        if (!$bucket = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET environment variable');
-        }
         $output = $this->runCommand('create-sink', [
+            'project' => self::$projectId,
             '--logger' => self::$loggerName,
-            '--bucket' => $bucket . '/logging',
+            '--bucket' => self::$projectId . '/logging',
             '--sink' => self::$sinkName,
         ]);
         $this->assertEquals(
@@ -80,7 +66,9 @@ class loggingTest extends \PHPUnit_Framework_TestCase
      */
     public function testListSinks()
     {
-        $output = $this->runCommand('list-sinks');
+        $output = $this->runCommand('list-sinks', [
+            'project' => self::$projectId,
+        ]);
         $this->assertContains('name:' . self::$sinkName, $output);
     }
 
@@ -90,6 +78,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     public function testUpdateSink()
     {
         $output = $this->runCommand('update-sink', [
+            'project' => self::$projectId,
             '--sink' => self::$sinkName,
             '--logger' => 'updated-logger',
         ]);
@@ -98,13 +87,13 @@ class loggingTest extends \PHPUnit_Framework_TestCase
             $output
         );
         // Check the updated filter value
-        $logging = new LoggingClient(['projectId' => $this->projectId]);
+        $logging = new LoggingClient(['projectId' => self::$projectId]);
         $sink = $logging->sink(self::$sinkName);
         $sink->reload();
         $this->assertRegExp(
             sprintf(
                 '|projects/%s/logs/%s|',
-                $this->projectId,
+                self::$projectId,
                 'updated-logger'
             ),
             $sink->info()['filter']
@@ -117,6 +106,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     public function testUpdateSinkWithFilter()
     {
         $output = $this->runCommand('update-sink', [
+            'project' => self::$projectId,
             '--sink' => self::$sinkName,
             '--filter' => 'severity >= INFO',
         ]);
@@ -125,7 +115,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
             $output
         );
         // Check the updated filter value
-        $logging = new LoggingClient(['projectId' => $this->projectId]);
+        $logging = new LoggingClient(['projectId' => self::$projectId]);
         $sink = $logging->sink(self::$sinkName);
         $sink->reload();
         $this->assertRegExp('/severity >= INFO/', $sink->info()['filter']);
@@ -137,6 +127,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     public function testDeleteSink()
     {
         $output = $this->runCommand('delete-sink', [
+            'project' => self::$projectId,
             '--sink' => self::$sinkName,
         ]);
         $this->assertEquals(
@@ -149,8 +140,9 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     {
         $message = sprintf("Test Message %s", uniqid());
         $output = $this->runCommand('write', [
+            'project' => self::$projectId,
+            'message' => $message,
             '--logger' => self::$loggerName,
-            'message' => $message
         ]);
         $this->assertEquals(
             sprintf("Wrote a log to a logger '%s'.\n", self::$loggerName),
@@ -160,10 +152,11 @@ class loggingTest extends \PHPUnit_Framework_TestCase
         $loggerName = self::$loggerName;
         $this->runEventuallyConsistentTest(function () use ($loggerName, $message) {
             $output = $this->runCommand('list-entries', [
+                'project' => self::$projectId,
                 '--logger' => $loggerName,
             ]);
             $this->assertContains($message, $output);
-        }, self::RETRY_COUNT, true);
+        });
     }
 
     /**
@@ -172,6 +165,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     public function testDeleteLogger()
     {
         $output = $this->runCommand('delete-logger', [
+            'project' => self::$projectId,
             '--logger' => self::$loggerName,
         ]);
         $this->assertEquals(
@@ -184,9 +178,10 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     {
         $message = 'Test Message';
         $output = $this->runCommand('write-psr', [
+            'project' => self::$projectId,
+            'message' => $message,
             '--logger' => self::$loggerName,
             '--level' => 'emergency',
-            'message' => $message,
         ]);
         $this->assertEquals(
             sprintf("Wrote to PSR logger '%s' at level 'emergency'.\n", self::$loggerName),
@@ -198,29 +193,14 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     {
         $message = 'Test Message';
         $output = $this->runCommand('write-monolog', [
+            'project' => self::$projectId,
+            'message' => $message,
             '--logger' => self::$loggerName,
             '--level' => 'emergency',
-            'message' => $message,
         ]);
         $this->assertEquals(
             sprintf("Wrote to monolog logger '%s' at level 'emergency'.\n", self::$loggerName),
             $output
         );
-    }
-
-    public function runCommand($commandName, $additionalArgs = [])
-    {
-        $application = require __DIR__ . '/../logging.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute([
-            'project' => $this->projectId,
-        ] + $additionalArgs, [
-            'interactive' => false
-        ]);
-
-        return ob_get_clean();
     }
 }

@@ -58,26 +58,6 @@ EOF
     })
 );
 
-// Pull and Acknowledge Task command
-$application->add((new Command('pull-and-acknowledge-task'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Pull and acknowledge a task from a given Pull Queue.')
-    ->setHelp(<<<EOF
-The <info>%command.name%</info> command pulls and acknowledges a task from a given Pull Queue.
-
-    <info>php %command.full_name% PROJECT_ID QUEUE_ID LOCATION</info>
-
-EOF
-    )
-    ->setCode(function ($input, $output) {
-        $project = $input->getArgument('project');
-        $queue = $input->getArgument('queue');
-        $location = $input->getArgument('location');
-        $task = pull_task($project, $queue, $location);
-        acknowledge_task($task);
-    })
-);
-
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

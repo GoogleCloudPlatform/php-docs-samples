@@ -21,7 +21,7 @@ fi
 
 # directories known as flaky tests
 FLAKES=(
-    datastore/api
+    # Add directories here to run the tests but ignore them if they fail
 )
 
 # tests to run with grpc.so disabled
@@ -31,6 +31,17 @@ REST_TESTS=(
     dialogflow
     dlp
     monitoring
+    video
+)
+
+# These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
+ALT_PROJECT_TESTS=(
+    datastore/api
+    dialogflow
+    dlp
+    kms
+    monitoring
+    pubsub/api
     video
 )
 
@@ -64,9 +75,15 @@ fi
 run_tests()
 {
     if [ -f "vendor/bin/phpunit" ]; then
-        vendor/bin/phpunit -v
+        CMD="vendor/bin/phpunit -v"
     else
-        phpunit -v
+        CMD="phpunit -v"
+    fi
+    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]]; then
+        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
+        GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID $CMD
+    else
+        $CMD
     fi
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
@@ -85,7 +102,7 @@ do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
         if ! grep -q ^$DIR <<< "$FILES_CHANGED" ; then
-            echo "Skipping tests in $DIR\n"
+            echo "Skipping tests in $DIR"
             continue
         fi
     fi
@@ -100,7 +117,7 @@ do
     if [ $? != 0 ]; then
         # If the PHP required version is too low, skip the test
         if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
-            echo "Skipping tests in $DIR\n"
+            echo "Skipping tests in $DIR"
         else
             # Run composer without "-q"
             composer install
