@@ -17,20 +17,17 @@
 
 namespace Google\Cloud\Samples\Speech\Tests;
 
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class speechTest extends TestCase
 {
-    protected static $hasCredentials;
-    protected static $bucketName;
+    use TestTrait;
+    use ExecuteCommandTrait;
 
-    public static function setUpBeforeClass()
-    {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
+    protected static $commandFile = __DIR__ . '/../speech.php';
+    protected static $bucketName;
 
     public function testBase64Audio()
     {
@@ -44,9 +41,6 @@ class speechTest extends TestCase
 
     public function testTranscribeEnhanced()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
         $path = __DIR__ . '/data/commercial_mono.wav';
         $output = $this->runCommand('transcribe-enhanced', [
             'audio-file' => $path
@@ -56,10 +50,6 @@ class speechTest extends TestCase
 
     public function testTranscribeModel()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        // $path = __DIR__ . '/data/gnome.wav';
         $path = __DIR__ . '/data/audio32KHz.raw';
         $output = $this->runCommand('transcribe-model', [
             'audio-file' => $path,
@@ -71,9 +61,6 @@ class speechTest extends TestCase
 
     public function testTranscribePunctuation()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
         $path = __DIR__ . '/data/audio32KHz.raw';
         $output = $this->runCommand('transcribe-punctuation', [
             'audio-file' => $path
@@ -87,11 +74,8 @@ class speechTest extends TestCase
         if ($requireGrpc && !extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
         if (!self::$bucketName && in_array($command, ['transcribe-gcs', 'transcribe-async-gcs'])) {
-            $this->markTestSkipped('You must set the GOOGLE_STORAGE_BUCKET environment variable.');
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         }
         $output = $this->runCommand($command, [
             'audio-file' => $audioFile,
@@ -119,19 +103,5 @@ class speechTest extends TestCase
             ['transcribe-async-words', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000'],
             ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', 'LINEAR16', '32000', true],
         ];
-    }
-
-    private function runCommand($commandName, $args = [])
-    {
-        $application = require __DIR__ . '/../speech.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]);
-
-        return ob_get_clean();
     }
 }
