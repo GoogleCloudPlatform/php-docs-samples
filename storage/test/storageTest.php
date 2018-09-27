@@ -18,88 +18,64 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 /**
  * Unit Tests for storage commands.
  */
 class storageTest extends \PHPUnit_Framework_TestCase
 {
-    private $serviceAccountPath;
+    use TestTrait;
+    use ExecuteCommandTrait;
+
+    private static $commandFile = __DIR__ . '/../storage.php';
     private $bucketName;
-    private $projectId;
+    private $keyName;
 
     public function setUp()
     {
-        if (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET ' .
-                'environment variable');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-        $this->serviceAccountPath = $serviceAccountPath;
-        $this->bucketName = $bucketName;
-        $this->projectId = $projectId;
+        $this->keyName = sprintf(
+            'projects/%s/locations/us/keyRings/%s/cryptoKeys/%s',
+            self::$projectId,
+            $this->requireEnv('GOOGLE_STORAGE_KMS_KEYRING'),
+            $this->requireEnv('GOOGLE_STORAGE_KMS_CRYPTOKEY')
+        );
+        $this->bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
     }
 
     public function testEnableDefaultKmsKey()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
-        }
-        if (!$kmsKeyName = getenv('GOOGLE_STORAGE_KMS_KEYNAME')) {
-            return $this->markTestSkipped('Set the GOOGLE_STORAGE_KMS_KEYNAME environment variable');
-        }
-
-        $kmsEncryptedBucketName = $bucketName . '-kms-encrypted';
+        $kmsEncryptedBucketName = $this->bucketName . '-kms-encrypted';
 
         $output = $this->runCommand('enable-default-kms-key', [
-            'project' => $projectId,
+            'project' => self::$projectId,
             'bucket' => $kmsEncryptedBucketName,
-            'kms-key-name' => $kmsKeyName,
+            'kms-key-name' => $this->keyName,
         ]);
 
         $this->assertEquals($output, sprintf(
             'Default KMS key for %s was set to %s' . PHP_EOL,
             $kmsEncryptedBucketName,
-            $kmsKeyName
+            $this->keyName
         ));
     }
 
     /** @depends testEnableDefaultKmsKey */
     public function testUploadWithKmsKey()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
-        }
-        if (!$kmsKeyName = getenv('GOOGLE_STORAGE_KMS_KEYNAME')) {
-            return $this->markTestSkipped('Set the GOOGLE_STORAGE_KMS_KEYNAME environment variable');
-        }
-
-        $kmsEncryptedBucketName = $bucketName . '-kms-encrypted';
+        $kmsEncryptedBucketName = $this->bucketName . '-kms-encrypted';
 
         $objectName = 'test-object-' . time();
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         file_put_contents($uploadFrom, 'foo' . rand());
 
         $output = $this->runCommand('upload-with-kms-key', [
-            'project' => $projectId,
+            'project' => self::$projectId,
             'bucket' => $kmsEncryptedBucketName,
             'object' => $objectName,
             'upload-from' => $uploadFrom,
-            'kms-key-name' => $kmsKeyName,
+            'kms-key-name' => $this->keyName,
         ]);
 
         $this->assertEquals($output, sprintf(
@@ -107,22 +83,7 @@ class storageTest extends \PHPUnit_Framework_TestCase
             basename($uploadFrom),
             $kmsEncryptedBucketName,
             $objectName,
-            $kmsKeyName
+            $this->keyName
         ));
-    }
-
-    private function runCommand($commandName, $args = [])
-    {
-        $application = require __DIR__ . '/../storage.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]
-        );
-
-        return ob_get_clean();
     }
 }

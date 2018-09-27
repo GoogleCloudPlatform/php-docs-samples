@@ -22,6 +22,7 @@ fi
 # directories known as flaky tests
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
+    datastore/api
 )
 
 # tests to run with grpc.so disabled
@@ -42,6 +43,7 @@ ALT_PROJECT_TESTS=(
     kms
     monitoring
     pubsub/api
+    storage
     video
 )
 
