@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START vision_localize_object]
+// [START vision_localize_objects]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
@@ -46,4 +46,4 @@ function detect_object($path)
 
     $imageAnnotator->close();
 }
-// [END vision_localize_object]
+// [END vision_localize_objects]
