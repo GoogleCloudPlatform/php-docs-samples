@@ -20,6 +20,7 @@ set -ex
 cd github/php-docs-samples
 
 export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
+export PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
 
 # export the secrets
 if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
