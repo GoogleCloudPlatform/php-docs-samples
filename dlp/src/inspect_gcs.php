@@ -52,8 +52,12 @@ function inspect_gcs(
     $maxFindings = 0
 ) {
     // Instantiate a client.
-    $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient();
+    $dlp = new DlpServiceClient([
+        'projectId' => $callingProjectId,
+    ]);
+    $pubsub = new PubSubClient([
+        'projectId' => $callingProjectId,
+    ]);
     $topic = $pubsub->topic($topicId);
 
     // The infoTypes of information to match
