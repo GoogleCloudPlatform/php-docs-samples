@@ -38,6 +38,7 @@ REST_TESTS=(
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
 ALT_PROJECT_TESTS=(
+    bigquery/api
     datastore/api
     datastore/tutorial
     dialogflow
