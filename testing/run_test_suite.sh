@@ -22,6 +22,8 @@ fi
 # directories known as flaky tests
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
+    datastore/api
+    jobs
 )
 
 # tests to run with grpc.so disabled
@@ -42,6 +44,7 @@ ALT_PROJECT_TESTS=(
     kms
     monitoring
     pubsub/api
+    storage
     video
 )
 
@@ -79,9 +82,9 @@ run_tests()
     else
         CMD="phpunit -v"
     fi
-    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]]; then
+    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
         echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
-        GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID $CMD
+        GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET $CMD
     else
         $CMD
     fi
