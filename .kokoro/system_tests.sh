@@ -22,6 +22,9 @@ cd github/php-docs-samples
 export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
 export PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
 
+# Temporary hack to see if this works
+export GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET
+
 # export the secrets
 if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
     gcloud auth activate-service-account \

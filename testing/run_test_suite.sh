@@ -37,16 +37,16 @@ REST_TESTS=(
 )
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
-ALT_PROJECT_TESTS=(
-    datastore/api
-    dialogflow
-    dlp
-    kms
-    monitoring
-    pubsub/api
-    storage
-    video
-)
+# ALT_PROJECT_TESTS=(
+#     datastore/api
+#     dialogflow
+#     dlp
+#     kms
+#     monitoring
+#     pubsub/api
+#     storage
+#     video
+# )
 
 GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
 
@@ -82,12 +82,12 @@ run_tests()
     else
         CMD="phpunit -v"
     fi
-    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
-        echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
-        GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET $CMD
-    else
+    # if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
+        # echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
+        # GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET $CMD
+    # else
         $CMD
-    fi
+    # fi
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
     else
