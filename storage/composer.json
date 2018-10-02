@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-storage": "^1.5.2",
+        "google/cloud-storage": "^1.9.0",
         "paragonie/random_compat": "^2.0",
         "symfony/console": " ^3.0"
     },
@@ -35,6 +35,8 @@
             "src/get_object_acl.php",
             "src/get_object_acl_for_entity.php",
             "src/get_requester_pays_status.php",
+            "src/get_retention_policy.php",
+            "src/get_default_event_based_hold.php",
             "src/list_buckets.php",
             "src/list_objects.php",
             "src/list_objects_with_prefix.php",

@@ -80,10 +80,19 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
             ['interactive' => false]
         );
         $this->bucket->reload();
+        $effectiveTime = $this->bucket->info()['retentionPolicy']['effectiveTime'];
 
-        $this->assertFalse($this->bucket->info()['retentionPolicy']['isLocked']);
-        $this->assertNotNull($this->bucket->info()['retentionPolicy']['effectiveTime']);
+        $this->assertNull($this->bucket->info()['retentionPolicy']['isLocked']);
+        $this->assertNotNull($effectiveTime);
         $this->assertEquals($this->bucket->info()['retentionPolicy']['retentionPeriod'], $retentionPeriod);
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $this->bucket->name(),
+                '--get-retention-policy' => true,
+            ],
+            ['interactive' => false]
+        );
 
         $this->uploadObject();
         $this->assertNotNull($this->object->info()['retentionExpirationTime']);
@@ -101,6 +110,9 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
 
         $outputString = <<<EOF
 Bucket {$this->bucket->name()} retention period set for $retentionPeriod seconds
+Retention Policy for {$this->bucket->name()}
+Retention Period: 5
+Effective Time: $effectiveTime
 Removed bucket {$this->bucket->name()} retention policy
 
 EOF;
@@ -142,7 +154,7 @@ EOF;
         $this->expectOutputString($outputString);
     }
 
-    public function testEnableDisableDefaultEventBasedHold()
+    public function testEnableDisableGetDefaultEventBasedHold()
     {
         $this->commandTester->execute(
             [
@@ -154,6 +166,14 @@ EOF;
         $this->bucket->reload();
 
         $this->assertTrue($this->bucket->info()['defaultEventBasedHold']);
+
+        $this->commandTester->execute(
+            [
+                'bucket' => $this->bucket->name(),
+                '--get-default-event-based-hold' => true,
+            ],
+            ['interactive' => false]
+        );
 
         $this->uploadObject();
         $this->assertTrue($this->object->info()['eventBasedHold']);
@@ -179,10 +199,20 @@ EOF;
         $this->bucket->reload();
         $this->assertFalse($this->bucket->info()['defaultEventBasedHold']);
 
+        $this->commandTester->execute(
+            [
+                'bucket' => $this->bucket->name(),
+                '--get-default-event-based-hold' => true,
+            ],
+            ['interactive' => false]
+        );
+
         $outputString = <<<EOF
 Default event based hold was enabled for {$this->bucket->name()}
+Default event-based hold is enabled for {$this->bucket->name()}
 Event based hold was released for {$this->object->name()}
 Default event based hold was disabled for {$this->bucket->name()}
+Default event-based hold is not enabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);

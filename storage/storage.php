@@ -164,10 +164,12 @@ EOF
     ->addOption('set-retention-policy', null, InputOption::VALUE_NONE, 'Set the retention policy')
     ->addOption('remove-retention-policy', null, InputOption::VALUE_NONE, 'Remove the retention policy')
     ->addOption('lock-retention-policy', null, InputOption::VALUE_NONE, 'Lock the retention policy')
+    ->addOption('get-retention-policy', null, InputOption::VALUE_NONE, 'Gets the retention policy')
     ->addOption('set-event-based-hold', null, InputOption::VALUE_NONE, 'Set an event based hold')
     ->addOption('release-event-based-hold', null, InputOption::VALUE_NONE, 'Release an event based hold')
     ->addOption('enable-default-event-based-hold', null, InputOption::VALUE_NONE, 'Enable default event based hold')
     ->addOption('disable-default-event-based-hold', null, InputOption::VALUE_NONE, 'Disable default event based hold')
+    ->addOption('get-default-event-based-hold', null, InputOption::VALUE_NONE, 'Gets default event based hold')
     ->addOption('set-temporary-hold', null, InputOption::VALUE_NONE, 'Set a temporary hold')
     ->addOption('release-temporary-hold', null, InputOption::VALUE_NONE, 'Release a temporary hold')
     ->setCode(function ($input, $output) {
@@ -177,10 +179,14 @@ EOF
                 remove_retention_policy($bucketName);
             } elseif ($input->getOption('lock-retention-policy')) {
                 lock_retention_policy($bucketName);
+            } elseif ($input->getOption('get-retention-policy')) {
+                get_retention_policy($bucketName);
             } elseif ($input->getOption('enable-default-event-based-hold')) {
                 enable_default_event_based_hold($bucketName);
             } elseif ($input->getOption('disable-default-event-based-hold')) {
                 disable_default_event_based_hold($bucketName);
+            } elseif ($input->getOption('get-default-event-based-hold')) {
+                get_default_event_based_hold($bucketName);
             } elseif ($input->getOption('set-retention-policy')) {
                 if ($retentionPeriod = $input->getArgument('retention-period')) {
                     set_retention_policy($bucketName, $retentionPeriod);
