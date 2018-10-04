@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
 namespace Google\Cloud\Samples\Speech;
@@ -28,13 +28,13 @@ use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
-use Google\Cloud\Speech\V1\RecognitionConfig_AudioEncoding;
+use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
  * Example:
  * ```
- * $audoEncoding =  Google\Cloud\Speech\V1\RecognitionConfig_AudioEncoding::WAV
+ * $audoEncoding =  Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding::WAV
  * streaming_recognize('/path/to/audiofile.wav', 'en-US');
  * ```.
  *
@@ -59,7 +59,7 @@ function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHe
         $config->setLanguageCode($languageCode);
         $config->setSampleRateHertz($sampleRateHertz);
         // encoding must be an enum, convert from string
-        $encodingEnum = constant(RecognitionConfig_AudioEncoding::class . '::' . $encoding);
+        $encodingEnum = constant(AudioEncoding::class . '::' . $encoding);
         $config->setEncoding($encodingEnum);
 
         $strmConfig = new StreamingRecognitionConfig();
