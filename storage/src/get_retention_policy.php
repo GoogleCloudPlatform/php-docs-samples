@@ -30,8 +30,6 @@ use Google\Cloud\Storage\StorageClient;
  * Gets a bucket's retention policy.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
- *
- * @return void
  */
 function get_retention_policy($bucketName)
 {

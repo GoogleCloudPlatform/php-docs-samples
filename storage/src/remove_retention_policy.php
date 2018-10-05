@@ -30,8 +30,6 @@ use Google\Cloud\Storage\StorageClient;
  * Removes a bucket's retention policy.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
- *
- * @return void
  */
 function remove_retention_policy($bucketName)
 {

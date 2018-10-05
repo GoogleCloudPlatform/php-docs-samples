@@ -31,8 +31,6 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  * @param string $objectName the name of your Cloud Storage object.
- *
- * @return void
  */
 function set_temporary_hold($bucketName, $objectName)
 {

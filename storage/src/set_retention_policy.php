@@ -31,8 +31,6 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  * @param string $retentionPeriod the number of seconds for your retention period.
- *
- * @return void
  */
 function set_retention_policy($bucketName, $retentionPeriod)
 {
