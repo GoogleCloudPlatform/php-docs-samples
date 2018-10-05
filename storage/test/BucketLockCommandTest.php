@@ -82,7 +82,8 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
         $this->bucket->reload();
         $effectiveTime = $this->bucket->info()['retentionPolicy']['effectiveTime'];
 
-        $this->assertNull($this->bucket->info()['retentionPolicy']['isLocked']);
+        $this->assertFalse(array_key_exists('isLocked',
+            $this->bucket->info()['retentionPolicy']));
         $this->assertNotNull($effectiveTime);
         $this->assertEquals($this->bucket->info()['retentionPolicy']['retentionPeriod'], $retentionPeriod);
 
@@ -106,7 +107,7 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->bucket->reload();
 
-        $this->assertNull($this->bucket->info()['retentionPolicy']);
+        $this->assertFalse(array_key_exists('retentionPolicy', $this->bucket->info()));
 
         $outputString = <<<EOF
 Bucket {$this->bucket->name()} retention period set for $retentionPeriod seconds
@@ -133,7 +134,8 @@ EOF;
         );
         $this->bucket->reload();
 
-        $this->assertNull($this->bucket->info()['retentionPolicy']['isLocked']);
+        $this->assertFalse(array_key_exists('isLocked',
+            $this->bucket->info()['retentionPolicy']));
 
         $this->commandTester->execute(
             [
@@ -221,7 +223,8 @@ EOF;
     public function testEnableDisableEventBasedHold()
     {
         $this->uploadObject();
-        $this->assertNull($this->object->info()['eventBasedHold']);
+
+        $this->assertFalse(array_key_exists('eventBasedHold', $this->object->info()));
 
         $this->commandTester->execute(
             [
@@ -256,7 +259,7 @@ EOF;
     public function testEnableDisableTemporaryHold()
     {
         $this->uploadObject();
-        $this->assertNull($this->object->info()['temporaryHold']);
+        $this->assertFalse(array_key_exists('temporaryHold', $this->object->info()));
 
         $this->commandTester->execute(
             [

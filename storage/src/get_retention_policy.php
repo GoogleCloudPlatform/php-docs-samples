@@ -39,11 +39,12 @@ function get_retention_policy($bucketName)
 
     printf('Retention Policy for ' . $bucketName . PHP_EOL);
     printf('Retention Period: ' . $bucket->info()['retentionPolicy']['retentionPeriod'] . PHP_EOL);
-    if ($bucket->info()['retentionPolicy']['isLocked']) {
+    if (array_key_exists('isLocked', $bucket->info()['retentionPolicy']) &&
+        $bucket->info()['retentionPolicy']['isLocked']) {
         printf('Retention Policy is locked' . PHP_EOL);
     }
     if ($bucket->info()['retentionPolicy']['effectiveTime']) {
-        printf('Effective Time: ' .  $bucket->info()['retentionPolicy']['effectiveTime'] . PHP_EOL);
+        printf('Effective Time: ' . $bucket->info()['retentionPolicy']['effectiveTime'] . PHP_EOL);
     }
 }
 # [END storage_get_retention_policy]

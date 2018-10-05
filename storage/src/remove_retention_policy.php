@@ -37,7 +37,8 @@ function remove_retention_policy($bucketName)
     $bucket = $storage->bucket($bucketName);
     $bucket->reload();
 
-    if ($bucket->info()['retentionPolicy']['isLocked']) {
+    if (array_key_exists('isLocked', $bucket->info()['retentionPolicy']) &&
+        $bucket->info()['retentionPolicy']['isLocked']) {
         printf('Unable to remove retention period as retention policy is locked.' . PHP_EOL);
         return;
     }
