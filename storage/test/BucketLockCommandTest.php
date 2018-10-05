@@ -40,6 +40,8 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        // Sleep to avoid the rate limit for creating/deleting.
+        sleep(5 + rand(2, 4));
         $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('bucket-lock'));
         $this->storage = new StorageClient();
@@ -47,7 +49,7 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        # Append random because tests for multiple PHP versions were running at the same time.
+        // Append random because tests for multiple PHP versions were running at the same time.
         $bucketName = 'php-bucket-lock-' . time() . '-' . rand(1000, 9999);
         $this->bucket = $this->storage->createBucket($bucketName);
     }
