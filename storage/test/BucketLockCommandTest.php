@@ -47,7 +47,8 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No application credentials were found.');
         }
 
-        $bucketName = 'php-bucket-lock-' . time();
+        # Append random because tests for multiple PHP versions were running at the same time.
+        $bucketName = 'php-bucket-lock-' . time() . '-' . rand(1000, 9999);
         $this->bucket = $this->storage->createBucket($bucketName);
     }
 
