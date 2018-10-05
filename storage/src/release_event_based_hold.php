@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Releases an event based hold for an object.
+ * Releases an event-based hold for an object.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  * @param string $objectName the name of your Cloud Storage object.
@@ -40,6 +40,6 @@ function release_event_based_hold($bucketName, $objectName)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->update(['eventBasedHold' => false]);
-    printf('Event based hold was released for %s' . PHP_EOL, $objectName);
+    printf('Event-based hold was released for %s' . PHP_EOL, $objectName);
 }
 # [END storage_release_event_based_hold]

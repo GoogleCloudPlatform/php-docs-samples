@@ -53,7 +53,7 @@ function object_metadata($bucketName, $objectName)
     printf('MD5 Hash: %s' . PHP_EOL, $info['md5Hash']);
     printf('Content-type: %s' . PHP_EOL, $info['contentType']);
     printf("Temporary hold: " . ($info['temporaryHold'] ? "enabled" : "disabled") . PHP_EOL);
-    printf("Event based hold: " . ($info['eventBasedHold'] ? "enabled" : "disabled") . PHP_EOL);
+    printf("Event-based hold: " . ($info['eventBasedHold'] ? "enabled" : "disabled") . PHP_EOL);
     if ($info['retentionExpirationTime']) {
         printf("retentionExpirationTime: " . $info['retentionExpirationTime'] . PHP_EOL);
     }

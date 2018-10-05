@@ -35,7 +35,7 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
     bucket-acl          Manage the ACL for Cloud Storage buckets.
     bucket-default-acl  Manage the default ACL for Cloud Storage buckets.
     bucket-labels       Manage Cloud Storage bucket labels
-    bucket-lock         Manage Cloud Storage bucket retention policies
+    bucket-lock         Manage Cloud Storage retention policies and holds
     buckets             Manage Cloud Storage buckets
     encryption          Upload and download Cloud Storage objects with encryption
     object-acl          Manage the ACL for Cloud Storage objects

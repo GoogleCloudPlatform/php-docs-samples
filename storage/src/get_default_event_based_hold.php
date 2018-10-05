@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Enables a default event based hold for a bucket.
+ * Enables a default event-based hold for a bucket.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  *

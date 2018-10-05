@@ -208,10 +208,10 @@ EOF;
         );
 
         $outputString = <<<EOF
-Default event based hold was enabled for {$this->bucket->name()}
+Default event-based hold was enabled for {$this->bucket->name()}
 Default event-based hold is enabled for {$this->bucket->name()}
-Event based hold was released for {$this->object->name()}
-Default event based hold was disabled for {$this->bucket->name()}
+Event-based hold was released for {$this->object->name()}
+Default event-based hold was disabled for {$this->bucket->name()}
 Default event-based hold is not enabled for {$this->bucket->name()}
 
 EOF;
@@ -246,8 +246,8 @@ EOF;
         $this->assertFalse($this->object->info()['eventBasedHold']);
 
         $outputString = <<<EOF
-Event based hold was set for {$this->object->name()}
-Event based hold was released for {$this->object->name()}
+Event-based hold was set for {$this->object->name()}
+Event-based hold was released for {$this->object->name()}
 
 EOF;
         $this->expectOutputString($outputString);

@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Enables a default event based hold for a bucket.
+ * Enables a default event-based hold for a bucket.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  *
@@ -38,6 +38,6 @@ function enable_default_event_based_hold($bucketName)
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update(['defaultEventBasedHold' => true]);
-    printf('Default event based hold was enabled for %s' . PHP_EOL, $bucketName);
+    printf('Default event-based hold was enabled for %s' . PHP_EOL, $bucketName);
 }
 # [END storage_enable_default_event_based_hold]
