@@ -35,8 +35,7 @@ command:
     ```
 1. Finally, change the root password for your instance:
     ```sh
-    $ gcloud sql users set-password root \
-        --host=% \
+    $ gcloud sql users set-password root % \
         --instance wordpress \
         --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
     ```
