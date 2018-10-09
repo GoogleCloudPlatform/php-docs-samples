@@ -405,7 +405,7 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('update-data-with-dml-structs');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Timothy Grant', $output);
+        $this->assertContains('Updated 1 row(s)', $output);
     }
 
     /**
