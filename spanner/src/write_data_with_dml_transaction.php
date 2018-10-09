@@ -56,7 +56,8 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
         // ensure that the transfer is atomic.
         $results = $t->execute(
             "SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1");
-        $album1budget = $results->rows()->current()['MarketingBudget'];
+        $resultsRow = $results->rows()->current();
+        $album1budget = $resultsRow['MarketingBudget'];
 
         // Transaction will only be committed if this condition still holds at the time of
         // commit. Otherwise it will be aborted and the callable will be rerun by the
@@ -64,7 +65,8 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
         if ($album1budget > 300000) {
             $results = $t->execute(
                 "SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2");
-            $album2budget = $results->rows()->current()['MarketingBudget'];
+            $resultsRow = $results->rows()->current();
+            $album2budget = $resultsRow['MarketingBudget'];
 
             $transferAmount = 200000;
             $album2budget += $transferAmount;
