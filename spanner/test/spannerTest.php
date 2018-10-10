@@ -349,6 +349,107 @@ class spannerTest extends TestCase
         $this->assertContains('SingerId: 9 SongName: Imagination', $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testInsertDataWithDml()
+    {
+        $output = $this->runCommand('insert-data-with-dml');
+        $this->assertContains('Inserted 1 row(s)', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testUpdateDataWithDml()
+    {
+        $output = $this->runCommand('update-data-with-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Updated 1 row(s)', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testDeleteDataWithDml()
+    {
+        $output = $this->runCommand('delete-data-with-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Deleted 1 row(s)', $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testUpdateDataWithDmlTimestamp()
+    {
+        $output = $this->runCommand('update-data-with-dml-timestamp');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Updated 2 row(s)', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testWriteReadWithDml()
+    {
+        $output = $this->runCommand('write-read-with-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Timothy Campbell', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testUpdateDataWithDmlStructs()
+    {
+        $output = $this->runCommand('update-data-with-dml-structs');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Updated 1 row(s)', $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testWriteDataWithDML()
+    {
+        $output = $this->runCommand('write-data-with-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Inserted 4 row(s)', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testUpdateDataWithDmlTransaction()
+    {
+        $output = $this->runCommand('write-data-with-dml-transaction');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Transaction complete', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testUpdateDataWithPartitionedDML()
+    {
+        $output = $this->runCommand('update-data-with-partitioned-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Updated 3 row(s)', $output);
+    }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testDeleteDataWithPartitionedDML()
+    {
+        $output = $this->runCommand('deleted-data-with-partitioned-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Deleted 5 row(s)', $output);
+    }
+
+
+
     private function runCommand($commandName)
     {
         $application = require __DIR__ . '/../spanner.php';
@@ -374,4 +475,5 @@ class spannerTest extends TestCase
             $database->drop();
         }
     }
+
 }
