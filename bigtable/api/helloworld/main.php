@@ -58,14 +58,17 @@ $formattedParent = $tableAdminClient->instanceName(
     $project_id,
     $instance_id
 );
-$table = new Table();
 $columnFamily = new ColumnFamily();
 $columnRule = (new GcRule)->setMaxNumVersions(2);
 $columnFamily->setGcRule($columnRule);
 $columnFamilyId = 'cf1';
-$table->setColumnFamilies([
-    $columnFamilyId => $columnFamily
+
+$table = new Table([
+    'column_families' => [
+        $columnFamilyId => $columnFamily
+    ]
 ]);
+
 $tableName = $tableAdminClient->tableName( $project_id, $instance_id, $table_id );
 if(!$table->exists( $tableName )){
     $tableAdminClient->createTable(
@@ -103,7 +106,9 @@ $key = 'greeting0';
 // Only retrieve the most recent version of the cell.
 $row_filter = (new RowFilter)->setCellsPerColumnLimitFilter(1);
 
-$row = $dataClient->readRow($key, [$row_filter]);
+$row = $dataClient->readRow($key, [
+    'rowFilter' => $row_filter
+]);
 echo $row[$columnFamilyId][$column][0]['value']."\n";
 
 // [END getting_a_row]
