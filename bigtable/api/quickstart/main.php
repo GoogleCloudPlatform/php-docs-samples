@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require '../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\Bigtable\DataClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
