@@ -25,7 +25,7 @@
  * - Set your Google Application Default Credentials.
  *   https://developers.google.com/identity/protocols/application-default-credentials
  */
-require '../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 
 use Google\Cloud\Bigtable\DataClient;
