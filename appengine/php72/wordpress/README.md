@@ -43,7 +43,7 @@ command:
 
 ## Create or Update a WordPress project for App Engine
 
-The `wordpress.php` command provides a convenient way for you to to either create
+The `wordpress.php` command provides a convenient way for you to either create
 a new WordPress project or add the required configuration to an existing one.
 
 ### Setup
