@@ -199,7 +199,7 @@ the production environment.
 [mysql-client]: https://dev.mysql.com/doc/refman/5.7/en/mysql.html
 [composer]: https://getcomposer.org/
 [cloud-console]: https://console.cloud.google.com/
-[cloud-storage-console]: https://www.console.cloud.google.com/storage
+[cloud-storage-console]: https://console.cloud.google.com/storage
 [cloud-sql-api-enable]: https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
 [app-engine-setting]: https://console.cloud.google.com/appengine/settings
 [gcloud-sdk]: https://cloud.google.com/sdk/
