@@ -27,12 +27,13 @@ DLP API from PHP.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run a sample filename followed by its parameters.
+5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+    are provided:
+    ```sh
+    $ php src/create_dataset.php
+    Usage: php src/dlp_inspect_string.php PROJECT_ID STRING
 
-    Example:
-
-    ```
-    $ php src/dlp_inspect_string.php YOUR-PROJECT-ID 'bob@example.com'
+    $ php src/dlp_inspect_string.php your-project-id 'bob@example.com'
     Findings:
       Quote: bob@example.com
       Info type: EMAIL_ADDRESS
