@@ -11,8 +11,6 @@
             "src/inspect_datastore.php",
             "src/inspect_bigquery.php",
             "src/inspect_gcs.php",
-            "src/inspect_file.php",
-            "src/inspect_string.php",
             "src/list_info_types.php",
             "src/deidentify_mask.php",
             "src/deidentify_fpe.php",
