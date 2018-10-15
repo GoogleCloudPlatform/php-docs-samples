@@ -3,16 +3,13 @@
     "type": "project",
     "require": {
         "google/cloud-dlp": "^0.18.1",
-        "google/cloud-pubsub": "^1.11.1",
-        "symfony/console": "^3.3"
+        "google/cloud-pubsub": "^1.11.1"
     },
     "autoload": {
         "files": [
             "src/inspect_datastore.php",
             "src/inspect_bigquery.php",
             "src/inspect_gcs.php",
-            "src/inspect_file.php",
-            "src/inspect_string.php",
             "src/list_info_types.php",
             "src/deidentify_mask.php",
             "src/deidentify_fpe.php",

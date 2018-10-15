@@ -31,9 +31,22 @@ class dlpTest extends TestCase
 
     private static $commandFile = __DIR__ . '/../dlp.php';
 
+    public static function setUpBeforeClass()
+    {
+        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+    }
+
     public function setUp()
     {
         $this->useResourceExhaustedBackoff(5);
+    }
+
+    private function runSnippet($sampleName, $params = [])
+    {
+        $argv = array_merge([0, self::$projectId], $params);
+        ob_start();
+        require __DIR__ . "/../src/$sampleName.php";
+        return ob_get_clean();
     }
 
     public function testInspectDatastore()
@@ -83,46 +96,31 @@ class dlpTest extends TestCase
         $this->assertContains('PERSON_NAME', $output);
     }
 
-    public function testInspectFile()
+    public function testInspectImageFile()
     {
-        // inspect a text file with results
-        $output = $this->runCommand('inspect-file', [
-            'calling-project' => self::$projectId,
-            'path' => __DIR__ . '/data/test.txt'
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-
-        // inspect an image file with results
-        $output = $this->runCommand('inspect-file', [
-            'calling-project' => self::$projectId,
-            'path' => __DIR__ . '/data/test.png'
+        $output = $this->runSnippet('dlp_inspect_image_file', [
+            __DIR__ . '/data/test.png'
         ]);
 
-        $this->assertContains('PHONE_NUMBER', $output);
+        $this->assertContains('Info type: EMAIL_ADDRESS', $output);
+    }
 
-        // inspect a file with no results
-        $output = $this->runCommand('inspect-file', [
-            'calling-project' => self::$projectId,
-            'path' => __DIR__ . '/data/harmless.txt'
+    public function testInspectTextFile()
+    {
+        $output = $this->runSnippet('dlp_inspect_text_file', [
+            __DIR__ . '/data/test.txt'
         ]);
-        $this->assertContains('No findings', $output);
+
+        $this->assertContains('Info type: EMAIL_ADDRESS', $output);
     }
 
     public function testInspectString()
     {
-        // inspect a string with results
-        $output = $this->runCommand('inspect-string', [
-            'calling-project' => self::$projectId,
-            'string' => 'The name Robert is very common.'
+        $output = $this->runSnippet('dlp_inspect_string', [
+            "My name is Gary Smith and my email is gary@example.com"
         ]);
-        $this->assertContains('PERSON_NAME', $output);
 
-        // inspect a string with no results
-        $output = $this->runCommand('inspect-string', [
-            'calling-project' => self::$projectId,
-            'string' => 'The name Zolo is not very common.'
-        ]);
-        $this->assertContains('No findings', $output);
+        $this->assertContains('Info type: EMAIL_ADDRESS', $output);
     }
 
     public function testListInfoTypes()
