@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START dialogflow_list_entity]
+// [START dialogflow_list_entities]
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\EntityTypesClient;
@@ -43,4 +43,4 @@ function entity_list($projectId, $entityTypeId)
 
     $entityTypesClient->close();
 }
-// [END dialogflow_list_entity]
+// [END dialogflow_list_entities]

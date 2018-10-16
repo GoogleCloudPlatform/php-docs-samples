@@ -28,6 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 $inputDefinition = new InputDefinition([
     new InputArgument('audio-file', InputArgument::REQUIRED, 'The audio file to transcribe'),
+    new InputOption('model', null, InputOption::VALUE_REQUIRED, 'The model to use'),
     new InputOption('encoding', null, InputOption::VALUE_REQUIRED,
         'The encoding of the audio file. This is required if the encoding is ' .
         'unable to be determined. '
@@ -109,6 +110,55 @@ EOF
             'encoding' => $input->getOption('encoding'),
             'sampleRateHertz' => $input->getOption('sample-rate'),
         ]);
+    });
+
+$application->add(new Command('transcribe-model'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Transcribe an audio file, with selected model, using Google Cloud Speech API')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command transcribes audio from a file, with the 
+selected model, using the Google Cloud Speech API.
+
+<info>php %command.full_name% audio_file.wav model_name</info>
+
+EOF
+    )
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+        $audioFile = $input->getArgument('audio-file');
+        $modelName = $input->getOption('model');
+        transcribe_model_selection($audioFile, $modelName);
+    });
+
+$application->add(new Command('transcribe-enhanced'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Transcribe an audio file, with an enhanced model, using Google Cloud Speech API')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command transcribes audio from a file, with an enhanced 
+model, using the Google Cloud Speech API.
+
+<info>php %command.full_name% audio_file.wav model_name</info>
+
+EOF
+    )
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+        $path = $input->getArgument('audio-file');
+        transcribe_enhanced_model($path);
+    });
+
+$application->add(new Command('transcribe-punctuation'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Transcribe an audio file, with proper punctuation, using Google Cloud Speech API')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command transcribes audio from a file, with 
+proper punctuation, using the Google Cloud Speech API.
+
+<info>php %command.full_name% audio_file.wav</info>
+
+EOF
+    )
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+        $path = $input->getArgument('audio-file');
+        transcribe_auto_punctuation($path);
     });
 
 $application->add(new Command('transcribe-async'))

@@ -17,46 +17,44 @@
 
 namespace Google\Cloud\Samples\Firestore\Tests;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for Firestore commands.
  */
-class firestoreTest extends \PHPUnit_Framework_TestCase
+class firestoreTest extends TestCase
 {
-    protected static $hasCredentials;
+    use TestTrait;
+    use ExecuteCommandTrait;
+
+    private static $commandFile = __DIR__ . '/../firestore.php';
+    private static $firestoreProjectId;
 
     public static function setUpBeforeClass()
     {
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!getenv('FIRESTORE_PROJECT_ID')) {
-            self::markTestSkipped('FIRESTORE_PROJECT_ID must be set.');
-        }
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::markTestSkipped('No application credentials were found.');
-        }
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
+        self::$firestoreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
     }
 
     public function testInitialize()
     {
-        $output = $this->runCommand('initialize');
+        $output = $this->runFirestoreCommand('initialize');
         $this->assertContains('Created Cloud Firestore client with default project ID.', $output);
     }
 
     public function testInitializeProjectId()
     {
-        $output = $this->runCommand('initialize-project-id');
+        $output = $this->runFirestoreCommand('initialize-project-id');
         $this->assertContains('Created Cloud Firestore client with project ID:', $output);
     }
 
     public function testAddData()
     {
-        $output = $this->runCommand('add-data');
+        $output = $this->runFirestoreCommand('add-data');
         $this->assertContains('Added data to the lovelace document in the users collection.', $output);
         $this->assertContains('Added data to the aturing document in the users collection.', $output);
     }
@@ -66,7 +64,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testRetrieveAllDocuments()
     {
-        $output = $this->runCommand('retrieve-all-documents');
+        $output = $this->runFirestoreCommand('retrieve-all-documents');
         $this->assertContains('User:', $output);
         $this->assertContains('First: Ada', $output);
         $this->assertContains('Last: Lovelace', $output);
@@ -83,7 +81,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetDocument()
     {
-        $output = $this->runCommand('set-document');
+        $output = $this->runFirestoreCommand('set-document');
         $this->assertContains('Set data for the LA document in the cities collection.', $output);
     }
 
@@ -92,7 +90,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDocDataTypes()
     {
-        $output = $this->runCommand('add-doc-data-types');
+        $output = $this->runFirestoreCommand('add-doc-data-types');
         $this->assertContains('Set multiple data-type data for the one document in the data collection.', $output);
     }
 
@@ -101,7 +99,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetRequiresId()
     {
-        $output = $this->runCommand('set-requires-id');
+        $output = $this->runFirestoreCommand('set-requires-id');
         $this->assertContains('Added document with ID: new-city-id', $output);
     }
 
@@ -110,7 +108,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDocDataWithAutoId()
     {
-        $output = $this->runCommand('add-doc-data-with-auto-id');
+        $output = $this->runFirestoreCommand('add-doc-data-with-auto-id');
         $this->assertContains('Added document with ID:', $output);
     }
 
@@ -119,13 +117,13 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDocDataAfterAutoId()
     {
-        $output = $this->runCommand('add-doc-data-after-auto-id');
+        $output = $this->runFirestoreCommand('add-doc-data-after-auto-id');
         $this->assertContains('Added document with ID:', $output);
     }
 
     public function testQueryCreateExamples()
     {
-        $output = $this->runCommand('query-create-examples');
+        $output = $this->runFirestoreCommand('query-create-examples');
         $this->assertContains('Added example cities data to the cities collection.', $output);
     }
 
@@ -134,7 +132,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateQueryState()
     {
-        $output = $this->runCommand('create-query-state');
+        $output = $this->runFirestoreCommand('create-query-state');
         $this->assertContains('Document SF returned by query state=CA', $output);
         $this->assertContains('Document LA returned by query state=CA', $output);
     }
@@ -144,7 +142,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateQueryCapital()
     {
-        $output = $this->runCommand('create-query-capital');
+        $output = $this->runFirestoreCommand('create-query-capital');
         $this->assertContains('Document BJ returned by query capital=true', $output);
         $this->assertContains('Document DC returned by query capital=true', $output);
         $this->assertContains('Document TOK returned by query capital=true', $output);
@@ -155,7 +153,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimpleQueries()
     {
-        $output = $this->runCommand('simple-queries');
+        $output = $this->runFirestoreCommand('simple-queries');
         $this->assertContains('Document LA returned by query state=CA', $output);
         $this->assertContains('Document SF returned by query state=CA', $output);
         $this->assertContains('Document BJ returned by query population>1000000', $output);
@@ -180,7 +178,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testChainedQuery()
     {
-        $output = $this->runCommand('chained-query');
+        $output = $this->runFirestoreCommand('chained-query');
         $this->assertContains('Document SF returned by query state=CA and name=San Francisco', $output);
     }
 
@@ -189,7 +187,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testCompositeIndexChainedQuery()
     {
-        $output = $this->runCommand('composite-index-chained-query');
+        $output = $this->runFirestoreCommand('composite-index-chained-query');
         $this->assertContains('Document SF returned by query state=CA and population<1000000', $output);
     }
 
@@ -198,7 +196,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeQuery()
     {
-        $output = $this->runCommand('range-query');
+        $output = $this->runFirestoreCommand('range-query');
         $this->assertContains('Document LA returned by query CA<=state<=IN', $output);
         $this->assertContains('Document SF returned by query CA<=state<=IN', $output);
     }
@@ -208,7 +206,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRangeQuery()
     {
-        $output = $this->runCommand('invalid-range-query');
+        $output = $this->runFirestoreCommand('invalid-range-query');
     }
 
     /**
@@ -216,7 +214,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteDocument()
     {
-        $output = $this->runCommand('delete-document');
+        $output = $this->runFirestoreCommand('delete-document');
         $this->assertContains('Deleted the DC document in the cities collection.', $output);
     }
 
@@ -225,7 +223,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteField()
     {
-        $output = $this->runCommand('delete-field');
+        $output = $this->runFirestoreCommand('delete-field');
         $this->assertContains('Deleted the capital field from the BJ document in the cities collection.', $output);
     }
 
@@ -234,7 +232,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteCollection()
     {
-        $output = $this->runCommand('delete-collection');
+        $output = $this->runFirestoreCommand('delete-collection');
         $this->assertContains('Deleting document BJ', $output);
         $this->assertContains('Deleting document LA', $output);
         $this->assertContains('Deleting document TOK', $output);
@@ -243,7 +241,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrieveCreateExamples()
     {
-        $output = $this->runCommand('retrieve-create-examples');
+        $output = $this->runFirestoreCommand('retrieve-create-examples');
         $this->assertContains('Added example cities data to the cities collection.', $output);
     }
 
@@ -252,7 +250,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDocument()
     {
-        $output = $this->runCommand('get-document');
+        $output = $this->runFirestoreCommand('get-document');
         $this->assertContains('Document data:', $output);
         $this->assertContains('[population] => 860000', $output);
         $this->assertContains('[state] => CA', $output);
@@ -266,7 +264,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetMultipleDocs()
     {
-        $output = $this->runCommand('get-multiple-docs');
+        $output = $this->runFirestoreCommand('get-multiple-docs');
         $this->assertContains('Document data for document DC:', $output);
         $this->assertContains('Document data for document TOK:', $output);
         $this->assertContains('[name] => Washington D.C.', $output);
@@ -278,7 +276,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAllDocs()
     {
-        $output = $this->runCommand('get-all-docs');
+        $output = $this->runFirestoreCommand('get-all-docs');
         $this->assertContains('Document data for document LA:', $output);
         $this->assertContains('[name] => Los Angeles', $output);
     }
@@ -288,8 +286,8 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testListSubcollections()
     {
-        $this->runCommand('add-subcollection');
-        $output = $this->runCommand('list-subcollections');
+        $this->runFirestoreCommand('add-subcollection');
+        $output = $this->runFirestoreCommand('list-subcollections');
         $this->assertContains('Found subcollection with id: neighborhoods', $output);
     }
 
@@ -298,7 +296,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testOrderByNameLimitQuery()
     {
-        $output = $this->runCommand('order-by-name-limit-query');
+        $output = $this->runFirestoreCommand('order-by-name-limit-query');
         $this->assertContains('Document BJ returned by order by name with limit query', $output);
         $this->assertContains('Document LA returned by order by name with limit query', $output);
         $this->assertContains('Document SF returned by order by name with limit query', $output);
@@ -309,7 +307,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testOrderByNameDescLimitQuery()
     {
-        $output = $this->runCommand('order-by-name-desc-limit-query');
+        $output = $this->runFirestoreCommand('order-by-name-desc-limit-query');
         $this->assertContains('Document DC returned by order by name descending with limit query', $output);
         $this->assertContains('Document TOK returned by order by name descending with limit query', $output);
         $this->assertContains('Document SF returned by order by name descending with limit query', $output);
@@ -320,7 +318,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testOrderByStateAndPopulationQuery()
     {
-        $output = $this->runCommand('order-by-state-and-population-query');
+        $output = $this->runFirestoreCommand('order-by-state-and-population-query');
         $this->assertContains('Document LA returned by order by state and descending population query', $output);
         $this->assertContains('Document SF returned by order by state and descending population query', $output);
         $this->assertContains('Document BJ returned by order by state and descending population query', $output);
@@ -333,7 +331,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testWhereOrderByLimitQuery()
     {
-        $output = $this->runCommand('where-order-by-limit-query');
+        $output = $this->runFirestoreCommand('where-order-by-limit-query');
         $this->assertContains('Document LA returned by where order by limit query', $output);
         $this->assertContains('Document TOK returned by where order by limit query', $output);
     }
@@ -343,7 +341,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeOrderByQuery()
     {
-        $output = $this->runCommand('range-order-by-query');
+        $output = $this->runFirestoreCommand('range-order-by-query');
         $this->assertContains('Document LA returned by range with order by query', $output);
         $this->assertContains('Document TOK returned by range with order by query', $output);
         $this->assertContains('Document BJ returned by range with order by query', $output);
@@ -354,27 +352,27 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRangeOrderByQuery()
     {
-        $output = $this->runCommand('invalid-range-order-by-query');
+        $output = $this->runFirestoreCommand('invalid-range-order-by-query');
     }
 
     public function testDocumentRef()
     {
-        $output = $this->runCommand('document-ref');
+        $output = $this->runFirestoreCommand('document-ref');
     }
 
     public function testCollectionRef()
     {
-        $output = $this->runCommand('collection-ref');
+        $output = $this->runFirestoreCommand('collection-ref');
     }
 
     public function testDocumentPathRef()
     {
-        $output = $this->runCommand('document-path-ref');
+        $output = $this->runFirestoreCommand('document-path-ref');
     }
 
     public function testSubcollectionRef()
     {
-        $output = $this->runCommand('subcollection-ref');
+        $output = $this->runFirestoreCommand('subcollection-ref');
     }
 
     /**
@@ -382,7 +380,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateDoc()
     {
-        $output = $this->runCommand('update-doc');
+        $output = $this->runFirestoreCommand('update-doc');
         $this->assertContains('Updated the capital field of the DC document in the cities collection.', $output);
     }
 
@@ -391,7 +389,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetDocumentMerge()
     {
-        $output = $this->runCommand('set-document-merge');
+        $output = $this->runFirestoreCommand('set-document-merge');
         $this->assertContains('Set document data by merging it into the existing BJ document in the cities collection.', $output);
     }
 
@@ -400,7 +398,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateNestedFields()
     {
-        $output = $this->runCommand('update-nested-fields');
+        $output = $this->runFirestoreCommand('update-nested-fields');
         $this->assertContains('Updated the age and favorite color fields of the frank document in the users collection.', $output);
     }
 
@@ -409,7 +407,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateServerTimestamp()
     {
-        $output = $this->runCommand('update-server-timestamp');
+        $output = $this->runFirestoreCommand('update-server-timestamp');
         $this->assertContains('Updated the timestamp field of the some-id document in the objects collection.', $output);
     }
 
@@ -418,7 +416,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunSimpleTransaction()
     {
-        $output = $this->runCommand('run-simple-transaction');
+        $output = $this->runFirestoreCommand('run-simple-transaction');
         $this->assertContains('Ran a simple transaction to update the population field in the SF document in the cities collection.', $output);
     }
 
@@ -427,7 +425,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnInfoTransaction()
     {
-        $output = $this->runCommand('return-info-transaction');
+        $output = $this->runFirestoreCommand('return-info-transaction');
         $this->assertContains('Population updated successfully.', $output);
     }
 
@@ -436,7 +434,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testBatchWrite()
     {
-        $output = $this->runCommand('batch-write');
+        $output = $this->runFirestoreCommand('batch-write');
         $this->assertContains('Batch write successfully completed.', $output);
     }
 
@@ -445,7 +443,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartAtFieldQueryCursor()
     {
-        $output = $this->runCommand('start-at-field-query-cursor');
+        $output = $this->runFirestoreCommand('start-at-field-query-cursor');
         $this->assertContains('Document SF returned by start at population 1000000 field query cursor.', $output);
         $this->assertContains('Document TOK returned by start at population 1000000 field query cursor.', $output);
         $this->assertContains('Document BJ returned by start at population 1000000 field query cursor.', $output);
@@ -456,7 +454,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testEndAtFieldQueryCursor()
     {
-        $output = $this->runCommand('end-at-field-query-cursor');
+        $output = $this->runFirestoreCommand('end-at-field-query-cursor');
         $this->assertContains('Document DC returned by end at population 1000000 field query cursor.', $output);
         $this->assertContains('Document SF returned by end at population 1000000 field query cursor.', $output);
     }
@@ -478,7 +476,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testPaginatedQueryCursor()
     {
-        $output = $this->runCommand('paginated-query-cursor');
+        $output = $this->runFirestoreCommand('paginated-query-cursor');
         $this->assertContains('Document BJ returned by paginated query cursor.', $output);
     }
 
@@ -487,26 +485,18 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testMultipleCursorConditions()
     {
-        $output = $this->runCommand('multiple-cursor-conditions');
+        $output = $this->runFirestoreCommand('multiple-cursor-conditions');
     }
 
     public function testDeleteTestCollections()
     {
-        $output = $this->runCommand('delete-test-collections');
+        $output = $this->runFirestoreCommand('delete-test-collections');
     }
 
-    private function runCommand($commandName)
+    private function runFirestoreCommand($commandName)
     {
-        $application = require __DIR__ . '/../firestore.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute([
-            'project' => getenv('FIRESTORE_PROJECT_ID'),
-        ], [
-            'interactive' => false
+        return $this->runCommand($commandName, [
+            'project' => self::$firestoreProjectId
         ]);
-        return ob_get_clean();
     }
 }

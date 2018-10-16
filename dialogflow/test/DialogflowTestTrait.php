@@ -17,27 +17,19 @@
 
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Core\ExponentialBackoff;
 use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 
 trait DialogflowTestTrait
 {
-    private static $projectId;
-    private static $backoff;
+    use TestTrait;
+    use ExponentialBackoffTrait;
 
-    /** @beforeClass */
-    public static function setupDialogFlowTest()
+    /** @before */
+    public function setupDialogFlowTest()
     {
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable');
-        }
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS environment variable');
-        }
-        self::$backoff = new ExponentialBackoff(5, function ($exception) {
-            return $exception instanceof ApiException
-                && $exception->getCode() == Code::RESOURCE_EXHAUSTED;
-        });
+        $this->useResourceExhaustedBackoff(6);
     }
 
     private function runCommand($commandName, array $args = [])

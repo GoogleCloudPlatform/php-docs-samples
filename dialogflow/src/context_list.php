@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START dialogflow_list_context]
+// [START dialogflow_list_contexts]
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\ContextsClient;
@@ -36,4 +36,4 @@ function context_list($projectId, $sessionId)
 
     $contextsClient->close();
 }
-// [END dialogflow_list_context]
+// [END dialogflow_list_contexts]

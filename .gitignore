@@ -2,11 +2,11 @@
 *~
 *.iml
 composer.phar
+composer.lock
 vendor/
 credentials.*
 **/vendor/
 **/build/
 .php_cs.cache
 .vscode/
-iap/composer.lock
 .kokoro/secrets.sh

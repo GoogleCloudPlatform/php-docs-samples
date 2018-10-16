@@ -29,7 +29,6 @@ use Google_Service_CloudTasks_AppEngineHttpRequest;
 use Google_Service_CloudTasks_Task;
 use Google_Service_CloudTasks_CreateTaskRequest;
 
-# [START create_task]
 /**
  * Create a task for a given App Engine queue
  * ```
@@ -56,8 +55,8 @@ function create_task($projectId, $queueId, $location, $payload = 'helloworld', $
     // Create an App Engine HTTP Request object.
     $appEngineHttpRequest = new Google_Service_CloudTasks_AppEngineHttpRequest();
     $appEngineHttpRequest->setHttpMethod('POST');
-    $appEngineHttpRequest->setPayload(base64_encode($payload));
-    $appEngineHttpRequest->setRelativeUrl('/example_task_handler');
+    $appEngineHttpRequest->setBody(base64_encode($payload));
+    $appEngineHttpRequest->setRelativeUri('/example_task_handler');
 
     // Create a Cloud Task object.
     $task = new Google_Service_CloudTasks_Task();
@@ -89,4 +88,3 @@ function create_task($projectId, $queueId, $location, $payload = 'helloworld', $
     );
     printf('Created task %s' . PHP_EOL, $response['name']);
 }
-# [END create_task]

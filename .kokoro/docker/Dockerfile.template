@@ -38,4 +38,3 @@ RUN gcloud config set app/promote_by_default false && \
     gcloud -q components update
 
 ENTRYPOINT /bin/bash
-

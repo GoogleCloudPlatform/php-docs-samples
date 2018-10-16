@@ -125,7 +125,7 @@ function update(DatastoreClient $datastore)
     $key = $datastore->key('Task', 'sampleTask');
     $task = $transaction->lookup($key);
     $task['priority'] = 5;
-    $transaction->upsert($task);
+    $transaction->update($task);
     $transaction->commit();
     // [END datastore_update]
     return $task;

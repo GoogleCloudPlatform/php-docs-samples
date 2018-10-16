@@ -30,7 +30,7 @@ class intentTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$displayName = 'fake_display_name_for_testing_' . time();
+        self::$displayName = 'fake_display' . time();
     }
 
     public function testCreateIntent()

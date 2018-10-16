@@ -31,7 +31,7 @@ class FunctionsTest extends TestCase
             $this->markTestSkipped('No project ID');
         }
 
-        $pubsub = require __DIR__ . '/../src/functions/pubsub_client.php';
+        $pubsub = require __DIR__ . '/../src/pubsub_client.php';
 
         $this->assertInstanceOf(PubSubClient::class, $pubsub);
     }

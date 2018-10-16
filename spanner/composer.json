@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.6",
+        "google/cloud-spanner": "^1.11",
         "symfony/console": "^3.2"
     },
     "require-dev": {
@@ -33,7 +33,17 @@
             "src/query_data_with_struct.php",
             "src/query_data_with_array_of_struct.php",
             "src/query_data_with_struct_field.php",
-            "src/query_data_with_nested_struct_field.php"
+            "src/query_data_with_nested_struct_field.php",
+            "src/insert_data_with_dml.php",
+            "src/update_data_with_dml.php",
+            "src/delete_data_with_dml.php",
+            "src/update_data_with_dml_timestamp.php",
+            "src/write_read_with_dml.php",
+            "src/update_data_with_dml_structs.php",
+            "src/write_data_with_dml.php",
+            "src/write_data_with_dml_transaction.php",
+            "src/update_data_with_partitioned_dml.php",
+            "src/delete_data_with_partitioned_dml.php"
         ]
     }
 }

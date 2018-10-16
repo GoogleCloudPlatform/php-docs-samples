@@ -25,9 +25,9 @@ namespace Google\Cloud\Samples\Tasks;
 
 use Google_Client;
 use Google_Service_CloudTasks;
-use Google_Service_CloudTasks_PullMessage;
 use Google_Service_CloudTasks_Task;
 use Google_Service_CloudTasks_CreateTaskRequest;
+use Google_Service_CloudTasks_AppEngineHttpRequest;
 
 # [START create_task]
 /**
@@ -52,13 +52,13 @@ function create_task($projectId, $queueId, $location, $payload = 'helloworld')
     // Create the Cloud Tasks client.
     $tasksClient = new Google_Service_CloudTasks($client);
 
-    // Create a Pull Message Object.
-    $pullMessage = new Google_Service_CloudTasks_PullMessage();
-    $pullMessage->setPayload(base64_encode($payload));
+    // Create an App Engine Http Request Object.
+    $httpRequest = new Google_Service_CloudTasks_AppEngineHttpRequest();
+    $httpRequest->setBody(base64_encode($payload));
 
     // Create a Cloud Task object.
     $task = new Google_Service_CloudTasks_Task();
-    $task->setPullMessage($pullMessage);
+    $task->setAppEngineHttpRequest($httpRequest);
 
     // Create a Create Task Request object.
     $createTaskRequest = new Google_Service_CloudTasks_CreateTaskRequest();

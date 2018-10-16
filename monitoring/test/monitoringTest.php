@@ -18,38 +18,41 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class monitoringTest extends \PHPUnit_Framework_TestCase
+class monitoringTest extends TestCase
 {
     const RETRY_COUNT = 5;
 
+    use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
+    use TestTrait;
 
-    private static $projectId;
+    private static $commandFile = __DIR__ . '/../monitoring.php';
     private static $metricId = 'custom.googleapis.com/stores/daily_sales';
     private static $uptimeConfigName;
     private static $minutesAgo = 720;
 
-    public static function setUpBeforeClass()
+    // Make retry function longer because creating a metric takes a while
+    private function retrySleepFunc($attempts)
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::markTestSkipped('No application credentials were found');
-        }
-        if (!self::$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            self::markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
+        sleep(pow(2, $attempts+2));
     }
 
     public function testCreateMetric()
     {
-        $output = $this->runCommand('create-metric');
+        $output = $this->runCommand('create-metric', [
+            'project_id' => self::$projectId,
+        ]);
         $this->assertContains('Created a metric', $output);
         $this->assertContains(self::$metricId, $output);
 
         // ensure the metric gets created
         $this->runEventuallyConsistentTest(function () {
             $output = $this->runCommand('get-descriptor', [
+                'project_id' => self::$projectId,
                 'metric_id' => self::$metricId,
             ]);
             $this->assertContains(self::$metricId, $output);
@@ -58,7 +61,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateUptimeCheck()
     {
-        $output = $this->runCommand('create-uptime-check');
+        $output = $this->runCommand('create-uptime-check', [
+            'project_id' => self::$projectId,
+        ]);
         $this->assertContains('Created an uptime check', $output);
 
         $matched = preg_match('/Created an uptime check: (.*)/', $output, $matches);
@@ -72,6 +77,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
         $this->runEventuallyConsistentTest(function () {
             $escapedName = addcslashes(self::$uptimeConfigName, '/');
             $output = $this->runCommand('get-uptime-check', [
+                'project_id' => self::$projectId,
                 'config_name' => self::$uptimeConfigName,
             ]);
             $this->assertContains($escapedName, $output);
@@ -82,7 +88,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testListUptimeChecks()
     {
         $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('list-uptime-checks');
+            $output = $this->runCommand('list-uptime-checks', [
+                'project_id' => self::$projectId,
+            ]);
             $this->assertContains(self::$uptimeConfigName, $output);
         });
     }
@@ -91,6 +99,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testDeleteUptimeCheck()
     {
         $output = $this->runCommand('delete-uptime-check', [
+            'project_id' => self::$projectId,
             'config_name' => self::$uptimeConfigName,
         ]);
         $this->assertContains('Deleted an uptime check', $output);
@@ -100,7 +109,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testListUptimeCheckIPs()
     {
         $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('list-uptime-check-ips');
+            $output = $this->runCommand('list-uptime-check-ips', [
+                'project_id' => self::$projectId,
+            ]);
             $this->assertContains('ip address: ', $output);
         });
     }
@@ -110,6 +121,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     {
         $this->runEventuallyConsistentTest(function () {
             $output = $this->runCommand('get-descriptor', [
+                'project_id' => self::$projectId,
                 'metric_id' => self::$metricId,
             ]);
             $this->assertContains(self::$metricId, $output);
@@ -120,7 +132,9 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testListDescriptors()
     {
         $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('list-descriptors');
+            $output = $this->runCommand('list-descriptors', [
+                'project_id' => self::$projectId,
+            ]);
             $this->assertContains(self::$metricId, $output);
         });
     }
@@ -128,18 +142,23 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     /** @depends testListDescriptors */
     public function testDeleteMetric()
     {
-        $output = $this->runCommand('delete-metric', [
-            'metric_id' => self::$metricId,
-        ]);
-        $this->assertContains('Deleted a metric', $output);
-        $this->assertContains(self::$metricId, $output);
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('delete-metric', [
+                'project_id' => self::$projectId,
+                'metric_id' => self::$metricId,
+            ]);
+            $this->assertContains('Deleted a metric', $output);
+            $this->assertContains(self::$metricId, $output);
+        }, self::RETRY_COUNT, true);
     }
 
     public function testWriteTimeseries()
     {
         // Catch all exceptions as this method occasionally throws an Internal error.
         $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('write-timeseries');
+            $output = $this->runCommand('write-timeseries', [
+                'project_id' => self::$projectId,
+            ]);
             $this->assertContains('Done writing time series data', $output);
         }, self::RETRY_COUNT, true);
     }
@@ -148,6 +167,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testReadTimeseriesAlign()
     {
         $output = $this->runCommand('read-timeseries-align', [
+            'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
         $this->assertContains('Now', $output);
@@ -157,6 +177,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testReadTimeseriesFields()
     {
         $output = $this->runCommand('read-timeseries-fields', [
+            'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
         $this->assertContains('Found data points', $output);
@@ -167,6 +188,7 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testReadTimeseriesReduce()
     {
         $output = $this->runCommand('read-timeseries-reduce', [
+            'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
         $this->assertContains('Last 10 minutes', $output);
@@ -176,30 +198,10 @@ class monitoringTest extends \PHPUnit_Framework_TestCase
     public function testReadTimeseriesSimple()
     {
         $output = $this->runCommand('read-timeseries-simple', [
+            'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
         $this->assertContains('CPU utilization:', $output);
         $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
-    }
-
-    private function runCommand($commandName, $args = [])
-    {
-        $application = require __DIR__ . '/../monitoring.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        try {
-            $commandTester->execute(
-                ['project_id' => self::$projectId] + $args,
-                ['interactive' => false]);
-        } catch (\Google\GAX\ApiException $e) {
-            // if the command throws an error cast it as a string (as this would be the output)
-            $application->renderException($e, $commandTester->getOutput());
-            return $commandTester->getDisplay();
-        } finally {
-            $output = ob_get_clean();
-        }
-        return $output;
     }
 }

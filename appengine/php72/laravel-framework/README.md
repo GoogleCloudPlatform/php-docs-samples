@@ -66,7 +66,7 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
 
 ## Set up Database Sessions with Cloud SQL
 
-**Note**: This section only works with Laravel 5.4.16. To use earlier versions of
+**Note**: This section only works with Laravel 5.4.16 and above. To use earlier versions of
 Laravel, you need to manually add the `DB_SOCKET` value to
 `config/database.php` (see [#4178](https://github.com/laravel/laravel/pull/4179/files))
 

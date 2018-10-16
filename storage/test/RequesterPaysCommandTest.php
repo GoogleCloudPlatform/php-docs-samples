@@ -19,119 +19,65 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\RequesterPaysCommand;
 use Google\Cloud\Storage\StorageClient;
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for RequesterPaysCommand.
  */
-class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
+class RequesterPaysCommandTest extends TestCase
 {
-    protected static $hasCredentials;
-    protected $commandTester;
-    protected $storage;
+    use TestTrait;
+    use ExecuteCommandTrait;
 
-    public static function setUpBeforeClass()
-    {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
+    private static $bucketName;
+    private static $commandFile = __DIR__ . '/../storage.php';
 
-    public function setUp()
+    /** @beforeClass */
+    public static function getBucketName()
     {
-        $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('requester-pays'));
-        $this->storage = new StorageClient();
+        self::$bucketName = self::requireEnv('GOOGLE_REQUESTER_PAYS_STORAGE_BUCKET');
     }
 
     public function testEnableRequesterPays()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
-        }
+        $output = $this->runCommand('requester-pays', [
+            'project' => self::$projectId,
+            'bucket' => self::$bucketName,
+            '--enable' => true,
+        ]);
 
-        $this->commandTester->execute(
-            [
-                'project' => $projectId,
-                'bucket' => $bucketName,
-                '--enable' => true,
-            ],
-            ['interactive' => false]
-        );
-
-        $this->expectOutputRegex("/Requester pays has been enabled/");
+        $this->assertContains("Requester pays has been enabled", $output);
     }
 
     /** @depends testEnableRequesterPays */
     public function testDisableRequesterPays()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
-        }
+        $output = $this->runCommand('requester-pays', [
+            'project' => self::$projectId,
+            'bucket' => self::$bucketName,
+            '--disable' => true,
+        ]);
 
-        $this->commandTester->execute(
-            [
-                'project' => $projectId,
-                'bucket' => $bucketName,
-                '--disable' => true,
-            ],
-            ['interactive' => false]
-        );
-
-        $this->expectOutputRegex("/Requester pays has been disabled/");
+        $this->assertContains("Requester pays has been disabled", $output);
     }
 
     /** depends testDisableRequesterPays */
     public function testGetRequesterPaysStatus()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
-        }
+        $output = $this->runCommand('requester-pays', [
+            'project' => self::$projectId,
+            'bucket' => self::$bucketName,
+            '--check-status' => true,
+        ]);
 
-        $this->commandTester->execute(
-            [
-                'project' => $projectId,
-                'bucket' => $bucketName,
-                '--check-status' => true,
-            ],
-            ['interactive' => false]
-        );
-
-        $this->expectOutputRegex("/Requester Pays is disabled/");
+        $this->assertContains("Requester Pays is disabled", $output);
     }
 
     public function testDownloadFileRequesterPays()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_BUCKET.');
-        }
-        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
-            $this->markTestSkipped('Please set GOOGLE_STORAGE_OBJECT.');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Please set GOOGLE_PROJECT_ID.');
-        }
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
         // Download to a temp file
         $destination = implode(DIRECTORY_SEPARATOR, [
@@ -139,15 +85,12 @@ class RequesterPaysCommandTest extends \PHPUnit_Framework_TestCase
             basename($objectName)
         ]);
 
-        $this->commandTester->execute(
-            [
-                'project' => $projectId,
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                'download-to' => $destination
-            ],
-            ['interactive' => false]
-        );
-        $this->expectOutputRegex("/using requester-pays requests/");
+        $output = $this->runCommand('requester-pays', [
+            'project' => self::$projectId,
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            'download-to' => $destination,
+        ]);
+        $this->assertContains("using requester-pays requests", $output);
     }
 }

@@ -1,21 +1,14 @@
 # Google Cloud Tasks Pull Queue Samples
 
-Sample command-line program for interacting with the Google Cloud Tasks API
-using pull queues.
+## THIS SAMPLE IS CURRENTLY INCOMPLETE. PLEASE REFER TO [THE DOCUMENTATION](https://cloud.google.com/tasks/docs/)
 
-Pull queues let you add tasks to a queue, then programatically remove and
-interact with them. Tasks can be added or processed in any environment,
-such as on Google App Engine or Google Compute Engine.
+Sample command-line program for interacting with the Google Cloud Tasks API.
 
 `tasks.php` is a simple command-line program to demonstrate listing queues,
  creating tasks, and pulling and acknowledging tasks.
 
 `src/create_task.php` is a simple function to create pull queue tasks.
 
-`src/pull_task.php` is a simple function to retrieve a pull queue task.
-
-`src/acknowledge_task.php` is a simple function to acknowledge successful
-completion of a task to remove it from the pull queue.
 
 ## Setup:
 
@@ -39,7 +32,7 @@ completion of a task to remove it from the pull queue.
 
 To create a queue using the Cloud SDK, use the following gcloud command:
 
-    gcloud alpha tasks queues create-pull-queue my-pull-queue
+    gcloud beta tasks queues create-app-engine-queue my-appengine-queue
 
 ## Running the Samples
 
@@ -54,7 +47,7 @@ First, your project ID:
 Then the queue ID, as specified at queue creation time. Queue IDs already
 created can be listed with `gcloud alpha tasks queues list`.
 
-    export QUEUE_ID=my-pull-queue
+    export QUEUE_ID=my-appengine-queue
 
 And finally the location ID, which can be discovered with
 `gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
@@ -67,9 +60,3 @@ location is "us-central1").
 Create a task for a queue:
 
     php tasks.php create-task $PROJECT_ID $QUEUE_ID $LOCATION_ID --payload=hello
-
-Pull and acknowledge a task:
-
-    php tasks.php pull-and-acknowledge-task $PROJECT_ID $QUEUE_ID $LOCATION_ID
-
-Note that usually, there would be a processing step in between pulling a task and acknowledging it.

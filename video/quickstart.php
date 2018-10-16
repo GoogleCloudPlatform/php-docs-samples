@@ -26,7 +26,10 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
-$options = ['inputUri'=>'gs://demomaker/cat.mp4', 'features'=>[Feature::LABEL_DETECTION]];
+$options = [
+    'inputUri' => 'gs://demomaker/cat.mp4',
+    'features' => [Feature::LABEL_DETECTION]
+];
 $operation = $video->annotateVideo($options);
 
 # Wait for the request to complete.
