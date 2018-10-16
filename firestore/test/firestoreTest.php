@@ -168,6 +168,16 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testQueryCreateExamples
      */
+    public function testArrayMembership()
+    {
+        $output = $this->runCommand('array-membership');
+        $this->assertContains('Document LA returned by query regions array-contains west_coast', $output);
+        $this->assertContains('Document SF returned by query regions array-contains west_coast', $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testChainedQuery()
     {
         $output = $this->runCommand('chained-query');
@@ -272,7 +282,7 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Document data for document LA:', $output);
         $this->assertContains('[name] => Los Angeles', $output);
     }
-    
+
     /**
      * @depends testRetrieveCreateExamples
      */
@@ -453,6 +463,18 @@ class firestoreTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testEndAtFieldQueryCursor
+     */
+    public function testStartAtSnapshotQueryCursor()
+    {
+        $output = $this->runCommand('start-at-snapshot-query-cursor');
+        $this->assertContains('Document SF returned by end at SF snapshot query cursor.', $output);
+        $this->assertContains('Document LA returned by end at SF snapshot query cursor.', $output);
+        $this->assertContains('Document TOK returned by end at SF snapshot query cursor.', $output);
+        $this->assertContains('Document BJ returned by end at SF snapshot query cursor.', $output);
+    }
+
+    /**
+     * @depends testStartAtSnapshotQueryCursor
      */
     public function testPaginatedQueryCursor()
     {

@@ -252,6 +252,23 @@ EOF
     })
 );
 
+// Array Membership command
+$application->add((new Command('array-membership'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Create queries using an array-contains where clause.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates queries using an array-contains where clause using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        array_membership($projectId);
+    })
+);
+
 // Chained Query command
 $application->add((new Command('chained-query'))
     ->setDefinition($inputDefinition)
@@ -805,6 +822,23 @@ EOF
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         end_at_field_query_cursor($projectId);
+    })
+);
+
+// Start At Snapshot Query Cursor command
+$application->add((new Command('start-at-snapshot-query-cursor'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Define snapshot start point for a query.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command defines a snapshot start point for a query using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        start_at_snapshot_query_cursor($projectId);
     })
 );
 

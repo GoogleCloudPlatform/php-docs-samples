@@ -44,35 +44,40 @@ function query_create_examples($projectId)
         'state' => 'CA',
         'country' => 'USA',
         'capital' => false,
-        'population' => 860000
+        'population' => 860000,
+        'regions' => ['west_coast', 'norcal']
     ]);
     $citiesRef->document('LA')->set([
         'name' => 'Los Angeles',
         'state' => 'CA',
         'country' => 'USA',
         'capital' => false,
-        'population' => 3900000
+        'population' => 3900000,
+        'regions' => ['west_coast', 'socal']
     ]);
     $citiesRef->document('DC')->set([
         'name' => 'Washington D.C.',
         'state' => null,
         'country' => 'USA',
         'capital' => true,
-        'population' => 680000
+        'population' => 680000,
+        'regions' => ['east_coast']
     ]);
     $citiesRef->document('TOK')->set([
         'name' => 'Tokyo',
         'state' => null,
         'country' => 'Japan',
         'capital' => true,
-        'population' => 9000000
+        'population' => 9000000,
+        'regions' => ['kanto', 'honshu']
     ]);
     $citiesRef->document('BJ')->set([
         'name' => 'Beijing',
         'state' => null,
         'country' => 'China',
         'capital' => true,
-        'population' => 21500000
+        'population' => 21500000,
+        'regions' => ['jingjinji', 'hebei']
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
     # [END fs_query_create_examples]
