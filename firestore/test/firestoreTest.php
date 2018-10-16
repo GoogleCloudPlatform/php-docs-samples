@@ -168,7 +168,7 @@ class firestoreTest extends TestCase
      */
     public function testArrayMembership()
     {
-        $output = $this->runCommand('array-membership');
+        $output = $this->runFirestoreCommand('array-membership');
         $this->assertContains('Document LA returned by query regions array-contains west_coast', $output);
         $this->assertContains('Document SF returned by query regions array-contains west_coast', $output);
     }
@@ -464,7 +464,7 @@ class firestoreTest extends TestCase
      */
     public function testStartAtSnapshotQueryCursor()
     {
-        $output = $this->runCommand('start-at-snapshot-query-cursor');
+        $output = $this->runFirestoreCommand('start-at-snapshot-query-cursor');
         $this->assertContains('Document SF returned by end at SF snapshot query cursor.', $output);
         $this->assertContains('Document LA returned by end at SF snapshot query cursor.', $output);
         $this->assertContains('Document TOK returned by end at SF snapshot query cursor.', $output);
