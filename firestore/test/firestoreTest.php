@@ -466,7 +466,6 @@ class firestoreTest extends TestCase
     {
         $output = $this->runFirestoreCommand('start-at-snapshot-query-cursor');
         $this->assertContains('Document SF returned by start at SF snapshot query cursor.', $output);
-        $this->assertContains('Document LA returned by start at SF snapshot query cursor.', $output);
         $this->assertContains('Document TOK returned by start at SF snapshot query cursor.', $output);
         $this->assertContains('Document BJ returned by start at SF snapshot query cursor.', $output);
     }
