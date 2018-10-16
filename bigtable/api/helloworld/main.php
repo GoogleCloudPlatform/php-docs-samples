@@ -38,6 +38,20 @@ use Google\Cloud\Bigtable\RowMutation;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Cloud\Bigtable\V2\RowFilter;
 
+class TableExist extends Table
+{
+    public static function exist($table){
+        $tableAdminClient = new BigtableTableAdminClient();
+        try {
+            $tableAdminClient->getTable( $table , [ 'view'=> View::NAME_ONLY ] );
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 
 $project_id  = getenv('PROJECT_ID');
 $instance_id = 'php-instance-test';
@@ -70,7 +84,7 @@ $table = new Table([
 ]);
 
 $tableName = $tableAdminClient->tableName( $project_id, $instance_id, $table_id );
-if(!$table->exists( $tableName )){
+if(!TableExist::exists( $tableName )){
     $tableAdminClient->createTable(
         $formattedParent,
         $table_id,
