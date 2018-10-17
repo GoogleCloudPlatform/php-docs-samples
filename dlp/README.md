@@ -27,7 +27,8 @@ DLP API from PHP.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+5.  Execute the snippets in the [src/](src/) directory by running
+    `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
     are provided:
     ```sh
     $ php src/create_dataset.php
