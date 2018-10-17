@@ -117,7 +117,7 @@ class dlpTest extends TestCase
     public function testInspectString()
     {
         $output = $this->runSnippet('dlp_inspect_string', [
-            "My name is Gary Smith and my email is gary@somedomain.com"
+            "My name is Gary Smith and my email is gary@example.com"
         ]);
 
         $this->assertContains('Info type: EMAIL_ADDRESS', $output);
