@@ -127,6 +127,7 @@ To run the Cloud Firestore Samples:
       start-at-snapshot-query-cursor       Define snapshot start point for a query.
       subcollection-ref                    Get a reference to a subcollection document.
       update-doc                           Update a document.
+      update-doc-array                     Update a document array field.
       update-nested-fields                 Update fields in nested data.
       update-server-timestamp              Update field with server timestamp.
       where-order-by-limit-query           Combine where with order by and limit in a query.

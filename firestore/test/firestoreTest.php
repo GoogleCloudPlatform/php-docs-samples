@@ -385,6 +385,15 @@ class firestoreTest extends TestCase
     }
 
     /**
+     * @depends testRetrieveCreateExamples
+     */
+    public function testUpdateDocArray()
+    {
+        $output = $this->runFirestoreCommand('update-doc-array');
+        $this->assertContains('Updated the regions field of the DC document in the cities collection.', $output);
+    }
+
+    /**
      * @depends testUpdateDoc
      */
     public function testSetDocumentMerge()

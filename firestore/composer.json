@@ -54,6 +54,7 @@
             "src/start_at_snapshot_query_cursor.php",
             "src/subcollection_ref.php",
             "src/update_doc.php",
+            "src/update_doc_array.php",
             "src/update_nested_fields.php",
             "src/update_server_timestamp.php",
             "src/where_order_by_limit_query.php"

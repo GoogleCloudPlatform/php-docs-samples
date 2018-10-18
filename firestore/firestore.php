@@ -689,6 +689,23 @@ EOF
     })
 );
 
+// Update Document Array command
+$application->add((new Command('update-doc-array'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Update a document array field.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command updates a document array field using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        update_doc_array($projectId);
+    })
+);
+
 // Set Document Merge command
 $application->add((new Command('set-document-merge'))
     ->setDefinition($inputDefinition)
