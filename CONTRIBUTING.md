@@ -27,6 +27,9 @@ accept your pull requests.
    Contributor License Agreement (see details above).
 1. Fork the desired repo, develop and test your code changes.
 
+   Install dependencies via [Composer](http://getcomposer.org/doc/00-intro.md).
+   Run `composer install` (if composer is installed globally).
+
    To run the tests, first set up [application default
    credentials](https://cloud.google.com/docs/authentication/getting-started)
    by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the
