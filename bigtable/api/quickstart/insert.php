@@ -35,14 +35,14 @@ $dataClient = new DataClient(
 function time_in_microseconds(){
     $mt = microtime(true);
     $mt = sprintf('%.03f',$mt);
-    return $mt*1000000;
+    return (float)$mt*1000000;
 }
 
 $insertRows = [
     'rk5' => [
         'cf1' => [
             'cq5' => [
-                'value' => $argv[1],
+                'value' => "Value5",
                 'timeStamp' => time_in_microseconds()
             ]
         ]
