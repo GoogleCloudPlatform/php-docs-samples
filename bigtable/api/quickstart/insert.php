@@ -28,22 +28,50 @@ $instance_id = 'quickstart-instance-php'; # instance-id
 $table_id    = 'bigtable-php-table'; # my-table
 $project_id  = getenv('PROJECT_ID');
 
-
-// [START bigtable_quickstart]
-// Connect to an existing table with an existing instance.
 $dataClient = new DataClient(
-	$instance_id,
-	$table_id
+    $instance_id,
+    $table_id
 );
-$key = 'rk1';
-// Read a row from my-table using a row key
-$row = $dataClient->readRow($key);
-
-$column_family_id = 'cf1';
-$column_id = 'cq1';
-// Get the Value from the Row, using the column_family_id and column_id
-
-$value = $row[$column_family_id][$column_id][0]['value'];
-
-printf("Row key: %s\nData: %s\n",$key,$value);
-// [END bigtable_quickstart]
+$insertRows = [
+    'rk1' => [
+        'cf1' => [
+            'cq1' => [
+                'value' => 'value1',
+                'timeStamp' => 5000
+            ]
+        ]
+    ],
+    'rk2' => [
+        'cf1' => [
+            'cq2' => [
+                'value' => 'value2',
+                'timeStamp' => 5000
+            ]
+        ]
+    ],
+    'rk3' => [
+        'cf1' => [
+            'cq3' => [
+                'value' => 'value3',
+                'timeStamp' => 5000
+            ]
+        ]
+    ],
+    'rk4' => [
+        'cf1' => [
+            'cq4' => [
+                'value' => 'value4',
+                'timeStamp' => 5000
+            ]
+        ]
+    ],
+    'rk5' => [
+        'cf1' => [
+            'cq5' => [
+                'value' => 'value5',
+                'timeStamp' => 5000
+            ]
+        ]
+    ]
+];
+$dataClient->upsert($insertRows);

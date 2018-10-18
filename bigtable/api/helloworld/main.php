@@ -26,9 +26,12 @@
  *   https://developers.google.com/identity/protocols/application-default-credentials
  */
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/dataclient/ChunkFormatter.php';
+require __DIR__ . '/dataclient/RowMutation.php';
+require __DIR__ . '/dataclient/DataClient.php';
 
 
-use Google\Cloud\Bigtable\DataClient;
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
@@ -37,10 +40,11 @@ use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\RowMutation;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Cloud\Bigtable\V2\RowFilter;
+use Google\ApiCore\ApiException;
 
 class TableExist extends Table
 {
-    public static function exist($table){
+    public static function exists($table){
         $tableAdminClient = new BigtableTableAdminClient();
         try {
             $tableAdminClient->getTable( $table , [ 'view'=> View::NAME_ONLY ] );
@@ -54,7 +58,7 @@ class TableExist extends Table
 }
 
 $project_id  = getenv('PROJECT_ID');
-$instance_id = 'php-instance-test';
+$instance_id = 'quickstart-instance-php';
 $table_id    = 'bigtable-php-table';
 $location_id = 'us-east1-b';
 
@@ -151,5 +155,5 @@ $formattedName = $tableAdminClient->tableName(
     $table_id
 );
 
-$tableAdminClient->deleteTable($formattedName);
+//$tableAdminClient->deleteTable($formattedName);
 // [END deleting_a_table]
