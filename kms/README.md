@@ -14,16 +14,16 @@ These samples show how to use the [Google Cloud KMS API]
 1.  **Enable APIs** - [Enable the KMS API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)
     and create a new project or select an existing project.
 2.  **Activate your Credentials** - If you do not already have an active set of credentials, create and download a [JSON Service Account key](https://pantheon.corp.google.com/apis/credentials/serviceaccountkey). Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` as the path to the downloaded JSON file.
-4.  **Clone the repo** and cd into this directory
+3.  **Clone the repo** and cd into this directory
 
     ```
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
     $ cd php-docs-samples/kms
-```
-5.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
+    ```
+4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-6.  Run `php kms.php`. The following commands are available:
+5.  Run `php kms.php`. The following commands are available:
 
     ```sh
     encryption    Manage encryption for KMS
@@ -31,8 +31,8 @@ These samples show how to use the [Google Cloud KMS API]
     key           Manage keys for KMS
     keyring       Manage keyrings for KMS
     version       Manage key versions for KMS
-```
-7. Run `php kms.php COMMAND --help` to print information about the usage of each command.
+    ```
+6. Run `php kms.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes
 
