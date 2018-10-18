@@ -35,6 +35,7 @@ use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\ByteContentItem;
+use Google\Cloud\Dlp\V2\ByteContentItem\BytesType;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'YOUR_PROJECT_ID';
@@ -45,7 +46,7 @@ $dlp = new DlpServiceClient();
 
 // Get the bytes of the file
 $fileBytes = (new ByteContentItem())
-    ->setType(5)
+    ->setType(BytesType::TEXT_UTF8)
     ->setData(file_get_contents($filepath));
 
 // Construct request
