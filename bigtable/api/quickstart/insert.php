@@ -32,44 +32,18 @@ $dataClient = new DataClient(
     $instance_id,
     $table_id
 );
+function time_in_microseconds(){
+    $mt = microtime(true);
+    $mt = sprintf('%.03f',$mt);
+    return $mt*1000000;
+}
+
 $insertRows = [
-    'rk1' => [
-        'cf1' => [
-            'cq1' => [
-                'value' => 'value1',
-                'timeStamp' => 5000
-            ]
-        ]
-    ],
-    'rk2' => [
-        'cf1' => [
-            'cq2' => [
-                'value' => 'value2',
-                'timeStamp' => 5000
-            ]
-        ]
-    ],
-    'rk3' => [
-        'cf1' => [
-            'cq3' => [
-                'value' => 'value3',
-                'timeStamp' => 5000
-            ]
-        ]
-    ],
-    'rk4' => [
-        'cf1' => [
-            'cq4' => [
-                'value' => 'value4',
-                'timeStamp' => 5000
-            ]
-        ]
-    ],
     'rk5' => [
         'cf1' => [
             'cq5' => [
-                'value' => 'value5',
-                'timeStamp' => 5000
+                'value' => $argv[1],
+                'timeStamp' => time_in_microseconds()
             ]
         ]
     ]
