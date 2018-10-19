@@ -83,6 +83,7 @@ To run the Cloud Firestore Samples:
       add-doc-data-types                   Set document data with different data types.
       add-doc-data-with-auto-id            Add document data with an auto-generated ID.
       add-subcollection                    Add a subcollection by creating a new document.
+      array-membership                     Create queries using an an array-contains where clause.
       batch-write                          Batch write.
       chained-query                        Create a query with chained clauses.
       collection-ref                       Get a collection reference.
@@ -123,8 +124,10 @@ To run the Cloud Firestore Samples:
       set-requires-id                      Set document data with a given document ID.
       simple-queries                       Create queries using single where clauses.
       start-at-field-query-cursor          Define field start point for a query.
+      start-at-snapshot-query-cursor       Define snapshot start point for a query.
       subcollection-ref                    Get a reference to a subcollection document.
       update-doc                           Update a document.
+      update-doc-array                     Update a document array field.
       update-nested-fields                 Update fields in nested data.
       update-server-timestamp              Update field with server timestamp.
       where-order-by-limit-query           Combine where with order by and limit in a query.
