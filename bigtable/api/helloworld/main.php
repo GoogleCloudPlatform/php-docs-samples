@@ -42,24 +42,10 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Cloud\Bigtable\V2\RowFilter;
 use Google\ApiCore\ApiException;
 
-class TableExist extends Table
-{
-    public static function exists($table){
-        $tableAdminClient = new BigtableTableAdminClient();
-        try {
-            $tableAdminClient->getTable( $table , [ 'view'=> View::NAME_ONLY ] );
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                return false;
-            }
-        }
-        return true;
-    }
-}
 
-$project_id  = getenv('PROJECT_ID');
+$project_id = getenv('PROJECT_ID');
 $instance_id = 'quickstart-instance-php';
-$table_id    = 'bigtable-php-table';
+$table_id = 'bigtable-php-table';
 $location_id = 'us-east1-b';
 
 
@@ -68,7 +54,7 @@ $location_id = 'us-east1-b';
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 // Create the DataClient
-$dataClient = new DataClient( $instance_id, $table_id);
+$dataClient = new DataClient($instance_id, $table_id);
 // [END connecting_to_bigtable]
 
 // [START creating_a_table]
@@ -87,13 +73,17 @@ $table = new Table([
     ]
 ]);
 
-$tableName = $tableAdminClient->tableName( $project_id, $instance_id, $table_id );
-if(!TableExist::exists( $tableName )){
-    $tableAdminClient->createTable(
-        $formattedParent,
-        $table_id,
-        $table
-    );
+$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+try {
+    $tableAdminClient->getTable($table, ['view' => View::NAME_ONLY]);
+} catch (ApiException $e) {
+    if ($e->getStatus() === 'NOT_FOUND') {
+        $tableAdminClient->createTable(
+            $formattedParent,
+            $table_id,
+            $table
+        );
+    }
 }
 // [END creating_a_table]
 
@@ -106,14 +96,14 @@ $greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello PHP!'];
 $entries = [];
 $column = 'greeting';
 
-foreach($greetings as $i=>$value){
-    $row_key = sprintf('greeting%s',$i);
+foreach ($greetings as $i => $value) {
+    $row_key = sprintf('greeting%s', $i);
 
-    $rowMutation = new RowMutation( $row_key );
-    $rowMutation->upsert($columnFamilyId, $column, $value, time()*1000 );
+    $rowMutation = new RowMutation($row_key);
+    $rowMutation->upsert($columnFamilyId, $column, $value, time() * 1000);
     $entries[] = $rowMutation;
 }
-$dataClient->mutateRows( $entries );
+$dataClient->mutateRows($entries);
 // [END writing_rows]
 
 // [START getting_a_row]
@@ -127,12 +117,12 @@ $row_filter = (new RowFilter)->setCellsPerColumnLimitFilter(1);
 $row = $dataClient->readRow($key, [
     'rowFilter' => $row_filter
 ]);
-echo $row[$columnFamilyId][$column][0]['value']."\n";
+echo $row[$columnFamilyId][$column][0]['value'] . "\n";
 
 // [END getting_a_row]
 
 // [START scanning_all_rows]
-echo 'Scanning for all greetings:'."\n";
+echo 'Scanning for all greetings:' . "\n";
 
 $partial_rows = $dataClient->readRows(
     [
@@ -140,14 +130,14 @@ $partial_rows = $dataClient->readRows(
     ]
 )->readAll();
 
-foreach($partial_rows as $row){
-    echo $row[$columnFamilyId][$column][0]['value']."\n";
+foreach ($partial_rows as $row) {
+    echo $row[$columnFamilyId][$column][0]['value'] . "\n";
 }
 // [END scanning_all_rows]
 
 // [START deleting_a_table]
 
-echo sprintf('Deleting the %s table.',$table_id)."\n";
+echo sprintf('Deleting the %s table.', $table_id) . "\n";
 
 $formattedName = $tableAdminClient->tableName(
     $project_id,
