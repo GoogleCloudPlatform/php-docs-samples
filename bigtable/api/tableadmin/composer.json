@@ -1,0 +1,6 @@
+{
+    "require": {
+        "google/cloud": "^0.82.0",
+        "phpunit/phpunit": "^7.4"
+    }
+}

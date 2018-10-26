@@ -1,0 +1,5 @@
+{
+    "require": {
+        "google/cloud": "^0.82.0"
+    }
+}
