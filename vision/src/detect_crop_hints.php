@@ -27,9 +27,9 @@ function detect_crop_hints($path)
     $vision = new VisionClient();
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $vision->image($image,['crop_hints']);
-    $annotations = $vision->annotate($response);
+    $imagePhotoResource = file_get_contents($path);
+    $image = $vision->image($imagePhotoResource,['CROP_HINTS']);
+    $annotations = $vision->annotate($image);
 
     # print the crop hints from the annotation
     if ($annotations) {
@@ -39,7 +39,8 @@ function detect_crop_hints($path)
             $vertices = $hint->boundingPoly()['vertices'];
             $bounds = [];
             foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+                print(gettype($vertex));
+                $bounds[] = sprintf('(%d,%d)', $vertex['x'], $vertex['y']);
             }
             print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         }
