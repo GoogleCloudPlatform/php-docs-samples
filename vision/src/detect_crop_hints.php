@@ -18,36 +18,33 @@
 // [START vision_crop_hint_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\VisionClient;
 
 // $path = 'path/to/your/image.jpg'
 
 function detect_crop_hints($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
-    
+    $vision = new VisionClient();
+
     # annotate the image
     $image = file_get_contents($path);
-    $response = $imageAnnotator->cropHintsDetection($image);
-    $annotations = $response->getCropHintsAnnotation();
+    $response = $vision->image($image,['crop_hints']);
+    $annotations = $vision->annotate($response);
 
     # print the crop hints from the annotation
     if ($annotations) {
         print("Crop hints:" . PHP_EOL);
-        foreach ($annotations->getCropHints() as $hint) {
+        foreach ($annotations->cropHints() as $key => $hint) {
             # get bounds
-            $vertices = $hint->getBoundingPoly()->getVertices();
+            $vertices = $hint->boundingPoly()['vertices'];
             $bounds = [];
             foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-                    $vertex->getY());
+                $bounds[] = sprintf('(%d,%d)', $vertex['x'], $vertex['y']);
             }
-            print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+            print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         }
     } else {
         print('No crop hints' . PHP_EOL);
     }
-    
-    $imageAnnotator->close();
 }
 // [END vision_crop_hint_detection]
