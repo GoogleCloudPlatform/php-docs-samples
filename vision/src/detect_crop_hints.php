@@ -39,8 +39,9 @@ function detect_crop_hints($path)
             $vertices = $hint->boundingPoly()['vertices'];
             $bounds = [];
             foreach ($vertices as $vertex) {                
-                $bounds[] = sprintf('(%d,%d)', $vertex['x'], $vertex['y']);
+                $bounds[] = sprintf('(%d,%d)', $vertex['x'] ?? 0, $vertex['y'] ?? 0);
             }
+            unset($vertex);
             print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         }
     } else {
