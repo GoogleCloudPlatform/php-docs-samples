@@ -18,27 +18,28 @@
 // [START vision_fulltext_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\VisionClient;
 
-// $path = 'gs://path/to/your/image.jpg'
+// $path = 'path/to/your/image.jpg'
 
 function detect_document_text_gcs($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
+    $vision = new VisionClient();
 
     # annotate the image
-    $response = $imageAnnotator->documentTextDetection($path);
-    $annotation = $response->getFullTextAnnotation();
+    $image = $vision->image($path,['DOCUMENT_TEXT_DETECTION']);
+    $annotations = $vision->annotate($image);
+    $document = $annotations->fullText();
 
     # print out detailed and structured information about document text
-    if ($annotation) {
-        foreach ($annotation->getPages() as $page) {
-            foreach ($page->getBlocks() as $block) {
+    if ($document) {
+        foreach ($document->pages() as $page) {
+            foreach ($page['blocks'] as $block) {
                 $block_text = '';
-                foreach ($block->getParagraphs() as $paragraph) {
-                    foreach ($paragraph->getWords() as $word) {
-                        foreach ($word->getSymbols() as $symbol) {
-                            $block_text .= $symbol->getText();
+                foreach ($block['paragraphs'] as $paragraph) {
+                    foreach ($paragraph['words'] as $word) {
+                        foreach ($word['symbols'] as $symbol) {
+                            $block_text .= $symbol['text'];
                         }
                         $block_text .= ' ';
                     }
@@ -46,24 +47,28 @@ function detect_document_text_gcs($path)
                 }
                 printf('Block content: %s', $block_text);
                 printf('Block confidence: %f' . PHP_EOL,
-                    $block->getConfidence());
+                    $block['confidence']);
 
                 # get bounds
-                $vertices = $block->getBoundingBox()->getVertices();
+                $vertices = $block['boundingBox']['vertices'];
                 $bounds = [];
                 foreach ($vertices as $vertex) {
-                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-                        $vertex->getY());
+                    # get (x, y) coordinates if available.
+                    $x = $y = 0;
+                    if (isset($vertex['x'])) {
+                        $x = $vertex['x'];
+                    }
+                    if (isset($vertex['y'])) {
+                        $y = $vertex['y'];
+                    }
+                    $bounds[] = sprintf('(%d,%d)', $x, $y);
                 }
                 print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-
                 print(PHP_EOL);
             }
         }
     } else {
         print('No text found' . PHP_EOL);
     }
-
-    $imageAnnotator->close();
 }
 // [END vision_fulltext_detection_gcs]
