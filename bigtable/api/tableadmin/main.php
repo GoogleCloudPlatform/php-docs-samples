@@ -58,14 +58,14 @@ use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\Protobuf\Duration;
 
 
-
-function run_table_operations($project_id, $instance_id, $table_id){
+function run_table_operations($project_id, $instance_id, $table_id)
+{
     /**
      * Check Instance exists.
      * * Creates a Production instance with default Cluster.
      * * List instances in a project.
      *   List clusters in an instance.
-     * 
+     *
      * @param string $project_id Project id of the client.
      * @param string $instance_id Instance id of the client.
      */
@@ -74,61 +74,61 @@ function run_table_operations($project_id, $instance_id, $table_id){
     $tableAdminClient = new BigtableTableAdminClient();
 
     $formattedInstance = $instanceAdminClient->instanceName($project_id, $instance_id);
-    $formattedTable = $tableAdminClient->tableName($project_id, $instance_id,$table_id);
+    $formattedTable = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
     // Check whether table exists in an instance.
     // Create table if it does not exists.
     $table = new Table();
-    printf('Checking if table %s exists'.PHP_EOL, $table_id);
+    printf('Checking if table %s exists' . PHP_EOL, $table_id);
 
     try {
-        $tableAdminClient->getTable( $table , [ 'view'=> View::NAME_ONLY ] );
-        printf('Table %s alredy exists'.PHP_EOL, $table_id);
+        $tableAdminClient->getTable($table, ['view' => View::NAME_ONLY]);
+        printf('Table %s alredy exists' . PHP_EOL, $table_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf('Creating the %s table'.PHP_EOL, $table_id);
+            printf('Creating the %s table' . PHP_EOL, $table_id);
 
             $tableAdminClient->createtable(
                 $formattedInstance,
                 $table_id,
                 $table
             );
-            printf('Created table %s'.PHP_EOL, $table_id);
+            printf('Created table %s' . PHP_EOL, $table_id);
         }
     }
     // [START bigtable_list_tables]
-    $tables = iterator_to_array( $tableAdminClient->listTables($formattedInstance)->iterateAllElements() );
-    if($tables != []){
-        foreach($tables as $table){
-            print($table->getName().PHP_EOL);
+    $tables = iterator_to_array($tableAdminClient->listTables($formattedInstance)->iterateAllElements());
+    if ($tables != []) {
+        foreach ($tables as $table) {
+            print($table->getName() . PHP_EOL);
         }
     } else {
-        printf('No table exists  in current project...'.PHP_EOL);
+        print('No table exists  in current project...' . PHP_EOL);
     }
     // [END bigtable_list_tables]
 
     // [START bigtable_create_family_gc_max_age]
-    printf('Creating column family cf1 with MaxAge GC Rule...'.PHP_EOL);
+    print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
     // Create a column family with GC policy : maximum age
     // where age = current time minus cell timestamp
-    
+
     $columnFamily1 = new ColumnFamily();
     $duration = new Duration();
-    $duration->setSeconds( 3600 * 24 * 5 );
+    $duration->setSeconds(3600 * 24 * 5);
     $MaxAgeRule = (new GcRule)->setMaxAge($duration);
     $columnFamily1->setGcRule($MaxAgeRule);
-    
+
     $columnModification = new Modification();
     $columnModification->setId('cf1');
     $columnModification->setCreate($columnFamily1);
-    $tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification] );
-    printf('Created column family cf1 with MaxAge GC Rule.'.PHP_EOL);
-    
+    $tableAdminClient->modifyColumnFamilies($formattedTable, [$columnModification]);
+    print('Created column family cf1 with MaxAge GC Rule.' . PHP_EOL);
+
     // [END bigtable_list_tables]
 
     // [START bigtable_create_family_gc_max_age]
-    
-    printf('Creating column family cf2 with max versions GC rule...'.PHP_EOL);
+
+    print('Creating column family cf2 with max versions GC rule...' . PHP_EOL);
     $columnFamily2 = new ColumnFamily();
     $maxVersionRule = (new GcRule)->setMaxNumVersions(2);
     $columnFamily2->setGCRule($maxVersionRule);
@@ -136,70 +136,70 @@ function run_table_operations($project_id, $instance_id, $table_id){
     $columnModification = new Modification();
     $columnModification->setId('cf2');
     $columnModification->setCreate($columnFamily2);
-    $tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($formattedTable, [$columnModification]);
 
-    printf('Created column family cf2 with Max Versions GC Rule.'.PHP_EOL);
-    
+    print('Created column family cf2 with Max Versions GC Rule.' . PHP_EOL);
+
     // [END bigtable_create_family_gc_max_versions]
 
     // [START bigtable_create_family_gc_union]
-    
-    printf('Creating column family cf3 with union GC rule...'.PHP_EOL);
+
+    print('Creating column family cf3 with union GC rule...' . PHP_EOL);
     // Create a column family with GC policy to drop data that matches
     // at least one condition.
     // Define a GC rule to drop cells older than 5 days or not the
     // most recent version
     $columnFamily3 = new ColumnFamily();
-    
+
     $rule_union = new GcRuleUnion();
     $rule_union_array = [
         (new GcRule)->setMaxNumVersions(2),
-        (new GcRule)->setMaxAge( (new Duration())->setSeconds( 3600 * 24 * 5 ) )
+        (new GcRule)->setMaxAge((new Duration())->setSeconds(3600 * 24 * 5))
     ];
     $rule_union->setRules($rule_union_array);
     $union = new GcRule();
     $union->setUnion($rule_union);
-    
+
     $columnFamily3->setGCRule($union);
-    
+
     $columnModification = new Modification();
     $columnModification->setId('cf3');
     $columnModification->setCreate($columnFamily3);
-    $tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification]);
-    
-    print('Created column family cf3 with Union GC rule'.PHP_EOL);
-    
+    $tableAdminClient->modifyColumnFamilies($formattedTable, [$columnModification]);
+
+    print('Created column family cf3 with Union GC rule' . PHP_EOL);
+
     // [END bigtable_create_family_gc_union]
 
     // [START bigtable_create_family_gc_intersection]
-    
-    printf('Creating column family cf4 with Intersection GC rule...'.PHP_EOL);
+
+    print('Creating column family cf4 with Intersection GC rule...' . PHP_EOL);
     $columnFamily4 = new ColumnFamily();
 
     $intersection_rule = new GcRuleIntersection();
     $intersection_array = [
-        (new GcRule)->setMaxAge((new Duration())->setSeconds( 3600 * 24 * 5 )),
+        (new GcRule)->setMaxAge((new Duration())->setSeconds(3600 * 24 * 5)),
         (new GcRule)->setMaxNumVersions(2)
     ];
     $intersection_rule->setRules($intersection_array);
 
     $intersection = new GcRule();
     $intersection->setIntersection($intersection_rule);
-    
+
     $columnFamily4->setGCRule($intersection);
 
     $columnModification = new Modification();
     $columnModification->setId('cf4');
     $columnModification->setCreate($columnFamily4);
-    $tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($formattedTable, [$columnModification]);
 
-    print('Created column family cf4 with Union GC rule'.PHP_EOL);
-    
+    print('Created column family cf4 with Union GC rule' . PHP_EOL);
+
     // [END bigtable_create_family_gc_intersection]
 
     // [START bigtable_create_family_gc_nested]
-    
-    printf('Creating column family cf5 with a Nested GC rule...'.PHP_EOL);
+
+    print('Creating column family cf5 with a Nested GC rule...' . PHP_EOL);
     // Create a column family with nested GC policies.
     // Create a nested GC rule:
     // Drop cells that are either older than the 10 recent versions
@@ -211,7 +211,7 @@ function run_table_operations($project_id, $instance_id, $table_id){
 
     $rule2Intersection = new GcRuleIntersection();
     $rule2Duration1 = new Duration();
-    $rule2Duration1->setSeconds( 3600 * 24 * 30 );
+    $rule2Duration1->setSeconds(3600 * 24 * 30);
     $rule2Array = [
         (new GcRule())->setMaxAge($rule2Duration1),
         (new GcRule())->setMaxNumVersions(2)
@@ -220,7 +220,7 @@ function run_table_operations($project_id, $instance_id, $table_id){
     $rule2 = new GcRule();
     $rule2->setIntersection($rule2Intersection);
 
-    $nested_rule  = new GcRuleUnion();
+    $nested_rule = new GcRuleUnion();
     $nested_rule->setRules([
         $rule1,
         $rule2
@@ -232,84 +232,87 @@ function run_table_operations($project_id, $instance_id, $table_id){
     $columnModification = new Modification();
     $columnModification->setId('cf5');
     $columnModification->setCreate($columnFamily5);
-    $tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($formattedTable, [$columnModification]);
 
-    printf('Created column family cf5 with a Nested GC rule.'.PHP_EOL);
-    
+    print('Created column family cf5 with a Nested GC rule.' . PHP_EOL);
+
     // [END bigtable_create_family_gc_nested]
-    
+
     // [START bigtable_list_column_families]
     $table = $tableAdminClient->getTable($formattedTable);
     $columnFamilies = iterator_to_array($table->getColumnFamilies()->getIterator());
-    foreach( $columnFamilies as $k => $columnFamily){
-        printf('Column Family: %s'.PHP_EOL, $k );
-        print('GC Rule:'.PHP_EOL);
-        printf('%s'.PHP_EOL,$columnFamily->serializeToJsonString());
+    foreach ($columnFamilies as $k => $columnFamily) {
+        printf('Column Family: %s' . PHP_EOL, $k);
+        print('GC Rule:' . PHP_EOL);
+        printf('%s' . PHP_EOL, $columnFamily->serializeToJsonString());
     }
     // [END bigtable_list_column_families]
-    printf('Print column family cf1 GC rule before update...'.PHP_EOL);
-    printf('Column Family: cf1'.PHP_EOL);
-    printf('%s'.PHP_EOL,$columnFamily1->serializeToJsonString());
+    print('Print column family cf1 GC rule before update...' . PHP_EOL);
+    print('Column Family: cf1' . PHP_EOL);
+    print($columnFamily1->serializeToJsonString() . PHP_EOL);
     // [START bigtable_update_gc_rule]
-    printf('Updating column family cf1 GC rule...'.PHP_EOL);
+    print('Updating column family cf1 GC rule...' . PHP_EOL);
     $columnFamily1->setGcRule((new GcRule)->setMaxNumVersions(1));
     // Update the column family cf1 to update the GC rule
     $columnModification = new Modification();
     $columnModification->setId('cf1');
     $columnModification->setUpdate($columnFamily1);
     //$tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification] );
-    printf('Print column family cf1 GC rule after update...'.PHP_EOL);
-    printf('Column Family: cf1');
-    printf('%s'.PHP_EOL,$columnFamily1->serializeToJsonString());
+    print('Print column family cf1 GC rule after update...' . PHP_EOL);
+    print('Column Family: cf1');
+    printf('%s' . PHP_EOL, $columnFamily1->serializeToJsonString());
     // [END bigtable_update_gc_rule]
 
     // [START bigtable_delete_family]
-    printf('Delete a column family cf2...'.PHP_EOL);
+    print('Delete a column family cf2...' . PHP_EOL);
     // Delete a column family
     $columnModification = new Modification();
     $columnModification->setId('cf2');
     $columnModification->setDrop(true);
-    $tableAdminClient->modifyColumnFamilies($formattedTable , [$columnModification]);
-    printf('Column family cf2 deleted successfully.'.PHP_EOL);
+    $tableAdminClient->modifyColumnFamilies($formattedTable, [$columnModification]);
+    print('Column family cf2 deleted successfully.' . PHP_EOL);
     // [END bigtable_delete_family]
 
 }
-function delete_table($project_id, $instance_id, $table_id){
+
+function delete_table($project_id, $instance_id, $table_id)
+{
     /**
      * Check Instance exists.
      * * Creates a Production instance with default Cluster.
      * * List instances in a project.
      *   List clusters in an instance.
-     * 
+     *
      * @param string $project_id Project id of the client.
      * @param string $instance_id Instance id of the client.
      */
 
     $tableAdminClient = new BigtableTableAdminClient();
-    
-    $formattedTable = $tableAdminClient->tableName($project_id, $instance_id,$table_id);
+
+    $formattedTable = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
     // [START bigtable_delete_table]
     // Delete the entire table
 
-    printf('Checking if table %s exists...'.PHP_EOL,$table_id);
+    printf('Checking if table %s exists...' . PHP_EOL, $table_id);
 
     try {
-        printf('Table %s exists.'.PHP_EOL, $table_id);
-        printf('Deleting %s table.'.PHP_EOL, $table_id);
+        printf('Table %s exists.' . PHP_EOL, $table_id);
+        printf('Deleting %s table.' . PHP_EOL, $table_id);
         $tableAdminClient->deleteTable($formattedTable);
-        printf('Deleted %s table.'.PHP_EOL, $table_id);
+        printf('Deleted %s table.' . PHP_EOL, $table_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf('Table %s does not exists'.PHP_EOL, $table_id);
+            printf('Table %s does not exists' . PHP_EOL, $table_id);
         }
     }
     // [END bigtable_delete_table]
 }
-if(basename(__FILE__) == $_SERVER['SCRIPT_FILENAME']){
-    $project_id = (isset($argv[0]))?$argv[0]:getenv('PROJECT_ID');
-    $instance_id = (isset($argv[1]))?$argv[0]:'quickstart-instance-php';
-    $table_id = (isset($argv[2]))?$argv[1]:'quickstart-instance-table';
+
+if (basename(__FILE__) == $_SERVER['SCRIPT_FILENAME']) {
+    $project_id = (isset($argv[0])) ? $argv[0] : getenv('PROJECT_ID');
+    $instance_id = (isset($argv[1])) ? $argv[0] : 'quickstart-instance-php';
+    $table_id = (isset($argv[2])) ? $argv[1] : 'quickstart-instance-table';
 
     run_table_operations($project_id, $instance_id, $table_id);
     delete_table($project_id, $instance_id, $table_id);
