@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHP bigtable Instance test">
+        <testsuite name="PHP bigtable Table test">
             <directory>test</directory>
         </testsuite>
     </testsuites>

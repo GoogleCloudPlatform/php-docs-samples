@@ -25,20 +25,23 @@ use PHPUnit\Framework\TestCase;
 
 final class HelloWorldTest extends TestCase
 {
+
     public function testTableAdminRun(): void
     {
+        $project_id = getenv('PROJECT_ID');
+        $instance_id = 'quickstart-php-prod';
+        $table_id = 'quickstart-table-test-create';
         $content = $this->runSnippet('run_table_operations', [
-            getenv('PROJECT_ID'),
-            'quickstart-instance-php2',
-            'quickstart-instance-table'
+            $project_id,
+            $instance_id,
+            $table_id
         ]);
-        $array = explode("\n", $content);
+        $array = explode(PHP_EOL, $content);
 
-        $this->assertContains('Checking if table quickstart-instance-table exists', $array);
-        $this->assertContains('Creating the quickstart-instance-table table', $array);
-        $this->assertContains('Created table quickstart-instance-table', $array);
-        $this->assertContains('projects/grass-clump-479/instances/quickstart-instance-php/tables/quickstart-instance-table', $array);
-        $this->assertContains('projects/grass-clump-479/instances/quickstart-instance-php/tables/table-test', $array);
+        $this->assertContains('Checking if table '.$table_id.' exists', $array);
+        $this->assertContains('Creating the '.$table_id.' table', $array);
+        $this->assertContains('Created table '.$table_id, $array);
+        $this->assertContains('projects/'.$project_id.'/instances/'.$instance_id.'/tables/'.$table_id, $array);
         $this->assertContains('Creating column family cf1 with MaxAge GC Rule...', $array);
         $this->assertContains('Created column family cf1 with MaxAge GC Rule.', $array);
         $this->assertContains('Creating column family cf2 with max versions GC rule...', $array);
@@ -73,28 +76,26 @@ final class HelloWorldTest extends TestCase
         $this->assertContains('Delete a column family cf2...', $array);
         $this->assertContains('Column family cf2 deleted successfully.', $array);
 
-    }
 
-    public function testTableAdminDelete(): void
-    {
         $content = $this->runSnippet('delete_table', [
-            getenv('PROJECT_ID'),
-            'quickstart-instance-php2',
-            'quickstart-instance-table'
+            $project_id,
+            $instance_id,
+            $table_id
         ]);
-        $array = explode("\n", $content);
 
-        $this->assertContains('Checking if table quickstart-instance-table exists...', $array);
-        $this->assertContains('Table quickstart-instance-table exists.', $array);
-        $this->assertContains('Deleting quickstart-instance-table table.', $array);
-        $this->assertContains('Deleted quickstart-instance-table table.', $array);
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Checking if table '.$table_id.' exists...', $array);
+        $this->assertContains('Table '.$table_id.' exists.', $array);
+        $this->assertContains('Deleting '.$table_id.' table.', $array);
+        $this->assertContains('Deleted '.$table_id.' table.', $array);
     }
 
     private function runSnippet($sampleName, $params = [])
     {
-        $argv = array_merge([0, self::$projectId], $params);
+        $argv = array_merge([basename(__FILE__)], $params);
         ob_start();
-        require __DIR__ . "/src/$sampleName.php";
+        require_once __DIR__ . "/../src/$sampleName.php";
         return ob_get_clean();
     }
 }

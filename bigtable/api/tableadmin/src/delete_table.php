@@ -30,26 +30,11 @@
  * - Delete a Bigtable table.
  */
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Instance;
-use Google\Cloud\Bigtable\Admin\V2\Table;
-use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
-use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-
-use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\ApiCore\ApiException;
-
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
-
-use Google\Protobuf\Duration;
 
 
 function delete_table($project_id, $instance_id, $table_id)

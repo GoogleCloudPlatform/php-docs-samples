@@ -40,7 +40,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Instance;
+
 use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
@@ -50,10 +50,6 @@ use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\ApiCore\ApiException;
-
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
-
 use Google\Protobuf\Duration;
 
 function run_table_operations($project_id, $instance_id, $table_id)
@@ -80,7 +76,7 @@ function run_table_operations($project_id, $instance_id, $table_id)
     printf('Checking if table %s exists' . PHP_EOL, $table_id);
 
     try {
-        $tableAdminClient->getTable($table, ['view' => View::NAME_ONLY]);
+        $tableAdminClient->getTable($formattedTable, ['view' => View::NAME_ONLY]);
         printf('Table %s alredy exists' . PHP_EOL, $table_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
@@ -101,7 +97,7 @@ function run_table_operations($project_id, $instance_id, $table_id)
             print($table->getName() . PHP_EOL);
         }
     } else {
-        print('No table exists  in current project...' . PHP_EOL);
+        print('No table exists in current project...' . PHP_EOL);
     }
     // [END bigtable_list_tables]
 
@@ -211,8 +207,8 @@ function run_table_operations($project_id, $instance_id, $table_id)
     $rule2Duration1 = new Duration();
     $rule2Duration1->setSeconds(3600 * 24 * 30);
     $rule2Array = [
-        (new GcRule())->setMaxAge($rule2Duration1),
-        (new GcRule())->setMaxNumVersions(2)
+        (new GcRule)->setMaxAge($rule2Duration1),
+        (new GcRule)->setMaxNumVersions(2)
     ];
     $rule2Intersection->setRules($rule2Array);
     $rule2 = new GcRule();

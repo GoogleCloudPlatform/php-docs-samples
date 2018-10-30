@@ -12,8 +12,8 @@ final class HelloWorldTest extends TestCase
     public function testInstanceAdminRun(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php2';
-        $cluster_id = 'php-cluster-prod';
+        $instance_id = 'quickstart-instance-php-prod';
+        $cluster_id = 'php-cluster-php-prod';
 
         $content = $this->runSnippet('run_instance_operations', [
             $project_id,
@@ -37,7 +37,7 @@ final class HelloWorldTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = 'quickstart-instance-php-dev';
-        $cluster_id = 'php-cluster-dev';
+        $cluster_id = 'php-cluster-php-dev';
 
         $content = $this->runSnippet('create_dev_instance', [
             $project_id,
@@ -54,6 +54,7 @@ final class HelloWorldTest extends TestCase
         $this->assertContains('Creating an Instance', $array);
     }
     private function clean_instance($project_id, $instance_id, $cluster_id){
+
         $this->runSnippet('delete_cluster', [
             $project_id,
             $instance_id,
@@ -64,6 +65,10 @@ final class HelloWorldTest extends TestCase
             $project_id,
             $instance_id
         ]);
+        echo "\n";
+        echo $project_id."\n";
+        echo $instance_id."\n";
+        echo $cluster_id."\n";
     }
     private function runSnippet($sampleName, $params = [])
     {

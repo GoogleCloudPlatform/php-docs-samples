@@ -1,6 +1,9 @@
 {
     "require": {
-        "google/cloud": "^0.82.0",
-        "phpunit/phpunit": "^7.4"
+        "google/cloud-bigtable": "^0.7.1"
+    },
+    "require-dev": {
+        "google/cloud-tools": "^0.8",
+        "phpunit/phpunit": "~5"
     }
 }
