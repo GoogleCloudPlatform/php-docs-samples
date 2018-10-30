@@ -22,17 +22,7 @@ final class HelloWorldTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-        
-        $this->runSnippet('delete_cluster', [
-            $project_id,
-            $instance_id,
-            $cluster_id
-        ]);
-
-        $this->runSnippet('delete_instance', [
-            $project_id,
-            $instance_id
-        ]);
+        $this->clean_instance($project_id, $instance_id,  $cluster_id);
 
         $this->assertContains('Instance ' . $instance_id . ' does not exists.', $array);
         $this->assertContains('Creating an Instance:', $array);
@@ -57,6 +47,13 @@ final class HelloWorldTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
+        $this->clean_instance($project_id, $instance_id,  $cluster_id);
+
+        $this->assertContains('Creating a DEVELOPMENT Instance', $array);
+        $this->assertContains('Instance ' . $instance_id . ' does not exists.', $array);
+        $this->assertContains('Creating an Instance', $array);
+    }
+    private function clean_instance($project_id, $instance_id, $cluster_id){
         $this->runSnippet('delete_cluster', [
             $project_id,
             $instance_id,
@@ -67,12 +64,7 @@ final class HelloWorldTest extends TestCase
             $project_id,
             $instance_id
         ]);
-
-        $this->assertContains('Creating a DEVELOPMENT Instance', $array);
-        $this->assertContains('Instance ' . $instance_id . ' does not exists.', $array);
-        $this->assertContains('Creating an Instance', $array);
     }
-
     private function runSnippet($sampleName, $params = [])
     {
         $argv = array_merge([basename(__FILE__)], $params);
