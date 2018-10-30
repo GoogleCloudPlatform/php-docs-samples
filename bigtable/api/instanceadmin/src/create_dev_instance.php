@@ -52,7 +52,7 @@ function create_dev_instance($project_id, $instance_id, $cluster_id)
      * Creates a Development instance with the name "hdd-instance"
      * * location us-central1-f
      * * Cluster nodes should not be set while creating Develpment
-     * * Instance
+     * * instance
      *
      * @param string $project_id Project id of the client.
      * @param string $instance_id Instance id of the client.
