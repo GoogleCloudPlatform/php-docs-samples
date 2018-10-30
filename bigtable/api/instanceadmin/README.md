@@ -23,10 +23,10 @@ All code in the `snippets` directory demonstrates how to connect to Cloud Bigtab
 5.  Run `php SNIPPET_NAME.php`. The usage will print for each if no arguments
     are provided:
     ```sh
-    $ php main.php
-    Usage: php main.php PROJECT_ID INSTANCE_ID TABLE_ID
+    $ php src/run_instance_operations.php
+    Usage: php src/run_instance_operations.php PROJECT_ID INSTANCE_ID TABLE_ID
 
-    $ php main.php your-project-id your-instance-id your-table-id
+    $ php src/run_instance_operations.php your-project-id your-instance-id your-table-id
     ```
 
 ## Contributing changes
