@@ -18,9 +18,9 @@
 
 /*
  * Demonstrates how to connect to Cloud Bigtable and run some basic operations.
- * 
+ *
  * Prerequisites:
- * 
+ *
  * - Create a Cloud Bigtable cluster.
  *   https://cloud.google.com/bigtable/docs/creating-cluster
  * - Set your Google Application Default Credentials.
@@ -35,8 +35,7 @@
  * - Delete a Bigtable table.
  */
 
-
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
@@ -56,7 +55,6 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 
 use Google\Protobuf\Duration;
-
 
 function run_table_operations($project_id, $instance_id, $table_id)
 {
@@ -275,45 +273,8 @@ function run_table_operations($project_id, $instance_id, $table_id)
 
 }
 
-function delete_table($project_id, $instance_id, $table_id)
-{
-    /**
-     * Check Instance exists.
-     * * Creates a Production instance with default Cluster.
-     * * List instances in a project.
-     *   List clusters in an instance.
-     *
-     * @param string $project_id Project id of the client.
-     * @param string $instance_id Instance id of the client.
-     */
+$project_id = (isset($argv[1])) ? $argv[1] : getenv('PROJECT_ID');
+$instance_id = (isset($argv[2])) ? $argv[2] : 'quickstart-instance-php';
+$table_id = (isset($argv[3])) ? $argv[3] : 'quickstart-instance-table';
 
-    $tableAdminClient = new BigtableTableAdminClient();
-
-    $formattedTable = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
-
-    // [START bigtable_delete_table]
-    // Delete the entire table
-
-    printf('Checking if table %s exists...' . PHP_EOL, $table_id);
-
-    try {
-        printf('Table %s exists.' . PHP_EOL, $table_id);
-        printf('Deleting %s table.' . PHP_EOL, $table_id);
-        $tableAdminClient->deleteTable($formattedTable);
-        printf('Deleted %s table.' . PHP_EOL, $table_id);
-    } catch (ApiException $e) {
-        if ($e->getStatus() === 'NOT_FOUND') {
-            printf('Table %s does not exists' . PHP_EOL, $table_id);
-        }
-    }
-    // [END bigtable_delete_table]
-}
-
-if (basename(__FILE__) == $_SERVER['SCRIPT_FILENAME']) {
-    $project_id = (isset($argv[0])) ? $argv[0] : getenv('PROJECT_ID');
-    $instance_id = (isset($argv[1])) ? $argv[0] : 'quickstart-instance-php';
-    $table_id = (isset($argv[2])) ? $argv[1] : 'quickstart-instance-table';
-
-    run_table_operations($project_id, $instance_id, $table_id);
-    delete_table($project_id, $instance_id, $table_id);
-}
+run_table_operations($project_id, $instance_id, $table_id);
