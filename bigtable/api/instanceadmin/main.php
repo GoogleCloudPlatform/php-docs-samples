@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,70 +46,68 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 
 
-function run_instance_operations($project_id, $instance_id){
+function run_instance_operations($project_id, $instance_id, $cluster_id, $table_id){
     /**
      * Check Instance exists.
      * * Creates a Production instance with default Cluster.
      * * List instances in a project.
      *   List clusters in an instance.
-     * 
+     *
      * @param string $project_id Project id of the client.
      * @param string $instance_id Instance id of the client.
      */
-   
+
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
-    $cluster_id  = 'php-cluster';
-    $table_id    = 'bigtable-php-table';
     $location_id = 'us-east1-b';
+
     $formattedInstance = $instanceAdminClient->instanceName($project_id, $instance_id);
-    $formattedParent = $instanceAdminClient->projectName( $project_id );
 
     $instance = new Instance();
-    $instance->setDisplayName( $instance_id );
-    $instance->setName( $formattedInstance );
-    
+    $instance->setDisplayName($instance_id);
+    $instance->setName($formattedInstance);
+
     $serve_nodes = 3;
     $storage_type = StorageType::SSD;
     $production = InstanceType::PRODUCTION;
     $labels = [ 'prod-label' => 'prod-label' ];
 
-    $formattedParent = $instanceAdminClient->projectName( $project_id );
+    $formattedParent = $instanceAdminClient->projectName($project_id);
     $instance = new Instance();
-    $instance->setDisplayName( $instance_id );
+    $instance->setDisplayName($instance_id);
 
-    $instance->setLabels( $labels );
-    $instance->setType( $production );
+    $instance->setLabels($labels);
+    $instance->setType($production);
 
     // [START bigtable_check_instance_exists]
     try {
-        $instanceAdminClient->getInstance( $formattedInstance );
-        printf("Instance %s already exists.\n", $instance_id);
+        $instanceAdminClient->getInstance($formattedInstance);
+        printf("Instance %s already exists.".PHP_EOL, $instance_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists.\n", $instance_id);
+            printf("Instance %s does not exists.".PHP_EOL, $instance_id);
         }
     }
     // [END bigtable_check_instance_exists]
-    
+
     // [START bigtable_create_prod_instance]
     $cluster = new Cluster();
-    $cluster->setDefaultStorageType( $storage_type );
+    $cluster->setDefaultStorageType($storage_type);
     $cluster->setLocation(
         $instanceAdminClient->locationName(
             $project_id,
             $location_id
         )
     );
-    $cluster->setServeNodes( $serve_nodes );
+    $cluster->setServeNodes($serve_nodes);
     $clusters = [
         $cluster_id => $cluster
     ];
     try {
-        $instanceAdminClient->getInstance( $formattedInstance );
+        $instanceAdminClient->getInstance($formattedInstance);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Creating an Instance:\n");
+            printf("Creating an Instance:".PHP_EOL);
             $operationResponse = $instanceAdminClient->createInstance(
                 $formattedParent,
                 $instance_id,
@@ -125,24 +123,24 @@ function run_instance_operations($project_id, $instance_id){
     // [END bigtable_create_prod_instance]
 
     // [START bigtable_list_instances]
-    printf("Listing Instances:\n");
+    printf("Listing Instances:".PHP_EOL);
     $instances_local = $instanceAdminClient->listInstances($formattedParent)->getInstances();
-    $instance_array = iterator_to_array( $instances_local->getIterator() );
-    foreach( $instance_array as $instance ){
-        echo $instance->getDisplayName()."\n";
+    $instance_array = iterator_to_array($instances_local->getIterator());
+    foreach($instance_array as $instance){
+        print( $instance->getDisplayName().PHP_EOL);
     }
     // [END bigtable_list_instances]
     // [START bigtable_get_instance]
-    $labels = json_encode( iterator_to_array( $instance->getLabels()->getIterator() ) );
-    printf("Name of instance: %s\nLabels: %s\n", $instance->getDisplayName(), $labels );
+    $labels = json_encode(iterator_to_array($instance->getLabels()->getIterator()));
+    printf("Name of instance: %s".PHP_EOL."Labels: %s".PHP_EOL, $instance->getDisplayName(), $labels);
     // [END bigtable_get_instance]
     // [START bigtable_get_clusters]
-    printf("Listing Clusters...\n");
+    printf("Listing Clusters...".PHP_EOL);
     $clusters_local = $instanceAdminClient->listClusters($formattedInstance)->getClusters();
-    $clusters_array = iterator_to_array( $clusters_local->getIterator() );
-    
+    $clusters_array = iterator_to_array($clusters_local->getIterator());
+
     foreach($clusters_array as $cluster){
-        echo $cluster->getName()."\n";
+        print($cluster->getName().PHP_EOL);
     }
     // [END bigtable_get_clusters]
 }
@@ -150,25 +148,24 @@ function run_instance_operations($project_id, $instance_id){
 
 function create_dev_instance($project_id, $instance_id, $cluster_id){
     /**
-     * Creates a Development instnace with the name "hdd-instance"
+     * Creates a Development instance with the name "hdd-instance"
      * * location us-central1-f
      * * Cluster nodes should not be set while creating Develpment
      * * Instance
-     * 
+     *
      * @param string $project_id Project id of the client.
      * @param string $instance_id Instance id of the client.
      */
-    
+
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
     $formattedInstance = $instanceAdminClient->instanceName($project_id, $instance_id);
-    $formattedParent = $instanceAdminClient->projectName( $project_id );
+
     // [START bigtable_create_dev_instance]
-    printf("Creating a DEVELOPMENT Instance\n");
+    printf("Creating a DEVELOPMENT Instance".PHP_EOL);
     // Set options to create an Instance
-    $table_id    = 'bigtable-php-table';
+
     $location_id = 'us-east1-b';
-    $serve_nodes = 3;
     $storage_type = StorageType::HDD;
     $development = InstanceType::DEVELOPMENT;
     $labels = [ 'dev-label' => 'dev-label' ];
@@ -178,7 +175,7 @@ function create_dev_instance($project_id, $instance_id, $cluster_id){
     $instance->setName( $formattedInstance );
 
     $formattedParent = $instanceAdminClient->projectName( $project_id );
-    
+
     # Create instance with given options
     $instance = new Instance();
     $instance->setDisplayName( $instance_id );
@@ -187,16 +184,16 @@ function create_dev_instance($project_id, $instance_id, $cluster_id){
 
     try {
         $instanceAdminClient->getInstance( $formattedInstance );
-        printf("Instance %s already exists.\n", $instance_id);
+        printf("Instance %s already exists.".PHP_EOL, $instance_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists.\n", $instance_id);
+            printf("Instance %s does not exists.".PHP_EOL, $instance_id);
         }
     }
 
     // Create cluster with given options
     $cluster = new Cluster();
-    $cluster->setDefaultStorageType( $storage_type );
+    $cluster->setDefaultStorageType($storage_type);
     $cluster->setLocation(
         $instanceAdminClient->locationName(
             $project_id,
@@ -208,10 +205,10 @@ function create_dev_instance($project_id, $instance_id, $cluster_id){
     ];
     // Create development instance with given options
     try {
-        $instanceAdminClient->getInstance( $formattedInstance );
+        $instanceAdminClient->getInstance($formattedInstance);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Creating an Instance\n");
+            printf("Creating an Instance".PHP_EOL);
             $operationResponse = $instanceAdminClient->createInstance(
                 $formattedParent,
                 $instance_id,
@@ -225,7 +222,7 @@ function create_dev_instance($project_id, $instance_id, $cluster_id){
         }
     }
     // [END bigtable_create_dev_instance]
-    
+
 }
 
 
@@ -236,29 +233,28 @@ function delete_instance($project_id, $instance_id){
      * @param string $project_id Project id of the client.
      * @param string $instance_id Instance id of the client.
      */
-    
+
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
-    $formattedParent = $instanceAdminClient->projectName( $project_id );
     $formattedInstance = $instanceAdminClient->instanceName($project_id, $instance_id);
 
-    $instance = new Instance();
+
 
     // [START bigtable_delete_instance]
-    printf("Deleting Instance\n");
+    printf("Deleting Instance".PHP_EOL);
     try {
-        $instanceAdminClient->deleteInstance( $formattedInstance );
-        printf("Deleted Instance: %s.\n", $instance_id);
+        $instanceAdminClient->deleteInstance($formattedInstance);
+        printf("Deleted Instance: %s.".PHP_EOL, $instance_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists.\n", $instance_id);
+            printf("Instance %s does not exists.".PHP_EOL, $instance_id);
         }
     }
     // [END bigtable_delete_instance]
 }
 
 
-function add_cluster($project_id, $instance_id, $cluster_id){
+function add_cluster($project_id, $instance_id, $cluster_id, $table_id){
     /**
      * Add Cluster
      *
@@ -266,67 +262,63 @@ function add_cluster($project_id, $instance_id, $cluster_id){
      * @param string $instance_id Instance id of the client.
      * @param string cluster_id Cluster id.
      */
-    
+
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
     $formattedInstance = $instanceAdminClient->instanceName($project_id, $instance_id);
     $formattedCluster = $instanceAdminClient->clusterName($project_id, $instance_id,$cluster_id);
 
-    $instance = new Instance();
     $instance_exists = true;
     try {
-        $instanceAdminClient->getInstance( $formattedInstance );
+        $instanceAdminClient->getInstance($formattedInstance);
+        printf("Adding Cluster to Instance %s" . PHP_EOL, $instance_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            $instance_exists = false;
+            printf("Instance %s does not exists.".PHP_EOL, $instance_id);
+            return;
         }
     }
-    if(!$instance_exists){
-        printf("Instance %s does not exists.\n", $instance_id);
-    }else{
-        printf("Adding Cluster to Instance %s\n", $instance_id);
-        // [START bigtable_create_cluster]
-        printf("Listing Clusters...\n");
+    // [START bigtable_create_cluster]
+    printf("Listing Clusters..." . PHP_EOL);
 
-        $clusters_local = $instanceAdminClient->listClusters($formattedInstance)->getClusters();
-        $clusters_array = iterator_to_array( $clusters_local->getIterator() );
+    $clusters_local = $instanceAdminClient->listClusters($formattedInstance)->getClusters();
+    $clusters_array = iterator_to_array($clusters_local->getIterator());
 
-        $table_id    = 'bigtable-php-table';
-        $location_id = 'us-east1-b';
-        $storage_type = StorageType::SSD;
-        $serve_nodes = 3;
 
-        foreach($clusters_array as $cluster){
-            echo $cluster->getName()."\n";
-        }
-        $cluster = new Cluster();
-        $cluster->setServeNodes( $serve_nodes );
-        $cluster->setDefaultStorageType( $storage_type );
-        $cluster->setLocation(
-            $instanceAdminClient->locationName(
-                $project_id,
-                $location_id
-            )
-        );
-        try {
-            $instanceAdminClient->getCluster( $formattedCluster );
-            printf("Cluster not created, as %s", $cluster_id);
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $operationResponse = $instanceAdminClient->createCluster($formattedInstance, $cluster_id, $cluster);
+    $location_id = 'us-east1-b';
+    $storage_type = StorageType::SSD;
+    $serve_nodes = 3;
 
-                $operationResponse->pollUntilComplete();
-                if ($operationResponse->operationSucceeded()) {
-                    $result = $operationResponse->getResult();
-                    printf("Cluster created: %s", $cluster_id);
-                } else {
-                    $error = $operationResponse->getError();
-                    printf("Cluster not created: %s", $error);
-                }
+    foreach ($clusters_array as $cluster) {
+        print($cluster->getName() . PHP_EOL);
+    }
+    $cluster = new Cluster();
+    $cluster->setServeNodes($serve_nodes);
+    $cluster->setDefaultStorageType($storage_type);
+    $cluster->setLocation(
+        $instanceAdminClient->locationName(
+            $project_id,
+            $location_id
+        )
+    );
+    try {
+        $instanceAdminClient->getCluster($formattedCluster);
+        printf("Cluster %s not created", $cluster_id);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            $operationResponse = $instanceAdminClient->createCluster($formattedInstance, $cluster_id, $cluster);
+
+            $operationResponse->pollUntilComplete();
+            if ($operationResponse->operationSucceeded()) {
+                $result = $operationResponse->getResult();
+                printf("Cluster created: %s", $cluster_id);
+            } else {
+                $error = $operationResponse->getError();
+                printf("Cluster not created: %s", $error);
             }
         }
-        // [END bigtable_create_cluster]
     }
+    // [END bigtable_create_cluster]
 }
 
 
@@ -338,20 +330,20 @@ function delete_cluster($project_id, $instance_id, $cluster_id){
      * @param string $instance_id Instance id of the client.
      * @param string cluster_id Cluster id.
      */
-    
+
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
-    $formattedInstance = $instanceAdminClient->instanceName($project_id, $instance_id);
-    $formattedCluster = $instanceAdminClient->clusterName($project_id, $instance_id,$cluster_id);
-    $cluster = new Cluster();
+
+    $formattedCluster = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
+
     // [START bigtable_delete_cluster]
-    printf("Deleting Cluster\n");
+    printf("Deleting Cluster".PHP_EOL);
     try {
         $instanceAdminClient->deleteCluster($formattedCluster);
-        printf("Cluster {} does not exist.\n",$cluster_id);
+        printf("Cluster {} does not exist.".PHP_EOL,$cluster_id);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Cluster deleted: %s\n",$cluster_id);
+            printf("Cluster %s deleted.".PHP_EOL,$cluster_id);
         }
     }
     // [END bigtable_delete_cluster]
@@ -359,12 +351,16 @@ function delete_cluster($project_id, $instance_id, $cluster_id){
 
 
 if(basename(__FILE__) == $_SERVER['SCRIPT_FILENAME']){
-    $instance = 'quickstart-instance-php2';
-    $cluster = 'php-cluster-d2';
-    run_instance_operations( getenv('PROJECT_ID') , $instance );
-    delete_instance( getenv('PROJECT_ID') , $instance );
-    create_dev_instance( getenv('PROJECT_ID') , $instance , $cluster );    
-    add_cluster( getenv('PROJECT_ID') , $instance , $cluster );
-    delete_cluster( getenv('PROJECT_ID') , $instance , $cluster );
-    delete_instance( getenv('PROJECT_ID') , $instance );
+    $project_id = (isset($argv[0]))?$argv[0]:getenv('PROJECT_ID');
+    $instance_id = (isset($argv[1]))?$argv[1]:'quickstart-instance-php';
+    $table_id = (isset($argv[2]))?$argv[2]:'bigtable-php-table';
+
+    $cluster_id = 'php-cluster-d';
+
+    run_instance_operations($project_id, $instance_id, $cluster_id, $table_id);
+    delete_instance($project_id, $instance_id);
+    create_dev_instance($project_id, $instance_id, $cluster_id);
+    add_cluster($project_id, $instance_id, $cluster_id, $table_id);
+    delete_cluster($project_id, $instance_id, $cluster_id);
+    delete_instance($project_id, $instance_id);
 }
