@@ -1,8 +1,8 @@
-# Google BigTable Table Admin Sample
+# Google BigTable Sample
 
 ## Description
 
-All code in the `snippets` directory demonstrates how to connect to Cloud Bigtable and run some basic operations to create tables, create column families, update column families, delete column families and delete tables.
+All code in the `snippets` directory demonstrates how to connect to Cloud Bigtable and run some basic operations to create instance, create cluster, delete instance and delete cluster.
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the BigTable API](https://console.cloud.google.com/flows/enableapi?apiid=bigtable)
@@ -14,7 +14,7 @@ All code in the `snippets` directory demonstrates how to connect to Cloud Bigtab
 3.  **Clone the repo** and cd into this directory
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/bigtable/api/tableadmin
+    $ cd php-docs-samples/bigtable/api
     ```
 
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
@@ -23,10 +23,10 @@ All code in the `snippets` directory demonstrates how to connect to Cloud Bigtab
 5.  Run `php SNIPPET_NAME.php`. The usage will print for each if no arguments
     are provided:
     ```sh
-    $ php src/run_table_operations.php
-    Usage: php src/run_table_operations.php PROJECT_ID INSTANCE_ID TABLE_ID
+    $ php src/run_instance_operations.php
+    Usage: php src/run_instance_operations.php PROJECT_ID INSTANCE_ID TABLE_ID
 
-    $ php src/run_table_operations.php your-project-id your-instance-id your-table-id
+    $ php src/run_instance_operations.php your-project-id your-instance-id your-table-id
     ```
 
 ## Contributing changes

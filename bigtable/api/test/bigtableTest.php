@@ -1,31 +1,74 @@
 <?php
-/**
- * Copyright 2018 Google LLC.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+declare(strict_types=1);
 
-namespace Google\Cloud\Samples\BigQuery\Tests;
+namespace Google\Cloud\Samples\BigTable\Tests;
 
-use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
+
 
 final class HelloWorldTest extends TestCase
 {
 
+    public function testInstanceAdminRun(): void
+    {
+        $project_id = getenv('PROJECT_ID');
+        $instance_id = 'quickstart-instance-php-prod';
+        $cluster_id = 'php-cluster-php-prod';
+
+        $content = $this->runSnippet('run_instance_operations', [
+            $project_id,
+            $instance_id,
+            $cluster_id
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+        $this->clean_instance($project_id, $instance_id,  $cluster_id);
+
+        $this->assertContains('Instance ' . $instance_id . ' does not exists.', $array);
+        $this->assertContains('Creating an Instance:', $array);
+        $this->assertContains('Listing Instances:', $array);
+        $this->assertContains($instance_id, $array);
+        $this->assertContains('Labels: []', $array);
+        $this->assertContains('Listing Clusters...', $array);
+        $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
+    }
+    public function testInstanceAdminDev(): void
+    {
+        $project_id = getenv('PROJECT_ID');
+        $instance_id = 'quickstart-instance-php-dev';
+        $cluster_id = 'php-cluster-php-dev';
+
+        $content = $this->runSnippet('create_dev_instance', [
+            $project_id,
+            $instance_id,
+            $cluster_id
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->clean_instance($project_id, $instance_id,  $cluster_id);
+
+        $this->assertContains('Creating a DEVELOPMENT Instance', $array);
+        $this->assertContains('Instance ' . $instance_id . ' does not exists.', $array);
+        $this->assertContains('Creating an Instance', $array);
+    }
+    private function clean_instance($project_id, $instance_id, $cluster_id){
+
+        $this->runSnippet('delete_cluster', [
+            $project_id,
+            $instance_id,
+            $cluster_id
+        ]);
+
+        $this->runSnippet('delete_instance', [
+            $project_id,
+            $instance_id
+        ]);
+        echo "\n";
+        echo $project_id."\n";
+        echo $instance_id."\n";
+        echo $cluster_id."\n";
+    }
     public function testTableAdminRun(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -90,7 +133,6 @@ final class HelloWorldTest extends TestCase
         $this->assertContains('Deleting '.$table_id.' table.', $array);
         $this->assertContains('Deleted '.$table_id.' table.', $array);
     }
-
     private function runSnippet($sampleName, $params = [])
     {
         $argv = array_merge([basename(__FILE__)], $params);
@@ -98,4 +140,5 @@ final class HelloWorldTest extends TestCase
         require_once __DIR__ . "/../src/$sampleName.php";
         return ob_get_clean();
     }
+
 }
