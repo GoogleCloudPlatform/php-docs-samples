@@ -25,13 +25,18 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 4) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID".PHP_EOL, __FILE__);
+}
+list($_, $project_id, $instance_id, $table_id) = $argv;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 
-$project_id = (isset($argv[1])) ? $argv[1] : getenv('PROJECT_ID');
-$instance_id = (isset($argv[2])) ? $argv[2] : 'quickstart-instance-php';
-$table_id = (isset($argv[3])) ? $argv[3] : 'quickstart-instance-table';
+/** Uncomment and populate these variables in your code */
+// $project_id = 'The Google project ID';
+// $instance_id = 'The Bigtable instance ID';
+// $table_id = 'The Bigtable table ID';
 
 $tableAdminClient = new BigtableTableAdminClient();
 

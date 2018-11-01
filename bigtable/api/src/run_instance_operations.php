@@ -25,6 +25,11 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 3 || count($argv) > 4) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]".PHP_EOL, __FILE__);
+}
+list($_, $project_id, $instance_id, $cluster_id) = $argv;
+$location_id = isset($argv[4])?$argv[4]:'us-east1-b';
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
@@ -33,10 +38,6 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\ApiCore\ApiException;
 
-$project_id = (isset($argv[1])) ? $argv[1] : getenv('PROJECT_ID');
-$instance_id = (isset($argv[2])) ? $argv[2] : 'quickstart-instance-php';
-$cluster_id = (isset($argv[3])) ? $argv[3] : 'php-cluster-d';
-$location_id = 'us-east1-b';
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
