@@ -1,14 +1,10 @@
-# Google Cloud Tasks Pull Queue Samples
+# Google Cloud Tasks App Engine Queue Samples
 
-## THIS SAMPLE IS CURRENTLY INCOMPLETE. PLEASE REFER TO [THE DOCUMENTATION](https://cloud.google.com/tasks/docs/)
+## Description
 
-Sample command-line program for interacting with the Google Cloud Tasks API.
+Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP.
 
-`tasks.php` is a simple command-line program to demonstrate listing queues,
- creating tasks, and pulling and acknowledging tasks.
-
-`src/create_task.php` is a simple function to create pull queue tasks.
-
+`src/create_task.php` is a simple function to create app engine queue tasks.
 
 ## Setup:
 
@@ -22,17 +18,45 @@ Sample command-line program for interacting with the Google Cloud Tasks API.
 
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/tasks
+    $ cd php-docs-samples/appengine/php72/tasks
     ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 
+5.  Create a Queue
+    To create a queue using the Cloud SDK, use the following gcloud command:
+    ```sh
+    gcloud beta tasks queues create-app-engine-queue my-appengine-queue
+    ```
+6.  Identify the Location
+
+    Determine the location ID, which can be discovered with
+    `gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
+    the "name" value (for instance, if the name is
+    "projects/my-project/locations/us-central1/queues/my-pull-queue", then the
+    location is "us-central1").
+
+7. Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments are provided:
+
+    ```
+    $> php src/create_task.php
+    Usage: php src/create_task.php PROJECT_ID LOCATION_ID QUEUE_ID [PAYLOAD]
+    ```
+
+## Contributing changes
+
+* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+
+## Licensing
+
+* See [LICENSE](../../LICENSE)
+
+
+
+
 ## Creating a queue
 
-To create a queue using the Cloud SDK, use the following gcloud command:
-
-    gcloud beta tasks queues create-app-engine-queue my-appengine-queue
 
 ## Running the Samples
 
@@ -49,14 +73,3 @@ created can be listed with `gcloud alpha tasks queues list`.
 
     export QUEUE_ID=my-appengine-queue
 
-And finally the location ID, which can be discovered with
-`gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
-the "name" value (for instance, if the name is
-"projects/my-project/locations/us-central1/queues/my-pull-queue", then the
-location is "us-central1").
-
-    export LOCATION_ID=us-central1
-
-Create a task for a queue:
-
-    php tasks.php create-task $PROJECT_ID $QUEUE_ID $LOCATION_ID --payload=hello
