@@ -38,8 +38,8 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
 
       try {
         handle_task(
-          $taskName,
           $queueName,
+          $taskName,
           file_get_contents('php://input')
         );
       } catch (Exception $e) {
