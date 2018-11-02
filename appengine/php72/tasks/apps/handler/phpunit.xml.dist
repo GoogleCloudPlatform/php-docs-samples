@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="AppEngine for PHP 7.2 storage test">
+        <testsuite name="AppEngine for PHP 7.2 tasks test">
             <directory>test</directory>
         </testsuite>
     </testsuites>

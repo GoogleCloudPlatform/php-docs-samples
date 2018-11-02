@@ -18,7 +18,6 @@
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\Logging\LoggingClient;
 use GuzzleHttp\Exception\ClientException;
 
 use PHPUnit\Framework\TestCase;
