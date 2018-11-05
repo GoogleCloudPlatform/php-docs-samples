@@ -26,11 +26,12 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]".PHP_EOL, __FILE__);
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $cluster_id) = $argv;
-$location_id = isset($argv[4])?$argv[4]:'us-east1-b';
+$location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
 
+// [START bigtable_create_dev_instance]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
@@ -48,10 +49,10 @@ use Google\ApiCore\ApiException;
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $projectName = $instanceAdminClient->projectName($project_id);
+$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
-// [START bigtable_create_dev_instance]
+
 printf("Creating a DEVELOPMENT Instance" . PHP_EOL);
 // Set options to create an Instance
 
@@ -59,24 +60,12 @@ $storage_type = StorageType::HDD;
 $development = InstanceType::DEVELOPMENT;
 $labels = ['dev-label' => 'dev-label'];
 
-$instance = new Instance();
-$instance->setDisplayName($instance_id);
-$instance->setName($instanceName);
 
 # Create instance with given options
 $instance = new Instance();
 $instance->setDisplayName($instance_id);
 $instance->setLabels($labels);
 $instance->setType($development);
-
-try {
-    $instanceAdminClient->getInstance($instanceName);
-    printf("Instance %s already exists." . PHP_EOL, $instance_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Instance %s does not exists." . PHP_EOL, $instance_id);
-    }
-}
 
 // Create cluster with given options
 $cluster = new Cluster();
@@ -93,6 +82,7 @@ $clusters = [
 // Create development instance with given options
 try {
     $instanceAdminClient->getInstance($instanceName);
+    printf("Instance %s already exists." . PHP_EOL, $instance_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf("Creating an Instance" . PHP_EOL);

@@ -26,10 +26,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID".PHP_EOL, __FILE__);
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
+// [START bigtable_delete_table]
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 
@@ -42,11 +43,10 @@ $tableAdminClient = new BigtableTableAdminClient();
 
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-// [START bigtable_delete_table]
+
 // Delete the entire table
 
 printf('Checking if table %s exists...' . PHP_EOL, $table_id);
-
 try {
     printf('Table %s exists.' . PHP_EOL, $table_id);
     printf('Deleting %s table.' . PHP_EOL, $table_id);

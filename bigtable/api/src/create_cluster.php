@@ -26,10 +26,12 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]".PHP_EOL, __FILE__);
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $cluster_id) = $argv;
-$location_id = isset($argv[4])?$argv[4]:'us-east1-b';
+$location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
+
+// [START bigtable_create_cluster]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
@@ -58,7 +60,6 @@ try {
         return;
     }
 }
-// [START bigtable_create_cluster]
 printf("Listing Clusters..." . PHP_EOL);
 
 $storage_type = StorageType::SSD;

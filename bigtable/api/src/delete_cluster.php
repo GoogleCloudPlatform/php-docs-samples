@@ -26,9 +26,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID".PHP_EOL, __FILE__);
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $cluster_id) = $argv;
+
+// [START bigtable_delete_cluster]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
@@ -43,14 +45,14 @@ $instanceAdminClient = new BigtableInstanceAdminClient();
 
 $clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
 
-// [START bigtable_delete_cluster]
+
 printf("Deleting Cluster" . PHP_EOL);
 try {
     $instanceAdminClient->deleteCluster($clusterName);
-    printf("Cluster %s does not exist." . PHP_EOL, $cluster_id);
+    printf("Cluster %s deleted." . PHP_EOL, $cluster_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Cluster %s deleted." . PHP_EOL, $cluster_id);
+        printf("Cluster %s does not exist." . PHP_EOL, $cluster_id);
     }
 }
 // [END bigtable_delete_cluster]
