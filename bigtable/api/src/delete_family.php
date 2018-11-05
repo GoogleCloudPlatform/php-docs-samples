@@ -29,31 +29,36 @@ if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
+$family_id = isset($argv[4]) ? $argv[4] : 'cf2';
 
-// [START bigtable_delete_table]
+// [START bigtable_delete_family]
+
+use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
+use Google\Protobuf\Duration;
+
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
+// $location_id = 'The Bigtable region ID';
 
+$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
+$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 
-// Delete the entire table
-
-printf('Checking if table %s exists...' . PHP_EOL, $table_id);
-try {
-    printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
-    $tableAdminClient->deleteTable($tableName);
-    printf('Deleted %s table.' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s does not exists' . PHP_EOL, $table_id);
-    }
-}
-// [END bigtable_delete_table]
+print('Delete a column family cf2...' . PHP_EOL);
+// Delete a column family
+$columnModification = new Modification();
+$columnModification->setId($family_id);
+$columnModification->setDrop(true);
+$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+print('Column family cf2 deleted successfully.' . PHP_EOL);
+// [END bigtable_delete_family]

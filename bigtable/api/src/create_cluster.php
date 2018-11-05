@@ -60,12 +60,14 @@ try {
         return;
     }
 }
-printf("Listing Clusters..." . PHP_EOL);
+printf("Listing Clusters:" . PHP_EOL);
 
 $storage_type = StorageType::SSD;
 $serve_nodes = 3;
 
-$clusters = $instanceAdminClient->listClusters($formattedInstance)->getClusters()->getIterator();
+//$clusters = $instanceAdminClient->listClusters($instanceName)->getClusters()->getIterator();
+$clusters = $instanceAdminClient->listClusters($instanceName)->getClusters();
+$clusters = iterator_to_array($clusters->getIterator());
 foreach ($clusters as $cluster) {
     print($cluster->getName() . PHP_EOL);
 }

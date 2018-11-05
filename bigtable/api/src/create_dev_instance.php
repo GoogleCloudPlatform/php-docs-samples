@@ -85,7 +85,7 @@ try {
     printf("Instance %s already exists." . PHP_EOL, $instance_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Creating an Instance" . PHP_EOL);
+        printf("Creating an Instance: %s" . PHP_EOL, $instance_id);
         $operationResponse = $instanceAdminClient->createInstance(
             $projectName,
             $instance_id,
@@ -95,6 +95,8 @@ try {
         $operationResponse->pollUntilComplete();
         if (!$operationResponse->operationSucceeded()) {
             throw new Exception('error creating instance', -1);
+        } else {
+            printf("Instance %s created.", $instance_id);
         }
     }
 }

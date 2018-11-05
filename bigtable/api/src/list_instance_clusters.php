@@ -25,35 +25,29 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
+if (count($argv) != 3) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
+list($_, $project_id, $instance_id) = $argv;
 
-// [START bigtable_delete_table]
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
+// [START bigtable_get_clusters]
+
+use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
 
-$tableAdminClient = new BigtableTableAdminClient();
+$instanceAdminClient = new BigtableInstanceAdminClient();
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$projectName = $instanceAdminClient->projectName($project_id);
+$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
 
-// Delete the entire table
-
-printf('Checking if table %s exists...' . PHP_EOL, $table_id);
-try {
-    printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
-    $tableAdminClient->deleteTable($tableName);
-    printf('Deleted %s table.' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s does not exists' . PHP_EOL, $table_id);
-    }
+printf("Listing Clusters:" . PHP_EOL);
+$clusters = $instanceAdminClient->listClusters($instanceName)->getClusters();
+$clusters = iterator_to_array($clusters->getIterator());
+foreach ($clusters as $cluster) {
+    print($cluster->getName() . PHP_EOL);
 }
-// [END bigtable_delete_table]
+// [END bigtable_get_clusters]

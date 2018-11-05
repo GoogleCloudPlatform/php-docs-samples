@@ -25,35 +25,44 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
+if (count($argv) < 3 || count($argv) > 5) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [FAMILY_ID]" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
+$family_id = isset($argv[4]) ? $argv[4] : 'cf2';
 
-// [START bigtable_delete_table]
+// [START bigtable_create_family_gc_max_versions]
+
+use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
+use Google\Protobuf\Duration;
+
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
+// $location_id = 'The Bigtable region ID';
 
+$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
+$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
+printf('Creating column family %s with max versions GC rule...' . PHP_EOL, $family_id);
+$columnFamily2 = new ColumnFamily();
+$maxVersionRule = (new GcRule)->setMaxNumVersions(2);
+$columnFamily2->setGCRule($maxVersionRule);
 
-// Delete the entire table
+$columnModification = new Modification();
+$columnModification->setId($family_id);
+$columnModification->setCreate($columnFamily2);
+$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 
-printf('Checking if table %s exists...' . PHP_EOL, $table_id);
-try {
-    printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
-    $tableAdminClient->deleteTable($tableName);
-    printf('Deleted %s table.' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s does not exists' . PHP_EOL, $table_id);
-    }
-}
-// [END bigtable_delete_table]
+printf('Created column family %s with Max Versions GC Rule.' . PHP_EOL, $family_id);
+
+// [END bigtable_create_family_gc_max_versions]

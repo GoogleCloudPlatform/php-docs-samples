@@ -30,30 +30,30 @@ if (count($argv) != 4) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_delete_table]
+// [START bigtable_list_column_families]
+
+use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
+
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
+// $location_id = 'The Bigtable region ID';
 
+$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
+$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 
-// Delete the entire table
-
-printf('Checking if table %s exists...' . PHP_EOL, $table_id);
-try {
-    printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
-    $tableAdminClient->deleteTable($tableName);
-    printf('Deleted %s table.' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s does not exists' . PHP_EOL, $table_id);
-    }
+$table = $tableAdminClient->getTable($tableName);
+$columnFamilies = iterator_to_array($table->getColumnFamilies()->getIterator());
+foreach ($columnFamilies as $k => $columnFamily) {
+    printf('Column Family: %s' . PHP_EOL, $k);
+    print('GC Rule:' . PHP_EOL);
+    printf('%s' . PHP_EOL, $columnFamily->serializeToJsonString());
 }
-// [END bigtable_delete_table]
+// [END bigtable_list_column_families]
