@@ -32,13 +32,14 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 $family_id = isset($argv[4]) ? $argv[4] : 'cf1';
 
 // [START bigtable_create_family_gc_max_age]
-
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Protobuf\Duration;
+
 
 
 /** Uncomment and populate these variables in your code */
@@ -53,6 +54,14 @@ $tableAdminClient = new BigtableTableAdminClient();
 $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
+try {
+    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+    printf('Table %s exists' . PHP_EOL, $table_id);
+} catch (ApiException $e) {
+    if ($e->getStatus() === 'NOT_FOUND') {
+    	printf('Table %s doesn\'t exists');
+    }
+}
 
 print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
 // Create a column family with GC policy : maximum age

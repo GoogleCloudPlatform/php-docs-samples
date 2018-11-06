@@ -8,11 +8,12 @@ use PHPUnit\Framework\TestCase;
 
 final class BigTableTest extends TestCase
 {
+    
     public function testCreateCluster(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
+        $instance_id = 'php-sample-instance-cluster';
+        $cluster_id = 'php-sample-cluster-cluster';
 
         $this->runSnippet('create_production_instance', [
             $project_id,
@@ -35,12 +36,12 @@ final class BigTableTest extends TestCase
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
         $this->assertContains('Cluster ' . $cluster_id . ' not created', $array);
     }
-
+    
     public function testCreateDevInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
+        $instance_id = 'php-sample-instance-dev';
+        $cluster_id = 'php-sample-cluster-dev';
 
         $content = $this->runSnippet('create_dev_instance', [
             $project_id,
@@ -56,35 +57,38 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating an Instance: ' . $instance_id, $array);
         $this->assertContains('Instance ' . $instance_id . ' created.', $array);
     }
-
+    
     public function testCreateFamilyGcIntersection(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = '';
+        $instance_id = 'php-sample-instance-inter';
+        $cluster_id = 'php-sample-cluster-inter';
+        $table_id = 'php-sample-table-inter';
+        $family_id = 'cf3';
 
-        $this->createTable($project_id, $instance_id, $table_id);
+        $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_union', [
             $project_id,
             $instance_id,
-            $cluster_id
+            $table_id,
+            $family_id
         ]);
 
         $array = explode(PHP_EOL, $content);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
-        print_r($array);
+        $this->assertContains(sprintf('Creating column family %s with union GC rule...', $family_id), $array);
+        $this->assertContains(sprintf('Created column family %s with Union GC rule.', $family_id), $array);
     }
-
+    
     public function testCreateFamilyGcMaxAge(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = 'php-table-prod';
+        $instance_id = 'php-sample-instance-max-age';
+        $cluster_id = 'php-sample-cluster-max-age';
+        $table_id = 'php-sample-table-max-age';
         $family_id = 'cf1';
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
@@ -100,16 +104,17 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
-        $this->assertContains('Creating column family ' . $family_id . ' with MaxAge GC Rule...', $array);
-        $this->assertContains('Created column family ' . $family_id . ' with MaxAge GC Rule.', $array);
-    }
 
+        $this->assertContains(sprintf('Creating column family %s with MaxAge GC Rule...', $family_id), $array);
+        $this->assertContains(sprintf('Created column family %s with MaxAge GC Rule.', $family_id), $array);
+    }
+    
     public function testCreateFamilyGcMaxVersions(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = 'php-table-prod';
+        $instance_id = 'php-sample-instance-max-ver';
+        $cluster_id = 'php-sample-cluster-max-ver';
+        $table_id = 'php-sample-table-max-ver';
         $family_id = 'cf2';
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
@@ -128,13 +133,13 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating column family ' . $family_id . ' with max versions GC rule...', $array);
         $this->assertContains('Created column family ' . $family_id . ' with Max Versions GC Rule.', $array);
     }
-
+    
     public function testCreateFamilyGcNested(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = 'php-table-prod';
+        $instance_id = 'php-sample-instance-gc-nested';
+        $cluster_id = 'php-sample-cluster-nested';
+        $table_id = 'php-sample-table-nested';
         $family_id = 'cf5';
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
@@ -153,13 +158,13 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating column family ' . $family_id . ' with a Nested GC rule...', $array);
         $this->assertContains('Created column family ' . $family_id . ' with a Nested GC rule.', $array);
     }
-
+    
     public function testCreateFamilyGcUnion(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = 'php-table-prod';
+        $instance_id = 'php-sample-instance-union';
+        $cluster_id = 'php-sample-cluster-union';
+        $table_id = 'php-sample-table-union';
         $family_id = 'cf5';
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
@@ -176,34 +181,34 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
         $this->assertContains(sprintf('Creating column family %s with union GC rule...', $family_id), $array);
-        $this->assertContains(sprintf('Created column family cf5 with Union GC rule.', $family_id), $array);
+        $this->assertContains(sprintf('Created column family %s with Union GC rule.', $family_id), $array);
     }
-
+    
     public function testCreateProductionInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
+        $instance_id = 'php-sample-instance-prod';
+        $cluster_id = 'php-sample-cluster-prod';
 
         $content = $this->runSnippet('create_production_instance', [
             $project_id,
             $instance_id,
             $cluster_id
         ]);
-        $this->clean_instance($project_id, $instance_id, $cluster_id);
-
         $array = explode(PHP_EOL, $content);
 
-        $this->assertContains('Creating an Instance:', $array);
-        $this->assertContains('Instance ' . $instance_id . ' created.', $array);
-    }
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
 
+        $this->assertContains(sprintf('Creating an Instance: %s',$instance_id), $array);
+        $this->assertContains(sprintf('Instance %s created.',$instance_id), $array);
+    }
+    
     public function testCreateTable(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
-        $table_id = 'table-php-prod';
+        $instance_id = 'php-sample-instance-table';
+        $cluster_id = 'php-sample-cluster-table';
+        $table_id = 'php-sample-table-table';
 
 
         $this->runSnippet('create_production_instance', [
@@ -225,13 +230,13 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating the ' . $table_id . ' table', $array);
         $this->assertContains('Created table ' . $table_id, $array);
     }
-
+    
     public function testDeleteCluster(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
-        $cluster_two_id = 'php-cluster-php-prod-two';
+        $instance_id = 'php-sample-instance-cluster';
+        $cluster_id = 'php-sample-cluster-cluster';
+        $cluster_two_id = 'php-sample-cluster-cluster2';
 
 
         $this->runSnippet('create_production_instance', [
@@ -258,27 +263,38 @@ final class BigTableTest extends TestCase
         $this->assertContains('Deleting Cluster', $array);
         $this->assertContains('Cluster ' . $cluster_two_id . ' deleted.', $array);
     }
-
+    
     public function testDeleteInstance(): void
     {
-        $this->runSnippet('delete_cluster', [
+        $project_id = getenv('PROJECT_ID');
+        $instance_id = 'php-sample-instance-delinst';
+        $cluster_id = 'php-sample-cluster-delinst';
+
+        $this->runSnippet('create_production_instance', [
             $project_id,
             $instance_id,
             $cluster_id
         ]);
 
-        $this->runSnippet('delete_instance', [
+        $content = $this->runSnippet('delete_instance', [
             $project_id,
             $instance_id
         ]);
-    }
 
+        $array = explode(PHP_EOL, $content);
+
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
+
+        $this->assertContains('Deleting Instance', $array);
+        $this->assertContains(sprintf('Deleted Instance: %s.',$instance_id), $array);
+    }
+    
     public function testDeleteTable(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
-        $table_id = 'table-php-prod';
+        $instance_id = 'php-sample-instance-deltable';
+        $cluster_id = 'php-sample-cluster-deltable';
+        $table_id = 'php-sample-table-table';
 
 
         $this->runSnippet('create_production_instance', [
@@ -301,17 +317,17 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
-        $this->assertContains('Checking if table table-php-prod exists...', $array);
-        $this->assertContains('Attempting to delete table ' . $table_id . '.', $array);
-        $this->assertContains('Deleted ' . $table_id . ' table.', $array);
+        $this->assertContains(sprintf('Checking if table %s exists...',$table_id), $array);
+        $this->assertContains(sprintf('Attempting to delete table %s.',$table_id), $array);
+        $this->assertContains(sprintf('Deleted %s table.',$table_id), $array);
     }
-
+    
     public function testListColumnFamilies(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = 'php-table-prod';
+        $instance_id = 'php-sample-instance-lfamilies';
+        $cluster_id = 'php-sample-cluster-lfamilies';
+        $table_id = 'php-sample-table-lfamilies';
         $family_id = 'cf5';
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
@@ -337,12 +353,12 @@ final class BigTableTest extends TestCase
         $this->assertContains('GC Rule:', $array);
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":{"seconds":432000}}]}}}', $array);
     }
-
+    
     public function testListInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
+        $instance_id = 'php-sample-instance-linstance';
+        $cluster_id = 'php-sample-cluster-linstance';
 
         $this->runSnippet('create_production_instance', [
             $project_id,
@@ -362,12 +378,12 @@ final class BigTableTest extends TestCase
         $this->assertContains('Listing Instances:', $array);
         $this->assertContains($instance_id, $array);
     }
-
+    
     public function testListInstanceClusters(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
+        $instance_id = 'php-sample-instance-lclusters';
+        $cluster_id = 'php-sample-cluster-lclusters';
 
         $this->runSnippet('create_production_instance', [
             $project_id,
@@ -387,13 +403,13 @@ final class BigTableTest extends TestCase
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
     }
-
+    
     public function testListTable(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod';
-        $table_id = 'table-php-prod';
+        $instance_id = 'php-sample-insntance-ltable';
+        $cluster_id = 'php-sample-cluster-ltable';
+        $table_id = 'php-sample-table-ltable';
 
 
         $this->runSnippet('create_production_instance', [
@@ -418,13 +434,13 @@ final class BigTableTest extends TestCase
         $this->assertContains('Listing Tables:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
     }
-
+    
     public function testUpdateGcRule(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'quickstart-instance-php-prod';
-        $cluster_id = 'php-cluster-php-prod-second';
-        $table_id = 'php-table-prod';
+        $instance_id = 'php-sample-instance-updrule';
+        $cluster_id = 'php-sample-cluster-updrule';
+        $table_id = 'php-sample-table-updrule';
         $family_id = 'cf5';
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
@@ -449,7 +465,7 @@ final class BigTableTest extends TestCase
         $this->assertContains(sprintf('Print column family %s GC rule after update...', $family_id), $array);
         $this->assertContains(sprintf('Column Family: %s{"gcRule":{"maxNumVersions":1}}', $family_id), $array);
     }
-
+    
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
     {
         $this->runSnippet('create_production_instance', [
@@ -466,20 +482,11 @@ final class BigTableTest extends TestCase
 
     private function clean_instance($project_id, $instance_id, $cluster_id)
     {
-        $this->runSnippet('delete_cluster', [
-            $project_id,
-            $instance_id,
-            $cluster_id
-        ]);
-
-        $this->runSnippet('delete_instance', [
+        $content = $this->runSnippet('delete_instance', [
             $project_id,
             $instance_id
         ]);
-        echo "\n";
-        echo $project_id . "\n";
-        echo $instance_id . "\n";
-        echo $cluster_id . "\n";
+        //print_r( $content );
     }
 
     private function runSnippet($sampleName, $params = [])

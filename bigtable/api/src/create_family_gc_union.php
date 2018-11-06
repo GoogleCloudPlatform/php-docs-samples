@@ -40,7 +40,8 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Protobuf\Duration;
-
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
+use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -60,6 +61,18 @@ printf('Creating column family %s with union GC rule...' . PHP_EOL, $family_id);
 // at least one condition.
 // Define a GC rule to drop cells older than 5 days or not the
 // most recent version
+
+try {
+    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+    printf('Table %s exists' . PHP_EOL, $table_id);
+} catch (ApiException $e) {
+    if ($e->getStatus() === 'NOT_FOUND') {
+        printf('Table %s doesn\'t exists' . PHP_EOL, $table_id);
+        return;
+    }
+}
+
+
 $columnFamily3 = new ColumnFamily();
 
 $rule_union = new GcRuleUnion();
