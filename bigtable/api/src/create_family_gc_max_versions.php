@@ -53,6 +53,16 @@ $tableAdminClient = new BigtableTableAdminClient();
 $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
+try {
+    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+    printf('Table %s exists' . PHP_EOL, $table_id);
+} catch (ApiException $e) {
+    if ($e->getStatus() === 'NOT_FOUND') {
+        printf('Table %s doesn\'t exists');
+        return;
+    }
+}
+
 printf('Creating column family %s with max versions GC rule...' . PHP_EOL, $family_id);
 $columnFamily2 = new ColumnFamily();
 $maxVersionRule = (new GcRule)->setMaxNumVersions(2);

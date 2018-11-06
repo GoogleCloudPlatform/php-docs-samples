@@ -55,6 +55,15 @@ $tableAdminClient = new BigtableTableAdminClient();
 $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
+try {
+    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+    printf('Table %s exists' . PHP_EOL, $table_id);
+} catch (ApiException $e) {
+    if ($e->getStatus() === 'NOT_FOUND') {
+        printf('Table %s doesn\'t exists');
+        return;
+    }
+}
 
 printf('Creating column family %s with a Nested GC rule...' . PHP_EOL, $family_id);
 // Create a column family with nested GC policies.

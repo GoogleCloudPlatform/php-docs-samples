@@ -67,7 +67,7 @@ try {
     printf('Table %s exists' . PHP_EOL, $table_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s doesn\'t exists' . PHP_EOL, $table_id);
+        printf('Table %s doesn\'t exists');
         return;
     }
 }

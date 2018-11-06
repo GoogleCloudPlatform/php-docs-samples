@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 final class BigTableTest extends TestCase
 {
-    
+
     public function testCreateCluster(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -36,7 +36,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
         $this->assertContains('Cluster ' . $cluster_id . ' not created', $array);
     }
-    
+
     public function testCreateDevInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -57,7 +57,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating an Instance: ' . $instance_id, $array);
         $this->assertContains('Instance ' . $instance_id . ' created.', $array);
     }
-    
+
     public function testCreateFamilyGcIntersection(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -82,7 +82,7 @@ final class BigTableTest extends TestCase
         $this->assertContains(sprintf('Creating column family %s with union GC rule...', $family_id), $array);
         $this->assertContains(sprintf('Created column family %s with Union GC rule.', $family_id), $array);
     }
-    
+
     public function testCreateFamilyGcMaxAge(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -108,7 +108,7 @@ final class BigTableTest extends TestCase
         $this->assertContains(sprintf('Creating column family %s with MaxAge GC Rule...', $family_id), $array);
         $this->assertContains(sprintf('Created column family %s with MaxAge GC Rule.', $family_id), $array);
     }
-    
+
     public function testCreateFamilyGcMaxVersions(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -133,7 +133,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating column family ' . $family_id . ' with max versions GC rule...', $array);
         $this->assertContains('Created column family ' . $family_id . ' with Max Versions GC Rule.', $array);
     }
-    
+
     public function testCreateFamilyGcNested(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -158,7 +158,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating column family ' . $family_id . ' with a Nested GC rule...', $array);
         $this->assertContains('Created column family ' . $family_id . ' with a Nested GC rule.', $array);
     }
-    
+
     public function testCreateFamilyGcUnion(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -183,7 +183,7 @@ final class BigTableTest extends TestCase
         $this->assertContains(sprintf('Creating column family %s with union GC rule...', $family_id), $array);
         $this->assertContains(sprintf('Created column family %s with Union GC rule.', $family_id), $array);
     }
-    
+
     public function testCreateProductionInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -199,10 +199,10 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
-        $this->assertContains(sprintf('Creating an Instance: %s',$instance_id), $array);
-        $this->assertContains(sprintf('Instance %s created.',$instance_id), $array);
+        $this->assertContains(sprintf('Creating an Instance: %s', $instance_id), $array);
+        $this->assertContains(sprintf('Instance %s created.', $instance_id), $array);
     }
-    
+
     public function testCreateTable(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -230,7 +230,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Creating the ' . $table_id . ' table', $array);
         $this->assertContains('Created table ' . $table_id, $array);
     }
-    
+
     public function testDeleteCluster(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -263,7 +263,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Deleting Cluster', $array);
         $this->assertContains('Cluster ' . $cluster_two_id . ' deleted.', $array);
     }
-    
+
     public function testDeleteInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -286,9 +286,9 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
         $this->assertContains('Deleting Instance', $array);
-        $this->assertContains(sprintf('Deleted Instance: %s.',$instance_id), $array);
+        $this->assertContains(sprintf('Deleted Instance: %s.', $instance_id), $array);
     }
-    
+
     public function testDeleteTable(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -317,11 +317,11 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
 
-        $this->assertContains(sprintf('Checking if table %s exists...',$table_id), $array);
-        $this->assertContains(sprintf('Attempting to delete table %s.',$table_id), $array);
-        $this->assertContains(sprintf('Deleted %s table.',$table_id), $array);
+        $this->assertContains(sprintf('Checking if table %s exists...', $table_id), $array);
+        $this->assertContains(sprintf('Attempting to delete table %s.', $table_id), $array);
+        $this->assertContains(sprintf('Deleted %s table.', $table_id), $array);
     }
-    
+
     public function testListColumnFamilies(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -353,7 +353,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('GC Rule:', $array);
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":{"seconds":432000}}]}}}', $array);
     }
-    
+
     public function testListInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -378,7 +378,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Listing Instances:', $array);
         $this->assertContains($instance_id, $array);
     }
-    
+
     public function testListInstanceClusters(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -403,7 +403,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
     }
-    
+
     public function testListTable(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -434,7 +434,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('Listing Tables:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
     }
-    
+
     public function testUpdateGcRule(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -465,7 +465,7 @@ final class BigTableTest extends TestCase
         $this->assertContains(sprintf('Print column family %s GC rule after update...', $family_id), $array);
         $this->assertContains(sprintf('Column Family: %s{"gcRule":{"maxNumVersions":1}}', $family_id), $array);
     }
-    
+
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
     {
         $this->runSnippet('create_production_instance', [

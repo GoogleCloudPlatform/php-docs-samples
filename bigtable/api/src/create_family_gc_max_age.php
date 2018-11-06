@@ -41,7 +41,6 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Protobuf\Duration;
 
 
-
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
@@ -59,7 +58,8 @@ try {
     printf('Table %s exists' . PHP_EOL, $table_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-    	printf('Table %s doesn\'t exists');
+        printf('Table %s doesn\'t exists');
+        return;
     }
 }
 
