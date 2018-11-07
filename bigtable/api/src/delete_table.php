@@ -31,6 +31,7 @@ if (count($argv) != 4) {
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
 // [START bigtable_delete_table]
+
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 

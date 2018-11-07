@@ -25,11 +25,10 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [FAMILY_ID]" . PHP_EOL, __FILE__);
+if (count($argv) != 4) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf1';
 
 // [START bigtable_create_family_gc_max_age]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
@@ -45,23 +44,12 @@ use Google\Protobuf\Duration;
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-try {
-    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-    printf('Table %s exists' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s doesn\'t exists');
-        return;
-    }
-}
 
 print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
 // Create a column family with GC policy : maximum age
@@ -74,7 +62,7 @@ $MaxAgeRule = (new GcRule)->setMaxAge($duration);
 $columnFamily1->setGcRule($MaxAgeRule);
 
 $columnModification = new Modification();
-$columnModification->setId($family_id);
+$columnModification->setId('cf1');
 $columnModification->setCreate($columnFamily1);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 print('Created column family cf1 with MaxAge GC Rule.' . PHP_EOL);

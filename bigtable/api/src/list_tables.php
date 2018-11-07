@@ -32,20 +32,9 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 $location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
 
 // [START bigtable_list_tables]
+
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-
-use Google\Cloud\Bigtable\Admin\V2\Table;
-use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
-use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-
-use Google\Cloud\Bigtable\Admin\V2\Table\View;
-use Google\ApiCore\ApiException;
-use Google\Protobuf\Duration;
-
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';

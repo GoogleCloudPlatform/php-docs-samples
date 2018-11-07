@@ -25,19 +25,17 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID FAMILY_ID" . PHP_EOL, __FILE__);
+if (count($argv) != 4) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf4';
 
 // [START bigtable_create_family_gc_intersection]
-
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Protobuf\Duration;
 
 
@@ -45,12 +43,10 @@ use Google\Protobuf\Duration;
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 print('Creating column family cf4 with Intersection GC rule...' . PHP_EOL);
@@ -69,7 +65,7 @@ $intersection->setIntersection($intersection_rule);
 $columnFamily4->setGCRule($intersection);
 
 $columnModification = new Modification();
-$columnModification->setId($family_id);
+$columnModification->setId('cf4');
 $columnModification->setCreate($columnFamily4);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 

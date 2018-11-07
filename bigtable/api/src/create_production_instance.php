@@ -33,11 +33,11 @@ $location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
 
 // [START bigtable_create_prod_instance]
 
+use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */

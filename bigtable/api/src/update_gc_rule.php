@@ -33,12 +33,11 @@ $family_id = isset($argv[4]) ? $argv[4] : 'cf3';
 
 // [START bigtable_update_gc_rule]
 
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Protobuf\Duration;
 
 
 /** Uncomment and populate these variables in your code */

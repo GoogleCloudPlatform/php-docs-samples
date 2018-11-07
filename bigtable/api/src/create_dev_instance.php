@@ -85,7 +85,7 @@ try {
     printf("Instance %s already exists." . PHP_EOL, $instance_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Creating an Instance: %s" . PHP_EOL, $instance_id);
+        printf("Creating a development Instance: %s" . PHP_EOL, $instance_id);
         $operationResponse = $instanceAdminClient->createInstance(
             $projectName,
             $instance_id,

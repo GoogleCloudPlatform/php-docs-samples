@@ -25,21 +25,20 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [FAMILY_ID]" . PHP_EOL, __FILE__);
+if (count($argv) != 4) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf5';
 
 // [START bigtable_create_family_gc_nested]
 
+use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Protobuf\Duration;
 
 
@@ -47,25 +46,14 @@ use Google\Protobuf\Duration;
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-try {
-    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-    printf('Table %s exists' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s doesn\'t exists');
-        return;
-    }
-}
 
-printf('Creating column family %s with a Nested GC rule...' . PHP_EOL, $family_id);
+print('Creating column family cf5 with a Nested GC rule...' . PHP_EOL);
 // Create a column family with nested GC policies.
 // Create a nested GC rule:
 // Drop cells that are either older than the 10 recent versions
@@ -96,10 +84,10 @@ $nested_rule = (new GcRule())->setUnion($nested_rule);
 $columnFamily5->setGCRule($nested_rule);
 
 $columnModification = new Modification();
-$columnModification->setId($family_id);
+$columnModification->setId('cf5');
 $columnModification->setCreate($columnFamily5);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 
-printf('Created column family %s with a Nested GC rule.' . PHP_EOL, $family_id);
+print('Created column family cf5 with a Nested GC rule.' . PHP_EOL);
 
 // [END bigtable_create_family_gc_nested]

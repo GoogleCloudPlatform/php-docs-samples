@@ -34,14 +34,11 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
-use Google\Cloud\Bigtable\Admin\V2\Table\View;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
@@ -49,15 +46,6 @@ $tableAdminClient = new BigtableTableAdminClient();
 $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-try {
-    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-    printf('Table %s exists' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s doesn\'t exists' . PHP_EOL, $table_id);
-        return;
-    }
-}
 
 $table = $tableAdminClient->getTable($tableName);
 $columnFamilies = iterator_to_array($table->getColumnFamilies()->getIterator());
