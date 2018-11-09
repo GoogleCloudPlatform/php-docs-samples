@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,44 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Tasks\Tests;
+namespace Google\Cloud\Samples\Appengine\Tasks\Tests;
 
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for tasks commands.
  */
-class tasksTest extends TestCase
+class TasksTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
-
-    private static $commandFile = __DIR__ . '/../tasks.php';
 
     public function testCreateTask()
     {
         $queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
         $location = $this->requireEnv('CLOUD_TASKS_LOCATION');
 
-        $output = $this->runCommand('create-task', [
-            'project' => self::$projectId,
-            'queue' => $queue,
-            'location' => $location
+        $output = $this->runSnippet('create_task', [
+            $location,
+            $queue,
+            'Task Details',
         ]);
         $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
             self::$projectId,
             $location,
             $queue
         );
+
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
         $this->assertContains($expectedOutput, $output);
+    }
+
+    private function runSnippet($sampleName, $params = [])
+    {
+        $argv = array_merge([0, self::$projectId], array_values($params));
+        $argc = count($argv);
+        ob_start();
+        require __DIR__ . "/../src/$sampleName.php";
+        return ob_get_clean();
     }
 }

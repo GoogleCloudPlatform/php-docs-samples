@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2017 Google Inc.
+  Copyright 2018 Google LLC.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,10 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-            <file>app.php</file>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
-    <php>
-        <env name="PHPUNIT_TESTS" value="1"/>
-    </php>
 </phpunit>
