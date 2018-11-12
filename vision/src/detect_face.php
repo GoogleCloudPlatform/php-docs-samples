@@ -36,35 +36,40 @@ function detect_face($path, $outFile = null)
     $annotations = $vision->annotate($image);
     $faces = $annotations->faces();
     // [END vision_face_detection_tutorial_send_request]
+    if (is_array($faces) ) {
+        printf("%d faces found:" . PHP_EOL, count($faces));
+        foreach ($faces as $face) {
+            $anger = $face->angerLikelihood();
+            printf("Anger: %s" . PHP_EOL, $anger);
 
-    printf("%d faces found:" . PHP_EOL, count($faces));
-    foreach ((array) $faces as $face) {
-        $anger = $face->angerLikelihood();
-        printf("Anger: %s" . PHP_EOL, $anger);
+            $joy = $face->joyLikelihood();
+            printf("Joy: %s" . PHP_EOL, $joy);
 
-        $joy = $face->joyLikelihood();
-        printf("Joy: %s" . PHP_EOL, $joy);
+            $surprise = $face->surpriseLikelihood();
+            printf("Surprise: %s" . PHP_EOL, $surprise);
 
-        $surprise = $face->surpriseLikelihood();
-        printf("Surprise: %s" . PHP_EOL, $surprise);
-
-        # get bounds
-        $vertices = $face->boundingPoly()['vertices'];
-        $bounds = [];
-        foreach ($vertices as $vertex) {
-            # get (x, y) coordinates if available.
-            $x = $y = 0;
-            if (isset($vertex['x'])) {
-                $x = $vertex['x'];
+            # get bounds
+            $vertices = $face->boundingPoly()['vertices'];
+            $bounds = [];
+            foreach ($vertices as $vertex) {
+                # get (x, y) coordinates if available.
+                $x = $y = 0;
+                if (isset($vertex['x'])) {
+                    $x = $vertex['x'];
+                }
+                if (isset($vertex['y'])) {
+                    $y = $vertex['y'];
+                }
+                $bounds[] = sprintf('(%d,%d)', $x, $y);
             }
-            if (isset($vertex['y'])) {
-                $y = $vertex['y'];
-            }
-            $bounds[] = sprintf('(%d,%d)', $x, $y);
+            print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+            print(PHP_EOL);
         }
-        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-        print(PHP_EOL);
     }
+    else {
+        printf("0 faces found:" . PHP_EOL);
+    }
+
     // [END vision_face_detection]
 
     # [START vision_face_detection_tutorial_process_response]
