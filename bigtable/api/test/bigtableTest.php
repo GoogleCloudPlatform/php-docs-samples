@@ -486,7 +486,6 @@ final class BigTableTest extends TestCase
             $project_id,
             $instance_id
         ]);
-        //print_r( $content );
     }
 
     private function runSnippet($sampleName, $params = [])
