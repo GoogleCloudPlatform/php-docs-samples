@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,47 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 // [START vision_face_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
-// $path = 'gs://path/to/your/image.jpg'
+use Google\Cloud\Vision\VisionClient;
 
 function detect_face_gcs($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
+
+    $vision = new VisionClient();
 
     # annotate the image
-    $response = $imageAnnotator->faceDetection($path);
-    $faces = $response->getFaceAnnotations();
-
-    # names of likelihood from google.cloud.vision.enums
-    $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
-    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+    $image = $vision->image($path, ['FACE_DETECTION']);
+    $annotations = $vision->annotate($image);
+    $faces = $annotations->faces();
+    // [END vision_face_detection_tutorial_send_request]
 
     printf("%d faces found:" . PHP_EOL, count($faces));
-    foreach ($faces as $face) {
-        $anger = $face->getAngerLikelihood();
-        printf("Anger: %s" . PHP_EOL, $likelihoodName[$anger]);
+    foreach ((array) $faces as $face) {
+        $anger = $face->angerLikelihood();
+        printf("Anger: %s" . PHP_EOL, $anger);
 
-        $joy = $face->getJoyLikelihood();
-        printf("Joy: %s" . PHP_EOL, $likelihoodName[$joy]);
+        $joy = $face->joyLikelihood();
+        printf("Joy: %s" . PHP_EOL, $joy);
 
-        $surprise = $face->getSurpriseLikelihood();
-        printf("Surprise: %s" . PHP_EOL, $likelihoodName[$surprise]);
+        $surprise = $face->surpriseLikelihood();
+        printf("Surprise: %s" . PHP_EOL, $surprise);
 
         # get bounds
-        $vertices = $face->getBoundingPoly()->getVertices();
+        $vertices = $face->boundingPoly()['vertices'];
         $bounds = [];
         foreach ($vertices as $vertex) {
-            $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+            # get (x, y) coordinates if available.
+            $x = $y = 0;
+            if (isset($vertex['x'])) {
+                $x = $vertex['x'];
+            }
+            if (isset($vertex['y'])) {
+                $y = $vertex['y'];
+            }
+            $bounds[] = sprintf('(%d,%d)', $x, $y);
         }
         print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         print(PHP_EOL);
     }
-
-    $imageAnnotator->close();
 }
 // [END vision_face_detection_gcs]
