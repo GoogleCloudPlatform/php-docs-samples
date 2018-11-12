@@ -31,7 +31,7 @@ function detect_face_gcs($path)
     // [END vision_face_detection_tutorial_send_request]
 
     printf("%d faces found:" . PHP_EOL, count($faces));
-    foreach ($faces as $face) {
+    foreach ((array) $faces as $face) {
         $anger = $face->angerLikelihood();
         printf("Anger: %s" . PHP_EOL, $anger);
 
