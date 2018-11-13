@@ -18,29 +18,29 @@
 // [START vision_image_property_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\VisionClient;
 
 // $path = 'path/to/your/image.jpg'
 
 function detect_image_property($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
+    $vision = new VisionClient();
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->imagePropertiesDetection($image);
-    $props = $response->getImagePropertiesAnnotation();
+    $imagePhotoResource = file_get_contents($path);
+    $image = $vision->image($imagePhotoResource, ['IMAGE_PROPERTIES']);
+    $annotations = $vision->annotate($image);
+    $props = $annotations->imageProperties();
 
     print("Properties:" . PHP_EOL);
-    foreach ($props->getDominantColors()->getColors() as $colorInfo) {
-        printf("Fraction: %s" . PHP_EOL, $colorInfo->getPixelFraction());
-        $color = $colorInfo->getColor();
-        printf("Red: %s" . PHP_EOL, $color->getRed());
-        printf("Green: %s" . PHP_EOL, $color->getGreen());
-        printf("Blue: %s" . PHP_EOL, $color->getBlue());
+    foreach ((array) $props->colors() as $colorInfo) {
+        printf("Fraction: %s" . PHP_EOL, $colorInfo['pixelFraction']);
+        $color = $colorInfo['color'];
+        printf("Red: %s" . PHP_EOL, $color['red']);
+        printf("Green: %s" . PHP_EOL, $color['green']);
+        printf("Blue: %s" . PHP_EOL, $color['blue']);
         print(PHP_EOL);
     }
 
-    $imageAnnotator->close();
 }
 // [END vision_image_property_detection]
