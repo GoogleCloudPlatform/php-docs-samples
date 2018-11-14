@@ -29,7 +29,7 @@ if ($argc < 4 || $argc > 5) {
 }
 list($_, $projectId, $locationId, $queueId, $payload) = $argv;
 
-# [START create_task]
+# [START cloud_tasks_appengine_create_task]
 use Google\Cloud\Tasks\V2beta3\AppEngineHttpRequest;
 use Google\Cloud\Tasks\V2beta3\CloudTasksClient;
 use Google\Cloud\Tasks\V2beta3\CreateTaskRequest;
@@ -65,4 +65,4 @@ $task->setAppEngineHttpRequest($httpRequest);
 $response = $client->createTask($queueName, $task);
 printf('Created task %s' . PHP_EOL, $response->getName());
 
-# [END create_task]
+# [END cloud_tasks_appengine_create_task]
