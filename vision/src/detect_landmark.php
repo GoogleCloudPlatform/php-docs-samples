@@ -18,24 +18,29 @@
 // [START vision_landmark_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\VisionClient;
 
 // $path = 'path/to/your/image.jpg1'
 
 function detect_landmark($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
+    $vision = new VisionClient();
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->landmarkDetection($image);
-    $landmarks = $response->getLandmarkAnnotations();
+    $imagePhotoResource = file_get_contents($path);
+    $image = $vision->image($imagePhotoResource, ['LANDMARK_DETECTION']);
+    $annotations = $vision->annotate($image);
+    $landmarks = $annotations->landmarks();
 
-    printf('%d landmark found:' . PHP_EOL, count($landmarks));
-    foreach ($landmarks as $landmark) {
-        print($landmark->getDescription() . PHP_EOL);
+    if ($landmarks) {
+        printf('%d landmark found:' . PHP_EOL, count($landmarks));
+        foreach ($landmarks as $landmark) {
+            print($landmark->info()['description'] . PHP_EOL);
+        }
+    }  else {
+        printf('0 landmark found' . PHP_EOL);
     }
 
-    $imageAnnotator->close();
+
 }
 // [END vision_landmark_detection]
