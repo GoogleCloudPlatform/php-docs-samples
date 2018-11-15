@@ -18,23 +18,26 @@
 // [START vision_logo_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\VisionClient;
 
 // $path = 'gs://path/to/your/image.jpg'
 
 function detect_logo_gcs($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
+    $vision = new VisionClient();
 
     # annotate the image
-    $response = $imageAnnotator->logoDetection($path);
-    $logos = $response->getLogoAnnotations();
+    $image = $vision->image($path, ['LOGO_DETECTION']);
+    $annotations = $vision->annotate($image);
+    $logos = $annotations->logos();
 
-    printf('%d logos found:' . PHP_EOL, count($logos));
-    foreach ($logos as $logo) {
-        print($logo->getDescription() . PHP_EOL);
+    if ($logos) {
+        printf('%d logos found:' . PHP_EOL, count($logos));
+        foreach ($logos as $logo) {
+            print($logo->info()['description'] . PHP_EOL);
+        }
+    } else {
+        printf('0 logos found' . PHP_EOL);
     }
-
-    $imageAnnotator->close();
 }
 // [END vision_logo_detection_gcs]
