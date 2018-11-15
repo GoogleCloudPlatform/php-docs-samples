@@ -18,28 +18,27 @@
 // [START vision_label_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\VisionClient;
 
 // $path = 'path/to/your/image.jpg'
 
 function detect_label($path)
 {
-    $imageAnnotator = new ImageAnnotatorClient();
+    $vision = new VisionClient();
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->labelDetection($image);
-    $labels = $response->getLabelAnnotations();
+    $imagePhotoResource = file_get_contents($path);
+    $image = $vision->image($imagePhotoResource, ['LABEL_DETECTION']);
+    $annotations = $vision->annotate($image);
+    $labels = $annotations->labels();
 
     if ($labels) {
         print("Labels:" . PHP_EOL);
         foreach ($labels as $label) {
-            print($label->getDescription() . PHP_EOL);
+            print($label->info()['description'] . PHP_EOL);
         }
     } else {
         print('No label found' . PHP_EOL);
     }
-
-    $imageAnnotator->close();
 }
 // [END vision_label_detection]
