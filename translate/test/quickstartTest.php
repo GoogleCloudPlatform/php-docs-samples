@@ -43,6 +43,6 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('text', $translation);
         $this->assertEquals('en', $translation['source']);
         $this->assertEquals('Hello, world!', $translation['input']);
-        $this->assertEquals('Привет мир!', $translation['text']);
+        $this->assertContains('мир', $translation['text']);
     }
 }
