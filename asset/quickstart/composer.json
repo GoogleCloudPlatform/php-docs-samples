@@ -1,0 +1,17 @@
+{
+    "require": {
+        "php": "^7.1",
+        "google/cloud-storage": "^1.9",
+        "google/cloud-asset": "^0.1.3",
+        "paragonie/random_compat": "^2.0",
+        "symfony/console": " ^3.0"
+    },
+    "autoload": {
+        "files": [
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "google/cloud-tools": "^0.8.5"
+    }
+}
