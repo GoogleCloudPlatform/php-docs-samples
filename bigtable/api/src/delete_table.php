@@ -47,7 +47,6 @@ $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 // Delete the entire table
 
-printf('Checking if table %s exists...' . PHP_EOL, $table_id);
 try {
     printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
     $tableAdminClient->deleteTable($tableName);

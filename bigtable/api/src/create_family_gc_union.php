@@ -46,7 +46,6 @@ use Google\Protobuf\Duration;
 // $table_id = 'The Bigtable table ID';
 // $location_id = 'The Bigtable region ID';
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);

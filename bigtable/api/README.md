@@ -2,7 +2,7 @@
 
 ## Description
 
-All code in the `snippets` directory demonstrates how to connect to Cloud Bigtable and run some basic operations to create instance, create cluster, delete instance and delete cluster.
+All code in the `src` directory demonstrates how to connect to Cloud Bigtable and run some basic operations to create instance, create cluster, delete instance and delete cluster.
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the BigTable API](https://console.cloud.google.com/flows/enableapi?apiid=bigtable)

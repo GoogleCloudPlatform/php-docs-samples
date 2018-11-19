@@ -40,10 +40,8 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 

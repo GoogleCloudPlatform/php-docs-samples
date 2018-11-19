@@ -46,10 +46,8 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
 // $table_id = 'The Bigtable table ID';
 // $location_id = 'The Bigtable region ID';
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 $columnFamily1 = new ColumnFamily();

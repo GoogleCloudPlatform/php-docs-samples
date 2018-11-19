@@ -49,11 +49,11 @@ $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
 printf("Listing Tables:" . PHP_EOL);
 $tables = iterator_to_array($tableAdminClient->listTables($instanceName)->iterateAllElements());
-if ($tables != []) {
-    foreach ($tables as $table) {
-        print($table->getName() . PHP_EOL);
-    }
-} else {
-    print('No table exists in current project...' . PHP_EOL);
+if(empty($tables)){
+	print('No table exists.' . PHP_EOL);
+	exit(0);
+}
+foreach ($tables as $table) {
+	print($table->getName() . PHP_EOL);
 }
 // [END bigtable_list_tables]
