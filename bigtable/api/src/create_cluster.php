@@ -65,10 +65,12 @@ printf("Listing Clusters:" . PHP_EOL);
 $storage_type = StorageType::SSD;
 $serve_nodes = 3;
 
-$clusters = $instanceAdminClient->listClusters($instanceName)->getClusters()->getIterator();
+$clustersBefore = $instanceAdminClient->listClusters($instanceName)->getClusters();
+$clusters = $clustersBefore->getIterator();
 foreach ($clusters as $cluster) {
     print($cluster->getName() . PHP_EOL);
 }
+
 $cluster = new Cluster();
 $cluster->setServeNodes($serve_nodes);
 $cluster->setDefaultStorageType($storage_type);
