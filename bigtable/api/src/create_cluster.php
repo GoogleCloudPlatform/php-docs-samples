@@ -93,6 +93,8 @@ try {
             $error = $operationResponse->getError();
             printf("Cluster not created: %s", $error);
         }
+    } else {
+        throw $e;
     }
 }
 // [END bigtable_create_cluster]

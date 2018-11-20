@@ -94,11 +94,13 @@ try {
         );
         $operationResponse->pollUntilComplete();
         if (!$operationResponse->operationSucceeded()) {
-            throw new Exception('error creating instance', -1);
+            $error = $operationResponse->getError();
+            throw $error;
         } else {
             printf("Instance %s created.", $instance_id);
         }
+    } else {
+        throw $e;
     }
 }
 // [END bigtable_create_dev_instance]
-

@@ -94,6 +94,8 @@ try {
         } else {
             printf("Instance %s created.", $instance_id);
         }
+    } else {
+        throw $e;
     }
 }
 // [END bigtable_create_prod_instance]

@@ -44,7 +44,6 @@ $tableAdminClient = new BigtableTableAdminClient();
 
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-
 // Delete the entire table
 
 try {
@@ -54,6 +53,8 @@ try {
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf('Table %s does not exists' . PHP_EOL, $table_id);
+    } else {
+        throw $e;
     }
 }
 // [END bigtable_delete_table]

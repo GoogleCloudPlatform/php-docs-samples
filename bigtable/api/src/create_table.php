@@ -68,6 +68,8 @@ try {
             $table
         );
         printf('Created table %s' . PHP_EOL, $table_id);
+    } else {
+        throw $e;
     }
 }
 // [END bigtable_create_table]
