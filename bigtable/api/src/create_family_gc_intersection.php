@@ -31,6 +31,7 @@ if (count($argv) != 4) {
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
 // [START bigtable_create_family_gc_intersection]
+use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;

@@ -40,14 +40,16 @@ final class BigTableTest extends TestCase
     public function testCreateDevInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-dev';
-        $cluster_id = 'php-sample-cluster-dev';
+        $instance_id = 'php-instance-dev';
+        $cluster_id = 'php-instance-c-dev';
 
         $content = $this->runSnippet('create_dev_instance', [
             $project_id,
             $instance_id,
             $cluster_id
         ]);
+        
+
 
         $array = explode(PHP_EOL, $content);
 
