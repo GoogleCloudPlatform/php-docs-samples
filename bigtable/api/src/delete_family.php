@@ -44,7 +44,6 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 // $table_id = 'The Bigtable table ID';
 // $location_id = 'The Bigtable region ID';
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);

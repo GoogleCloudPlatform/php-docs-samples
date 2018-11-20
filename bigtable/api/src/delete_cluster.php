@@ -53,6 +53,8 @@ try {
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf("Cluster %s does not exist." . PHP_EOL, $cluster_id);
+    } else {
+        throw $e;
     }
 }
 // [END bigtable_delete_cluster]
