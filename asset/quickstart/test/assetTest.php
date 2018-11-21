@@ -55,7 +55,6 @@ class assetTest extends TestCase
 
     public function testExportAssets()
     {
-        $this->assertEquals(self::$bucket->name(), self::$bucketName);
         $fileName = 'my-assets.txt';
         $dumpFilePath = 'gs://' . self::$bucketName . '/' . $fileName;
         $output = $this->runCommand('export', [
