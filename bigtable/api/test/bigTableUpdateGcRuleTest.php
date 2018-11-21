@@ -17,7 +17,7 @@ final class BigTableUpdateGcRuleTest extends TestCase
         $table_id = 'php-table-updrule';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_union', [
+        $this->runSnippet('create_family_gc_union', [
             $project_id,
             $instance_id,
             $table_id
@@ -25,55 +25,52 @@ final class BigTableUpdateGcRuleTest extends TestCase
 
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
-        try {
-            $table = $tableAdminClient->getTable($tableName);
-            $columnFamilies = $table->getColumnFamilies()->getIterator();
-            $key = $columnFamilies->key();
-            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
 
-            $gcRuleCompare = [
-                'gcRule' => [
-                    'union' => [
-                        'rules' => [
-                            [
-                                'maxNumVersions' => 2
-                            ],
-                            [
-                                'maxAge' => [
-                                    'seconds' => 432000
-                                ]
+        $gcRuleCompare = [
+            'gcRule' => [
+                'union' => [
+                    'rules' => [
+                        [
+                            'maxNumVersions' => 2
+                        ],
+                        [
+                            'maxAge' => [
+                                'seconds' => 432000
                             ]
                         ]
                     ]
                 ]
-            ];
-            $this->assertEquals($key, 'cf3');
-            $this->assertEquals($gcRule, $gcRuleCompare);
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(), true);
-                $this->fail($error['message']);
-            }
-            throw $e;
-        }
+            ]
+        ];
 
-        $content = $this->runSnippet('update_gc_rule', [
+        $this->checkRule($tableAdminClient, $tableName, $gcRuleCompare);
+
+        $this->runSnippet('update_gc_rule', [
             $project_id,
             $instance_id,
             $table_id
         ]);
+
+        $gcRuleCompare = [
+            'gcRule' => [
+                'maxNumVersions' => 1
+            ]
+        ];
+
+        $this->checkRule($tableAdminClient, $tableName, $gcRuleCompare);
+
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function checkRule($tableAdminClient, $tableName, $familyKey, $gcRuleCompare)
+    {
         try {
             $table = $tableAdminClient->getTable($tableName);
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
 
-            $gcRuleCompare = [
-                'gcRule' => [
-                    'maxNumVersions' => 1
-                ]
-            ];
-            $this->assertEquals($key, 'cf3');
+            $this->assertEquals($key, $familyKey);
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -82,8 +79,6 @@ final class BigTableUpdateGcRuleTest extends TestCase
             }
             throw $e;
         }
-
-        $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
