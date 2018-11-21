@@ -4,10 +4,13 @@
         "google/cloud-storage": "^1.9",
         "google/cloud-asset": "^0.1.3",
         "paragonie/random_compat": "^2.0",
-        "symfony/console": " ^3.0"
+        "symfony/console": " ^3.0",
+        "ext-bcmath": "*"
     },
     "autoload": {
         "files": [
+            "src/export_assets.php",
+            "src/batch_get_assets_history.php"
         ]
     },
     "require-dev": {
