@@ -25,38 +25,47 @@ final class BigTableCreateFamilyGcNestedTest extends TestCase
 
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
-        try {
-            $table = $tableAdminClient->getTable($tableName);
-            $columnFamilies = $table->getColumnFamilies()->getIterator();
-            $key = $columnFamilies->key();
-            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
-            $gcRuleCompare = [
-                'gcRule' => [
-                    'union' => [
-                        'rules' => [
-                            [
-                                'maxNumVersions' => 10
-                            ],
-                            [
-                                'intersection' => [
-                                    'rules' => [
-                                        [
-                                            'maxAge' => [
-                                                'seconds' => 2592000
-                                            ]
-                                        ],
-                                        [
-                                            'maxNumVersions' => 2
+        
+        $gcRuleCompare = [
+            'gcRule' => [
+                'union' => [
+                    'rules' => [
+                        [
+                            'maxNumVersions' => 10
+                        ],
+                        [
+                            'intersection' => [
+                                'rules' => [
+                                    [
+                                        'maxAge' => [
+                                            'seconds' => 2592000
                                         ]
+                                    ],
+                                    [
+                                        'maxNumVersions' => 2
                                     ]
                                 ]
                             ]
                         ]
                     ]
                 ]
-            ];
+            ]
+        ];
 
-            $this->assertEquals($key, 'cf5');
+        $this->checkRule($tableAdminClient, $tableName, 'cf5', $gcRuleCompare)
+        
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function checkRule($tableAdminClient, $tableName, $familyKey, $gcRuleCompare)
+    {
+        try {
+            $table = $tableAdminClient->getTable($tableName);
+            $columnFamilies = $table->getColumnFamilies()->getIterator();
+            $key = $columnFamilies->key();
+            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
+
+            $this->assertEquals($key, $familyKey);
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -65,7 +74,6 @@ final class BigTableCreateFamilyGcNestedTest extends TestCase
             }
             throw $e;
         }
-        $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)

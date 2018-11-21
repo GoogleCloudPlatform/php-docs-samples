@@ -23,9 +23,17 @@ final class BigTableCreateDevInstanceTest extends TestCase
 
         $instanceAdminClient = new BigtableInstanceAdminClient();
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
+        
+        $this->check_instance($instanceAdminClient, $instanceName);
+        
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function check_instance($instanceAdminClient, $instanceName)
+    {
         try {
             $instance = $instanceAdminClient->GetInstance($instanceName);
-            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id);
+            $this->assertEquals($instance->getName(), $instanceName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);
@@ -33,7 +41,6 @@ final class BigTableCreateDevInstanceTest extends TestCase
             }
             throw $e;
         }
-        $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)

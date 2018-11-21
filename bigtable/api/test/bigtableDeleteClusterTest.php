@@ -31,16 +31,7 @@ final class BigTableDeleteClusterTest extends TestCase
             'us-east1-c'
         ]);
 
-        try {
-            $cluster = $instanceAdminClient->GetCluster($clusterName);
-            $this->assertEquals($clusterName = $cluster->getName(), 'projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_two_id);
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(), true);
-                $this->fail($error['message']);
-            }
-            throw $e;
-        }
+        $this->checkCluster($instanceAdminClient, $clusterName);
 
         $content = $this->runSnippet('delete_cluster', [
             $project_id,
@@ -58,6 +49,20 @@ final class BigTableDeleteClusterTest extends TestCase
         }
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function checkCluster($instanceAdminClient, $clusterName)
+    {
+        try {
+            $cluster = $instanceAdminClient->GetCluster($clusterName);
+            $this->assertEquals($clusterName = $cluster->getName(), $clusterName);
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $error = json_decode($e->getMessage(), true);
+                $this->fail($error['message']);
+            }
+            throw $e;
+        }
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)

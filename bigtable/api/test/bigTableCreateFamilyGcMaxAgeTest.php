@@ -25,20 +25,29 @@ final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
 
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        
+        $gcRuleCompare = [
+            'gcRule' => [
+                'maxAge' => [
+                    'seconds' => 432000
+                ]
+            ]
+        ];
 
+        $this->checkRule($tableAdminClient, $tableName, 'cf1', $gcRuleCompare);
+        
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function checkRule($tableAdminClient, $tableName, $familyKey, $gcRuleCompare)
+    {
         try {
             $table = $tableAdminClient->getTable($tableName);
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
-            $gcRuleCompare = [
-                'gcRule' => [
-                    'maxAge' => [
-                        'seconds' => 432000
-                    ]
-                ]
-            ];
-            $this->assertEquals($key, 'cf1');
+
+            $this->assertEquals($key, $familyKey);
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -47,7 +56,6 @@ final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
             }
             throw $e;
         }
-        $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)

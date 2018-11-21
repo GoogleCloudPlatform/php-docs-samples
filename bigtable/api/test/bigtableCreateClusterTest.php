@@ -29,6 +29,14 @@ final class BigTableCreateClusterTest extends TestCase
 
         $instanceAdminClient = new BigtableInstanceAdminClient();
         $clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
+        
+        $this->check_cluster($instanceAdminClient, $clusterName);
+
+        $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function check_cluster($instanceAdminClient, $clusterName)
+    {
         try {
             $cluster = $instanceAdminClient->GetCluster($clusterName);
             $this->assertEquals($cluster->getName(), $clusterName);
@@ -39,7 +47,6 @@ final class BigTableCreateClusterTest extends TestCase
             }
             throw $e;
         }
-        $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
