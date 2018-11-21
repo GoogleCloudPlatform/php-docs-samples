@@ -43,9 +43,10 @@ final class BigTableDeleteTableTest extends TestCase
             throw $e;
         }
 
-        $content = $this->runSnippet('delete_instance', [
+        $content = $this->runSnippet('delete_table', [
             $project_id,
-            $instance_id
+            $instance_id,
+            $table_id
         ]);
 
         try{
