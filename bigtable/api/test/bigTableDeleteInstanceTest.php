@@ -24,16 +24,7 @@ final class BigTableDeleteInstanceTest extends TestCase
             $cluster_id
         ]);
 
-        try {
-            $instance = $instanceAdminClient->GetInstance($instanceName);
-            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id);
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(), true);
-                $this->fail($error['message']);
-            }
-            throw $e;
-        }
+        $this->checkInstance($instanceAdminClient, $instanceName);
 
         $content = $this->runSnippet('delete_instance', [
             $project_id,
@@ -50,6 +41,20 @@ final class BigTableDeleteInstanceTest extends TestCase
         }
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
+    }
+
+    private function checkInstance($instanceAdminClient, $instanceName)
+    {
+        try {
+            $instance = $instanceAdminClient->GetInstance($instanceName);
+            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id);
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $error = json_decode($e->getMessage(), true);
+                $this->fail($error['message']);
+            }
+            throw $e;
+        }
     }
 
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
