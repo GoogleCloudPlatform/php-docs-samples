@@ -9,7 +9,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 final class BigTableDeleteInstanceTest extends TestCase
 {
-	public function testDeleteInstance(): void
+    public function testDeleteInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = 'php-delete-instance';
@@ -23,13 +23,13 @@ final class BigTableDeleteInstanceTest extends TestCase
             $instance_id,
             $cluster_id
         ]);
-        
-        try{
+
+        try {
             $instance = $instanceAdminClient->GetInstance($instanceName);
-            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id );
+            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(),true);
+                $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
             }
             throw $e;
@@ -40,7 +40,7 @@ final class BigTableDeleteInstanceTest extends TestCase
             $instance_id
         ]);
 
-        try{
+        try {
             $instance = $instanceAdminClient->GetInstance($instanceName);
             $this->fail(sprintf('Instance %s still exists', $instance->getName()));
         } catch (ApiException $e) {
@@ -65,7 +65,8 @@ final class BigTableDeleteInstanceTest extends TestCase
             $table_id
         ]);
     }
-	private function clean_instance($project_id, $instance_id, $cluster_id)
+
+    private function clean_instance($project_id, $instance_id, $cluster_id)
     {
         $content = $this->runSnippet('delete_instance', [
             $project_id,

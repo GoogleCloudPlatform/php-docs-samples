@@ -51,14 +51,15 @@ $tableAdminClient = new BigtableTableAdminClient();
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 $columnFamily1 = new ColumnFamily();
-printf('Updating column family %s GC rule...' . PHP_EOL, $family_id);
+print('Updating column family cf3 GC rule...' . PHP_EOL);
 $columnFamily1->setGcRule((new GcRule)->setMaxNumVersions(1));
 // Update the column family cf1 to update the GC rule
 $columnModification = new Modification();
-$columnModification->setId($family_id);
+$columnModification->setId('cf3');
 $columnModification->setUpdate($columnFamily1);
+$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 
-printf('Print column family %s GC rule after update...' . PHP_EOL, $family_id);
-printf('Column Family: %s', $family_id);
+print('Print column family cf3 GC rule after update...' . PHP_EOL);
+printf('Column Family: cf3');
 printf('%s' . PHP_EOL, $columnFamily1->serializeToJsonString());
 // [END bigtable_update_gc_rule]

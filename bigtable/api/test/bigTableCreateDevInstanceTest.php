@@ -9,32 +9,33 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 final class BigTableCreateDevInstanceTest extends TestCase
 {
-	public function testCreateDevInstance(): void
+    public function testCreateDevInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = 'php-instance-dev';
         $cluster_id = 'php-instance-dev-c';
-        
+
         $content = $this->runSnippet('create_dev_instance', [
             $project_id,
             $instance_id,
             $cluster_id
         ]);
-        
+
         $instanceAdminClient = new BigtableInstanceAdminClient();
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
-        try{
+        try {
             $instance = $instanceAdminClient->GetInstance($instanceName);
-            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id );
+            $this->assertEquals($instance->getName(), 'projects/' . $project_id . '/instances/' . $instance_id);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(),true);
+                $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
             }
             throw $e;
         }
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
+
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
     {
         $this->runSnippet('create_production_instance', [
@@ -48,7 +49,8 @@ final class BigTableCreateDevInstanceTest extends TestCase
             $table_id
         ]);
     }
-	private function clean_instance($project_id, $instance_id, $cluster_id)
+
+    private function clean_instance($project_id, $instance_id, $cluster_id)
     {
         $content = $this->runSnippet('delete_instance', [
             $project_id,

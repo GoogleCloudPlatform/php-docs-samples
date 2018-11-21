@@ -7,17 +7,17 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
+final class BigTableUpdateGcRuleTest extends TestCase
 {
-    public function testCreateFamilyGcMaxAge(): void
+    public function testUpdateGcRule(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-max-age';
-        $cluster_id = 'php-sample-cluster-max-age';
-        $table_id = 'php-sample-table-max-age';
+        $instance_id = 'php-instance-updrule';
+        $cluster_id = 'php-cluster-updrule';
+        $table_id = 'php-table-updrule';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_max_age', [
+        $content = $this->runSnippet('create_family_gc_union', [
             $project_id,
             $instance_id,
             $table_id
@@ -25,20 +25,29 @@ final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
 
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
-
         try {
             $table = $tableAdminClient->getTable($tableName);
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
+
             $gcRuleCompare = [
                 'gcRule' => [
-                    'maxAge' => [
-                        'seconds' => 432000
+                    'union' => [
+                        'rules' => [
+                            [
+                                'maxNumVersions' => 2
+                            ],
+                            [
+                                'maxAge' => [
+                                    'seconds' => 432000
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ];
-            $this->assertEquals($key, 'cf1');
+            $this->assertEquals($key, 'cf3');
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -47,6 +56,33 @@ final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
             }
             throw $e;
         }
+
+        $content = $this->runSnippet('update_gc_rule', [
+            $project_id,
+            $instance_id,
+            $table_id
+        ]);
+        try {
+            $table = $tableAdminClient->getTable($tableName);
+            $columnFamilies = $table->getColumnFamilies()->getIterator();
+            $key = $columnFamilies->key();
+            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
+
+            $gcRuleCompare = [
+                'gcRule' => [
+                    'maxNumVersions' => 1
+                ]
+            ];
+            $this->assertEquals($key, 'cf3');
+            $this->assertEquals($gcRule, $gcRuleCompare);
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $error = json_decode($e->getMessage(), true);
+                $this->fail($error['message']);
+            }
+            throw $e;
+        }
+
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
@@ -64,7 +100,7 @@ final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
         ]);
     }
 
-    private function clean_instance($project_id, $instance_id, $cluster_id)
+    private function clean_instance($project_id, $instance_id, $cluster_id = null)
     {
         $content = $this->runSnippet('delete_instance', [
             $project_id,

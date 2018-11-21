@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 final class BigTableDeleteTableTest extends TestCase
 {
-	public function testDeleteTable(): void
+    public function testDeleteTable(): void
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = 'php-sample-instance-deltable';
@@ -31,13 +31,13 @@ final class BigTableDeleteTableTest extends TestCase
             $instance_id,
             $table_id
         ]);
-        
-        try{
+
+        try {
             $table = $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-            $this->assertEquals($table->getName(), 'projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id );
+            $this->assertEquals($table->getName(), 'projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(),true);
+                $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
             }
             throw $e;
@@ -49,7 +49,7 @@ final class BigTableDeleteTableTest extends TestCase
             $table_id
         ]);
 
-        try{
+        try {
             $table = $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
             $this->fail(sprintf('Instance %s still exists', $table->getName()));
         } catch (ApiException $e) {
@@ -74,7 +74,8 @@ final class BigTableDeleteTableTest extends TestCase
             $table_id
         ]);
     }
-	private function clean_instance($project_id, $instance_id, $cluster_id)
+
+    private function clean_instance($project_id, $instance_id, $cluster_id)
     {
         $content = $this->runSnippet('delete_instance', [
             $project_id,

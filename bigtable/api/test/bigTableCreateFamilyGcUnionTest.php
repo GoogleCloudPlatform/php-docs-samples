@@ -9,7 +9,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 final class BigTableCreateFamilyGcUnionTest extends TestCase
 {
-	public function testCreateFamilyGcUnion(): void
+    public function testCreateFamilyGcUnion(): void
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = 'php-sample-instance-union';
@@ -22,14 +22,14 @@ final class BigTableCreateFamilyGcUnionTest extends TestCase
             $instance_id,
             $table_id
         ]);
-        
+
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
-        try{
+        try {
             $table = $tableAdminClient->getTable($tableName);
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
-            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(),true);
+            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
 
             $gcRuleCompare = [
                 'gcRule' => [
@@ -51,13 +51,14 @@ final class BigTableCreateFamilyGcUnionTest extends TestCase
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
-                $error = json_decode($e->getMessage(),true);
+                $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
             }
             throw $e;
         }
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
+
     private function createTable($project_id, $instance_id, $cluster_id, $table_id)
     {
         $this->runSnippet('create_production_instance', [
@@ -71,7 +72,8 @@ final class BigTableCreateFamilyGcUnionTest extends TestCase
             $table_id
         ]);
     }
-	private function clean_instance($project_id, $instance_id, $cluster_id)
+
+    private function clean_instance($project_id, $instance_id, $cluster_id)
     {
         $content = $this->runSnippet('delete_instance', [
             $project_id,
