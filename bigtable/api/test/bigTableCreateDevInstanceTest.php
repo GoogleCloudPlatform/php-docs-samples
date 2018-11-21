@@ -7,15 +7,15 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
-final class BigTableTest extends TestCase
+final class BigTableCreateDevInstanceTest extends TestCase
 {
-	public function testCreateProductionInstance(): void
+	public function testCreateDevInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-prod';
-        $cluster_id = 'php-sample-cluster-prod';
-
-        $content = $this->runSnippet('create_production_instance', [
+        $instance_id = 'php-instance-dev';
+        $cluster_id = 'php-instance-dev-c';
+        
+        $content = $this->runSnippet('create_dev_instance', [
             $project_id,
             $instance_id,
             $cluster_id

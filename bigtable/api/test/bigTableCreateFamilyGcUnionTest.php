@@ -7,17 +7,17 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-final class BigTableTest extends TestCase
+final class BigTableCreateFamilyGcUnionTest extends TestCase
 {
-	public function testCreateFamilyGcNested(): void
+	public function testCreateFamilyGcUnion(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-gc-nested';
-        $cluster_id = 'php-sample-cluster-nested';
-        $table_id = 'php-sample-table-nested';
+        $instance_id = 'php-sample-instance-union';
+        $cluster_id = 'php-sample-cluster-union';
+        $table_id = 'php-sample-table-union';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_nested', [
+        $content = $this->runSnippet('create_family_gc_union', [
             $project_id,
             $instance_id,
             $table_id
@@ -30,33 +30,24 @@ final class BigTableTest extends TestCase
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(),true);
+
             $gcRuleCompare = [
                 'gcRule' => [
                     'union' => [
                         'rules' => [
                             [
-                                'maxNumVersions' => 10
+                                'maxNumVersions' => 2
                             ],
                             [
-                                'intersection' => [
-                                    'rules' => [
-                                        [
-                                            'maxAge' => [
-                                                'seconds' => 2592000
-                                            ]
-                                        ],
-                                        [
-                                            'maxNumVersions' => 2
-                                        ]
-                                    ]
+                                'maxAge' => [
+                                    'seconds' => 432000
                                 ]
                             ]
                         ]
                     ]
                 ]
             ];
-
-            $this->assertEquals($key, 'cf5');
+            $this->assertEquals($key, 'cf3');
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {

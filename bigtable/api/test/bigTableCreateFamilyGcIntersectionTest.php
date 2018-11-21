@@ -7,7 +7,7 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-final class BigTableTest extends TestCase
+final class BigTableCreateFamilyGcIntersectionTest extends TestCase
 {
 	public function testCreateFamilyGcIntersection(): void
     {

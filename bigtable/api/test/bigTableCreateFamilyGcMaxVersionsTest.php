@@ -7,21 +7,17 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-final class BigTableTest extends TestCase
+final class BigTableCreateFamilyGcMaxVersionsTest extends TestCase
 {
-	public function testCreateDevInstance(): void
+	public function testCreateFamilyGcMaxVersions(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-table';
-        $cluster_id = 'php-sample-cluster-table';
-        $table_id = 'php-sample-table-table';
-        
-        $this->runSnippet('create_production_instance', [
-            $project_id,
-            $instance_id,
-            $cluster_id
-        ]);
-        $content = $this->runSnippet('create_table', [
+        $instance_id = 'php-sample-instance-max-ver';
+        $cluster_id = 'php-sample-cluster-max-ver';
+        $table_id = 'php-sample-table-max-ver';
+        $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
+
+        $content = $this->runSnippet('create_family_gc_max_versions', [
             $project_id,
             $instance_id,
             $table_id
@@ -30,8 +26,18 @@ final class BigTableTest extends TestCase
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         try{
-            $table = $tableAdminClient->GetTable($tableName);
-            $this->assertEquals($table->getName(), 'projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id );
+            $table = $tableAdminClient->getTable($tableName);
+            $columnFamilies = $table->getColumnFamilies()->getIterator();
+            $key = $columnFamilies->key();
+            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(),true);
+            $gcRuleCompare = [
+                'gcRule' => [
+                    'maxNumVersions' => 2
+                ]
+            ];
+            
+            $this->assertEquals($key, 'cf2');
+            $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(),true);

@@ -7,17 +7,21 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-final class BigTableTest extends TestCase
+final class BigTableCreateTableTest extends TestCase
 {
-	public function testCreateFamilyGcMaxVersions(): void
+	public function testCreateDevInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-max-ver';
-        $cluster_id = 'php-sample-cluster-max-ver';
-        $table_id = 'php-sample-table-max-ver';
-        $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
-
-        $content = $this->runSnippet('create_family_gc_max_versions', [
+        $instance_id = 'php-sample-instance-table';
+        $cluster_id = 'php-sample-cluster-table';
+        $table_id = 'php-sample-table-table';
+        
+        $this->runSnippet('create_production_instance', [
+            $project_id,
+            $instance_id,
+            $cluster_id
+        ]);
+        $content = $this->runSnippet('create_table', [
             $project_id,
             $instance_id,
             $table_id
@@ -26,18 +30,8 @@ final class BigTableTest extends TestCase
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         try{
-            $table = $tableAdminClient->getTable($tableName);
-            $columnFamilies = $table->getColumnFamilies()->getIterator();
-            $key = $columnFamilies->key();
-            $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(),true);
-            $gcRuleCompare = [
-                'gcRule' => [
-                    'maxNumVersions' => 2
-                ]
-            ];
-            
-            $this->assertEquals($key, 'cf2');
-            $this->assertEquals($gcRule, $gcRuleCompare);
+            $table = $tableAdminClient->GetTable($tableName);
+            $this->assertEquals($table->getName(), 'projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id );
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(),true);
@@ -75,5 +69,4 @@ final class BigTableTest extends TestCase
         require_once __DIR__ . "/../src/$sampleName.php";
         return ob_get_clean();
     }
-
 }

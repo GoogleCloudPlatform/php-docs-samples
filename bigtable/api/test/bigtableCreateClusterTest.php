@@ -7,7 +7,7 @@ use Google\ApiCore\ApiException;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
-final class BigTableTest extends TestCase
+final class BigTableCreateClusterTest extends TestCase
 {
 	public function testCreateCluster(): void
     {

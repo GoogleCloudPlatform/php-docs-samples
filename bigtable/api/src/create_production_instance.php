@@ -51,22 +51,16 @@ $instanceAdminClient = new BigtableInstanceAdminClient();
 $projectName = $instanceAdminClient->projectName($project_id);
 $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
-$instance = new Instance();
-$instance->setDisplayName($instance_id);
-$instance->setName($instanceName);
-
 $serve_nodes = 3;
 $storage_type = StorageType::SSD;
 $production = InstanceType::PRODUCTION;
 $labels = ['prod-label' => 'prod-label'];
-
 
 $instance = new Instance();
 $instance->setDisplayName($instance_id);
 
 $instance->setLabels($labels);
 $instance->setType($production);
-
 
 $cluster = new Cluster();
 $cluster->setDefaultStorageType($storage_type);
@@ -79,6 +73,7 @@ $clusters = [
 try {
     $instanceAdminClient->getInstance($instanceName);
     printf("Instance %s already exists." . PHP_EOL, $instance_id);
+    throw new Exception(sprintf("Instance %s already exists." . PHP_EOL, $instance_id));
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf("Creating an Instance: %s" . PHP_EOL, $instance_id);
@@ -90,7 +85,8 @@ try {
         );
         $operationResponse->pollUntilComplete();
         if (!$operationResponse->operationSucceeded()) {
-            throw new Exception('error creating instance', -1);
+            $error = $operationResponse->getError();
+            throw $error;
         } else {
             printf("Instance %s created.", $instance_id);
         }
