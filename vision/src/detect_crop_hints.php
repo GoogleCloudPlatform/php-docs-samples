@@ -25,12 +25,10 @@ use Google\Cloud\Vision\VisionClient;
 function detect_crop_hints($path)
 {
     $vision = new VisionClient();
-
     # annotate the image
     $imagePhotoResource = file_get_contents($path);
     $image = $vision->image($imagePhotoResource,['CROP_HINTS']);
     $annotations = $vision->annotate($image);
-
     # print the crop hints from the annotation
     if ($annotations) {
         print("Crop hints:" . PHP_EOL);
@@ -39,7 +37,11 @@ function detect_crop_hints($path)
             $vertices = $hint->boundingPoly()['vertices'];
             $bounds = [];
             foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex['x'], $vertex['y']);
+                # get (x, y) coordinates if available.
+                $bounds[] = sprintf('(%d,%d)',
+                    isset($vertex['x']) ? $vertex['x'] : 0,
+                    isset($vertex['y']) ? $vertex['y'] : 0
+                );
             }
             print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         }
