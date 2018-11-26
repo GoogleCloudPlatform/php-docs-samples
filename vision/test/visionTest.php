@@ -291,7 +291,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $this->requireCloudStorage();
 
-        $source = 'gs://' . $this->bucketName . '/HodgeConj.pdf';
+        $source = 'gs://' . $this->bucketName . '/vision/HodgeConj.pdf';
         $destination = 'gs://' . $this->bucketName . '/OCR_PDF_TEST_OUTPUT/';
         $output = $this->runCommand('pdf', $source, $destination);
         $this->assertContains('Output files:', $output);
