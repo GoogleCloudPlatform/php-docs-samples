@@ -53,14 +53,10 @@ function detect_face($path, $outFile = null)
             $bounds = [];
             foreach ($vertices as $vertex) {
                 # get (x, y) coordinates if available.
-                $x = $y = 0;
-                if (isset($vertex['x'])) {
-                    $x = $vertex['x'];
-                }
-                if (isset($vertex['y'])) {
-                    $y = $vertex['y'];
-                }
-                $bounds[] = sprintf('(%d,%d)', $x, $y);
+                $bounds[] = sprintf('(%d,%d)',
+                    isset($vertex['x']) ? $vertex['x'] : 0,
+                    isset($vertex['y']) ? $vertex['y'] : 0
+                );
             }
             print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
             print(PHP_EOL);
