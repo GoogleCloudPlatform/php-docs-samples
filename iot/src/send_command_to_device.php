@@ -25,7 +25,7 @@ use Google\Cloud\Iot\V1\DeviceManagerClient;
  *
  * @param string $registryId IOT Device Registry ID
  * @param string $deviceId IOT Device ID
- * @param string $config Configuration sent to a device
+ * @param string $command The command sent to a device
  * @param string $projectId Google Cloud project ID
  * @param string $location (Optional) Google Cloud region
  */
