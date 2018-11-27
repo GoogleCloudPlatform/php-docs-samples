@@ -183,11 +183,11 @@ class dlpTest extends \PHPUnit_Framework_TestCase
     /** @depends testCreateRsaDevice */
     public function testSendCommandToDevice()
     {
-        $config = '{"data":"example of command data"}';
+        $command = '{"data":"example of command data"}';
         $output = $this->runCommand('send-command-to-device', [
             'registry' => self::$registryId,
             'device' => self::$devices[0],
-            'config' => $config,
+            'command-data' => $command,
         ]);
         $this->assertContains('not subscribed to the commands topic', $output);
     }
