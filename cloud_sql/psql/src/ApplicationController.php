@@ -36,9 +36,13 @@ class ApplicationController
 
     public function vote()
     {
-        if (array_key_exists('team', $_POST) && $_POST['team']) {
-            echo $this->votes->save($_POST['team']);
+        $message = 'Invalid vote. Choose Between TABS and SPACES';
+
+        if (!empty($_POST['team']) && in_array($_POST['team'], ['SPACES', 'TABS'])) {
+            $message = $this->votes->save($_POST['team']);
         }
+
+        echo $message;
     }
 
     private function render($list, $tab_count, $space_count)
