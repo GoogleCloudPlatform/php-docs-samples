@@ -526,6 +526,7 @@ final class BigTableTest extends TestCase
             throw $e;
         }
     }
+    
     private function checkRule($tableAdminClient, $tableName, $familyKey, $gcRuleCompare)
     {
         try {

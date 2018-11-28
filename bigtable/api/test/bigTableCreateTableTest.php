@@ -11,19 +11,20 @@ final class BigTableCreateTableTest extends TestCase
 {
     const INSTANCE_ID_PREFIX = 'php-itest-';
     const CLUSTER_ID_PREFIX = 'php-ctest-';
+    
     public function testCreateTable(): void
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
-        $table_id = 'php-sample-table-table';
+        $table_id = uniqid(self::TABLE_ID_PREFIX);
 
         $this->runSnippet('create_production_instance', [
             $project_id,
             $instance_id,
             $cluster_id
         ]);
-        $content = $this->runSnippet('create_table', [
+        $this->runSnippet('create_table', [
             $project_id,
             $instance_id,
             $table_id

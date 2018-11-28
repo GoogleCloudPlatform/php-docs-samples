@@ -13,7 +13,7 @@ final class BigTableDeleteInstanceTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-delete-instance';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $instanceAdminClient = new BigtableInstanceAdminClient();
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
@@ -24,7 +24,7 @@ final class BigTableDeleteInstanceTest extends TestCase
             $cluster_id
         ]);
 
-        $this->checkInstance($instanceAdminClient, $instanceName);
+        $this->check_instance($instanceAdminClient, $instanceName);
 
         $content = $this->runSnippet('delete_instance', [
             $project_id,

@@ -13,7 +13,7 @@ final class BigTableCreateProductionInstanceTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-sample-cluster-prod';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = $this->runSnippet('create_production_instance', [
             $project_id,
@@ -24,12 +24,12 @@ final class BigTableCreateProductionInstanceTest extends TestCase
         $instanceAdminClient = new BigtableInstanceAdminClient();
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
         
-        $this->checkInstance($instanceAdminClient, $instanceName);
+        $this->check_instance($instanceAdminClient, $instanceName);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
-    private function checkInstance($instanceAdminClient, $instanceName)
+    private function check_instance($instanceAdminClient, $instanceName)
     {
         try {
             $instance = $instanceAdminClient->GetInstance($instanceName);

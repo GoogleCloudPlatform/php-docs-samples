@@ -13,8 +13,9 @@ final class BigTableDeleteClusterTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-cluster';
-        $cluster_two_id = 'php-cluster-two';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+        $cluster_two_id = uniqid(self::CLUSTER_ID_PREFIX);
+
         $this->runSnippet('create_production_instance', [
             $project_id,
             $instance_id,
@@ -32,13 +33,13 @@ final class BigTableDeleteClusterTest extends TestCase
         ]);
 
         $this->check_cluster($instanceAdminClient, $clusterName);
-
+        
         $content = $this->runSnippet('delete_cluster', [
             $project_id,
             $instance_id,
             $cluster_two_id
         ]);
-
+        
         try {
             $cluster = $instanceAdminClient->GetCluster($clusterName);
             $this->fail(sprintf('Cluster %s still exists', $cluster->getName()));
@@ -51,7 +52,7 @@ final class BigTableDeleteClusterTest extends TestCase
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
-    private function checkCluster($instanceAdminClient, $clusterName)
+    private function check_cluster($instanceAdminClient, $clusterName)
     {
         try {
             $cluster = $instanceAdminClient->GetCluster($clusterName);

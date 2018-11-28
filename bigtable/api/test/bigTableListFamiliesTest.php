@@ -12,9 +12,9 @@ final class BigTableListFamiliesTest extends TestCase
     public function testListColumnFamilies(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-instance-lfamily';
-        $cluster_id = 'php-cluster-lfamily';
-        $table_id = 'php-table-lfamily';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+        $table_id = uniqid(self::TABLE_ID_PREFIX);
         $family_id = 'cf3';
         
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);

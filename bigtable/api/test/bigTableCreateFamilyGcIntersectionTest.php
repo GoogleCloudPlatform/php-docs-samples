@@ -13,8 +13,8 @@ final class BigTableCreateFamilyGcIntersectionTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-sample-cluster-inter';
-        $table_id = 'php-sample-table-inter';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+        $table_id = uniqid(self::TABLE_ID_PREFIX);
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 

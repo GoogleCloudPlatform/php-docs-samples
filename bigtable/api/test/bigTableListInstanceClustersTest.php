@@ -12,8 +12,8 @@ final class BigTableListFamiliesTest extends TestCase
     public function testListInstanceClusters(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-lclusters';
-        $cluster_id = 'php-sample-cluster-lclusters';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $this->runSnippet('create_production_instance', [
             $project_id,

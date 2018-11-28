@@ -13,8 +13,8 @@ final class BigTableCreateFamilyGcUnionTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-sample-cluster-union';
-        $table_id = 'php-sample-table-union';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+        $table_id = uniqid(self::TABLE_ID_PREFIX);
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_union', [
@@ -43,7 +43,7 @@ final class BigTableCreateFamilyGcUnionTest extends TestCase
             ]
         ];
 
-        $this->checkRule($tableAdminClient, $tableName, 'cf3', $gcRuleCompare)
+        $this->checkRule($tableAdminClient, $tableName, 'cf3', $gcRuleCompare);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }

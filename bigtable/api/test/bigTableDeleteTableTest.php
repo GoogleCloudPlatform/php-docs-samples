@@ -15,8 +15,8 @@ final class BigTableDeleteTableTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-sample-cluster-deltable';
-        $table_id = 'php-sample-table-table';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+        $table_id = uniqid(self::TABLE_ID_PREFIX);
 
         $tableAdminClient = new BigtableTableAdminClient();
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);

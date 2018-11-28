@@ -13,7 +13,7 @@ final class BigTableCreateDevInstanceTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-instance-dev-c';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = $this->runSnippet('create_dev_instance', [
             $project_id,

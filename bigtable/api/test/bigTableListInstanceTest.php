@@ -12,8 +12,8 @@ final class BigTableListInstanceTest extends TestCase
     public function testListInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-linstance';
-        $cluster_id = 'php-sample-cluster-linstance';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $this->runSnippet('create_production_instance', [
             $project_id,

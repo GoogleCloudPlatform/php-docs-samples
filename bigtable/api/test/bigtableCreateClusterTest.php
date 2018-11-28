@@ -14,7 +14,7 @@ final class BigTableCreateClusterTest extends TestCase
     {
         $project_id = getenv('PROJECT_ID');
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = 'php-sample-cluster-cluster';
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $this->runSnippet('create_production_instance', [
             $project_id,

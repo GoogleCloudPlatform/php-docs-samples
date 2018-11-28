@@ -12,9 +12,9 @@ final class BigTableListTableTest extends TestCase
     public function testListTable(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-insntance-ltable';
-        $cluster_id = 'php-sample-cluster-ltable';
-        $table_id = 'php-sample-table-ltable';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+        $table_id = uniqid(self::TABLE_ID_PREFIX);
 
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
