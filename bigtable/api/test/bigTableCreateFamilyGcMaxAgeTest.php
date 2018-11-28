@@ -12,7 +12,7 @@ final class BigTableCreateFamilyGcMaxAgeTest extends TestCase
     public function testCreateFamilyGcMaxAge(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-max-age';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-max-age';
         $table_id = 'php-sample-table-max-age';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);

@@ -12,7 +12,7 @@ final class BigTableCreateFamilyGcUnionTest extends TestCase
     public function testCreateFamilyGcUnion(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-union';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-union';
         $table_id = 'php-sample-table-union';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);

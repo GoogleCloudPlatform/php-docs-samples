@@ -9,11 +9,13 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 final class BigTableCreateTableTest extends TestCase
 {
-    public function testCreateDevInstance(): void
+    const INSTANCE_ID_PREFIX = 'php-itest-';
+    const CLUSTER_ID_PREFIX = 'php-ctest-';
+    public function testCreateTable(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-table';
-        $cluster_id = 'php-sample-cluster-table';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = 'php-sample-table-table';
 
         $this->runSnippet('create_production_instance', [

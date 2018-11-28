@@ -12,7 +12,7 @@ final class BigTableCreateFamilyGcNestedTest extends TestCase
     public function testCreateFamilyGcNested(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-gc-nested';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-nested';
         $table_id = 'php-sample-table-nested';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);

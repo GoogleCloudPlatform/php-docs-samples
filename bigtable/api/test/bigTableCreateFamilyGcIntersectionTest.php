@@ -12,7 +12,7 @@ final class BigTableCreateFamilyGcIntersectionTest extends TestCase
     public function testCreateFamilyGcIntersection(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-inter';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-inter';
         $table_id = 'php-sample-table-inter';
 

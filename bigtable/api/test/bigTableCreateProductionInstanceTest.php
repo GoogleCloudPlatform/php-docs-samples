@@ -12,7 +12,7 @@ final class BigTableCreateProductionInstanceTest extends TestCase
     public function testCreateProductionInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-prod';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-prod';
 
         $content = $this->runSnippet('create_production_instance', [

@@ -46,7 +46,9 @@ $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 
 $table = $tableAdminClient->getTable($tableName);
-$columnFamilies = iterator_to_array($table->getColumnFamilies()->getIterator());
+//$columnFamilies = iterator_to_array($table->getColumnFamilies()->getIterator());
+$colmunf = $table->getColumnFamilies();
+$columnFamilies = $colmunf->getIterator();
 foreach ($columnFamilies as $k => $columnFamily) {
     printf('Column Family: %s' . PHP_EOL, $k);
     print('GC Rule:' . PHP_EOL);

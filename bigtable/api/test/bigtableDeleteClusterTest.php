@@ -12,7 +12,7 @@ final class BigTableDeleteClusterTest extends TestCase
     public function testDeleteCluster(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-instance-cluster';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-cluster';
         $cluster_two_id = 'php-cluster-two';
         $this->runSnippet('create_production_instance', [
@@ -31,7 +31,7 @@ final class BigTableDeleteClusterTest extends TestCase
             'us-east1-c'
         ]);
 
-        $this->checkCluster($instanceAdminClient, $clusterName);
+        $this->check_cluster($instanceAdminClient, $clusterName);
 
         $content = $this->runSnippet('delete_cluster', [
             $project_id,

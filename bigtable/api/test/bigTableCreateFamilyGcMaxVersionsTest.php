@@ -12,7 +12,7 @@ final class BigTableCreateFamilyGcMaxVersionsTest extends TestCase
     public function testCreateFamilyGcMaxVersions(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-max-ver';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-max-ver';
         $table_id = 'php-sample-table-max-ver';
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);

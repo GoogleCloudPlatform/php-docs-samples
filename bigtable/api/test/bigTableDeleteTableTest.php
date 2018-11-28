@@ -14,7 +14,7 @@ final class BigTableDeleteTableTest extends TestCase
     public function testDeleteTable(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-deltable';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-deltable';
         $table_id = 'php-sample-table-table';
 

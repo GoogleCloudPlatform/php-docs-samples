@@ -1,0 +1,211 @@
+PHPUnit 5.7.27 by Sebastian Bergmann and contributors.
+
+..EEEEEFFFFFEEFE                                                  16 / 16 (100%)
+
+Time: 16.67 seconds, Memory: 12.00MB
+
+There were 8 errors:
+
+1) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateFamilyGcIntersection
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa8abe571",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:504
+/var/www/php-docs-samples/bigtable/api/src/create_table.php:68
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:586
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:71
+
+2) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateFamilyGcMaxAge
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa8b70027",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:857
+/var/www/php-docs-samples/bigtable/api/src/create_family_gc_max_age.php:66
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:115
+
+3) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateFamilyGcMaxVersions
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa8bccf38",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:857
+/var/www/php-docs-samples/bigtable/api/src/create_family_gc_max_versions.php:60
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:145
+
+4) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateFamilyGcNested
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa8c275ab",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:857
+/var/www/php-docs-samples/bigtable/api/src/create_family_gc_nested.php:88
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:173
+
+5) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateFamilyGcUnion
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa8c933a1",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:857
+/var/www/php-docs-samples/bigtable/api/src/create_family_gc_union.php:77
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:221
+
+6) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testListColumnFamilies
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa8f581a8",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:267
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:225
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:746
+/var/www/php-docs-samples/bigtable/api/src/list_column_families.php:48
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:432
+
+7) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testListInstanceClusters
+Google\ApiCore\ApiException: {
+    "message": "Instance php-itest-5bfefa8fab781 not found.",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:267
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:225
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableInstanceAdminGapicClient.php:1092
+/var/www/php-docs-samples/bigtable/api/src/list_instance_clusters.php:48
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:458
+
+8) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testListTable
+Google\ApiCore\ApiException: {
+    "message": "Failed to read: projects\/{980770916211}\/instances\/php-itest-5bfefa9153e4d",
+    "code": 5,
+    "status": "NOT_FOUND",
+    "details": []
+}
+
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:138
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/ApiException.php:90
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/Transport/GrpcTransport.php:249
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:246
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:223
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:267
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:225
+/var/www/php-docs-samples/bigtable/api/vendor/guzzlehttp/promises/src/Promise.php:62
+/var/www/php-docs-samples/bigtable/api/vendor/google/gax/src/ApiCore/GapicClientTrait.php:590
+/var/www/php-docs-samples/bigtable/api/vendor/google/cloud-bigtable/src/Admin/V2/Gapic/BigtableTableAdminGapicClient.php:686
+/var/www/php-docs-samples/bigtable/api/src/list_tables.php:51
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:602
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:505
+
+--
+
+There were 6 failures:
+
+1) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateProductionInstance
+Instance php-itest-5bfefa8d0c028 not found.
+
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:556
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:264
+
+2) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testCreateTable
+Failed to read: projects/{980770916211}/instances/php-itest-5bfefa8d96c43
+
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:570
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:290
+
+3) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testDeleteCluster
+Failed to read: projects/{980770916211}/instances/php-itest-5bfefa8e0f669
+
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:524
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:317
+
+4) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testDeleteInstance
+Instance php-itest-5bfefa8e63b8c not found.
+
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:556
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:352
+
+5) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testDeleteTable
+Failed to read: projects/{980770916211}/instances/php-itest-5bfefa8eea351
+
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:570
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:393
+
+6) Google\Cloud\Samples\BigTable\Tests\BigTableTest::testListInstance
+Failed asserting that an array contains 'php-itest-5bfefa905bf92'.
+
+/var/www/php-docs-samples/bigtable/api/test/bigtableTest.php:489
+
+ERRORS!
+Tests: 16, Assertions: 4, Errors: 8, Failures: 6.
+
+Generating code coverage report in Clover XML format ... done

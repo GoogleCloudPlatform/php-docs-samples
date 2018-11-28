@@ -44,8 +44,9 @@ $projectName = $instanceAdminClient->projectName($project_id);
 
 printf("Listing Instances:" . PHP_EOL);
 
-$instances = $instanceAdminClient->listInstances($projectName)->getInstances()->getIterator();
-
+//$instances = $instanceAdminClient->listInstances($projectName)->getInstances()->getIterator();
+$insta = $instanceAdminClient->listInstances($projectName)->getInstances();
+$instances = $insta->getIterator();
 foreach ($instances as $instance) {
     print($instance->getDisplayName() . PHP_EOL);
 }

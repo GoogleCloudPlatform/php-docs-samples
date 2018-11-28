@@ -9,10 +9,11 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 final class BigTableCreateClusterTest extends TestCase
 {
+    public static INSTANCE_ID_PREFIX = 'php-sys-instance-';
     public function testCreateCluster(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-sample-instance-cluster';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-sample-cluster-cluster';
 
         $this->runSnippet('create_production_instance', [

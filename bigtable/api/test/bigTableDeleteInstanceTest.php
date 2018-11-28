@@ -12,7 +12,7 @@ final class BigTableDeleteInstanceTest extends TestCase
     public function testDeleteInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
-        $instance_id = 'php-delete-instance';
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = 'php-delete-instance';
 
         $instanceAdminClient = new BigtableInstanceAdminClient();
