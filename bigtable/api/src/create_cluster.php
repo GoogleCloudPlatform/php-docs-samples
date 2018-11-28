@@ -58,6 +58,8 @@ try {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf("Instance %s does not exists." . PHP_EOL, $instance_id);
         return;
+    } else {
+        throw $e;
     }
 }
 printf("Listing Clusters:" . PHP_EOL);
