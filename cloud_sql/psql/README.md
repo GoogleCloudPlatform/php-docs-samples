@@ -54,7 +54,7 @@ Navigate towards http://localhost:3000 to verify your application is running cor
 
 ## Google App Engine Standard
 
-To run on GAE-Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php/quickstart#before-you-begin).
+To run on GAE-Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
 First, update `app.yaml` with the correct values to pass the environment variables into the runtime.
 
