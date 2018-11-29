@@ -283,6 +283,23 @@ $application->add(new Command('set-iam-policy'))
         );
     });
 
+$application->add(new Command('send-command-to-device'))
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('device', InputArgument::REQUIRED, 'the device ID')
+    ->addArgument('command-data', InputArgument::REQUIRED, 'the binary data to send as the command')
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->setDescription('Sends a command to a device.')
+    ->setCode(function ($input, $output) {
+        send_command_to_device(
+            $input->getArgument('registry'),
+            $input->getArgument('device'),
+            $input->getArgument('command-data'),
+            $input->getOption('project'),
+            $input->getOption('location')
+        );
+    });
+
 $application->add(new Command('set-device-state'))
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
     ->addArgument('device', InputArgument::REQUIRED, 'the device ID')

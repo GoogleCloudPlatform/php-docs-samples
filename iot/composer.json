@@ -2,7 +2,7 @@
     "name": "google/iot-sample",
     "type": "project",
     "require": {
-        "google/cloud-iot": "^0.1",
+        "google/cloud-iot": "^0.5.0",
         "symfony/console": "^3.3"
     },
     "autoload": {
@@ -22,6 +22,7 @@
             "src/list_registries.php",
             "src/patch_es.php",
             "src/patch_rsa.php",
+            "src/send_command_to_device.php",
             "src/set_device_config.php",
             "src/set_device_state.php",
             "src/set_iam_policy.php"
