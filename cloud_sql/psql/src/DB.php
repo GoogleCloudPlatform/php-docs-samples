@@ -28,7 +28,7 @@ class DB
             "password" => getenv("DB_PASSWORD"),
             "schema" => getenv("DB_NAME"),
             "hostname" => getenv("DB_HOSTNAME") ?: "127.0.0.1",
-            "cloud_sql_connection_name" => getenv("CLOUD_SQL_CONNECTION_NAME")
+            "cloud_sql_instance_name" => getenv("CLOUD_SQL_INSTANCE_NAME")
         ];
 
         $this->connection = $this->connect($config);
@@ -38,8 +38,8 @@ class DB
     {
         $dsn = "pgsql:dbname={$config['schema']};host={$config['hostname']}";
 
-        if ($config["cloud_sql_connection_name"] != "") {
-            $dsn = "pgsql:dbname={$config['schema']};unix_socket=/cloudsql/{$config['cloud_sql_connection_name']}";
+        if ($config["cloud_sql_instance_name"] != "") {
+            $dsn = "pgsql:dbname={$config['schema']};unix_socket=/cloudsql/{$config['cloud_sql_instance_name']}";
         }
 
         return new PDO($dsn, $config['username'], $config['password']);
