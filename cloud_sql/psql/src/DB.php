@@ -39,7 +39,7 @@ class DB
         $dsn = "pgsql:dbname={$config['schema']};host={$config['hostname']}";
 
         if ($config["cloud_sql_instance_name"] != "") {
-            $dsn = "pgsql:dbname={$config['schema']};unix_socket=/cloudsql/{$config['cloud_sql_instance_name']}";
+            $dsn = "pgsql:dbname={$config['schema']};host=/cloudsql/{$config['cloud_sql_instance_name']}";
         }
 
         return new PDO($dsn, $config['username'], $config['password']);
