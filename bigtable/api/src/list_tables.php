@@ -48,7 +48,7 @@ $tableAdminClient = new BigtableTableAdminClient();
 $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
 printf("Listing Tables:" . PHP_EOL);
-$tables = iterator_to_array($tableAdminClient->listTables($instanceName)->iterateAllElements());
+$tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
 if(empty($tables)){
 	print('No table exists.' . PHP_EOL);
 	exit(0);
