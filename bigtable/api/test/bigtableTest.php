@@ -14,12 +14,12 @@ final class BigTableTest extends TestCase
     const INSTANCE_ID_PREFIX = 'php-itest-';
     const CLUSTER_ID_PREFIX = 'php-ctest-';
     const TABLE_ID_PREFIX = 'php-ttest-';
-    private $instanceAdminClient;
-    private $tableAdminClient;
-    protected function setUpBeforeClass()
+    static $instanceAdminClient;
+    static $tableAdminClient;
+    public static function setUpBeforeClass()
     {
-        $this->instanceAdminClient = new BigtableInstanceAdminClient();
-        $this->tableAdminClient = new BigtableTableAdminClient();
+        self::$instanceAdminClient = new BigtableInstanceAdminClient();
+        self::$tableAdminClient = new BigtableTableAdminClient();
     }
 
     public function testCreateCluster(): void
@@ -83,7 +83,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = $this->tableAdminClient;
+        $tableAdminClient = self::$tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -122,7 +122,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = $this->tableAdminClient;
+        $tableAdminClient = self::$tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -152,7 +152,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = $this->tableAdminClient;
+        $tableAdminClient = self::$tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -180,7 +180,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = $this->tableAdminClient;
+        $tableAdminClient = self::$tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -228,7 +228,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = $this->tableAdminClient;
+        $tableAdminClient = self::$tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -265,7 +265,7 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $instanceAdminClient = $this->instanceAdminClient;
+        $instanceAdminClient = self::$instanceAdminClient;
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
         
         $this->check_instance($instanceName);
@@ -291,7 +291,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = $this->tableAdminClient;
+        $tableAdminClient = self::$tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $this->checkTable($tableName);
@@ -311,7 +311,7 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $instanceAdminClient = $this->instanceAdminClient;
+        $instanceAdminClient = self::$instanceAdminClient;
         $clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_two_id);
 
         $this->runSnippet('create_cluster', [
@@ -347,7 +347,7 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $instanceAdminClient = $this->instanceAdminClient;
+        $instanceAdminClient = self::$instanceAdminClient;
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
         $this->runSnippet('create_production_instance', [
