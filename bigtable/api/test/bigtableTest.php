@@ -14,6 +14,13 @@ final class BigTableTest extends TestCase
     const INSTANCE_ID_PREFIX = 'php-itest-';
     const CLUSTER_ID_PREFIX = 'php-ctest-';
     const TABLE_ID_PREFIX = 'php-ttest-';
+    private $instanceAdminClient;
+    private $tableAdminClient;
+    protected function setUpBeforeClass()
+    {
+        $this->instanceAdminClient = new BigtableInstanceAdminClient();
+        $this->tableAdminClient = new BigtableTableAdminClient();
+    }
 
     public function testCreateCluster(): void
     {
@@ -33,7 +40,7 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $instanceAdminClient = new BigtableInstanceAdminClient();
+        $instanceAdminClient = $this->instanceAdminClient;
         $clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
         
         $this->check_cluster($instanceAdminClient, $clusterName);
@@ -53,10 +60,10 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $instanceAdminClient = new BigtableInstanceAdminClient();
+        $instanceAdminClient = $this->tableAdminClient;
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
         
-        $this->check_instance($instanceAdminClient, $instanceName);
+        $this->check_instance($instanceName);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
@@ -76,7 +83,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -96,7 +103,7 @@ final class BigTableTest extends TestCase
             ]
         ];
 
-        $this->checkRule($tableAdminClient, $tableName, 'cf4', $gcRuleCompare);
+        $this->checkRule($tableName, 'cf4', $gcRuleCompare);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
@@ -115,7 +122,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -126,7 +133,7 @@ final class BigTableTest extends TestCase
             ]
         ];
 
-        $this->checkRule($tableAdminClient, $tableName, 'cf1', $gcRuleCompare);
+        $this->checkRule($tableName, 'cf1', $gcRuleCompare);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
@@ -145,7 +152,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -154,7 +161,7 @@ final class BigTableTest extends TestCase
             ]
         ];
 
-        $this->checkRule($tableAdminClient, $tableName, 'cf2', $gcRuleCompare);
+        $this->checkRule($tableName, 'cf2', $gcRuleCompare);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
@@ -173,7 +180,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -202,7 +209,7 @@ final class BigTableTest extends TestCase
             ]
         ];
 
-        $this->checkRule($tableAdminClient, $tableName, 'cf5', $gcRuleCompare);
+        $this->checkRule($tableName, 'cf5', $gcRuleCompare);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
@@ -221,7 +228,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
         $gcRuleCompare = [
@@ -241,11 +248,11 @@ final class BigTableTest extends TestCase
             ]
         ];
 
-        $this->checkRule($tableAdminClient, $tableName, 'cf3', $gcRuleCompare);
+        $this->checkRule($tableName, 'cf3', $gcRuleCompare);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-
+    
     public function testCreateProductionInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -258,14 +265,14 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $instanceAdminClient = new BigtableInstanceAdminClient();
+        $instanceAdminClient = $this->instanceAdminClient;
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
         
-        $this->check_instance($instanceAdminClient, $instanceName);
+        $this->check_instance($instanceName);
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-
+    
     public function testCreateTable(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -284,10 +291,10 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
         
-        $this->checkTable($tableAdminClient, $tableName);
+        $this->checkTable($tableName);
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
@@ -304,7 +311,7 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $instanceAdminClient = new BigtableInstanceAdminClient();
+        $instanceAdminClient = $this->instanceAdminClient;
         $clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_two_id);
 
         $this->runSnippet('create_cluster', [
@@ -314,7 +321,7 @@ final class BigTableTest extends TestCase
             'us-east1-c'
         ]);
 
-        $this->check_cluster($instanceAdminClient, $clusterName);
+        $this->check_cluster($clusterName);
         
         $content = $this->runSnippet('delete_cluster', [
             $project_id,
@@ -340,7 +347,7 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $instanceAdminClient = new BigtableInstanceAdminClient();
+        $instanceAdminClient = $this->instanceAdminClient;
         $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
         $this->runSnippet('create_production_instance', [
@@ -349,7 +356,7 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
 
-        $this->check_instance($instanceAdminClient, $instanceName);
+        $this->check_instance($instanceName);
 
         $content = $this->runSnippet('delete_instance', [
             $project_id,
@@ -368,7 +375,6 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
     
-    
     public function testDeleteTable(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -376,7 +382,7 @@ final class BigTableTest extends TestCase
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $tableAdminClient = new BigtableTableAdminClient();
+        $tableAdminClient = $this->tableAdminClient;
         $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
         $this->runSnippet('create_production_instance', [
@@ -390,7 +396,7 @@ final class BigTableTest extends TestCase
             $table_id
         ]);
 
-        $this->checkTable($tableAdminClient, $tableName);
+        $this->checkTable($tableName);
 
         $content = $this->runSnippet('delete_table', [
             $project_id,
@@ -416,7 +422,6 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
-        $family_id = 'cf3';
         
         $this->createTable($project_id, $instance_id, $cluster_id, $table_id);
 
@@ -434,13 +439,13 @@ final class BigTableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertContains(sprintf('Column Family: %s', $family_id), $array);
+        $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
         $this->assertContains('GC Rule:', $array);
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":{"seconds":432000}}]}}}', $array);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-
+    
     public function testListInstanceClusters(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -459,13 +464,13 @@ final class BigTableTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-
+        print_r($array);
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-
+    
     public function testListInstance(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -484,13 +489,13 @@ final class BigTableTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-
+        print_r($array);
         $this->assertContains('Listing Instances:', $array);
         $this->assertContains($instance_id, $array);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-
+    
     public function testListTable(): void
     {
         $project_id = getenv('PROJECT_ID');
@@ -506,15 +511,16 @@ final class BigTableTest extends TestCase
         ]);
         
         $array = explode(PHP_EOL, $content);
-
+        print_r($array);
         $this->assertContains('Listing Tables:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
     
-    private function check_cluster($instanceAdminClient, $clusterName)
+    private function check_cluster($clusterName)
     {
+        $instanceAdminClient = $this->instanceAdminClient;
         try {
             $cluster = $instanceAdminClient->GetCluster($clusterName);
             $this->assertEquals($cluster->getName(), $clusterName);
@@ -522,13 +528,15 @@ final class BigTableTest extends TestCase
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
+            }else{
+                throw $e;    
             }
-            throw $e;
         }
     }
     
-    private function checkRule($tableAdminClient, $tableName, $familyKey, $gcRuleCompare)
+    private function checkRule($tableName, $familyKey, $gcRuleCompare)
     {
+        $tableAdminClient = $this->tableAdminClient;
         try {
             $table = $tableAdminClient->getTable($tableName);
             $columnFamilies = $table->getColumnFamilies()->getIterator();
@@ -541,13 +549,15 @@ final class BigTableTest extends TestCase
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
+            }else{
+                throw $e;    
             }
-            throw $e;
         }
     }
 
-    private function check_instance($instanceAdminClient, $instanceName)
+    private function check_instance($instanceName)
     {
+        $instanceAdminClient = $this->instanceAdminClient;
         try {
             $instance = $instanceAdminClient->GetInstance($instanceName);
             $this->assertEquals($instance->getName(), $instanceName);
@@ -555,13 +565,15 @@ final class BigTableTest extends TestCase
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
+            }else{
+                throw $e;    
             }
-            throw $e;
         }
     }
     
-    private function checkTable($tableAdminClient, $tableName)
+    private function checkTable($tableName)
     {
+        $tableAdminClient = $this->tableAdminClient;
         try {
             $table = $tableAdminClient->GetTable($tableName);
             $this->assertEquals($table->getName(), $tableName);
@@ -569,8 +581,9 @@ final class BigTableTest extends TestCase
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);
                 $this->fail($error['message']);
+            }else{
+                throw $e;    
             }
-            throw $e;
         }
     }
 
