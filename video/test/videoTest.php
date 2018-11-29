@@ -85,10 +85,29 @@ class videoTest extends TestCase
         $this->assertContains(' to ', $output);
     }
 
+    public function testTranscription()
+    {
+        $output = $this->runCommand('transcription', [
+            'uri' => $this->gcsUriTwo(),
+            '--polling-interval-seconds' => 10,
+        ]);
+        $this->assertContains('Transcript:', $output);
+        $this->assertContains('Paris', $output);
+        $this->assertContains('France', $output);
+    }
+
     private function gcsUri()
     {
         return sprintf(
             'gs://%s/video/cat_shortened.mp4',
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
+    }
+
+    private function gcsUriTwo()
+    {
+        return sprintf(
+            'gs://%s/video/googlework_short.mp4',
             $this->requireEnv('GOOGLE_STORAGE_BUCKET')
         );
     }

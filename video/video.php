@@ -84,6 +84,16 @@ $application->add(new Command('shots'))
         );
     });
 
+$application->add(new Command('transcription'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Transcribe speech from a video')
+    ->setCode(function ($input, $output) {
+        analyze_transcription(
+            $input->getArgument('uri'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
+        );
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

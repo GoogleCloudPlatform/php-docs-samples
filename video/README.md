@@ -37,6 +37,7 @@ Video Intelligence API from PHP.
     list            Lists commands
     safe-search     Detect safe search in video using the Video Intelligence API
     shots           Detect shots in video using the Video Intelligence API
+    transcription   Transcribe speech from a video
     ```
 
     Example:
