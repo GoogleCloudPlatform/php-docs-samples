@@ -34,7 +34,7 @@ function analyze_transcription($uri, array $options = [])
     $features = [Feature::SPEECH_TRANSCRIPTION];
     $speechTranscriptionConfig = (new SpeechTranscriptionConfig())
         ->setLanguageCode('en-US')
-        ->setEnableAutomaticPunctuation(True);
+        ->setEnableAutomaticPunctuation(true);
     $videoContext = (new VideoContext())
         ->setSpeechTranscriptionConfig($speechTranscriptionConfig);
 
@@ -48,7 +48,7 @@ function analyze_transcription($uri, array $options = [])
         'videoContext' => $videoContext
     ]);
 
-    print('Processing video for speech transcription...');
+    print('Processing video for speech transcription...' . PHP_EOL);
     # Wait for the request to complete.
     $operation->pollUntilComplete($options);
 
@@ -66,7 +66,7 @@ function analyze_transcription($uri, array $options = [])
             # each alternative is a different possible transcription
             # and has its own confidence score.
             foreach ($transcription->getAlternatives() as $alternative) {
-                print('Alternative level information');
+                print('Alternative level information' . PHP_EOL);
                 
                 printf('Transcript: %s' . PHP_EOL, $alternative->getTranscript());
                 printf('Confidence: %s' . PHP_EOL, $alternative->getConfidence());
@@ -76,7 +76,7 @@ function analyze_transcription($uri, array $options = [])
                     $word = $wordInfo->getWord();
                     $startTime = $wordInfo->getStartTime();
                     $endTime = $wordInfo->getEndTime();
-                    printf('%s s - %s s: %s' . PHP_EOL, $startTime, $endTime, $word);
+                    printf('%s s - %s s: %s' . PHP_EOL, $startTime->getSeconds(), $endTime->getSeconds(), $word);
                 }
             }
         }
