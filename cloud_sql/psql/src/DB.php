@@ -24,8 +24,8 @@ class DB
     public function __construct()
     {
         $config = [
-            "username" => getenv("DB_USERNAME"),
-            "password" => getenv("DB_PASSWORD"),
+            "username" => getenv("DB_USER"),
+            "password" => getenv("DB_PASS"),
             "schema" => getenv("DB_NAME"),
             "hostname" => getenv("DB_HOSTNAME") ?: "127.0.0.1",
             "cloud_sql_instance_name" => getenv("CLOUD_SQL_INSTANCE_NAME")

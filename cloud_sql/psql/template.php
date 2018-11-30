@@ -30,15 +30,15 @@ limitations under the License.
 <div class="section">
     <div class="center">
         <h4>
-            <?php if ($tab_count == $space_count) { ?>
+            <?php if ($tab_count == $space_count): ?>
             TABS and SPACES are evenly matched!
-            <?php } elseif ($tab_count > $space_count) { ?>
+            <?php elseif ($tab_count > $space_count): ?>
             TABS are winning by <?=$tab_count - $space_count?>
             <?= $tab_count - $space_count > 1 ? "votes" : "vote" ?>!
-            <?php } elseif ($space_count > $tab_count) { ?>
+            <?php elseif ($space_count > $tab_count): ?>
             SPACES are winning by <?=$space_count - $tab_count?>
             <?= $space_count - $tab_count > 1 ? "votes" : "vote" ?>!
-            <?php }?>
+            <?php endif ?>
         </h4>
     </div>
     <div class="row center">
@@ -59,19 +59,19 @@ limitations under the License.
     </div>
     <h4 class="header center">Recent Votes</h4>
     <ul class="container collection center">
-        <?php foreach($list as $vote) { ?>
+        <?php foreach($list as $vote): ?>
             <li class="collection-item avatar">
-                <?php if ($vote['candidate'] == "TABS") { ?>
+                <?php if ($vote['candidate'] == "TABS"): ?>
                     <i class="material-icons circle green">keyboard_tab</i>
-                <?php } elseif ($vote['candidate'] == "SPACES") { ?>
+                <?php elseif ($vote['candidate'] == "SPACES"): ?>
                     <i class="material-icons circle blue">space_bar</i>
-                <?php } ?>
+                <?php endif ?>
             <span class="title">
                     A vote for <b><?= $vote['candidate'] ?></b>
                 </span>
             <p>was cast at <?= $vote['time_cast'] ?></p>
         </li>
-        <?php } ?>
+        <?php endforeach ?>
     </ul>
 </div>
 <script>

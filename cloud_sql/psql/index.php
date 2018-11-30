@@ -15,9 +15,9 @@
 
 require "vendor/autoload.php";
 
-use Google\Cloud\Samples\CloudSQL\Postgres\ApplicationController as Application;
+use Google\Cloud\Samples\CloudSQL\Postgres\ApplicationController;
 
-$app = new Application();
+$app = new ApplicationController();
 
 if ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     $app->index();

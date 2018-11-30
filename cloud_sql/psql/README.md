@@ -3,7 +3,7 @@
 ## Before you begin
 
 1. Before you use this code sample, you need to have [Composer](https://getcomposer.org/) installed or downloaded into this folder. Download instructions can be found [here](https://getcomposer.org/download/).
-2. Create a PostgreSQL   Cloud SQL Instance by following these [instructions](https://cloud.google.com/sql/docs/postgres/create-instance). Note the connection string, database user, and database password that you create.
+2. Create a PostgreSQL Cloud SQL Instance by following these [instructions](https://cloud.google.com/sql/docs/postgres/create-instance). Note the connection string, database user, and database password that you create.
 3. Create a database for your application by following these [instructions](https://cloud.google.com/sql/docs/postgres/create-manage-databases). Note the database name.
 4. Create a service account with the 'Cloud SQL Client' permissions by following these [instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account). Download a JSON key to use to authenticate your connection.
 5. Use the information noted in the previous steps:
@@ -11,8 +11,8 @@
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
 export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
-export DB_USERNAME='my-db-username'
-export DB_PASSWORD='my-db-password'
+export DB_USER='my-db-user'
+export DB_PASS='my-db-pass'
 export DB_NAME='my-db-name'
 export DB_HOSTNAME='localhost' # If connecting using cloud_sql_proxy
 ```
@@ -42,15 +42,13 @@ OR
 $ php composer.phar install
 ```
 
-## Running Locally
-
 Execute the following:
 
 ```bash
-$ php -S localhost:3000 quickstart.php
+$ php -S localhost:8080 index.php
 ```
 
-Navigate towards http://localhost:3000 to verify your application is running correctly.
+Navigate towards http://localhost:8080 to verify your application is running correctly.
 
 ## Google App Engine Standard
 

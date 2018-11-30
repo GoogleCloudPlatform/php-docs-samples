@@ -18,8 +18,8 @@ runtime: php72
 # something like https://cloud.google.com/kms/ to help keep secrets secret.
 env_variables:
   CLOUD_SQL_INSTANCE_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
-  DB_USERNAME: my-db-username
-  DB_PASSWORD: my-db-password
+  DB_USER: my-db-user
+  DB_PASS: my-db-pass
   DB_NAME: my_db
 
 entrypoint: serve quickstart.php
