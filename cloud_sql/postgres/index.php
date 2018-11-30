@@ -13,14 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require "vendor/autoload.php";
+require 'vendor/autoload.php';
 
-use Google\Cloud\Samples\CloudSQL\Postgres\ApplicationController;
+use Google\Cloud\Samples\CloudSQL\Postgres\DB;
+use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 
-$app = new ApplicationController();
+$votes = new Votes(new DB());
 
 if ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'GET') {
-    $app->index();
+    $list = $votes->list();
+
+    $vote_count = $votes->count_candidates();
+    $tab_count = $vote_count['tabs'];
+    $space_count = $vote_count['spaces'];
+
+    include_once("./template.php");
+
 } elseif ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'POST') {
-    $app->vote();
+    $message = 'Invalid vote. Choose Between TABS and SPACES';
+
+        if (!empty($_POST['team']) && in_array($_POST['team'], ['SPACES', 'TABS'])) {
+            $message = $votes->save($_POST['team']);
+        }
+
+        echo $message;
 }

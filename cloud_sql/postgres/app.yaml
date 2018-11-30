@@ -22,4 +22,4 @@ env_variables:
   DB_PASS: my-db-pass
   DB_NAME: my_db
 
-entrypoint: serve quickstart.php
+entrypoint: serve index.php
