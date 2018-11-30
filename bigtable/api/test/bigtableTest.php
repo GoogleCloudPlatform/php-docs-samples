@@ -21,7 +21,10 @@ final class BigTableTest extends TestCase
     
     public static function setUpBeforeClass()
     {
-        self::$project_id = getenv('PROJECT_ID');
+        $keyFilePath = getenv('GOOGLE_CLOUD_PHP_TESTS_KEY_PATH');
+        $keyFileData = json_decode(file_get_contents($keyFilePath), true);
+
+        self::$project_id = $keyFileData['project_id'];
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
         self::$dataClient = new BigtableClient([
