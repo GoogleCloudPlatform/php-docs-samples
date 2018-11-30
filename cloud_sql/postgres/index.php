@@ -32,9 +32,9 @@ if ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'GET') {
 } elseif ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $message = 'Invalid vote. Choose Between TABS and SPACES';
 
-        if (!empty($_POST['team']) && in_array($_POST['team'], ['SPACES', 'TABS'])) {
-            $message = $votes->save($_POST['team']);
-        }
+    if (!empty($_POST['team']) && in_array($_POST['team'], ['SPACES', 'TABS'])) {
+        $message = $votes->save($_POST['team']);
+    }
 
-        echo $message;
+    echo $message;
 }
