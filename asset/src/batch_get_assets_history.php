@@ -18,8 +18,6 @@
 namespace Google\Cloud\Samples\Asset;
 
 # [START asset_quickstart_batch_get_assets_history]
-# Includes the autoloader for libraries installed with composer
-
 use Google\Cloud\Asset\V1beta1\AssetServiceClient;
 use Google\Cloud\Asset\V1beta1\ContentType;
 use Google\Cloud\Asset\V1beta1\GcsDestination;

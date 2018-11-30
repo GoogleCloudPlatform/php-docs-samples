@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Asset;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Core\Exception\BadRequestException;
 use PHPUnit\Framework\TestCase;
@@ -32,17 +32,15 @@ class assetTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;
+    use EventuallyConsistentTestTrait;
 
     private static $commandFile = __DIR__ . '/../asset.php';
-    private static $projectId;
     private static $storage;
     private static $bucketName;
     private static $bucket;
 
     public static function setUpBeforeClass()
     {
-        self::checkProjectEnvVars();
-        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         self::$storage = new StorageClient();
         self::$bucketName = 'assets-bucket-' . time();
         self::$bucket = self::$storage->createBucket(self::$bucketName);
@@ -60,7 +58,7 @@ class assetTest extends TestCase
         $output = $this->runCommand('export', [
             'project' => self::$projectId,
             'filePath' => $dumpFilePath,
-          ]);
+        ]);
         $assetFile = self::$bucket->object($fileName);
         $this->assertEquals($assetFile->name(), $fileName);
         $assetFile->delete();
@@ -69,15 +67,14 @@ class assetTest extends TestCase
     public function testBatchGetAssetsHistory()
     {
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
-        $assetNames = array('//storage.googleapis.com/' . self::$bucketName);
-        $output = $this->runCommand('batch-get-history', [
-            'project' => self::$projectId,
-            'assetNames' => $assetNames,
-          ]);
-        if ($output != '')
-        {
-            $this->assertContains($assetName, $output);
-        }
-    }
 
+        $this->runEventuallyConsistentTest(function () use ($assetName) {
+            $output = $this->runCommand('batch-get-history', [
+                'project' => self::$projectId,
+                'assetNames' => [$assetName],
+            ]);
+
+            $this->assertContains($assetName, $output);
+        });
+    }
 }

@@ -18,16 +18,16 @@
 namespace Google\Cloud\Samples\Asset;
 
 # [START asset_quickstart_export_assets]
-
 use Google\Cloud\Asset\V1beta1\AssetServiceClient;
 use Google\Cloud\Asset\V1beta1\GcsDestination;
 use Google\Cloud\Asset\V1beta1\OutputConfig;
 
 /**
  * Export assets for given project to specified dump file path.
+ *
  * @param string $projectId the project Id for export assets.
  * @param string $dumpFilePath the file path where the assets will be dumped to.
- * e.g.: gs://[bucket-name]/[asset-file-name].
+ *        e.g.: gs://[bucket-name]/[asset-file-name].
  */
 function export_assets($projectId, $dumpFilePath)
 {
@@ -41,7 +41,7 @@ function export_assets($projectId, $dumpFilePath)
   $resp->pollUntilComplete();
 
   if ($resp->operationSucceeded()) {
-      echo "The result is dumped to $dumpFilePath successfully." . PHP_EOL;
+      print('The result is dumped to $dumpFilePath successfully.' . PHP_EOL);
   } else {
       $error = $operationResponse->getError();
       // handleError($error)
