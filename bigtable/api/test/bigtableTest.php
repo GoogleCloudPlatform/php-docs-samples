@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
 
 final class BigTableTest extends TestCase
 {
@@ -27,7 +28,7 @@ final class BigTableTest extends TestCase
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
     }
-
+    
     public function testCreateCluster(): void
     {
         $project_id = self::$project_id;
@@ -48,7 +49,7 @@ final class BigTableTest extends TestCase
 
         $clusterName = self::$instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
         
-        $this->check_cluster(self::$instanceAdminClient, $clusterName);
+        $this->check_cluster($clusterName);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
@@ -251,7 +252,7 @@ final class BigTableTest extends TestCase
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testCreateProductionInstance(): void
     {
         $project_id = self::$project_id;
@@ -270,7 +271,7 @@ final class BigTableTest extends TestCase
         
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testCreateTable(): void
     {
         $project_id = self::$project_id;
@@ -336,7 +337,7 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testDeleteInstance(): void
     {
         $project_id = self::$project_id;
@@ -369,7 +370,7 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testDeleteTable(): void
     {
         $project_id = self::$project_id;
@@ -439,7 +440,7 @@ final class BigTableTest extends TestCase
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testListInstanceClusters(): void
     {
         $project_id = self::$project_id;
@@ -458,13 +459,13 @@ final class BigTableTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-        print_r($array);
+
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testListInstance(): void
     {
         $project_id = self::$project_id;
@@ -483,13 +484,13 @@ final class BigTableTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-        print_r($array);
+
         $this->assertContains('Listing Instances:', $array);
         $this->assertContains($instance_id, $array);
 
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
-    
+
     public function testListTable(): void
     {
         $project_id = self::$project_id;
@@ -505,7 +506,7 @@ final class BigTableTest extends TestCase
         ]);
         
         $array = explode(PHP_EOL, $content);
-        print_r($array);
+
         $this->assertContains('Listing Tables:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
 

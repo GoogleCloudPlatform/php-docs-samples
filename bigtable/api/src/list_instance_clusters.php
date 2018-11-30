@@ -46,6 +46,7 @@ $instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
 printf("Listing Clusters:" . PHP_EOL);
 $clusters = $instanceAdminClient->listClusters($instanceName)->getClusters()->getIterator();
+
 foreach ($clusters as $cluster) {
     print($cluster->getName() . PHP_EOL);
 }
