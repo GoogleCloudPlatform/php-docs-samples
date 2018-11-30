@@ -45,6 +45,7 @@ ALT_PROJECT_TESTS=(
     dlp
     error_reporting
     kms
+    logging
     monitoring
     pubsub/api
     storage
