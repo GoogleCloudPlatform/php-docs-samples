@@ -84,7 +84,7 @@ $cluster->setLocation(
 );
 try {
     $instanceAdminClient->getCluster($clusterName);
-    printf("Cluster %s alraedy exists, aborting...", $cluster_id);
+    printf("Cluster %s already exists, aborting...", $cluster_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         $operationResponse = $instanceAdminClient->createCluster($instanceName, $cluster_id, $cluster);
