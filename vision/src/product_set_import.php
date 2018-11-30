@@ -33,6 +33,8 @@ use Google\Cloud\Vision\V1\ImportProductSetsInputConfig;
  */
 function product_set_import($projectId, $location, $gcsUri)
 {
+    $client = new ProductSearchClient();
+
     # a resource that represents Google Cloud Platform location.
     $locationPath = $client->locationName($projectId, $location);
 
@@ -43,26 +45,27 @@ function product_set_import($projectId, $location, $gcsUri)
         ->setGcsSource($gcsSource);
 
     # import the product sets from the input URI
-    $client = new ProductSearchClient();
     $operation = $client->importProductSets($locationPath, $inputConfig);
     $operationName = $operation->getName();
     printf('Processing operation name: %s' . PHP_EOL, $operationName);
 
     $operation->pollUntilComplete();
-    print('Processing done.');
+    print('Processing done.' . PHP_EOL);
 
     # synchronous check of operation status
     $result = $operation->getResult();
     $referenceImages = $result->getReferenceImages();
 
-    foreach ($result->getStatuses() as $status => $value) {
-        printf('Status of processing line %d of the csv: %s' . PHP_EOL, $value, $status);
+    foreach ($result->getStatuses() as $count => $status) {
+        printf('Status of processing line %d of the csv: ' . PHP_EOL, $count);
         # check the status of reference image
         # `0` is the code for OK in google.rpc.Code.
         if ($status->getCode() == 0){
-            print($referenceImages[$value]); // this line here is wrong
+            $referenceImage = $referenceImages[$count];
+            printf('name: %s' . PHP_EOL, $referenceImage->getName());
+            printf('uri: %s' . PHP_EOL, $referenceImage->getUri());
         } else {
-            print('Status code not OK: %s' . PHP_EOL, $status->getMessage());
+            printf('Status code not OK: %s' . PHP_EOL, $status->getMessage());
         }
     }
     $client->close();

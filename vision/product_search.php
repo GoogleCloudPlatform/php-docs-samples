@@ -29,25 +29,20 @@ $application = new Application('Product Search');
 $application->add((new Command('product-set-import'))
     ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
-    ->addOption('session-id', 's', InputOption::VALUE_REQUIRED,
-        'Identifier of the DetectIntent session. Defaults to random.')
-    ->addOption('language-code', 'l', InputOption::VALUE_REQUIRED,
-        'Language code of the query. Defaults to "en-US".', 'en-US')
-    ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
-    ->setDescription('Detect intent of audio file using Dialogflow.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('gcs-uri', InputArgument::REQUIRED, 'GCS path to import file.')
+    ->setDescription('Import images of different products in the product set.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command detects the intent of provided audio 
-using Dialogflow.
-    <info>php %command.full_name% PROJECT_ID [-s SESSION_ID] 
-    [-l LANGUAGE-CODE] AUDIO_FILE_PATH</info>
+The <info>%command.name%</info> imports images of different products in the product set.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION IMPORT_FILE_PATH</info>
 EOF
     )
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project-id');
-        $sessionId = $input->getOption('session-id');
-        $languageCode = $input->getOption('language-code');
-        $path = $input->getArgument('path');
-        detect_intent_audio($projectId, $path, $sessionId, $languageCode);
+        $location = $input->getArgument('location');
+        $gcsUri = $input->getArgument('gcs-uri');
+        product_set_import($projectId, $location, $gcsUri);
     })
 );
 
