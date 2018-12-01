@@ -78,7 +78,7 @@ $application->add((new Command('product-list'))
         'Name of compute region.')
     ->setDescription('List products.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> list products
+The <info>%command.name%</info> lists all products
     <info>php %command.full_name% PROJECT_ID COMPUTE_REGION</info>
 EOF
     )
@@ -86,6 +86,27 @@ EOF
         $projectId = $input->getArgument('project-id');
         $location = $input->getArgument('location');
         product_list($projectId, $location);
+    })
+);
+
+// get product
+$application->add((new Command('product-get'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product')
+    ->setDescription('Get information for a product.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> gets information for a product
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        product_get($projectId, $location, $productId);
     })
 );
 
