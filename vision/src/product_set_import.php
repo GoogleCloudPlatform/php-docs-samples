@@ -22,6 +22,7 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\Vision\V1\ProductSearchClient;
 use Google\Cloud\Vision\V1\ImportProductSetsGcsSource;
 use Google\Cloud\Vision\V1\ImportProductSetsInputConfig;
+
 // [END vision_product_search_tutorial_import]
 
 /**
@@ -60,7 +61,7 @@ function product_set_import($projectId, $location, $gcsUri)
         printf('Status of processing line %d of the csv: ' . PHP_EOL, $count);
         # check the status of reference image
         # `0` is the code for OK in google.rpc.Code.
-        if ($status->getCode() == 0){
+        if ($status->getCode() == 0) {
             $referenceImage = $referenceImages[$count];
             printf('name: %s' . PHP_EOL, $referenceImage->getName());
             printf('uri: %s' . PHP_EOL, $referenceImage->getUri());

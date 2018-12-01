@@ -21,11 +21,10 @@ require __DIR__ . '/vendor/autoload.php';
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 
 $application = new Application('Product Search');
 
-// detect audio intent command
+// import product set
 $application->add((new Command('product-set-import'))
     ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
@@ -46,6 +45,30 @@ EOF
     })
 );
 
+// create product
+$application->add((new Command('product-set-create'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product')
+    ->addArgument('product-display-name', InputArgument::REQUIRED, 'display name of product')
+    ->addArgument('product-category', InputArgument::REQUIRED, 'Category of product')
+    ->setDescription('Create a product.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a product
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID PRODUCT_DISPLAY_NAME PRODUCT_CATEGORY</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        $productDisplayName = $input->getArgument('product-display-name');
+        $productCategory = $input->getArgument('product-category');
+        product_set_create($projectId, $location, $productId, $productDisplayName, $productCategory);
+    })
+);
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
