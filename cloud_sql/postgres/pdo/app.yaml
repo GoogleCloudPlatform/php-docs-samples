@@ -22,4 +22,8 @@ env_variables:
   DB_PASS: my-db-pass
   DB_NAME: my_db
 
-entrypoint: serve index.php
+# Defaults to "serve index.php" and "serve public/index.php". Can be used to
+# serve a custom PHP front controller (e.g. "serve backend/index.php") or to
+# run a long-running PHP script as a worker process (e.g. "php worker.php").
+#
+# entrypoint: serve index.php
