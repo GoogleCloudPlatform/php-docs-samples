@@ -25,6 +25,9 @@ class FunctionsTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
 
+    /* @var $retryCount int */
+    protected static $retryCount = 5;
+
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
 
@@ -103,7 +106,7 @@ class FunctionsTest extends TestCase
                 }
             }
             $this->assertEquals(1, $found, 'It should list a new task.');
-        });
+        }, self::$retryCount);
     }
 
     public function tearDown()
