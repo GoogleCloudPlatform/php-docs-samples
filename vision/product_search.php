@@ -46,7 +46,7 @@ EOF
 );
 
 // create product
-$application->add((new Command('product-set-create'))
+$application->add((new Command('product-create'))
     ->addArgument('project-id', InputArgument::REQUIRED,
         'Project/agent id. Required.')
     ->addArgument('location', InputArgument::REQUIRED,
@@ -66,7 +66,26 @@ EOF
         $productId = $input->getArgument('product-id');
         $productDisplayName = $input->getArgument('product-display-name');
         $productCategory = $input->getArgument('product-category');
-        product_set_create($projectId, $location, $productId, $productDisplayName, $productCategory);
+        product_create($projectId, $location, $productId, $productDisplayName, $productCategory);
+    })
+);
+
+// list products
+$application->add((new Command('product-list'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->setDescription('List products.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> list products
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        product_list($projectId, $location);
     })
 );
 
