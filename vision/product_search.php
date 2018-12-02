@@ -68,6 +68,25 @@ EOF
     })
 );
 
+// list product set
+$application->add((new Command('product-set-list'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->setDescription('List all product sets')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> lists a product set.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        product_set_list($projectId, $location);
+    })
+);
+
 // create product
 $application->add((new Command('product-create'))
     ->addArgument('project-id', InputArgument::REQUIRED,

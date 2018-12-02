@@ -38,11 +38,11 @@ function product_list($projectId, $location)
 
     # display the product information.
     foreach ($products->iterateAllElements() as $product) {
-        $productName = $product->getName();
-        $productNameArray = explode('/', $productName);
+        $name = $product->getName();
+        $nameArray = explode('/', $name);
 
-        printf('Product name: %s' . PHP_EOL, $productName);
-        printf('Product id: %s' . PHP_EOL, end($productNameArray));
+        printf('Product name: %s' . PHP_EOL, $name);
+        printf('Product id: %s' . PHP_EOL, end($nameArray));
         printf('Product display name: %s' . PHP_EOL, $product->getDisplayName());
         printf('Product description: %s' . PHP_EOL, $product->getDescription());
         printf('Product category: %s' . PHP_EOL, $product->getProductCategory());
