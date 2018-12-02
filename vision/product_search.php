@@ -284,6 +284,29 @@ EOF
     })
 );
 
+// remove product from product set
+$application->add((new Command('product-set-remove-product'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product set')
+    ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
+    ->setDescription('Remove a product from a product set')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> removes a product from a product set.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID PRODUCT_SET_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        $productSetId = $input->getArgument('product-set-id');
+        product_set_remove_product($projectId, $location, $productId, $productSetId);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
