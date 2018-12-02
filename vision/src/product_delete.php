@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START vision_product_search_get_product]
+// [START vision_product_search_delete_product]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ProductSearchClient;
@@ -40,4 +40,4 @@ function product_delete($projectId, $location, $productId)
 
     $client->close();
 }
-// [END vision_product_search_get_product]
+// [END vision_product_search_delete_product]

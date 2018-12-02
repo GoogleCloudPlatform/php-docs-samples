@@ -45,6 +45,29 @@ EOF
     })
 );
 
+// create product set
+$application->add((new Command('product-set-create'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
+    ->addArgument('product-set-display-name', InputArgument::REQUIRED, 'display name of product set')
+    ->setDescription('Create a product set')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a product set.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_SET_ID PRODUCT_SET_DISPLAY_NAME</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productSetId = $input->getArgument('product-set-id');
+        $productSetDisplayName = $input->getArgument('product-set-display-name');
+        product_set_create($projectId, $location, $productSetId, $productSetDisplayName);
+    })
+);
+
 // create product
 $application->add((new Command('product-create'))
     ->addArgument('project-id', InputArgument::REQUIRED,
