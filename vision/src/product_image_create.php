@@ -22,7 +22,7 @@ use Google\Cloud\Vision\V1\ProductSearchClient;
 use Google\Cloud\Vision\V1\ReferenceImage;
 
 /**
- * Get information about a product
+ * Create a reference image
  *
  * @param string $projectId Your Google Cloud project ID
  * @param string $location Google Cloud compute region name

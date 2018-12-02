@@ -332,6 +332,27 @@ EOF
     })
 );
 
+// list reference images
+$application->add((new Command('product-image-list'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product set')
+    ->setDescription('List all images in a product.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> list all images in a product.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        product_image_list($projectId, $location, $productId);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
