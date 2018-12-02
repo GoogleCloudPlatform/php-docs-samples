@@ -110,6 +110,31 @@ EOF
     })
 );
 
+// update product labels
+$application->add((new Command('product-update'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product')
+    ->addArgument('key', InputArgument::REQUIRED, 'key of the label to update')
+    ->addArgument('value', InputArgument::REQUIRED, 'value of the label to update')
+    ->setDescription('Update product labels.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> updates product label
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID LABEL_KEY LABEL_VALUE</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        $key = $input->getArgument('key');
+        $value = $input->getArgument('value');
+        product_update($projectId, $location, $productId, $key, $value);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

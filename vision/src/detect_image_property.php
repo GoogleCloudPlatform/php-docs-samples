@@ -41,6 +41,6 @@ function detect_image_property($path)
         printf("Blue: %s" . PHP_EOL, $color['blue']);
         print(PHP_EOL);
     }
-    
+
 }
 // [END vision_image_property_detection]

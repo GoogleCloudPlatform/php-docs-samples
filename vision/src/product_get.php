@@ -31,10 +31,10 @@ function product_get($projectId, $location, $productId)
 {
     $client = new ProductSearchClient();
 
-    # a resource that represents Google Cloud Platform location.
+    # get the name of the product.
     $productPath = $client->productName($projectId, $location, $productId);
 
-    # list all the products available in the region.
+    # get complete detail of the product.
     $product =$client->getProduct($productPath);
 
     # display the product information.
