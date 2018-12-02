@@ -426,6 +426,33 @@ EOF
     })
 );
 
+// get similar products gcs
+$application->add((new Command('product-search-similar-gcs'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
+    ->addArgument('product-category', InputArgument::REQUIRED, 'Category of product')
+    ->addArgument('gcs-uri', InputArgument::REQUIRED, 'Google Cloud Storage path of the image to be searched')
+    ->addArgument('filter', InputArgument::REQUIRED, 'Condition to be applied on the labels')
+    ->setDescription('Search similar products to image.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> searches similar products to the image
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_SET_ID PRODUCT_CATEGORY FILE_PATH FILTER</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productSetId = $input->getArgument('product-set-id');
+        $productCategory = $input->getArgument('product-category');
+        $gcsUri = $input->getArgument('gcs-uri');
+        $filter = $input->getArgument('filter');
+        product_search_similar_gcs($projectId, $location, $productSetId, $productCategory, $gcsUri, $filter);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

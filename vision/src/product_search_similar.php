@@ -50,9 +50,6 @@ function product_search_similar($projectId, $location, $productSetId, $productCa
         ->setProductCategories([$productCategory])
         ->setFilter($filter);
 
-    // $imageContext = (new ImageContext())
-    //     ->setProductSearchParams();
-
     # search products similar to the image
     $response = $imageAnnotatorClient->productSearch($image, $productSearchParams);
 
