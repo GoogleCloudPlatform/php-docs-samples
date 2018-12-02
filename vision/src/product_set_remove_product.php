@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START vision_product_search_add_product_to_product_set]
+// [START vision_product_search_remove_product_from_product_set]
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ProductSearchClient;
@@ -44,4 +44,4 @@ function product_set_remove_product($projectId, $location, $productId, $productS
 
     $client->close();
 }
-// [END vision_product_search_add_product_to_product_set]
+// [END vision_product_search_remove_product_from_product_set]

@@ -307,6 +307,31 @@ EOF
     })
 );
 
+// create reference image
+$application->add((new Command('product-image-create'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product set')
+    ->addArgument('reference-image-id', InputArgument::REQUIRED, 'ID of reference image')
+    ->addArgument('gcs-uri', InputArgument::REQUIRED, 'GCS path to input image.')
+    ->setDescription('Create a reference image.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> creates a reference image.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID REFERENCE_IMAGE_ID GCS_URI</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        $referenceImageId = $input->getArgument('reference-image-id');
+        $gcsUri = $input->getArgument('gcs-uri');
+        product_image_create($projectId, $location, $productId, $referenceImageId, $gcsUri);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
