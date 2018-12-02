@@ -96,7 +96,7 @@ $application->add((new Command('product-set-get'))
     ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
     ->setDescription('Get information for a product set.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> gets information for a product
+The <info>%command.name%</info> gets information for a product set
     <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_SET_ID</info>
 EOF
     )
@@ -105,6 +105,27 @@ EOF
         $location = $input->getArgument('location');
         $productSetId = $input->getArgument('product-set-id');
         product_set_get($projectId, $location, $productSetId);
+    })
+);
+
+// delete product set
+$application->add((new Command('product-set-delete'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
+    ->setDescription('Delete a product set.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> deletes a product set
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_SET_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productSetId = $input->getArgument('product-set-id');
+        product_set_delete($projectId, $location, $productSetId);
     })
 );
 

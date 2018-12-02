@@ -34,7 +34,7 @@ function product_set_get($projectId, $location, $productSetId)
     # get the name of the product set
     $productSetPath = $client->productSetName($projectId, $location, $productSetId);
 
-    # get complete detail of the product.
+    # get complete detail of the product set
     $productSet = $client->getProductSet($productSetPath);
 
     # display the product set information.
