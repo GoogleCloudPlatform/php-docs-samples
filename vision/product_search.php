@@ -376,6 +376,29 @@ EOF
     })
 );
 
+// delete reference image
+$application->add((new Command('product-image-delete'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product set')
+    ->addArgument('reference-image-id', InputArgument::REQUIRED, 'ID of reference image')
+    ->setDescription('Delete a reference image.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> deletes a reference image.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID REFERENCE_IMAGE_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        $referenceImageId = $input->getArgument('reference-image-id');
+        product_image_delete($projectId, $location, $productId, $referenceImageId);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
