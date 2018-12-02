@@ -263,6 +263,27 @@ EOF
     })
 );
 
+// list products in product set
+$application->add((new Command('product-set-list-products'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
+    ->setDescription('List products in a product set')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> lists products in a product set.
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_SET_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productSetId = $input->getArgument('product-set-id');
+        product_set_list_products($projectId, $location, $productSetId);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
