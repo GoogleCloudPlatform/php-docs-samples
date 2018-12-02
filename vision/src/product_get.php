@@ -35,7 +35,7 @@ function product_get($projectId, $location, $productId)
     $productPath = $client->productName($projectId, $location, $productId);
 
     # get complete detail of the product.
-    $product =$client->getProduct($productPath);
+    $product = $client->getProduct($productPath);
 
     # display the product information.
     $productName = $product->getName();

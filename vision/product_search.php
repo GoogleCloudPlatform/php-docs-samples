@@ -135,6 +135,27 @@ EOF
     })
 );
 
+// delete product
+$application->add((new Command('product-delete'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-id', InputArgument::REQUIRED, 'ID of product')
+    ->setDescription('Delete the product and all its reference images.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> deletes the product and all its reference images 
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION PRODUCT_ID</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productId = $input->getArgument('product-id');
+        product_delete($projectId, $location, $productId);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
