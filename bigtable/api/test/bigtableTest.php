@@ -433,7 +433,7 @@ final class BigTableTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-
+        
         $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
         $this->assertContains('GC Rule:', $array);
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":{"seconds":432000}}]}}}', $array);
@@ -466,7 +466,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id, $cluster_id);
     }
 
-    public function testListInstance(): void
+    public function testListInstances(): void
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -477,7 +477,7 @@ final class BigTableTest extends TestCase
             $instance_id,
             $cluster_id
         ]);
-
+        
         $content = $this->runSnippet('list_instance', [
             $project_id,
             $instance_id
