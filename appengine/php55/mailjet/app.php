@@ -40,10 +40,11 @@ $app->post('/send', function () use ($app) {
     /** @var Mailjet\Client $mailjet */
     $mailjet = $app['mailjet'];
     $recipient = $request->get('recipient');
+    $sender = $app['mailjet.sender'] ?: "test@example.com";
 
     # [START gae_mailjet_send_message]
     $body = [
-        'FromEmail' => "test@example.com",
+        'FromEmail' => $sender,
         'FromName' => "Testing Mailjet",
         'Subject' => "Your email flight plan!",
         'Text-part' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!",

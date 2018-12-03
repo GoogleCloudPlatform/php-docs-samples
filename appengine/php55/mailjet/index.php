@@ -24,6 +24,8 @@ $app = require __DIR__ . '/app.php';
 // set your Mailjet API key and secret
 $app['mailjet.api_key'] = 'MAILJET_APIKEY';
 $app['mailjet.secret'] = 'MAILJET_SECRET';
+// set your mailjet sender email. This must be verified in your mailjet account
+$app['mailjet.sender'] = '';
 
 // Run the app!
 // use "gcloud app deploy" or run "php -S localhost:8000"
