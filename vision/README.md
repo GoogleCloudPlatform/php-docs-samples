@@ -26,7 +26,7 @@ Vision API from PHP.
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 5.  For a basic demonstration of the Cloud Vision API, run `php quickstart.php`.
-6.  Run `php vision.php`. The following commands are available:
+6.  Run `php vision.php` or `php product_search.php`. For `vision.php`, the following commands are available:
 ```
   face            Detect faces in an image using Google Cloud Vision API
   help            Displays help for a command
@@ -45,7 +45,30 @@ Vision API from PHP.
   web-geo         Detect web entities in an image with geo metadata using
                   Google Cloud Vision API
 ```
-7. Run `php vision.php COMMAND --help` to print information about the usage of each command.
+   For `product_search.php`, the following commands are available:
+```
+  product-create              Create a product
+  product-delete              Delete a product
+  product-get                 Get information of a product
+  product-list                List information for all products
+  product-update              Update information for a product
+  product-image-create        Create reference image
+  product-image-delete        Delete reference image
+  product-image-get           Get reference image information for a product
+  product-image-list          List all reference image information for a product
+  product-search-similar      Search for similar products to local image
+  product-search-similar-gcs  Search for similar products to GCS image
+  product-set-create          Create a product set
+  product-set-delete          Delete a product set
+  product-set-get             Get information for a product set
+  product-set-import          Import a product set
+  product-set-list            List information for all product sets
+  product-set-add-product     Add product to a product set
+  product-set-list-products   List products in a product set
+  product-set-remove-product  Remove product from a product set
+```
+
+7. Run `php vision.php COMMAND --help` or `php product_search.php COMMAND --help` to print information about the usage of each command.
 
 ## The client library
 
