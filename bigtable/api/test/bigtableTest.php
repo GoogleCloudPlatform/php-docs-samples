@@ -44,7 +44,7 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
         $content = $this->runSnippet('create_cluster', [
             self::$projectId,
@@ -56,7 +56,7 @@ final class BigTableTest extends TestCase
         $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, $instance_id, $cluster_id);
 
         $this->check_cluster($clusterName);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateDevInstance()
