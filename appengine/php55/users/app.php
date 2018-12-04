@@ -60,9 +60,7 @@ $app->get('/user', function () use ($app) {
 });
 
 $app->get('/federatedUser', function () use ($app) {
-    # [START new_federated_user]
     $user = new User(null, 'http://example.com/id/ajohnson');
-    # [END new_federated_user]
     return sprintf('Nickname is %s', $user->getNickname());
 });
 
