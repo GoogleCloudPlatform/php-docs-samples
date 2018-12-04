@@ -7,24 +7,27 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
-use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 
 final class BigTableTest extends TestCase
 {
-    use TestTrait;
+    use ExponentialBackoffTrait;
 
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
     static $instanceAdminClient;
     static $tableAdminClient;
-    static $project_id;
     static $listInstances = [];
 
     public static function setUpBeforeClass()
     {
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
+    }
+    public function setUp()
+    {
+        $this->useResourceExhaustedBackoff();
     }
 
     public static function tearDownAfterClass()
@@ -560,10 +563,13 @@ final class BigTableTest extends TestCase
 
     private function runSnippet($sampleName, $params = [])
     {
-        $argv = array_merge([basename(__FILE__)], $params);
-        ob_start();
-        require __DIR__ . "/../src/$sampleName.php";
-        return ob_get_clean();
-    }
+        $testFunc = function() use ($sampleName, $params) {
+            $argv = array_merge([basename(__FILE__)], $params);
+            ob_start();
+            require __DIR__ . "/../src/$sampleName.php";
+            return ob_get_clean();
+        };
 
+        return self::$backoff->execute($testFunc);
+    }
 }
