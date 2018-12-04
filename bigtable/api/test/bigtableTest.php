@@ -51,7 +51,7 @@ final class BigTableTest extends TestCase
 
         $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
-        $content = $this->runSnippet('create_cluster', [
+        $content = self::runSnippet('create_cluster', [
             self::$projectId,
             $instance_id,
             $cluster_id
@@ -69,7 +69,7 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $content = $this->runSnippet('create_dev_instance', [
+        $content = self::runSnippet('create_dev_instance', [
             self::$projectId,
             $instance_id,
             $cluster_id
@@ -89,7 +89,7 @@ final class BigTableTest extends TestCase
 
         $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
         
-        $content = $this->runSnippet('list_instance', [
+        $content = self::runSnippet('list_instance', [
             self::$projectId,
             $instance_id
         ]);
@@ -109,7 +109,7 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('list_tables', [
+        $content = self::runSnippet('list_tables', [
             self::$projectId,
             $instance_id
         ]);
@@ -129,7 +129,7 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_intersection', [
+        $content = self::runSnippet('create_family_gc_intersection', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -164,7 +164,7 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_max_age', [
+        $content = self::runSnippet('create_family_gc_max_age', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -190,7 +190,7 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_max_versions', [
+        $content = self::runSnippet('create_family_gc_max_versions', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -216,7 +216,7 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_nested', [
+        $content = self::runSnippet('create_family_gc_nested', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -260,7 +260,7 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $content = $this->runSnippet('create_family_gc_union', [
+        $content = self::runSnippet('create_family_gc_union', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -292,7 +292,7 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $content = $this->runSnippet('create_production_instance', [
+        $content = self::runSnippet('create_production_instance', [
             self::$projectId,
             $instance_id,
             $cluster_id
@@ -312,7 +312,7 @@ final class BigTableTest extends TestCase
 
         $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
-        $this->runSnippet('create_table', [
+        self::runSnippet('create_table', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -334,7 +334,7 @@ final class BigTableTest extends TestCase
 
         $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, $instance_id, $cluster_two_id);
 
-        $this->runSnippet('create_cluster', [
+        self::runSnippet('create_cluster', [
             self::$projectId,
             $instance_id,
             $cluster_two_id,
@@ -343,7 +343,7 @@ final class BigTableTest extends TestCase
 
         $this->check_cluster($clusterName);
 
-        $content = $this->runSnippet('delete_cluster', [
+        $content = self::runSnippet('delete_cluster', [
             self::$projectId,
             $instance_id,
             $cluster_two_id
@@ -371,7 +371,7 @@ final class BigTableTest extends TestCase
 
         $this->check_instance($instanceName);
 
-        $content = $this->runSnippet('delete_instance', [
+        $content = self::runSnippet('delete_instance', [
             self::$projectId,
             $instance_id
         ]);
@@ -397,7 +397,7 @@ final class BigTableTest extends TestCase
 
         $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
-        $this->runSnippet('create_table', [
+        self::runSnippet('create_table', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -405,7 +405,7 @@ final class BigTableTest extends TestCase
 
         $this->check_table($tableName);
 
-        $content = $this->runSnippet('delete_table', [
+        $content = self::runSnippet('delete_table', [
             self::$projectId,
             $instance_id,
             $table_id
@@ -430,13 +430,13 @@ final class BigTableTest extends TestCase
 
         $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
-        $this->runSnippet('create_family_gc_union', [
+        self::runSnippet('create_family_gc_union', [
             self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $content = $this->runSnippet('list_column_families', [
+        $content = self::runSnippet('list_column_families', [
             self::$projectId,
             $instance_id,
             $table_id,
@@ -456,7 +456,7 @@ final class BigTableTest extends TestCase
 
         $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
-        $content = $this->runSnippet('list_instance_clusters', [
+        $content = self::runSnippet('list_instance_clusters', [
             self::$projectId,
             $instance_id
         ]);
@@ -470,7 +470,7 @@ final class BigTableTest extends TestCase
     private function create_production_instance($project_id,$instance_id,$cluster_id)
     {
         self::$listInstances[] = $instance_id;
-        $content = $this->runSnippet('create_production_instance', [
+        $content = self::runSnippet('create_production_instance', [
             $project_id,
             $instance_id,
             $cluster_id
@@ -548,7 +548,7 @@ final class BigTableTest extends TestCase
     {
         $this->create_production_instance($project_id,$instance_id,$cluster_id);
 
-        $this->runSnippet('create_table', [
+        self::runSnippet('create_table', [
             $project_id,
             $instance_id,
             $table_id
@@ -557,13 +557,13 @@ final class BigTableTest extends TestCase
 
     private function clean_instance($project_id, $instance_id)
     {
-        $content = $this->runSnippet('delete_instance', [
+        $content = self::runSnippet('delete_instance', [
             $project_id,
             $instance_id
         ]);
     }
 
-    private function runSnippet($sampleName, $params = [])
+    private static function runSnippet($sampleName, $params = [])
     {
         $testFunc = function() use ($sampleName, $params) {
             $argv = array_merge([basename(__FILE__)], $params);
