@@ -7,18 +7,17 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
-use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 
 final class BigTableTest extends TestCase
 {
-    use TestTrait;
+    use ExponentialBackoffTrait;
 
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
     static $instanceAdminClient;
     static $tableAdminClient;
-    static $project_id;
     static $listInstances = [];
 
     public static function setUpBeforeClass()
@@ -26,16 +25,21 @@ final class BigTableTest extends TestCase
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
     }
+    public function setUp()
+    {
+        $this->useResourceExhaustedBackoff();
+    }
 
     public static function tearDownAfterClass()
     {
-        foreach(self::$listInstances as $key => $listInstance)
-        {
+        try {
             self::runSnippet('delete_instance', [
                 self::$projectId,
                 $listInstance
             ]);
             unset(self::$listInstances[$key]);
+        } catch (ApiException $e) {
+            printf('Failed to delete instance "%s"' . PHP_EOL, $listInstance);
         }
     }
     
@@ -44,7 +48,7 @@ final class BigTableTest extends TestCase
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
         $content = $this->runSnippet('create_cluster', [
             self::$projectId,
@@ -56,7 +60,7 @@ final class BigTableTest extends TestCase
         $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, $instance_id, $cluster_id);
 
         $this->check_cluster($clusterName);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateDevInstance()
@@ -74,7 +78,7 @@ final class BigTableTest extends TestCase
         $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
 
         $this->check_instance($instanceName);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testListInstances()
@@ -560,10 +564,13 @@ final class BigTableTest extends TestCase
 
     private function runSnippet($sampleName, $params = [])
     {
-        $argv = array_merge([basename(__FILE__)], $params);
-        ob_start();
-        require __DIR__ . "/../src/$sampleName.php";
-        return ob_get_clean();
-    }
+        $testFunc = function() use ($sampleName, $params) {
+            $argv = array_merge([basename(__FILE__)], $params);
+            ob_start();
+            require __DIR__ . "/../src/$sampleName.php";
+            return ob_get_clean();
+        };
 
+        return self::$backoff->execute($testFunc);
+    }
 }
