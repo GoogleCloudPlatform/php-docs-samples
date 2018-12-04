@@ -24,54 +24,32 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 6 || count($argv) > 7) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME OBJECT_NAME [FORMAT]\n", __FILE__);
+if (count($argv) != 5) {
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME\n", __FILE__);
 }
 
 list($_, $projectId, $datasetId, $tableId, $bucketName, $objectName) = $argv;
-$format = isset($argv[6]) ? $argv[6] : 'csv';
 
 # [START bigquery_extract_table]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /** Uncomment and populate these variables in your code */
 // $projectId  = 'The Google project ID';
 // $datasetId  = 'The BigQuery dataset ID';
 // $tableId    = 'The BigQuery table ID';
 // $bucketName = 'The Cloud Storage bucket Name';
-// $objectName = 'The Cloud Storage object Name';
-// $format     = 'The extract format, either "csv" or "json"';
 
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
 $dataset = $bigQuery->dataset($datasetId);
 $table = $dataset->table($tableId);
-// load the storage object
-$storage = new StorageClient([
-    'projectId' => $projectId,
-]);
-$destinationObject = $storage->bucket($bucketName)->object($objectName);
-// create the extract job
-$options = ['destinationFormat' => $format];
-$extractConfig = $table->extract($destinationObject, $options);
-$job = $table->runJob($extractConfig);
-// poll the job until it is complete
-$backoff = new ExponentialBackoff(10);
-$backoff->execute(function () use ($job) {
-    print('Waiting for job to complete' . PHP_EOL);
-    $job->reload();
-    if (!$job->isComplete()) {
-        throw new Exception('Job has not yet completed', 500);
-    }
-});
-// check if the job has errors
-if (isset($job->info()['status']['errorResult'])) {
-    $error = $job->info()['status']['errorResult']['message'];
-    printf('Error running job: %s' . PHP_EOL, $error);
-} else {
-    print('Data extracted successfully' . PHP_EOL);
-}
+$destinationUri = "gs://{$bucketName}/{$tableId}.json";
+// Define the format to use. If the format is not specified, 'CSV' will be used.
+$format = 'NEWLINE_DELIMITED_JSON';
+// Create the extract job
+$extractConfig = $table->extract($destinationUri)->destinationFormat($format);
+// Run the job
+$job = $table->runJob($extractConfig);  // Waits for the job to complete
+printf('Exported %s to %s' . PHP_EOL, $table->id(), $destinationUri);
 # [END bigquery_extract_table]

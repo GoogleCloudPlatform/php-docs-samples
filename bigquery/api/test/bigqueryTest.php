@@ -111,10 +111,7 @@ class FunctionsTest extends TestCase
         $this->assertContains('Deleted table', $output);
     }
 
-    /**
-     * @dataProvider provideExtractTable
-     */
-    public function testExtractTable($objectName, $format)
+    public function testExtractTable()
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $tableId = $this->createTempTable();
@@ -123,34 +120,20 @@ class FunctionsTest extends TestCase
         $output = $this->runSnippet('extract_table', [
             self::$datasetId,
             $tableId,
-            $bucketName,
-            $objectName,
-            $format,
+            $bucketName
         ]);
-
-        $this->assertContains('Data extracted successfully', $output);
 
         // verify the contents of the bucket
         $storage = new StorageClient([
             'projectId' => self::$projectId,
         ]);
-        $object = $storage->bucket($bucketName)->object($objectName);
+        $object = $storage->bucket($bucketName)->objects(['prefix' => $tableId])->current();
         $contents = $object->downloadAsString();
         $this->assertContains('Brent Shaffer', $contents);
         $this->assertContains('Takashi Matsuo', $contents);
         $this->assertContains('Jeffrey Rennie', $contents);
         $object->delete();
         $this->assertFalse($object->exists());
-    }
-
-    public function provideExtractTable()
-    {
-        $time = time();
-
-        return [
-            [sprintf('bigquery/test_data_%s.json', $time), 'json'],
-            [sprintf('bigquery/test_data_%s.csv', $time), 'csv'],
-        ];
     }
 
     public function testGetTable()
