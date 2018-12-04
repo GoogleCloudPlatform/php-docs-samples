@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 use Silex\WebTestCase;
+use Google\Cloud\TestUtils\TestTrait;
 
 class LocalTest extends WebTestCase
 {
+    use TestTrait;
+
     public function createApplication()
     {
         $app = require __DIR__ . '/../app.php';
@@ -25,18 +28,9 @@ class LocalTest extends WebTestCase
         // set some parameters for testing
         $app['session.test'] = true;
         $app['debug'] = true;
-        $projectId = getenv('GOOGLE_PROJECT_ID');
-
-        // set your Mailjet API key and secret
-        $mailjetApiKey = getenv('MAILJET_APIKEY');
-        $mailjetSecret = getenv('MAILJET_SECRET');
-
-        if (empty($mailjetApiKey) || empty($mailjetSecret)) {
-            $this->markTestSkipped('set the MAILJET_APIKEY and MAILJET_SECRET environment variables');
-        }
-
-        $app['mailjet.api_key'] = $mailjetApiKey;
-        $app['mailjet.secret'] = $mailjetSecret;
+        $app['mailjet.api_key'] = $this->requireEnv('MAILJET_APIKEY');
+        $app['mailjet.secret'] = $this->requireEnv('MAILJET_SECRET');
+        $app['mailjet.sender'] = $this->requireEnv('MAILJET_SENDER');
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);
