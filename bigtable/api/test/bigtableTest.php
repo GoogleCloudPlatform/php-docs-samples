@@ -7,9 +7,12 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
+use Google\Cloud\TestUtils\TestTrait;
 
 final class BigTableTest extends TestCase
 {
+    use TestTrait;
+
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
@@ -20,17 +23,6 @@ final class BigTableTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        if (!extension_loaded('grpc')) {
-            self::markTestSkipped('Must enable grpc extension.');
-        }
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::markTestSkipped('No application credentials were found');
-        }
-
-        $keyFilePath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        $keyFileData = json_decode(file_get_contents($keyFilePath), true);
-
-        self::$project_id = $keyFileData['project_id'];
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
     }
@@ -40,7 +32,7 @@ final class BigTableTest extends TestCase
         foreach(self::$listInstances as $key => $listInstance)
         {
             self::runSnippet('delete_instance', [
-                self::$project_id,
+                self::$projectId,
                 $listInstance
             ]);
             unset(self::$listInstances[$key]);
@@ -49,20 +41,19 @@ final class BigTableTest extends TestCase
     
     public function testCreateCluster()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $this->create_production_instance($project_id,$instance_id,$cluster_id);
 
         $content = $this->runSnippet('create_cluster', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $cluster_id
         ]);
         $array = explode(PHP_EOL, $content);
         
-        $clusterName = self::$instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
+        $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, $instance_id, $cluster_id);
 
         $this->check_cluster($clusterName);
         $this->clean_instance($project_id, $instance_id);
@@ -70,18 +61,17 @@ final class BigTableTest extends TestCase
 
     public function testCreateDevInstance()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = $this->runSnippet('create_dev_instance', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $cluster_id
         ]);
         $array = explode(PHP_EOL, $content);
         
-        $instanceName = self::$instanceAdminClient->instanceName($project_id, $instance_id);
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
 
         $this->check_instance($instanceName);
         $this->clean_instance($project_id, $instance_id);
@@ -89,14 +79,13 @@ final class BigTableTest extends TestCase
 
     public function testListInstances()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
         
         $content = $this->runSnippet('list_instance', [
-            $project_id,
+            self::$projectId,
             $instance_id
         ]);
 
@@ -104,46 +93,44 @@ final class BigTableTest extends TestCase
         
         $this->assertContains('Listing Instances:', $array);
         $this->assertContains($instance_id, $array);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testListTable()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('list_tables', [
-            $project_id,
+            self::$projectId,
             $instance_id
         ]);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
         $array = explode(PHP_EOL, $content);
         
         $this->assertContains('Listing Tables:', $array);
-        $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
+        $this->assertContains('projects/' . self::$projectId . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
         
     }
 
     public function testCreateFamilyGcIntersection()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_intersection', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
         $gcRuleCompare = [
             'gcRule' => [
@@ -161,25 +148,24 @@ final class BigTableTest extends TestCase
         ];
         
         $this->check_rule($tableName, 'cf4', $gcRuleCompare);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateFamilyGcMaxAge()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_max_age', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
         $gcRuleCompare = [
             'gcRule' => [
@@ -188,25 +174,24 @@ final class BigTableTest extends TestCase
         ];
         
         $this->check_rule($tableName, 'cf1', $gcRuleCompare);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateFamilyGcMaxVersions()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_max_versions', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
         $gcRuleCompare = [
             'gcRule' => [
@@ -215,25 +200,24 @@ final class BigTableTest extends TestCase
         ];
 
         $this->check_rule($tableName, 'cf2', $gcRuleCompare);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateFamilyGcNested()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_nested', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
         $gcRuleCompare = [
             'gcRule' => [
@@ -260,25 +244,24 @@ final class BigTableTest extends TestCase
         ];
         
         $this->check_rule($tableName, 'cf5', $gcRuleCompare);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateFamilyGcUnion()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $content = $this->runSnippet('create_family_gc_union', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
         $gcRuleCompare = [
             'gcRule' => [
@@ -296,61 +279,58 @@ final class BigTableTest extends TestCase
         ];
 
         $this->check_rule($tableName, 'cf3', $gcRuleCompare);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testCreateProductionInstance()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = $this->runSnippet('create_production_instance', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $cluster_id
         ]);
 
-        $instanceName = self::$instanceAdminClient->instanceName($project_id, $instance_id);
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
 
         $this->check_instance($instanceName);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testcreate_table()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
         $this->runSnippet('create_table', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
         $this->check_table($tableName);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testDeleteCluster()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $cluster_two_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
-        $clusterName = self::$instanceAdminClient->clusterName($project_id, $instance_id, $cluster_two_id);
+        $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, $instance_id, $cluster_two_id);
 
         $this->runSnippet('create_cluster', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $cluster_two_id,
             'us-east1-c'
@@ -359,7 +339,7 @@ final class BigTableTest extends TestCase
         $this->check_cluster($clusterName);
 
         $content = $this->runSnippet('delete_cluster', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $cluster_two_id
         ]);
@@ -372,23 +352,22 @@ final class BigTableTest extends TestCase
                 $this->assertTrue(true);
             }
         }
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testDeleteInstance()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $instanceName = self::$instanceAdminClient->instanceName($project_id, $instance_id);
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
         $this->check_instance($instanceName);
 
         $content = $this->runSnippet('delete_instance', [
-            $project_id,
+            self::$projectId,
             $instance_id
         ]);
 
@@ -400,22 +379,21 @@ final class BigTableTest extends TestCase
                 $this->assertTrue(true);
             }
         }
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testDeleteTable()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $tableName = self::$tableAdminClient->tableName($project_id, $instance_id, $table_id);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, $instance_id, $table_id);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
         $this->runSnippet('create_table', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
@@ -423,7 +401,7 @@ final class BigTableTest extends TestCase
         $this->check_table($tableName);
 
         $content = $this->runSnippet('delete_table', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
@@ -436,30 +414,29 @@ final class BigTableTest extends TestCase
                 $this->assertTrue(true);
             }
         }
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testListColumnFamilies()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
         $table_id = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table($project_id, $instance_id, $cluster_id, $table_id);
+        $this->create_table(self::$projectId, $instance_id, $cluster_id, $table_id);
 
         $this->runSnippet('create_family_gc_union', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id
         ]);
 
         $content = $this->runSnippet('list_column_families', [
-            $project_id,
+            self::$projectId,
             $instance_id,
             $table_id,
         ]);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
         $array = explode(PHP_EOL, $content);
         
         $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
@@ -469,21 +446,20 @@ final class BigTableTest extends TestCase
 
     public function testListInstanceClusters()
     {
-        $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
-        $this->create_production_instance($project_id,$instance_id,$cluster_id);
+        $this->create_production_instance(self::$projectId,$instance_id,$cluster_id);
 
         $content = $this->runSnippet('list_instance_clusters', [
-            $project_id,
+            self::$projectId,
             $instance_id
         ]);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
         $array = explode(PHP_EOL, $content);
 
         $this->assertContains('Listing Clusters:', $array);
-        $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
+        $this->assertContains('projects/' . self::$projectId . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
     }
 
     private function create_production_instance($project_id,$instance_id,$cluster_id)
