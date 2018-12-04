@@ -21,7 +21,7 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\Vision\V1\ProductSearchClient;
 
 /**
- * List all images in 
+ * List all images in
  *
  * @param string $projectId Your Google Cloud project ID
  * @param string $location Google Cloud compute region name

@@ -21,7 +21,6 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ProductSearchClient;
 use Google\Cloud\Vision\V1\ProductSearchParams;
-use Google\Cloud\Vision\V1\ImageContext;
 
 /**
  * Search similar products to image
