@@ -74,7 +74,7 @@ final class BigTableTest extends TestCase
         $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
 
         $this->check_instance($instanceName);
-        $this->clean_instance($project_id, $instance_id);
+        $this->clean_instance(self::$projectId, $instance_id);
     }
 
     public function testListInstances()
