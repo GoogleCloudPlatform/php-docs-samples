@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 namespace Google\Cloud\Samples\BigTable\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -49,7 +47,7 @@ final class BigTableTest extends TestCase
         }
     }
     
-    public function testCreateCluster(): void
+    public function testCreateCluster()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -70,7 +68,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testCreateDevInstance(): void
+    public function testCreateDevInstance()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -89,7 +87,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testListInstances(): void
+    public function testListInstances()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -109,7 +107,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testListTable(): void
+    public function testListTable()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -130,7 +128,7 @@ final class BigTableTest extends TestCase
         
     }
 
-    public function testCreateFamilyGcIntersection(): void
+    public function testCreateFamilyGcIntersection()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -166,7 +164,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testCreateFamilyGcMaxAge(): void
+    public function testCreateFamilyGcMaxAge()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -193,7 +191,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testCreateFamilyGcMaxVersions(): void
+    public function testCreateFamilyGcMaxVersions()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -220,7 +218,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testCreateFamilyGcNested(): void
+    public function testCreateFamilyGcNested()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -265,7 +263,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testCreateFamilyGcUnion(): void
+    public function testCreateFamilyGcUnion()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -301,7 +299,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testCreateProductionInstance(): void
+    public function testCreateProductionInstance()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -319,7 +317,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testcreate_table(): void
+    public function testcreate_table()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -340,7 +338,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testDeleteCluster(): void
+    public function testDeleteCluster()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -377,7 +375,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testDeleteInstance(): void
+    public function testDeleteInstance()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -405,7 +403,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testDeleteTable(): void
+    public function testDeleteTable()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -441,7 +439,7 @@ final class BigTableTest extends TestCase
         $this->clean_instance($project_id, $instance_id);
     }
 
-    public function testListColumnFamilies(): void
+    public function testListColumnFamilies()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
@@ -469,7 +467,7 @@ final class BigTableTest extends TestCase
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000.000000000s"}]}}}', $array);
     }
 
-    public function testListInstanceClusters(): void
+    public function testListInstanceClusters()
     {
         $project_id = self::$project_id;
         $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
