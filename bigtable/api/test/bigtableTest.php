@@ -5,13 +5,14 @@ use PHPUnit\Framework\TestCase;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
-use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\ApiCore\ApiException;
 
 final class BigTableTest extends TestCase
 {
-    use ExponentialBackoffTrait;
+    use TestTrait,ExponentialBackoffTrait;
 
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
