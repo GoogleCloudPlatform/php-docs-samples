@@ -28,7 +28,7 @@ if (count($argv) != 5) {
     return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME\n", __FILE__);
 }
 
-list($_, $projectId, $datasetId, $tableId, $bucketName, $objectName) = $argv;
+list($_, $projectId, $datasetId, $tableId, $bucketName) = $argv;
 
 # [START bigquery_extract_table]
 use Google\Cloud\BigQuery\BigQueryClient;
