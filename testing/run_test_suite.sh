@@ -66,9 +66,7 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 
 # If any files outside the sample directories changed, or if we are not
 # on a Pull Request, run the whole test suite.
-if grep -q ^testing\/ <<< "$FILES_CHANGED" || \
-   grep -v ^.kokoro\/secrets.sh.enc$ <<< "$FILES_CHANGED" | grep -q ^.kokoro\/ || \
-    grep -qv \/ <<< "$FILES_CHANGED" || \
+if grep -q ^testing\/RUN_ALL_TESTS$ <<< "$FILES_CHANGED" || \
     [ -z "$IS_PULL_REQUEST" ]; then
     RUN_ALL_TESTS=1
 else
