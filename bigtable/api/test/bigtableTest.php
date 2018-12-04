@@ -36,6 +36,7 @@ final class BigTableTest extends TestCase
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
     }
+
     public static function tearDownAfterClass()
     {
         foreach(self::$listInstances as $key => $listInstance)
@@ -47,6 +48,7 @@ final class BigTableTest extends TestCase
             unset(self::$listInstances[$key]);
         }
     }
+    
     public function testCreateCluster(): void
     {
         $project_id = self::$project_id;
@@ -120,12 +122,12 @@ final class BigTableTest extends TestCase
             $project_id,
             $instance_id
         ]);
-
+        $this->clean_instance($project_id, $instance_id);
         $array = explode(PHP_EOL, $content);
         
         $this->assertContains('Listing Tables:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/tables/' . $table_id, $array);
-        $this->clean_instance($project_id, $instance_id);
+        
     }
 
     public function testCreateFamilyGcIntersection(): void
@@ -150,9 +152,7 @@ final class BigTableTest extends TestCase
                 'intersection' => [
                     'rules' => [
                         [
-                            'maxAge' => [
-                                'seconds' => '432000.000000000s'
-                            ]
+                            'maxAge' => '432000.000000000s'
                         ],
                         [
                             'maxNumVersions' => 2
@@ -161,7 +161,7 @@ final class BigTableTest extends TestCase
                 ]
             ]
         ];
-        print_r($gcRuleCompare);
+        
         $this->check_rule($tableName, 'cf4', $gcRuleCompare);
         $this->clean_instance($project_id, $instance_id);
     }
@@ -185,12 +185,10 @@ final class BigTableTest extends TestCase
 
         $gcRuleCompare = [
             'gcRule' => [
-                'maxAge' => [
-                    'seconds' => '432000.000000000s'
-                ]
+                'maxAge' => '432000.000000000s'
             ]
         ];
-        print_r($gcRuleCompare);
+        
         $this->check_rule($tableName, 'cf1', $gcRuleCompare);
         $this->clean_instance($project_id, $instance_id);
     }
@@ -250,9 +248,7 @@ final class BigTableTest extends TestCase
                             'intersection' => [
                                 'rules' => [
                                     [
-                                        'maxAge' => [
-                                            'seconds' => '2592000.000000000s'
-                                        ]
+                                        'maxAge' => '2592000.000000000s'
                                     ],
                                     [
                                         'maxNumVersions' => 2
@@ -264,7 +260,7 @@ final class BigTableTest extends TestCase
                 ]
             ]
         ];
-        print_r($gcRuleCompare);
+        
         $this->check_rule($tableName, 'cf5', $gcRuleCompare);
         $this->clean_instance($project_id, $instance_id);
     }
@@ -291,12 +287,10 @@ final class BigTableTest extends TestCase
                 'union' => [
                     'rules' => [
                         [
-                            'maxAge' => [
-                                'seconds' => '432000.000000000s'
-                            ]
+                            'maxNumVersions' => 2
                         ],
                         [
-                            'maxNumVersions' => 2
+                            'maxAge' => '432000.000000000s'
                         ]
                     ]
                 ]
@@ -467,13 +461,12 @@ final class BigTableTest extends TestCase
             $instance_id,
             $table_id,
         ]);
-
+        $this->clean_instance($project_id, $instance_id);
         $array = explode(PHP_EOL, $content);
-        print_r($array);
+        
         $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
         $this->assertContains('GC Rule:', $array);
-        $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":{"seconds":"432000.000000000s"}}]}}}', $array);
-        $this->clean_instance($project_id, $instance_id);
+        $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000.000000000s"}]}}}', $array);
     }
 
     public function testListInstanceClusters(): void
@@ -488,12 +481,11 @@ final class BigTableTest extends TestCase
             $project_id,
             $instance_id
         ]);
-
+        $this->clean_instance($project_id, $instance_id);
         $array = explode(PHP_EOL, $content);
 
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . $project_id . '/instances/' . $instance_id . '/clusters/' . $cluster_id, $array);
-        $this->clean_instance($project_id, $instance_id);
     }
 
     private function create_production_instance($project_id,$instance_id,$cluster_id)
@@ -528,10 +520,9 @@ final class BigTableTest extends TestCase
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $json = $columnFamilies->current()->serializeToJsonString();
-            echo $json."\n";
+            
             $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
-            print_r($gcRuleCompare);
-            print_r($gcRule);
+            
             $this->assertEquals($key, $familyKey);
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
