@@ -507,12 +507,16 @@ final class BigTableTest extends TestCase
 
     private static function runSnippet($sampleName, $params = [])
     {
-       
+        $testFunc = function() use ($sampleName, $params) {
             $argv = array_merge([basename(__FILE__)], $params);
             ob_start();
             require __DIR__ . "/../src/$sampleName.php";
             return ob_get_clean();
-       
+        };
+
+        if (self::$backoff) {
+            return self::$backoff->execute($testFunc);
+        }
         return $testFunc();
     }
 }
