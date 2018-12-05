@@ -47,7 +47,8 @@ final class BigTableTest extends TestCase
         $content = self::runSnippet('create_cluster', [
             self::$projectId,
             self::$instanceId,
-            $cluster_id
+            $cluster_id,
+            'us-east1-c'
         ]);
         $array = explode(PHP_EOL, $content);
         
@@ -506,16 +507,12 @@ final class BigTableTest extends TestCase
 
     private static function runSnippet($sampleName, $params = [])
     {
-        $testFunc = function() use ($sampleName, $params) {
+       
             $argv = array_merge([basename(__FILE__)], $params);
             ob_start();
             require __DIR__ . "/../src/$sampleName.php";
             return ob_get_clean();
-        };
-
-        if (self::$backoff) {
-            return self::$backoff->execute($testFunc);
-        }
+       
         return $testFunc();
     }
 }
