@@ -30,19 +30,6 @@ final class BigTableTest extends TestCase
     {
         $this->useResourceExhaustedBackoff();
     }
-
-    public static function tearDownAfterClass()
-    {
-        try {
-            self::runSnippet('delete_instance', [
-                self::$projectId,
-                $listInstance
-            ]);
-            unset(self::$listInstances[$key]);
-        } catch (ApiException $e) {
-            printf('Failed to delete instance "%s"' . PHP_EOL, $listInstance);
-        }
-    }
     
     public function testCreateCluster()
     {
