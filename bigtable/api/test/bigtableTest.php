@@ -35,12 +35,13 @@ final class BigTableTest extends TestCase
 
         self::create_production_instance(self::$projectId,self::$instanceId,self::$clusterId);
     }
+
     public function setUp()
     {
         $this->useResourceExhaustedBackoff();
     }
-    
-    public function testCreateCluster()
+
+    public function testCreateAndDeleteCluster()
     {
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
@@ -51,10 +52,25 @@ final class BigTableTest extends TestCase
             'us-east1-c'
         ]);
         $array = explode(PHP_EOL, $content);
-        
+
         $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, self::$instanceId, $cluster_id);
 
         $this->check_cluster($clusterName);
+
+        $content = self::runSnippet('delete_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            $cluster_id
+        ]);
+
+        try {
+            self::$instanceAdminClient->GetCluster($clusterName);
+            $this->fail(sprintf('Cluster %s still exists', $cluster->getName()));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            }
+        }
     }
 
     public function testCreateDevInstance()
@@ -68,7 +84,7 @@ final class BigTableTest extends TestCase
             $cluster_id
         ]);
         $array = explode(PHP_EOL, $content);
-        
+
         $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
 
         $this->check_instance($instanceName);
@@ -100,7 +116,7 @@ final class BigTableTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $content);
-        
+
         $this->assertContains('Listing Instances:', $array);
         $this->assertContains(self::$instanceId, $array);
     }
@@ -116,7 +132,7 @@ final class BigTableTest extends TestCase
             self::$instanceId
         ]);
         $array = explode(PHP_EOL, $content);
-        
+
         $this->assertContains('Listing Tables:', $array);
         $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/tables/' . $tableId, $array);
     }
@@ -138,9 +154,9 @@ final class BigTableTest extends TestCase
             self::$instanceId,
             $tableId,
         ]);
-        $this->clean_instance(self::$projectId, self::$instanceId);
+
         $array = explode(PHP_EOL, $content);
-        
+
         $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
         $this->assertContains('GC Rule:', $array);
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000.000000000s"}]}}}', $array);
@@ -243,7 +259,7 @@ final class BigTableTest extends TestCase
                 ]
             ]
         ];
-        
+
         $this->check_rule($tableName, 'cf5', $gcRuleCompare);
     }
 
@@ -289,7 +305,7 @@ final class BigTableTest extends TestCase
                 'maxAge' => '432000.000000000s'
             ]
         ];
-        
+
         $this->check_rule($tableName, 'cf1', $gcRuleCompare);
     }
 
@@ -321,80 +337,15 @@ final class BigTableTest extends TestCase
                 ]
             ]
         ];
-        
+
         $this->check_rule($tableName, 'cf4', $gcRuleCompare);
     }
 
-    public function testDeleteCluster()
-    {
-        $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, self::$instanceId, self::$clusterTwoId);
-
-        self::runSnippet('create_cluster', [
-            self::$projectId,
-            self::$instanceId,
-            self::$clusterTwoId,
-            'us-east1-c'
-        ]);
-
-        $this->check_cluster($clusterName);
-
-        $content = self::runSnippet('delete_cluster', [
-            self::$projectId,
-            self::$instanceId,
-            self::$clusterTwoId
-        ]);
-
-        try {
-            $cluster = self::$instanceAdminClient->GetCluster($clusterName);
-            $this->fail(sprintf('Cluster %s still exists', $cluster->getName()));
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $this->assertTrue(true);
-            }
-        }
-    }
-
-    public function testDeleteInstance()
-    {
-        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
-        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
-
-        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
-
-        
-
-        $this->check_instance($instanceName);
-
-        $content = self::runSnippet('delete_instance', [
-            self::$projectId,
-            $instance_id
-        ]);
-
-        try {
-            $instance = self::$instanceAdminClient->GetInstance($instanceName);
-            $this->fail(sprintf('Instance %s still exists', $instance->getName()));
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $this->assertTrue(true);
-            }
-        }
-        $this->clean_instance(self::$projectId, $instance_id);
-    }
     public function testDeleteTable()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
 
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
-
-        $this->create_production_instance(self::$projectId,self::$instanceId,self::$clusterId);
-
-        self::runSnippet('create_table', [
-            self::$projectId,
-            self::$instanceId,
-            $tableId
-        ]);
-
-        $this->check_table($tableName);
 
         $content = self::runSnippet('delete_table', [
             self::$projectId,
@@ -421,6 +372,25 @@ final class BigTableTest extends TestCase
         ]);
     }
 
+    public function testDeleteInstance()
+    {
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, self::$instanceId);
+
+        $content = self::runSnippet('delete_instance', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        try {
+            $instance = self::$instanceAdminClient->GetInstance($instanceName);
+            $this->fail(sprintf('Instance %s still exists', $instance->getName()));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            }
+        }
+    }
+
     private function check_cluster($clusterName)
     {
         try {
@@ -443,9 +413,9 @@ final class BigTableTest extends TestCase
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $json = $columnFamilies->current()->serializeToJsonString();
-            
+
             $gcRule = json_decode($columnFamilies->current()->serializeToJsonString(), true);
-            
+
             $this->assertEquals($key, $familyKey);
             $this->assertEquals($gcRule, $gcRuleCompare);
         } catch (ApiException $e) {
@@ -517,6 +487,7 @@ final class BigTableTest extends TestCase
         if (self::$backoff) {
             return self::$backoff->execute($testFunc);
         }
+
         return $testFunc();
     }
 }
