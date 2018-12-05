@@ -47,7 +47,8 @@ final class BigTableTest extends TestCase
         $content = self::runSnippet('create_cluster', [
             self::$projectId,
             self::$instanceId,
-            $cluster_id
+            $cluster_id,
+            'us-east1-c'
         ]);
         $array = explode(PHP_EOL, $content);
         
@@ -58,8 +59,8 @@ final class BigTableTest extends TestCase
 
     public function testCreateDevInstance()
     {
-        $instance_id = uniqid(INSTANCE_ID_PREFIX);
-        $cluster_id = uniqid(CLUSTER_ID_PREFIX);
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = self::runSnippet('create_dev_instance', [
             self::$projectId,
@@ -76,8 +77,8 @@ final class BigTableTest extends TestCase
 
     public function testCreateProductionInstance()
     {
-        $instance_id = uniqid(INSTANCE_ID_PREFIX);
-        $cluster_id = uniqid(CLUSTER_ID_PREFIX);
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = self::runSnippet('create_production_instance', [
             self::$projectId,
@@ -124,7 +125,7 @@ final class BigTableTest extends TestCase
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table(self::$projectId, self::$instance_id, self::$clusterId, $tableId);
+        $this->create_table(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
 
         self::runSnippet('create_family_gc_union', [
             self::$projectId,
@@ -135,7 +136,7 @@ final class BigTableTest extends TestCase
         $content = self::runSnippet('list_column_families', [
             self::$projectId,
             self::$instanceId,
-            $table_id,
+            $tableId,
         ]);
         $this->clean_instance(self::$projectId, self::$instanceId);
         $array = explode(PHP_EOL, $content);
@@ -155,7 +156,7 @@ final class BigTableTest extends TestCase
         $array = explode(PHP_EOL, $content);
 
         $this->assertContains('Listing Clusters:', $array);
-        $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$cluster_id, $array);
+        $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
     }
 
     public function testcreate_table()
@@ -209,7 +210,7 @@ final class BigTableTest extends TestCase
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
 
-        $this->create_table(self::$projectId, self::$instanceId, self::$clusterd, $tableId);
+        $this->create_table(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
 
         $content = self::runSnippet('create_family_gc_nested', [
             self::$projectId,
@@ -383,9 +384,9 @@ final class BigTableTest extends TestCase
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
 
-        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instance_id, $tableId);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
-        $this->create_production_instance(self::$projectId,self::$instanceId,$clusterId);
+        $this->create_production_instance(self::$projectId,self::$instanceId,self::$clusterId);
 
         self::runSnippet('create_table', [
             self::$projectId,
@@ -433,15 +434,6 @@ final class BigTableTest extends TestCase
                 throw $e;
             }
         }
-    }
-
-    private static function create_production_instance($project_id,$instance_id,$cluster_id)
-    {
-        self::runSnippet('create_production_instance', [
-            $project_id,
-            $instance_id,
-            $cluster_id
-        ]);
     }
 
     private function check_rule($tableName, $familyKey, $gcRuleCompare)
@@ -522,6 +514,9 @@ final class BigTableTest extends TestCase
             return ob_get_clean();
         };
 
-        return self::$backoff->execute($testFunc);
+        if (self::$backoff) {
+            return self::$backoff->execute($testFunc);
+        }
+        return $testFunc();
     }
 }
