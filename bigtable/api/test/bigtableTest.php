@@ -43,7 +43,7 @@ final class BigTableTest extends TestCase
     public function testCreateCluster()
     {
         $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
-        
+
         $content = self::runSnippet('create_cluster', [
             self::$projectId,
             self::$instanceId,
@@ -322,6 +322,93 @@ final class BigTableTest extends TestCase
         ];
         
         $this->check_rule($tableName, 'cf4', $gcRuleCompare);
+    }
+
+    public function testDeleteCluster()
+    {
+        $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, self::$instanceId, self::$clusterTwoId);
+
+        self::runSnippet('create_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterTwoId,
+            'us-east1-c'
+        ]);
+
+        $this->check_cluster($clusterName);
+
+        $content = self::runSnippet('delete_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterTwoId
+        ]);
+
+        try {
+            $cluster = self::$instanceAdminClient->GetCluster($clusterName);
+            $this->fail(sprintf('Cluster %s still exists', $cluster->getName()));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            }
+        }
+    }
+
+    public function testDeleteInstance()
+    {
+        $instance_id = uniqid(self::INSTANCE_ID_PREFIX);
+        $cluster_id = uniqid(self::CLUSTER_ID_PREFIX);
+
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instance_id);
+
+        
+
+        $this->check_instance($instanceName);
+
+        $content = self::runSnippet('delete_instance', [
+            self::$projectId,
+            $instance_id
+        ]);
+
+        try {
+            $instance = self::$instanceAdminClient->GetInstance($instanceName);
+            $this->fail(sprintf('Instance %s still exists', $instance->getName()));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            }
+        }
+        $this->clean_instance(self::$projectId, $instance_id);
+    }
+    public function testDeleteTable()
+    {
+        $tableId = uniqid(self::TABLE_ID_PREFIX);
+
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instance_id, $tableId);
+
+        $this->create_production_instance(self::$projectId,self::$instanceId,$clusterId);
+
+        self::runSnippet('create_table', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        $this->check_table($tableName);
+
+        $content = self::runSnippet('delete_table', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        try {
+            $table = self::$tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+            $this->fail(sprintf('Instance %s still exists', $table->getName()));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            }
+        }
     }
 
     private static function create_production_instance($project_id,$instance_id,$cluster_id)
