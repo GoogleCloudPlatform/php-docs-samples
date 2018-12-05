@@ -342,8 +342,10 @@ final class BigTableTest extends TestCase
     public function testDeleteTable()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
-
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
+
+        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->checkTable($tableName);
 
         $content = self::runSnippet('delete_table', [
             self::$projectId,
