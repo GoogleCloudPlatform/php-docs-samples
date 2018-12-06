@@ -78,7 +78,7 @@ function product_search_similar($projectId, $location, $productSetId, $productCa
             }
         }
     } else {
-        print($operation->getError());
+        print($operation->getError()->getMessage());
     }
 
     $imageAnnotatorClient->close();

@@ -69,7 +69,7 @@ function product_set_import($projectId, $location, $gcsUri)
             }
         }
     } else{
-        print($operation->getError());
+        print($operation->getError()->getMessage());
     }
     
     $client->close();
