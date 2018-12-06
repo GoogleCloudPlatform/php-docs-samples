@@ -35,6 +35,7 @@ $inputDefinitionFile = new InputDefinition([
 ]);
 
 
+// [START tts_list_voices]
 $application->add(new Command('list-voices'))
     ->setDescription('List the available voices')
     ->setHelp(<<<EOF
@@ -47,7 +48,9 @@ EOF
         list_voices();
     }
 );
+// [END tts_list_voices]
 
+// [START tts_synthesize_ssml]
 $application->add((new Command('synthesize-ssml'))
     ->setDefinition($inputDefinition)
     ->setDescription('Synthesizes speech from the input string of ssml')
@@ -62,7 +65,9 @@ EOF
         synthesize_ssml($ssml);
     })
 );
+// [END tts_synthesize_ssml]
 
+// [START tts_synthesize_text]
 $application->add((new Command('synthesize-text'))
     ->setDefinition($inputDefinition)
     ->setDescription('Synthesizes speech from the input string of text')
@@ -77,7 +82,9 @@ EOF
         synthesize_text($text);
     })
 );
+// [END tts_synthesize_text]
 
+// [START tts_synthesize_ssml_file]
 $application->add((new Command('synthesize-ssml-file'))
     ->setDefinition($inputDefinitionFile)
     ->setDescription('Synthesizes speech from the input file of ssml')
@@ -92,7 +99,9 @@ EOF
         synthesize_ssml_file($path);
     })
 );
+// [END tts_synthesize_ssml_file]
 
+// [START tts_synthesize_text_file]
 $application->add((new Command('synthesize-text-file'))
     ->setDefinition($inputDefinitionFile)
     ->setDescription('Synthesizes speech from the input file of text')
@@ -107,6 +116,7 @@ EOF
         synthesize_text_file($path);
     })
 );
+// [END tts_synthesize_text_file]
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
