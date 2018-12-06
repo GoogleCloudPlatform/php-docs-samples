@@ -52,13 +52,12 @@ function product_search_similar($projectId, $location, $productSetId, $productCa
     # search products similar to the image
     $response = $imageAnnotatorClient->productSearch($image, $productSearchParams);
 
-    # get results
-    $productSearchResults = $response->getProductSearchResults();
+    if ($productSearchResults = $response->getProductSearchResults()) {
+        $indexTime = $productSearchResults->getIndexTime();
+        printf('Product set index time: %d seconds %d nanos' . PHP_EOL, $indexTime->getSeconds(), $indexTime->getNanos());
 
-    $indexTime = $productSearchResults->getIndexTime();
-    printf('Product set index time: %d seconds %d nanos' . PHP_EOL, $indexTime->getSeconds(), $indexTime->getNanos());
-
-    if ($results = $productSearchResults->getResults()) {
+        $results = $productSearchResults->getResults();
+        print('Search results: ' . PHP_EOL);
         foreach ($results as $result) {
             printf('Score (confidence): %d' . PHP_EOL, $result->getScore());
 
@@ -78,7 +77,7 @@ function product_search_similar($projectId, $location, $productSetId, $productCa
             }
         }
     } else {
-        print($operation->getError()->getMessage());
+        print($response->getError()->getMessage());
     }
 
     $imageAnnotatorClient->close();

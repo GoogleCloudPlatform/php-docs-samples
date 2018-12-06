@@ -49,13 +49,11 @@ function product_search_similar_gcs($projectId, $location, $productSetId, $produ
     # search products similar to the image
     $response = $imageAnnotatorClient->productSearch($gcsUri, $productSearchParams);
 
-    # get results
-    $productSearchResults = $response->getProductSearchResults();
-
-    $indexTime = $productSearchResults->getIndexTime();
-    printf('Product set index time: %d seconds %d nanos' . PHP_EOL, $indexTime->getSeconds(), $indexTime->getNanos());
-
-    if ($results = $productSearchResults->getResults()) {
+    if ($productSearchResults = $response->getProductSearchResults()) {
+        $indexTime = $productSearchResults->getIndexTime();
+        printf('Product set index time: %d seconds %d nanos' . PHP_EOL, $indexTime->getSeconds(), $indexTime->getNanos());
+        
+        $results = $productSearchResults->getResults();
         print('Search results: ' . PHP_EOL);
         foreach ($results as $result) {
             printf('Score (confidence): %d' . PHP_EOL, $result->getScore());
@@ -76,7 +74,7 @@ function product_search_similar_gcs($projectId, $location, $productSetId, $produ
             }
         }
     } else {
-        print($operation->getError()->getMessage());
+        print($response->getError()->getMessage());
     }
 
     $imageAnnotatorClient->close();
