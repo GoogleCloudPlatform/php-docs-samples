@@ -25,6 +25,7 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
 {
     use ProductSearchTestTrait;
 
+    private static $bucketName;
     private static $productDisplayName;
     private static $productCategory;
     private static $productSetId;
@@ -44,6 +45,7 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
         self::$productDisplayName = 'fake_product_display_name_for_testing';
         self::$productCategory = 'apparel';
         self::$productSetId = 'fake_product_set_id_for_testing';
@@ -54,8 +56,8 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         self::$shoesOneUri = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg';
         self::$shoesTwoUri = 'gs://cloud-samples-data/vision/product_search/shoes_2.jpg';
         self::$productSetDisplayName = 'fake_product_set_display_name_for_testing';
-        self::$productSetsUri = 'gs://cloud-samples-data/vision/product_sets.csv';
-        self::$indexedProductsSetsUri = 'gs://cloud-samples-data/vision/indexed_products_sets.csv';
+        self::$productSetsUri = 'gs://' . self::$bucketName . '/vision/product_sets.csv';
+        self::$indexedProductsSetsUri = 'gs://' . self::$bucketName . '/vision/indexed_products_sets.csv';
         self::$key = 'fake_key_for_testing';
         self::$value = 'fake_value_for_testing';
         self::$localFile = __DIR__ . '/data/shoes_1.jpg';
@@ -64,6 +66,20 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
 
     public function testImportProductSets()
     {
+        # reset
+        $this->runCommand('product-delete', [
+            'product-id' => self::$productId
+        ]);
+        $this->runCommand('product-delete', [
+            'product-id' => self::$productIdOne
+        ]);
+        $this->runCommand('product-delete', [
+            'product-id' => self::$productIdTwo
+        ]);
+        $this->runCommand('product-set-delete', [
+            'product-set-id' => self::$productSetId
+        ]);
+
         # pre-check
         $output = $this->runCommand('product-set-list', []);
         $this->assertNotContains(self::$productSetId, $output);
