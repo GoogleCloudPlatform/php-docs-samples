@@ -58,26 +58,27 @@ function product_search_similar($projectId, $location, $productSetId, $productCa
     $indexTime = $productSearchResults->getIndexTime();
     printf('Product set index time: %d seconds %d nanos' . PHP_EOL, $indexTime->getSeconds(), $indexTime->getNanos());
 
-    # print results
-    $results = $productSearchResults->getResults();
-    print('Search results: ' . PHP_EOL);
-    foreach ($results as $result) {
-        printf('Score (confidence): %d' . PHP_EOL, $result->getScore());
+    if ($results = $productSearchResults->getResults()) {
+        foreach ($results as $result) {
+            printf('Score (confidence): %d' . PHP_EOL, $result->getScore());
 
-        # display the product information.
-        $product = $result->getProduct();
-        $productName = $product->getName();
-        $productNameArray = explode('/', $productName);
+            # display the product information.
+            $product = $result->getProduct();
+            $productName = $product->getName();
+            $productNameArray = explode('/', $productName);
 
-        printf('Product name: %s' . PHP_EOL, $productName);
-        printf('Product id: %s' . PHP_EOL, end($productNameArray));
-        printf('Product display name: %s' . PHP_EOL, $product->getDisplayName());
-        printf('Product description: %s' . PHP_EOL, $product->getDescription());
-        printf('Product category: %s' . PHP_EOL, $product->getProductCategory());
-        print('Product labels: ' . PHP_EOL);
-        foreach ($product->getProductLabels() as $label) {
-            printf('%s : %s' . PHP_EOL, $label->getKey(), $label->getValue());
+            printf('Product name: %s' . PHP_EOL, $productName);
+            printf('Product id: %s' . PHP_EOL, end($productNameArray));
+            printf('Product display name: %s' . PHP_EOL, $product->getDisplayName());
+            printf('Product description: %s' . PHP_EOL, $product->getDescription());
+            printf('Product category: %s' . PHP_EOL, $product->getProductCategory());
+            print('Product labels: ' . PHP_EOL);
+            foreach ($product->getProductLabels() as $label) {
+                printf('%s : %s' . PHP_EOL, $label->getKey(), $label->getValue());
+            }
         }
+    } else {
+        print($operation->getError());
     }
 
     $imageAnnotatorClient->close();

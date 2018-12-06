@@ -53,22 +53,25 @@ function product_set_import($projectId, $location, $gcsUri)
     $operation->pollUntilComplete();
     print('Processing done.' . PHP_EOL);
 
-    # synchronous check of operation status
-    $result = $operation->getResult();
-    $referenceImages = $result->getReferenceImages();
+    if ($result = $operation->getResult()) {
+        $referenceImages = $result->getReferenceImages();
 
-    foreach ($result->getStatuses() as $count => $status) {
-        printf('Status of processing line %d of the csv: ' . PHP_EOL, $count);
-        # check the status of reference image
-        # `0` is the code for OK in google.rpc.Code.
-        if ($status->getCode() == 0) {
-            $referenceImage = $referenceImages[$count];
-            printf('name: %s' . PHP_EOL, $referenceImage->getName());
-            printf('uri: %s' . PHP_EOL, $referenceImage->getUri());
-        } else {
-            printf('Status code not OK: %s' . PHP_EOL, $status->getMessage());
+        foreach ($result->getStatuses() as $count => $status) {
+            printf('Status of processing line %d of the csv: ' . PHP_EOL, $count);
+            # check the status of reference image
+            # `0` is the code for OK in google.rpc.Code.
+            if ($status->getCode() == 0) {
+                $referenceImage = $referenceImages[$count];
+                printf('name: %s' . PHP_EOL, $referenceImage->getName());
+                printf('uri: %s' . PHP_EOL, $referenceImage->getUri());
+            } else {
+                printf('Status code not OK: %s' . PHP_EOL, $status->getMessage());
+            }
         }
+    } else{
+        print($operation->getError());
     }
+    
     $client->close();
 }
 // [END vision_product_search_import_product_images]
