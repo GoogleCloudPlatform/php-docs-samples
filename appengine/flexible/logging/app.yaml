@@ -3,6 +3,6 @@ env: flex
 
 runtime_config:
   document_root: .
-  # [START enabling_stackdriver_integration]
+  # [START trace_setup_php_enabling_stackdriver_integration]
   enable_stackdriver_integration: true
-  # [END enabling_stackdriver_integration]
+  # [END trace_setup_php_enabling_stackdriver_integration]
