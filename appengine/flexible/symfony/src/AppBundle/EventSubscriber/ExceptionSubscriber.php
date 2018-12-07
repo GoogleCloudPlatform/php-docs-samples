@@ -1,5 +1,6 @@
 <?php
 
+# [START error_reporting_setup_php_symfony]
 // src/AppBundle/EventSubscriber/ExceptionSubscriber.php
 namespace AppBundle\EventSubscriber;
 
@@ -24,3 +25,4 @@ class ExceptionSubscriber implements EventSubscriberInterface
         Bootstrap::exceptionHandler($exception);
     }
 }
+# [END error_reporting_setup_php_symfony]
