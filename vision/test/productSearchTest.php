@@ -25,89 +25,30 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
 {
     use ProductSearchTestTrait;
 
-    private static $productDisplayName;
-    private static $productCategory;
-    private static $productSetId;
-    private static $productId;
-    private static $productIdOne;
-    private static $productIdTwo;
-    private static $referenceImageId;
-    private static $shoesOneUri;
-    private static $shoesTwoUri;
-    private static $productSetDisplayName;
-    private static $productSetsUri;
-    private static $indexedProductsSetsUri;
-    private static $key;
-    private static $value;
-    private static $localFile;
-    private static $filter;
-
-    public function setUp()
-    {
-        self::$productDisplayName = 'fake_product_display_name_for_testing';
-        self::$productCategory = 'apparel';
-        self::$productSetId = 'fake_product_set_id_for_testing';
-        self::$productId = 'fake_product_id_for_testing';
-        self::$productIdOne = 'fake_product_id_for_testing_1';
-        self::$productIdTwo = 'fake_product_id_for_testing_2';
-        self::$referenceImageId = 'fake_reference_image_id_for_testing';
-        self::$shoesOneUri = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg';
-        self::$shoesTwoUri = 'gs://cloud-samples-data/vision/product_search/shoes_2.jpg';
-        self::$productSetDisplayName = 'fake_product_set_display_name_for_testing';
-        self::$productSetsUri = 'gs://cloud-samples-data/vision/product_search/product_sets.csv';
-        self::$indexedProductsSetsUri = 'gs://cloud-samples-data/vision/indexed_products_sets.csv';
-        self::$key = 'fake_key_for_testing';
-        self::$value = 'fake_value_for_testing';
-        self::$localFile = __DIR__ . '/data/shoes_1.jpg';
-        self::$filter = 'style=womens';
-    }
+    private static $productDisplayName = 'fake_product_display_name_for_testing';
+    private static $productCategory = 'apparel';
+    private static $productSetId = 'fake_product_set_id_for_testing';
+    private static $productId = 'fake_product_id_for_testing';
+    private static $productIdOne = 'fake_product_id_for_testing_1';
+    private static $productIdTwo = 'fake_product_id_for_testing_2';
+    private static $referenceImageId = 'fake_reference_image_id_for_testing';
+    private static $shoesOneUri = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg';
+    private static $shoesTwoUri = 'gs://cloud-samples-data/vision/product_search/shoes_2.jpg';
+    private static $productSetDisplayName = 'fake_product_set_display_name_for_testing';
+    private static $productSetsUri = 'gs://cloud-samples-data/vision/product_search/product_sets.csv';
+    private static $key = 'fake_key_for_testing';
+    private static $value = 'fake_value_for_testing';
+    private static $localFile = __DIR__ . '/data/shoes_1.jpg';
+    private static $filter = 'style=womens';
 
     public function testImportProductSets()
     {
-        # reset
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productId
-        ]);
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdOne
-        ]);
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdTwo
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
-
-        # pre-check
-        $output = $this->runCommand('product-set-list', []);
-        $this->assertNotContains(self::$productSetId, $output);
-
-        $output = $this->runCommand('product-list', []);
-        $this->assertNotContains(self::$productIdOne, $output);
-        $this->assertNotContains(self::$productIdTwo, $output);
-
-        $output = $this->runCommand('product-set-list-products', [
-            'product-set-id' => self::$productSetId
-        ]);
-        $this->assertNotContains(self::$productIdOne, $output);
-        $this->assertNotContains(self::$productIdTwo, $output);
-
-        $output = $this->runCommand('product-image-list', [
-            'product-id' => self::$productIdOne
-        ]);
-        $this->assertNotContains(self::$shoesOneUri, $output);
-
-        $output = $this->runCommand('product-image-list', [
-            'product-id' => self::$productIdTwo
-        ]);
-        $this->assertNotContains(self::$shoesTwoUri, $output);
-
         # run command
         $this->runCommand('product-set-import', [
             'gcs-uri' => self::$productSetsUri
         ]);
 
-        # post check
+        # verify
         $output = $this->runCommand('product-set-list', []);
         $this->assertContains(self::$productSetId, $output);
 
@@ -131,7 +72,7 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains(self::$shoesTwoUri, $output);
 
-        # clean up
+        # delete everything we created
         $this->runCommand('product-delete', [
             'product-id' => self::$productIdOne
         ]);
@@ -143,86 +84,17 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function testAddProductToProductSet()
+    public function testCreateProductSet()
     {
-        # set up
         $this->runCommand('product-set-create', [
             'product-set-id' => self::$productSetId,
             'product-set-display-name' => self::$productSetDisplayName
         ]);
-        $this->runCommand('product-create', [
-            'product-id' => self::$productId,
-            'product-display-name' => self::$productDisplayName,
-            'product-category' => self::$productCategory
-        ]);
-
-        # check
-        $output = $this->runCommand('product-set-list-products', [
-            'product-set-id' => self::$productSetId
-        ]);
-        $this->assertNotContains(self::$productId, $output);
-
-        # test
-        $output = $this->runCommand('product-set-add-product', [
-            'product-id' => self::$productId,
-            'product-set-id' => self::$productSetId
-        ]);
-        $output = $this->runCommand('product-set-list-products', [
-            'product-set-id' => self::$productSetId
-        ]);
-        $this->assertContains(self::$productId, $output);
-
-        # tear down
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productId
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
+        $output = $this->runCommand('product-set-list', []);
+        $this->assertContains(self::$productSetId, $output);
     }
 
-    public function testRemoveProductFromProductSet()
-    {
-        # set up
-        $this->runCommand('product-set-create', [
-            'product-set-id' => self::$productSetId,
-            'product-set-display-name' => self::$productSetDisplayName
-        ]);
-        $this->runCommand('product-create', [
-            'product-id' => self::$productId,
-            'product-display-name' => self::$productDisplayName,
-            'product-category' => self::$productCategory
-        ]);
-
-        # check
-        $output = $this->runCommand('product-set-add-product', [
-            'product-id' => self::$productId,
-            'product-set-id' => self::$productSetId
-        ]);
-        $output = $this->runCommand('product-set-list-products', [
-            'product-set-id' => self::$productSetId
-        ]);
-        $this->assertContains(self::$productId, $output);
-
-        # test
-        $output = $this->runCommand('product-set-remove-product', [
-            'product-id' => self::$productId,
-            'product-set-id' => self::$productSetId
-        ]);
-        $output = $this->runCommand('product-set-list-products', [
-            'product-set-id' => self::$productSetId
-        ]);
-        $this->assertNotContains(self::$productId, $output);
-
-        # tear down
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productId
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
-    }
-
+    /** @depends testCreateProductSet */
     public function testCreateProduct()
     {
         # check
@@ -237,41 +109,11 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $output = $this->runCommand('product-list', []);
         $this->assertContains(self::$productId, $output);
-
-        # tear down
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productId
-        ]);
     }
 
-    public function testDeleteProduct()
-    {
-        # set up
-        $this->runCommand('product-create', [
-            'product-id' => self::$productId,
-            'product-display-name' => self::$productDisplayName,
-            'product-category' => self::$productCategory
-        ]);
-        $output = $this->runCommand('product-list', []);
-        $this->assertContains(self::$productId, $output);
-
-        # test
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productId
-        ]);
-        $output = $this->runCommand('product-list', []);
-        $this->assertNotContains(self::$productId, $output);
-    }
-
+    /** @depends testCreateProduct */
     public function testUpdateProduct()
     {
-        # set up
-        $this->runCommand('product-create', [
-            'product-id' => self::$productId,
-            'product-display-name' => self::$productDisplayName,
-            'product-category' => self::$productCategory
-        ]);
-
         # check
         $output = $this->runCommand('product-get', [
             'product-id' => self::$productId
@@ -287,21 +129,37 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains(self::$key, $output);
         $this->assertContains(self::$value, $output);
-
-        # tear down
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productId
-        ]);
     }
 
+    /** @depends testUpdateProduct */
+    public function testAddProductToProductSet()
+    {
+        $output = $this->runCommand('product-set-add-product', [
+            'product-id' => self::$productId,
+            'product-set-id' => self::$productSetId
+        ]);
+        $output = $this->runCommand('product-set-list-products', [
+            'product-set-id' => self::$productSetId
+        ]);
+        $this->assertContains(self::$productId, $output);
+    }
+
+    /** @depends testAddProductToProductSet */
+    public function testRemoveProductFromProductSet()
+    {
+        $output = $this->runCommand('product-set-remove-product', [
+            'product-id' => self::$productId,
+            'product-set-id' => self::$productSetId
+        ]);
+        $output = $this->runCommand('product-set-list-products', [
+            'product-set-id' => self::$productSetId
+        ]);
+        $this->assertNotContains(self::$productId, $output);
+    }
+
+    /** @depends testImportProductSets */
     public function testGetSimilarProductsLocal()
     {
-        # set up
-        $this->runCommand('product-set-import', [
-            'gcs-uri' => self::$productSetsUri
-        ]);
-
-        # test
         $output = $this->runCommand('product-search-similar', [
             'product-set-id' => self::$productSetId,
             'product-category' => self::$productCategory,
@@ -310,26 +168,11 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains(self::$productIdOne, $output);
         $this->assertContains(self::$productIdTwo, $output);
-
-        # clean up
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdOne
-        ]);
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdTwo
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
     }
 
+    /** @depends testImportProductSets */
     public function testGetSimilarProductsGcs()
     {
-        # set up
-        $this->runCommand('product-set-import', [
-            'gcs-uri' => self::$productSetsUri
-        ]);
-
         $output = $this->runCommand('product-search-similar-gcs', [
             'product-set-id' => self::$productSetId,
             'product-category' => self::$productCategory,
@@ -338,26 +181,11 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains(self::$productIdOne, $output);
         $this->assertContains(self::$productIdTwo, $output);
-
-        # clean up
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdOne
-        ]);
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdTwo
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
     }
 
+    /** @depends testImportProductSets */
     public function testGetSimilarProductsLocalFilter()
     {
-        # set up
-        $this->runCommand('product-set-import', [
-            'gcs-uri' => self::$productSetsUri
-        ]);
-
         $output = $this->runCommand('product-search-similar', [
             'product-set-id' => self::$productSetId,
             'product-category' => self::$productCategory,
@@ -366,26 +194,11 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains(self::$productIdOne, $output);
         $this->assertNotContains(self::$productIdTwo, $output);
-
-        # clean up
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdOne
-        ]);
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdTwo
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
     }
 
+    /** @depends testImportProductSets */
     public function testGetSimilarProductsGcsFilter()
     {
-        # set up
-        $this->runCommand('product-set-import', [
-            'gcs-uri' => self::$productSetsUri
-        ]);
-
         $output = $this->runCommand('product-search-similar-gcs', [
             'product-set-id' => self::$productSetId,
             'product-category' => self::$productCategory,
@@ -394,75 +207,11 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertContains(self::$productIdOne, $output);
         $this->assertNotContains(self::$productIdTwo, $output);
-
-        # clean up
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdOne
-        ]);
-        $this->runCommand('product-delete', [
-            'product-id' => self::$productIdTwo
-        ]);
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
     }
 
-    public function testCreateProductSet()
-    {
-        # pre-check
-        $output = $this->runCommand('product-set-list', []);
-        $this->assertNotContains(self::$productSetId, $output);
-
-        # test
-        $this->runCommand('product-set-create', [
-            'product-set-id' => self::$productSetId,
-            'product-set-display-name' => self::$productSetDisplayName
-        ]);
-        $output = $this->runCommand('product-set-list', []);
-        $this->assertContains(self::$productSetId, $output);
-
-        # tear down
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
-    }
-
-    public function testDeleteProductSet()
-    {
-        # set up
-        $this->runCommand('product-set-create', [
-            'product-set-id' => self::$productSetId,
-            'product-set-display-name' => self::$productSetDisplayName
-        ]);
-
-        # pre-check
-        $output = $this->runCommand('product-set-list', []);
-        $this->assertContains(self::$productSetId, $output);
-
-        # test
-        $this->runCommand('product-set-delete', [
-            'product-set-id' => self::$productSetId
-        ]);
-        $output = $this->runCommand('product-set-list', []);
-        $this->assertNotContains(self::$productSetId, $output);
-    }
-
+    /** @depends testImportProductSets */
     public function testCreateImage()
     {
-        # set up
-        $this->runCommand('product-create', [
-            'product-id' => self::$productId,
-            'product-display-name' => self::$productDisplayName,
-            'product-category' => self::$productCategory
-        ]);
-
-        # pre check
-        $output = $this->runCommand('product-image-list', [
-            'product-id' => self::$productId
-        ]);
-        $this->assertNotContains(self::$referenceImageId, $output);
-
-        # test
         $this->runCommand('product-image-create', [
             'product-id' => self::$productId,
             'reference-image-id' => self::$referenceImageId,
@@ -479,27 +228,9 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /** @depends testCreateImage */
     public function testDeleteImage()
     {
-        # set up
-        $this->runCommand('product-create', [
-            'product-id' => self::$productId,
-            'product-display-name' => self::$productDisplayName,
-            'product-category' => self::$productCategory
-        ]);
-        $this->runCommand('product-image-create', [
-            'product-id' => self::$productId,
-            'reference-image-id' => self::$referenceImageId,
-            'gcs-uri' => self::$shoesOneUri
-        ]);
-
-        # pre check
-        $output = $this->runCommand('product-image-list', [
-            'product-id' => self::$productId
-        ]);
-        $this->assertContains(self::$referenceImageId, $output);
-
-        # test
         $this->runCommand('product-image-delete', [
             'product-id' => self::$productId,
             'reference-image-id' => self::$referenceImageId
@@ -508,10 +239,42 @@ class productSearchTest extends \PHPUnit_Framework_TestCase
             'product-id' => self::$productId
         ]);
         $this->assertNotContains(self::$referenceImageId, $output);
+    }
 
-        # tear down
+    /** @depends testCreateProduct */
+    public function testDeleteProduct()
+    {
         $this->runCommand('product-delete', [
             'product-id' => self::$productId
+        ]);
+        $output = $this->runCommand('product-list', []);
+        $this->assertNotContains(self::$productId, $output);
+    }
+
+    /** @depends testCreateProductSet */
+    public function testDeleteProductSet()
+    {
+        $this->runCommand('product-set-delete', [
+            'product-set-id' => self::$productSetId
+        ]);
+        $output = $this->runCommand('product-set-list', []);
+        $this->assertNotContains(self::$productSetId, $output);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        print('Cleaning up products and product sets...' . PHP_EOL);
+        self::runCommand('product-delete', [
+            'product-id' => self::$productId
+        ]);
+        self::runCommand('product-delete', [
+            'product-id' => self::$productIdOne
+        ]);
+        self::runCommand('product-delete', [
+            'product-id' => self::$productIdTwo
+        ]);
+        self::runCommand('product-set-delete', [
+            'product-set-id' => self::$productSetId
         ]);
     }
 }

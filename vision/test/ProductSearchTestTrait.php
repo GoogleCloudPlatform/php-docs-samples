@@ -32,7 +32,7 @@ trait ProductSearchTestTrait
         $this->useResourceExhaustedBackoff(6);
     }
 
-    private function runCommand($commandName, array $args = [])
+    private static function runCommand($commandName, array $args = [])
     {
         $application = require __DIR__ . '/../product_search.php';
         $command = $application->get($commandName);
