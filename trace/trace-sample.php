@@ -18,40 +18,40 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use OpenCensus\Trace\Exporter\NullExporter;
-# [START trace_use_statement]
+# [START trace_setup_php_use_statement]
 use OpenCensus\Trace\Exporter\StackdriverExporter;
 use OpenCensus\Trace\Tracer;
 
-# [END trace_use_statement]
+# [END trace_setup_php_use_statement]
 
 $projectId = getenv('GOOGLE_PROJECT_ID');
 if ($projectId === false) {
     die('Set GOOGLE_PROJECT_ID envvar');
 }
 
-# [START exporter_setup]
+# [START trace_setup_php_exporter_setup]
 $exporter = new StackdriverExporter([
     'clientConfig' => [
         'projectId' => $projectId
     ]
 ]);
-# [END exporter_setup]
+# [END trace_setup_php_exporter_setup]
 // When running tests, use a null exporter instead.
 if (getenv('USE_NULL_EXPORTER')) {
     $exporter = new NullExporter();
 }
-# [START tracer_start]
+# [START trace_setup_php_tracer_start]
 Tracer::start($exporter);
-# [END tracer_start]
+# [END trace_setup_php_tracer_start]
 
 function trace_callable()
 {
-    # [START span_with_closure]
+    # [START trace_setup_php_span_with_closure]
     Tracer::inSpan(
         ['name' => 'slow_function'],
         function () {
             sleep(1);
         }
     );
-    # [END span_with_closure]
+    # [END trace_setup_php_span_with_closure]
 }
