@@ -3,7 +3,7 @@
 // Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-# [START error_reporting]
+# [START error_reporting_quickstart]
 // Imports the Google Cloud client library
 use Google\Cloud\Logging\LoggingClient;
 
@@ -43,4 +43,4 @@ $handlerFunction = function (Exception $e) use ($logger, $service, $version) {
 set_exception_handler($handlerFunction);
 
 throw new Exception('This will be logged to Stack Driver Error Reporting');
-# [END error_reporting]
+# [END error_reporting_quickstart]
