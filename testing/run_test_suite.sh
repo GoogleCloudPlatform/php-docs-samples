@@ -51,6 +51,7 @@ ALT_PROJECT_TESTS=(
     pubsub/api
     storage
     video
+    vision
 )
 
 GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')

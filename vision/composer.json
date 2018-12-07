@@ -2,7 +2,7 @@
     "name": "google/vision",
     "type": "project",
     "require": {
-        "google/cloud-vision": "^0.17",
+        "google/cloud-vision": "^0.19",
         "google/cloud-storage": "^1.3",
         "symfony/console": "^3.1"
     },
@@ -35,10 +35,35 @@
             "src/detect_object_gcs.php",
             "src/detect_web_with_geo_metadata.php",
             "src/detect_web_with_geo_metadata_gcs.php",
-            "src/detect_pdf_gcs.php"
+            "src/detect_pdf_gcs.php",
+            "src/product_create.php",
+            "src/product_delete.php",
+            "src/product_get.php",
+            "src/product_image_create.php",
+            "src/product_image_delete.php",
+            "src/product_image_get.php",
+            "src/product_image_list.php",
+            "src/product_list.php",
+            "src/product_search_similar.php",
+            "src/product_search_similar_gcs.php",
+            "src/product_set_add_product.php",
+            "src/product_set_create.php",
+            "src/product_set_delete.php",
+            "src/product_set_get.php",
+            "src/product_set_import.php",
+            "src/product_set_list.php",
+            "src/product_set_list_products.php",
+            "src/product_set_remove_product.php",
+            "src/product_update.php"
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "~4"
+        "phpunit/phpunit": "~4",
+        "google/cloud-tools": "^0.8.5"
+    },
+    "autoload-dev": {
+        "files": [
+            "test/ProductSearchTestTrait.php"
+        ]
     }
 }
