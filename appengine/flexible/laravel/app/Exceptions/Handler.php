@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    # [START stackdriver_exception_handler_configuration]
+    # [START error_reporting_setup_php_laravel]
     public function report(Exception $exception)
     {
         if (isset($_SERVER['GAE_SERVICE'])) {
@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
             parent::report($exception);
         }
     }
-    # [END stackdriver_exception_handler_configuration]
+    # [END error_reporting_setup_php_laravel]
 
     /**
      * Render an exception into an HTTP response.
