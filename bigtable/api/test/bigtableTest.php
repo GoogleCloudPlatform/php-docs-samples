@@ -17,10 +17,10 @@ final class BigTableTest extends TestCase
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
-    public static $instanceAdminClient;
-    public static $tableAdminClient;
-    public static $instanceId;
-    public static $clusterId;
+    private static $instanceAdminClient;
+    private static $tableAdminClient;
+    private static $instanceId;
+    private static $clusterId;
 
     public static function setUpBeforeClass()
     {
