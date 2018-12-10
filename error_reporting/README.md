@@ -36,7 +36,7 @@ Run the samples:
 
 ```sh
 php quickstart.php
-Exception logged to Stack Driver Error Reporting
+Exception logged to Stackdriver Error Reporting
 ```
 
 View [Stackdriver Error Reporting][1] in the Cloud Console to see the logged

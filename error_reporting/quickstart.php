@@ -36,11 +36,11 @@ $handlerFunction = function (Exception $e) use ($logger, $service, $version) {
     // Writes the log entry
     $logger->write($entry);
 
-    print("Exception logged to Stack Driver Error Reporting" . PHP_EOL);
+    print("Exception logged to Stackdriver Error Reporting" . PHP_EOL);
 };
 
 // Sets PHP's default exception handler
 set_exception_handler($handlerFunction);
 
-throw new Exception('This will be logged to Stack Driver Error Reporting');
+throw new Exception('This will be logged to Stackdriver Error Reporting');
 # [END error_reporting_quickstart]

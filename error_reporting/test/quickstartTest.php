@@ -46,11 +46,11 @@ class quickstartTest extends TestCase
 
         // Make sure it looks correct
         $this->assertEquals(
-            'Exception logged to Stack Driver Error Reporting' . PHP_EOL,
+            'Exception logged to Stackdriver Error Reporting' . PHP_EOL,
             $output
         );
 
-        $message = 'This will be logged to Stack Driver Error Reporting';
+        $message = 'This will be logged to Stackdriver Error Reporting';
 
         $this->verifyReportedError($projectId, $message);
     }
