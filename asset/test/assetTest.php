@@ -21,8 +21,6 @@ use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\Core\Exception\NotFoundException;
-use Google\Cloud\Core\Exception\BadRequestException;
 use PHPUnit\Framework\TestCase;
 
 /**

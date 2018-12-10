@@ -20,21 +20,19 @@ namespace Google\Cloud\Samples\Asset;
 # [START asset_quickstart_batch_get_assets_history]
 use Google\Cloud\Asset\V1beta1\AssetServiceClient;
 use Google\Cloud\Asset\V1beta1\ContentType;
-use Google\Cloud\Asset\V1beta1\GcsDestination;
-use Google\Cloud\Asset\V1beta1\OutputConfig;
 use Google\Cloud\Asset\V1beta1\TimeWindow;
 use Google\Protobuf\Timestamp;
 
 function batch_get_assets_history($projectId, $assetNames)
 {
-  $client = new AssetServiceClient();
-  $formattedParent = $client->projectName($projectId);
-  $contentType = ContentType::RESOURCE;
-  $readTimeWindow = new TimeWindow(['start_time' => new Timestamp(['seconds' => time()])]);
+    $client = new AssetServiceClient();
+    $formattedParent = $client->projectName($projectId);
+    $contentType = ContentType::RESOURCE;
+    $readTimeWindow = new TimeWindow(['start_time' => new Timestamp(['seconds' => time()])]);
 
-  $resp = $client->batchGetAssetsHistory($formattedParent, $contentType, $readTimeWindow, ['assetNames' => $assetNames]);
+    $resp = $client->batchGetAssetsHistory($formattedParent, $contentType, $readTimeWindow, ['assetNames' => $assetNames]);
 
-  # Do things with response.
-  print($resp->serializeToString());
+    # Do things with response.
+    print($resp->serializeToString());
 }
 # [END asset_quickstart_batch_get_assets_history]

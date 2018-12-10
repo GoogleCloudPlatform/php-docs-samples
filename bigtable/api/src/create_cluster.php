@@ -38,7 +38,6 @@ use Google\Cloud\Bigtable\Admin\V2\Cluster;
 use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\ApiCore\ApiException;
 
-
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';

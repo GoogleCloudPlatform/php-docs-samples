@@ -31,20 +31,20 @@ use Google\Cloud\Asset\V1beta1\OutputConfig;
  */
 function export_assets($projectId, $dumpFilePath)
 {
-  $client = new AssetServiceClient();
+    $client = new AssetServiceClient();
 
-  $gcsDestination = new GcsDestination(['uri' => $dumpFilePath]);
-  $outputConfig = new OutputConfig(['gcs_destination' => $gcsDestination]);
+    $gcsDestination = new GcsDestination(['uri' => $dumpFilePath]);
+    $outputConfig = new OutputConfig(['gcs_destination' => $gcsDestination]);
 
-  $resp = $client->exportAssets("projects/$projectId", $outputConfig);
+    $resp = $client->exportAssets("projects/$projectId", $outputConfig);
 
-  $resp->pollUntilComplete();
+    $resp->pollUntilComplete();
 
-  if ($resp->operationSucceeded()) {
-      print('The result is dumped to $dumpFilePath successfully.' . PHP_EOL);
-  } else {
-      $error = $operationResponse->getError();
-      // handleError($error)
-  }
+    if ($resp->operationSucceeded()) {
+        print('The result is dumped to $dumpFilePath successfully.' . PHP_EOL);
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 # [END asset_quickstart_export_assets]

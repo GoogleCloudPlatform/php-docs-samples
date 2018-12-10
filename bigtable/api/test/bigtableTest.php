@@ -17,10 +17,10 @@ final class BigTableTest extends TestCase
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
-    static $instanceAdminClient;
-    static $tableAdminClient;
-    static $instanceId;
-    static $clusterId;
+    public static $instanceAdminClient;
+    public static $tableAdminClient;
+    public static $instanceId;
+    public static $clusterId;
 
     public static function setUpBeforeClass()
     {
@@ -477,7 +477,7 @@ final class BigTableTest extends TestCase
 
     private static function runSnippet($sampleName, $params = [])
     {
-        $testFunc = function() use ($sampleName, $params) {
+        $testFunc = function () use ($sampleName, $params) {
             $argv = array_merge([basename(__FILE__)], $params);
             ob_start();
             require __DIR__ . "/../src/$sampleName.php";

@@ -45,6 +45,5 @@ function delete_data_with_dml($instanceId, $databaseId)
         $t->commit();
         printf('Deleted %d row(s).' . PHP_EOL, $rowCount);
     });
-
 }
 // [END spanner_dml_standard_delete]

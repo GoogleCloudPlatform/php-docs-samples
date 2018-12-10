@@ -32,7 +32,6 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 
 // [START bigtable_list_column_families]
 
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 /** Uncomment and populate these variables in your code */

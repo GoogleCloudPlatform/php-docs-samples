@@ -46,3 +46,10 @@ export IS_PULL_REQUEST=$KOKORO_GITHUB_PULL_REQUEST_COMMIT
 
 # Run tests
 bash testing/run_test_suite.sh
+
+# Run code standards check on latest version of PHP
+if [ ! -z "${IS_PULL_REQUEST}" ] && \
+   [ "${RUN_CS_CHECK}" = "true" ]
+then
+  bash testing/run_cs_check.sh
+fi

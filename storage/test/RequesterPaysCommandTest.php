@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\RequesterPaysCommand;
-use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;

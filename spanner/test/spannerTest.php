@@ -475,5 +475,4 @@ class spannerTest extends TestCase
             $database->drop();
         }
     }
-
 }

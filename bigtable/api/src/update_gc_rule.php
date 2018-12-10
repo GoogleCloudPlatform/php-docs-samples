@@ -34,11 +34,9 @@ $family_id = isset($argv[4]) ? $argv[4] : 'cf3';
 // [START bigtable_update_gc_rule]
 
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';

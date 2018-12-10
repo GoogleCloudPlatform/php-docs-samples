@@ -32,7 +32,6 @@ list($_, $projectId, $locationId, $queueId, $payload) = $argv;
 # [START cloud_tasks_appengine_create_task]
 use Google\Cloud\Tasks\V2beta3\AppEngineHttpRequest;
 use Google\Cloud\Tasks\V2beta3\CloudTasksClient;
-use Google\Cloud\Tasks\V2beta3\CreateTaskRequest;
 use Google\Cloud\Tasks\V2beta3\HttpMethod;
 use Google\Cloud\Tasks\V2beta3\Task;
 

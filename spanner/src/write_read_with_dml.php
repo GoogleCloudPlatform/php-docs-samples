@@ -61,6 +61,5 @@ function write_read_with_dml($instanceId, $databaseId)
 
         $t->commit();
     });
-
 }
 // [END spanner_dml_write_then_read]
