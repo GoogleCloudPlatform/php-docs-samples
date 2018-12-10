@@ -28,12 +28,17 @@ FLAKES=(
 
 # tests to run with grpc.so disabled
 REST_TESTS=(
+    asset
     bigquerydatatransfer
-    error_reporting
+    bigtable/api
     dialogflow
     dlp
+    error_reporting
+    iot
     monitoring
+    texttospeech
     video
+    vision
 )
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
