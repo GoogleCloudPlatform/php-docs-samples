@@ -23,7 +23,7 @@
 # [START auth_cloud_explicit_app_engine]
 namespace Google\Cloud\Samples\Auth;
 
-// Imports AppIdentityCredentials and the Google Cloud Storage client library.
+// Imports AppIdentityCredentials and the Cloud Storage client library.
 use Google\Auth\Credentials\AppIdentityCredentials;
 use Google\Cloud\Storage\StorageClient;
 

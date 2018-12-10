@@ -4,7 +4,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # [START error_reporting_quickstart]
-// Imports the Google Cloud client library
+// Imports the Cloud Client Library
 use Google\Cloud\Logging\LoggingClient;
 
 // These variables are set by the App Engine environment. To test locally,

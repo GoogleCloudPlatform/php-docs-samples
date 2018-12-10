@@ -19,7 +19,7 @@
 // includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-// imports the Google Cloud client library
+// Imports the Cloud Client Library
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
 use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
