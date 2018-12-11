@@ -58,7 +58,7 @@ authentication:
 
 1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
 
-## Samples
+## Stackdriver Monitoring Samples
 
 To run the Stackdriver Monitoring Samples:
 
@@ -80,16 +80,53 @@ To run the Stackdriver Monitoring Samples:
 
     Available commands:
       create-metric           Creates a logging metric.
+      create-uptime-check     Creates an uptime check.
       delete-metric           Deletes a logging metric.
+      delete-uptime-check     Deletes an uptime check config.
       get-descriptor          Gets a logging descriptor.
       help                    Displays help for a command
       list                    Lists commands
       list-descriptors        Lists logging descriptors.
+      list-uptime-check-ips   Lists Uptime Check IPs.
+      list-uptime-checks      Lists Uptime Check Configs.
       read-timeseries-align   Aggregates metrics for each timeseries.
       read-timeseries-fields  Reads Timeseries fields.
       read-timeseries-reduce  Aggregates metrics across multiple timeseries.
       read-timeseries-simple  Reads a timeseries.
       write-timeseries        Writes a timeseries.
+
+## Stackdriver Monitoring Alert Samples
+
+To run the Stackdriver Monitoring Alert Samples:
+
+    $ php alerts.php
+
+    Stackdriver Monitoring Alerts
+
+    Usage:
+      command [options] [arguments]
+
+    Options:
+      -h, --help            Display this help message
+      -q, --quiet           Do not output any message
+      -V, --version         Display this application version
+          --ansi            Force ANSI output
+          --no-ansi         Disable ANSI output
+      -n, --no-interaction  Do not ask any interactive question
+      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+    Available commands:
+      backup-policies   Back up alert policies.
+      create-channel    Create a notification channel.
+      create-policy     Create an alert policy.
+      delete-channel    Delete a notification channel.
+      enable-policies   Enable or disable alert policies in a project.
+      help              Displays help for a command
+      list              Lists commands
+      list-channels     List alert channels.
+      list-policies     List alert policies.
+      replace-channels  Replace alert channels.
+      restore-policies  Restore alert policies from a backup.
 
 ## The client library
 
