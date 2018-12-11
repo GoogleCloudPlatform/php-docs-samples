@@ -23,7 +23,7 @@
 # [START auth_cloud_explicit]
 namespace Google\Cloud\Samples\Auth;
 
-// Imports the Google Cloud Storage client library.
+// Imports the Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
 function auth_cloud_explicit($projectId, $serviceAccountPath)

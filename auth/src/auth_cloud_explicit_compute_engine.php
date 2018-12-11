@@ -23,7 +23,7 @@
 # [START auth_cloud_explicit_compute_engine]
 namespace Google\Cloud\Samples\Auth;
 
-// Imports GCECredentials and the Google Cloud Storage client library.
+// Imports GCECredentials and the Cloud Storage client library.
 use Google\Auth\Credentials\GCECredentials;
 use Google\Cloud\Storage\StorageClient;
 

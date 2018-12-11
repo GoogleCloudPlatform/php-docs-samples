@@ -23,7 +23,7 @@
 # [START gae_auth_api_implicit]
 namespace Google\Cloud\Samples\Auth;
 
-// Imports the Google Cloud Storage client library.
+// Imports the Cloud Storage client library.
 use Google_Client;
 use Google_Service_Storage;
 

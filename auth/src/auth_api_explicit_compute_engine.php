@@ -28,7 +28,6 @@ use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
-// Imports the Google Cloud Storage client library.
 use Google_Client;
 use Google_Service_Storage;
 
