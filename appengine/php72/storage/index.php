@@ -21,7 +21,7 @@ use Google\Auth\Credentials\GCECredentials;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$bucketName = getenv('GOOGLE_STORAGE_BUCKET');;
+$bucketName = getenv('GOOGLE_STORAGE_BUCKET');
 $projectId = getenv('GOOGLE_CLOUD_PROJECT');
 $defaultBucketName = sprintf('%s.appspot.com', $projectId);
 
