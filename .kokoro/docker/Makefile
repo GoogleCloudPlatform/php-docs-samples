@@ -40,9 +40,15 @@ build:
 	make php70 && docker build php70 -t gcr.io/cloud-devrel-kokoro-resources/php70
 	make php71 && docker build php71 -t gcr.io/cloud-devrel-kokoro-resources/php71
 	make php72 && docker build php72 -t gcr.io/cloud-devrel-kokoro-resources/php72
+	docker build php73 -t gcr.io/cloud-devrel-kokoro-resources/php73
 
 push:
 	docker push gcr.io/cloud-devrel-kokoro-resources/php56
 	docker push gcr.io/cloud-devrel-kokoro-resources/php70
 	docker push gcr.io/cloud-devrel-kokoro-resources/php71
 	docker push gcr.io/cloud-devrel-kokoro-resources/php72
+	docker push gcr.io/cloud-devrel-kokoro-resources/php73
+
+push55:
+	docker build php55 -t gcr.io/cloud-devrel-kokoro-resources/php55
+	docker push gcr.io/cloud-devrel-kokoro-resources/php55
