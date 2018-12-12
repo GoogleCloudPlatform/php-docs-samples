@@ -1,3 +1,4 @@
+# This image is for googleapis/google-cloud-php repo.
 FROM gcr.io/gcp-runtimes/ubuntu_16_0_4
 ENV PHP_DIR=/opt/php55
 ENV PHP_SRC_DIR=/usr/local/src/php55-build
