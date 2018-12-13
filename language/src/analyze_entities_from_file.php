@@ -42,6 +42,16 @@ function analyze_entities_from_file($gcsUri, $projectId = null)
     // Create the Natural Language client
     $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
     try {
+        $entity_types = [
+            0 => 'UNKNOWN',
+            1 => 'PERSON',
+            2 => 'LOCATION',
+            3 => 'ORGANIZATION',
+            4 => 'EVENT',
+            5 => 'WORK_OF_ART',
+            6 => 'CONSUMER_GOOD',
+            7 => 'OTHER',
+        ];
         $document = new Document();
         // Pass GCS URI and set document type to PLAIN_TEXT, otherwise you get a Code: 3 INVALID_ARGUMENT error
         $document->setGcsContentUri($gcsUri)->setType(1);
@@ -51,7 +61,7 @@ function analyze_entities_from_file($gcsUri, $projectId = null)
         // Print out information about each entity
         foreach ($entities as $entity) {
             printf('Name: %s' . PHP_EOL, $entity->getName());
-            printf('Type: %s' . PHP_EOL, $entity->getType());
+            printf('Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
             printf('Salience: %s' . PHP_EOL, $entity->getSalience());
             printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
             printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
