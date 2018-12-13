@@ -24,48 +24,42 @@
 # [START language_entities_gcs]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\LanguageClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
  * Find the entities in text stored in a Cloud Storage bucket.
  * ```
- * analyze_entities_from_file('my-bucket', 'file_with_text.txt');
+ * analyze_entities_from_file('gs://my-bucket/text.txt');
  * ```
  *
- * @param string $bucketName The Cloud Storage bucket.
- * @param string $objectName The Cloud Storage object with text.
+ * @param string $gcsUri The Cloud Storage path with text.
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_entities_from_file($bucketName, $objectName, $projectId = null)
+function analyze_entities_from_file($gcsUri, $projectId = null)
 {
-    // Create the Cloud Storage object
-    $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
-    $storageObject = $bucket->object($objectName);
-
     // Create the Natural Language client
-    $language = new LanguageClient([
-        'projectId' => $projectId,
-    ]);
-
-    // Call the analyzeEntities function
-    $annotation = $language->analyzeEntities($storageObject);
-
-    // Print out information about each entity
-    $entities = $annotation->entities();
-    foreach ($entities as $entity) {
-        printf('Name: %s' . PHP_EOL, $entity['name']);
-        printf('Type: %s' . PHP_EOL, $entity['type']);
-        printf('Salience: %s' . PHP_EOL, $entity['salience']);
-        if (array_key_exists('wikipedia_url', $entity['metadata'])) {
-            printf('Wikipedia URL: %s' . PHP_EOL, $entity['metadata']['wikipedia_url']);
+    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
+    try {
+        $document = new Document();
+        // Pass GCS URI and set document type to PLAIN_TEXT, otherwise you get a Code: 3 INVALID_ARGUMENT error
+        $document->setGcsContentUri($gcsUri)->setType(1);
+        // Call the analyzeEntities function
+        $response = $languageServiceClient->analyzeEntities($document, []);
+        $entities = $response->getEntities();
+        // Print out information about each entity
+        foreach ($entities as $entity) {
+            printf('Name: %s' . PHP_EOL, $entity->getName());
+            printf('Type: %s' . PHP_EOL, $entity->getType());
+            printf('Salience: %s' . PHP_EOL, $entity->getSalience());
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
+            printf(PHP_EOL);
         }
-        if (array_key_exists('mid', $entity['metadata'])) {
-            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
-        }
-        printf(PHP_EOL);
+
+    } finally {
+        $languageServiceClient->close();
     }
 }
 # [END language_entities_gcs]

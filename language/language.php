@@ -127,7 +127,7 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
-            analyze_entities_from_file($matches[1], $matches[2], $projectId);
+            analyze_entities_from_file($matches[0], $projectId);
         } else {
             analyze_entities($content, $projectId);
         }
