@@ -119,7 +119,7 @@ class languageTest extends \PHPUnit_Framework_TestCase
     public function testEntitiesFromStorageObject()
     {
         $output = $this->runCommand('entities', [
-            'content' => $this->gcsFile()
+            'gcsUri' => $this->gcsFile()
         ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
