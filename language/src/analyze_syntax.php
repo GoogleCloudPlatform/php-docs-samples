@@ -24,7 +24,8 @@
 # [START language_syntax_text]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
  * Find the syntax in text.
@@ -39,20 +40,41 @@ use Google\Cloud\Language\LanguageClient;
 function analyze_syntax($text, $projectId = null)
 {
     // Create the Natural Language client
-    $language = new LanguageClient([
-        'projectId' => $projectId,
-    ]);
+    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
 
-    // Call the analyzeSyntax function
-    $annotation = $language->analyzeSyntax($text);
-
-    // Print syntax information. See https://cloud.google.com/natural-language/docs/reference/rest/v1/Token
-    // to learn about more information you can extract from Token objects.
-    $tokens = $annotation->tokens();
-    foreach ($tokens as $token) {
-        printf('Token text: %s' . PHP_EOL, $token['text']['content']);
-        printf('Token part of speech: %s' . PHP_EOL, $token['partOfSpeech']['tag']);
-        printf(PHP_EOL);
+    try {
+        $tag_types = [
+            0 => 'UNKNOWN',
+            1 => 'ADJ',
+            2 => 'ADP',
+            3 => 'ADV',
+            4 => 'CONJ',
+            5 => 'DET',
+            6 => 'NOUN',
+            7 => 'NUM',
+            8 => 'PRON',
+            9 => 'PRT',
+            10 => 'PUNCT',
+            11 => 'VERB',
+            12 => 'X',
+            13 => 'AFFIX',
+        ];
+        // Create a new Document
+        $document = new Document();
+        // Add text as content and set document type to PLAIN_TEXT
+        $document->setContent($text)->setType(1);
+        // Call the analyzeEntities function
+        $response = $languageServiceClient->analyzeSyntax($document, []);
+        $tokens = $response->getTokens();
+        // Print out information about each entity
+        foreach ($tokens as $token) {
+            printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
+            printf('Token part of speech: %s' . PHP_EOL, $tag_types[$token->getPartOfSpeech()->getTag()]);
+            printf(PHP_EOL);
+        }
+    } finally {
+        $languageServiceClient->close();
     }
+
 }
 # [END language_syntax_text]
