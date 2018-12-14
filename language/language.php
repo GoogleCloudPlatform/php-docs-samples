@@ -290,7 +290,7 @@ EOF
         // Regex to match a Cloud Storage path as the first argument
         // e.g "gs://my-bucket/file_with_text.txt"
         if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $content, $matches)) {
-            classify_text_from_file($content, $projectId);
+            classify_text_from_file($matches[0], $projectId);
         } else {
             classify_text($content, $projectId);
         }
