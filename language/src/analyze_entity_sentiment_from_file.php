@@ -24,7 +24,8 @@
 # [START language_entity_sentiment_gcs]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
  * Find the entities in text.
@@ -32,34 +33,47 @@ use Google\Cloud\Language\LanguageClient;
  * analyze_entity_sentiment_from_file('gs://storage-bucket/file-name');
  * ```
  *
- * @param string $cloud_storage_uri Your Cloud Storage bucket URI
+ * @param string $gcsUri Your Cloud Storage bucket URI
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
 
-function analyze_entity_sentiment_from_file($cloud_storage_uri, $projectId = null)
+function analyze_entity_sentiment_from_file($gcsUri, $projectId = null)
 {
     // Create the Natural Language client
-    $language = new LanguageClient([
-        'projectId' => $projectId,
-    ]);
-
-    // Call the analyzeEntitySentiment function
-    $response = $language->analyzeEntitySentiment($cloud_storage_uri);
-    $info = $response->info();
-    $entities = $info['entities'];
-
-    $entity_types = array('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT',
-        'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER');
-
-    // Print out information about each entity
-    foreach ($entities as $entity) {
-        printf('Entity Name: %s' . PHP_EOL, $entity['name']);
-        printf('Entity Type: %s' . PHP_EOL, $entity['type']);
-        printf('Entity Salience: %s' . PHP_EOL, $entity['salience']);
-        printf('Entity Magnitude: %s' . PHP_EOL, $entity['sentiment']['magnitude']);
-        printf('Entity Score: %s' . PHP_EOL, $entity['sentiment']['score']);
-        printf(PHP_EOL);
+    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
+    try {
+        $entity_types = [
+            0 => 'UNKNOWN',
+            1 => 'PERSON',
+            2 => 'LOCATION',
+            3 => 'ORGANIZATION',
+            4 => 'EVENT',
+            5 => 'WORK_OF_ART',
+            6 => 'CONSUMER_GOOD',
+            7 => 'OTHER',
+        ];
+        // Create a new Document
+        $document = new Document();
+        // Pass GCS URI and set document type to PLAIN_TEXT
+        $document->setGcsContentUri($gcsUri)->setType(1);
+        // Call the analyzeEntitySentiment function
+        $response = $languageServiceClient->analyzeEntitySentiment($document);
+        $entities = $response->getEntities();
+        // Print out information about each entity
+        foreach ($entities as $entity) {
+            printf('Entity Name: %s' . PHP_EOL, $entity->getName());
+            printf('Entity Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
+            printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
+            $sentiment = $entity->getSentiment();
+            if ($sentiment) {
+                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
+            }
+            printf(PHP_EOL);
+        }
+    } finally {
+        $languageServiceClient->close();
     }
 }
 # [END language_entity_sentiment_gcs]
