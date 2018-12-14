@@ -63,8 +63,12 @@ function analyze_entities_from_file($gcsUri, $projectId = null)
             printf('Name: %s' . PHP_EOL, $entity->getName());
             printf('Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
             printf('Salience: %s' . PHP_EOL, $entity->getSalience());
-            printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
-            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
+            if($entity->getMetadata()->offsetExists('wikipedia_url')) {
+                printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
+            }
+            if($entity->getMetadata()->offsetExists('mid')) {
+                printf('Knowledge Graph MID: %s' . PHP_EOL, $mid = $entity->getMetadata()->offsetGet('mid'));
+            }
             printf(PHP_EOL);
         }
 
