@@ -52,7 +52,7 @@ function analyze_entities($text, $projectId = null)
             7 => 'OTHER',
         ];
         $document = new Document();
-        // Add text as content and set document type to PLAIN_TEXT, otherwise you get a Code: 3 INVALID_ARGUMENT error
+        // Add text as content and set document type to PLAIN_TEXT
         $document->setContent($text)->setType(1);
         // Call the analyzeEntities function
         $response = $languageServiceClient->analyzeEntities($document, []);
@@ -66,7 +66,7 @@ function analyze_entities($text, $projectId = null)
                 printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
             }
             if($entity->getMetadata()->offsetExists('mid')) {
-                printf('Knowledge Graph MID: %s' . PHP_EOL, $mid = $entity->getMetadata()->offsetGet('mid'));
+                printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
             }
             printf(PHP_EOL);
         }
