@@ -24,8 +24,8 @@
 # [START language_entities_text]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\LanguageClient;
-
+use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 /**
  * Find the entities in text.
  * ```
@@ -39,26 +39,41 @@ use Google\Cloud\Language\LanguageClient;
 function analyze_entities($text, $projectId = null)
 {
     // Create the Natural Language client
-    $language = new LanguageClient([
-        'projectId' => $projectId,
-    ]);
-
-    // Call the analyzeEntities function
-    $annotation = $language->analyzeEntities($text);
-
-    // Print out information about each entity
-    $entities = $annotation->entities();
-    foreach ($entities as $entity) {
-        printf('Name: %s' . PHP_EOL, $entity['name']);
-        printf('Type: %s' . PHP_EOL, $entity['type']);
-        printf('Salience: %s' . PHP_EOL, $entity['salience']);
-        if (array_key_exists('wikipedia_url', $entity['metadata'])) {
-            printf('Wikipedia URL: %s' . PHP_EOL, $entity['metadata']['wikipedia_url']);
+    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
+    try {
+        $entity_types = [
+            0 => 'UNKNOWN',
+            1 => 'PERSON',
+            2 => 'LOCATION',
+            3 => 'ORGANIZATION',
+            4 => 'EVENT',
+            5 => 'WORK_OF_ART',
+            6 => 'CONSUMER_GOOD',
+            7 => 'OTHER',
+        ];
+        $document = new Document();
+        // Add text as content and set document type to PLAIN_TEXT
+        $document->setContent($text)->setType(1);
+        // Call the analyzeEntities function
+        $response = $languageServiceClient->analyzeEntities($document, []);
+        $entities = $response->getEntities();
+        // Print out information about each entity
+        foreach ($entities as $entity) {
+            printf('Name: %s' . PHP_EOL, $entity->getName());
+            printf('Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
+            printf('Salience: %s' . PHP_EOL, $entity->getSalience());
+            if($entity->getMetadata()->offsetExists('wikipedia_url')) {
+                printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
+            }
+            if($entity->getMetadata()->offsetExists('mid')) {
+                printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
+            }
+            printf(PHP_EOL);
         }
-        if (array_key_exists('mid', $entity['metadata'])) {
-            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity['metadata']['mid']);
-        }
-        printf(PHP_EOL);
+
+    } finally {
+        $languageServiceClient->close();
     }
+
 }
 # [END language_entities_text]
