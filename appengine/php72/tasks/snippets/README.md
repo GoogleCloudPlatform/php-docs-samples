@@ -32,7 +32,7 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 6.  Identify the Location
 
     Determine the location ID, which can be discovered with
-    `gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
+    `gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
     the "name" value (for instance, if the name is
     "projects/my-project/locations/us-central1/queues/my-pull-queue", then the
     location is "us-central1").
