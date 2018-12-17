@@ -60,10 +60,5 @@
     "require-dev": {
         "phpunit/phpunit": "~4",
         "google/cloud-tools": "^0.8.5"
-    },
-    "autoload-dev": {
-        "files": [
-            "test/ProductSearchTestTrait.php"
-        ]
     }
 }
