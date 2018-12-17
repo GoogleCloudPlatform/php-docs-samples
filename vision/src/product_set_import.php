@@ -68,10 +68,11 @@ function product_set_import($projectId, $location, $gcsUri)
                 printf('Status code not OK: %s' . PHP_EOL, $status->getMessage());
             }
         }
-    } else{
-        print($operation->getError()->getMessage());
+        print('IMPORTANT: You will need to wait up to 30 minutes for indexing to complete' . PHP_EOL);
+    } else {
+        printf('Error: %s' . PHP_EOL, $operation->getError()->getMessage());
     }
-    
+
     $client->close();
 }
 // [END vision_product_search_import_product_images]
