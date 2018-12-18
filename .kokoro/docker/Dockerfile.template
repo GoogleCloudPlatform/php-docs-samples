@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     jq
 
-RUN git clone https://github.com/GoogleCloudPlatform/php-tools.git ${HOME}/php-tools \
-    && ${HOME}/php-tools/scripts/install_test_deps.sh
-
 # install / enable PHP extensions
 RUN pecl install grpc \
     && echo "extension=grpc.so" >> /opt/PHP_VERSION/lib/conf.d/ext-grpc.ini \
