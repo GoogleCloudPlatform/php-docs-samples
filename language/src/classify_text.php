@@ -25,6 +25,7 @@
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\Document\Type;
 use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 /**
  * Classify text (20+ words) into categories.
@@ -51,8 +52,8 @@ function classify_text($text, $projectId = null)
     try {
         // Create a new Document
         $document = new Document();
-        // Pass GCS URI and set document type to PLAIN_TEXT
-        $document->setContent($text)->setType(1);
+        // Pass GCS URI and set document type to PLAIN_TEXT (1)
+        $document->setContent($text)->setType(Type::PLAIN_TEXT);
         // Call the analyzeSentiment function
         $response = $languageServiceClient->classifyText($document);
         $categories = $response->getCategories();
@@ -60,7 +61,7 @@ function classify_text($text, $projectId = null)
         foreach ($categories as $category) {
             printf('Category Name: %s' . PHP_EOL, $category->getName());
             printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
-            printf(PHP_EOL);
+            print(PHP_EOL);
         }
     } finally {
         $languageServiceClient->close();
