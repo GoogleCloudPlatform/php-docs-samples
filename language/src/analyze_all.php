@@ -97,10 +97,10 @@ function analyze_all($text, $projectId = null)
             printf('Name: %s' . PHP_EOL, $entity->getName());
             printf('Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
             printf('Salience: %s' . PHP_EOL, $entity->getSalience());
-            if($entity->getMetadata()->offsetExists('wikipedia_url')) {
+            if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
                 printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
             }
-            if($entity->getMetadata()->offsetExists('mid')) {
+            if ($entity->getMetadata()->offsetExists('mid')) {
                 printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
             }
             printf('Mentions:' . PHP_EOL);
@@ -138,10 +138,8 @@ function analyze_all($text, $projectId = null)
             printf('Token part of speech: %s' . PHP_EOL, $tag_types[$token->getPartOfSpeech()->getTag()]);
             printf(PHP_EOL);
         }
-
     } finally {
         $languageServiceClient->close();
     }
-
 }
 # [END analyze_all]
