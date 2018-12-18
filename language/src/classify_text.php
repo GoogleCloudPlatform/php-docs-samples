@@ -24,7 +24,9 @@
 # [START language_classify_text]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\Document\Type;
+use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
  * Classify text (20+ words) into categories.
@@ -47,21 +49,23 @@ function classify_text($text, $projectId = null)
         printf('20+ words are required to classify text.' . PHP_EOL);
         return;
     }
-
-    // Create the Natural Language client
-    $language = new LanguageClient([
-        'projectId' => $projectId,
-    ]);
-
-    // Call the classifyText function
-    $response = $language->classifyText($text);
-    $categories = $response->categories();
-
-    // Print out information about each category
-    foreach ($categories as $category) {
-        printf('Category Name: %s' . PHP_EOL, $category['name']);
-        printf('Confidence: %s' . PHP_EOL, $category['confidence']);
-        printf(PHP_EOL);
+    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
+    try {
+        // Create a new Document
+        $document = new Document();
+        // Pass GCS URI and set document type to PLAIN_TEXT (1)
+        $document->setContent($text)->setType(Type::PLAIN_TEXT);
+        // Call the analyzeSentiment function
+        $response = $languageServiceClient->classifyText($document);
+        $categories = $response->getCategories();
+        // Print document information
+        foreach ($categories as $category) {
+            printf('Category Name: %s' . PHP_EOL, $category->getName());
+            printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
+            print(PHP_EOL);
+        }
+    } finally {
+        $languageServiceClient->close();
     }
 }
 # [END language_classify_text]
