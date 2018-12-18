@@ -25,6 +25,7 @@
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\Document\Type;
 use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
@@ -44,7 +45,7 @@ function analyze_sentiment($text, $projectId = null)
         // Create a new Document
         $document = new Document();
         // Pass GCS URI and set document type to PLAIN_TEXT
-        $document->setContent($text)->setType(1);
+        $document->setContent($text)->setType(Type::PLAIN_TEXT);
         // Call the analyzeSentiment function
         $response = $languageServiceClient->analyzeSentiment($document);
         $document_sentiment = $response->getDocumentSentiment();
@@ -62,7 +63,7 @@ function analyze_sentiment($text, $projectId = null)
                 printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
                 printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
             }
-            printf(PHP_EOL);
+            print(PHP_EOL);
         }
     } finally {
         $languageServiceClient->close();
