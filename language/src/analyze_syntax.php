@@ -76,6 +76,5 @@ function analyze_syntax($text, $projectId = null)
     } finally {
         $languageServiceClient->close();
     }
-
 }
 # [END language_syntax_text]
