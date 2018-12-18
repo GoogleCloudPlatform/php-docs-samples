@@ -56,5 +56,3 @@ try {
     }
 }
 // [END bigtable_delete_instance]
-
-

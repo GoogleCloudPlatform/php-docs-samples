@@ -33,7 +33,6 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 // [START bigtable_create_family_gc_union]
 
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;

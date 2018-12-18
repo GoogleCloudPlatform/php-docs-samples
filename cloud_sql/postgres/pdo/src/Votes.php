@@ -15,8 +15,6 @@
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres;
 
-use Google\Cloud\Samples\CloudSQL\Postgres\DB;
-
 class Votes
 {
     private $connection;

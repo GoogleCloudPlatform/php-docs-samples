@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     $space_count = $vote_count['spaces'];
 
     include_once("./template.php");
-
 } elseif ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $message = 'Invalid vote. Choose Between TABS and SPACES';
 

@@ -58,6 +58,5 @@ function update_data_with_dml($instanceId, $databaseId)
         $t->commit();
         printf('Updated %d row(s).' . PHP_EOL, $rowCount);
     });
-
 }
 // [END spanner_dml_standard_update]

@@ -59,7 +59,7 @@ limitations under the License.
     </div>
     <h4 class="header center">Recent Votes</h4>
     <ul class="container collection center">
-        <?php foreach($list as $vote): ?>
+        <?php foreach ($list as $vote): ?>
             <li class="collection-item avatar">
                 <?php if ($vote['candidate'] == "TABS"): ?>
                     <i class="material-icons circle green">keyboard_tab</i>

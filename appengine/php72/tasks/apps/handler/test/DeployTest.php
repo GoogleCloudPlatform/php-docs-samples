@@ -39,7 +39,8 @@ class DeployTest extends TestCase
         );
     }
 
-    public function testTaskHandlerInvalid() {
+    public function testTaskHandlerInvalid()
+    {
         $this->expectException(ClientException::class);
         $response = $this->client->get('/task_handler');
     }

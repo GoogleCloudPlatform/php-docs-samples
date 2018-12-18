@@ -34,9 +34,7 @@ $family_id = isset($argv[4]) ? $argv[4] : 'cf2';
 // [START bigtable_delete_family]
 
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';

@@ -41,6 +41,5 @@ function get_default_event_based_hold($bucketName)
     } else {
         printf('Default event-based hold is not enabled for ' . $bucketName . PHP_EOL);
     }
-
 }
 # [END storage_get_default_event_based_hold]
