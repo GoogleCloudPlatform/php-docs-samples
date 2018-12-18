@@ -27,6 +27,7 @@ namespace Google\Cloud\Samples\Language;
 use Google\Cloud\Language\V1beta2\Document;
 use Google\Cloud\Language\V1beta2\Document\Type;
 use Google\Cloud\Language\V1beta2\LanguageServiceClient;
+
 /**
  * Classify text (20+ words) into categories.
  * ```
