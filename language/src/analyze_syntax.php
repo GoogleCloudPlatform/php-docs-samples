@@ -25,6 +25,7 @@
 namespace Google\Cloud\Samples\Language;
 
 use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\Document\Type;
 use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
@@ -62,7 +63,7 @@ function analyze_syntax($text, $projectId = null)
         // Create a new Document
         $document = new Document();
         // Add text as content and set document type to PLAIN_TEXT
-        $document->setContent($text)->setType(1);
+        $document->setContent($text)->setType(Type::PLAIN_TEXT);
         // Call the analyzeEntities function
         $response = $languageServiceClient->analyzeSyntax($document, []);
         $tokens = $response->getTokens();
@@ -70,7 +71,7 @@ function analyze_syntax($text, $projectId = null)
         foreach ($tokens as $token) {
             printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
             printf('Token part of speech: %s' . PHP_EOL, $tag_types[$token->getPartOfSpeech()->getTag()]);
-            printf(PHP_EOL);
+            print(PHP_EOL);
         }
     } finally {
         $languageServiceClient->close();
