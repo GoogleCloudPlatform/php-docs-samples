@@ -24,8 +24,9 @@
 # [START language_sentiment_gcs]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\LanguageClient;
-use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Language\V1beta2\Document;
+use Google\Cloud\Language\V1beta2\Document\Type;
+use Google\Cloud\Language\V1beta2\LanguageServiceClient;
 
 /**
  * Find the sentiment in text stored in a Cloud Storage bucket.
@@ -33,38 +34,39 @@ use Google\Cloud\Storage\StorageClient;
  * analyze_sentiment_from_file('my-bucket', 'file_with_text.txt');
  * ```
  *
- * @param string $bucketName The Cloud Storage bucket.
- * @param string $objectName The Cloud Storage object with text.
+ * @param string $gcsUri Your Cloud Storage bucket URI
  * @param string $projectId (optional) Your Google Cloud Project ID
  *
  */
-function analyze_sentiment_from_file($bucketName, $objectName, $projectId = null)
+function analyze_sentiment_from_file($gcsUri, $projectId = null)
 {
-    // Create the Cloud Storage object
-    $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
-    $storageObject = $bucket->object($objectName);
-
-    // Create the Natural Language client
-    $language = new LanguageClient([
-        'projectId' => $projectId,
-    ]);
-
-    // Call the analyzeSentiment function
-    $annotation = $language->analyzeSentiment($storageObject);
-
-    // Print document and sentence sentiment information
-    $sentiment = $annotation->sentiment();
-    printf('Document Sentiment:' . PHP_EOL);
-    printf('  Magnitude: %s' . PHP_EOL, $sentiment['magnitude']);
-    printf('  Score: %s' . PHP_EOL, $sentiment['score']);
-    printf(PHP_EOL);
-    foreach ($annotation->sentences() as $sentence) {
-        printf('Sentence: %s' . PHP_EOL, $sentence['text']['content']);
-        printf('Sentence Sentiment:' . PHP_EOL);
-        printf('  Magnitude: %s' . PHP_EOL, $sentence['sentiment']['magnitude']);
-        printf('  Score: %s' . PHP_EOL, $sentence['sentiment']['score']);
+    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
+    try {
+        // Create a new Document
+        $document = new Document();
+        // Pass GCS URI and set document type to PLAIN_TEXT
+        $document->setGcsContentUri($gcsUri)->setType(Type::PLAIN_TEXT);
+        // Call the analyzeSentiment function
+        $response = $languageServiceClient->analyzeSentiment($document);
+        $document_sentiment = $response->getDocumentSentiment();
+        // Print document information
+        printf('Document Sentiment:' . PHP_EOL);
+        printf('  Magnitude: %s' . PHP_EOL, $document_sentiment->getMagnitude());
+        printf('  Score: %s' . PHP_EOL, $document_sentiment->getScore());
         printf(PHP_EOL);
+        $sentences = $response->getSentences();
+        foreach ($sentences as $sentence) {
+            printf('Sentence: %s' . PHP_EOL, $sentence->getText()->getContent());
+            printf('Sentence Sentiment:' . PHP_EOL);
+            $sentiment = $sentence->getSentiment();
+            if ($sentiment) {
+                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
+            }
+            print(PHP_EOL);
+        }
+    } finally {
+        $languageServiceClient->close();
     }
 }
 # [END language_sentiment_gcs]
