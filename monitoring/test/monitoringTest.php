@@ -154,23 +154,19 @@ class monitoringTest extends TestCase
 
     public function testGetResource()
     {
-        $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('get-resource', [
-                'project_id' => self::$projectId,
-                'resource_id' => 'gcs_bucket',
-            ]);
-            $this->assertContains('A Google Cloud Storage (GCS) bucket.', $output);
-        });
+        $output = $this->runCommand('get-resource', [
+            'project_id' => self::$projectId,
+            'resource_type' => 'gcs_bucket',
+        ]);
+        $this->assertContains('A Google Cloud Storage (GCS) bucket.', $output);
     }
 
     public function testListResources()
     {
-        $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('list-resources', [
-                'project_id' => self::$projectId,
-            ]);
-            $this->assertContains('gcs_bucket', $output);
-        });
+        $output = $this->runCommand('list-resources', [
+            'project_id' => self::$projectId,
+        ]);
+        $this->assertContains('gcs_bucket', $output);
     }
 
     public function testWriteTimeseries()
