@@ -3,7 +3,6 @@
         "google/cloud-tools": "^0.8.1",
         "symfony\/process": "~2.8|~3.0",
         "monolog\/monolog": "^1.19",
-        "google/cloud-logging": "^1.14",
-        "google/cloud-error-reporting": "^0.12.2"
+        "google/cloud-logging": "^1.14"
     }
 }
