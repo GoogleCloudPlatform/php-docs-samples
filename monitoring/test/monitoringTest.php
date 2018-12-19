@@ -152,6 +152,23 @@ class monitoringTest extends TestCase
         }, self::RETRY_COUNT, true);
     }
 
+    public function testGetResource()
+    {
+        $output = $this->runCommand('get-resource', [
+            'project_id' => self::$projectId,
+            'resource_type' => 'gcs_bucket',
+        ]);
+        $this->assertContains('A Google Cloud Storage (GCS) bucket.', $output);
+    }
+
+    public function testListResources()
+    {
+        $output = $this->runCommand('list-resources', [
+            'project_id' => self::$projectId,
+        ]);
+        $this->assertContains('gcs_bucket', $output);
+    }
+
     public function testWriteTimeseries()
     {
         // Catch all exceptions as this method occasionally throws an Internal error.

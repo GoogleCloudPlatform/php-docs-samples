@@ -88,6 +88,17 @@ $application->add(new Command('get-descriptor'))
         );
     });
 
+$application->add(new Command('get-resource'))
+    ->setDefinition(clone $inputDefinition)
+    ->addArgument('resource_type', InputArgument::REQUIRED, 'The monitored resource type')
+    ->setDescription('Gets a monitored resource.')
+    ->setCode(function ($input, $output) {
+        get_resource(
+            $input->getArgument('project_id'),
+            $input->getArgument('resource_type')
+        );
+    });
+
 $application->add(new Command('get-uptime-check'))
     ->setDefinition(clone $inputDefinition)
     ->addArgument('config_name', InputArgument::REQUIRED, 'The uptime check config name')
@@ -104,6 +115,15 @@ $application->add(new Command('list-descriptors'))
     ->setDescription('Lists logging descriptors.')
     ->setCode(function ($input, $output) {
         list_descriptors(
+            $input->getArgument('project_id')
+        );
+    });
+
+$application->add(new Command('list-resources'))
+    ->setDefinition(clone $inputDefinition)
+    ->setDescription('List monitored resources.')
+    ->setCode(function ($input, $output) {
+        list_resources(
             $input->getArgument('project_id')
         );
     });
