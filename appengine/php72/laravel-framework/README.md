@@ -124,7 +124,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 
 ## Set up Stackdriver Logging and Error Reporting
 
-1. First, install both of the Google Cloud client libraries for Stackdriver
+Before we begin, install both of the Google Cloud client libraries for Stackdriver
 Logging and Error Reporting:
 
         composer require google/cloud-logging google/cloud-error-reporting
