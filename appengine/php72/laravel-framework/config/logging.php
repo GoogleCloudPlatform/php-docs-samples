@@ -65,6 +65,7 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
         'stackdriver' => [
             'driver' => 'custom',
             'via' => App\Logging\CreateCustomLogger::class,
