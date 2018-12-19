@@ -84,7 +84,6 @@ class DeployTest extends TestCase
             $found = false;
             foreach ($logs as $log) {
                 $info = $log->info();
-                print($info['jsonPayload']['message'] . PHP_EOL);
                 if (false !== strpos($info['jsonPayload']['message'], "token: $token")) {
                     $found = true;
                 }
