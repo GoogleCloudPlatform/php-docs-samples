@@ -38,7 +38,12 @@ function create_registry(
 ) {
     print('Creating Registry' . PHP_EOL);
 
-    // Instantiate a client.
+    // The Google Cloud Client Library automatically checks the environment
+    // variable GOOGLE_APPLICATION_CREDENTIALS for the Service Account
+    // credentials, and defaults scopes to [
+    //    'https://www.googleapis.com/auth/cloud-platform',
+    //    'https://www.googleapis.com/auth/cloudiot'
+    // ].
     $deviceManager = new DeviceManagerClient();
     $locationName = $deviceManager->locationName($projectId, $location);
 
