@@ -122,6 +122,92 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 1. Replace each instance of `YOUR_DB_PASSWORD` and `YOUR_CONNECTION_NAME`
    with the values you created for your Cloud SQL instance above.
 
+## Set up Stackdriver Logging and Error Reporting
+
+Before we begin, install both of the Google Cloud client libraries for Stackdriver
+Logging and Error Reporting:
+
+        composer require google/cloud-logging google/cloud-error-reporting
+
+### Stackdriver Logging
+
+You can write logs to Stackdriver Logging from PHP applications by using the Stackdriver Logging library for PHP directly.
+
+1. First, create a custom logger in `app/Logging/CreateCustomLogger.php`:
+    ```php
+    namespace App\Logging;
+
+    use Google\Cloud\Logging\LoggingClient;
+    use Monolog\Handler\PsrHandler;
+    use Monolog\Logger;
+
+    class CreateCustomLogger
+    {
+        /**
+         * Create a custom Monolog instance.
+         *
+         * @param  array  $config
+         * @return \Monolog\Logger
+         */
+        public function __invoke(array $config)
+        {
+            $logName = isset($config['logName']) ? $config['logName'] : 'app';
+            $psrLogger = LoggingClient::psrBatchLogger($logName);
+            $handler = new PsrHandler($psrLogger);
+            $logger = new Logger($logName, [$handler]);
+            return $logger;
+        }
+    }
+    ```
+
+1. Next, you'll need to add our new custom logger to `config/logging.php`:
+
+    ```php
+    'channels' => [
+
+        // Add the following lines to integrate with Stackdriver:
+        'stackdriver' => [
+            'driver' => 'custom',
+            'via' => App\Logging\CreateCustomLogger::class,
+            'level' => 'debug',
+        ],
+    ```
+
+1. Now you can log to Stackdriver logging anywhere in your application!
+
+    ```php
+    Log::info("Hello Stackdriver! This will show up as log level INFO!");
+    ```
+
+### Stackdriver Error Reporting
+
+You can send error reports to Stackdriver Error Reporting from PHP applications by using the
+[Stackdriver Error Reporting library for PHP](http://googleapis.github.io/google-cloud-php/#/docs/cloud-error-reporting/v0.12.3/errorreporting/readme).
+
+
+1. Add the following `use` statement at the beginning of the file `app/Exceptions/Handler.php`:
+    ```php
+    use Google\Cloud\ErrorReporting\Bootstrap;
+    ```
+
+1. Edit the `report` function in the same file (`app/Exceptions/Handler.php`) as follows:
+    ```php
+    public function report(Exception $exception)
+    {
+        if (isset($_SERVER['GAE_SERVICE'])) {
+            Bootstrap::init();
+            Bootstrap::exceptionHandler($exception);
+        } else {
+            parent::report($exception);
+        }
+    }
+    ```
+
+1. Now any PHP Exception will be logged to Stackdriver Error Reporting!
+    ```php
+    throw new \Exception('PHEW! We will see this in Stackdriver Error Reporting!');
+    ```
+
 [php-gcp]: https://cloud.google.com/php
 [laravel]: http://laravel.com
 [laravel-install]: https://laravel.com/docs/5.4/installation

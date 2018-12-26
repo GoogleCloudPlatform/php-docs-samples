@@ -37,16 +37,10 @@ trait DeployLaravelTrait
         self::executeProcess($process);
 
         // move the code for the sample to the new laravel installation
-        $files = [
-            // '.gcloudignore',
+        self::copyFiles([
             'bootstrap/app.php',
             'config/view.php',
-        ];
-        foreach ($files as $file) {
-            $source = sprintf('%s/../%s', __DIR__, $file);
-            $target = sprintf('%s/%s', $tmpDir, $file);
-            copy($source, $target);
-        }
+        ], $tmpDir);
 
         // set the directory in gcloud and move there
         self::setWorkingDirectory($tmpDir);
@@ -65,5 +59,14 @@ trait DeployLaravelTrait
             trim(self::execute('php artisan key:generate --show --no-ansi')),
         ], file_get_contents($targetDir . '/app.yaml'));
         file_put_contents($targetDir . '/app.yaml', $appYaml);
+    }
+
+    private static function copyFiles(array $files, $dir)
+    {
+        foreach ($files as $file) {
+            $source = sprintf('%s/../%s', __DIR__, $file);
+            $target = sprintf('%s/%s', $dir, $file);
+            copy($source, $target);
+        }
     }
 }
