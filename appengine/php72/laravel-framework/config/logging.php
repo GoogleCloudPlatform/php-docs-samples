@@ -68,7 +68,7 @@ return [
 
         'stackdriver' => [
             'driver' => 'custom',
-            'via' => App\Logging\CreateCustomLogger::class,
+            'via' => App\Logging\CreateStackdriverLogger::class,
             'level' => 'debug',
         ],
 

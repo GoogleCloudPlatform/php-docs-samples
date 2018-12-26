@@ -42,7 +42,7 @@ class DeployTest extends TestCase
             'routes/web.php',
             'config/logging.php',
             'app/Exceptions/Handler.php',
-            'app/Logging/CreateCustomLogger.php',
+            'app/Logging/CreateStackdriverLogger.php',
         ], $tmpDir);
 
         // require google cloud logging and error reporting dependencies
