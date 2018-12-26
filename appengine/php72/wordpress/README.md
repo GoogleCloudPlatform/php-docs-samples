@@ -144,6 +144,8 @@ $ cloud_sql_proxy \
     -credential_file=/path/to/YOUR_SERVICE_ACCOUNT_JSON_FILE.json
 ```
 
+> **Note**: Make sure to run the command under a user with write access in the `/cloudsql` directory. This proxy will use this folder to create a unix socket.
+
 Now you can access the Cloud SQL instance with the MySQL client in a separate
 command line tab.
 
