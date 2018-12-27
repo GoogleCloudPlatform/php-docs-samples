@@ -29,6 +29,6 @@ return [
     |
     */
 
-    'compiled' => storage_path(),
+    'compiled' => isset($_SERVER['GAE_SERVICE']) ? storage_path() : env('VIEW_COMPILED_PATH', realpath(storage_path('framework/views'))),
     # [END google-app-engine-deployment]
 ];
