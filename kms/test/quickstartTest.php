@@ -37,9 +37,9 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         $output = ob_get_clean();
 
         // Make sure it looks correct
-        $this->assertInstanceOf('Google_Service_CloudKMS_ListKeyRingsResponse', $keyRings);
+        $this->assertInstanceOf('Google\ApiCore\PagedListResponse', $keyRings);
         $this->assertTrue(count($keyRings) > 0);
-        $this->assertNotNull($keyRings[0]->name);
-        $this->assertContains($keyRings[0]->name, $output);
+        $this->assertNotNull($keyRingName = $keyRings->iterateAllElements()->current()->getName());
+        $this->assertContains($keyRingName, $output);
     }
 }

@@ -17,31 +17,26 @@
 
 namespace Google\Cloud\Samples\Kms;
 
-use Google_Client;
-use Google_Service_CloudKMS;
-use Google_Service_CloudKMS_DecryptRequest;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 class kmsTest extends \PHPUnit_Framework_TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
-    private static $commandFile = __DIR__ . '/../kms.php';
+    private static $locationId = 'global';
     private static $encryptedFile;
     private static $tempRing;
     private static $tempKey;
     private static $tempVersion;
-    private $ring;
-    private $key;
-    private $altKey;
+    private static $ring;
+    private static $key;
+    private static $altKey;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->ring = $this->requireEnv('GOOGLE_KMS_KEYRING');
-        $this->key = $this->requireEnv('GOOGLE_KMS_CRYPTOKEY');
-        $this->altKey = $this->requireEnv('GOOGLE_KMS_CRYPTOKEY_ALTERNATE');
+        self::$ring = self::requireEnv('GOOGLE_KMS_KEYRING');
+        self::$key = self::requireEnv('GOOGLE_KMS_CRYPTOKEY');
+        self::$altKey = self::requireEnv('GOOGLE_KMS_CRYPTOKEY_ALTERNATE');
     }
 
     public function testEncrypt()
@@ -49,40 +44,14 @@ class kmsTest extends \PHPUnit_Framework_TestCase
         $infile = __DIR__ . '/data/plaintext.txt';
         $outfile = sys_get_temp_dir() . '/plaintext.txt.encrypted';
 
-        $output = $this->runCommand('encryption', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->key,
-            'infile' => $infile,
-            'outfile' => $outfile,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('encrypt', [
+            self::$ring,
+            self::$key,
+            $infile,
+            $outfile
         ]);
 
         $this->assertTrue(file_exists($outfile));
-
-        // assert the text matches
-        $parent = sprintf(
-            'projects/%s/locations/global/keyRings/%s/cryptoKeys/%s',
-            self::$projectId,
-            $this->ring,
-            $this->key
-        );
-        // Instantiate the client, authenticate, and add scopes.
-        $client = new Google_Client();
-        $client->useApplicationDefaultCredentials();
-        $client->addScope('https://www.googleapis.com/auth/cloud-platform');
-        $kms = new Google_Service_CloudKMS($client);
-        // create the decrypt request
-        $request = new Google_Service_CloudKMS_DecryptRequest([
-            'ciphertext' => base64_encode(file_get_contents($outfile))
-        ]);
-        $response = $kms->projects_locations_keyRings_cryptoKeys->decrypt(
-            $parent,
-            $request
-        );
-        $this->assertEquals(
-            file_get_contents(__DIR__ . '/data/plaintext.txt'),
-            base64_decode($response['plaintext'])
-        );
 
         $this->assertContains(sprintf('Saved encrypted text to %s' . PHP_EOL, $outfile), $output);
 
@@ -94,13 +63,11 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $outfile = sys_get_temp_dir() . '/plaintext.txt.decrypted';
 
-        $output = $this->runCommand('encryption', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->key,
-            'infile' => self::$encryptedFile,
-            'outfile' => $outfile,
-            '--decrypt' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('decrypt', [
+            self::$ring,
+            self::$key,
+            self::$encryptedFile,
+            $outfile
         ]);
 
         $this->assertTrue(file_exists($outfile));
@@ -116,16 +83,16 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $userEmail = 'betterbrent@google.com';
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            '--user-email' => $userEmail,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('add_member_to_keyring_policy', [
+            self::$ring,
+            'user:' . $userEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s added to policy for keyRing %s' . PHP_EOL,
             $userEmail,
-            $this->ring
+            self::$ring
         ), $output);
     }
 
@@ -136,17 +103,16 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $userEmail = 'betterbrent@google.com';
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            '--user-email' => $userEmail,
-            '--remove' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('remove_member_from_keyring_policy', [
+            self::$ring,
+            'user:' . $userEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s removed from policy for keyRing %s' . PHP_EOL,
             $userEmail,
-            $this->ring
+            self::$ring
         ), $output);
     }
 
@@ -154,18 +120,18 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $userEmail = 'betterbrent@google.com';
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->key,
-            '--user-email' => $userEmail,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('add_member_to_cryptokey_policy', [
+            self::$ring,
+            self::$key,
+            'user:' . $userEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $userEmail,
-            $this->key,
-            $this->ring
+            self::$key,
+            self::$ring
         ), $output);
     }
 
@@ -176,19 +142,18 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $userEmail = 'betterbrent@google.com';
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->key,
-            '--user-email' => $userEmail,
-            '--remove' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('remove_member_from_cryptokey_policy', [
+            self::$ring,
+            self::$key,
+            'user:' . $userEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $userEmail,
-            $this->key,
-            $this->ring
+            self::$key,
+            self::$ring
         ), $output);
     }
 
@@ -196,18 +161,18 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $serviceAccountEmail = $this->requireEnv('GOOGLE_KMS_SERVICEACCOUNTEMAIL');
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->key,
-            '--service-account-email' => $serviceAccountEmail,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('add_member_to_cryptokey_policy', [
+            self::$ring,
+            self::$key,
+            'serviceAccount:' . $serviceAccountEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member serviceAccount:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
-            $this->key,
-            $this->ring
+            self::$key,
+            self::$ring
         ), $output);
     }
 
@@ -218,19 +183,18 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $serviceAccountEmail = $this->requireEnv('GOOGLE_KMS_SERVICEACCOUNTEMAIL');
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->key,
-            '--service-account-email' => $serviceAccountEmail,
-            '--remove' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('remove_member_from_cryptokey_policy', [
+            self::$ring,
+            self::$key,
+            'serviceAccount:' . $serviceAccountEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member serviceAccount:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
-            $this->key,
-            $this->ring
+            self::$key,
+            self::$ring
         ), $output);
     }
 
@@ -238,16 +202,16 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $serviceAccountEmail = $this->requireEnv('GOOGLE_KMS_SERVICEACCOUNTEMAIL');
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            '--service-account-email' => $serviceAccountEmail,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('add_member_to_keyring_policy', [
+            self::$ring,
+            'serviceAccount:' . $serviceAccountEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member serviceAccount:%s added to policy for keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
-            $this->ring
+            self::$ring
         ), $output);
     }
 
@@ -258,25 +222,23 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     {
         $serviceAccountEmail = $this->requireEnv('GOOGLE_KMS_SERVICEACCOUNTEMAIL');
 
-        $output = $this->runCommand('iam', [
-            'keyring' => $this->ring,
-            '--service-account-email' => $serviceAccountEmail,
-            '--remove' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('remove_member_from_keyring_policy', [
+            self::$ring,
+            'serviceAccount:' . $serviceAccountEmail,
+            'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member serviceAccount:%s removed from policy for keyRing %s' . PHP_EOL,
             $serviceAccountEmail,
-            $this->ring
+            self::$ring
         ), $output);
     }
 
     public function testListCryptoKeys()
     {
-        $output = $this->runCommand('key', [
-            'keyring' => $this->ring,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('list_cryptokeys', [
+            self::$ring
         ]);
 
         $this->assertContains('Name: ', $output);
@@ -288,17 +250,15 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     public function testCreateCryptoKey()
     {
         self::$tempKey = 'test-crypto-key-' . time();
-        $output = $this->runCommand('key', [
-            'keyring' => $this->ring,
-            'cryptokey' => self::$tempKey,
-            '--create' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('create_cryptokey', [
+            self::$ring,
+            self::$tempKey
         ]);
 
         $this->assertContains(sprintf(
             'Created cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempKey,
-            $this->ring
+            self::$ring
         ), $output);
     }
 
@@ -307,10 +267,9 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCryptoKey()
     {
-        $output = $this->runCommand('key', [
-            'keyring' => $this->ring,
-            'cryptokey' => self::$tempKey,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('get_cryptokey', [
+            self::$ring,
+            self::$tempKey
         ]);
 
         $this->assertContains(self::$tempKey, $output);
@@ -321,9 +280,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
 
     public function testListKeyRings()
     {
-        $output = $this->runCommand('keyring', [
-            '--project' => self::$projectId,
-        ]);
+        $output = $this->runSnippet('list_keyrings');
 
         $this->assertContains('Name: ', $output);
         $this->assertContains('Create Time: ', $output);
@@ -332,10 +289,8 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     public function testCreateKeyRing()
     {
         self::$tempRing = 'test-key-ring-' . time();
-        $output = $this->runCommand('keyring', [
-            'keyring' => self::$tempRing,
-            '--create' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('create_keyring', [
+            self::$tempRing,
         ]);
 
         $this->assertContains(sprintf('Created keyRing %s' . PHP_EOL, self::$tempRing), $output);
@@ -346,9 +301,8 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetKeyRing()
     {
-        $output = $this->runCommand('keyring', [
-            'keyring' => self::$tempRing,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('get_keyring', [
+            self::$tempRing,
         ]);
 
         $this->assertContains(self::$tempRing, $output);
@@ -357,10 +311,9 @@ class kmsTest extends \PHPUnit_Framework_TestCase
 
     public function testListCryptoKeyVersions()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('list_cryptokey_versions', [
+            self::$ring,
+            self::$altKey
         ]);
 
         $this->assertContains('Name: ', $output);
@@ -370,17 +323,15 @@ class kmsTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateCryptoKeyVersion()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            '--create' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('create_cryptokey_version', [
+            self::$ring,
+            self::$altKey,
         ]);
 
         $regex = sprintf(
             '/Created version (\d+) for cryptoKey %s in keyRing %s/' . PHP_EOL,
-            $this->altKey,
-            $this->ring
+            self::$altKey,
+            self::$ring
         );
         $this->assertEquals(1, preg_match($regex, $output, $matches));
         self::$tempVersion = $matches[1];
@@ -391,11 +342,10 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCryptoKeyVersions()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            'version' => self::$tempVersion,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('get_cryptokey_version', [
+            self::$ring,
+            self::$altKey,
+            self::$tempVersion,
         ]);
 
         $this->assertContains('Name: ', $output);
@@ -408,19 +358,17 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testDisableCryptoKeyVersion()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            'version' => self::$tempVersion,
-            '--disable' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('disable_cryptokey_version', [
+            self::$ring,
+            self::$altKey,
+            self::$tempVersion,
         ]);
 
         $this->assertContains(sprintf(
             'Disabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->altKey,
-            $this->ring
+            self::$altKey,
+            self::$ring
         ), $output);
     }
 
@@ -429,19 +377,17 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnableCryptoKeyVersion()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            'version' => self::$tempVersion,
-            '--enable' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('enable_cryptokey_version', [
+            self::$ring,
+            self::$altKey,
+            self::$tempVersion,
         ]);
 
         $this->assertContains(sprintf(
             'Enabled version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->altKey,
-            $this->ring
+            self::$altKey,
+            self::$ring
         ), $output);
     }
 
@@ -450,19 +396,17 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testDestroyCryptoKeyVersion()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            'version' => self::$tempVersion,
-            '--destroy' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('destroy_cryptokey_version', [
+            self::$ring,
+            self::$altKey,
+            self::$tempVersion,
         ]);
 
         $this->assertContains(sprintf(
             'Destroyed version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->altKey,
-            $this->ring
+            self::$altKey,
+            self::$ring
         ), $output);
     }
 
@@ -471,19 +415,17 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testRestoreCryptoKeyVersion()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            'version' => self::$tempVersion,
-            '--restore' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('restore_cryptokey_version', [
+            self::$ring,
+            self::$altKey,
+            self::$tempVersion,
         ]);
 
         $this->assertContains(sprintf(
             'Restored version %s for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->altKey,
-            $this->ring
+            self::$altKey,
+            self::$ring
         ), $output);
     }
 
@@ -492,19 +434,25 @@ class kmsTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetPrimaryCryptoKeyVersion()
     {
-        $output = $this->runCommand('version', [
-            'keyring' => $this->ring,
-            'cryptokey' => $this->altKey,
-            'version' => self::$tempVersion,
-            '--set-primary' => true,
-            '--project' => self::$projectId,
+        $output = $this->runSnippet('set_cryptokey_primary_version', [
+            self::$ring,
+            self::$altKey,
+            self::$tempVersion,
         ]);
 
         $this->assertContains(sprintf(
             'Set %s as primary version for cryptoKey %s in keyRing %s' . PHP_EOL,
             self::$tempVersion,
-            $this->altKey,
-            $this->ring
+            self::$altKey,
+            self::$ring
         ), $output);
+    }
+
+    private function runSnippet($sampleName, $params = [])
+    {
+        $argv = array_merge([0, self::$projectId, self::$locationId], $params);
+        ob_start();
+        require __DIR__ . "/../src/$sampleName.php";
+        return ob_get_clean();
     }
 }

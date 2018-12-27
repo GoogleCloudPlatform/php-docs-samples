@@ -23,16 +23,16 @@ These samples show how to use the [Google Cloud KMS API]
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php kms.php`. The following commands are available:
-
+5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+    are provided:
     ```sh
-    encryption    Manage encryption for KMS
-    iam           Manage IAM for KMS
-    key           Manage keys for KMS
-    keyring       Manage keyrings for KMS
-    version       Manage key versions for KMS
+    $ php src/create_dataset.php
+    Usage: php src/list_keyrings.php PROJECT_ID LOCATION
+
+    $ php src/list_keyrings.php your-project-id us-west1
+    Name: projects/your-project-id/locations/us-west1/keyRings/your-test-keyring
+    Create Time: 2018-12-28 06:27:56
     ```
-6. Run `php kms.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes
 
