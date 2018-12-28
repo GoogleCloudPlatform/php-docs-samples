@@ -38,8 +38,7 @@ class quickstartTest extends PHPUnit_Framework_TestCase
 
         // Make sure it looks correct
         $this->assertInstanceOf('Google\ApiCore\PagedListResponse', $keyRings);
-        $this->assertTrue(count($keyRings) > 0);
-        $this->assertNotNull($keyRingName = $keyRings->iterateAllElements()->current()->getName());
-        $this->assertContains($keyRingName, $output);
+        $this->assertNotNull($keyRing = $keyRings->iterateAllElements()->current());
+        $this->assertContains($keyRing->getName(), $output);
     }
 }
