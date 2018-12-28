@@ -24,7 +24,10 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_sync]
-use Google\Cloud\Speech\SpeechClient;
+use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V1\RecognitionAudio;
+use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
@@ -34,30 +37,46 @@ use Google\Cloud\Speech\SpeechClient;
  * ```.
  *
  * @param string $audioFile path to an audio file.
- * @param string $languageCode The language of the content to
- *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
- * @param array $options configuration options.
  *
  * @return string the text transcription
  */
-function transcribe_sync($audioFile, $languageCode = 'en-US', $options = [])
+function transcribe_sync($audioFile)
 {
-    // Create the speech client
-    $speech = new SpeechClient([
-        'languageCode' => $languageCode,
-    ]);
+    // change these variables
+    $encoding = AudioEncoding::LINEAR16;
+    $sampleRateHertz = 16000;
+    $languageCode = 'en-US';
 
-    // Make the API call
-    $results = $speech->recognize(
-        fopen($audioFile, 'r'),
-        $options
-    );
+    // get contents of a file into a string
+    $handle = fopen($audioFile, 'r');
+    $content = fread($handle, filesize($path));
+    fclose($handle);
 
-    // Print the results
-    foreach ($results as $result) {
-        $alternative = $result->alternatives()[0];
-        printf('Transcript: %s' . PHP_EOL, $alternative['transcript']);
-        printf('Confidence: %s' . PHP_EOL, $alternative['confidence']);
+    // set string as audio content
+    $audio = (new RecognitionAudio())
+        ->setContent($content);
+
+    // set config
+    $config = (new RecognitionConfig())
+        ->setEncoding($encoding)
+        ->setSampleRateHertz($sampleRateHertz)
+        ->setLanguageCode($languageCode)
+
+    // create the speech client
+    $client = new SpeechClient();
+
+    try {
+        $response = $client->recognize($config, $audio);
+        foreach ($response->getResults() as $result) {
+            $alternatives = $result->getAlternatives();
+            $mostLikely = $alternatives[0];
+            $transcript = $mostLikely->getTranscript();
+            $confidence = $mostLikely->getConfidence();
+            printf('Transcript: %s' . PHP_EOL, $transcript);
+            printf('Confidence: %s' . PHP_EOL, $confidence);
+        }
+    } finally {
+        $client->close();
     }
 }
 # [END speech_transcribe_sync]
