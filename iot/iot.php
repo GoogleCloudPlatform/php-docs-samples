@@ -321,24 +321,22 @@ $application->add(new Command('set-device-state'))
 
 // Beta features
 $application->add(new Command('beta-create-gateway'))
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
     ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
     ->addArgument('certificate-file', InputArgument::REQUIRED, 'Path to public key file')
     ->addArgument('algorithm', InputArgument::REQUIRED, 'The algorithm (RS256|ES256) used for the public key')
-    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
-    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->setDescription('(Beta feature) Create a new gateway with the given id.')
     ->setCode(function ($input, $output) {
-        /*
         create_gateway(
+            $input->getOption('project'),
+            $input->getOption('location'),
             $input->getArgument('registry'),
             $input->getArgument('gateway'),
             $input->getArgument('certificate-file'),
-            $input->getOption('project'),
-            $input->getOption('location')
             $input->getArgument('algorithm')
         );
-        */
     });
 
 $application->add(new Command('beta-delete-gateway'))
@@ -372,20 +370,18 @@ $application->add(new Command('beta-list-gateways'))
     });
 
 $application->add(new Command('beta-list-devices-for-gateway'))
-    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
-    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
     ->setDescription('(Beta feature) List devices for the given gateway.')
     ->setCode(function ($input, $output) {
-        /*
         list_devices_for_gateway(
             $input->getOption('project'),
-            $input->getOption('location')
+            $input->getOption('location'),
             $input->getArgument('registry'),
             $input->getArgument('gateway')
         );
-        */
     });
 
 $application->add(new Command('beta-bind-device-to-gateway'))

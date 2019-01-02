@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,25 @@
  */
 namespace Google\Cloud\Samples\Iot;
 
-# [START iot_list_gateways]
+# [START iot_list_devices]
 use Google\Cloud\Iot\V1\DeviceManagerClient;
-use Google\Cloud\Iot\V1\GatewayType;
-use Google\Protobuf\FieldMask;
+use Google\Cloud\Iot\V1\GatewayListOptions;
 
 /**
- * List gateways in the registry.
+ * List all devices associated to the given gateway.
  *
- * @param string $registryId IOT Device Registry ID
  * @param string $projectId Google Cloud project ID
  * @param string $location (Optional) Google Cloud region
+ * @param string $registryId IOT Device Registry ID
+ * @param string $gatewayId The identifier for the gateway
  */
-function list_gateways(
+function list_devices_for_gateway(
     $projectId,
     $location = 'us-central1',
-    $registryId
+    $registryId,
+    $gatewayId
 ) {
-    print('Listing gateways' . PHP_EOL);
+    print('Listing devices for gateway' . PHP_EOL);
 
     // Instantiate a client.
     $deviceManager = new DeviceManagerClient();
@@ -42,32 +43,19 @@ function list_gateways(
     // Format the full registry path
     $registryName = $deviceManager->registryName($projectId, $location, $registryId);
 
-    // Pass field mask to retrieve the gateway configuration fields
-    $fieldMask = (new FieldMask())->setPaths(['config', 'gatewayConfig']);
+    // Configure the list options for the gateway
+    $gatewayListOptions = (new GatewayListOptions())->setAssociationsGatewayId($gatewayId);
 
     // Call the API
     $devices = $deviceManager->listDevices($registryName,
-      ['fieldMask' => $fieldMask]
+      ['gatewayListOptions' => $gatewayListOptions]
     );
 
     // Print the result
-    $foundGateway = false;
     foreach ($devices->iterateAllElements() as $device) {
-      $gatewayConfig = $device->getGatewayConfig();
-      $gatewayType = NULL;
-      if ($gatewayConfig != NULL) {
-        $gatewayType = $gatewayConfig->getGatewayType();
-      }
-
-      if ($gatewayType == GatewayType::GATEWAY) {
-        $foundGateway = true;
         printf('Device: %s : %s' . PHP_EOL,
             $device->getNumId(),
             $device->getId());
-      }
-    }
-    if (!$foundGateway) {
-        printf('Registry %s has no gateways' . PHP_EOL, $registryId);
     }
 }
-# [END iot_list_gateways]
+# [END iot_list_devices]
