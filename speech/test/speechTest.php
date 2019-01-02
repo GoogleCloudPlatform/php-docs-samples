@@ -95,7 +95,9 @@ class speechTest extends TestCase
         return [
             ['transcribe', __DIR__ . '/data/audio32KHz.raw'],
             ['transcribe-gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['transcribe-async', __DIR__ . '/data/audio32KHz.raw'],
             ['transcribe-async-gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['transcribe-async-words', __DIR__ . '/data/audio32KHz.raw'],
             ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', true],
         ];
     }
