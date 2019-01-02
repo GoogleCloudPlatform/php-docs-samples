@@ -22,5 +22,3 @@ handlers:
   static_files: wp-includes/images/media/\1
   upload: wp-includes/images/media/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
 
-- url: .*
-  script: auto
