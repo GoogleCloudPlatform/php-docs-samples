@@ -15,18 +15,33 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\ErrorReporting;
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/error_reporting/README.md
+ */
 
+// Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-# [START report_error_grpc]
+if (count($argv) < 3 || count($argv) > 4) {
+    return printf("Usage: php %s PROJECT_ID ERROR_MESSAGE [USER]\n", basename(__FILE__));
+}
+list($_, $projectId, $message) = $argv;
+$user = isset($argv[3]) ? $argv[3] : '';
+
+# [START report_error]
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorContext;
 use Google\Cloud\ErrorReporting\V1beta1\ReportedErrorEvent;
 use Google\Cloud\ErrorReporting\V1beta1\SourceLocation;
 
 /**
- * Uncomment these line and replace with your project ID, message, and user.
+ * This sample shows how to report an error by creating a ReportedErrorEvent.
+ * The ReportedErrorEvent object gives you more control over how the error
+ * appears and the details associated with it.
+ *
+ * Uncomment these line and replace with your project ID, message, and optionally your user.
  */
 // $projectId = 'YOUR_PROJECT_ID';
 // $message = 'This is the error message to report!';
@@ -47,5 +62,5 @@ $event = (new ReportedErrorEvent())
     ->setContext($context);
 
 $errors->reportErrorEvent($projectName, $event);
-# [END report_error_grpc]
-print('Reported an exception to Stackdriver using gRPC' . PHP_EOL);
+# [END report_error]
+print('Reported an exception to Stackdriver' . PHP_EOL);
