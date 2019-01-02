@@ -57,15 +57,14 @@ To run the Speech Samples:
       transcribe-model        Transcribe an audio file, with selected model, using Google Cloud Speech API
       transcribe-punctuation  Transcribe an audio file with proper punctuation, using Google Cloud Speech API
       transcribe-stream       Transcribe a stream of audio using Google Cloud Speech API
-      transcribe-words        Transcribe an audio file and print word time offsets using Google Cloud Speech API
 
 Once you have a speech sample in the proper format, send it through the speech
 API using the transcribe command:
 
 ```sh
-php speech.php transcribe test/data/audio32KHz.raw --encoding LINEAR16 --sample-rate 32000
-php speech.php transcribe-async test/data/audio32KHz.flac --encoding FLAC --sample-rate 32000
-php speech.php transcribe-words test/data/audio32KHz.flac --encoding FLAC --sample-rate 32000
+php speech.php transcribe test/data/audio32KHz.raw
+php speech.php transcribe-async test/data/audio32KHz.raw
+php speech.php transcribe-words test/data/audio32KHz.raw
 
 ```
 ## Troubleshooting
