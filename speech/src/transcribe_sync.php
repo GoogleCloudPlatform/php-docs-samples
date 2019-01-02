@@ -44,12 +44,12 @@ function transcribe_sync($audioFile)
 {
     // change these variables
     $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 16000;
+    $sampleRateHertz = 32000;
     $languageCode = 'en-US';
 
     // get contents of a file into a string
     $handle = fopen($audioFile, 'r');
-    $content = fread($handle, filesize($path));
+    $content = fread($handle, filesize($audioFile));
     fclose($handle);
 
     // set string as audio content
@@ -60,7 +60,7 @@ function transcribe_sync($audioFile)
     $config = (new RecognitionConfig())
         ->setEncoding($encoding)
         ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode)
+        ->setLanguageCode($languageCode);
 
     // create the speech client
     $client = new SpeechClient();

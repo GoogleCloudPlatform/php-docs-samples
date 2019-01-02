@@ -44,7 +44,7 @@ function transcribe_sync_gcs($audioFile)
 {
     // change these variables
     $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 16000;
+    $sampleRateHertz = 32000;
     $languageCode = 'en-US';
 
     // set string as audio content
@@ -55,7 +55,7 @@ function transcribe_sync_gcs($audioFile)
     $config = (new RecognitionConfig())
         ->setEncoding($encoding)
         ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode)
+        ->setLanguageCode($languageCode);
 
     // create the speech client
     $client = new SpeechClient();

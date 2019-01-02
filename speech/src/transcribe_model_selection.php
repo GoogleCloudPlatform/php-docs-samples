@@ -32,11 +32,11 @@ use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 /**
  * Transcribe the given audio file synchronously with the selected model
  */
-function transcribe_model_selection($speechFile, $model)
+function transcribe_model_selection($audioFile, $model)
 {
     // get contents of a file into a string
-    $handle = fopen($speechFile, 'r');
-    $content = fread($handle, filesize($speechFile));
+    $handle = fopen($audioFile, 'r');
+    $content = fread($handle, filesize($audioFile));
     fclose($handle);
 
     // set string as audio content

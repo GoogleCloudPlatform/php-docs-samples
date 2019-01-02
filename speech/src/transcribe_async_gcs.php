@@ -23,11 +23,11 @@
 
 namespace Google\Cloud\Samples\Speech;
 
-use Exception;
 # [START speech_transcribe_async_gcs]
-use Google\Cloud\Speech\SpeechClient;
-use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Core\ExponentialBackoff;
+use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V1\RecognitionAudio;
+use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 /**
  * Transcribe an audio file using Google Cloud Speech API
@@ -59,7 +59,7 @@ function transcribe_async_gcs($audioFile)
     $config = (new RecognitionConfig())
         ->setEncoding($encoding)
         ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode)
+        ->setLanguageCode($languageCode);
 
     // create the speech client
     $client = new SpeechClient();
@@ -71,7 +71,7 @@ function transcribe_async_gcs($audioFile)
     if ($operation->operationSucceeded()) {
         $response = $operation->getResult();
 
-        // each result is for a consecutive portion of the audio. iterate 
+        // each result is for a consecutive portion of the audio. iterate
         // through them to get the transcripts for the entire audio file.
         foreach ($response->getResults() as $result) {
             $alternatives = $result->getAlternatives();

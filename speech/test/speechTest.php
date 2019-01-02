@@ -84,7 +84,7 @@ class speechTest extends TestCase
         $this->assertContains('how old is the Brooklyn Bridge', $output);
 
         // Check for the word time offsets
-        if (in_array($command, ['transcribe-words'])) {
+        if (in_array($command, ['transcribe-async-words'])) {
             $this->assertRegexp('/start: .*s, end: .*s/', $output);
         }
     }
@@ -94,10 +94,8 @@ class speechTest extends TestCase
         self::$bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         return [
             ['transcribe', __DIR__ . '/data/audio32KHz.raw'],
-            ['transcribe', __DIR__ . '/data/audio32KHz.flac'],
             ['transcribe-gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
             ['transcribe-async-gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
-            ['transcribe-words', __DIR__ . '/data/audio32KHz.flac'],
             ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', true],
         ];
     }

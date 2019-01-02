@@ -32,11 +32,11 @@ use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 /**
  * Transcribe the given audio file with auto punctuation enabled
  */
-function transcribe_auto_punctuation($path)
+function transcribe_auto_punctuation($audioFile)
 {
     // get contents of a file into a string
-    $handle = fopen($path, 'r');
-    $content = fread($handle, filesize($path));
+    $handle = fopen($audioFile, 'r');
+    $content = fread($handle, filesize($audioFile));
     fclose($handle);
 
     // set string as audio content

@@ -21,8 +21,7 @@
             "src/transcribe_enhanced_model.php",
             "src/transcribe_model_selection.php",
             "src/transcribe_sync.php",
-            "src/transcribe_sync_gcs.php",
-            "src/transcribe_sync_words.php"
+            "src/transcribe_sync_gcs.php"
         ]
     }
 }
