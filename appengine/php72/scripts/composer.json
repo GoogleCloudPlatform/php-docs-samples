@@ -27,9 +27,8 @@
         "post-autoload-dump": [
             "echo POST-AUTOLOAD-DUMP",
             "php post_update_cmd.php",
-            "# pecl install swoole",
-            "# cp /usr/lib/php/extensions/no-debug-non-zts-20170718/swoole.so .",
-            "pecl install swoole",
+            "pecl install swoole || true",
+            "cp /usr/lib/php/extensions/no-debug-non-zts-20170718/swoole.so .",
             "gcloud kms decrypt --location=global --keyring=ci --key=ci --ciphertext-file=secrets.txt.enc --plaintext-file=secrets.txt"
         ],
         "pre-dependency-solving": [
