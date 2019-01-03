@@ -385,22 +385,20 @@ $application->add(new Command('beta-list-devices-for-gateway'))
     });
 
 $application->add(new Command('beta-bind-device-to-gateway'))
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
     ->addArgument('device', InputArgument::REQUIRED, 'the device ID')
     ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
-    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
-    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->setDescription('(Beta feature) Bind a device to a gateway.')
     ->setCode(function ($input, $output) {
-        /*
         bind_device_to_gateway(
             $input->getOption('project'),
-            $input->getOption('location')
+            $input->getOption('location'),
             $input->getArgument('registry'),
             $input->getArgument('gateway'),
-            $input->getArgument('device'),
+            $input->getArgument('device')
         );
-        */
     });
 
 $application->add(new Command('beta-unbind-device-from-gateway'))
