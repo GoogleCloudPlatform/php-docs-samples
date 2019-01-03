@@ -340,20 +340,18 @@ $application->add(new Command('beta-create-gateway'))
     });
 
 $application->add(new Command('beta-delete-gateway'))
-    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
-    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
     ->setDescription('(Beta feature) Delete the gateway with the given id.')
     ->setCode(function ($input, $output) {
-        /*
         delete_gateway(
             $input->getOption('project'),
             $input->getOption('location'),
             $input->getArgument('registry'),
             $input->getArgument('gateway')
         );
-        */
     });
 
 $application->add(new Command('beta-list-gateways'))

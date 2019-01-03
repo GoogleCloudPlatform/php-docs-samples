@@ -14,6 +14,7 @@
             "src/create_rsa_device.php",
             "src/create_unauth_device.php",
             "src/delete_device.php",
+            "src/delete_gateway.php",
             "src/delete_registry.php",
             "src/get_iam_policy.php",
             "src/get_device.php",
