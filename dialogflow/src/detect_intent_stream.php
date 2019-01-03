@@ -83,24 +83,24 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
         if ($recognitionResult) {
             $transcript = $recognitionResult->getTranscript();
             printf('Intermediate transcript: %s' . PHP_EOL, $transcript);
+        }else{
+            // get final response and relevant info
+            $queryResult = $response->getQueryResult();
+            $queryText = $queryResult->getQueryText();
+            $intent = $queryResult->getIntent();
+            $displayName = $intent->getDisplayName();
+            $confidence = $queryResult->getIntentDetectionConfidence();
+            $fulfilmentText = $queryResult->getFulfillmentText();
+
+            // output relevant info
+            printf('Query text: %s' . PHP_EOL, $queryText);
+            printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
+                $confidence);
+            print(PHP_EOL);
+            printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
         }
     }
     print(str_repeat("=", 20) . PHP_EOL);
-
-    // get final response and relevant info
-    $queryResult = $response->getQueryResult();
-    $queryText = $queryResult->getQueryText();
-    $intent = $queryResult->getIntent();
-    $displayName = $intent->getDisplayName();
-    $confidence = $queryResult->getIntentDetectionConfidence();
-    $fulfilmentText = $queryResult->getFulfillmentText();
-
-    // output relevant info
-    printf('Query text: %s' . PHP_EOL, $queryText);
-    printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
-        $confidence);
-    print(PHP_EOL);
-    printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
 
     $sessionsClient->close();
 }
