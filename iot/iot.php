@@ -409,15 +409,13 @@ $application->add(new Command('beta-unbind-device-from-gateway'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->setDescription('(Beta feature) Unbind a device from a gateway.')
     ->setCode(function ($input, $output) {
-        /*
         unbind_device_from_gateway(
             $input->getOption('project'),
-            $input->getOption('location')
+            $input->getOption('location'),
             $input->getArgument('registry'),
             $input->getArgument('gateway'),
-            $input->getArgument('device'),
+            $input->getArgument('device')
         );
-        */
     });
 
 // for testing

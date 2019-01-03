@@ -32,8 +32,8 @@ use Google\Cloud\Iot\V1\PublicKeyFormat;
  *
  * @param string $projectId (optional) Google Cloud project ID
  * @param string $location (Optional) Google Cloud region
- * @param string $registryId IOT Device Registry ID
- * @param string $deviceId IOT Device ID
+ * @param string $registryId IOT Gateway Registry ID
+ * @param string $gatewayId IOT Gateway ID
  * @param string $certificateFile Path to certificate file.
  * @param string $algorithm the algorithm used for JWT (ES256 or RS256).
  */

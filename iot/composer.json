@@ -7,6 +7,7 @@
     },
     "autoload": {
         "files": [
+            "src/bind_device_to_gateway.php",
             "src/create_es_device.php",
             "src/create_gateway.php",
             "src/create_registry.php",
@@ -28,7 +29,8 @@
             "src/send_command_to_device.php",
             "src/set_device_config.php",
             "src/set_device_state.php",
-            "src/set_iam_policy.php"
+            "src/set_iam_policy.php",
+            "src/unbind_device_from_gateway.php"
         ]
     },
     "require-dev": {
