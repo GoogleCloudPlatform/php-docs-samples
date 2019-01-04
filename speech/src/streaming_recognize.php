@@ -53,17 +53,17 @@ function streaming_recognize($audioFile)
     $sampleRateHertz = 32000;
     $languageCode = 'en-US';
 
-    if (!defined('Grpc\STATUS_OK')) {
+    if (!extension_loaded('grpc')) {
         throw new \Exception('Install the grpc extension ' .
             '(pecl install grpc)');
     }
 
     $speechClient = new SpeechClient();
     try {
-        $config = new RecognitionConfig();
-        $config->setLanguageCode($languageCode);
-        $config->setSampleRateHertz($sampleRateHertz);
-        $config->setEncoding($encoding);
+        $config = (new RecognitionConfig())
+            ->setEncoding($encoding)
+            ->setSampleRateHertz($sampleRateHertz)
+            ->setLanguageCode($languageCode);
 
         $strmConfig = new StreamingRecognitionConfig();
         $strmConfig->setConfig($config);
@@ -75,10 +75,8 @@ function streaming_recognize($audioFile)
         $strm->write($strmReq);
 
         $strmReq = new StreamingRecognizeRequest();
-        $f = fopen($audioFile, "rb");
-        $fsize = filesize($audioFile);
-        $bytes = fread($f, $fsize);
-        $strmReq->setAudioContent($bytes);
+        $content = file_get_contents($audioFile);
+        $strmReq->setAudioContent($content);
         $strm->write($strmReq);
 
         foreach ($strm->closeWriteAndReadAll() as $response) {

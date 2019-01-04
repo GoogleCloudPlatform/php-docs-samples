@@ -48,9 +48,7 @@ function transcribe_async($audioFile)
     $languageCode = 'en-US';
 
     // get contents of a file into a string
-    $handle = fopen($audioFile, 'r');
-    $content = fread($handle, filesize($audioFile));
-    fclose($handle);
+    $content = file_get_contents($audioFile);
 
     // set string as audio content
     $audio = (new RecognitionAudio())

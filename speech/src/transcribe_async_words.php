@@ -50,10 +50,13 @@ function transcribe_async_words($audioFile)
     $sampleRateHertz = 32000;
     $languageCode = 'en-US';
 
+    if (!extension_loaded('grpc')) {
+        throw new \Exception('Install the grpc extension ' .
+            '(pecl install grpc)');
+    }
+
     // get contents of a file into a string
-    $handle = fopen($audioFile, 'r');
-    $content = fread($handle, filesize($audioFile));
-    fclose($handle);
+    $content = file_get_contents($audioFile);
 
     // set string as audio content
     $audio = (new RecognitionAudio())

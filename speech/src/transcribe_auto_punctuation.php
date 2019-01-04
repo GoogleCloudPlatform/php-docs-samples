@@ -35,9 +35,7 @@ use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 function transcribe_auto_punctuation($audioFile)
 {
     // get contents of a file into a string
-    $handle = fopen($audioFile, 'r');
-    $content = fread($handle, filesize($audioFile));
-    fclose($handle);
+    $content = file_get_contents($audioFile);
 
     // set string as audio content
     $audio = (new RecognitionAudio())
