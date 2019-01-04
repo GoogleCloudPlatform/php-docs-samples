@@ -17,7 +17,7 @@ exceptions, errors, and PHP fatral errors to Stackdriver Error Reporting.
     ```sh
     composer install
     ```
-    1. To use the[gRPC PHP Extension][php_grpc], which will be more performant than
+    1. To use the [gRPC PHP Extension][php_grpc], which will be more performant than
     REST/HTTP,
     install and enable the gRPC extension using PECL:
     ```sh
