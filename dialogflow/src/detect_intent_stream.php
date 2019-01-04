@@ -102,8 +102,8 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
             $confidence);
         print(PHP_EOL);
         printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
-
-        $sessionsClient->close();
     }
+
+    $sessionsClient->close();
 }
 // [END dialogflow_detect_intent_streaming]
