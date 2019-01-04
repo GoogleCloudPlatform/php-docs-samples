@@ -20,32 +20,42 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Speech\SpeechClient;
-
-# Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
-
-# Instantiates a client
-$speech = new SpeechClient([
-    'projectId' => $projectId,
-    'languageCode' => 'en-US',
-]);
+use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V1\RecognitionAudio;
+use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 # The name of the audio file to transcribe
-$fileName = __DIR__ . '/resources/audio.raw';
+$audioFile = __DIR__ . '/test/data/audio32KHz.raw';
 
-# The audio file's encoding and sample rate
-$options = [
-    'encoding' => 'LINEAR16',
-    'sampleRateHertz' => 16000,
-];
+# get contents of a file into a string
+$content = file_get_contents($audioFile);
+
+# set string as audio content
+$audio = (new RecognitionAudio())
+    ->setContent($content);
+
+# The audio file's encoding, sample rate and language
+$config = new RecognitionConfig([
+    'encoding' => AudioEncoding::LINEAR16,
+    'sample_rate_hertz' => 32000,
+    'language_code' => 'en-US'
+]);
+
+# Instantiates a client
+$client = new SpeechClient();
 
 # Detects speech in the audio file
-$results = $speech->recognize(fopen($fileName, 'r'), $options);
+$response = $client->recognize($config, $audio);
 
-foreach ($results as $result) {
-    echo 'Transcription: ' . $result->alternatives()[0]['transcript'] . PHP_EOL;
+# Print most likely transcription
+foreach ($response->getResults() as $result) {
+    $alternatives = $result->getAlternatives();
+    $mostLikely = $alternatives[0];
+    $transcript = $mostLikely->getTranscript();
+    printf('Transcript: %s' . PHP_EOL, $transcript);
 }
 
+$client->close();
+
 # [END speech_quickstart]
-return $results;
