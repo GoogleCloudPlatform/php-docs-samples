@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -17,16 +16,19 @@
  */
 namespace Google\Cloud\Samples\Iot;
 
+require 'vendor/autoload.php';
+
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for dlp commands.
+ * Unit Tests for iot commands.
  */
-class dlpTest extends \PHPUnit_Framework_TestCase
+class iotTest extends \PHPUnit_Framework_TestCase
 {
     private static $testId;
     private static $registryId;
     private static $devices = [];
+    private static $gateways = [];
 
     public function checkEnv($var)
     {
@@ -53,6 +55,13 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             self::runCommand('delete-device', [
                 'registry' => self::$registryId,
                 'device' => $deviceId,
+            ]);
+        }
+        foreach (self::$gateways as $gatewayId) {
+            printf('Cleaning up Gateway %s' . PHP_EOL, $gatewayId);
+            self::runCommand('beta-delete-gateway', [
+                'registry' => self::$registryId,
+                'gateway' => $gatewayId,
             ]);
         }
         if (self::$registryId) {
@@ -267,6 +276,22 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertContains('Updated device', $output);
+    }
+
+    /** @depends testCreateRegistry */
+    public function testCreateGateway()
+    {
+        $gatewayId = 'test-rsa-gateway' . self::$testId;
+
+        $output = $this->runCommand('beta-create-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+            'algorithm' => 'RS256',
+        ]);
+        self::$gateways[] = $gatewayId;
+
+        $this->assertContains('Created gateway', $output);
     }
 
     private static function runCommand($commandName, $args = [])

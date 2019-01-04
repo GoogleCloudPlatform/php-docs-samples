@@ -58,4 +58,4 @@ function list_devices_for_gateway(
             $device->getId());
     }
 }
-# [END iot_list_devices]
+# [END iot_list_devices_for_gateway]

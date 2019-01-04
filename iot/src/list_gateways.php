@@ -53,18 +53,18 @@ function list_gateways(
     // Print the result
     $foundGateway = false;
     foreach ($devices->iterateAllElements() as $device) {
-      $gatewayConfig = $device->getGatewayConfig();
-      $gatewayType = NULL;
-      if ($gatewayConfig != NULL) {
-        $gatewayType = $gatewayConfig->getGatewayType();
-      }
+        $gatewayConfig = $device->getGatewayConfig();
+        $gatewayType = null;
+        if ($gatewayConfig != null) {
+            $gatewayType = $gatewayConfig->getGatewayType();
+        }
 
-      if ($gatewayType == GatewayType::GATEWAY) {
-        $foundGateway = true;
-        printf('Device: %s : %s' . PHP_EOL,
-            $device->getNumId(),
-            $device->getId());
-      }
+        if ($gatewayType == GatewayType::GATEWAY) {
+            $foundGateway = true;
+            printf('Device: %s : %s' . PHP_EOL,
+                $device->getNumId(),
+                $device->getId());
+        }
     }
     if (!$foundGateway) {
         printf('Registry %s has no gateways' . PHP_EOL, $registryId);

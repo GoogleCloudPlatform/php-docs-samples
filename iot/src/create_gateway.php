@@ -53,7 +53,7 @@ function create_gateway(
 
     $publicKeyFormat = PublicKeyFormat::ES256_PEM;
     if ($algorithm == 'RS256') {
-      $publicKeyFormat = PublicKeyFormat::RSA_X509_PEM;
+        $publicKeyFormat = PublicKeyFormat::RSA_X509_PEM;
     }
 
     $gatewayConfig = (new GatewayConfig())
