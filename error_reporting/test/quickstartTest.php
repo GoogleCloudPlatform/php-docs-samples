@@ -19,22 +19,25 @@ namespace Google\Cloud\Samples\ErrorReporting;
 
 use PHPUnit\Framework\TestCase;
 
+// Load the testing trait
+require_once __DIR__ . '/VerifyReportedErrorTrait.php';
+
 class quickstartTest extends TestCase
 {
     use VerifyReportedErrorTrait;
 
     public function testQuickstart()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
-
         $version = 'quickstart-tests-' . time();
         $file = sys_get_temp_dir() . '/error_reporting_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
-            ['YOUR_PROJECT_ID', '1.0-dev', '__DIR__'],
-            [$projectId, $version, sprintf('"%s/.."', __DIR__)],
+            ['YOUR_PROJECT_ID', "'test'", '__DIR__'],
+            [
+                self::$projectId,
+                var_export($version, true),
+                sprintf('"%s/.."', __DIR__)
+            ],
             $contents
         );
         file_put_contents($file, $contents);
@@ -44,14 +47,8 @@ class quickstartTest extends TestCase
         passthru(sprintf('php %s', $file));
         $output = ob_get_clean();
 
-        // Make sure it looks correct
-        $this->assertEquals(
-            'Exception logged to Stackdriver Error Reporting' . PHP_EOL,
-            $output
-        );
-
-        $message = 'This will be logged to Stackdriver Error Reporting';
-
-        $this->verifyReportedError($projectId, $message);
+        // Make sure it worked
+        $this->assertContains('Throwing a test exception', $output);
+        $this->verifyReportedError(self::$projectId, 'quickstart.php test exception');
     }
 }

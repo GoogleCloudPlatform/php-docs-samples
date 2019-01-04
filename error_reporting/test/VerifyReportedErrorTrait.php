@@ -17,22 +17,25 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
+use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
-use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange_Period;
+use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
 
 trait VerifyReportedErrorTrait
 {
     use EventuallyConsistentTestTrait;
+    use TestTrait;
 
-    private function verifyReportedError($projectId, $message, $retryCount = 6)
+    private function verifyReportedError($projectId, $message)
     {
+        $retryCount = 7;
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->projectName($projectId);
 
         $timeRange = (new QueryTimeRange())
-            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
+            ->setPeriod(Period::PERIOD_1_HOUR);
 
         // Iterate through all elements
         $this->runEventuallyConsistentTest(function () use (
@@ -55,10 +58,7 @@ trait VerifyReportedErrorTrait
                 }
             }
 
-            $this->assertContains(
-                $message,
-                implode("\n", $messages)
-            );
+            $this->assertContains($message, implode("\n", $messages));
         }, $retryCount, true);
     }
 }

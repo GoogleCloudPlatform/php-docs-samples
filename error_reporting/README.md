@@ -12,14 +12,17 @@ exceptions, errors, and PHP fatral errors to Stackdriver Error Reporting.
 
 1. To use this sample, you must first [enable the Stackdriver Error Reporting API][0]
 1. Next, **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md):
-    1. Run `php composer.phar install --ignore-platform-reqs` (if composer is installed locally) or `composer install --ignore-platform-reqs`
+    1. Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
     ```sh
-    composer install --ignore-platform-reqs
+    composer install
     ```
-    1. If the [gRPC PHP Extension][php_grpc] is enabled for your version of PHP,
-    install your dependencies without the `--ignore-platform-reqs` flag. **Note**
-    some samples in `error_reporting.php` require gRPC.
+    1. To use the [gRPC PHP Extension][php_grpc], which will be more performant than
+    REST/HTTP,
+    install and enable the gRPC extension using PECL:
+    ```sh
+    pecl install grpc
+    ```
 1. Create a service account in the [Service Account section of the Cloud Console][2]
 1. Download the JSON key file of the service account.
 1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to that file.
@@ -36,41 +39,31 @@ Run the samples:
 
 ```sh
 php quickstart.php
-Exception logged to Stackdriver Error Reporting
+Throwing a test exception. You can view the message at https://console.cloud.google.com/errors.
+```
+
+This example registers the Stackdriver exception handler using
+[PHP exception handlers][3]. View [Stackdriver Error Reporting][1] in the Cloud
+Console to see the logged exception.
+
+# Running src/report_error.php
+
+This sample shows how to report an error by creating a `ReportedErrorEvent`. The
+`ReportedErrorEvent` object gives you more control over how the error appears
+and the details associated with it.
+
+Run the sample:
+
+```sh
+$ php src/report_error.php YOUR_PROJECT_ID "This is a test message"
+Reported an exception to Stackdriver
 ```
 
 View [Stackdriver Error Reporting][1] in the Cloud Console to see the logged
 exception.
 
-# Running error_reporting.php
-
-Run the sample:
-
-```sh
-$ php error_reporting.php report YOUR_PROJECT_ID
-Reported an error to Stackdriver
-```
-
-For an example of how to register the Stackdriver exception handler in your custom application, see
-[src/register_exception_handler.php](src/register_exception_handler.php). You can test this out
-using the samples:
-
-```sh
-# Test registering an exception handler and then throwing a PHP Fatal Error
-$ php error_reporting.php test-exception-handler YOUR_PROJECT_ID --fatal
-Triggering a PHP Fatal Error by eval-ing a syntax error...
-```
-
-For more granular control over your error reporting, and better performance, you can use the gRPC
-library to throw errors. Follow the instructions to install and enable the
-[gRPC PHP Extension][php_grpc]. Now run the gRPC example in `error_reporting.php`:
-
-```sh
-$ php error_reporting.php report-grpc YOUR_PROJECT_ID
-Reported an error to Stackdriver
-```
-
 [0]: https://console.cloud.google.com/flows/enableapi?apiid=clouderrorreporting.googleapis.com
 [1]: https://console.cloud.google.com/errors
 [2]: https://console.cloud.google.com/iam-admin/serviceaccounts/
+[3]: http://php.net/manual/en/function.set-exception-handler.php
 [php_grpc]: http://cloud.google.com/php/grpc
