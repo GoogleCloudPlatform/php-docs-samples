@@ -17,18 +17,56 @@
 
 # [START signed_url]
 /**
+ * Decodes base64url (RFC4648 Section 5) string
+ *
+ * @param string $input base64url encoded string
+ *
+ * @return string
+ */
+function base64url_decode($input)
+{
+    $input .= str_repeat('=', (4 - strlen($input) % 4) % 4);
+    return base64_decode(strtr($input, '-_', '+/'));
+}
+
+/**
+* Encodes a string with base64url (RFC4648 Section 5)
+* Keeps the '=' padding by default.
+*
+* @param string $input   String to be encoded
+* @param bool   $padding Keep the '=' padding
+*
+* @return string
+*/
+function base64url_encode($input, $padding = true)
+{
+    $output = strtr(base64_encode($input), '+/', '-_');
+    return ($padding) ? $output : str_replace('=', '',  $output);
+}
+
+/**
  * Creates signed URL for Google Cloud CDN
  * Details about order of operations: https://cloud.google.com/cdn/docs/using-signed-urls#creating_signed_urls
  *
+ * Example function invocation (In production store the key safely with other secrets):
+ *
+ *     <?php
+ *     $base64url_key = 'wpLL7f4VB9RNe_WI0BBGmA=='; // head -c 16 /dev/urandom | base64 | tr +/ -_
+ *     $signed_url = signUrl('https://example.com/foo', 'my-key', $base64url_key, time() + 1800);
+ *     echo $signed_url;
+ *     ?>
+ *
  * @param string $url             URL of the endpoint served by Cloud CDN
  * @param string $keyName         Name of the signing key added to the Google Cloud Storage bucket or service
- * @param string $key             Signing key as base64 encoded string
+ * @param string $base64url_key   Signing key as base64url (RFC4648 Section 5) encoded string
  * @param int    $expiration_time Expiration time as a UNIX timestamp (GMT, e.g. time())
+ *
+ * @return string
  */
-function signUrl($url, $keyName, $key, $expiration_time)
+function signUrl($url, $keyName, $base64url_key, $expiration_time)
 {
     // Decode the key
-    $decoded_key = base64_decode($key, true);
+    $decoded_key = base64url_decode($base64url_key, true);
 
     // Determine which separator makes sense given a URL
     $separator = (strpos($url, '?') === false) ? '?' : '&';
@@ -36,16 +74,11 @@ function signUrl($url, $keyName, $key, $expiration_time)
     // Concatenate url with expected query parameters Expires and KeyName
     $url = "{$url}{$separator}Expires={$expiration_time}&KeyName={$keyName}";
 
-    // Sign the url using the key and encode the signature using base64
+    // Sign the url using the key and encode the signature using base64url
     $signature = hash_hmac('sha1', $url, $decoded_key, true);
-    $encoded_signature = base64_encode($signature);
+    $encoded_signature = base64url_encode($signature);
 
     // Concatenate the URL and encoded signature
     return "{$url}&Signature={$encoded_signature}";
 }
 // [END signed_url]
-
-// Example function call (In production store the key safely with other secrets)
-$base64_key = '4RfgBoqmotRolLCtU-82Ew=='; // head -c 16 /dev/urandom | base64 | tr +/ -_
-$signed_url = signUrl('https://example.com/foo', 'MY-KEY', $base64_key, time() + 1800);
-echo $signed_url."\n";
