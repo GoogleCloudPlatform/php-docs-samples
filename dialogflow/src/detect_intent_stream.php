@@ -71,7 +71,7 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
         $request->setInputAudio($chunk);
         $requests[] = $request;
     }
-    
+
     // intermediate transcript info
     print(PHP_EOL . str_repeat("=", 20) . PHP_EOL);
     $stream = $sessionsClient->streamingDetectIntent();
@@ -85,22 +85,24 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
             printf('Intermediate transcript: %s' . PHP_EOL, $transcript);
         }
     }
-    print(str_repeat("=", 20) . PHP_EOL);
 
     // get final response and relevant info
-    $queryResult = $response->getQueryResult();
-    $queryText = $queryResult->getQueryText();
-    $intent = $queryResult->getIntent();
-    $displayName = $intent->getDisplayName();
-    $confidence = $queryResult->getIntentDetectionConfidence();
-    $fulfilmentText = $queryResult->getFulfillmentText();
+    if ($response) {
+        print(str_repeat("=", 20) . PHP_EOL);
+        $queryResult = $response->getQueryResult();
+        $queryText = $queryResult->getQueryText();
+        $intent = $queryResult->getIntent();
+        $displayName = $intent->getDisplayName();
+        $confidence = $queryResult->getIntentDetectionConfidence();
+        $fulfilmentText = $queryResult->getFulfillmentText();
 
-    // output relevant info
-    printf('Query text: %s' . PHP_EOL, $queryText);
-    printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
-        $confidence);
-    print(PHP_EOL);
-    printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
+        // output relevant info
+        printf('Query text: %s' . PHP_EOL, $queryText);
+        printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
+            $confidence);
+        print(PHP_EOL);
+        printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
+    }
 
     $sessionsClient->close();
 }
