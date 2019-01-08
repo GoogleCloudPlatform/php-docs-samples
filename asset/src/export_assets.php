@@ -43,7 +43,8 @@ function export_assets($projectId, $dumpFilePath)
     if ($resp->operationSucceeded()) {
         print('The result is dumped to $dumpFilePath successfully.' . PHP_EOL);
     } else {
-        $error = $operationResponse->getError();
+        $error = $resp->getError();
+        printf('There was an error: "%s".' . PHP_EOL, $error->getMessage());
         // handleError($error)
     }
 }
