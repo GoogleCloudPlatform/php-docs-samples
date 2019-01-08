@@ -22,6 +22,3 @@ handlers:
     static_files: public/\1
     upload: public/.*\.(ico|txt|gif|png|jpg)$
 
-  # Declare a catch-all to send all other routes to be handled by the application.
-  - url: .*
-    script: auto
