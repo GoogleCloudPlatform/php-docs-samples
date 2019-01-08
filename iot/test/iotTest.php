@@ -294,6 +294,32 @@ class iotTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Created gateway', $output);
     }
 
+    /** @depends testCreateGateway */
+    public function testBindUnbindDevice()
+    {
+        $deviceId = 'test-device-to-bind' . self::$testId;
+
+        $this->runCommand('create-unauth-device', [
+            'registry' => self::$registryId,
+            'device' => $deviceId,
+        ]);
+        self::$devices[] = $deviceId;
+
+        $output = $this->runCommand('beta-bind-device-to-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'device' => $deviceId,
+        ]);
+        $this->assertContains('Device bound', $output);
+
+        $output = $this->runCommand('unbeta-bind-device-from-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'device' => $deviceId,
+        ]);
+        $this->assertContains('Device unbound', $output);
+    }
+
     private static function runCommand($commandName, $args = [])
     {
         $application = require __DIR__ . '/../iot.php';
