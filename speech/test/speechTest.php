@@ -85,7 +85,7 @@ class speechTest extends TestCase
 
         // Check for the word time offsets
         if (in_array($command, ['transcribe-async-words'])) {
-            $this->assertRegexp('/start: .*s, end: .*s/', $output);
+            $this->assertRegexp('/start: "*.*s", end: "*.*s/', $output);
         }
     }
 
