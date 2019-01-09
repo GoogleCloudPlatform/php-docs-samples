@@ -55,6 +55,9 @@ function transcribe_async_words($audioFile)
             '(pecl install grpc)');
     }
 
+    // When true, time offsets for every word will be included in the response.
+    $enableWordTimeOffsets = true;
+
     // get contents of a file into a string
     $content = file_get_contents($audioFile);
 
@@ -66,7 +69,8 @@ function transcribe_async_words($audioFile)
     $config = (new RecognitionConfig())
         ->setEncoding($encoding)
         ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode);
+        ->setLanguageCode($languageCode)
+        ->setEnableWordTimeOffsets($enableWordTimeOffsets);
 
     // create the speech client
     $client = new SpeechClient();
@@ -88,10 +92,12 @@ function transcribe_async_words($audioFile)
             printf('Transcript: %s' . PHP_EOL, $transcript);
             printf('Confidence: %s' . PHP_EOL, $confidence);
             foreach ($mostLikely->getWords() as $wordInfo) {
+                $startTime = $wordInfo->getStartTime();
+                $endTime = $wordInfo->getEndTime();
                 printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
                     $wordInfo->getWord(),
-                    $wordInfo->getStartTime(),
-                    $wordInfo->getEndTime());
+                    $startTime->serializeToJsonString(),
+                    $endTime->serializeToJsonString());
             }
         }
     } else {
