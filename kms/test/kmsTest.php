@@ -24,6 +24,7 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     use TestTrait;
 
     private static $locationId = 'global';
+    private static $userEmail = 'betterbrent@google.com';
     private static $encryptedFile;
     private static $tempRing;
     private static $tempKey;
@@ -81,17 +82,15 @@ class kmsTest extends \PHPUnit_Framework_TestCase
 
     public function testAddUserToKeyRing()
     {
-        $userEmail = 'betterbrent@google.com';
-
         $output = $this->runSnippet('add_member_to_keyring_policy', [
             self::$ring,
-            'user:' . $userEmail,
+            'user:' . self::$userEmail,
             'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s added to policy for keyRing %s' . PHP_EOL,
-            $userEmail,
+            self::$userEmail,
             self::$ring
         ), $output);
     }
@@ -99,37 +98,45 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testAddUserToKeyRing
      */
+    public function testGetKeyRingPolicy()
+    {
+        $output = $this->runSnippet('get_keyring_policy', [
+            self::$ring,
+        ]);
+
+        $this->assertContains('user:' . self::$userEmail, $output);
+    }
+
+    /**
+     * @depends testAddUserToKeyRing
+     */
     public function testRemoveUserFromKeyRing()
     {
-        $userEmail = 'betterbrent@google.com';
-
         $output = $this->runSnippet('remove_member_from_keyring_policy', [
             self::$ring,
-            'user:' . $userEmail,
+            'user:' . self::$userEmail,
             'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s removed from policy for keyRing %s' . PHP_EOL,
-            $userEmail,
+            self::$userEmail,
             self::$ring
         ), $output);
     }
 
     public function testAddUserToCryptoKey()
     {
-        $userEmail = 'betterbrent@google.com';
-
         $output = $this->runSnippet('add_member_to_cryptokey_policy', [
             self::$ring,
             self::$key,
-            'user:' . $userEmail,
+            'user:' . self::$userEmail,
             'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s added to policy for cryptoKey %s in keyRing %s' . PHP_EOL,
-            $userEmail,
+            self::$userEmail,
             self::$key,
             self::$ring
         ), $output);
@@ -138,20 +145,31 @@ class kmsTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testAddUserToCryptoKey
      */
+    public function testGetCryptoKeyPolicy()
+    {
+        $output = $this->runSnippet('get_cryptokey_policy', [
+            self::$ring,
+            self::$key,
+        ]);
+
+        $this->assertContains('user:' . self::$userEmail, $output);
+    }
+
+    /**
+     * @depends testAddUserToCryptoKey
+     */
     public function testRemoveUserFromCryptoKey()
     {
-        $userEmail = 'betterbrent@google.com';
-
         $output = $this->runSnippet('remove_member_from_cryptokey_policy', [
             self::$ring,
             self::$key,
-            'user:' . $userEmail,
+            'user:' . self::$userEmail,
             'roles/cloudkms.cryptoKeyEncrypterDecrypter'
         ]);
 
         $this->assertContains(sprintf(
             'Member user:%s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
-            $userEmail,
+            self::$userEmail,
             self::$key,
             self::$ring
         ), $output);
