@@ -30,7 +30,7 @@ if (count($argv) != 4) {
 }
 list($_, $projectId, $locationId, $keyRingId) = $argv;
 
-# [START kms_create_cryptokey]
+# [START kms_create_keyring]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\KeyRing;
 
@@ -54,4 +54,4 @@ $newKeyRing = $kms->createKeyRing(
 );
 
 printf('Created keyRing %s' . PHP_EOL, $keyRingId);
-# [END kms_create_cryptokey]
+# [END kms_create_keyring]
