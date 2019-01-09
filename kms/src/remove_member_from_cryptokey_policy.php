@@ -31,7 +31,7 @@ if (count($argv) != 7) {
 list($_, $projectId, $locationId, $keyRingId, $cryptoKeyId, $member, $role) = $argv;
 
 
-# [START kms_add_member_to_keyring_policy]
+# [START remove_member_from_cryptokey_policy]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 /** Uncomment and populate these variables in your code */
@@ -69,4 +69,4 @@ printf('Member %s removed from policy for cryptoKey %s in keyRing %s' . PHP_EOL,
     $member,
     $cryptoKeyId,
     $keyRingId);
-# [END kms_add_member_to_keyring_policy]
+# [END remove_member_from_cryptokey_policy]
