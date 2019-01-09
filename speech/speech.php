@@ -32,19 +32,7 @@ $inputDefinition = new InputDefinition([
     new InputOption('encoding', null, InputOption::VALUE_REQUIRED,
         'The encoding of the audio file. This is required if the encoding is ' .
         'unable to be determined. '
-    ),
-    new InputOption('language-code', null, InputOption::VALUE_REQUIRED,
-        'The language code for the language used in the source file. ',
-        'en-US'
-    ),
-    new InputOption('sample-rate', null, InputOption::VALUE_REQUIRED,
-        'The sample rate of the audio file in hertz. This is required ' .
-        'if the sample rate is unable to be determined. '
-    ),
-    new InputOption('sample-rate', null, InputOption::VALUE_REQUIRED,
-        'The sample rate of the audio file in hertz. This is required ' .
-        'if the sample rate is unable to be determined. '
-    ),
+    )
 ]);
 
 $application = new Application('Cloud Speech');
@@ -61,11 +49,7 @@ EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $audioFile = $input->getArgument('audio-file');
-        $languageCode = $input->getOption('language-code');
-        transcribe_sync($audioFile, $languageCode, [
-            'encoding' => $input->getOption('encoding'),
-            'sampleRateHertz' => $input->getOption('sample-rate'),
-        ]);
+        transcribe_sync($audioFile);
     });
 
 $application->add(new Command('transcribe-gcs'))
@@ -81,35 +65,10 @@ EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $audioFile = $input->getArgument('audio-file');
-        $languageCode = $input->getOption('language-code');
         if (!preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $audioFile, $matches)) {
             throw new \Exception('Invalid file name. Must be gs://[bucket]/[audiofile]');
         }
-        list($bucketName, $objectName) = array_slice($matches, 1);
-        transcribe_sync_gcs($bucketName, $objectName, $languageCode, [
-            'encoding' => $input->getOption('encoding'),
-            'sampleRateHertz' => $input->getOption('sample-rate'),
-        ]);
-    });
-
-$application->add(new Command('transcribe-words'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Transcribe an audio file and print word time offsets using Google Cloud Speech API')
-    ->setHelp(<<<EOF
-The <info>%command.name%</info> command transcribes audio from a file using the
-Google Cloud Speech API and prints word time offsets.
-
-<info>php %command.full_name% audio_file.wav</info>
-
-EOF
-    )
-    ->setCode(function (InputInterface $input, OutputInterface $output) {
-        $audioFile = $input->getArgument('audio-file');
-        $languageCode = $input->getOption('language-code');
-        transcribe_sync_words($audioFile, $languageCode, [
-            'encoding' => $input->getOption('encoding'),
-            'sampleRateHertz' => $input->getOption('sample-rate'),
-        ]);
+        transcribe_sync_gcs($audioFile);
     });
 
 $application->add(new Command('transcribe-model'))
@@ -174,11 +133,7 @@ EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $audioFile = $input->getArgument('audio-file');
-        $languageCode = $input->getOption('language-code');
-        transcribe_async($audioFile, $languageCode, [
-            'encoding' => $input->getOption('encoding'),
-            'sampleRateHertz' => $input->getOption('sample-rate'),
-        ]);
+        transcribe_async($audioFile);
     });
 
 $application->add(new Command('transcribe-async-gcs'))
@@ -194,15 +149,10 @@ EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $audioFile = $input->getArgument('audio-file');
-        $languageCode = $input->getOption('language-code');
         if (!preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $audioFile, $matches)) {
             throw new \Exception('Invalid file name. Must be gs://[bucket]/[audiofile]');
         }
-        list($bucketName, $objectName) = array_slice($matches, 1);
-        transcribe_async_gcs($bucketName, $objectName, $languageCode, [
-            'encoding' => $input->getOption('encoding'),
-            'sampleRateHertz' => $input->getOption('sample-rate'),
-        ]);
+        transcribe_async_gcs($audioFile);
     });
 
 $application->add(new Command('transcribe-async-words'))
@@ -218,11 +168,7 @@ EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $audioFile = $input->getArgument('audio-file');
-        $languageCode = $input->getOption('language-code');
-        transcribe_async_words($audioFile, $languageCode, [
-            'encoding' => $input->getOption('encoding'),
-            'sampleRateHertz' => $input->getOption('sample-rate'),
-        ]);
+        transcribe_async_words($audioFile);
     });
 
 $application->add(new Command('transcribe-stream'))
@@ -238,10 +184,7 @@ EOF
     )
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         streaming_recognize(
-            $input->getArgument('audio-file'),
-            $input->getOption('language-code'),
-            $input->getOption('encoding'),
-            $input->getOption('sample-rate')
+            $input->getArgument('audio-file')
         );
     });
 

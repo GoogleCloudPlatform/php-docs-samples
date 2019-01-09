@@ -14,45 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
 
 class quickstartTest extends TestCase
 {
+    use TestTrait;
     public function testQuickstart()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
-
-        $file = sys_get_temp_dir() . '/speech_quickstart.php';
-        $contents = file_get_contents(__DIR__ . '/../quickstart.php');
-        $contents = str_replace(
-            ['YOUR_PROJECT_ID', '__DIR__'],
-            [$projectId, sprintf('"%s/.."', __DIR__)],
-            $contents
-        );
-        file_put_contents($file, $contents);
-
         // Invoke quickstart.php
-        $results = include $file;
-
-        // Make sure it looks correct
-        $this->assertTrue(is_array($results));
-        $this->assertEquals(1, count($results));
-        $alternatives = $results[0]->alternatives();
-        $this->assertTrue(is_array($alternatives));
-        $this->assertEquals(1, count($alternatives));
-        $this->assertArrayHasKey('transcript', $alternatives[0]);
-        $this->assertArrayHasKey('confidence', $alternatives[0]);
-        $this->assertEquals('how old is the Brooklyn Bridge', $alternatives[0]['transcript']);
-        $this->assertTrue($alternatives[0]['confidence'] > .9);
-
-        $expectedOutput = <<<EOF
-Transcription: how old is the Brooklyn Bridge
-
-EOF;
-
-        $this->expectOutputString($expectedOutput);
+        include __DIR__ . '/../quickstart.php';
+        $this->expectOutputRegex('/Bridge/');
     }
 }

@@ -46,21 +46,24 @@ use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
  *
  * @return string the text transcription
  */
-function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHertz)
+function streaming_recognize($audioFile)
 {
-    if (!defined('Grpc\STATUS_OK')) {
+    // change these variables
+    $encoding = AudioEncoding::LINEAR16;
+    $sampleRateHertz = 32000;
+    $languageCode = 'en-US';
+
+    if (!extension_loaded('grpc')) {
         throw new \Exception('Install the grpc extension ' .
             '(pecl install grpc)');
     }
 
     $speechClient = new SpeechClient();
     try {
-        $config = new RecognitionConfig();
-        $config->setLanguageCode($languageCode);
-        $config->setSampleRateHertz($sampleRateHertz);
-        // encoding must be an enum, convert from string
-        $encodingEnum = constant(AudioEncoding::class . '::' . $encoding);
-        $config->setEncoding($encodingEnum);
+        $config = (new RecognitionConfig())
+            ->setEncoding($encoding)
+            ->setSampleRateHertz($sampleRateHertz)
+            ->setLanguageCode($languageCode);
 
         $strmConfig = new StreamingRecognitionConfig();
         $strmConfig->setConfig($config);
@@ -72,10 +75,8 @@ function streaming_recognize($audioFile, $languageCode, $encoding, $sampleRateHe
         $strm->write($strmReq);
 
         $strmReq = new StreamingRecognizeRequest();
-        $f = fopen($audioFile, "rb");
-        $fsize = filesize($audioFile);
-        $bytes = fread($f, $fsize);
-        $strmReq->setAudioContent($bytes);
+        $content = file_get_contents($audioFile);
+        $strmReq->setAudioContent($content);
         $strm->write($strmReq);
 
         foreach ($strm->closeWriteAndReadAll() as $response) {
