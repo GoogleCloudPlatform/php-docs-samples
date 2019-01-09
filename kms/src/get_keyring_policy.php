@@ -50,7 +50,7 @@ foreach ($keyRingPolicy->getBindings() as $binding) {
     printf("Role: %s\nMembers:\n", $binding->getRole());
 
     foreach ($binding->getMembers() as $member) {
-    	printf("  %s\n", $member);
+        printf("  %s\n", $member);
     }
     print("\n");
 }
