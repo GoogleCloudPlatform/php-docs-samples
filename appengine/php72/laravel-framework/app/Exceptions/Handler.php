@@ -28,9 +28,10 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
+     * Report or log an exception to Google Cloud Stackdriver Error Reporting
      *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     * For a full tutorial on deploying Laravel to Google Cloud,
+     * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/appengine/php72/laravel-framework/README.md
      *
      * @param  \Exception  $exception
      * @return void
