@@ -23,8 +23,8 @@ use Google\Cloud\Iot\V1\DeviceManagerClient;
 /**
  * Binds a device to a gateway.
  *
- * @param string $projectId (optional) Google Cloud project ID
- * @param string $location (Optional) Google Cloud region
+ * @param string $projectId Google Cloud project ID
+ * @param string $location Google Cloud region
  * @param string $registryId IOT Device Registry ID
  * @param string $deviceId the device ID to bind
  * @param string $gatewayId the ID for the gateway to bind to

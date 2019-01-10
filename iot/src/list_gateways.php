@@ -25,9 +25,9 @@ use Google\Protobuf\FieldMask;
 /**
  * List gateways in the registry.
  *
- * @param string $registryId IOT Device Registry ID
  * @param string $projectId Google Cloud project ID
  * @param string $location (Optional) Google Cloud region
+ * @param string $registryId IOT Device Registry ID
  */
 function list_gateways(
     $projectId,

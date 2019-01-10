@@ -320,7 +320,7 @@ $application->add(new Command('set-device-state'))
     });
 
 // Beta features
-$application->add(new Command('beta-create-gateway'))
+$application->add(new Command('create-gateway'))
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
@@ -339,7 +339,7 @@ $application->add(new Command('beta-create-gateway'))
         );
     });
 
-$application->add(new Command('beta-delete-gateway'))
+$application->add(new Command('delete-gateway'))
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
@@ -354,7 +354,7 @@ $application->add(new Command('beta-delete-gateway'))
         );
     });
 
-$application->add(new Command('beta-list-gateways'))
+$application->add(new Command('list-gateways'))
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
@@ -367,7 +367,7 @@ $application->add(new Command('beta-list-gateways'))
         );
     });
 
-$application->add(new Command('beta-list-devices-for-gateway'))
+$application->add(new Command('list-devices-for-gateway'))
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
@@ -382,7 +382,7 @@ $application->add(new Command('beta-list-devices-for-gateway'))
         );
     });
 
-$application->add(new Command('beta-bind-device-to-gateway'))
+$application->add(new Command('bind-device-to-gateway'))
     ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
     ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
@@ -399,7 +399,7 @@ $application->add(new Command('beta-bind-device-to-gateway'))
         );
     });
 
-$application->add(new Command('beta-unbind-device-from-gateway'))
+$application->add(new Command('unbind-device-from-gateway'))
     ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
     ->addArgument('device', InputArgument::REQUIRED, 'the device ID')
     ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')

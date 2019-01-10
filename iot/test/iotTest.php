@@ -59,7 +59,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
         }
         foreach (self::$gateways as $gatewayId) {
             printf('Cleaning up Gateway %s' . PHP_EOL, $gatewayId);
-            self::runCommand('beta-delete-gateway', [
+            self::runCommand('delete-gateway', [
                 'registry' => self::$registryId,
                 'gateway' => $gatewayId,
             ]);
@@ -283,7 +283,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
     {
         $gatewayId = 'test-rsa-gateway' . self::$testId;
 
-        $output = $this->runCommand('beta-create-gateway', [
+        $output = $this->runCommand('create-gateway', [
             'registry' => self::$registryId,
             'gateway' => $gatewayId,
             'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
@@ -292,7 +292,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
         self::$gateways[] = $gatewayId;
         $this->assertContains('Created gateway', $output);
 
-        $output = $this->runCommand('beta-list-gateways', [
+        $output = $this->runCommand('list-gateways', [
             'registry' => self::$registryId
         ]);
         $this->assertContains($gatewayId, $output);
@@ -309,14 +309,14 @@ class iotTest extends \PHPUnit_Framework_TestCase
         ]);
         self::$devices[] = $deviceId;
 
-        $output = $this->runCommand('beta-bind-device-to-gateway', [
+        $output = $this->runCommand('bind-device-to-gateway', [
             'registry' => self::$registryId,
             'gateway' => $gatewayId,
             'device' => $deviceId,
         ]);
         $this->assertContains('Device bound', $output);
 
-        $output = $this->runCommand('unbeta-bind-device-from-gateway', [
+        $output = $this->runCommand('unbind-device-from-gateway', [
             'registry' => self::$registryId,
             'gateway' => $gatewayId,
             'device' => $deviceId,
