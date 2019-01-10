@@ -9,10 +9,10 @@ to App Engine Standard for PHP 7.2. You will learn how to:
 1. Set up a [Cloud SQL][cloud-sql] database
 1. Configure Doctrine to communicate with Cloud SQL
 
-> **Note**: This repository is just a tutorial and is not a Symfony project in 
+> **Note**: This repository is just a tutorial and is not a Symfony project in
   and of itself. The steps will require you to set up a new Symfony project in a
   separate directory.
-  
+
 ## Prerequisites
 
 1. [Create a project][create-project] in the Google Cloud Platform Console
@@ -204,6 +204,46 @@ database. This tutorial uses the database name `symfonydb` and the username
     your application to App Engine:
 
         gcloud app deploy
+
+## Set up Stackdriver Logging and Error Reporting
+
+Install some cloud libraries for Stackdriver integration
+
+```sh
+cd /path/to/symfony
+composer require google/cloud-logging google/cloud-error-reporting
+```
+
+### Copy over App Engine files
+
+For your app to deploy on App Engine, you will need to copy over some files in this
+directory:
+
+```sh
+# clone this repo somewhere
+git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
+
+# create a directory for the event subscriber
+mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
+
+
+cd /path/to/php-docs-samples/appengine/php72/symfony-framework/
+# copy config/prod_yaml.yaml and ExceptionSubscriber.php into your Symfony project
+cp app/config/config_prod.yml /path/to/symfony/app/config
+cp src/AppBundle/EventSubscriber/ExceptionSubscriber.php \
+    /path/to/symfony/src/AppBundle/EventSubscriber
+```
+
+The two files needed are as follows:
+
+  1. [`config/packages/prod/monolog.yaml`](app/config/packages/prod/monolog.yaml) - Adds Stackdriver Logging to your Monolog configuration.
+  1. [`src/EventSubscriber/ExceptionSubscriber.php`](src/EventSubscriber/ExceptionSubscriber.php) - Event subscriber which sends exceptions to Stackdriver Error Reporting.
+
+If you'd like to test the logging and error reporting, you can also copy over `LoggingController.php`, which
+exposes the routes `/en/logging/notice` and `/en/logging/exception` for ensuring your logs are being sent to
+Stackdriver:
+
+  1. [`src/Controller/LoggingController.php`](src/Controller/LoggingController.php) - Controller for testing logging and exceptions.
 
 ### What's Next
 

@@ -20,15 +20,16 @@ namespace Google\Cloud\Samples\AppEngine\Symfony;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/lib/SymfonyDeploymentTrait.php';
-
 class DeployDoctrineTest extends TestCase
 {
     use TestTrait;
-    use SymfonyDeploymentTrait;
+    use DeploySymfonyTrait;
 
     public static function beforeDeploy()
     {
+        // ensure logging output is displayed in phpunit
+        self::$logger = new \Monolog\Logger('phpunit');
+
         $dbConn = self::requireEnv('SYMFONY_CLOUDSQL_CONNECTION_NAME');
         $dbName = self::requireEnv('SYMFONY_DB_DATABASE');
         $dbPass = self::requireEnv('SYMFONY_DB_PASSWORD');
