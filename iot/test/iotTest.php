@@ -302,6 +302,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
     public function testBindUnbindDevice()
     {
         $deviceId = 'test-device-to-bind' . self::$testId;
+        $gatewayId = 'test-bindunbind-gateway' . self::$testId;
 
         $this->runCommand('create-unauth-device', [
             'registry' => self::$registryId,
