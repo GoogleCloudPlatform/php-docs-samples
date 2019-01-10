@@ -290,7 +290,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
             'algorithm' => 'RS256',
         ]);
         self::$gateways[] = $gatewayId;
-        $this->assertContains('Created gateway', $output);
+        $this->assertContains('Gateway: ', $output);
 
         $output = $this->runCommand('list-gateways', [
             'registry' => self::$registryId
