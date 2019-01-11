@@ -304,6 +304,13 @@ class iotTest extends \PHPUnit_Framework_TestCase
         $deviceId = 'test-device-to-bind' . self::$testId;
         $gatewayId = 'test-bindunbind-gateway' . self::$testId;
 
+        $this->runCommand('create-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+            'algorithm' => 'RS256',
+        ]);
+
         $this->runCommand('create-unauth-device', [
             'registry' => self::$registryId,
             'device' => $deviceId,
