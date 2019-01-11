@@ -207,7 +207,7 @@ database. This tutorial uses the database name `symfonydb` and the username
 
 ## Set up Stackdriver Logging and Error Reporting
 
-Install some cloud libraries for Stackdriver integration
+Install the Google Cloud libraries for Stackdriver integration:
 
 ```sh
 cd /path/to/symfony
@@ -216,22 +216,23 @@ composer require google/cloud-logging google/cloud-error-reporting
 
 ### Copy over App Engine files
 
-For your app to deploy on App Engine, you will need to copy over some files in this
-directory:
+For your Symfony application to integrate with Stackdriver Logging and Error Handling, 
+you will need to copy over the `monolog.yaml` config file and the `ExceptionSubscriber.php`
+Exception Subscriber:
 
 ```sh
 # clone this repo somewhere
 git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
 
-# create a directory for the event subscriber
-mkdir -p /path/to/symfony/src/AppBundle/EventSubscriber
-
-
+# enter the directory for the symfony framework sample
 cd /path/to/php-docs-samples/appengine/php72/symfony-framework/
-# copy config/prod_yaml.yaml and ExceptionSubscriber.php into your Symfony project
-cp app/config/config_prod.yml /path/to/symfony/app/config
-cp src/AppBundle/EventSubscriber/ExceptionSubscriber.php \
-    /path/to/symfony/src/AppBundle/EventSubscriber
+
+# copy monolog.yaml into your Symfony project
+cp config/packages/prod/monolog.yaml \
+    /path/to/symfony/config/packages/prod/
+# copy ExceptionSubscriber.php into your Symfony project
+cp src/EventSubscriber/ExceptionSubscriber.php \
+    /path/to/symfony/src/EventSubscriber
 ```
 
 The two files needed are as follows:
