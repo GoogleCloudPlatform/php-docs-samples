@@ -53,9 +53,7 @@ function list_devices_for_gateway(
 
     // Print the result
     foreach ($devices->iterateAllElements() as $device) {
-        printf('Device: %s : %s' . PHP_EOL,
-            $device->getNumId(),
-            $device->getId());
+        printf('Bound Device: %s' . PHP_EOL, $device->getId());
     }
 }
 # [END iot_list_devices_for_gateway]
