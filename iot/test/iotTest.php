@@ -333,7 +333,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @depends testBindUnbindDevice */
-    public function testBindUnbindDevice()
+    public function testListDevicesForGateway()
     {
         $deviceId = 'test-device-bind-and-list' . self::$testId;
         $gatewayId = 'test-bind-and-list-gateway' . self::$testId;
