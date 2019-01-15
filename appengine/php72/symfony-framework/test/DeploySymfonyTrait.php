@@ -26,7 +26,6 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
-use Monolog\Logger;
 
 trait DeploySymfonyTrait
 {
