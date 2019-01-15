@@ -21,10 +21,10 @@ namespace Google\Cloud\Samples\Dlp;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob_JobState;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\PrivacyMetric_CategoricalStatsConfig;
+use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\PrivacyMetric\CategoricalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
@@ -62,7 +62,7 @@ function categorical_stats(
     $columnField = (new FieldId())
         ->setName($columnName);
 
-    $statsConfig = (new PrivacyMetric_CategoricalStatsConfig())
+    $statsConfig = (new CategoricalStatsConfig())
         ->setField($columnField);
 
     $privacyMetric = (new PrivacyMetric())
@@ -75,7 +75,7 @@ function categorical_stats(
         ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $pubSubAction = (new Action_PublishToPubSub())
+    $pubSubAction = (new PublishToPubSub())
         ->setTopic($topic->name());
 
     $action = (new Action())
@@ -122,7 +122,7 @@ function categorical_stats(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
+        case JobState::DONE:
             $histBuckets = $job->getRiskDetails()->getCategoricalStatsResult()->getValueFrequencyHistogramBuckets();
 
             foreach ($histBuckets as $bucketIndex => $histBucket) {
@@ -143,7 +143,7 @@ function categorical_stats(
             }
 
             break;
-        case DlpJob_JobState::FAILED:
+        case JobState::FAILED:
             $errors = $job->getErrors();
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             foreach ($errors as $error) {

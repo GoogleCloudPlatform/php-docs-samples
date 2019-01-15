@@ -20,15 +20,15 @@ namespace Google\Cloud\Samples\Dlp;
 # [START dlp_inspect_gcs]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
-use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
+use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
+use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
@@ -71,11 +71,11 @@ function inspect_gcs(
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = (new InspectConfig_FindingLimits())
+    $limits = (new FindingLimits())
         ->setMaxFindingsPerRequest($maxFindings);
 
     // Construct items to be inspected
-    $fileSet = (new CloudStorageOptions_FileSet())
+    $fileSet = (new FileSet())
         ->setUrl('gs://' . $bucketId . '/' . $file);
 
     $cloudStorageOptions = (new CloudStorageOptions())
@@ -91,7 +91,7 @@ function inspect_gcs(
         ->setInfoTypes($infoTypes);
 
     // Construct the action to run when job completes
-    $pubSubAction = (new Action_PublishToPubSub())
+    $pubSubAction = (new PublishToPubSub())
         ->setTopic($topic->name());
 
     $action = (new Action())
@@ -132,7 +132,7 @@ function inspect_gcs(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
+        case JobState::DONE:
             $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
             if (count($infoTypeStats) === 0) {
                 print('No findings.' . PHP_EOL);
@@ -142,7 +142,7 @@ function inspect_gcs(
                 }
             }
             break;
-        case DlpJob_JobState::FAILED:
+        case JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

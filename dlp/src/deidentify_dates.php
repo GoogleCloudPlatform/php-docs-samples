@@ -30,7 +30,7 @@ use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\RecordTransformations;
 use Google\Cloud\Dlp\V2\Table;
-use Google\Cloud\Dlp\V2\Table_Row;
+use Google\Cloud\Dlp\V2\Table\Row;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 use DateTime;
@@ -91,7 +91,7 @@ function deidentify_dates(
             }
         }, explode(',', $csvRow));
 
-        return (new Table_Row())
+        return (new Row())
             ->setValues($rowValues);
     }, $csvRows);
 

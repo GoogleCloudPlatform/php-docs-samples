@@ -21,10 +21,10 @@ namespace Google\Cloud\Samples\Dlp;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob_JobState;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\PrivacyMetric_LDiversityConfig;
+use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\PrivacyMetric\LDiversityConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
@@ -72,7 +72,7 @@ function l_diversity(
     $sensitiveField = (new FieldId())
         ->setName($sensitiveAttribute);
 
-    $statsConfig = (new PrivacyMetric_LDiversityConfig())
+    $statsConfig = (new LDiversityConfig())
         ->setQuasiIds($quasiIds)
         ->setSensitiveAttribute($sensitiveField);
 
@@ -86,7 +86,7 @@ function l_diversity(
         ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $pubSubAction = (new Action_PublishToPubSub())
+    $pubSubAction = (new PublishToPubSub())
         ->setTopic($topic->name());
 
     $action = (new Action())
@@ -133,7 +133,7 @@ function l_diversity(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
+        case JobState::DONE:
             $histBuckets = $job->getRiskDetails()->getLDiversityResult()->getSensitiveValueFrequencyHistogramBuckets();
 
             foreach ($histBuckets as $bucketIndex => $histBucket) {
@@ -171,7 +171,7 @@ function l_diversity(
                 }
             }
             break;
-        case DlpJob_JobState::FAILED:
+        case JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

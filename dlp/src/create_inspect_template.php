@@ -23,7 +23,7 @@ use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
 /**
  * Create a new DLP inspection configuration template.
@@ -59,7 +59,7 @@ function create_inspect_template(
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = (new InspectConfig_FindingLimits())
+    $limits = (new FindingLimits())
         ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the configuration object

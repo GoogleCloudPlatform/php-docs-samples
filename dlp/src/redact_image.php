@@ -21,7 +21,7 @@ namespace Google\Cloud\Samples\Dlp;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\RedactImageRequest_ImageRedactionConfig;
+use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 
@@ -75,7 +75,7 @@ function redact_image(
     // Create the image redaction config objects
     $imageRedactionConfigs = [];
     foreach ($infoTypes as $infoType) {
-        $config = (new RedactImageRequest_ImageRedactionConfig())
+        $config = (new ImageRedactionConfig())
             ->setInfoType($infoType);
         $imageRedactionConfigs[] = $config;
     }

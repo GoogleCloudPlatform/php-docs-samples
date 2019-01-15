@@ -21,11 +21,11 @@ namespace Google\Cloud\Samples\Dlp;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob_JobState;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\PrivacyMetric_NumericalStatsConfig;
+use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\PrivacyMetric\NumericalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\V1\PublisherClient;
@@ -62,7 +62,7 @@ function numerical_stats(
     $columnField = (new FieldId())
         ->setName($columnName);
 
-    $statsConfig = (new PrivacyMetric_NumericalStatsConfig())
+    $statsConfig = (new NumericalStatsConfig())
         ->setField($columnField);
 
     $privacyMetric = (new PrivacyMetric())
@@ -76,7 +76,7 @@ function numerical_stats(
 
     // Construct the action to run when job completes
     $fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
-    $pubSubAction = (new Action_PublishToPubSub())
+    $pubSubAction = (new PublishToPubSub())
         ->setTopic($fullTopicId);
 
     $action = (new Action())
@@ -99,13 +99,12 @@ function numerical_stats(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
@@ -125,7 +124,7 @@ function numerical_stats(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
+        case JobState::DONE:
             $results = $job->getRiskDetails()->getNumericalStatsResult();
             printf(
                 'Value range: [%s, %s]' . PHP_EOL,
@@ -144,7 +143,7 @@ function numerical_stats(
             }
 
             break;
-        case DlpJob_JobState::FAILED:
+        case JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

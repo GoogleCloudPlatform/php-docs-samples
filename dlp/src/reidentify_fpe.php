@@ -19,19 +19,19 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_reidentify_fpe]
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
-use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
+use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CustomInfoType;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\CustomInfoType_SurrogateType;
+use Google\Cloud\Dlp\V2\CustomInfoType\SurrogateType;
 
 /**
  * Reidentify a deidentified string using Format-Preserving Encryption (FPE).
@@ -62,7 +62,7 @@ function reidentify_fpe(
 
     // The set of characters to replace sensitive ones with
     // For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2/organizations.deidentifyTemplates#ffxcommonnativealphabet
-    $commonAlphabet = CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet::NUMERIC;
+    $commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the wrapped crypto key configuration object
     $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
@@ -79,7 +79,7 @@ function reidentify_fpe(
 
     $customInfoType = (new CustomInfoType())
         ->setInfoType($surrogateType)
-        ->setSurrogateType(new CustomInfoType_SurrogateType());
+        ->setSurrogateType(new SurrogateType());
 
     // Create the crypto FFX FPE configuration object
     $cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
@@ -91,7 +91,7 @@ function reidentify_fpe(
     $primitiveTransformation = (new PrimitiveTransformation())
         ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
-    $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
+    $infoTypeTransformation = (new InfoTypeTransformation())
         ->setPrimitiveTransformation($primitiveTransformation);
 
     $infoTypeTransformations = (new InfoTypeTransformations())
