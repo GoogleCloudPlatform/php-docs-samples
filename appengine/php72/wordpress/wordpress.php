@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Google\Cloud\Utils\WordPressProject;
 
-$application = new Application('Cloud Video Intelligence');
+$application = new Application('WordPress on Google Cloud Helper');
 
 $wordPressOptions = new InputDefinition([
     new InputOption('project_id', null, InputOption::VALUE_REQUIRED, 'Google Cloud project id'),
