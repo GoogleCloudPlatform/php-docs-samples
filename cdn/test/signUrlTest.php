@@ -56,7 +56,7 @@ class signUrlTest extends TestCase
 
         foreach($cases as $c)
         {
-            $this->assertEquals(signUrl($c[0], $c[1], $encoded_key, $c[2]), $c[3]);
+            $this->assertEquals(sign_url($c[0], $c[1], $encoded_key, $c[2]), $c[3]);
         }
     }
 }

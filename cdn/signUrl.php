@@ -51,34 +51,34 @@ function base64url_encode($input, $padding = true)
  * Example function invocation (In production store the key safely with other secrets):
  *
  *     <?php
- *     $base64url_key = 'wpLL7f4VB9RNe_WI0BBGmA=='; // head -c 16 /dev/urandom | base64 | tr +/ -_
- *     $signed_url = signUrl('https://example.com/foo', 'my-key', $base64url_key, time() + 1800);
- *     echo $signed_url;
+ *     $base64UrlKey = 'wpLL7f4VB9RNe_WI0BBGmA=='; // head -c 16 /dev/urandom | base64 | tr +/ -_
+ *     $signedUrl = sign_url('https://example.com/foo', 'my-key', $base64UrlKey, time() + 1800);
+ *     echo $signedUrl;
  *     ?>
  *
  * @param string $url             URL of the endpoint served by Cloud CDN
  * @param string $keyName         Name of the signing key added to the Google Cloud Storage bucket or service
- * @param string $base64url_key   Signing key as base64url (RFC4648 Section 5) encoded string
- * @param int    $expiration_time Expiration time as a UNIX timestamp (GMT, e.g. time())
+ * @param string $base64UrlKey    Signing key as base64url (RFC4648 Section 5) encoded string
+ * @param int    $expirationTime  Expiration time as a UNIX timestamp (GMT, e.g. time())
  *
  * @return string
  */
-function signUrl($url, $keyName, $base64url_key, $expiration_time)
+function sign_url($url, $keyName, $base64UrlKey, $expirationTime)
 {
     // Decode the key
-    $decoded_key = base64url_decode($base64url_key, true);
+    $decodedKey = base64url_decode($base64UrlKey, true);
 
     // Determine which separator makes sense given a URL
     $separator = (strpos($url, '?') === false) ? '?' : '&';
 
     // Concatenate url with expected query parameters Expires and KeyName
-    $url = "{$url}{$separator}Expires={$expiration_time}&KeyName={$keyName}";
+    $url = "{$url}{$separator}Expires={$expirationTime}&KeyName={$keyName}";
 
     // Sign the url using the key and encode the signature using base64url
-    $signature = hash_hmac('sha1', $url, $decoded_key, true);
-    $encoded_signature = base64url_encode($signature);
+    $signature = hash_hmac('sha1', $url, $decodedKey, true);
+    $encodedSignature = base64url_encode($signature);
 
     // Concatenate the URL and encoded signature
-    return "{$url}&Signature={$encoded_signature}";
+    return "{$url}&Signature={$encodedSignature}";
 }
 // [END signed_url]
