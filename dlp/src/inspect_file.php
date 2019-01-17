@@ -23,7 +23,7 @@ use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 
 /**
@@ -55,7 +55,7 @@ function inspect_file(
     $includeQuote = true;
 
     // Specify finding limits
-    $limits = (new InspectConfig_FindingLimits())
+    $limits = (new FindingLimits())
         ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the configuration object

@@ -24,7 +24,7 @@ use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -49,7 +49,7 @@ $maxFindings = 0;
 $includeQuote = true;
 
 // Specify finding limits
-$limits = (new InspectConfig_FindingLimits())
+$limits = (new FindingLimits())
     ->setMaxFindingsPerRequest($maxFindings);
 
 // Create the configuration object

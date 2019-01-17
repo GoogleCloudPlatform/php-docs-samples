@@ -23,11 +23,11 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob_JobState;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
-use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig;
-use Google\Cloud\Dlp\V2\PrivacyMetric_KMapEstimationConfig_TaggedField;
+use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\PrivacyMetric\KMapEstimationConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric\KMapEstimationConfig\TaggedField;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
@@ -80,7 +80,7 @@ function k_map(
         $quasiIdType = (new InfoType())
             ->setName($infoType);
 
-        $quasiIdObject = (new PrivacyMetric_KMapEstimationConfig_TaggedField())
+        $quasiIdObject = (new TaggedField())
             ->setInfoType($quasiIdType)
             ->setField($quasiIdField);
 
@@ -88,7 +88,7 @@ function k_map(
     }, $quasiIdNames, $infoTypes);
 
     // Construct analysis config
-    $statsConfig = (new PrivacyMetric_KMapEstimationConfig())
+    $statsConfig = (new KMapEstimationConfig())
         ->setQuasiIds($quasiIdObjects)
         ->setRegionCode($regionCode);
 
@@ -102,7 +102,7 @@ function k_map(
         ->setTableId($tableId);
 
     // Construct the action to run when job completes
-    $pubSubAction = (new Action_PublishToPubSub())
+    $pubSubAction = (new PublishToPubSub())
         ->setTopic($topic->name());
 
     $action = (new Action())
@@ -149,7 +149,7 @@ function k_map(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
+        case JobState::DONE:
             $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
 
             foreach ($histBuckets as $bucketIndex => $histBucket) {
@@ -178,7 +178,7 @@ function k_map(
                 }
             }
             break;
-        case DlpJob_JobState::FAILED:
+        case JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {

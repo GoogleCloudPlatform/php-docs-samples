@@ -19,14 +19,14 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_fpe]
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
-use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet;
+use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations_InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
 
@@ -64,7 +64,7 @@ function deidentify_fpe(
 
     // The set of characters to replace sensitive ones with
     // For more information, see https://cloud.google.com/dlp/docs/reference/rest/V2/organizations.deidentifyTemplates#ffxcommonnativealphabet
-    $commonAlphabet = CryptoReplaceFfxFpeConfig_FfxCommonNativeAlphabet::NUMERIC;
+    $commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the crypto key configuration object
     $cryptoKey = (new CryptoKey())
@@ -84,7 +84,7 @@ function deidentify_fpe(
     $primitiveTransformation = (new PrimitiveTransformation())
         ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
-    $infoTypeTransformation = (new InfoTypeTransformations_InfoTypeTransformation())
+    $infoTypeTransformation = (new InfoTypeTransformation())
         ->setPrimitiveTransformation($primitiveTransformation)
         ->setInfoTypes($infoTypes);
 

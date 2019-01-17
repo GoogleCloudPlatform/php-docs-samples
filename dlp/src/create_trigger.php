@@ -20,8 +20,8 @@ namespace Google\Cloud\Samples\Dlp;
 // [START dlp_create_trigger]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\JobTrigger;
-use Google\Cloud\Dlp\V2\JobTrigger_Trigger;
-use Google\Cloud\Dlp\V2\JobTrigger_Status;
+use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
+use Google\Cloud\Dlp\V2\JobTrigger\Status;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\Schedule;
@@ -31,7 +31,7 @@ use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\StorageConfig_TimespanConfig;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Protobuf\Duration;
 
 /**
@@ -72,7 +72,7 @@ function create_trigger(
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = (new InspectConfig_FindingLimits())
+    $limits = (new FindingLimits())
         ->setMaxFindingsPerRequest($maxFindings);
 
     // Create the inspectConfig object
@@ -88,7 +88,7 @@ function create_trigger(
     $schedule = (new Schedule())
         ->setRecurrencePeriodDuration($duration);
 
-    $triggerObject = (new JobTrigger_Trigger())
+    $triggerObject = (new Trigger())
         ->setSchedule($schedule);
 
     // Create the storageConfig object
@@ -115,7 +115,7 @@ function create_trigger(
     $jobTriggerObject = (new JobTrigger())
         ->setTriggers([$triggerObject])
         ->setInspectJob($jobConfig)
-        ->setStatus(JobTrigger_Status::HEALTHY)
+        ->setStatus(Status::HEALTHY)
         ->setDisplayName($displayName)
         ->setDescription($description);
 

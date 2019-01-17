@@ -22,15 +22,15 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DatastoreOptions;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action_PublishToPubSub;
+use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\KindExpression;
 use Google\Cloud\Dlp\V2\PartitionId;
 use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\DlpJob_JobState;
-use Google\Cloud\Dlp\V2\InspectConfig_FindingLimits;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -70,7 +70,7 @@ function inspect_datastore(
     $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
     // Specify finding limits
-    $limits = (new InspectConfig_FindingLimits())
+    $limits = (new FindingLimits())
         ->setMaxFindingsPerRequest($maxFindings);
 
     // Construct items to be inspected
@@ -96,7 +96,7 @@ function inspect_datastore(
         ->setDatastoreOptions($datastoreOptions);
 
     // Construct the action to run when job completes
-    $pubSubAction = (new Action_PublishToPubSub())
+    $pubSubAction = (new PublishToPubSub())
         ->setTopic($topic->name());
 
     $action = (new Action())
@@ -118,13 +118,12 @@ function inspect_datastore(
     ]);
 
     // Poll via Pub/Sub until job finishes
-    $polling = true;
-    while ($polling) {
+    while (true) {
         foreach ($subscription->pull() as $message) {
             if (isset($message->attributes()['DlpJobName']) &&
                 $message->attributes()['DlpJobName'] === $job->getName()) {
                 $subscription->acknowledge($message);
-                $polling = false;
+                break 2;
             }
         }
     }
@@ -138,7 +137,7 @@ function inspect_datastore(
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     switch ($job->getState()) {
-        case DlpJob_JobState::DONE:
+        case JobState::DONE:
             $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
             if (count($infoTypeStats) === 0) {
                 print('No findings.' . PHP_EOL);
@@ -148,7 +147,7 @@ function inspect_datastore(
                 }
             }
             break;
-        case DlpJob_JobState::FAILED:
+        case JobState::FAILED:
             printf('Job %s had errors:' . PHP_EOL, $job->getName());
             $errors = $job->getErrors();
             foreach ($errors as $error) {
