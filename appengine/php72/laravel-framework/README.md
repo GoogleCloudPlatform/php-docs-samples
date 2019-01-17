@@ -91,6 +91,10 @@ Laravel, you need to manually add the `DB_SOCKET` value to
     * Use `gcloud` to create a database for the application.
 
             gcloud sql databases create laravel --instance=YOUR_INSTANCE_NAME
+            
+    * Authenticate with the Google Cloud SDK. Note that the default service account needs to have the `Cloud SQL Client` role. The Cloud SQL Admin API must also be enabled under `APIs and Services` in order to use the Cloud SQL Proxy Client.
+                
+            gcloud auth application-default login
 
 1. Run the database migrations for Laravel. This can be done locally by setting
   your parameters in `.env` or by passing them in as environment variables. Be
