@@ -210,29 +210,33 @@ database. This tutorial uses the database name `symfonydb` and the username
 Install the Google Cloud libraries for Stackdriver integration:
 
 ```sh
-cd /path/to/symfony
+# Set the environment variable below to the local path to your symfony project
+SYMFONY_PROJECT_PATH="/path/to/my-symfony-project"
+cd $SYMFONY_PROJECT_PATH
 composer require google/cloud-logging google/cloud-error-reporting
 ```
 
 ### Copy over App Engine files
 
-For your Symfony application to integrate with Stackdriver Logging and Error Handling, 
+For your Symfony application to integrate with Stackdriver Logging and Error Handling,
 you will need to copy over the `monolog.yaml` config file and the `ExceptionSubscriber.php`
 Exception Subscriber:
 
 ```sh
-# clone this repo somewhere
-git clone https://github.com/GoogleCloudPlatform/php-docs-samples /path/to/php-docs-samples
+# clone the Google Cloud Platform PHP samples repo somewhere
+cd /path/to/php-samples
+git clone https://github.com/GoogleCloudPlatform/php-docs-samples
 
 # enter the directory for the symfony framework sample
-cd /path/to/php-docs-samples/appengine/php72/symfony-framework/
+cd appengine/php72/symfony-framework/
 
 # copy monolog.yaml into your Symfony project
 cp config/packages/prod/monolog.yaml \
-    /path/to/symfony/config/packages/prod/
+    $SYMFONY_PROJECT_PATH/config/packages/prod/
+
 # copy ExceptionSubscriber.php into your Symfony project
 cp src/EventSubscriber/ExceptionSubscriber.php \
-    /path/to/symfony/src/EventSubscriber
+    $SYMFONY_PROJECT_PATH/src/EventSubscriber
 ```
 
 The two files needed are as follows:
@@ -244,14 +248,23 @@ If you'd like to test the logging and error reporting, you can also copy over `L
 exposes the routes `/en/logging/notice` and `/en/logging/exception` for ensuring your logs are being sent to
 Stackdriver:
 
+```
+# copy LoggingController.php into your Symfony project
+cp src/Controller/LoggingController.php \
+    $SYMFONY_PROJECT_PATH/src/Controller
+```
+
   1. [`src/Controller/LoggingController.php`](src/Controller/LoggingController.php) - Controller for testing logging and exceptions.
 
-### What's Next
+### View application logs and errors
 
-1. Check out the [Databases and the Doctrine ORM][symfony-doctrine] documentation for Symfony.
-1. View a [Symfony Demo Application][symfony-sample-app] for App Engine Flex.
+Once you've redeployed your application using `gcloud app deploy`, you'll be able to view
+Application logs in the [Stackdriver Logging UI][stackdriver-logging-ui], and errors in
+the [Stackdriver Error Reporting UI][stackdriver-errorreporting-ui]! If you copied over the
+`LoggingController.php` file, you can test this by pointing your browser to
+`https://YOUR_PROJECT_ID.appspot.com/en/logging/notice` and
+`https://YOUR_PROJECT_ID.appspot.com/en/logging/exception`
 
-[php-gcp]: https://cloud.google.com/php
 [cloud-sdk]: https://cloud.google.com/sdk/
 [cloud-build]: https://cloud.google.com/cloud-build/
 [cloud-sql]: https://cloud.google.com/sql/docs/
@@ -260,14 +273,12 @@ Stackdriver:
 [cloud-sql-apis]:https://pantheon.corp.google.com/apis/library/sqladmin.googleapis.com/?pro
 [create-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 [enable-billing]: https://support.google.com/cloud/answer/6293499?hl=en
-[php-gcp]: https://cloud.google.com/php
 [symfony]: http://symfony.com
 [symfony-install]: http://symfony.com/doc/current/setup.html
 [symfony-welcome]: https://symfony.com/doc/current/_images/welcome.png
-[composer-json]: https://storage.googleapis.com/gcp-community/tutorials/run-symfony-on-appengine-flexible/composer-json.png
-[symfony-doctrine]: https://symfony.com/doc/current/doctrine.html
-[symfony-sample-app]: https://github.com/bshaffer/symfony-on-app-engine-flex
 [symfony-demo]: https://github.com/symfony/demo
 [symfony-secret]: http://symfony.com/doc/current/reference/configuration/framework.html#secret
 [symfony-env]: https://symfony.com/doc/current/configuration/environments.html#executing-an-application-in-different-environments
 [symfony-override-cache]: https://symfony.com/doc/current/configuration/override_dir_structure.html#override-the-cache-directory
+[stackdriver-logging-ui]: https://console.cloud.google.com/logs
+[stackdriver-errorreporting-ui]: https://console.cloud.google.com/errors
