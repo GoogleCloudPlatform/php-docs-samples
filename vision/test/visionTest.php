@@ -41,7 +41,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/data/cat.jpg';
         $output = $this->runCommand('label', $path);
         $this->assertContains('cat', $output);
-        $this->assertContains('mammal', $output);
     }
 
     public function testLabelCommandGcs()
@@ -51,7 +50,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = 'gs://' . $this->bucketName . '/vision/cat.jpg';
         $output = $this->runCommand('label', $path);
         $this->assertContains('cat', $output);
-        $this->assertContains('mammal', $output);
     }
 
     public function testTextCommand()
