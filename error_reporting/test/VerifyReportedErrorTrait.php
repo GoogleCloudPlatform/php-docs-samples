@@ -36,7 +36,7 @@ trait VerifyReportedErrorTrait
         $backoff = new ExponentialBackoff($retries, function ($exception) {
             // retry if the exception is resource exhausted from Google APIs
             if ($exception instanceof ApiException
-                && $exception->getCode() == Code::RESOURCE_EXHAUSTED)  {
+                && $exception->getCode() == Code::RESOURCE_EXHAUSTED) {
                 return true;
             }
 
