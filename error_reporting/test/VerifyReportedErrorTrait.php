@@ -18,19 +18,20 @@
 namespace Google\Cloud\Samples\ErrorReporting;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
 
 trait VerifyReportedErrorTrait
 {
-    use EventuallyConsistentTestTrait;
+    use ExponentialBackoffTrait;
     use TestTrait;
 
     private function verifyReportedError($projectId, $message)
     {
-        $retryCount = 7;
+        self::useExpectationFailedBackoff();
+
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->projectName($projectId);
 
@@ -38,12 +39,7 @@ trait VerifyReportedErrorTrait
             ->setPeriod(Period::PERIOD_1_HOUR);
 
         // Iterate through all elements
-        $this->runEventuallyConsistentTest(function () use (
-            $errorStats,
-            $projectName,
-            $timeRange,
-            $message
-        ) {
+        $testFunc = function () use ($errorStats, $projectName, $timeRange, $message) {
             $messages = [];
             $response = $errorStats->listGroupStats($projectName, $timeRange, [
                 'pageSize' => 100,
@@ -59,6 +55,8 @@ trait VerifyReportedErrorTrait
             }
 
             $this->assertContains($message, implode("\n", $messages));
-        }, $retryCount, true);
+        };
+
+        self::$backoff->execute($testFunc);
     }
 }
