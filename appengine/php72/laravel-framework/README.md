@@ -8,8 +8,9 @@ overview of PHP and learn ways to run PHP apps on GCP.
 ## Prerequisites
 
 1. Create a project in the [Google Cloud Platform Console](https://console.cloud.google.com/project).
-1. Enable billing for your project.
-1. Install the [Google Cloud SDK][cloud_sdk].
+2. Enable billing for your project.
+3. Install the [Google Cloud SDK][cloud_sdk].
+4. Authenticate with the Cloud SDK - `gcloud auth application-default login`
 
 ## Prepare
 
@@ -22,7 +23,7 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
 
         php artisan serve
 
-1. Visit [http://localhost:8000](http://localhost:8000) to see the Laravel
+2. Visit [http://localhost:8000](http://localhost:8000) to see the Laravel
    Welcome page.
 
 ## Deploy
@@ -37,7 +38,7 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
           APP_KEY: YOUR_APP_KEY
           APP_STORAGE: /tmp
 
-1. Copy the [`bootstrap/app.php`](bootstrap/app.php) and
+2. Copy the [`bootstrap/app.php`](bootstrap/app.php) and
   [`config/view.php`](config/view.php) files included in this sample into the
   corresponding directories of your Laravel application. These two files ensure
   your Laravel application writes to `/tmp` for caching in production.
@@ -45,7 +46,7 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
   > If you are using an existing Laravel application, just copy the
   `google-app-engine-deployment` blocks from these files.
 
-1. Replace `YOUR_APP_KEY` in `app.yaml` with an application key you generate
+3. Replace `YOUR_APP_KEY` in `app.yaml` with an application key you generate
   with the following command:
 
         php artisan key:generate --show
@@ -55,11 +56,11 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
 
         sed -i '' "s#YOUR_APP_KEY#$(php artisan key:generate --show --no-ansi)#" app.yaml
 
-1. Run the following command to deploy your app:
+4. Run the following command to deploy your app:
 
         gcloud app deploy
 
-1. Visit `http://YOUR_PROJECT_ID.appspot.com` to see the Laravel welcome page. Replace `YOUR_PROJECT_ID`
+5. Visit `http://YOUR_PROJECT_ID.appspot.com` to see the Laravel welcome page. Replace `YOUR_PROJECT_ID`
    with the ID of your GCP project.
 
     ![Laravel welcome page][laravel-welcome]
@@ -75,7 +76,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
    Keep track of your instance name and password, as they
    will be used below.
 
-1. Follow the instructions to
+2. Follow the instructions to
    [install the Cloud SQL proxy client on your local machine][cloudsql-install].
    The Cloud SQL proxy is used to connect to your Cloud SQL instance when running
    locally.
@@ -92,11 +93,9 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 
             gcloud sql databases create laravel --instance=YOUR_INSTANCE_NAME
             
-    * Authenticate with the Google Cloud SDK. Note that the default service account needs to have the `Cloud SQL Client` role. The Cloud SQL Admin API must also be enabled under `APIs and Services` in order to use the Cloud SQL Proxy Client.
-                
-            gcloud auth application-default login
+    * The default service account needs to have the `Cloud SQL Client` role. The Cloud SQL Admin API must also be enabled under `APIs and Services` in order to use the Cloud SQL Proxy Client.
 
-1. Run the database migrations for Laravel. This can be done locally by setting
+3. Run the database migrations for Laravel. This can be done locally by setting
   your parameters in `.env` or by passing them in as environment variables. Be
   sure to replace `YOUR_DB_PASSWORD` below with the root password you
   configured:
@@ -106,7 +105,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
         export DB_DATABASE=laravel DB_USERNAME=root DB_PASSWORD=YOUR_DB_PASSWORD
         php artisan migrate --force
 
-1. Modify your `app.yaml` file with contents from [`app-dbsessions.yaml`](app-dbsessions.yaml):
+4. Modify your `app.yaml` file with contents from [`app-dbsessions.yaml`](app-dbsessions.yaml):
 
         runtime: php72
 
@@ -123,7 +122,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
           DB_PASSWORD: YOUR_DB_PASSWORD
           DB_SOCKET: "/cloudsql/YOUR_CONNECTION_NAME"
 
-1. Replace each instance of `YOUR_DB_PASSWORD` and `YOUR_CONNECTION_NAME`
+5. Replace each instance of `YOUR_DB_PASSWORD` and `YOUR_CONNECTION_NAME`
    with the values you created for your Cloud SQL instance above.
 
 ## Set up Stackdriver Logging and Error Reporting
@@ -164,7 +163,7 @@ You can write logs to Stackdriver Logging from PHP applications by using the Sta
     }
     ```
 
-1. Next, you'll need to add our new custom logger to `config/logging.php`:
+2. Next, you'll need to add our new custom logger to `config/logging.php`:
 
     ```php
     'channels' => [
@@ -177,7 +176,7 @@ You can write logs to Stackdriver Logging from PHP applications by using the Sta
         ],
     ```
 
-1. Now you can log to Stackdriver logging anywhere in your application!
+3. Now you can log to Stackdriver logging anywhere in your application!
 
     ```php
     Log::info("Hello Stackdriver! This will show up as log level INFO!");
@@ -194,7 +193,7 @@ You can send error reports to Stackdriver Error Reporting from PHP applications 
     use Google\Cloud\ErrorReporting\Bootstrap;
     ```
 
-1. Edit the `report` function in the same file (`app/Exceptions/Handler.php`) as follows:
+2. Edit the `report` function in the same file (`app/Exceptions/Handler.php`) as follows:
     ```php
     public function report(Exception $exception)
     {
@@ -207,7 +206,7 @@ You can send error reports to Stackdriver Error Reporting from PHP applications 
     }
     ```
 
-1. Now any PHP Exception will be logged to Stackdriver Error Reporting!
+3. Now any PHP Exception will be logged to Stackdriver Error Reporting!
     ```php
     throw new \Exception('PHEW! We will see this in Stackdriver Error Reporting!');
     ```
