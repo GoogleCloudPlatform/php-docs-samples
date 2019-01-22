@@ -17,20 +17,35 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
-use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
+use Google\ApiCore\ApiException;
+use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Rpc\Code;
+use PHPUnit\Framework\ExpectationFailedException;
 
 trait VerifyReportedErrorTrait
 {
-    use ExponentialBackoffTrait;
     use TestTrait;
 
     private function verifyReportedError($projectId, $message)
     {
-        self::useExpectationFailedBackoff();
+        $retries = 7;
+        $backoff = new ExponentialBackoff($retries, function ($exception) {
+            // retry if the exception is resource exhausted from Google APIs
+            if ($exception instanceof ApiException
+                && $exception->getCode() == Code::RESOURCE_EXHAUSTED)  {
+                return true;
+            }
+
+            // retry if the exxception is PHPUnit failed assertion
+            if ($exception instanceof ExpectationFailedException
+                || $exception instanceof \PHPUnit_Framework_ExpectationFailedException) {
+                return true;
+            }
+        });
 
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->projectName($projectId);
@@ -57,6 +72,6 @@ trait VerifyReportedErrorTrait
             $this->assertContains($message, implode("\n", $messages));
         };
 
-        self::$backoff->execute($testFunc);
+        $backoff->execute($testFunc);
     }
 }
