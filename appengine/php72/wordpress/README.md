@@ -2,6 +2,7 @@
 
 This is a simple command-line tool for downloading and configuring
 WordPress on App Engine Standard for PHP 7.2.
+
 ## Common Prerequisites
 
 * Create a new Cloud Project using the [Cloud Console][cloud-console]
@@ -43,7 +44,7 @@ command:
 
 ## Create or Update a WordPress project for App Engine
 
-The `wordpress.php` command provides a convenient way for you to either create
+The `wp-gae` command provides a convenient way for you to either create
 a new WordPress project or add the required configuration to an existing one.
 
 ### Setup
@@ -65,7 +66,7 @@ a new WordPress project or add the required configuration to an existing one.
 To download WordPress and set it up for Google Cloud, run the `create` command:
 
 ```sh
-$ php wordpress.php create
+$ php vendor/bin/wp-gae create
 ```
 
 The command asks you several questions, please answer them. Then you'll have a
@@ -80,16 +81,16 @@ If you are migrating an existing project to Google Cloud, you can use the
 `update` command:
 
 ```sh
-$ php wordpress.php update path/to/your-wordpress-site
+$ php vendor/bin/wp-gae update path/to/your-wordpress-site
 ```
 
-The command asks you several questions, please answer them. This will copy the
-files in the [`files`](files/) directory and write the proper configuration.
-Then your WordPress project will be ready to deploy to Google Cloud!
+The command asks you several questions, please answer them. This will copy
+[a few files][wp-gcp-files] and write the proper configuration. Then your
+WordPress project will be ready to deploy to Google Cloud!
 
 ## Deploy to Google Cloud
 
-`cd` into the root of your WordPress project. 
+`cd` into the root of your WordPress project.
 
 ```sh
 $ cd my-wordpress-project
@@ -208,3 +209,4 @@ the production environment.
 [cloud-sql-proxy-download]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
 [credentials-section]: https://console.cloud.google.com/apis/credentials/
 [gcs-plugin]: https://wordpress.org/plugins/gcs/
+[wp-gcp-files]: https://github.com/GoogleCloudPlatform/php-tools/tree/master/src/Utils/WordPress/files

@@ -19,13 +19,14 @@ namespace Google\Cloud\Samples\AppEngine\Php72\WordPress;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     use ExecuteCommandTrait;
     use AppEngineDeploymentTrait;
 
-    private static $commandFile = __DIR__ . '/../wordpress.php';
+    private static $commandFile = __DIR__ . '/../vendor/bin/wp-gae';
 
     public static function beforeDeploy()
     {
