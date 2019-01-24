@@ -39,7 +39,6 @@ trait DeployLaravelTrait
         // move the code for the sample to the new laravel installation
         self::copyFiles([
             'bootstrap/app.php',
-            'config/view.php',
         ], $tmpDir);
 
         // set the directory in gcloud and move there

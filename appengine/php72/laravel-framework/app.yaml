@@ -5,3 +5,4 @@ env_variables:
   LOG_CHANNEL: stackdriver
   APP_KEY: YOUR_APP_KEY
   APP_STORAGE: /tmp
+  VIEW_COMPILED_PATH: /tmp
