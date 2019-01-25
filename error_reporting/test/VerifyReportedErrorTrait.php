@@ -32,7 +32,7 @@ trait VerifyReportedErrorTrait
 
     private function verifyReportedError($projectId, $message)
     {
-        $retries = 10;
+        $retries = 20; // Retry for 20 minutes
         $backoff = new ExponentialBackoff($retries, function ($exception) {
             // retry if the exception is resource exhausted from Google APIs
             if ($exception instanceof ApiException
