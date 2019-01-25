@@ -156,7 +156,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/logo.jpg';
         $output = $this->runCommand('logo', $path);
-        $this->assertContains('Google', $output);
+        $this->assertContains('google', $output);
     }
 
     public function testLogoCommandGcs()
@@ -165,7 +165,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('logo', $path);
-        $this->assertContains('Google', $output);
+        $this->assertContains('google', $output);
     }
 
     public function testLocalizeObjectCommand()
