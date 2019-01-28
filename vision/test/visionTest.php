@@ -41,7 +41,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/data/cat.jpg';
         $output = $this->runCommand('label', $path);
         $this->assertContains('cat', $output);
-        $this->assertContains('mammal', $output);
     }
 
     public function testLabelCommandGcs()
@@ -51,7 +50,6 @@ class visionTest extends \PHPUnit_Framework_TestCase
         $path = 'gs://' . $this->bucketName . '/vision/cat.jpg';
         $output = $this->runCommand('label', $path);
         $this->assertContains('cat', $output);
-        $this->assertContains('mammal', $output);
     }
 
     public function testTextCommand()
@@ -158,7 +156,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . '/data/logo.jpg';
         $output = $this->runCommand('logo', $path);
-        $this->assertContains('Google', $output);
+        $this->assertContains('google', $output);
     }
 
     public function testLogoCommandGcs()
@@ -167,7 +165,7 @@ class visionTest extends \PHPUnit_Framework_TestCase
 
         $path = 'gs://' . $this->bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('logo', $path);
-        $this->assertContains('Google', $output);
+        $this->assertContains('google', $output);
     }
 
     public function testLocalizeObjectCommand()

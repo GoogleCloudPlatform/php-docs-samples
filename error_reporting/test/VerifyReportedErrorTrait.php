@@ -17,20 +17,36 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
-use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use Google\ApiCore\ApiException;
+use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Rpc\Code;
+use PHPUnit\Framework\ExpectationFailedException;
 
 trait VerifyReportedErrorTrait
 {
-    use EventuallyConsistentTestTrait;
     use TestTrait;
 
     private function verifyReportedError($projectId, $message)
     {
-        $retryCount = 7;
+        $retries = 20; // Retry for 20 minutes
+        $backoff = new ExponentialBackoff($retries, function ($exception) {
+            // retry if the exception is resource exhausted from Google APIs
+            if ($exception instanceof ApiException
+                && $exception->getCode() == Code::RESOURCE_EXHAUSTED) {
+                return true;
+            }
+
+            // retry if the exxception is PHPUnit failed assertion
+            if ($exception instanceof ExpectationFailedException
+                || $exception instanceof \PHPUnit_Framework_ExpectationFailedException) {
+                return true;
+            }
+        });
+
         $errorStats = new ErrorStatsServiceClient();
         $projectName = $errorStats->projectName($projectId);
 
@@ -38,12 +54,7 @@ trait VerifyReportedErrorTrait
             ->setPeriod(Period::PERIOD_1_HOUR);
 
         // Iterate through all elements
-        $this->runEventuallyConsistentTest(function () use (
-            $errorStats,
-            $projectName,
-            $timeRange,
-            $message
-        ) {
+        $testFunc = function () use ($errorStats, $projectName, $timeRange, $message) {
             $messages = [];
             $response = $errorStats->listGroupStats($projectName, $timeRange, [
                 'pageSize' => 100,
@@ -59,6 +70,8 @@ trait VerifyReportedErrorTrait
             }
 
             $this->assertContains($message, implode("\n", $messages));
-        }, $retryCount, true);
+        };
+
+        $backoff->execute($testFunc);
     }
 }
