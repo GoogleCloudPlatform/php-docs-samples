@@ -63,7 +63,7 @@ for more details.
 Then change the root password for your instance:
 
 ```
-$ gcloud sql users set-password root % \
+$ gcloud sql users set-password root --host=% \
   --instance wp --password=YOUR_INSTANCE_ROOT_PASSWORD # Don't use this password!
 ```
 
