@@ -133,7 +133,7 @@ Logging and Error Reporting:
 
 You can write logs to Stackdriver Logging from PHP applications by using the Stackdriver Logging library for PHP directly.
 
-1. First, create a custom logger in `app/Logging/CreateCustomLogger.php`:
+1. First, create a custom logger in `app/Logging/CreateStackdriverLogger.php`:
     ```php
     namespace App\Logging;
 
@@ -141,7 +141,7 @@ You can write logs to Stackdriver Logging from PHP applications by using the Sta
     use Monolog\Handler\PsrHandler;
     use Monolog\Logger;
 
-    class CreateCustomLogger
+    class CreateStackdriverLogger
     {
         /**
          * Create a custom Monolog instance.
@@ -168,7 +168,7 @@ You can write logs to Stackdriver Logging from PHP applications by using the Sta
         // Add the following lines to integrate with Stackdriver:
         'stackdriver' => [
             'driver' => 'custom',
-            'via' => App\Logging\CreateCustomLogger::class,
+            'via' => App\Logging\CreateStackdriverLogger::class,
             'level' => 'debug',
         ],
     ```

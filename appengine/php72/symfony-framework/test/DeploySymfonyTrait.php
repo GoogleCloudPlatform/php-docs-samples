@@ -26,21 +26,11 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
-use Monolog\Logger;
 
-trait SymfonyDeploymentTrait
+trait DeploySymfonyTrait
 {
     use AppEngineDeploymentTrait;
     use ExecuteCommandTrait;
-
-    /**
-     * @beforeClass
-     */
-    public static function setMonologLogger()
-    {
-        // ensure logging output is displayed in phpunit
-        self::$logger = new Logger('phpunit');
-    }
 
     private static function createSymfonyProject()
     {
@@ -56,7 +46,7 @@ trait SymfonyDeploymentTrait
         self::executeProcess($process);
 
         // move app.yaml for the sample to the new symfony installation
-        copy(__DIR__ . '/../../app.yaml', $tmpDir . '/app.yaml');
+        self::copyFiles(['app.yaml'], $tmpDir);
 
         // Remove the scripts from composer so they do not error out in the
         // Cloud Build environment.
@@ -103,5 +93,14 @@ CODE
         $ast = $traverser->traverse($ast);
         $prettyPrinter = new PrettyPrinter\Standard();
         file_put_contents($kernelFile, $prettyPrinter->prettyPrintFile($ast));
+    }
+
+    private static function copyFiles(array $files, $dir)
+    {
+        foreach ($files as $file) {
+            $source = sprintf('%s/../%s', __DIR__, $file);
+            $target = sprintf('%s/%s', $dir, $file);
+            copy($source, $target);
+        }
     }
 }

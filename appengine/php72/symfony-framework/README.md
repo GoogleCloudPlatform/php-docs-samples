@@ -9,10 +9,10 @@ to App Engine Standard for PHP 7.2. You will learn how to:
 1. Set up a [Cloud SQL][cloud-sql] database
 1. Configure Doctrine to communicate with Cloud SQL
 
-> **Note**: This repository is just a tutorial and is not a Symfony project in 
+> **Note**: This repository is just a tutorial and is not a Symfony project in
   and of itself. The steps will require you to set up a new Symfony project in a
   separate directory.
-  
+
 ## Prerequisites
 
 1. [Create a project][create-project] in the Google Cloud Platform Console
@@ -205,12 +205,66 @@ database. This tutorial uses the database name `symfonydb` and the username
 
         gcloud app deploy
 
-### What's Next
+## Set up Stackdriver Logging and Error Reporting
 
-1. Check out the [Databases and the Doctrine ORM][symfony-doctrine] documentation for Symfony.
-1. View a [Symfony Demo Application][symfony-sample-app] for App Engine Flex.
+Install the Google Cloud libraries for Stackdriver integration:
 
-[php-gcp]: https://cloud.google.com/php
+```sh
+# Set the environment variable below to the local path to your symfony project
+SYMFONY_PROJECT_PATH="/path/to/my-symfony-project"
+cd $SYMFONY_PROJECT_PATH
+composer require google/cloud-logging google/cloud-error-reporting
+```
+
+### Copy over App Engine files
+
+For your Symfony application to integrate with Stackdriver Logging and Error Handling,
+you will need to copy over the `monolog.yaml` config file and the `ExceptionSubscriber.php`
+Exception Subscriber:
+
+```sh
+# clone the Google Cloud Platform PHP samples repo somewhere
+cd /path/to/php-samples
+git clone https://github.com/GoogleCloudPlatform/php-docs-samples
+
+# enter the directory for the symfony framework sample
+cd appengine/php72/symfony-framework/
+
+# copy monolog.yaml into your Symfony project
+cp config/packages/prod/monolog.yaml \
+    $SYMFONY_PROJECT_PATH/config/packages/prod/
+
+# copy ExceptionSubscriber.php into your Symfony project
+cp src/EventSubscriber/ExceptionSubscriber.php \
+    $SYMFONY_PROJECT_PATH/src/EventSubscriber
+```
+
+The two files needed are as follows:
+
+  1. [`config/packages/prod/monolog.yaml`](app/config/packages/prod/monolog.yaml) - Adds Stackdriver Logging to your Monolog configuration.
+  1. [`src/EventSubscriber/ExceptionSubscriber.php`](src/EventSubscriber/ExceptionSubscriber.php) - Event subscriber which sends exceptions to Stackdriver Error Reporting.
+
+If you'd like to test the logging and error reporting, you can also copy over `LoggingController.php`, which
+exposes the routes `/en/logging/notice` and `/en/logging/exception` for ensuring your logs are being sent to
+Stackdriver:
+
+```
+# copy LoggingController.php into your Symfony project
+cp src/Controller/LoggingController.php \
+    $SYMFONY_PROJECT_PATH/src/Controller
+```
+
+  1. [`src/Controller/LoggingController.php`](src/Controller/LoggingController.php) - Controller for testing logging and exceptions.
+
+### View application logs and errors
+
+Once you've redeployed your application using `gcloud app deploy`, you'll be able to view
+Application logs in the [Stackdriver Logging UI][stackdriver-logging-ui], and errors in
+the [Stackdriver Error Reporting UI][stackdriver-errorreporting-ui]! If you copied over the
+`LoggingController.php` file, you can test this by pointing your browser to
+`https://YOUR_PROJECT_ID.appspot.com/en/logging/notice` and
+`https://YOUR_PROJECT_ID.appspot.com/en/logging/exception`
+
 [cloud-sdk]: https://cloud.google.com/sdk/
 [cloud-build]: https://cloud.google.com/cloud-build/
 [cloud-sql]: https://cloud.google.com/sql/docs/
@@ -219,14 +273,12 @@ database. This tutorial uses the database name `symfonydb` and the username
 [cloud-sql-apis]:https://pantheon.corp.google.com/apis/library/sqladmin.googleapis.com/?pro
 [create-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 [enable-billing]: https://support.google.com/cloud/answer/6293499?hl=en
-[php-gcp]: https://cloud.google.com/php
 [symfony]: http://symfony.com
 [symfony-install]: http://symfony.com/doc/current/setup.html
 [symfony-welcome]: https://symfony.com/doc/current/_images/welcome.png
-[composer-json]: https://storage.googleapis.com/gcp-community/tutorials/run-symfony-on-appengine-flexible/composer-json.png
-[symfony-doctrine]: https://symfony.com/doc/current/doctrine.html
-[symfony-sample-app]: https://github.com/bshaffer/symfony-on-app-engine-flex
 [symfony-demo]: https://github.com/symfony/demo
 [symfony-secret]: http://symfony.com/doc/current/reference/configuration/framework.html#secret
 [symfony-env]: https://symfony.com/doc/current/configuration/environments.html#executing-an-application-in-different-environments
 [symfony-override-cache]: https://symfony.com/doc/current/configuration/override_dir_structure.html#override-the-cache-directory
+[stackdriver-logging-ui]: https://console.cloud.google.com/logs
+[stackdriver-errorreporting-ui]: https://console.cloud.google.com/errors

@@ -57,7 +57,7 @@ class DeployTest extends TestCase
         $this->assertContains('Laravel', $resp->getBody()->getContents());
     }
 
-    public function testNormalLog()
+    public function testLogging()
     {
         // bump up the retry count because logs can take a bit to show up
         $this->eventuallyConsistentRetryCount = 5;
@@ -92,7 +92,7 @@ class DeployTest extends TestCase
         });
     }
 
-    public function testErrorLog()
+    public function testErrorReporting()
     {
         $this->eventuallyConsistentRetryCount = 5;
         $logging = new LoggingClient([
