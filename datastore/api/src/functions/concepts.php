@@ -840,7 +840,7 @@ function get_or_create(DatastoreClient $datastore, Entity $task)
 function get_task_list_entities(DatastoreClient $datastore)
 {
     // [START datastore_transactional_single_entity_group_read_only]
-    $transaction = $datastore->transaction();
+    $transaction = $datastore->readOnlyTransaction();
     $taskListKey = $datastore->key('TaskList', 'default');
     $query = $datastore->query()
         ->kind('Task')
