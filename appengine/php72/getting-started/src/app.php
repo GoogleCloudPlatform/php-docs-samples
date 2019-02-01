@@ -21,10 +21,10 @@
  * Follows Silex Skeleton pattern.
  */
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
-// [START storage_client_import]
+// [START gae_php_app_storage_client_import]
 use Google\Cloud\Storage\StorageClient;
 
-// [END storage_client_import]
+// [END gae_php_app_storage_client_import]
 
 $app = new Slim\App([
     'settings' => [
@@ -43,7 +43,7 @@ $container['view'] = function ($container) {
 // Cloud Storage bucket
 $container['bucket'] = function ($container) {
     $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
-    // [START setup_storage_client]
+    // [START gae_php_app_storage_client_setup]
     // Your Google Cloud Storage bucket name and Project ID can be configured
     // however fits your application best.
     // $projectId = 'YOUR_PROJECT_ID';
@@ -52,7 +52,7 @@ $container['bucket'] = function ($container) {
         'projectId' => $projectId,
     ]);
     $bucket = $storage->bucket($bucketName);
-    // [END setup_storage_client]
+    // [END gae_php_app_storage_client_setup]
     return $bucket;
 };
 
@@ -63,7 +63,7 @@ $container['cloudsql'] = function ($container) {
     $dbConn = getenv('CLOUDSQL_CONNECTION_NAME');
     $dbUser = getenv('CLOUDSQL_USER');
     $dbPass = getenv('CLOUDSQL_PASSWORD');
-    // [START setup_cloudsql_client]
+    // [START gae_php_cloudsql_client_setup]
     // Fill the variables below to match your Cloud SQL configuration.
     // $dbConn = 'YOUR_CLOUDSQL_CONNECTION_NAME';
     // $dbName = 'YOUR_CLOUDSQL_DATABASE_NAME';
@@ -71,7 +71,7 @@ $container['cloudsql'] = function ($container) {
     // $dbPass = 'YOUR_CLOUDSQL_PASSWORD';
     $dsn = "mysql:unix_socket=/cloudsql/${dbConn};dbname=${dbName}";
     $pdo = new PDO($dsn, $dbUser, $dbPass);
-    // [END setup_cloudsql_client]
+    // [END gae_php_app_cloudsql_client_setup]
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return new CloudSqlDataModel($pdo);
 };
