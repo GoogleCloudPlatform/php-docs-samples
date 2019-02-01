@@ -18,7 +18,7 @@
 /**
  * This front controller is called by the App Engine web server to handle
  * incoming requests.
- * 
+ *
  * To use another file, modify the "entrypoint" directive in `app.yaml`.
  *
  * @see https://cloud.google.com/appengine/docs/standard/php/config/appref
