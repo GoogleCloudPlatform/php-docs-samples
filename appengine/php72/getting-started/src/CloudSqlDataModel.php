@@ -74,7 +74,6 @@ class CloudSqlDataModel
     public function listBooks($limit = 10, $cursor = 0)
     {
         $pdo = $this->pdo;
-        // [START gae_php_app_cloudsql_query_multiple_rows]
         $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id LIMIT :limit';
         $statement = $pdo->prepare($query);
         $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
@@ -84,7 +83,6 @@ class CloudSqlDataModel
         // while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         //     var_dump($row);
         // }
-        // [END gae_php_app_cloudsql_query_multiple_rows]
         $rows = array();
         $nextCursor = null;
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -109,7 +107,6 @@ class CloudSqlDataModel
             return ":$key";
         }, $names);
         $pdo = $this->pdo;
-        // [START gae_php_app_cloudsql_write]
         $sql = sprintf(
             'INSERT INTO books (%s) VALUES (%s)',
             implode(', ', $names),
@@ -117,7 +114,6 @@ class CloudSqlDataModel
         );
         $statement = $pdo->prepare($sql);
         $statement->execute($book);
-        // [END gae_php_app_cloudsql_write]
         return $this->pdo->lastInsertId();
     }
 

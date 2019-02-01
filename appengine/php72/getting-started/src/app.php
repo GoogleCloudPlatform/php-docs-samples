@@ -63,7 +63,7 @@ $container['cloudsql'] = function ($container) {
     $dbConn = getenv('CLOUDSQL_CONNECTION_NAME');
     $dbUser = getenv('CLOUDSQL_USER');
     $dbPass = getenv('CLOUDSQL_PASSWORD');
-    // [START gae_php_cloudsql_client_setup]
+    // [START gae_php_app_cloudsql_client_setup]
     // Fill the variables below to match your Cloud SQL configuration.
     // $dbConn = 'YOUR_CLOUDSQL_CONNECTION_NAME';
     // $dbName = 'YOUR_CLOUDSQL_DATABASE_NAME';
