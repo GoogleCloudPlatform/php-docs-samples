@@ -46,6 +46,9 @@ trait DeployLaravelTrait
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
+        // fix "beyondcode/laravel-dump-server" issue
+        self::execute('composer remove --dev beyondcode/laravel-dump-server');
+
         return $tmpDir;
     }
 

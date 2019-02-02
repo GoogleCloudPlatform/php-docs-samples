@@ -1,10 +1,12 @@
 runtime: php72
 
 env_variables:
-  # Put production environment variables here.
-  APP_LOG: errorlog
+  ## Put production environment variables here.
+  APP_DEBUG: true
   APP_KEY: YOUR_APP_KEY
   APP_STORAGE: /tmp
+  VIEW_COMPILED_PATH: /tmp
+
   CACHE_DRIVER: database
   SESSION_DRIVER: database
   ## Set these environment variables according to your CloudSQL configuration.
@@ -12,3 +14,8 @@ env_variables:
   DB_USERNAME: YOUR_DB_USERNAME
   DB_PASSWORD: YOUR_DB_PASSWORD
   DB_SOCKET: "/cloudsql/YOUR_CLOUDSQL_CONNECTION_NAME"
+
+  ## To use Stackdriver logging in your Laravel application, copy
+  ## "app/Logging/CreateStackdriverLogger.php" and "config/logging.php"
+  ## into your Laravel application. Then uncomment the following line:
+  # LOG_CHANNEL: stackdriver
