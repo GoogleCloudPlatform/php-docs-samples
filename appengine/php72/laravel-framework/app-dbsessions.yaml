@@ -2,11 +2,9 @@ runtime: php72
 
 env_variables:
   ## Put production environment variables here.
-  APP_DEBUG: true
   APP_KEY: YOUR_APP_KEY
   APP_STORAGE: /tmp
   VIEW_COMPILED_PATH: /tmp
-
   CACHE_DRIVER: database
   SESSION_DRIVER: database
   ## Set these environment variables according to your CloudSQL configuration.
