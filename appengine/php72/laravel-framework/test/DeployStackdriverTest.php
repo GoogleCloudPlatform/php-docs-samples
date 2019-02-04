@@ -22,7 +22,7 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
-class DeployTest extends TestCase
+class DeployStackdriverTest extends TestCase
 {
     use DeployLaravelTrait;
     use AppEngineDeploymentTrait;
