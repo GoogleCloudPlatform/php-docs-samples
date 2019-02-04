@@ -95,7 +95,7 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
         $bucket = $this->bucket;
         $imageStream = $image->getStream();
         $imageContentType = $image->getClientMediaType();
-        // [START upload_image]
+        // [START gae_php_app_upload_image]
         // Set your own image file path and content type below to upload an
         // image to Cloud Storage.
         // $imageStream = fopen('/path/to/your_image.jpg', 'r');
@@ -105,7 +105,7 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
             'predefinedAcl' => 'publicRead',
         ]);
         $imageUrl = $object->info()['mediaLink'];
-        // [END upload_image]
+        // [END gae_php_app_upload_image]
         $book['image_url'] = $imageUrl;
     }
     if ($this->cloudsql->update($book)) {
@@ -123,10 +123,10 @@ $app->post('/books/{id}/delete', function (Request $request, Response $response,
             $objectName = parse_url(basename($book['image_url']), PHP_URL_PATH);
             $bucket = $this->bucket;
             // get bucket name from image
-            // [START delete_image]
+            // [START gae_php_app_delete_image]
             $object = $bucket->object($objectName);
             $object->delete();
-            // [END delete_image]
+            // [END gae_php_app_delete_image]
         }
         return $response->withRedirect('/books');
     }
