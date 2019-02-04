@@ -172,7 +172,7 @@ You can write logs to Stackdriver Logging from PHP applications by using the Sta
         ],
     ```
 
-1. Finally, set the environemnt variable `LOG_CHANNEL` in `app.yaml` to
+1. Finally, set the environment variable `LOG_CHANNEL` in `app.yaml` to
   `stackdriver` to use the Stackdriver logger you created:
 
     ```yaml
