@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\AppEngine\Laravel;
 
-use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
