@@ -57,7 +57,6 @@ class DeployStackdriverTest extends TestCase
 
         // require google cloud logging and error reporting dependencies
         self::execute('composer require google/cloud-logging google/cloud-error-reporting');
-
     }
 
     public function testLogging()
