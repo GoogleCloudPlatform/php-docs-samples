@@ -29,6 +29,9 @@ class DeployDatabaseTest extends TestCase
 
     public static function beforeDeploy()
     {
+        // ensure logging output is displayed in phpunit
+        self::$logger = new \Monolog\Logger('phpunit');
+
         $connection = self::requireEnv('LARAVEL_CLOUDSQL_CONNECTION_NAME');
         $dbName = self::requireEnv('LARAVEL_DB_DATABASE');
         $dbUser = self::requireEnv('LARAVEL_DB_USERNAME');

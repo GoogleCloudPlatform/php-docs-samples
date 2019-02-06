@@ -66,11 +66,13 @@ return [
             'level' => 'debug',
         ],
 
+        # [START] Add Stackdriver Logging and Error Reporting to your Laraval application
         'stackdriver' => [
             'driver' => 'custom',
             'via' => App\Logging\CreateStackdriverLogger::class,
             'level' => 'debug',
         ],
+        # [END]
 
     ],
 

@@ -33,9 +33,9 @@ laravel.com. This version was tested to work with `laravel/laravel-framework:^5.
 
         env_variables:
           # Put production environment variables here.
-          APP_LOG: errorlog
           APP_KEY: YOUR_APP_KEY
           APP_STORAGE: /tmp
+          VIEW_COMPILED_PATH: /tmp
 
 1. Copy the [`bootstrap/app.php`](bootstrap/app.php) file included in this sample
   into the `bootstrap` directory of your Laravel application. This file ensures
@@ -107,9 +107,9 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 
         env_variables:
           # Put production environment variables here.
-          APP_LOG: errorlog
           APP_KEY: YOUR_APP_KEY
           APP_STORAGE: /tmp
+          VIEW_COMPILED_PATH: /tmp
           CACHE_DRIVER: database
           SESSION_DRIVER: database
           ## Set these environment variables according to your CloudSQL configuration.
@@ -171,6 +171,18 @@ You can write logs to Stackdriver Logging from PHP applications by using the Sta
             'level' => 'debug',
         ],
     ```
+
+1. Finally, set the environment variable `LOG_CHANNEL` in `app.yaml` to
+  `stackdriver` to use the Stackdriver logger you created:
+
+    ```yaml
+    runtime: php72
+
+    env_variables:
+      # Put production environment variables here.
+      LOG_CHANNEL: stackdriver
+      #...
+   ```
 
 1. Now you can log to Stackdriver logging anywhere in your application!
 
