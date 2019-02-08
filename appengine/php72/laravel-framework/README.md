@@ -10,7 +10,7 @@ overview of PHP and learn ways to run PHP apps on GCP.
 1. Create a project in the [Google Cloud Platform Console](https://console.cloud.google.com/project).
 1. Enable billing for your project.
 1. Install the [Google Cloud SDK][cloud_sdk].
-1. Authenticate with the Cloud SDK - `gcloud auth application-default login`
+1. Initialize Cloud SDK
 
 ## Prepare
 
@@ -79,7 +79,7 @@ Laravel, you need to manually add the `DB_SOCKET` value to
 1. Follow the instructions to
    [install the Cloud SQL proxy client on your local machine][cloudsql-install].
    The Cloud SQL proxy is used to connect to your Cloud SQL instance when running
-   locally.
+   locally. Refer to the [Cloud SQL Proxy Repo][cloudsql-proxy-repo] for additional details on authentication.
 
    * Use the [Google Cloud SDK][cloud_sdk] from the command line to run the following command. Copy the `connectionName` value for the next step. Replace `YOUR_INSTANCE_NAME` with the name of your instance:
 
@@ -219,3 +219,4 @@ You can send error reports to Stackdriver Error Reporting from PHP applications 
 [cloudsql-create]: https://cloud.google.com/sql/docs/mysql/create-instance
 [cloudsql-install]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
 [cloudsql-admin-api]: https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
+[cloudsql-proxy-repo]: https://github.com/GoogleCloudPlatform/cloudsql-proxy
