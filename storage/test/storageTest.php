@@ -114,7 +114,7 @@ class storageTest extends TestCase
 
     public function testCreateAndDeleteBuckets()
     {
-        $bucketName = 'test-bucket-' . time();
+        $bucketName = sprintf('test-bucket-%s-%s', time(), rand());
         $bucket = self::$storage->bucket($bucketName);
 
         $this->assertFalse($bucket->exists());
