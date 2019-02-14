@@ -5,8 +5,14 @@ env_variables:
   APP_KEY: YOUR_APP_KEY
   APP_STORAGE: /tmp
   VIEW_COMPILED_PATH: /tmp
+  APP_BOOTSTRAP_PATH: /tmp
 
   ## To use Stackdriver logging in your Laravel application, copy
   ## "app/Logging/CreateStackdriverLogger.php" and "config/logging.php"
   ## into your Laravel application. Then uncomment the following line:
   # LOG_CHANNEL: stackdriver
+
+  APP_SERVICES_CACHE: /tmp/services.php
+  APP_PACKAGES_CACHE: /tmp/packages.php
+  APP_CONFIG_CACHE: /tmp/config.php
+  APP_ROUTES_CACHE: /tmp/routes.php
