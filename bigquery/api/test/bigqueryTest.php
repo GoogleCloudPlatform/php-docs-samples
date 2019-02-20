@@ -263,17 +263,6 @@ class FunctionsTest extends TestCase
         $this->verifyTable($tempTable, 'Brent Shaffer', 1);
     }
 
-    public function testPaginateTable()
-    {
-        $tableId = $this->createTempTable();
-        $output = $this->runSnippet('paginate_table', [
-            self::$datasetId,
-            $tableId,
-            1
-        ]);
-        $this->assertContains('Brent Shaffer', $output);
-    }
-
     public function testRunQuery()
     {
         $query = 'SELECT corpus, COUNT(*) as unique_words

@@ -25,10 +25,10 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 4 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [NUM_RESULTS]\n", __FILE__);
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [START_INDEX]\n", __FILE__);
 }
 list($_, $projectId, $datasetId, $tableId) = $argv;
-$maxResults = isset($argv[4]) ? $argv[4] : 10;
+$startIndex = isset($argv[4]) ? $argv[4] : 0;
 
 
 # [START bigquery_browse_table]
@@ -38,9 +38,9 @@ use Google\Cloud\BigQuery\BigQueryClient;
 // $projectId = 'The Google project ID';
 // $datasetId = 'The BigQuery dataset ID';
 // $tableId   = 'The BigQuery table ID';
-// $maxResults = 10;
+// $startIndex = 0;
 
-$startIndex = 0;
+$maxResults = 10;
 
 $options = [
     'maxResults' => $maxResults,
