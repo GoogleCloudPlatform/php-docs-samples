@@ -6,8 +6,8 @@ runtime_config:
 
 # [START gae_flex_redislabs_memcache_yaml]
 env_variables:
-  MEMCACHE_HOST: localhost
-  MEMCACHE_PORT: 11211
+  # Set your memcache endpoint here. This should be in the format "host:port"
+  MEMCACHE_ENDPOINT: "YOUR_MEMCACHE_ENDPOINT"
   # If you are using a Memcached server with SASL authentiation enabled,
   # fill in these values with your username and password.
   MEMCACHE_USERNAME: ""

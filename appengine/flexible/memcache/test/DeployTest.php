@@ -17,12 +17,14 @@
 namespace Google\Cloud\Test\Memcache;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class DeployTest extends TestCase
 {
+    use TestTrait;
     use AppEngineDeploymentTrait;
 
     public static function beforeDeploy()
@@ -31,19 +33,10 @@ class DeployTest extends TestCase
         self::$gcloudWrapper->setDir($tmpDir);
         chdir($tmpDir);
 
-        $user = getenv('MEMCACHE_USERNAME');
-        $password = getenv('MEMCACHE_PASSWORD');
-        $server = getenv('MEMCACHE_SERVER');
-
-        if (empty($user) || empty($password) || empty($server)) {
-            self::markTestSkipped('Must set MEMCACHE_USERNAME, ' .
-                'MEMCACHE_PASSWORD, and MEMCACHE_SERVER');
-        }
-
         $appYaml = Yaml::parse(file_get_contents('app.yaml'));
-        $appYaml['env_variables']['MEMCACHE_USERNAME'] = $user;
-        $appYaml['env_variables']['MEMCACHE_PASSWORD'] = $password;
-        $appYaml['env_variables']['MEMCACHE_SERVER'] = $server;
+        $appYaml['env_variables']['MEMCACHE_ENDPOINT'] = self::requireEnv('MEMCACHE_ENDPOINT');
+        $appYaml['env_variables']['MEMCACHE_USERNAME'] = self::requireEnv('MEMCACHE_USERNAME');
+        $appYaml['env_variables']['MEMCACHE_PASSWORD'] = self::requireEnv('MEMCACHE_PASSWORD');
 
         file_put_contents('app.yaml', Yaml::dump($appYaml));
     }

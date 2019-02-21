@@ -26,15 +26,15 @@ $app->register(new TwigServiceProvider());
 $app['twig.path'] = [ __DIR__ ];
 $app['memcached'] = function () {
     # [START gae_flex_redislabs_memcache]
-    $host = getenv('MEMCACHE_HOST') ?: 'localhost';
-    $port = getenv('MEMCACHE_PORT') ?: '11211';
-    $username = getenv('MEMCACHE_USERNAME'); // optional
-    $password = getenv('MEMCACHE_PASSWORD'); // optional
+    $endpoint = getenv('MEMCACHE_ENDPOINT');
+    $username = getenv('MEMCACHE_USERNAME');
+    $password = getenv('MEMCACHE_PASSWORD');
     $memcached = new Memcached;
     if ($username && $password) {
         $memcached->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
         $memcached->setSaslAuthData($username, $password);
     }
+    list($host, $port) = explode(':', $endpoint);
     if (!$memcached->addServer($host, $port)) {
         throw new Exception("Failed to add server $host:$port");
     }
