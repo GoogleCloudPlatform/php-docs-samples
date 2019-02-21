@@ -26,8 +26,8 @@ $app->register(new TwigServiceProvider());
 $app['twig.path'] = [ __DIR__ ];
 $app['memcached'] = function () {
     # [START gae_flex_redislabs_memcache]
-    $host = getenv('GAE_MEMCACHE_HOST') ?: 'localhost';
-    $port = getenv('GAE_MEMCACHE_PORT') ?: '11211';
+    $host = getenv('MEMCACHE_HOST') ?: 'localhost';
+    $port = getenv('MEMCACHE_PORT') ?: '11211';
     $username = getenv('MEMCACHE_USERNAME'); // optional
     $password = getenv('MEMCACHE_PASSWORD'); // optional
     $memcached = new Memcached;
