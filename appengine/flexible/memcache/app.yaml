@@ -6,10 +6,8 @@ runtime_config:
 
 # [START gae_flex_redislabs_memcache_yaml]
 env_variables:
-  # If you are using the App Engine Memcache service (currently in alpha),
-  # uncomment this section and comment out the other Memcache variables.
-  # USE_GAE_MEMCACHE: 1
-  MEMCACHE_SERVER: your-memcache-server
+  MEMCACHE_HOST: localhost
+  MEMCACHE_PORT: 11211
   # If you are using a Memcached server with SASL authentiation enabled,
   # fill in these values with your username and password.
   MEMCACHE_USERNAME: ""
