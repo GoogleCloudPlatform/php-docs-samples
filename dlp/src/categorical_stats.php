@@ -107,8 +107,8 @@ function categorical_stats(
         }
     }
 
-    // Sleep for half a second to avoid race condition with the job's status.
-    usleep(500000);
+    // Sleep for one second to avoid race condition with the job's status.
+    usleep(1000000);
 
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
@@ -151,7 +151,7 @@ function categorical_stats(
             }
             break;
         default:
-            printf('Unknown job state. Most likely, the job is either running or has not yet started.');
+            printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_categorical_stats]
