@@ -13,8 +13,8 @@ these two steps:
 1. Create a [PSR-3][psr3]-compatible logger object
     ```php
     use Google\Cloud\Logging\LoggingClient;
-    $logging = new LoggingClient();
-    $logger = $logging->psrLogger('app', ['batchEnabled' => true]);
+    // Create a PSR-3-Compatible logger
+    $logger = LoggingClient::psrBatchLogger('app');
     ```
 
 Now you can happily log anything you'd like, and they will show up on
