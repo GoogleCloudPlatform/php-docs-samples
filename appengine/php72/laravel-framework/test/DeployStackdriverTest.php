@@ -65,16 +65,16 @@ class DeployStackdriverTest extends TestCase
             'projectId' => self::getProjectId()
         ]);
 
-        $token = uniqid();
+        $message = uniqid();
         // The routes are defined in routes/web.php
-        $resp = $this->client->request('GET', "/log/$token", [
+        $resp = $this->client->request('GET', "/log/$message", [
             'http_errors' => false
         ]);
         $this->assertEquals('200', $resp->getStatusCode(), 'log page status code');
 
         // 'app' is the default logname of our Stackdriver Logging integration.
         $logger = $logging->logger('app');
-        $this->runEventuallyConsistentTest(function () use ($logger, $token) {
+        $this->runEventuallyConsistentTest(function () use ($logger, $message) {
             $logs = $logger->entries([
                 'pageSize' => 100,
                 'orderBy' => 'timestamp desc',
@@ -83,11 +83,11 @@ class DeployStackdriverTest extends TestCase
             $found = false;
             foreach ($logs as $log) {
                 $info = $log->info();
-                if (false !== strpos($info['jsonPayload']['message'], "token: $token")) {
+                if (false !== strpos($info['jsonPayload']['message'], "message: $message")) {
                     $found = true;
                 }
             }
-            $this->assertTrue($found, "The log entry $token was not found");
+            $this->assertTrue($found, "The log entry $message was not found");
         }, $eventuallyConsistentRetryCount = 5);
     }
 
@@ -97,16 +97,16 @@ class DeployStackdriverTest extends TestCase
             'projectId' => self::getProjectId()
         ]);
 
-        $token = uniqid();
+        $message = uniqid();
         // The routes are defined in routes/web.php
-        $resp = $this->client->request('GET', "/exception/$token", [
+        $resp = $this->client->request('GET', "/exception/$message", [
             'http_errors' => false
         ]);
         $this->assertEquals('500', $resp->getStatusCode(), 'exception page status code');
 
         // 'app-error' is the default logname of our Stackdriver Error Reporting integration.
         $logger = $logging->logger('app-error');
-        $this->runEventuallyConsistentTest(function () use ($logger, $token) {
+        $this->runEventuallyConsistentTest(function () use ($logger, $message) {
             $logs = $logger->entries([
                 'pageSize' => 100,
                 'orderBy' => 'timestamp desc',
@@ -115,7 +115,7 @@ class DeployStackdriverTest extends TestCase
             $found = false;
             foreach ($logs as $log) {
                 $info = $log->info();
-                if (false !== strpos($info['jsonPayload']['message'], "token: $token")) {
+                if (false !== strpos($info['jsonPayload']['message'], "message: $message")) {
                     $found = true;
                 }
             }
