@@ -15,11 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/log/{token}', function ($token) {
-    Log::info("Hello my log, token: $token");
+Route::get('/log/{message}', function ($message) {
+    Log::info("Hello my log, message: $message");
     return view('welcome');
 });
 
-Route::get('/exception/{token}', function ($token) {
-    throw new Exception("Intentional exception, token: $token");
+Route::get('/exception/{message}', function ($message) {
+    throw new Exception("Intentional exception, message: $message");
 });
