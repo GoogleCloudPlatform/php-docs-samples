@@ -363,6 +363,87 @@ final class BigTableTest extends TestCase
         }
     }
 
+    public function testWritingRows()
+    {
+        $tableId = uniqid(self::TABLE_ID_PREFIX);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
+
+        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->checkTable($tableName);
+
+        $content = self::runSnippet('writing_rows', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        $table = self::$tableAdminClient->table(self::$instanceId, self::$tableId);
+
+        $partial_rows = $table->readRows([])->readAll();
+        $array = [];
+        foreach ($partial_rows as $row) {
+            $array[] = $row[$columnFamilyId][$column][0]['value'];
+        }
+
+        $this->assertContains('Hello World!', $array);
+        $this->assertContains('Hello Cloud Bigtable!', $array);
+        $this->assertContains('Hello PHP!', $array);
+    }
+
+    public function testGettingARow()
+    {
+        $tableId = uniqid(self::TABLE_ID_PREFIX);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
+
+        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->checkTable($tableName);
+
+        self::runSnippet('writing_rows', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        $content = self::runSnippet('getting_a_row', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Getting a single greeting by row key.', $array);
+        $this->assertContains('Hello World!', $array);
+    }
+
+    public function testScanningAllRows()
+    {
+        $tableId = uniqid(self::TABLE_ID_PREFIX);
+        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
+
+        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->checkTable($tableName);
+
+        self::runSnippet('writing_rows', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        $content = self::runSnippet('scanning_all_rows', [
+            self::$projectId,
+            self::$instanceId,
+            $tableId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Scanning for all greetings:', $array);
+        $this->assertContains('Hello World!', $array);
+        $this->assertContains('Hello Cloud Bigtable!', $array);
+        $this->assertContains('Hello PHP!', $array);
+    }
+
     private static function create_production_instance($projectId, $instanceId, $clusterId)
     {
         $content = self::runSnippet('create_production_instance', [
