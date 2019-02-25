@@ -2,7 +2,7 @@
 of PHP. Please refer to the [php72 environment](../../php72/wordpress)
 for the current version.
 
-# A helper command for running WordPress on Google Cloud Platform for PHP 5.5
+# Running WordPress on App Engine Standard for PHP 5.5
 
 This is a small command line tool for downloading and configuring
 WordPress for Google Cloud Platform. The script allows you to create a
