@@ -18,11 +18,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Google\Cloud\Logging\LoggingClient;
 
-// Create the logging client
-$logging = new LoggingClient();
-
 // Create a PSR-3-Compatible logger
-$logger = $logging->psrLogger('app', ['batchEnabled' => true]);
+$logger = LoggingClient::psrBatchLogger('app');
 
 // Log messages with varying log levels.
 $logger->info('This will show up as log level INFO');
