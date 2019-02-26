@@ -3,7 +3,7 @@
         "google/cloud-core": "^1.5"
     },
     "require-dev": {
-        "phpunit/phpunit":"~4.8",
+        "phpunit/phpunit": "^5",
         "google/cloud-tools":"^0.6"
     }
 }

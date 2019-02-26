@@ -1,7 +1,7 @@
 {
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",
-        "phpunit/phpunit": "~4",
+        "phpunit/phpunit": "^5",
         "symfony/browser-kit": "~2",
         "twig/twig": "~1.0"
     },
