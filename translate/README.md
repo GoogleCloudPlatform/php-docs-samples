@@ -17,9 +17,9 @@ https://cloud.google.com/translate/).
     Click "Go to credentials" after enabling the APIs. Click "Create Credentials"
     and select "Service Account Credentials" and download the credentials file. Then set the path to
     this file to the environment variable `GOOGLE_APPLICATION_CREDENTIALS`:
-
+```
     $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-
+```
 3.  **Clone the repo** and cd into this directory
 ```
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
@@ -64,4 +64,4 @@ Available commands:
 
 * See [LICENSE](../LICENSE)
 
-[adc]: https://developers.google.com/identity/protocols/application-default-credentials
+[adc]: https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually
