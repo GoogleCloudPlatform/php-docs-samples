@@ -13,8 +13,13 @@ https://cloud.google.com/translate/).
 ## Build and Run
 1.  **Enable APIs** - [Enable the Translate API](https://console.cloud.google.com/flows/enableapi?apiid=translate)
     and create a new project or select an existing project.
-2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click "Create Credentials"
-    and select "API key". Copy the API key.
+2.  **Download The Credentials** - Configure your project using [Application Default Credentials][adc].
+    Click "Go to credentials" after enabling the APIs. Click "Create Credentials"
+    and select "Service Account Credentials" and download the credentials file. Then set the path to
+    this file to the environment variable `GOOGLE_APPLICATION_CREDENTIALS`:
+```
+    $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+```
 3.  **Clone the repo** and cd into this directory
 ```
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
@@ -58,3 +63,5 @@ Available commands:
 ## Licensing
 
 * See [LICENSE](../LICENSE)
+
+[adc]: https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually
