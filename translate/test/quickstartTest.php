@@ -21,6 +21,9 @@ class quickstartTest extends PHPUnit_Framework_TestCase
         if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            $this->markTestSkipped('GOOGLE_APPLICATION_CREDENTIALS must be set.');
+        }
 
         $file = sys_get_temp_dir() . '/translate_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
