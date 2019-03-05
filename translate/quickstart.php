@@ -25,9 +25,13 @@ use Google\Cloud\Translate\TranslateClient;
 # Your Google Cloud Platform project ID
 $projectId = 'YOUR_PROJECT_ID';
 
+# Your Google Cloud Platform project API key
+$key =  'YOUR_API_KEY';
+
 # Instantiates a client
 $translate = new TranslateClient([
-    'projectId' => $projectId
+    'projectId' => $projectId,
+    'key' => $key
 ]);
 
 # The text to translate
