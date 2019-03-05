@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-text-to-speech": "^0.1",
+        "google/cloud-text-to-speech": "^0.2.1",
         "symfony/console": "^3.0"
     },
     "require-dev": {
@@ -12,7 +12,9 @@
             "src/synthesize_ssml.php",
             "src/synthesize_ssml_file.php",
             "src/synthesize_text.php",
-            "src/synthesize_text_file.php"
+            "src/synthesize_text_file.php",
+            "src/synthesize_text_effects_profile.php",
+            "src/synthesize_text_effects_profile_file.php"
         ]
     }
 }

@@ -40,9 +40,13 @@ $voice = (new VoiceSelectionParams())
     ->setLanguageCode('en-US')
     ->setSsmlGender(SsmlVoiceGender::FEMALE);
 
+// Effects profile
+$effects_profile_id = "telephony-class-application";
+
 // select the type of audio file you want returned
 $audioConfig = (new AudioConfig())
-    ->setAudioEncoding(AudioEncoding::MP3);
+    ->setAudioEncoding(AudioEncoding::MP3)
+    ->setEffectsProfileId(array($effects_profile_id));
 
 // perform text-to-speech request on the text input with selected voice
 // parameters and audio file type
