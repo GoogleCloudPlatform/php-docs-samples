@@ -26,10 +26,8 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\BigtableClient;
-use Google\Cloud\Bigtable\Table;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\Table as TableClass;
-use Google\ApiCore\ApiException;
 
 $dataClient = new BigtableClient([
     'projectId' => $project_id,
