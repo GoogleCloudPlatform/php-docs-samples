@@ -17,7 +17,7 @@
 
 namespace Google\Cloud\Samples\TextToSpeech;
 
-// [START tts_synthesize_text_effects_profile]
+// [START tts_synthesize_text_audio_profile]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
 use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
@@ -52,4 +52,4 @@ function synthesize_text_effects_profile($text, $effects_profile_id)
 
     $client->close();
 }
-// [END tts_synthesize_text_effects_profile]
+// [END tts_synthesize_text_audio_profile]
