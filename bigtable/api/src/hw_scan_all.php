@@ -30,7 +30,7 @@ if (count($argv) < 3 || count($argv) > 5) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START scanning_all_rows]
+// [START bigtable_hw_scan_all]
 
 use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
@@ -58,7 +58,6 @@ $column = 'greeting';
 printf('Scanning for all greetings:' . PHP_EOL);
 $partial_rows = $table->readRows([])->readAll();
 foreach ($partial_rows as $row) {
-    //print_r( $row[$columnFamilyId][$column] );
     printf('%s' . PHP_EOL, $row[$columnFamilyId][$column][0]['value']);
 }
-// [END scanning_all_rows]
+// [END bigtable_hw_scan_all]

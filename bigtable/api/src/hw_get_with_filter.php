@@ -30,7 +30,7 @@ if (count($argv) < 3 || count($argv) > 5) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START getting_a_row]
+// [START bigtable_hw_get_with_filter]
 
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Table;
@@ -65,4 +65,4 @@ $row = $table->readRow($key, [
     'rowFilter' => $row_filter
 ]);
 printf('%s' . PHP_EOL, $row[$columnFamilyId][$column][0]['value']);
-// [END getting_a_row]
+// [END bigtable_hw_get_with_filter]

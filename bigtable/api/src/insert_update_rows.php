@@ -16,6 +16,12 @@
  */
 require __DIR__ . '/../vendor/autoload.php';
 
+$instance_id = 'quickstart-instance-php'; # instance-id
+$table_id    = 'bigtable-php-table'; # my-table
+$project_id  = getenv('PROJECT_ID');
+
+// [START bigtable_insert_update_rows]
+
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
@@ -24,9 +30,7 @@ use Google\Cloud\Bigtable\Table;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\Table as TableClass;
 use Google\ApiCore\ApiException;
-$instance_id = 'quickstart-instance-php'; # instance-id
-$table_id    = 'bigtable-php-table'; # my-table
-$project_id  = getenv('PROJECT_ID');
+
 $dataClient = new BigtableClient([
     'projectId' => $project_id,
 ]);
@@ -69,3 +73,4 @@ $insertRows = [
     ]
 ];
 $table->upsert($insertRows);
+// [END bigtable_insert_update_rows]
