@@ -34,7 +34,6 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 
 use Google\Cloud\Bigtable\BigtableClient;
 
-
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
