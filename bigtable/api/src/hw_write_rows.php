@@ -57,8 +57,8 @@ $table = $dataClient->table($instance_id, $table_id);
 printf('Writing some greetings to the table.' . PHP_EOL);
 $greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello PHP!'];
 $entries = [];
-$column = 'greeting';
 $columnFamilyId = 'cf1';
+$column = 'greeting';
 foreach ($greetings as $i => $value) {
     $row_key = sprintf('greeting%s', $i);
     $rowMutation = new Mutations();

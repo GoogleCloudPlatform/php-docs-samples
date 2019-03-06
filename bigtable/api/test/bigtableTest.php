@@ -1,6 +1,8 @@
 <?php
+
 namespace Google\Cloud\Samples\BigTable\Tests;
 
+use Google\Cloud\Bigtable\BigtableClient;
 use PHPUnit\Framework\TestCase;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
@@ -12,13 +14,14 @@ use Google\ApiCore\ApiException;
 
 final class BigTableTest extends TestCase
 {
-    use TestTrait,ExponentialBackoffTrait;
+    use TestTrait, ExponentialBackoffTrait;
 
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
     private static $instanceAdminClient;
     private static $tableAdminClient;
+    private static $bigtableClient;
     private static $instanceId;
     private static $clusterId;
 
@@ -27,11 +30,14 @@ final class BigTableTest extends TestCase
         self::checkProjectEnvVarBeforeClass();
         self::$instanceAdminClient = new BigtableInstanceAdminClient();
         self::$tableAdminClient = new BigtableTableAdminClient();
+        self::$bigtableClient = new BigtableClient([
+            'projectId' => self::$projectId,
+        ]);
 
         self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
         self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
 
-        self::create_production_instance(self::$projectId,self::$instanceId,self::$clusterId);
+        self::create_production_instance(self::$projectId, self::$instanceId, self::$clusterId);
     }
 
     public function setUp()
@@ -368,16 +374,18 @@ final class BigTableTest extends TestCase
         $tableId = uniqid(self::TABLE_ID_PREFIX);
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
-        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        $content = self::runSnippet('writing_rows', [
+        $content = self::runSnippet('hw_write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
         ]);
 
-        $table = self::$tableAdminClient->table(self::$instanceId, self::$tableId);
+        $table = self::$bigtableClient->table(self::$instanceId, $tableId);
+        $columnFamilyId = 'cf1';
+        $column = 'greeting';
 
         $partial_rows = $table->readRows([])->readAll();
         $array = [];
@@ -395,16 +403,16 @@ final class BigTableTest extends TestCase
         $tableId = uniqid(self::TABLE_ID_PREFIX);
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
-        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        self::runSnippet('writing_rows', [
+        self::runSnippet('hw_write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
         ]);
 
-        $content = self::runSnippet('getting_a_row', [
+        $content = self::runSnippet('hw_get_with_filter', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -421,16 +429,16 @@ final class BigTableTest extends TestCase
         $tableId = uniqid(self::TABLE_ID_PREFIX);
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
-        $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
+        $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        self::runSnippet('writing_rows', [
+        self::runSnippet('hw_write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
         ]);
 
-        $content = self::runSnippet('scanning_all_rows', [
+        $content = self::runSnippet('hw_scan_all', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -542,6 +550,15 @@ final class BigTableTest extends TestCase
     private function createTable($projectId, $instanceId, $clusterId, $tableId)
     {
         self::runSnippet('create_table', [
+            $projectId,
+            $instanceId,
+            $tableId
+        ]);
+    }
+
+    private function createHWTable($projectId, $instanceId, $clusterId, $tableId)
+    {
+        self::runSnippet('hw_create_table', [
             $projectId,
             $instanceId,
             $tableId
