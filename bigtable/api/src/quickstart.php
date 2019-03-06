@@ -53,12 +53,12 @@ $dataClient = new BigtableClient([
     'projectId' => $project_id,
 ]);
 $table = $dataClient->table($instance_id, $table_id);
-$key = 'rk5';
+$key = 'r1';
 // Read a row from my-table using a row key
 $row = $table->readRow($key);
 
 $column_family_id = 'cf1';
-$column_id = 'cq5';
+$column_id = 'c1';
 // Get the Value from the Row, using the column_family_id and column_id
 
 $value = $row[$column_family_id][$column_id][0]['value'];

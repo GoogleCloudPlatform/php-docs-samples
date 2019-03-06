@@ -30,7 +30,7 @@ if (count($argv) < 3 || count($argv) > 5) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START writing_rows]
+// [START bigtable_hw_write_rows]
 
 use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
@@ -66,4 +66,4 @@ foreach ($greetings as $i => $value) {
     $entries[$row_key] = $rowMutation;
 }
 $table->mutateRows($entries);
-// [END writing_rows]
+// [END bigtable_hw_write_rows]
