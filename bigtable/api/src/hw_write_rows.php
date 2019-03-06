@@ -39,7 +39,6 @@ use Google\Cloud\Bigtable\Mutations;
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Table;
 
-
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';

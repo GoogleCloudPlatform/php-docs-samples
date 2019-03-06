@@ -49,7 +49,7 @@ $tableAdminClient->createtable(
     $table
 );
 
-$table = $dataClient->table($instance_id,$table_id);
+$table = $dataClient->table($instance_id, $table_id);
 
 $columnFamily4 = new ColumnFamily();
 $columnModification = new Modification();
@@ -57,9 +57,10 @@ $columnModification->setId('cf1');
 $columnModification->setCreate($columnFamily4);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 
-function time_in_microseconds(){
+function time_in_microseconds()
+{
     $mt = microtime(true);
-    $mt = sprintf('%.03f',$mt);
+    $mt = sprintf('%.03f', $mt);
     return (float)$mt*1000000;
 }
 $insertRows = [
