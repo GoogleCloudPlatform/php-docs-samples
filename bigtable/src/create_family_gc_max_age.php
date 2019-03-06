@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -30,12 +30,12 @@ if (count($argv) != 4) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_create_family_gc_max_versions]
-
+// [START bigtable_create_family_gc_max_age]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\Protobuf\Duration;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -47,16 +47,20 @@ $tableAdminClient = new BigtableTableAdminClient();
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 
-print('Creating column family cf2 with max versions GC rule...' . PHP_EOL);
-$columnFamily2 = new ColumnFamily();
-$maxVersionRule = (new GcRule)->setMaxNumVersions(2);
-$columnFamily2->setGCRule($maxVersionRule);
+print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
+// Create a column family with GC policy : maximum age
+// where age = current time minus cell timestamp
+
+$columnFamily1 = new ColumnFamily();
+$duration = new Duration();
+$duration->setSeconds(3600 * 24 * 5);
+$MaxAgeRule = (new GcRule)->setMaxAge($duration);
+$columnFamily1->setGcRule($MaxAgeRule);
 
 $columnModification = new Modification();
-$columnModification->setId('cf2');
-$columnModification->setCreate($columnFamily2);
+$columnModification->setId('cf1');
+$columnModification->setCreate($columnFamily1);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+print('Created column family cf1 with MaxAge GC Rule.' . PHP_EOL);
 
-print('Created column family cf2 with Max Versions GC Rule.' . PHP_EOL);
-
-// [END bigtable_create_family_gc_max_versions]
+// [END bigtable_create_family_gc_max_age]

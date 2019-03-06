@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -30,21 +30,15 @@ if (count($argv) < 3 || count($argv) > 5) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_hw_get_with_filter]
+// [START bigtable_hw_write_rows]
 
 use Google\Cloud\Bigtable\BigtableClient;
-use Google\Cloud\Bigtable\Table;
-use Google\Cloud\Bigtable\Admin\V2\Cluster;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\ApiCore\ApiException;
-use Google\Cloud\Bigtable\V2\RowFilter;
+use Google\Cloud\Bigtable\Mutations;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
-// $cluster_id = 'The Bigtable cluster ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
 
 
 // Connect to an existing table with an existing instance.
@@ -53,16 +47,16 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-printf('Getting a single greeting by row key.' . PHP_EOL);
-$key = 'greeting0';
-// Only retrieve the most recent version of the cell.
-$row_filter = (new RowFilter)->setCellsPerColumnLimitFilter(1);
-
-$column = 'greeting';
+printf('Writing some greetings to the table.' . PHP_EOL);
+$greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello PHP!'];
+$entries = [];
 $columnFamilyId = 'cf1';
-
-$row = $table->readRow($key, [
-    'rowFilter' => $row_filter
-]);
-printf('%s' . PHP_EOL, $row[$columnFamilyId][$column][0]['value']);
-// [END bigtable_hw_get_with_filter]
+$column = 'greeting';
+foreach ($greetings as $i => $value) {
+    $row_key = sprintf('greeting%s', $i);
+    $rowMutation = new Mutations();
+    $rowMutation->upsert($columnFamilyId, $column, $value, time() * 1000);
+    $entries[$row_key] = $rowMutation;
+}
+$table->mutateRows($entries);
+// [END bigtable_hw_write_rows]

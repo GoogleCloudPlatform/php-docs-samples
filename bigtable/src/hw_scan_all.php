@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,39 +19,38 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 4) {
+if (count($argv) < 3 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf2';
 
-// [START bigtable_delete_family]
+// [START bigtable_hw_scan_all]
 
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\BigtableClient;
+
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
-
-$tableAdminClient = new BigtableTableAdminClient();
-
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 
-print('Delete a column family cf2...' . PHP_EOL);
-// Delete a column family
-$columnModification = new Modification();
-$columnModification->setId($family_id);
-$columnModification->setDrop(true);
-$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-print('Column family cf2 deleted successfully.' . PHP_EOL);
-// [END bigtable_delete_family]
+// Connect to an existing table with an existing instance.
+$dataClient = new BigtableClient([
+    'projectId' => $project_id,
+]);
+$table = $dataClient->table($instance_id, $table_id);
+$columnFamilyId = 'cf1';
+$column = 'greeting';
+printf('Scanning for all greetings:' . PHP_EOL);
+$partial_rows = $table->readRows([])->readAll();
+foreach ($partial_rows as $row) {
+    printf('%s' . PHP_EOL, $row[$columnFamilyId][$column][0]['value']);
+}
+// [END bigtable_hw_scan_all]

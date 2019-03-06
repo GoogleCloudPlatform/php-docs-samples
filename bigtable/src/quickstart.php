@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -34,17 +34,11 @@ $location_id = isset($argv[5]) ? $argv[5] : 'us-east1-b';
 // [START bigtable_quickstart]
 
 use Google\Cloud\Bigtable\BigtableClient;
-use Google\Cloud\Bigtable\Table;
-use Google\Cloud\Bigtable\Admin\V2\Cluster;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
-// $cluster_id = 'The Bigtable cluster ID';
 // $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
 
 
 // Connect to an existing table with an existing instance.
