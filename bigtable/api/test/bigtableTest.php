@@ -371,7 +371,7 @@ final class BigTableTest extends TestCase
         $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        $content = self::runSnippet('writing_rows', [
+        $content = self::runSnippet('hw_write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -398,13 +398,13 @@ final class BigTableTest extends TestCase
         $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        self::runSnippet('writing_rows', [
+        self::runSnippet('hw_write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
         ]);
 
-        $content = self::runSnippet('getting_a_row', [
+        $content = self::runSnippet('hw_get_with_filter', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -430,7 +430,7 @@ final class BigTableTest extends TestCase
             $tableId
         ]);
 
-        $content = self::runSnippet('scanning_all_rows', [
+        $content = self::runSnippet('hw_scan_all', [
             self::$projectId,
             self::$instanceId,
             $tableId
