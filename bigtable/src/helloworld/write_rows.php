@@ -23,7 +23,7 @@
  */
 
 // Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);

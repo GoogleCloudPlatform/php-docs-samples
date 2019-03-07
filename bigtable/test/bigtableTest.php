@@ -377,7 +377,7 @@ final class BigTableTest extends TestCase
         $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        $content = self::runSnippet('hw_write_rows', [
+        $content = self::runSnippet('helloworld/write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -406,13 +406,13 @@ final class BigTableTest extends TestCase
         $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        self::runSnippet('hw_write_rows', [
+        self::runSnippet('helloworld/write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
         ]);
 
-        $content = self::runSnippet('hw_get_with_filter', [
+        $content = self::runSnippet('helloworld/get_with_filter', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -432,13 +432,13 @@ final class BigTableTest extends TestCase
         $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
         $this->checkTable($tableName);
 
-        self::runSnippet('hw_write_rows', [
+        self::runSnippet('helloworld/write_rows', [
             self::$projectId,
             self::$instanceId,
             $tableId
         ]);
 
-        $content = self::runSnippet('hw_scan_all', [
+        $content = self::runSnippet('helloworld/scan_all', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -558,7 +558,7 @@ final class BigTableTest extends TestCase
 
     private function createHWTable($projectId, $instanceId, $clusterId, $tableId)
     {
-        self::runSnippet('hw_create_table', [
+        self::runSnippet('helloworld/create_table', [
             $projectId,
             $instanceId,
             $tableId
