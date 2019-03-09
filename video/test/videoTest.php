@@ -111,7 +111,7 @@ class videoTest extends TestCase
     public function testAnalyzeTextInFile()
     {
         $output = $this->runCommand('text-detection-file', [
-            'file' => __DIR__ . '/data/bohemian_rapsody_shortened.mp4',
+            'file' => __DIR__ . '/data/googlework_short.mp4',
             '--polling-interval-seconds' => 10,
         ]);
         $this->assertContains('GOOGLE', $output);
