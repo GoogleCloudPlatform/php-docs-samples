@@ -94,6 +94,29 @@ $application->add(new Command('transcription'))
         );
     });
 
+$application->add(new Command('text-detection'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect text in video using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_text_detection(
+            $input->getArgument('uri'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
+        );
+    });
+
+$application->add(new Command('text-detection-file'))
+    ->addArgument('file', InputArgument::REQUIRED,
+        'Path to a local video file.')
+    ->addOption('polling-interval-seconds', '', InputOption::VALUE_REQUIRED,
+        'Polling interval in seconds to waiting for a Video API response.')
+    ->setDescription('Detect texts in a file using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_text_detection_file(
+            $input->getArgument('file'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
+        );
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
