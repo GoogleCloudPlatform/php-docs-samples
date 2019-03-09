@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
-function synthesize_text_effects_profile($text, $effects_profile_id)
+function synthesize_text_effects_profile($text, $effectsProfileId)
 {
     // create client object
     $client = new TextToSpeechClient();
 
-    $input_text = (new SynthesisInput())
+    $inputText = (new SynthesisInput())
         ->setText($text);
 
     // note: the voice can also be specified by name
@@ -42,9 +42,9 @@ function synthesize_text_effects_profile($text, $effects_profile_id)
     // define effects profile id.
     $audioConfig = (new AudioConfig())
         ->setAudioEncoding(AudioEncoding::MP3)
-        ->setEffectsProfileId(array($effects_profile_id));
+        ->setEffectsProfileId(array($effectsProfileId));
 
-    $response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
+    $response = $client->synthesizeSpeech($inputText, $voice, $audioConfig);
     $audioContent = $response->getAudioContent();
 
     file_put_contents('output.mp3', $audioContent);

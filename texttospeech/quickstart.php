@@ -31,7 +31,7 @@ use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 $client = new TextToSpeechClient();
 
 // sets text to be synthesised
-$synthesis_input = (new SynthesisInput())
+$synthesisInputText = (new SynthesisInput())
     ->setText('Hello, world!');
 
 // build the voice request, select the language code ("en-US") and the ssml
@@ -41,16 +41,16 @@ $voice = (new VoiceSelectionParams())
     ->setSsmlGender(SsmlVoiceGender::FEMALE);
 
 // Effects profile
-$effects_profile_id = "telephony-class-application";
+$effectsProfileId = "telephony-class-application";
 
 // select the type of audio file you want returned
 $audioConfig = (new AudioConfig())
     ->setAudioEncoding(AudioEncoding::MP3)
-    ->setEffectsProfileId(array($effects_profile_id));
+    ->setEffectsProfileId(array($effectsProfileId));
 
 // perform text-to-speech request on the text input with selected voice
 // parameters and audio file type
-$response = $client->synthesizeSpeech($synthesis_input, $voice, $audioConfig);
+$response = $client->synthesizeSpeech($synthesisInputText, $voice, $audioConfig);
 $audioContent = $response->getAudioContent();
 
 // the response's audioContent is binary
