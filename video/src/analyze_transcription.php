@@ -73,10 +73,12 @@ function analyze_transcription($uri, array $options = [])
 
                 print('Word level information:');
                 foreach ($alternative->getWords() as $wordInfo) {
-                    printf('%s s - %s s: %s' . PHP_EOL,
+                    printf(
+                        '%s s - %s s: %s' . PHP_EOL,
                         $wordInfo->getStartTime()->getSeconds(),
                         $wordInfo->getEndTime()->getSeconds(),
-                        $wordInfo->getWord());
+                        $wordInfo->getWord()
+                    );
                 }
             }
         }

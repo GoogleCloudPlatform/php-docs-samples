@@ -64,7 +64,6 @@ function analyze_text_detection($uri, array $options = [])
             }
         }
         print(PHP_EOL);
-
     } else {
         print_r($operation->getError());
     }
