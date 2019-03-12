@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -30,10 +30,12 @@ if (count($argv) != 4) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_delete_table]
+// [START bigtable_create_family_gc_max_versions]
 
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\GcRule;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -44,17 +46,17 @@ $tableAdminClient = new BigtableTableAdminClient();
 
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-// Delete the entire table
 
-try {
-    printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
-    $tableAdminClient->deleteTable($tableName);
-    printf('Deleted %s table.' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s does not exists' . PHP_EOL, $table_id);
-    } else {
-        throw $e;
-    }
-}
-// [END bigtable_delete_table]
+print('Creating column family cf2 with max versions GC rule...' . PHP_EOL);
+$columnFamily2 = new ColumnFamily();
+$maxVersionRule = (new GcRule)->setMaxNumVersions(2);
+$columnFamily2->setGCRule($maxVersionRule);
+
+$columnModification = new Modification();
+$columnModification->setId('cf2');
+$columnModification->setCreate($columnFamily2);
+$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+
+print('Created column family cf2 with Max Versions GC Rule.' . PHP_EOL);
+
+// [END bigtable_create_family_gc_max_versions]

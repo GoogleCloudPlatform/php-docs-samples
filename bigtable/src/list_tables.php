@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -30,25 +30,27 @@ if (count($argv) != 3) {
 }
 list($_, $project_id, $instance_id) = $argv;
 
-// [START bigtable_list_instances]
+// [START bigtable_list_tables]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
+$tableAdminClient = new BigtableTableAdminClient();
 
-$projectName = $instanceAdminClient->projectName($project_id);
+$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
 
-printf("Listing Instances:" . PHP_EOL);
-
-$getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
-$instances = $getInstances->getIterator();
-
-foreach ($instances as $instance) {
-    print($instance->getDisplayName() . PHP_EOL);
+printf("Listing Tables:" . PHP_EOL);
+$tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
+if (empty($tables)) {
+    print('No table exists.' . PHP_EOL);
+    return;
 }
-
-// [END bigtable_list_instances]
+foreach ($tables as $table) {
+    print($table->getName() . PHP_EOL);
+}
+// [END bigtable_list_tables]

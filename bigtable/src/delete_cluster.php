@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,36 +19,42 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID" . PHP_EOL, __FILE__);
+if (count($argv) != 4) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id) = $argv;
+list($_, $project_id, $instance_id, $cluster_id) = $argv;
 
-// [START bigtable_get_clusters]
+// [START bigtable_delete_cluster]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
+// $cluster_id = 'The Bigtable cluster ID';
+
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 
-$projectName = $instanceAdminClient->projectName($project_id);
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
+$clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
 
 
-printf("Listing Clusters:" . PHP_EOL);
-$getClusters = $instanceAdminClient->listClusters($instanceName)->getClusters();
-$clusters = $getClusters->getIterator();
-
-foreach ($clusters as $cluster) {
-    print($cluster->getName() . PHP_EOL);
+printf("Deleting Cluster" . PHP_EOL);
+try {
+    $instanceAdminClient->deleteCluster($clusterName);
+    printf("Cluster %s deleted." . PHP_EOL, $cluster_id);
+} catch (ApiException $e) {
+    if ($e->getStatus() === 'NOT_FOUND') {
+        printf("Cluster %s does not exist." . PHP_EOL, $cluster_id);
+    } else {
+        throw $e;
+    }
 }
-// [END bigtable_get_clusters]
+// [END bigtable_delete_cluster]

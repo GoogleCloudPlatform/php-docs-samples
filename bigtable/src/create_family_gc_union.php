@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -29,12 +29,15 @@ if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf2';
 
-// [START bigtable_delete_family]
+// [START bigtable_create_family_gc_union]
 
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
+use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\Protobuf\Duration;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -47,11 +50,31 @@ $tableAdminClient = new BigtableTableAdminClient();
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
 
-print('Delete a column family cf2...' . PHP_EOL);
-// Delete a column family
+print('Creating column family cf3 with union GC rule...' . PHP_EOL);
+// Create a column family with GC policy to drop data that matches
+// at least one condition.
+// Define a GC rule to drop cells older than 5 days or not the
+// most recent version
+
+
+$columnFamily3 = new ColumnFamily();
+
+$rule_union = new GcRuleUnion();
+$rule_union_array = [
+    (new GcRule)->setMaxNumVersions(2),
+    (new GcRule)->setMaxAge((new Duration())->setSeconds(3600 * 24 * 5))
+];
+$rule_union->setRules($rule_union_array);
+$union = new GcRule();
+$union->setUnion($rule_union);
+
+$columnFamily3->setGCRule($union);
+
 $columnModification = new Modification();
-$columnModification->setId($family_id);
-$columnModification->setDrop(true);
+$columnModification->setId('cf3');
+$columnModification->setCreate($columnFamily3);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-print('Column family cf2 deleted successfully.' . PHP_EOL);
-// [END bigtable_delete_family]
+
+print('Created column family cf3 with Union GC rule.' . PHP_EOL);
+
+// [END bigtable_create_family_gc_union]

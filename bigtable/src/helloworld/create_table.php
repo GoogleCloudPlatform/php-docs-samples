@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,23 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_create_table]
+// [START bigtable_hw_create_table]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\ApiCore\ApiException;
@@ -66,9 +68,14 @@ try {
             $table_id,
             $table
         );
+        $columnFamily = new ColumnFamily();
+        $columnModification = new Modification();
+        $columnModification->setId('cf1');
+        $columnModification->setCreate($columnFamily);
+        $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
         printf('Created table %s' . PHP_EOL, $table_id);
     } else {
         throw $e;
     }
 }
-// [END bigtable_create_table]
+// [END bigtable_hw_create_table]

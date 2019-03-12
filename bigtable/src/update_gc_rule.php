@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,24 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
+if (count($argv) < 3 || count($argv) > 5) {
+    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [FAMILY_ID]" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
+$family_id = isset($argv[4]) ? $argv[4] : 'cf3';
 
-// [START bigtable_create_family_gc_max_age]
+// [START bigtable_update_gc_rule]
+
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\Protobuf\Duration;
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -46,21 +47,16 @@ $tableAdminClient = new BigtableTableAdminClient();
 
 $tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
 
-
-print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
-// Create a column family with GC policy : maximum age
-// where age = current time minus cell timestamp
-
 $columnFamily1 = new ColumnFamily();
-$duration = new Duration();
-$duration->setSeconds(3600 * 24 * 5);
-$MaxAgeRule = (new GcRule)->setMaxAge($duration);
-$columnFamily1->setGcRule($MaxAgeRule);
-
+print('Updating column family cf3 GC rule...' . PHP_EOL);
+$columnFamily1->setGcRule((new GcRule)->setMaxNumVersions(1));
+// Update the column family cf1 to update the GC rule
 $columnModification = new Modification();
-$columnModification->setId('cf1');
-$columnModification->setCreate($columnFamily1);
+$columnModification->setId('cf3');
+$columnModification->setUpdate($columnFamily1);
 $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-print('Created column family cf1 with MaxAge GC Rule.' . PHP_EOL);
 
-// [END bigtable_create_family_gc_max_age]
+print('Print column family cf3 GC rule after update...' . PHP_EOL);
+printf('Column Family: cf3');
+printf('%s' . PHP_EOL, $columnFamily1->serializeToJsonString());
+// [END bigtable_update_gc_rule]
