@@ -54,6 +54,16 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
     }
+    public function testSynthesizeTextEffectsProfile()
+    {
+        $output = $this->runCommand('synthesize-text-effects-profile', [
+            'text' => 'hello there',
+            'effects_profile_id' => 'telephony-class-application'
+        ]);
+        $this->assertContains('Audio content written to', $output);
+        $this->assertGreaterThan(0,filesize('output.mp3'));
+        unlink('output.mp3');
+    }
     public function testSynthesizeSsmlFile()
     {
         $path = __DIR__ . '/../resources/hello.ssml';
@@ -69,6 +79,17 @@ class textToSpeechTest extends \PHPUnit_Framework_TestCase
         $path = __DIR__ . '/../resources/hello.txt';
         $output = $this->runCommand('synthesize-text-file', [
             'path' => $path
+        ]);
+        $this->assertContains('Audio content written to', $output);
+        $this->assertGreaterThan(0,filesize('output.mp3'));
+        unlink('output.mp3');
+    }
+    public function testSynthesizeTextEffectsProfileFile()
+    {
+        $path = __DIR__ . '/../resources/hello.txt';
+        $output = $this->runCommand('synthesize-text-effects-profile-file', [
+            'path' => $path,
+            'effects_profile_id' => 'telephony-class-application'
         ]);
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));

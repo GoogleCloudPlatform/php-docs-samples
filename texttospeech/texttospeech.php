@@ -28,10 +28,24 @@ $application = new Application('Cloud TTS');
 $inputDefinition = new InputDefinition([
     new InputArgument('text', InputArgument::REQUIRED,
         'Text/SSML to synthesize.')
+
+]);
+
+$inputDefinitionEffectsProfile = new InputDefinition([
+    new InputArgument('text', InputArgument::REQUIRED,
+        'Text/SSML to synthesize.'),
+    new InputArgument('effects_profile_id', InputArgument::REQUIRED,
+        'Audio Profile.')
 ]);
 
 $inputDefinitionFile = new InputDefinition([
     new InputArgument('path', InputArgument::REQUIRED, 'File to synthesize.')
+]);
+
+$inputDefinitionEffectsProfileFile = new InputDefinition([
+    new InputArgument('path', InputArgument::REQUIRED, 'File to synthesize.'),
+    new InputArgument('effects_profile_id', InputArgument::REQUIRED,
+        'Audio Profile.')
 ]);
 
 
@@ -78,6 +92,22 @@ EOF
     })
 );
 
+$application->add((new Command('synthesize-text-effects-profile'))
+    ->setDefinition($inputDefinitionEffectsProfile)
+    ->setDescription('Synthesizes speech from the input string of text using Audio Profiles')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command synthesizes speech from the input string 
+of text using Google Cloud Text-to-Speech API using Audio Profiles.
+    <info>php %command.full_name% "hello there" "wearable-class-device"</info>
+EOF
+    )
+    ->setCode(function ($input) {
+        $text = $input->getArgument('text');
+        $effectsProfileId = $input->getArgument('effects_profile_id');
+        synthesize_text_effects_profile($text, $effectsProfileId);
+    })
+);
+
 $application->add((new Command('synthesize-ssml-file'))
     ->setDefinition($inputDefinitionFile)
     ->setDescription('Synthesizes speech from the input file of ssml')
@@ -105,6 +135,22 @@ EOF
     ->setCode(function ($input) {
         $path = $input->getArgument('path');
         synthesize_text_file($path);
+    })
+);
+
+$application->add((new Command('synthesize-text-effects-profile-file'))
+    ->setDefinition($inputDefinitionEffectsProfileFile)
+    ->setDescription('Synthesizes speech from the input file of text using Audio Profiles')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command synthesizes speech from the input file 
+of text using Google Cloud Text-to-Speech API using Audio Profiles.
+    <info>php %command.full_name% path/to/file.txt "wearable-class-device"</info>
+EOF
+    )
+    ->setCode(function ($input) {
+        $path = $input->getArgument('path');
+        $effectsProfileId = $input->getArgument('effects_profile_id');
+        synthesize_text_effects_profile_file($path, $effectsProfileId);
     })
 );
 

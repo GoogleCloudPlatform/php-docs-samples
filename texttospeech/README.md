@@ -41,8 +41,10 @@ Usage:
 Examples:
   php texttospeech.php synthesize-text -h
   php texttospeech.php synthesize-ssml -h
+  php texttospeech.php synthesize-text-audio-profile -h
   php texttospeech.php synthesize-text "Hello there."
   php texttospeech.php synthesize-ssml "<speak>Hello there.</speak>"
+  php texttospeech.php synthesize-text-effects-profile "Hello there." "handset-class-device"
 ```
 
 ### Synthesize file
@@ -50,12 +52,15 @@ Examples:
 Usage:
   php texttospeech.php synthesize-text-file <FILE_PATH> 
   php texttospeech.php synthesize-ssml-file <FILE_PATH> 
-
+  php texttospeech.php synthesize-text-effects-profile-file <FILE_PATH> <AUDIO_PROFILE>
+  
 Examples:
   php texttospeech.php synthesize-text-file -h
   php texttospeech.php synthesize-ssml-file -h
+  php texttospeech.php synthesize-text-audio-profile-file -h
   php texttospeech.php synthesize-text-file resources/hello.txt
   php texttospeech.php synthesize-ssml-file resources/hello.ssml
+  php texttospeech.php synthesize-text-effects-profile-file resources/hello.txt "handset-class-device"
 ```
 
 ## The client library
