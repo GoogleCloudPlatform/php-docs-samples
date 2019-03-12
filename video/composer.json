@@ -3,7 +3,7 @@
     "type": "project",
     "require": {
         "symfony/console": "^3.1",
-        "google/cloud-videointelligence": "^1.2"
+        "google/cloud-videointelligence": "^1.3.1"
     },
     "autoload": {
         "files": [
@@ -11,7 +11,9 @@
             "src/analyze_labels_file.php",
             "src/analyze_explicit_content.php",
             "src/analyze_shots.php",
-            "src/analyze_transcription.php"
+            "src/analyze_transcription.php",
+            "src/analyze_text_detection.php",
+            "src/analyze_text_detection_file.php"
         ]
     },
     "require-dev": {

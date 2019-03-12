@@ -30,14 +30,16 @@ Video Intelligence API from PHP.
 5.  Run `php video.php`. The following commands are available:
 
     ```
-    faces           Detect faces changes in video using the Video Intelligence API
-    help            Displays help for a command
-    labels          Detect labels in video using the Video Intelligence API
-    labels-in-file  Detect labels in a file using the Video Intelligence API
-    list            Lists commands
-    safe-search     Detect safe search in video using the Video Intelligence API
-    shots           Detect shots in video using the Video Intelligence API
-    transcription   Transcribe speech from a video
+    faces                Detect faces changes in video using the Video Intelligence API
+    help                 Displays help for a command
+    labels               Detect labels in video using the Video Intelligence API
+    labels-in-file       Detect labels in a file using the Video Intelligence API
+    list                 Lists commands
+    safe-search          Detect safe search in video using the Video Intelligence API
+    shots                Detect shots in video using the Video Intelligence API
+    transcription        Transcribe speech from a video
+    text-detection       Detects OCR text in video using the Video Intelligence API
+    text-detection-file  Detects OCR text in a file using the Video Intelligence API
     ```
 
     Example:

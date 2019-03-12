@@ -96,6 +96,30 @@ class videoTest extends TestCase
         $this->assertContains('France', $output);
     }
 
+    public function testAnalyzeText()
+    {
+        $output = $this->runCommand('text-detection', [
+            'uri' => $this->gcsUriTwo(),
+            '--polling-interval-seconds' => 10,
+        ]);
+        $this->assertContains('GOOGLE', $output);
+        $this->assertContains('Video text description:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Confidence:', $output);
+    }
+
+    public function testAnalyzeTextInFile()
+    {
+        $output = $this->runCommand('text-detection-file', [
+            'file' => __DIR__ . '/data/googlework_short.mp4',
+            '--polling-interval-seconds' => 10,
+        ]);
+        $this->assertContains('GOOGLE', $output);
+        $this->assertContains('Video text description:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Confidence:', $output);
+    }
+
     private function gcsUri()
     {
         return sprintf(
