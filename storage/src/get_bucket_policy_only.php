@@ -47,6 +47,12 @@ function get_bucket_policy_only($projectId, $bucketName)
             ]
         ]
     ]);
-    printf('Bucket Policy Only was disabled for %s' . PHP_EOL, $bucketName);
+    $bucketInformation = $bucket->info();
+    $requesterPaysStatus = $bucketInformation['billing']['requesterPays'];
+    if ($requesterPaysStatus) {
+        printf('Requester Pays is enabled for %s' . PHP_EOL, $bucketName);
+    } else {
+        printf('Bucket Policy Only was disabled for %s' . PHP_EOL, $bucketName);
+    }
 }
 # [END storage_get_bucket_policy_only]

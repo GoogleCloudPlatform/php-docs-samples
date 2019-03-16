@@ -402,6 +402,32 @@ EOF
         }
     });
 
+ $application->add(new Command('bucket-policy-only'))
+    ->setDescription('Manage Cloud Storage bucket policy only buckets.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command manages Cloud Storage bucket policy only buckets.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('project', InputArgument::REQUIRED, 'Your billable Google Cloud Project ID')
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage requester pays bucket name')
+    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable Bucket Policy Only on a Cloud Storage bucket')
+    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable Bucket Policy Only on a Cloud Storage bucket')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get Bucket Policy Only on a Cloud Storage bucekt')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        $bucketName = $input->getArgument('bucket');
+        if ($input->getOption('enable')) {
+            enable_bucket_policy_only($projectId, $bucketName);
+        } elseif ($input->getOption('disable')) {
+            enable_bucket_policy_only$projectId, $bucketName);
+        } elseif ($input->getOption('get')) {
+            get_bucket_policy_only($projectId, $bucketName);
+        }
+    });
+
 $application->add(new Command('enable-default-kms-key'))
     ->setDescription('Enable default KMS encryption for a bucket.')
     ->setHelp(<<<EOF
