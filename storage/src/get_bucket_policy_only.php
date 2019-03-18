@@ -40,19 +40,13 @@ function get_bucket_policy_only($projectId, $bucketName)
         'projectId' => $projectId
     ]);
     $bucket = $storage->bucket($bucketName);
-    $bucket->update([
-        'iamConfiguration' => [
-            'bucketPolicyOnly' => [
-              'enabled' => false
-            ]
-        ]
-    ]);
     $bucketInformation = $bucket->info();
-    $requesterPaysStatus = $bucketInformation['billing']['requesterPays'];
-    if ($requesterPaysStatus) {
-        printf('Requester Pays is enabled for %s' . PHP_EOL, $bucketName);
+    $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
+    if ($bucketPolicyOnly['enabled']) {
+        printf('Bucket Policy Only is enabled for %s' . PHP_EOL, $bucketName);
+        printf('Bucket Policy Only will be locked on %s' . PHP_EOL, $bucketPolicyOnly['LockedTime']).
     } else {
-        printf('Bucket Policy Only was disabled for %s' . PHP_EOL, $bucketName);
+        printf('Bucket Policy Only is disabled for %s' . PHP_EOL, $bucketName);
     }
 }
 # [END storage_get_bucket_policy_only]

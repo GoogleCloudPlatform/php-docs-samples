@@ -17,60 +17,80 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage\BucketPolicyOnlyCommand;
-use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
-use PHPUnit\Framework\TestCase;
+use Google\Cloud\Storage\StorageClient;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit Tests for BucketPolicyOnlyCommand.
  */
-class BucketPolicyOnlyCommandTest extends TestCase
+class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
 {
-    use TestTrait;
-    use ExecuteCommandTrait;
 
-    private static $bucketName;
-    private static $commandFile = __DIR__ . '/../storage.php';
+    protected static $hasCredentials;
+    protected $commandTester;
+    protected $storage;
+    protected $bucket;
 
-    /** @beforeClass */
-    public static function getBucketName()
+    public static function setUpBeforeClass()
     {
-        self::$bucketName = self::requireEnv('GOOGLE_REQUESTER_PAYS_STORAGE_BUCKET');
+        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+        self::$hasCredentials = $path && file_exists($path) &&
+            filesize($path) > 0;
     }
 
-    public function testEnableRequesterPays()
+    public function setUp()
     {
-        $output = $this->runCommand('requester-pays', [
+        // Sleep to avoid the rate limit for creating/deleting.
+        sleep(5 + rand(2, 4));
+        $application = require __DIR__ . '/../storage.php';
+        $this->commandTester = new CommandTester($application->get('bucket-policy-only'));
+        $this->storage = new StorageClient();
+        if (!self::$hasCredentials) {
+            $this->markTestSkipped('No application credentials were found.');
+        }
+
+        // Append random because tests for multiple PHP versions were running at the same time.
+        $bucketName = 'php-bucket-policy-only-' . time() . '-' . rand(1000, 9999);
+        $this->bucket = $this->storage->createBucket($bucketName);
+    }
+
+    public function tearDown()
+    {
+        $this->bucket->delete();
+    }
+
+    public function testEnableBucketPolicyOnly()
+    {
+        $output = $this->runCommand('bucket-policy-only', [
             'project' => self::$projectId,
-            'bucket' => self::$bucketName,
+            'bucket' => $this->bucket,
             '--enable' => true,
         ]);
 
-        $this->assertContains("Requester pays has been enabled", $output);
+        $this->assertContains("Bucket Policy Only was enabled for", $output);
     }
 
     /** @depends testEnableRequesterPays */
-    public function testDisableRequesterPays()
+    public function testDisableBucketPolicyOnly()
     {
-        $output = $this->runCommand('requester-pays', [
+        $output = $this->runCommand('bucket-policy-only', [
             'project' => self::$projectId,
             'bucket' => self::$bucketName,
             '--disable' => true,
         ]);
 
-        $this->assertContains("Requester pays has been disabled", $output);
+        $this->assertContains("Bucket Policy Only was disabled for", $output);
     }
 
     /** depends testDisableRequesterPays */
-    public function testGetRequesterPaysStatus()
+    public function testGetBucketPolicyOnly()
     {
-        $output = $this->runCommand('requester-pays', [
+        $output = $this->runCommand('bucket-policy', [
             'project' => self::$projectId,
             'bucket' => self::$bucketName,
-            '--check-status' => true,
+            '--get' => true,
         ]);
 
-        $this->assertContains("Requester Pays is disabled", $output);
+        $this->assertContains("Bucket Policy Only is disabled", $output);
     }
 }

@@ -402,7 +402,7 @@ EOF
         }
     });
 
- $application->add(new Command('bucket-policy-only'))
+$application->add(new Command('bucket-policy-only'))
     ->setDescription('Manage Cloud Storage bucket policy only buckets.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage bucket policy only buckets.
