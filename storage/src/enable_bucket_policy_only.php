@@ -29,16 +29,13 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enable Bucket Policy Only.
  *
- * @param string $projectId Your Google Cloud project ID.
  * @param string $bucketName Name of your Google Cloud Storage bucket.
  *
  * @return void
  */
-function enable_bucket_policy_only($projectId, $bucketName)
+function enable_bucket_policy_only($bucketName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId
-    ]);
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'iamConfiguration' => [

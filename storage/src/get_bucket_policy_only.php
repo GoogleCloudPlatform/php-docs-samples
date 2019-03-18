@@ -29,30 +29,21 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enable Bucket Policy Only.
  *
- * @param string $projectId Your Google Cloud project ID.
  * @param string $bucketName Name of your Google Cloud Storage bucket.
  *
  * @return void
  */
-function get_bucket_policy_only($projectId, $bucketName)
+function get_bucket_policy_only($bucketName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId
-    ]);
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $bucket->update([
-        'iamConfiguration' => [
-            'bucketPolicyOnly' => [
-              'enabled' => false
-            ]
-        ]
-    ]);
     $bucketInformation = $bucket->info();
-    $requesterPaysStatus = $bucketInformation['billing']['requesterPays'];
-    if ($requesterPaysStatus) {
-        printf('Requester Pays is enabled for %s' . PHP_EOL, $bucketName);
+    $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
+    if ($bucketPolicyOnly['enabled']) {
+        printf('Bucket Policy Only is enabled for %s' . PHP_EOL, $bucketName);
+        printf('Bucket Policy Only will be locked on %s' . PHP_EOL, $bucketPolicyOnly['LockedTime']).
     } else {
-        printf('Bucket Policy Only was disabled for %s' . PHP_EOL, $bucketName);
+        printf('Bucket Policy Only is disabled for %s' . PHP_EOL, $bucketName);
     }
 }
 # [END storage_get_bucket_policy_only]
