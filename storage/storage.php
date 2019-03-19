@@ -402,6 +402,32 @@ EOF
         }
     });
 
+$application->add(new Command('bucket-policy-only'))
+    ->setDescription('Manage Cloud Storage bucket policy only buckets.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command manages Cloud Storage bucket policy only buckets.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage Bucket Policy Only bucket name')
+    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable Bucket Policy Only on a Cloud Storage bucket')
+    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable Bucket Policy Only on a Cloud Storage bucket')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get Bucket Policy Only on a Cloud Storage bucekt')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        if ($input->getOption('enable')) {
+            enable_bucket_policy_only($bucketName);
+        } elseif ($input->getOption('disable')) {
+            disable_bucket_policy_only($bucketName);
+        } elseif ($input->getOption('get')) {
+            get_bucket_policy_only($bucketName);
+        } else {
+            throw new \Exception('You must provide --enable, --disable, or --get with a bucket name.');
+        }
+    });
+
 $application->add(new Command('enable-default-kms-key'))
     ->setDescription('Enable default KMS encryption for a bucket.')
     ->setHelp(<<<EOF
