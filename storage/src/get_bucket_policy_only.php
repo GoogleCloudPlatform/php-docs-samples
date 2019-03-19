@@ -41,7 +41,7 @@ function get_bucket_policy_only($bucketName)
     $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
     if ($bucketPolicyOnly['enabled']) {
         printf('Bucket Policy Only is enabled for %s' . PHP_EOL, $bucketName);
-        printf('Bucket Policy Only will be locked on %s' . PHP_EOL, $bucketPolicyOnly['LockedTime']).
+        printf('Bucket Policy Only will be locked on %s' . PHP_EOL, $bucketPolicyOnly['LockedTime']);
     } else {
         printf('Bucket Policy Only is disabled for %s' . PHP_EOL, $bucketName);
     }
