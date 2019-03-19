@@ -59,6 +59,18 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
         $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;
+
+        // clean up bucket IAM policy
+        $policy = $this->storage->bucket($bucket)->iam()->policy();
+        foreach ($policy['bindings'] as $binding) {
+            if ($binding['role'] == $role && in_array($user, $binding['members'])) {
+                $policyBuilder = new PolicyBuilder($policy);
+                $policyBuilder->removeBinding($role, [$user]);
+                $bucket->iam()->setPolicy($policyBuilder->result());
+                break;
+            }
+        }
+
         $this->commandTester->execute(
             [
                 'bucket' => $bucket,
