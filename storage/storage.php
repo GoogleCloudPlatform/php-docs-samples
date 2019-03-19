@@ -424,7 +424,7 @@ EOF
         } elseif ($input->getOption('get')) {
             get_bucket_policy_only($bucketName);
         } else {
-          throw new \Exception('You must provide --enable, --disable, or --get with a bucket name.');
+            throw new \Exception('You must provide --enable, --disable, or --get with a bucket name.');
         }
     });
 
