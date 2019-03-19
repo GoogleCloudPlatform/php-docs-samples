@@ -60,7 +60,7 @@ class BucketPolicyOnlyCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testEnableBucketPolicyOnly()
     {
-        $output = $this->commandTester->execute(
+        $this->commandTester->execute(
           [
               'bucket' => $this->bucket->name(),
               '--enable' => true,
@@ -77,7 +77,7 @@ EOF;
     /** @depends testEnableBucketPolicyOnly */
     public function testDisableBucketPolicyOnly()
     {
-        $output = $this->commandTester->execute(
+        $this->commandTester->execute(
           [
               'bucket' => $this->bucket->name(),
               '--disable' => true,
@@ -95,7 +95,7 @@ EOF;
     /** @depends testDisableBucketPolicyOnly */
     public function testGetBucketPolicyOnly()
     {
-        $output = $this->commandTester->execute(
+        $this->commandTester->execute(
           [
               'bucket' => $this->bucket->name(),
               '--get' => true,
@@ -103,7 +103,6 @@ EOF;
           ['interactive' => false]
         );
 
-        $this->assertContains("Bucket Policy Only is disabled", $output);
         $outputString = <<<EOF
 Bucket Policy Only is disabled for {$this->bucket->name()}
 
