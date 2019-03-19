@@ -67,7 +67,11 @@ class BucketPolicyOnlyCommandTest extends \PHPUnit_Framework_TestCase
           ],
           ['interactive' => false]
         );
-        $this->assertContains("Bucket Policy Only was enabled for", $output);
+        $outputString = <<<EOF
+Bucket Policy Only was enabled for {$this->bucket->name()}
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 
     /** @depends testEnableBucketPolicyOnly */
@@ -81,7 +85,11 @@ class BucketPolicyOnlyCommandTest extends \PHPUnit_Framework_TestCase
           ['interactive' => false]
         );
 
-        $this->assertContains("Bucket Policy Only was disabled for", $output);
+        $outputString = <<<EOF
+Bucket Policy Only was disabled for {$this->bucket->name()}
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 
     /** @depends testDisableBucketPolicyOnly */
@@ -96,5 +104,10 @@ class BucketPolicyOnlyCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertContains("Bucket Policy Only is disabled", $output);
+        $outputString = <<<EOF
+Bucket Policy Only is disabled for {$this->bucket->name()}
+
+EOF;
+        $this->expectOutputString($outputString);
     }
 }
