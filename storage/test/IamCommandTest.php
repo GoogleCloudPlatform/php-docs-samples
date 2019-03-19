@@ -67,7 +67,7 @@ class IamCommandTest extends \PHPUnit_Framework_TestCase
             if ($binding['role'] == $role && in_array($user, $binding['members'])) {
                 $policyBuilder = new PolicyBuilder($policy);
                 $policyBuilder->removeBinding($role, [$user]);
-                $bucket->iam()->setPolicy($policyBuilder->result());
+                $this->storage->bucket($bucket)->iam()->setPolicy($policyBuilder->result());
                 break;
             }
         }
