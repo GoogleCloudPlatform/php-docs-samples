@@ -72,6 +72,9 @@ Bucket Policy Only was enabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);
+        $bucketInformation = $this->bucket->info();
+        $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
+        $this->assertTrue($bucketPolicyOnly['enabled']);
     }
 
     /** @depends testEnableBucketPolicyOnly */
@@ -90,6 +93,9 @@ Bucket Policy Only was disabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);
+        $bucketInformation = $this->bucket->info();
+        $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
+        $this->assertFalse($bucketPolicyOnly['enabled']);
     }
 
     /** @depends testDisableBucketPolicyOnly */
@@ -108,5 +114,8 @@ Bucket Policy Only is disabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);
+        $bucketInformation = $this->bucket->info();
+        $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
+        $this->assertFalse($bucketPolicyOnly['enabled']);
     }
 }
