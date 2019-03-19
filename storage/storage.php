@@ -420,7 +420,7 @@ EOF
         if ($input->getOption('enable')) {
             enable_bucket_policy_only($bucketName);
         } elseif ($input->getOption('disable')) {
-            enable_bucket_policy_only($bucketName);
+            disable_bucket_policy_only($bucketName);
         } elseif ($input->getOption('get')) {
             get_bucket_policy_only($bucketName);
         }
