@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -468,6 +468,17 @@ $application->add((new Command('deleted-data-with-partitioned-dml'))
     })
 );
 
+// Update data with Batch DML
+$application->add((new Command('update-data-with-batch-dml'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates sample data in the given database using Batch DML.')
+    ->setCode(function ($input, $output) {
+        update_data_with_batch_dml(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
