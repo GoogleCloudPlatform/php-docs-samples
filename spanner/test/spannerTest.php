@@ -448,7 +448,7 @@ class spannerTest extends TestCase
         $this->assertContains('Deleted 5 row(s)', $output);
     }
 
-     /**
+    /**
      * @depends testAddColumn
      */
     public function testUpdateDataWithBatchDML()
@@ -456,7 +456,7 @@ class spannerTest extends TestCase
         $output = $this->runCommand('update-data-with-batch-dml');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('Executed 2 SQL statements using Batch DML', $output);
-    }   
+    }
 
     
 
