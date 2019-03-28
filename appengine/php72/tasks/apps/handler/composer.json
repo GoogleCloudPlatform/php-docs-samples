@@ -1,6 +1,5 @@
 {
     "require": {
-        "google/cloud-tasks": "^0.4.1",
         "google/cloud-logging": "^1.14"
     },
     "require-dev": {
