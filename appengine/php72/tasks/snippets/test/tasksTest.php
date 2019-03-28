@@ -44,7 +44,28 @@ class TasksTest extends TestCase
         );
 
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    public function testCreateHttpTask()
+    {
+        $queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
+        $location = $this->requireEnv('CLOUD_TASKS_LOCATION');
+
+        $output = $this->runSnippet('create_http_task', [
+            $location,
+            $queue,
+            'http://example.com',
+            'Task Details',
+        ]);
+        $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
+            self::$projectId,
+            $location,
+            $queue
+        );
+
+        $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     private function runSnippet($sampleName, $params = [])

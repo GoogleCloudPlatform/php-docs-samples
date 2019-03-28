@@ -4,7 +4,8 @@
 
 Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP.
 
-`src/create_task.php` is a simple function to create app engine queue tasks.
+`src/create_task.php` is a simple function to create tasks with App Engine routing.
+`src/create_http_task.php` is a simple function to create tasks with an HTTP target.
 
 ## Setup:
 
@@ -37,12 +38,22 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
     "projects/my-project/locations/us-central1/queues/my-pull-queue", then the
     location is "us-central1").
 
-7. Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments are provided:
+## Using App Engine Routing
+1. Run `php src/create_task.php`. The usage will print for each if no arguments are provided:
 
     ```
     $> php src/create_task.php
     Usage: php src/create_task.php PROJECT_ID LOCATION_ID QUEUE_ID [PAYLOAD]
     ```
+    
+## Using an HTTP Target
+1. Run `php src/create_http_task.php`. The usage will print for each if no arguments are provided:
+
+    ```
+    $> php src/create_http_task.php
+    Usage: php src/create_http_task.php PROJECT_ID LOCATION_ID QUEUE_ID URL [PAYLOAD]
+    ```
+
 
 ## Contributing changes
 
@@ -72,4 +83,3 @@ Then the queue ID, as specified at queue creation time. Queue IDs already
 created can be listed with `gcloud alpha tasks queues list`.
 
     export QUEUE_ID=my-appengine-queue
-
