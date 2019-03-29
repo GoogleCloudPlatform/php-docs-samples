@@ -198,7 +198,7 @@ class iotTest extends \PHPUnit_Framework_TestCase
             'device' => self::$devices[0],
             'command-data' => $command,
         ]);
-        $this->assertContains('not subscribed to the commands topic', $output);
+        $this->assertContains('is not connected', $output);
     }
 
     /** @depends testSetDeviceConfig */
@@ -335,14 +335,21 @@ class iotTest extends \PHPUnit_Framework_TestCase
     /** @depends testBindUnbindDevice */
     public function testListDevicesForGateway()
     {
-        $deviceId = 'test-device-bind-and-list' . self::$testId;
-        $gatewayId = 'test-bind-and-list-gateway' . self::$testId;
+        $deviceId = 'php-bind-and-list' . self::$testId;
+        $gatewayId = 'php-bal-gateway' . self::$testId;
 
         $this->runCommand('create-unauth-device', [
             'registry' => self::$registryId,
             'device' => $deviceId,
         ]);
         self::$devices[] = $deviceId;
+
+        $this->runCommand('create-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+            'algorithm' => 'RS256',
+        ]);
 
         $this->runCommand('bind-device-to-gateway', [
             'registry' => self::$registryId,
@@ -354,8 +361,9 @@ class iotTest extends \PHPUnit_Framework_TestCase
             'registry' => self::$registryId,
             'gateway' => $gatewayId,
         ]);
-        $this->assertContains('Bound Device', $output);
         $this->assertContains($deviceId, $output);
+        print('yoooooooou');
+        print($output);
 
         $this->runCommand('unbind-device-from-gateway', [
             'registry' => self::$registryId,
