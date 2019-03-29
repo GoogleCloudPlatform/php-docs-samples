@@ -18,7 +18,7 @@
 namespace Google\Cloud\Samples\Asset;
 
 # [START asset_quickstart_export_assets]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\AssetServiceClient
 use Google\Cloud\Asset\V1\GcsDestination;
 use Google\Cloud\Asset\V1\OutputConfig;
 
