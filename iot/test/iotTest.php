@@ -198,7 +198,8 @@ class iotTest extends \PHPUnit_Framework_TestCase
             'device' => self::$devices[0],
             'command-data' => $command,
         ]);
-        $this->assertContains('is not connected', $output);
+        print($output);
+        $this->assertContains('Sending command to', $output);
     }
 
     /** @depends testSetDeviceConfig */
@@ -362,8 +363,6 @@ class iotTest extends \PHPUnit_Framework_TestCase
             'gateway' => $gatewayId,
         ]);
         $this->assertContains($deviceId, $output);
-        print('yoooooooou');
-        print($output);
 
         $this->runCommand('unbind-device-from-gateway', [
             'registry' => self::$registryId,
