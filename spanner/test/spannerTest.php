@@ -458,8 +458,6 @@ class spannerTest extends TestCase
         $this->assertContains('Executed 2 SQL statements using Batch DML', $output);
     }
 
-    
-
     private function runCommand($commandName)
     {
         $application = require __DIR__ . '/../spanner.php';
