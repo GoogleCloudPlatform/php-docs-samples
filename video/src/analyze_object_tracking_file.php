@@ -50,28 +50,28 @@ function analyze_object_tracking_file($path, array $options = [])
     if ($operation->operationSucceeded()) {
         $results = $operation->getResult()->getAnnotationResults()[0];
         # Process video/segment level label annotations
-        $objectAnnotation = $results->getObjectAnnotations()[0];
+        $objectEntity = $results->getObjectAnnotations()[0];
 
-        printf('Video object entity: %s' . PHP_EOL, $objectAnnotation->getEntity()->getEntityId());
-        printf('Video object description: %s' . PHP_EOL, $objectAnnotation->getEntity()->getDescription());
+        printf('Video object entity: %s' . PHP_EOL, $objectEntity->getEntity()->getEntityId());
+        printf('Video object description: %s' . PHP_EOL, $objectEntity->getEntity()->getDescription());
 
-        $startTimeOffset = $objectAnnotation->getSegment()->getStartTimeOffset();
+        $startTimeOffset = $objectEntity->getSegment()->getStartTimeOffset();
         $startSeconds = $startTimeOffset->getSeconds();
         $startNanoseconds = floatval($startTimeOffset->getNanos())/1000000000.00;
         $startTime = $startSeconds + $startNanoseconds;
-        $endTimeOffset = $objectAnnotation->getSegment()->getEndTimeOffset();
+        $endTimeOffset = $objectEntity->getSegment()->getEndTimeOffset();
         $endSeconds = $endTimeOffset->getSeconds();
         $endNanoseconds = floatval($endTimeOffset->getNanos())/1000000000.00;
         $endTime = $endSeconds + $endNanoseconds;
         printf('  Segment: %ss to %ss' . PHP_EOL, $startTime, $endTime);
-        printf('  Confidence: %f' . PHP_EOL, $objectAnnotation->getConfidence());
+        printf('  Confidence: %f' . PHP_EOL, $objectEntity->getConfidence());
 
-        foreach ($objectAnnotation->getFrames() as $objectAnnotationFrame) {
-            $startSeconds = $objectAnnotationFrame->getTimeOffset()->getSeconds();
-            $startNanoseconds = $objectAnnotationFrame->getTimeOffset()->getNanos();
+        foreach ($objectEntity->getFrames() as $objectEntityFrame) {
+            $startSeconds = $objectEntityFrame->getTimeOffset()->getSeconds();
+            $startNanoseconds = $objectEntityFrame->getTimeOffset()->getNanos();
             $timeOffSet = $startSeconds + $startNanoseconds/1000000000.00;
             printf('  Time offset: %ss' . PHP_EOL, $timeOffSet);
-            $boundingBox = $objectAnnotationFrame->getNormalizedBoundingBox();
+            $boundingBox = $objectEntityFrame->getNormalizedBoundingBox();
             printf('  Bounding box position:' . PHP_EOL);
             printf('   Left: %s', $boundingBox->getLeft());
             printf('   Top: %s', $boundingBox->getTop());
