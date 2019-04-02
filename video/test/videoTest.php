@@ -120,6 +120,26 @@ class videoTest extends TestCase
         $this->assertContains('Confidence:', $output);
     }
 
+    public function testObjectTracking()
+    {
+        $output = $this->runCommand('object-tracking', [
+            'uri' => $this->gcsUriTwo(),
+            '--polling-interval-seconds' => 10,
+        ]);
+        $this->assertContains('/m/01g317', $output);
+        $this->assertContains('person', $output);
+    }
+
+    public function testObjectTrackingFile()
+    {
+        $output = $this->runCommand('object-tracking-file', [
+            'file' => __DIR__ . '/data/googlework_short.mp4',
+            '--polling-interval-seconds' => 10,
+        ]);
+        $this->assertContains('/m/01g317', $output);
+        $this->assertContains('person', $output);
+    }
+
     private function gcsUri()
     {
         return sprintf(
