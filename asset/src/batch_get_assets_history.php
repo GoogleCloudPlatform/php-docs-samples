@@ -18,9 +18,9 @@
 namespace Google\Cloud\Samples\Asset;
 
 # [START asset_quickstart_batch_get_assets_history]
-use Google\Cloud\Asset\V1beta1\AssetServiceClient;
-use Google\Cloud\Asset\V1beta1\ContentType;
-use Google\Cloud\Asset\V1beta1\TimeWindow;
+use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\ContentType;
+use Google\Cloud\Asset\V1\TimeWindow;
 use Google\Protobuf\Timestamp;
 
 function batch_get_assets_history($projectId, $assetNames)
