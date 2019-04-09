@@ -30,10 +30,10 @@ if ($argc < 4 || $argc > 5) {
 list($_, $projectId, $locationId, $queueId, $payload) = $argv;
 
 # [START cloud_tasks_appengine_create_task]
-use Google\Cloud\Tasks\V2beta3\AppEngineHttpRequest;
-use Google\Cloud\Tasks\V2beta3\CloudTasksClient;
-use Google\Cloud\Tasks\V2beta3\HttpMethod;
-use Google\Cloud\Tasks\V2beta3\Task;
+use Google\Cloud\Tasks\V2\AppEngineHttpRequest;
+use Google\Cloud\Tasks\V2\CloudTasksClient;
+use Google\Cloud\Tasks\V2\HttpMethod;
+use Google\Cloud\Tasks\V2\Task;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'The Google project ID';

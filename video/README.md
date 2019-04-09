@@ -40,6 +40,8 @@ Video Intelligence API from PHP.
     transcription        Transcribe speech from a video
     text-detection       Detects OCR text in video using the Video Intelligence API
     text-detection-file  Detects OCR text in a file using the Video Intelligence API
+    object-tracking      Object tracking tracks multiple objects detected in an input video
+    object-tracking-file Object tracking tracks multiple objects detected in a file
     ```
 
     Example:
