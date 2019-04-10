@@ -44,7 +44,7 @@ class TasksTest extends TestCase
         );
 
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertStringContainsString($expectedOutput, $output);
+        $this->assertContains($expectedOutput, $output);
     }
 
     public function testCreateHttpTask()
@@ -65,7 +65,7 @@ class TasksTest extends TestCase
         );
 
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertStringContainsString($expectedOutput, $output);
+        $this->assertContains($expectedOutput, $output);
     }
 
     private function runSnippet($sampleName, $params = [])
