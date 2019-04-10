@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -448,7 +448,15 @@ class spannerTest extends TestCase
         $this->assertContains('Deleted 5 row(s)', $output);
     }
 
-
+    /**
+     * @depends testAddColumn
+     */
+    public function testUpdateDataWithBatchDML()
+    {
+        $output = $this->runCommand('update-data-with-batch-dml');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('Executed 2 SQL statements using Batch DML', $output);
+    }
 
     private function runCommand($commandName)
     {

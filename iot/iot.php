@@ -319,6 +319,103 @@ $application->add(new Command('set-device-state'))
         );
     });
 
+// Beta features
+$application->add(new Command('create-gateway'))
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
+    ->addArgument('certificate-file', InputArgument::REQUIRED, 'Path to public key file')
+    ->addArgument('algorithm', InputArgument::REQUIRED, 'The algorithm (RS256|ES256) used for the public key')
+    ->setDescription('(Beta feature) Create a new gateway with the given id.')
+    ->setCode(function ($input, $output) {
+        create_gateway(
+            $input->getOption('project'),
+            $input->getOption('location'),
+            $input->getArgument('registry'),
+            $input->getArgument('gateway'),
+            $input->getArgument('certificate-file'),
+            $input->getArgument('algorithm')
+        );
+    });
+
+$application->add(new Command('delete-gateway'))
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
+    ->setDescription('(Beta feature) Delete the gateway with the given id.')
+    ->setCode(function ($input, $output) {
+        delete_gateway(
+            $input->getOption('project'),
+            $input->getOption('location'),
+            $input->getArgument('registry'),
+            $input->getArgument('gateway')
+        );
+    });
+
+$application->add(new Command('list-gateways'))
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->setDescription('(Beta feature) List gateways for the given registry.')
+    ->setCode(function ($input, $output) {
+        list_gateways(
+            $input->getOption('project'),
+            $input->getOption('location'),
+            $input->getArgument('registry')
+        );
+    });
+
+$application->add(new Command('list-devices-for-gateway'))
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
+    ->setDescription('(Beta feature) List devices for the given gateway.')
+    ->setCode(function ($input, $output) {
+        list_devices_for_gateway(
+            $input->getOption('project'),
+            $input->getOption('location'),
+            $input->getArgument('registry'),
+            $input->getArgument('gateway')
+        );
+    });
+
+$application->add(new Command('bind-device-to-gateway'))
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('device', InputArgument::REQUIRED, 'the device ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
+    ->setDescription('(Beta feature) Bind a device to a gateway.')
+    ->setCode(function ($input, $output) {
+        bind_device_to_gateway(
+            $input->getOption('project'),
+            $input->getOption('location'),
+            $input->getArgument('registry'),
+            $input->getArgument('gateway'),
+            $input->getArgument('device')
+        );
+    });
+
+$application->add(new Command('unbind-device-from-gateway'))
+    ->addArgument('registry', InputArgument::REQUIRED, 'the registry ID')
+    ->addArgument('device', InputArgument::REQUIRED, 'the device ID')
+    ->addArgument('gateway', InputArgument::REQUIRED, 'the gateway ID')
+    ->addOption('project', '', InputOption::VALUE_REQUIRED, 'The Google Cloud project ID', getenv('GCLOUD_PROJECT'))
+    ->addOption('location', '', InputOption::VALUE_REQUIRED, 'The location of your device registries', 'us-central1')
+    ->setDescription('(Beta feature) Unbind a device from a gateway.')
+    ->setCode(function ($input, $output) {
+        unbind_device_from_gateway(
+            $input->getOption('project'),
+            $input->getOption('location'),
+            $input->getArgument('registry'),
+            $input->getArgument('gateway'),
+            $input->getArgument('device')
+        );
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

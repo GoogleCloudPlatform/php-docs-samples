@@ -117,6 +117,29 @@ $application->add(new Command('text-detection-file'))
         );
     });
 
+$application->add(new Command('object-tracking'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Detect objects in video using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_object_tracking(
+            $input->getArgument('uri'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
+        );
+    });
+
+$application->add(new Command('object-tracking-file'))
+    ->addArgument('file', InputArgument::REQUIRED,
+        'Path to a local video file.')
+    ->addOption('polling-interval-seconds', '', InputOption::VALUE_REQUIRED,
+        'Polling interval in seconds to waiting for a Video API response.')
+    ->setDescription('Detect objects in a file using the Video Intelligence API')
+    ->setCode(function ($input, $output) {
+        analyze_object_tracking_file(
+            $input->getArgument('file'),
+            ['pollingIntervalSeconds' => $input->getOption('polling-interval-seconds')]
+        );
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

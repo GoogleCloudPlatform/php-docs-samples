@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -17,16 +16,19 @@
  */
 namespace Google\Cloud\Samples\Iot;
 
+require 'vendor/autoload.php';
+
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit Tests for dlp commands.
+ * Unit Tests for iot commands.
  */
-class dlpTest extends \PHPUnit_Framework_TestCase
+class iotTest extends \PHPUnit_Framework_TestCase
 {
     private static $testId;
     private static $registryId;
     private static $devices = [];
+    private static $gateways = [];
 
     public function checkEnv($var)
     {
@@ -53,6 +55,13 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             self::runCommand('delete-device', [
                 'registry' => self::$registryId,
                 'device' => $deviceId,
+            ]);
+        }
+        foreach (self::$gateways as $gatewayId) {
+            printf('Cleaning up Gateway %s' . PHP_EOL, $gatewayId);
+            self::runCommand('delete-gateway', [
+                'registry' => self::$registryId,
+                'gateway' => $gatewayId,
             ]);
         }
         if (self::$registryId) {
@@ -189,7 +198,8 @@ class dlpTest extends \PHPUnit_Framework_TestCase
             'device' => self::$devices[0],
             'command-data' => $command,
         ]);
-        $this->assertContains('not subscribed to the commands topic', $output);
+        print($output);
+        $this->assertContains('Sending command to', $output);
     }
 
     /** @depends testSetDeviceConfig */
@@ -267,6 +277,98 @@ class dlpTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertContains('Updated device', $output);
+    }
+
+    /** @depends testCreateRegistry */
+    public function testCreateGateway()
+    {
+        $gatewayId = 'test-rsa-gateway' . self::$testId;
+
+        $output = $this->runCommand('create-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+            'algorithm' => 'RS256',
+        ]);
+        self::$gateways[] = $gatewayId;
+        $this->assertContains('Gateway: ', $output);
+
+        $output = $this->runCommand('list-gateways', [
+            'registry' => self::$registryId
+        ]);
+        $this->assertContains($gatewayId, $output);
+    }
+
+    /** @depends testCreateGateway */
+    public function testBindUnbindDevice()
+    {
+        $deviceId = 'test-device-to-bind' . self::$testId;
+        $gatewayId = 'test-bindunbind-gateway' . self::$testId;
+
+        $this->runCommand('create-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+            'algorithm' => 'RS256',
+        ]);
+
+        $this->runCommand('create-unauth-device', [
+            'registry' => self::$registryId,
+            'device' => $deviceId,
+        ]);
+        self::$devices[] = $deviceId;
+
+        $output = $this->runCommand('bind-device-to-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'device' => $deviceId,
+        ]);
+        $this->assertContains('Device bound', $output);
+
+        $output = $this->runCommand('unbind-device-from-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'device' => $deviceId,
+        ]);
+        $this->assertContains('Device unbound', $output);
+    }
+
+    /** @depends testBindUnbindDevice */
+    public function testListDevicesForGateway()
+    {
+        $deviceId = 'php-bind-and-list' . self::$testId;
+        $gatewayId = 'php-bal-gateway' . self::$testId;
+
+        $this->runCommand('create-unauth-device', [
+            'registry' => self::$registryId,
+            'device' => $deviceId,
+        ]);
+        self::$devices[] = $deviceId;
+
+        $this->runCommand('create-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+            'algorithm' => 'RS256',
+        ]);
+
+        $this->runCommand('bind-device-to-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'device' => $deviceId,
+        ]);
+
+        $output = $this->runCommand('list-devices-for-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+        ]);
+        $this->assertContains($deviceId, $output);
+
+        $this->runCommand('unbind-device-from-gateway', [
+            'registry' => self::$registryId,
+            'gateway' => $gatewayId,
+            'device' => $deviceId,
+        ]);
     }
 
     private static function runCommand($commandName, $args = [])
