@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Appengine\Tasks\Tests;
+namespace Google\Cloud\Samples\Tasks\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
@@ -27,14 +27,15 @@ class TasksTest extends TestCase
 {
     use TestTrait;
 
-    public function testCreateTask()
+    public function testCreateHttpTask()
     {
         $queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
         $location = $this->requireEnv('CLOUD_TASKS_LOCATION');
 
-        $output = $this->runSnippet('create_task', [
+        $output = $this->runSnippet('create_http_task', [
             $location,
             $queue,
+            'http://example.com',
             'Task Details',
         ]);
         $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',

@@ -40,7 +40,7 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 
         export QUEUE_ID=my-appengine-queue
 
-    Then, identify the queue location
+    Then, identify the queue location:
 
         Determine the location ID, which can be discovered with
         `gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
@@ -50,12 +50,15 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 
         export LOCATION_ID=us-central1
 
-## Using App Engine Routing
-1. Run `php src/create_task.php`. The usage will print for each if no arguments are provided:
+    Lastly, set your target URL:
+        export URL=<your-target-url>
+
+## Using an HTTP Target
+1. Run `php src/create_http_task.php`. The usage will print for each if no arguments are provided:
 
     ```
-    $> php src/create_task.php
-    Usage: php src/create_task.php PROJECT_ID LOCATION_ID QUEUE_ID [PAYLOAD]
+    $> php src/create_http_task.php
+    Usage: php src/create_http_task.php PROJECT_ID LOCATION_ID QUEUE_ID URL [PAYLOAD]
     ```
 
 ## Contributing changes
