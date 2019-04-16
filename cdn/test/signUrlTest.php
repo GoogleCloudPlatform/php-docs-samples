@@ -54,7 +54,7 @@ class signUrlTest extends TestCase
                   "https://www.example.com/some/path?some=query&another=param&Expires=1549751461&KeyName=my-key&Signature=sTqqGX5hUJmlRJ84koAIhWW_c3M="),
         );
 
-        foreach($cases as $c) {
+        foreach ($cases as $c) {
             $this->assertEquals(sign_url($c[0], $c[1], $encoded_key, $c[2]), $c[3]);
         }
     }
