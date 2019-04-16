@@ -4,7 +4,6 @@
 
 Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP.
 
-`src/create_task.php` is a simple function to create tasks with App Engine routing.
 `src/create_http_task.php` is a simple function to create tasks with an HTTP target.
 
 ## Setup:
