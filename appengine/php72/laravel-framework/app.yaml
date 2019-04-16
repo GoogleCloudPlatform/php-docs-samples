@@ -5,6 +5,7 @@ env_variables:
   APP_KEY: YOUR_APP_KEY
   APP_STORAGE: /tmp
   VIEW_COMPILED_PATH: /tmp
+  SESSION_DRIVER: cookie
 
   ## To use Stackdriver logging in your Laravel application, copy
   ## "app/Logging/CreateStackdriverLogger.php" and "config/logging.php"
