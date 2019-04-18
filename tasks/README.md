@@ -1,10 +1,10 @@
-# Google Cloud Tasks App Engine Queue Samples
+# Google Cloud Tasks Samples
 
 ## Description
 
 Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP.
 
-`src/create_task.php` is a simple function to create tasks with App Engine routing.
+`src/create_http_task.php` is a simple function to create tasks with an HTTP target.
 
 ## Setup:
 
@@ -18,7 +18,7 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/appengine/php72/tasks
+    $ cd php-docs-samples/tasks
     ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
@@ -28,34 +28,26 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
     ```sh
     gcloud beta tasks queues create-app-engine-queue my-appengine-queue
     ```
-6. Set environment variables:
 
-    First, your project ID:
-
-        export PROJECT_ID=my-project-id
-
-    Then the queue ID, as specified at queue creation time. Queue IDs already
-    created can be listed with `gcloud alpha tasks queues list`.
-
-        export QUEUE_ID=my-appengine-queue
-
-    Then, identify the queue location
-
-        Determine the location ID, which can be discovered with
-        `gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
-        the "name" value (for instance, if the name is
-        "projects/my-project/locations/us-central1/queues/my-pull-queue", then the
-        location is "us-central1").
-
-        export LOCATION_ID=us-central1
-
-## Using App Engine Routing
-1. Run `php src/create_task.php`. The usage will print for each if no arguments are provided:
+## Using an HTTP Target
+1. Run `php src/create_http_task.php`. The usage will print for each if no arguments are provided:
 
     ```
-    $> php src/create_task.php
-    Usage: php src/create_task.php PROJECT_ID LOCATION_ID QUEUE_ID [PAYLOAD]
+    $> php src/create_http_task.php
+    Usage: php src/create_http_task.php PROJECT_ID LOCATION_ID QUEUE_ID URL [PAYLOAD]
     ```
+
+    where:
+    * `PROJECT_ID` is your Google Cloud Project id.
+    * `QUEUE_ID` is your queue id (ie my-appengine-queue).  
+      Queue IDs already created can be listed with `gcloud alpha tasks queues list`.
+    * `LOCATION_ID` is the location of your queue.  
+      Determine the location ID, which can be discovered with
+      `gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
+      the "name" value (for instance, if the name is
+      "projects/my-project/locations/us-central1/queues/my-pull-queue", then the
+      location is "us-central1").
+    * `URL` is the full URL to your target endpoint.
 
 ## Contributing changes
 
