@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/tasks/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/tasks/README.md
  */
 
 // Include Google Cloud dependendencies using Composer
@@ -38,7 +38,7 @@ use Google\Cloud\Tasks\V2beta3\Task;
 /** Uncomment and populate these variables in your code */
 // $projectId = 'The Google project ID';
 // $locationId = 'The Location ID';
-// $queueId = 'The Cloud Tasks App Engine Queue ID';
+// $queueId = 'The Cloud Tasks Queue ID';
 // $url = 'The full url path that the task request will be sent to.'
 // $payload = 'The payload your task should carry to the task handler. Optional';
 
