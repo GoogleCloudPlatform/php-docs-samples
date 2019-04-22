@@ -44,16 +44,6 @@ function analyze_entity_sentiment($text, $projectId = null)
 {
     $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
     try {
-        $entity_types = [
-            0 => 'UNKNOWN',
-            1 => 'PERSON',
-            2 => 'LOCATION',
-            3 => 'ORGANIZATION',
-            4 => 'EVENT',
-            5 => 'WORK_OF_ART',
-            6 => 'CONSUMER_GOOD',
-            7 => 'OTHER',
-        ];
         // Create a new Document
         $document = new Document();
         // Add text as content and set document type to PLAIN_TEXT
