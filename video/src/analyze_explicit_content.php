@@ -15,50 +15,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Video;
+
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/video/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 2 || count($argv) > 3) {
+    return printf("Usage: php %s URI\n", __FILE__);
+}
+list($_, $uri) = $argv;
+$options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
 
 // [START video_analyze_explicit_content]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 use Google\Cloud\VideoIntelligence\V1\Likelihood;
 
-/**
- * Analyze explicit content in the video.
- *
- * @param string $uri The cloud storage object to analyze. Must be formatted
- *                    like gs://bucketname/objectname.
- * @param array $options optional Array of options to pass to
- *                       OperationResponse::pollUntilComplete. This is useful
- *                       for increasing the "pollingIntervalSeconds" option.
- */
-function analyze_explicit_content($uri, array $options = [])
-{
-    # Instantiate a client.
-    $video = new VideoIntelligenceServiceClient();
+/** Uncomment and populate these variables in your code */
+// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
+// $options = []; // Optional, can be used to increate "pollingIntervalSeconds"
 
-    # Execute a request.
-    $operation = $video->annotateVideo([
-        'inputUri' => $uri,
-        'features' => [Feature::EXPLICIT_CONTENT_DETECTION]
-    ]);
+$video = new VideoIntelligenceServiceClient();
 
-    # Wait for the request to complete.
-    $operation->pollUntilComplete($options);
+# Execute a request.
+$operation = $video->annotateVideo([
+    'inputUri' => $uri,
+    'features' => [Feature::EXPLICIT_CONTENT_DETECTION]
+]);
 
-    # Print the result.
-    if ($operation->operationSucceeded()) {
-        $results = $operation->getResult()->getAnnotationResults()[0];
-        $explicitAnnotation = $results->getExplicitAnnotation();
-        foreach ($explicitAnnotation->getFrames() as $frame) {
-            $timeOffset = $frame->getTimeOffset();
-            $seconds = $timeOffset->getSeconds();
-            $nanoseconds = floatval($timeOffset->getNanos())/1000000000.00;
-            $time = $seconds + $nanoseconds;
-            printf('At %ss:' . PHP_EOL, $time);
-            printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
-        }
-    } else {
-        print_r($operation->getError());
+# Wait for the request to complete.
+$operation->pollUntilComplete($options);
+
+# Print the result.
+if ($operation->operationSucceeded()) {
+    $results = $operation->getResult()->getAnnotationResults()[0];
+    $explicitAnnotation = $results->getExplicitAnnotation();
+    foreach ($explicitAnnotation->getFrames() as $frame) {
+        $time = $frame->getTimeOffset();
+        printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos()/1000000000.0);
+        printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
     }
+} else {
+    print_r($operation->getError());
 }
 // [END video_analyze_explicit_content]

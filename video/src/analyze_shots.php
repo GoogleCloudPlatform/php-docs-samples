@@ -15,51 +15,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Video;
 
-// [START video_analyze_shots]
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 2 || count($argv) > 3) {
+    return printf("Usage: php %s URI\n", __FILE__);
+}
+list($_, $uri) = $argv;
+$options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
+
+// [START video_analyze_labels]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
-/**
- * Finds shot changes in the video.
- *
- * @param string $uri The cloud storage object to analyze. Must be formatted
- *                    like gs://bucketname/objectname.
- * @param array $options optional Array of options to pass to
- *                       OperationResponse::pollUntilComplete. This is useful
- *                       for increasing the "pollingIntervalSeconds" option.
- */
-function analyze_shots($uri, array $options = [])
-{
-    # Instantiate a client.
-    $video = new VideoIntelligenceServiceClient();
+/** Uncomment and populate these variables in your code */
+// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
+// $options = [];
 
-    # Execute a request.
-    $operation = $video->annotateVideo([
-        'inputUri' => $uri,
-        'features' => [Feature::SHOT_CHANGE_DETECTION]
-    ]);
+# Instantiate a client.
+$video = new VideoIntelligenceServiceClient();
 
-    # Wait for the request to complete.
-    $operation->pollUntilComplete($options);
+# Execute a request.
+$operation = $video->annotateVideo([
+    'inputUri' => $uri,
+    'features' => [Feature::SHOT_CHANGE_DETECTION]
+]);
 
-    # Print the result.
-    if ($operation->operationSucceeded()) {
-        $results = $operation->getResult()->getAnnotationResults()[0];
-        foreach ($results->getShotAnnotations() as $shot) {
-            $startTimeOffset = $shot->getStartTimeOffset();
-            $startSeconds = $startTimeOffset->getSeconds();
-            $startNanoseconds = floatval($startTimeOffset->getNanos())/1000000000.00;
-            $startTime = $startSeconds + $startNanoseconds;
-            $endTimeOffset = $shot->getEndTimeOffset();
-            $endSeconds = $endTimeOffset->getSeconds();
-            $endNanoseconds = floatval($endTimeOffset->getNanos())/1000000000.00;
-            $endTime = $endSeconds + $endNanoseconds;
-            printf('Shot: %ss to %ss' . PHP_EOL, $startTime, $endTime);
-        }
-    } else {
-        print_r($operation->getError());
+# Wait for the request to complete.
+$operation->pollUntilComplete($options);
+
+# Print the result.
+if ($operation->operationSucceeded()) {
+    $results = $operation->getResult()->getAnnotationResults()[0];
+    foreach ($results->getShotAnnotations() as $shot) {
+        $start = $shot->getStartTimeOffset();
+        $end = $shot->getEndTimeOffset();
+        printf('Shot: %ss to %ss' . PHP_EOL,
+            $start->getSeconds() + $start->getNanos()/1000000000.0,
+            $end->getSeconds() + $end->getNanos()/1000000000.0);
     }
+} else {
+    print_r($operation->getError());
 }
 // [END video_analyze_shots]

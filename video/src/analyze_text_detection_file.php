@@ -15,60 +15,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Video;
 
-// [START video_analyze_text_detection_file]
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 2 || count($argv) > 3) {
+    return printf("Usage: php %s PATH\n", __FILE__);
+}
+list($_, $path) = $argv;
+$options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
+
+// [START video_analyze_labels]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
-/**
- * Finds labels in the video.
- *
- * @param string $path File path to a video file to analyze.
- * @param array $options optional Array of options to pass to
- *                       OperationResponse::pollUntilComplete. This is useful
- *                       for increasing the "pollingIntervalSeconds" option.
- */
-function analyze_text_detection_file($path, array $options = [])
-{
-    # Instantiate a client.
-    $video = new VideoIntelligenceServiceClient();
+/** Uncomment and populate these variables in your code */
+// $path = 'File path to a video file to analyze';
+// $options = [];
 
-    # Read the local video file
-    $inputContent = file_get_contents($path);
+# Instantiate a client.
+$video = new VideoIntelligenceServiceClient();
 
-    # Execute a request.
-    $operation = $video->annotateVideo([
-        'inputContent' => $inputContent,
-        'features' => [Feature::TEXT_DETECTION]
-    ]);
+# Read the local video file
+$inputContent = file_get_contents($path);
 
-    # Wait for the request to complete.
-    $operation->pollUntilComplete($options);
+# Execute a request.
+$operation = $video->annotateVideo([
+    'inputContent' => $inputContent,
+    'features' => [Feature::TEXT_DETECTION]
+]);
 
-    # Print the results.
-    if ($operation->operationSucceeded()) {
-        $results = $operation->getResult()->getAnnotationResults()[0];
+# Wait for the request to complete.
+$operation->pollUntilComplete($options);
 
-        # Process video/segment level label annotations
-        foreach ($results->getTextAnnotations() as $text) {
-            printf('Video text description: %s' . PHP_EOL, $text->getText());
-            foreach ($text->getSegments() as $segment) {
-                $startTimeOffset = $segment->getSegment()->getStartTimeOffset();
-                $startSeconds = $startTimeOffset->getSeconds();
-                $startNanoseconds = floatval($startTimeOffset->getNanos())/1000000000.00;
-                $startTime = $startSeconds + $startNanoseconds;
-                $endTimeOffset = $segment->getSegment()->getEndTimeOffset();
-                $endSeconds = $endTimeOffset->getSeconds();
-                $endNanoseconds = floatval($endTimeOffset->getNanos())/1000000000.00;
-                $endTime = $endSeconds + $endNanoseconds;
-                printf('  Segment: %ss to %ss' . PHP_EOL, $startTime, $endTime);
-                printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
-            }
+# Print the results.
+if ($operation->operationSucceeded()) {
+    $results = $operation->getResult()->getAnnotationResults()[0];
+
+    # Process video/segment level label annotations
+    foreach ($results->getTextAnnotations() as $text) {
+        printf('Video text description: %s' . PHP_EOL, $text->getText());
+        foreach ($text->getSegments() as $segment) {
+            $start = $segment->getSegment()->getStartTimeOffset();
+            $end = $segment->getSegment()->getEndTimeOffset();
+            printf('  Segment: %ss to %ss' . PHP_EOL,
+                $start->getSeconds() + $start->getNanos()/1000000000.0,
+                $end->getSeconds() + $end->getNanos()/1000000000.0);
+            printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
         }
-        print(PHP_EOL);
-    } else {
-        print_r($operation->getError());
     }
+    print(PHP_EOL);
+} else {
+    print_r($operation->getError());
 }
 // [END video_analyze_text_detection_file]

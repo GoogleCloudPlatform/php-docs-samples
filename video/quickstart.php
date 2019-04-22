@@ -45,15 +45,12 @@ if ($operation->operationSucceeded()) {
             printf('  Category: %s' . PHP_EOL, $categoryEntity->getDescription());
         }
         foreach ($label->getSegments() as $segment) {
-            $startTimeOffset = $segment->getSegment()->getStartTimeOffset();
-            $startSeconds = $startTimeOffset->getSeconds();
-            $startNanoseconds = floatval($startTimeOffset->getNanos())/1000000000.00;
-            $startTime = $startSeconds + $startNanoseconds;
-            $endTimeOffset = $segment->getSegment()->getEndTimeOffset();
-            $endSeconds = $endTimeOffset->getSeconds();
-            $endNanoseconds = floatval($endTimeOffset->getNanos())/1000000000.00;
-            $endTime = $endSeconds + $endNanoseconds;
-            printf('  Segment: %ss to %ss' . PHP_EOL, $startTime, $endTime);
+            $start = $segment->getSegment()->getStartTimeOffset();
+            $end = $segment->getSegment()->getEndTimeOffset();
+            printf('  Segment: %ss to %ss' . PHP_EOL,
+                $start->getSeconds() + $start->getNanos()/1000000000.0,
+                $end->getSeconds() + $end->getNanos()/1000000000.0
+            );
             printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
         }
     }

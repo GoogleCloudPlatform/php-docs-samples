@@ -15,7 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Video;
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 2 || count($argv) > 3) {
+    return printf("Usage: php %s URI\n", __FILE__);
+}
+list($_, $uri) = $argv;
+$options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
 
 // [START video_speech_transcription_gcs]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
@@ -23,66 +31,62 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 use Google\Cloud\VideoIntelligence\V1\VideoContext;
 use Google\Cloud\VideoIntelligence\V1\SpeechTranscriptionConfig;
 
-/**
- * Transcribe speech from a video stored on GCS.
- *
- * @param string $path The cloud storage object to analyze.
- */
-function analyze_transcription($uri, array $options = [])
-{
-    # set configs
-    $features = [Feature::SPEECH_TRANSCRIPTION];
-    $speechTranscriptionConfig = (new SpeechTranscriptionConfig())
-        ->setLanguageCode('en-US')
-        ->setEnableAutomaticPunctuation(true);
-    $videoContext = (new VideoContext())
-        ->setSpeechTranscriptionConfig($speechTranscriptionConfig);
+/** Uncomment and populate these variables in your code */
+// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
+// $options = [];
 
-    # instantiate a client
-    $client = new VideoIntelligenceServiceClient();
+# set configs
+$features = [Feature::SPEECH_TRANSCRIPTION];
+$speechTranscriptionConfig = (new SpeechTranscriptionConfig())
+    ->setLanguageCode('en-US')
+    ->setEnableAutomaticPunctuation(true);
+$videoContext = (new VideoContext())
+    ->setSpeechTranscriptionConfig($speechTranscriptionConfig);
 
-    # execute a request.
-    $operation = $client->annotateVideo([
-        'inputUri' => $uri,
-        'features' => $features,
-        'videoContext' => $videoContext
-    ]);
+# instantiate a client
+$client = new VideoIntelligenceServiceClient();
 
-    print('Processing video for speech transcription...' . PHP_EOL);
-    # Wait for the request to complete.
-    $operation->pollUntilComplete($options);
+# execute a request.
+$operation = $client->annotateVideo([
+    'inputUri' => $uri,
+    'features' => $features,
+    'videoContext' => $videoContext
+]);
 
-    # Print the result.
-    if ($operation->operationSucceeded()) {
-        $result = $operation->getResult();
-        # there is only one annotation_result since only
-        # one video is processed.
-        $annotationResults = $result->getAnnotationResults()[0];
-        $speechTranscriptions = $annotationResults ->getSpeechTranscriptions();
+print('Processing video for speech transcription...' . PHP_EOL);
+# Wait for the request to complete.
+$operation->pollUntilComplete($options);
 
-        foreach ($speechTranscriptions as $transcription) {
-            # the number of alternatives for each transcription is limited by
-            # $max_alternatives in SpeechTranscriptionConfig
-            # each alternative is a different possible transcription
-            # and has its own confidence score.
-            foreach ($transcription->getAlternatives() as $alternative) {
-                print('Alternative level information' . PHP_EOL);
-                
-                printf('Transcript: %s' . PHP_EOL, $alternative->getTranscript());
-                printf('Confidence: %s' . PHP_EOL, $alternative->getConfidence());
+# Print the result.
+if ($operation->operationSucceeded()) {
+    $result = $operation->getResult();
+    # there is only one annotation_result since only
+    # one video is processed.
+    $annotationResults = $result->getAnnotationResults()[0];
+    $speechTranscriptions = $annotationResults ->getSpeechTranscriptions();
 
-                print('Word level information:');
-                foreach ($alternative->getWords() as $wordInfo) {
-                    printf(
-                        '%s s - %s s: %s' . PHP_EOL,
-                        $wordInfo->getStartTime()->getSeconds(),
-                        $wordInfo->getEndTime()->getSeconds(),
-                        $wordInfo->getWord()
-                    );
-                }
+    foreach ($speechTranscriptions as $transcription) {
+        # the number of alternatives for each transcription is limited by
+        # $max_alternatives in SpeechTranscriptionConfig
+        # each alternative is a different possible transcription
+        # and has its own confidence score.
+        foreach ($transcription->getAlternatives() as $alternative) {
+            print('Alternative level information' . PHP_EOL);
+
+            printf('Transcript: %s' . PHP_EOL, $alternative->getTranscript());
+            printf('Confidence: %s' . PHP_EOL, $alternative->getConfidence());
+
+            print('Word level information:');
+            foreach ($alternative->getWords() as $wordInfo) {
+                printf(
+                    '%s s - %s s: %s' . PHP_EOL,
+                    $wordInfo->getStartTime()->getSeconds(),
+                    $wordInfo->getEndTime()->getSeconds(),
+                    $wordInfo->getWord()
+                );
             }
         }
     }
-    $client->close();
 }
+$client->close();
 // [END video_speech_transcription_gcs]

@@ -27,28 +27,11 @@ Video Intelligence API from PHP.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php video.php`. The following commands are available:
-
-    ```
-    faces                Detect faces changes in video using the Video Intelligence API
-    help                 Displays help for a command
-    labels               Detect labels in video using the Video Intelligence API
-    labels-in-file       Detect labels in a file using the Video Intelligence API
-    list                 Lists commands
-    safe-search          Detect safe search in video using the Video Intelligence API
-    shots                Detect shots in video using the Video Intelligence API
-    transcription        Transcribe speech from a video
-    text-detection       Detects OCR text in video using the Video Intelligence API
-    text-detection-file  Detects OCR text in a file using the Video Intelligence API
-    object-tracking      Object tracking tracks multiple objects detected in an input video
-    object-tracking-file Object tracking tracks multiple objects detected in a file
-    ```
-
-    Example:
-
-    ```
-    $ php video.php shots gs://demomaker/cat.mp4
-    0s to 14.833664s
+5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+    are provided:
+    ```sh
+    $ php src/analyze_shots.php gs://demomaker/cat.mp4
+    Shot: 0s to 14.84s
     ```
 
 
