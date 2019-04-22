@@ -117,9 +117,6 @@ function reidentify_fpe(
         'item' => $item
     ]);
 
-    $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
-
     // Print the results
     $reidentifiedValue = $response->getItem()->getValue();
     print($reidentifiedValue);

@@ -70,9 +70,6 @@ $response = $dlp->inspectContent($parent, array(
     'item' => $content
 ));
 
-$likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                'Likely', 'Very likely'];
-
 // Print the results
 $findings = $response->getResult()->getFindings();
 if (count($findings) == 0) {
@@ -84,7 +81,7 @@ if (count($findings) == 0) {
             print('  Quote: ' . $finding->getQuote() . PHP_EOL);
         }
         print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-        $likelihoodString = $likelihoods[$finding->getLikelihood()];
+        $likelihoodString = Likelihood::name($finding->getLikelihood());
         print('  Likelihood: ' . $likelihoodString . PHP_EOL);
     }
 }

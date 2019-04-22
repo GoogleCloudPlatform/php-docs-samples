@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Video;
 // [START video_analyze_explicit_content]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
+use Google\Cloud\VideoIntelligence\V1\Likelihood;
 
 /**
  * Analyze explicit content in the video.
@@ -46,8 +47,6 @@ function analyze_explicit_content($uri, array $options = [])
 
     # Print the result.
     if ($operation->operationSucceeded()) {
-        $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                        'Likely', 'Very likely'];
         $results = $operation->getResult()->getAnnotationResults()[0];
         $explicitAnnotation = $results->getExplicitAnnotation();
         foreach ($explicitAnnotation->getFrames() as $frame) {
@@ -56,7 +55,7 @@ function analyze_explicit_content($uri, array $options = [])
             $nanoseconds = floatval($timeOffset->getNanos())/1000000000.00;
             $time = $seconds + $nanoseconds;
             printf('At %ss:' . PHP_EOL, $time);
-            printf('  pornography: ' . $likelihoods[$frame->getPornographyLikelihood()] . PHP_EOL);
+            printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
         }
     } else {
         print_r($operation->getError());
