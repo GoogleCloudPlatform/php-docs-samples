@@ -24,9 +24,10 @@
 # [START language_syntax_gcs]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\Document\Type;
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
+use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\Document\Type;
+use Google\Cloud\Language\V1\LanguageServiceClient;
+use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 
 /**
  * Find the syntax in text stored in a Cloud Storage bucket.
@@ -44,22 +45,6 @@ function analyze_syntax_from_file($gcsUri, $projectId = null)
     $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
 
     try {
-        $tag_types = [
-            0 => 'UNKNOWN',
-            1 => 'ADJ',
-            2 => 'ADP',
-            3 => 'ADV',
-            4 => 'CONJ',
-            5 => 'DET',
-            6 => 'NOUN',
-            7 => 'NUM',
-            8 => 'PRON',
-            9 => 'PRT',
-            10 => 'PUNCT',
-            11 => 'VERB',
-            12 => 'X',
-            13 => 'AFFIX',
-        ];
         // Create a new Document
         $document = new Document();
         // Pass GCS URI and set document type to PLAIN_TEXT
@@ -70,7 +55,7 @@ function analyze_syntax_from_file($gcsUri, $projectId = null)
         // Print out information about each entity
         foreach ($tokens as $token) {
             printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
-            printf('Token part of speech: %s' . PHP_EOL, $tag_types[$token->getPartOfSpeech()->getTag()]);
+            printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
             print(PHP_EOL);
         }
     } finally {

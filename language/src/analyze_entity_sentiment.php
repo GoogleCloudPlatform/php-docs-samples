@@ -24,9 +24,10 @@
 # [START language_entity_sentiment_text]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\Document\Type;
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
+use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\Document\Type;
+use Google\Cloud\Language\V1\LanguageServiceClient;
+use Google\Cloud\Language\V1\Entity\Type as EntityType;
 
 /**
  * Find the entities in text.
@@ -63,7 +64,7 @@ function analyze_entity_sentiment($text, $projectId = null)
         // Print out information about each entity
         foreach ($entities as $entity) {
             printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-            printf('Entity Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
+            printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
             printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
             $sentiment = $entity->getSentiment();
             if ($sentiment) {

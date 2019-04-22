@@ -24,9 +24,12 @@
 # [START analyze_all_from_file]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\AnnotateTextRequest\Features;
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
+use Google\Cloud\Language\V1\AnnotateTextRequest\Features;
+use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\LanguageServiceClient;
+use Google\Cloud\Language\V1\Entity\Type as EntityType;
+use Google\Cloud\Language\V1\EntityMention\Type as MentionType;
+use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 
 /**
  * Find the everything in text stored in a Cloud Storage bucket.
@@ -42,42 +45,6 @@ function analyze_all_from_file($gcsUri, $projectId = null)
 {
     // Create the Natural Language client
     $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-
-    // Entities, Mention and Tags mappings
-    $entity_types = [
-        0 => 'UNKNOWN',
-        1 => 'PERSON',
-        2 => 'LOCATION',
-        3 => 'ORGANIZATION',
-        4 => 'EVENT',
-        5 => 'WORK_OF_ART',
-        6 => 'CONSUMER_GOOD',
-        7 => 'OTHER',
-    ];
-
-    $mention_type = [
-        0 => 'TYPE_UNKNOWN',
-        1 => 'PROPER',
-        2 => 'COMMON',
-    ];
-
-    $tag_types = [
-        0 => 'UNKNOWN',
-        1 => 'ADJ',
-        2 => 'ADP',
-        3 => 'ADV',
-        4 => 'CONJ',
-        5 => 'DET',
-        6 => 'NOUN',
-        7 => 'NUM',
-        8 => 'PRON',
-        9 => 'PRT',
-        10 => 'PUNCT',
-        11 => 'VERB',
-        12 => 'X',
-        13 => 'AFFIX',
-    ];
-
     try {
         // Create a new Document
         $document = new Document();
@@ -95,7 +62,7 @@ function analyze_all_from_file($gcsUri, $projectId = null)
         $entities = $response->getEntities();
         foreach ($entities as $entity) {
             printf('Name: %s' . PHP_EOL, $entity->getName());
-            printf('Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
+            printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
             printf('Salience: %s' . PHP_EOL, $entity->getSalience());
             if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
                 printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
@@ -107,7 +74,7 @@ function analyze_all_from_file($gcsUri, $projectId = null)
             foreach ($entity->getMentions() as $mention) {
                 printf('  Begin Offset: %s' . PHP_EOL, $mention->getText()->getBeginOffset());
                 printf('  Content: %s' . PHP_EOL, $mention->getText()->getContent());
-                printf('  Mention Type: %s' . PHP_EOL, $mention_type[$mention->getType()]);
+                printf('  Mention Type: %s' . PHP_EOL, MentionType::name($mention->getType()));
                 printf(PHP_EOL);
             }
             printf(PHP_EOL);
@@ -135,7 +102,7 @@ function analyze_all_from_file($gcsUri, $projectId = null)
         // Print out information about each entity
         foreach ($tokens as $token) {
             printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
-            printf('Token part of speech: %s' . PHP_EOL, $tag_types[$token->getPartOfSpeech()->getTag()]);
+            printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
             printf(PHP_EOL);
         }
     } finally {

@@ -24,8 +24,9 @@
 # [START language_entities_gcs]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
+use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\LanguageServiceClient;
+use Google\Cloud\Language\V1\Entity\Type;
 
 /**
  * Find the entities in text stored in a Cloud Storage bucket.
@@ -42,16 +43,6 @@ function analyze_entities_from_file($gcsUri, $projectId = null)
     // Create the Natural Language client
     $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
     try {
-        $entity_types = [
-            0 => 'UNKNOWN',
-            1 => 'PERSON',
-            2 => 'LOCATION',
-            3 => 'ORGANIZATION',
-            4 => 'EVENT',
-            5 => 'WORK_OF_ART',
-            6 => 'CONSUMER_GOOD',
-            7 => 'OTHER',
-        ];
         $document = new Document();
         // Pass GCS URI and set document type to PLAIN_TEXT
         $document->setGcsContentUri($gcsUri)->setType(1);
@@ -61,7 +52,7 @@ function analyze_entities_from_file($gcsUri, $projectId = null)
         // Print out information about each entity
         foreach ($entities as $entity) {
             printf('Name: %s' . PHP_EOL, $entity->getName());
-            printf('Type: %s' . PHP_EOL, $entity_types[$entity->getType()]);
+            printf('Type: %s' . PHP_EOL, Type::name($entity->getType()));
             printf('Salience: %s' . PHP_EOL, $entity->getSalience());
             if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
                 printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
