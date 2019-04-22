@@ -26,7 +26,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 2 || count($argv) > 3) {
-    return printf("Usage: php %s URI\n", __FILE__);
+    return print("Usage: php analyze_explicit_content.php URI\n");
 }
 list($_, $uri) = $argv;
 $options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];

@@ -21,7 +21,13 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
-namespace Google\Cloud\Samples\Speech;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 2) {
+    return print("Usage: php streaming_recognize.php AUDIO_FILE\n");
+}
+list($_, $audioFile) = $argv;
 
 # [START speech_transcribe_streaming]
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -30,64 +36,48 @@ use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-/**
- * Transcribe an audio file using Google Cloud Speech API
- * Example:
- * ```
- * $audoEncoding =  Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding::WAV
- * streaming_recognize('/path/to/audiofile.wav', 'en-US');
- * ```.
- *
- * @param string $audioFile path to an audio file.
- * @param string $languageCode The language of the content to
- *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
- * @param string $encoding
- * @param string $sampleRateHertz
- *
- * @return string the text transcription
- */
-function streaming_recognize($audioFile)
-{
-    // change these variables
-    $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 32000;
-    $languageCode = 'en-US';
+/** Uncomment and populate these variables in your code */
+// $audioFile = 'path to an audio file';
 
-    if (!extension_loaded('grpc')) {
-        throw new \Exception('Install the grpc extension ' .
-            '(pecl install grpc)');
-    }
+// change these variables if necessary
+$encoding = AudioEncoding::LINEAR16;
+$sampleRateHertz = 32000;
+$languageCode = 'en-US';
 
-    $speechClient = new SpeechClient();
-    try {
-        $config = (new RecognitionConfig())
-            ->setEncoding($encoding)
-            ->setSampleRateHertz($sampleRateHertz)
-            ->setLanguageCode($languageCode);
+// the gRPC extension is required for streaming
+if (!extension_loaded('grpc')) {
+    throw new \Exception('Install the grpc extension (pecl install grpc)');
+}
 
-        $strmConfig = new StreamingRecognitionConfig();
-        $strmConfig->setConfig($config);
+$speechClient = new SpeechClient();
+try {
+    $config = (new RecognitionConfig())
+        ->setEncoding($encoding)
+        ->setSampleRateHertz($sampleRateHertz)
+        ->setLanguageCode($languageCode);
 
-        $strmReq = new StreamingRecognizeRequest();
-        $strmReq->setStreamingConfig($strmConfig);
+    $strmConfig = new StreamingRecognitionConfig();
+    $strmConfig->setConfig($config);
 
-        $strm = $speechClient->streamingRecognize();
-        $strm->write($strmReq);
+    $strmReq = new StreamingRecognizeRequest();
+    $strmReq->setStreamingConfig($strmConfig);
 
-        $strmReq = new StreamingRecognizeRequest();
-        $content = file_get_contents($audioFile);
-        $strmReq->setAudioContent($content);
-        $strm->write($strmReq);
+    $strm = $speechClient->streamingRecognize();
+    $strm->write($strmReq);
 
-        foreach ($strm->closeWriteAndReadAll() as $response) {
-            foreach ($response->getResults() as $result) {
-                foreach ($result->getAlternatives() as $alt) {
-                    printf("Transcription: %s\n", $alt->getTranscript());
-                }
+    $strmReq = new StreamingRecognizeRequest();
+    $content = file_get_contents($audioFile);
+    $strmReq->setAudioContent($content);
+    $strm->write($strmReq);
+
+    foreach ($strm->closeWriteAndReadAll() as $response) {
+        foreach ($response->getResults() as $result) {
+            foreach ($result->getAlternatives() as $alt) {
+                printf("Transcription: %s\n", $alt->getTranscript());
             }
         }
-    } finally {
-        $speechClient->close();
     }
+} finally {
+    $speechClient->close();
 }
 # [END speech_transcribe_streaming]

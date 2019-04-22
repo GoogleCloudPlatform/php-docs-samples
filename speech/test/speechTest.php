@@ -18,43 +18,41 @@
 namespace Google\Cloud\Samples\Speech\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 class speechTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
-    protected static $commandFile = __DIR__ . '/../speech.php';
     protected static $bucketName;
 
     public function testBase64Audio()
     {
         $audioFile = __DIR__ . '/data/audio32KHz.raw';
 
-        $base64Audio = require __DIR__ . '/../src/base64_encode_audio.php';
+        $output = $this->runSnippet('base64_encode_audio', [$audioFile]);
 
         $audioFileResource = fopen($audioFile, 'r');
-        $this->assertEquals(base64_decode($base64Audio), stream_get_contents($audioFileResource));
+        $this->assertEquals(
+            base64_decode($output),
+            stream_get_contents($audioFileResource)
+        );
     }
 
     public function testTranscribeEnhanced()
     {
         $path = __DIR__ . '/data/commercial_mono.wav';
-        $output = $this->runCommand('transcribe-enhanced', [
-            'audio-file' => $path
-        ]);
-        $this->assertContains('Chrome',$output);
+        $output = $this->runSnippet('transcribe_enhanced_model', [$path]);
+        $this->assertContains('Chrome', $output);
     }
 
     public function testTranscribeModel()
     {
         $path = __DIR__ . '/data/audio32KHz.raw';
-        $output = $this->runCommand('transcribe-model', [
-            'audio-file' => $path,
-            '--model' => 'video'
-        ]);
+        $output = $this->runSnippet(
+            'transcribe_model_selection',
+            [$path, 'video']
+        );
         // $this->assertContains('the weather outside is sunny',$output);
         $this->assertContains('how old is the Brooklyn Bridge',$output);
     }
@@ -62,9 +60,7 @@ class speechTest extends TestCase
     public function testTranscribePunctuation()
     {
         $path = __DIR__ . '/data/audio32KHz.raw';
-        $output = $this->runCommand('transcribe-punctuation', [
-            'audio-file' => $path
-        ]);
+        $output = $this->runSnippet('transcribe_auto_punctuation', [$path]);
         $this->assertContains('How old is the Brooklyn Bridge?',$output);
     }
 
@@ -74,17 +70,15 @@ class speechTest extends TestCase
         if ($requireGrpc && !extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!self::$bucketName && in_array($command, ['transcribe-gcs', 'transcribe-async-gcs'])) {
+        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs'])) {
             $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         }
-        $output = $this->runCommand($command, [
-            'audio-file' => $audioFile
-        ]);
+        $output = $this->runSnippet($command, [$audioFile]);
 
         $this->assertContains('how old is the Brooklyn Bridge', $output);
 
         // Check for the word time offsets
-        if (in_array($command, ['transcribe-async-words'])) {
+        if (in_array($command, ['transcribe_async-words'])) {
             $this->assertRegexp('/start: "*.*s", end: "*.*s/', $output);
         }
     }
@@ -93,12 +87,12 @@ class speechTest extends TestCase
     {
         self::$bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         return [
-            ['transcribe', __DIR__ . '/data/audio32KHz.raw'],
-            ['transcribe-gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
-            ['transcribe-async', __DIR__ . '/data/audio32KHz.raw'],
-            ['transcribe-async-gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
-            ['transcribe-async-words', __DIR__ . '/data/audio32KHz.raw'],
-            ['transcribe-stream', __DIR__ . '/data/audio32KHz.raw', true],
+            ['transcribe_sync', __DIR__ . '/data/audio32KHz.raw'],
+            ['transcribe_sync_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['transcribe_async', __DIR__ . '/data/audio32KHz.raw'],
+            ['transcribe_async_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['transcribe_async_words', __DIR__ . '/data/audio32KHz.raw'],
+            ['streaming_recognize', __DIR__ . '/data/audio32KHz.raw', true],
         ];
     }
 }

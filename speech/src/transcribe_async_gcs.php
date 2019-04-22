@@ -21,7 +21,13 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
-namespace Google\Cloud\Samples\Speech;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 2) {
+    return print("Usage: php transcribe_async_gcs.php URI\n");
+}
+list($_, $uri) = $argv;
 
 # [START speech_transcribe_async_gcs]
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -29,62 +35,47 @@ use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-/**
- * Transcribe an audio file using Google Cloud Speech API
- * Example:
- * ```
- * transcribe_async_gcs('your-bucket-name', 'audiofile.wav');
- * ```.
- *
- * @param string $bucketName The Cloud Storage bucket name.
- * @param string $objectName The Cloud Storage object name.
- * @param string $languageCode The Cloud Storage
- *     be recognized. Accepts BCP-47 (e.g., `"en-US"`, `"es-ES"`).
- * @param array $options configuration options.
- *
- * @return string the text transcription
- */
-function transcribe_async_gcs($audioFile)
-{
-    // change these variables
-    $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 32000;
-    $languageCode = 'en-US';
+/** Uncomment and populate these variables in your code */
+// $uri = 'The Cloud Storage object to transcribe (gs://your-bucket-name/your-object-name)';
 
-    // set string as audio content
-    $audio = (new RecognitionAudio())
-        ->setUri($audioFile);
+// change these variables if necessary
+$encoding = AudioEncoding::LINEAR16;
+$sampleRateHertz = 32000;
+$languageCode = 'en-US';
 
-    // set config
-    $config = (new RecognitionConfig())
-        ->setEncoding($encoding)
-        ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode);
+// set string as audio content
+$audio = (new RecognitionAudio())
+    ->setUri($uri);
 
-    // create the speech client
-    $client = new SpeechClient();
+// set config
+$config = (new RecognitionConfig())
+    ->setEncoding($encoding)
+    ->setSampleRateHertz($sampleRateHertz)
+    ->setLanguageCode($languageCode);
 
-    // create the asyncronous recognize operation
-    $operation = $client->longRunningRecognize($config, $audio);
-    $operation->pollUntilComplete();
+// create the speech client
+$client = new SpeechClient();
 
-    if ($operation->operationSucceeded()) {
-        $response = $operation->getResult();
+// create the asyncronous recognize operation
+$operation = $client->longRunningRecognize($config, $audio);
+$operation->pollUntilComplete();
 
-        // each result is for a consecutive portion of the audio. iterate
-        // through them to get the transcripts for the entire audio file.
-        foreach ($response->getResults() as $result) {
-            $alternatives = $result->getAlternatives();
-            $mostLikely = $alternatives[0];
-            $transcript = $mostLikely->getTranscript();
-            $confidence = $mostLikely->getConfidence();
-            printf('Transcript: %s' . PHP_EOL, $transcript);
-            printf('Confidence: %s' . PHP_EOL, $confidence);
-        }
-    } else {
-        print_r($operation->getError());
+if ($operation->operationSucceeded()) {
+    $response = $operation->getResult();
+
+    // each result is for a consecutive portion of the audio. iterate
+    // through them to get the transcripts for the entire audio file.
+    foreach ($response->getResults() as $result) {
+        $alternatives = $result->getAlternatives();
+        $mostLikely = $alternatives[0];
+        $transcript = $mostLikely->getTranscript();
+        $confidence = $mostLikely->getConfidence();
+        printf('Transcript: %s' . PHP_EOL, $transcript);
+        printf('Confidence: %s' . PHP_EOL, $confidence);
     }
-
-    $client->close();
+} else {
+    print_r($operation->getError());
 }
+
+$client->close();
 # [END speech_transcribe_async_gcs]
