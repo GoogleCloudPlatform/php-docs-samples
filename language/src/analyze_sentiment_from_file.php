@@ -24,9 +24,9 @@
 # [START language_sentiment_gcs]
 namespace Google\Cloud\Samples\Language;
 
-use Google\Cloud\Language\V1beta2\Document;
-use Google\Cloud\Language\V1beta2\Document\Type;
-use Google\Cloud\Language\V1beta2\LanguageServiceClient;
+use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\Document\Type;
+use Google\Cloud\Language\V1\LanguageServiceClient;
 
 /**
  * Find the sentiment in text stored in a Cloud Storage bucket.
