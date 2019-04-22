@@ -15,10 +15,24 @@
  * limitations under the License.
  */
 
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/translate/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 2) {
+    return printf("Usage: php %s TEXT\n", __FILE__);
+}
+list($_, $text) = $argv;
 
 // [START translate_detect_language]
 use Google\Cloud\Translate\TranslateClient;
 
+/** Uncomment and populate these variables in your code */
 // $text = 'The text whose language to detect.  This will be detected as en.';
 
 $translate = new TranslateClient();

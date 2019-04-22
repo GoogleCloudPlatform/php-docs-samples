@@ -27,15 +27,14 @@ Video Intelligence API from PHP.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
-    are provided:
+5.  **Run** with the command `php src/SNIPPET_NAME.php`. For example:
     ```sh
+    $ php src/analyze_shots.php gs://demomaker/cat.mp4
+    Usage: php src/analyze_shots.php URI
+
     $ php src/analyze_shots.php gs://demomaker/cat.mp4
     Shot: 0s to 14.84s
     ```
-
-
-6. Run `php video.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes
 

@@ -15,19 +15,31 @@
  * limitations under the License.
  */
 
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/translate/README.md
+ */
 
-namespace Google\Cloud\Samples\Translate;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) > 2) {
+    return printf("Usage: php %s [TARGET_LANGUAGE]\n", __FILE__);
+}
+$targetLanguage = isset($argv[1]) ? $argv[1] : 'en';
 
 // [START translate_list_language_names]
 use Google\Cloud\Translate\TranslateClient;
 
-// $targetLanguage = 'en'; // Print the names of the languages in which language?
+/** Uncomment and populate these variables in your code */
+// $targetLanguage = 'en'; // Language to print the language names in
 
 $translate = new TranslateClient();
 $result = $translate->localizedLanguages([
     'target' => $targetLanguage,
 ]);
 foreach ($result as $lang) {
-    print("$lang[code]: $lang[name]\n");
+    printf('%s: %s' . PHP_EOL, $lang['code'], $lang['name']);
 }
 // [END translate_list_language_names]

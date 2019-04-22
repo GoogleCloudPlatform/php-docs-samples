@@ -18,46 +18,34 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
 
 /**
  * Unit Tests for transcribe commands.
  */
-class CommandTest extends \PHPUnit_Framework_TestCase
+class translateTest extends \PHPUnit_Framework_TestCase
 {
-    private $application;
-
-    public function setUp()
-    {
-        $this->application = require __DIR__ . '/../translate.php';
-    }
+    use TestTrait;
 
     public function testTranslate()
     {
-        $output = $this->runCommand('translate', [
-            'text' => 'Hello.',
-            '-t' => 'ja',
-        ]);
+        $output = $this->runSnippet(
+            'translate',
+            ['Hello.', 'ja']
+        );
         $this->assertContains('Source language: en', $output);
         $this->assertContains('Translation:', $output);
     }
 
-    /** @expectedException Google\Cloud\Core\Exception\BadRequestException */
     public function testTranslateBadLanguage()
     {
-        $this->runCommand('translate', [
-            'text' => 'Hello.',
-            '-t' => 'jp',
-        ]);
+        $output = $this->runSnippet('translate', ['Hello.', 'jp']);
+        $this->assertContains('Google\Cloud\Core\Exception\BadRequestException', $output);
     }
 
     public function testTranslateWithModel()
     {
-        $output = $this->runCommand('translate', [
-            'text' => 'Hello.',
-            '-t' => 'ja',
-            '--model' => 'nmt',
-        ]);
+        $output = $this->runSnippet('translate_with_model', ['Hello.', 'ja']);
         $this->assertContains('Source language: en', $output);
         $this->assertContains('Translation:', $output);
         $this->assertContains('Model: nmt', $output);
@@ -65,50 +53,27 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectLanguage()
     {
-        $output = $this->runCommand('detect-language', [
-            'text' => 'Hello.',
-        ]);
+        $output = $this->runSnippet('detect_language', ['Hello.']);
         $this->assertContains('Language code: en', $output);
         $this->assertContains('Confidence:', $output);
     }
 
     public function testListCodes()
     {
-        $output = $this->runCommand('list-codes');
+        $output = $this->runSnippet('list_codes');
         $this->assertContains("\nen\n", $output);
         $this->assertContains("\nja\n", $output);
     }
 
     public function testListLanguagesInEnglish()
     {
-        $output = $this->runCommand('list-langs', [
-            '-t' => 'en'
-        ]);
+        $output = $this->runSnippet('list_languages', ['en']);
         $this->assertContains('ja: Japanese', $output);
     }
 
     public function testListLanguagesInJapanese()
     {
-        $output = $this->runCommand('list-langs', [
-            '-t' => 'ja'
-        ]);
+        $output = $this->runSnippet('list_languages', ['ja']);
         $this->assertContains('en: 英語', $output);
-    }
-
-    private function runCommand($commandName, $args = [])
-    {
-        $command = $this->application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        try {
-            ob_start();
-            $commandTester->execute(
-                $args,
-                ['interactive' => false]
-            );
-        } finally {
-            $output = ob_get_clean();
-        }
-        return $output;
     }
 }
