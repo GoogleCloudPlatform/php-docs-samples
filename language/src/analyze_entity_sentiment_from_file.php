@@ -21,51 +21,47 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_entity_sentiment_gcs]
-namespace Google\Cloud\Samples\Language;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return printf("Usage: php %s FILE\n", __FILE__);
+}
+list($_, $uri) = $argv;
+
+# [START language_entity_sentiment_gcs]
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\Entity\Type as EntityType;
 
-/**
- * Find the entities in text.
- * ```
- * analyze_entity_sentiment_from_file('gs://storage-bucket/file-name');
- * ```
- *
- * @param string $gcsUri Your Cloud Storage bucket URI
- * @param string $projectId (optional) Your Google Cloud Project ID
- *
- */
+/** Uncomment and populate these variables in your code */
+// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
 
-function analyze_entity_sentiment_from_file($gcsUri, $projectId = null)
-{
-    // Create the Natural Language client
-    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-    try {
-        // Create a new Document
-        $document = new Document();
-        // Pass GCS URI and set document type to PLAIN_TEXT
-        $document->setGcsContentUri($gcsUri)->setType(Type::PLAIN_TEXT);
-        // Call the analyzeEntitySentiment function
-        $response = $languageServiceClient->analyzeEntitySentiment($document);
-        $entities = $response->getEntities();
-        // Print out information about each entity
-        foreach ($entities as $entity) {
-            printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-            printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
-            printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
-            $sentiment = $entity->getSentiment();
-            if ($sentiment) {
-                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
-                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
-            }
-            print(PHP_EOL);
+// Create the Natural Language client
+$languageServiceClient = new LanguageServiceClient();
+try {
+    // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setGcsContentUri($uri)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeEntitySentiment function
+    $response = $languageServiceClient->analyzeEntitySentiment($document);
+    $entities = $response->getEntities();
+    // Print out information about each entity
+    foreach ($entities as $entity) {
+        printf('Entity Name: %s' . PHP_EOL, $entity->getName());
+        printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
+        printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
+        $sentiment = $entity->getSentiment();
+        if ($sentiment) {
+            printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+            printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
         }
-    } finally {
-        $languageServiceClient->close();
+        print(PHP_EOL);
     }
+} finally {
+    $languageServiceClient->close();
 }
 # [END language_entity_sentiment_gcs]

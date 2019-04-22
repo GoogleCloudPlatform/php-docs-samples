@@ -21,42 +21,39 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_classify_gcs]
-namespace Google\Cloud\Samples\Language;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return printf("Usage: php %s FILE\n", __FILE__);
+}
+list($_, $uri) = $argv;
+
+# [START language_classify_gcs]
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 
-/**
- * Classify text (20+ words) into categories.
- * ```
- * classify_text_from_file('gs://storage-bucket/file-name');
- * ```
- *
- * @param string $cloud_storage_uri Your Cloud Storage bucket URI
- * @param string $projectId (optional) Your Google Cloud Project ID
- */
+/** Uncomment and populate these variables in your code */
+// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
 
-function classify_text_from_file($gcsUri, $projectId = null)
-{
-    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-    try {
-        // Create a new Document
-        $document = new Document();
-        // Pass GCS URI and set document type to PLAIN_TEXT
-        $document->setGcsContentUri($gcsUri)->setType(Type::PLAIN_TEXT);
-        // Call the analyzeSentiment function
-        $response = $languageServiceClient->classifyText($document);
-        $categories = $response->getCategories();
-        // Print document information
-        foreach ($categories as $category) {
-            printf('Category Name: %s' . PHP_EOL, $category->getName());
-            printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
-            print(PHP_EOL);
-        }
-    } finally {
-        $languageServiceClient->close();
+$languageServiceClient = new LanguageServiceClient();
+try {
+    // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setGcsContentUri($uri)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeSentiment function
+    $response = $languageServiceClient->classifyText($document);
+    $categories = $response->getCategories();
+    // Print document information
+    foreach ($categories as $category) {
+        printf('Category Name: %s' . PHP_EOL, $category->getName());
+        printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
+        print(PHP_EOL);
     }
+} finally {
+    $languageServiceClient->close();
 }
 # [END language_classify_gcs]

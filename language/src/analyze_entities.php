@@ -21,49 +21,48 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_entities_text]
-namespace Google\Cloud\Samples\Language;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return printf("Usage: php %s TEXT\n", __FILE__);
+}
+list($_, $text) = $argv;
+
+# [START language_entities_text]
 use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\Entity\Type as EntityType;
 
-/**
- * Find the entities in text.
- * ```
- * analyze_entities('Do you know the way to San Jose?');
- * ```
- *
- * @param string $text The text to analyze.
- * @param string $projectId (optional) Your Google Cloud Project ID
- *
- */
-function analyze_entities($text, $projectId = null)
-{
-    // Create the Natural Language client
-    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-    try {
-        $document = new Document();
-        // Add text as content and set document type to PLAIN_TEXT
-        $document->setContent($text)->setType(1);
-        // Call the analyzeEntities function
-        $response = $languageServiceClient->analyzeEntities($document, []);
-        $entities = $response->getEntities();
-        // Print out information about each entity
-        foreach ($entities as $entity) {
-            printf('Name: %s' . PHP_EOL, $entity->getName());
-            printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
-            printf('Salience: %s' . PHP_EOL, $entity->getSalience());
-            if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
-                printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
-            }
-            if ($entity->getMetadata()->offsetExists('mid')) {
-                printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
-            }
-            printf(PHP_EOL);
+/** Uncomment and populate these variables in your code */
+// $text = 'The text to analyze.';
+
+// Create the Natural Language client
+$languageServiceClient = new LanguageServiceClient();
+try {
+    // Create a new Document, add text as content and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setContent($text)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeEntities function
+    $response = $languageServiceClient->analyzeEntities($document, []);
+    $entities = $response->getEntities();
+    // Print out information about each entity
+    foreach ($entities as $entity) {
+        printf('Name: %s' . PHP_EOL, $entity->getName());
+        printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
+        printf('Salience: %s' . PHP_EOL, $entity->getSalience());
+        if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
         }
-    } finally {
-        $languageServiceClient->close();
+        if ($entity->getMetadata()->offsetExists('mid')) {
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
+        }
+        printf(PHP_EOL);
     }
+} finally {
+    $languageServiceClient->close();
 }
 # [END language_entities_text]

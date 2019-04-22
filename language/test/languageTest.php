@@ -38,11 +38,12 @@ class languageTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAll()
+    public function testAnalyzeAll()
     {
-        $output = $this->runCommand('all', [
-            'content' => 'Barack Obama lives in Washington D.C.'
-        ]);
+        $output = $this->runSnippet(
+            'analyze_all',
+            ['Barack Obama lives in Washington D.C.']
+        );
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
@@ -70,11 +71,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Token part of speech: NOUN', $output);
     }
 
-    public function testAllFromStorageObject()
+    public function testAnalzeAllFromFile()
     {
-        $output = $this->runCommand('all', [
-            'content' => $this->gcsFile()
-        ]);
+        $output = $this->runSnippet('analyze_all_from_file', [$this->gcsFile()]);
+
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
         $this->assertContains('Salience:', $output);
@@ -102,10 +102,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Token part of speech: NOUN', $output);
     }
 
-    public function testEntities()
+    public function testAnalyzeEntities()
     {
-        $output = $this->runCommand('entities', [
-            'content' => 'Barack Obama lives in Washington D.C.'
+        $output = $this->runSnippet('analyze_entities', [
+            'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
@@ -116,10 +116,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testEntitiesFromStorageObject()
+    public function testAnalyzeEntitiesFromFile()
     {
-        $output = $this->runCommand('entities', [
-            'content' => $this->gcsFile()
+        $output = $this->runSnippet('analyze_entities_from_file', [
+            $this->gcsFile()
         ]);
         $this->assertContains('Name: Barack Obama', $output);
         $this->assertContains('Type: PERSON', $output);
@@ -129,10 +129,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Name: Washington D.C.', $output);
     }
 
-    public function testSentiment()
+    public function testAnalyzeSentiment()
     {
-        $output = $this->runCommand('sentiment', [
-            'content' => 'Barack Obama lives in Washington D.C.'
+        $output = $this->runSnippet('analyze_sentiment', [
+            'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
@@ -144,10 +144,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testSentimentFromStorageObject()
+    public function testAnalyzeSentimentFromFile()
     {
-        $output = $this->runCommand('sentiment', [
-            'content' => $this->gcsFile()
+        $output = $this->runSnippet('analyze_sentiment_from_file', [
+            $this->gcsFile()
         ]);
         $this->assertContains('Document Sentiment:', $output);
         $this->assertContains('Magnitude:', $output);
@@ -158,10 +158,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('  Score:', $output);
     }
 
-    public function testSyntax()
+    public function testAnalyzeSyntax()
     {
-        $output = $this->runCommand('syntax', [
-            'content' => 'Barack Obama lives in Washington D.C.'
+        $output = $this->runSnippet('analyze_syntax', [
+            'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertContains('Token text: Barack', $output);
         $this->assertContains('Token part of speech: NOUN', $output);
@@ -177,10 +177,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Token part of speech: NOUN', $output);
     }
 
-    public function testSyntaxFromStorageObject()
+    public function testAnalyzeSyntaxFromFile()
     {
-        $output = $this->runCommand('syntax', [
-            'content' => $this->gcsFile()
+        $output = $this->runSnippet('analyze_syntax_from_file', [
+            $this->gcsFile()
         ]);
         $this->assertContains('Token text: Barack', $output);
         $this->assertContains('Token part of speech: NOUN', $output);
@@ -196,10 +196,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Token part of speech: NOUN', $output);
     }
 
-    public function testEntitySentiment()
+    public function testAnalyzeEntitySentiment()
     {
-        $output = $this->runCommand('entity-sentiment', [
-            'content' => 'Barack Obama lives in Washington D.C.'
+        $output = $this->runSnippet('analyze_entity_sentiment', [
+            'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertContains('Entity Name: Barack Obama', $output);
         $this->assertContains('Entity Type: PERSON', $output);
@@ -210,10 +210,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Entity Type: LOCATION', $output);
     }
 
-    public function testEntitySentimentFromStorageObject()
+    public function testAnalyzeEntitySentimentFromFile()
     {
-        $output = $this->runCommand('entity-sentiment', [
-            'content' => $this->gcsFile()
+        $output = $this->runSnippet('analyze_entity_sentiment_from_file', [
+            $this->gcsFile()
         ]);
         $this->assertContains('Entity Name: Barack Obama', $output);
         $this->assertContains('Entity Type: PERSON', $output);
@@ -226,8 +226,8 @@ class languageTest extends \PHPUnit_Framework_TestCase
 
     public function testClassifyText()
     {
-        $output = $this->runCommand('classify', [
-            'content' => 'The first two gubernatorial elections since President '
+        $output = $this->runSnippet('classify_text', [
+            'The first two gubernatorial elections since President '
                 . 'Donald Trump took office went in favor of Democratic '
                 . 'candidates in Virginia and New Jersey.'
         ]);
@@ -235,10 +235,10 @@ class languageTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Confidence:', $output);
     }
 
-    public function testClassifyTextFromStorageObject()
+    public function testClassifyTextFromFile()
     {
-        $output = $this->runCommand('classify', [
-            'content' => $this->gcsFile()
+        $output = $this->runSnippet('classify_text_from_file', [
+            $this->gcsFile()
         ]);
         $this->assertContains('Category Name: /News/Politics', $output);
         $this->assertContains('Confidence:', $output);

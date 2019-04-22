@@ -21,51 +21,44 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_classify_text]
-namespace Google\Cloud\Samples\Language;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return printf("Usage: php %s TEXT\n", __FILE__);
+}
+list($_, $text) = $argv;
+
+# [START language_classify_text]
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 
-/**
- * Classify text (20+ words) into categories.
- * ```
- * classify_text(
- *     'The first two gubernatorial elections since President Donald Trump ' .
- *     'took office went in favor of Democratic candidates in Virginia and ' .
- *     'New Jersey.'
- * );
- * ```
- *
- * @param string $text The text to analyze.
- * @param string $projectId (optional) Your Google Cloud Project ID
- */
+/** Uncomment and populate these variables in your code */
+// $text = 'The text to analyze.';
 
-function classify_text($text, $projectId = null)
-{
-    // Make sure we have enough words (20+) to call classifyText
-    if (str_word_count($text) < 20) {
-        printf('20+ words are required to classify text.' . PHP_EOL);
-        return;
+// Make sure we have enough words (20+) to call classifyText
+if (str_word_count($text) < 20) {
+    printf('20+ words are required to classify text.' . PHP_EOL);
+    return;
+}
+$languageServiceClient = new LanguageServiceClient();
+try {
+    // Create a new Document, add text as content and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setContent($text)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeSentiment function
+    $response = $languageServiceClient->classifyText($document);
+    $categories = $response->getCategories();
+    // Print document information
+    foreach ($categories as $category) {
+        printf('Category Name: %s' . PHP_EOL, $category->getName());
+        printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
+        print(PHP_EOL);
     }
-    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-    try {
-        // Create a new Document
-        $document = new Document();
-        // Pass GCS URI and set document type to PLAIN_TEXT (1)
-        $document->setContent($text)->setType(Type::PLAIN_TEXT);
-        // Call the analyzeSentiment function
-        $response = $languageServiceClient->classifyText($document);
-        $categories = $response->getCategories();
-        // Print document information
-        foreach ($categories as $category) {
-            printf('Category Name: %s' . PHP_EOL, $category->getName());
-            printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
-            print(PHP_EOL);
-        }
-    } finally {
-        $languageServiceClient->close();
-    }
+} finally {
+    $languageServiceClient->close();
 }
 # [END language_classify_text]
