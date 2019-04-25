@@ -37,10 +37,13 @@ class translateTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Translation:', $output);
     }
 
+    /**
+     * @expectedException Google\Cloud\Core\Exception\BadRequestException
+     * @expectedExceptionMessage Target language is not set to a valid language code
+     */
     public function testTranslateBadLanguage()
     {
-        $output = $this->runSnippet('translate', ['Hello.', 'jp']);
-        $this->assertContains('Google\Cloud\Core\Exception\BadRequestException', $output);
+        $this->runSnippet('translate', ['Hello.', 'jp']);
     }
 
     public function testTranslateWithModel()
