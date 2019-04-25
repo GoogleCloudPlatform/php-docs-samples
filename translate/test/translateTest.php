@@ -39,7 +39,6 @@ class translateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Google\Cloud\Core\Exception\BadRequestException
-     * @expectedExceptionMessage Target language is not set to a valid language code
      */
     public function testTranslateBadLanguage()
     {
