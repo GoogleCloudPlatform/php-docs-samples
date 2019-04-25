@@ -2,7 +2,7 @@
     "name": "google/iot-sample",
     "type": "project",
     "require": {
-        "google/cloud-iot": "^0.6.0",
+        "google/cloud-iot": "^0.7.1",
         "symfony/console": "^3.3"
     },
     "autoload": {

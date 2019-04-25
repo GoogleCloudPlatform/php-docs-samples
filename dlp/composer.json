@@ -2,8 +2,8 @@
     "name": "google/dlp-sample",
     "type": "project",
     "require": {
-        "google/cloud-dlp": "^0.15.2",
-        "google/cloud-pubsub": "^1.8",
+        "google/cloud-dlp": "^0.18.1",
+        "google/cloud-pubsub": "^1.11.1",
         "symfony/console": "^3.3"
     },
     "autoload": {
