@@ -15,7 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 3 || count($argv) > 6) {
+    return print("Usage: php create_inspect_template.php CALLING_PROJECT TEMPLATE [DISPLAY_NAME] [DESCRIPTIOPN] [MAX_FINDINGS]\n");
+}
+list($_, $callingProjectId, $templateId, $displayName, $description) = $argv;
+$displayName = isset($argv[3]) ? $argv : '';
+$description = isset($argv[4]) ? $argv : '';
+$maxFindings = isset($argv[5]) ? $argv : 0;
 
 // [START dlp_create_inspect_template]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -25,68 +41,58 @@ use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
-/**
- * Create a new DLP inspection configuration template.
- *
- * @param string $callingProjectId The project ID to run the API call under
- * @param string $templateId The name of the template to be created
- * @param string $displayName (Optional) The human-readable name to give the template
- * @param string $description (Optional) A description for the trigger to be created
- * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
- */
-function create_inspect_template(
+/** Uncomment and populate these variables in your code */
+// $callingProjectId = 'The project ID to run the API call under';
+// $templateId = 'The name of the template to be created';
+// $displayName = ''; // (Optional) The human-readable name to give the template
+// $description = ''; // (Optional) A description for the trigger to be created
+// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+
+// Instantiate a client.
+$dlp = new DlpServiceClient();
+
+// ----- Construct inspection config -----
+// The infoTypes of information to match
+$personNameInfoType = (new InfoType())
+    ->setName('PERSON_NAME');
+$phoneNumberInfoType = (new InfoType())
+    ->setName('PHONE_NUMBER');
+$infoTypes = [$personNameInfoType, $phoneNumberInfoType];
+
+// Whether to include the matching string in the response
+$includeQuote = true;
+
+// The minimum likelihood required before returning a match
+$minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+
+// Specify finding limits
+$limits = (new FindingLimits())
+    ->setMaxFindingsPerRequest($maxFindings);
+
+// Create the configuration object
+$inspectConfig = (new InspectConfig())
+    ->setMinLikelihood($minLikelihood)
+    ->setLimits($limits)
+    ->setInfoTypes($infoTypes)
+    ->setIncludeQuote($includeQuote);
+
+// Construct inspection template
+$inspectTemplate = (new InspectTemplate())
+    ->setInspectConfig($inspectConfig)
+    ->setDisplayName($displayName)
+    ->setDescription($description);
+
+// Run request
+$parent = $dlp->projectName($callingProjectId);
+$dlp->createInspectTemplate($parent, [
+    'inspectTemplate' => $inspectTemplate,
+    'templateId' => $templateId
+]);
+
+// Print results
+printf(
+    'Successfully created template projects/%s/inspectTemplates/%s' . PHP_EOL,
     $callingProjectId,
-    $templateId,
-    $displayName = '',
-    $description = '',
-    $maxFindings = 0
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
-
-    // ----- Construct inspection config -----
-    // The infoTypes of information to match
-    $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
-    $phoneNumberInfoType = (new InfoType())
-        ->setName('PHONE_NUMBER');
-    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
-
-    // Whether to include the matching string in the response
-    $includeQuote = true;
-
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
-
-    // Specify finding limits
-    $limits = (new FindingLimits())
-        ->setMaxFindingsPerRequest($maxFindings);
-
-    // Create the configuration object
-    $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood($minLikelihood)
-        ->setLimits($limits)
-        ->setInfoTypes($infoTypes)
-        ->setIncludeQuote($includeQuote);
-
-    // Construct inspection template
-    $inspectTemplate = (new InspectTemplate())
-        ->setInspectConfig($inspectConfig)
-        ->setDisplayName($displayName)
-        ->setDescription($description);
-
-    // Run request
-    $parent = $dlp->projectName($callingProjectId);
-    $dlp->createInspectTemplate($parent, [
-        'inspectTemplate' => $inspectTemplate,
-        'templateId' => $templateId
-    ]);
-
-    // Print results
-    printf(
-        'Successfully created template projects/%s/inspectTemplates/%s' . PHP_EOL,
-        $callingProjectId,
-        $templateId
-    );
-}
+    $templateId
+);
 // [END dlp_create_inspect_template]

@@ -15,7 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 7 || count($argv) > 10) {
+    return print("Usage: php deidentify_dates.php CALLING_PROJECT INPUT_CSV OUTPUT_CSV DATE_FIELDS LOWER_BOUND_DAYS UPPER_BOUND_DAYS [CONTEXT_FIELDS] [KEY_NAME] [WRAPPED_KEY]\n");
+}
+list($_, $callingProjectId, $inputCsvFile, $outputCsvFile, $dateFieldNames, $lowerBoundDays, $upperBoundDays) = $argv;
+$contextFieldName = isset($argv[7]) ? $argv : '';
+$keyName = isset($argv[8]) ? $argv : '';
+$wrappedKey = isset($argv[9]) ? $argv : '';
 
 use Exception;
 # [START dlp_deidentify_date_shift]
@@ -35,151 +51,135 @@ use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 use DateTime;
 
-/**
- * Deidentify dates in a CSV file by pseudorandomly shifting them.
- *
- * @param string $callingProject The GCP Project ID to run the API call under
- * @param string $inputCsvFile The path to the CSV file to deidentify
- * @param string $outputCsvFile The path to save the date-shifted CSV file to
- * @param array $dateFieldNames The list of (date) fields in the CSV file to date shift
- * @param string $lowerBoundDays The maximum number of days to shift a date backward
- * @param string $upperBoundDays The maximum number of days to shift a date forward
- * @param string contextFieldName (Optional) The column to determine date shift amount based on
- *        If this is not specified, a random shift amount will be used for every row.
- *        If this is specified, then 'wrappedKey' and 'keyName' must also be set
- * @param string keyName (Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
- *        If this is specified, then 'wrappedKey' and 'contextFieldName' must also be set
- * @param string wrappedKey (Optional) The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
- *        If this is specified, then 'keyName' and 'contextFieldName' must also be set
- */
-function deidentify_dates(
-    $callingProjectId,
-    $inputCsvFile,
-    $outputCsvFile,
-    $dateFieldNames,
-    $lowerBoundDays,
-    $upperBoundDays,
-    $contextFieldName = '',
-    $keyName = '',
-    $wrappedKey = ''
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
+/** Uncomment and populate these variables in your code */
+// $callingProject = 'The GCP Project ID to run the API call under';
+// $inputCsvFile = 'The path to the CSV file to deidentify';
+// $outputCsvFile = 'The path to save the date-shifted CSV file to';
+// $dateFieldNames = 'The comma-separated list of (date) fields in the CSV file to date shift';
+// $lowerBoundDays = 'The maximum number of days to shift a date backward';
+// $upperBoundDays = 'The maximum number of days to shift a date forward';
+/** If contextFieldName is not specified, a random shift amount will be used for every row.
+/** If contextFieldName is specified, then 'wrappedKey' and 'keyName' must also be set*/
+// contextFieldName = ''; (Optional) The column to determine date shift amount based on
+// keyName = ''; // Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
+// wrappedKey = ''; // (Optional) The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
 
-    // Read a CSV file
-    $csvLines = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
-    $csvHeaders = explode(',', $csvLines[0]);
-    $csvRows = array_slice($csvLines, 1);
+// Instantiate a client.
+$dlp = new DlpServiceClient();
 
-    // Convert CSV file into protobuf objects
-    $tableHeaders = array_map(function ($csvHeader) {
-        return (new FieldId)->setName($csvHeader);
-    }, $csvHeaders);
+// Read a CSV file
+$csvLines = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+$csvHeaders = explode(',', $csvLines[0]);
+$csvRows = array_slice($csvLines, 1);
 
-    $tableRows = array_map(function ($csvRow) {
-        $rowValues = array_map(function ($csvValue) {
-            if ($csvDate = DateTime::createFromFormat('m/d/Y', $csvValue)) {
-                $date = (new Date())
-                    ->setYear((int) $csvDate->format('Y'))
-                    ->setMonth((int) $csvDate->format('m'))
-                    ->setDay((int) $csvDate->format('d'));
-                return (new Value())
-                    ->setDateValue($date);
-            } else {
-                return (new Value())
-                    ->setStringValue($csvValue);
-            }
-        }, explode(',', $csvRow));
+// Convert CSV file into protobuf objects
+$tableHeaders = array_map(function ($csvHeader) {
+    return (new FieldId)->setName($csvHeader);
+}, $csvHeaders);
 
-        return (new Row())
-            ->setValues($rowValues);
-    }, $csvRows);
+$tableRows = array_map(function ($csvRow) {
+    $rowValues = array_map(function ($csvValue) {
+        if ($csvDate = DateTime::createFromFormat('m/d/Y', $csvValue)) {
+            $date = (new Date())
+                ->setYear((int) $csvDate->format('Y'))
+                ->setMonth((int) $csvDate->format('m'))
+                ->setDay((int) $csvDate->format('d'));
+            return (new Value())
+                ->setDateValue($date);
+        } else {
+            return (new Value())
+                ->setStringValue($csvValue);
+        }
+    }, explode(',', $csvRow));
 
-    // Convert date fields into protobuf objects
-    $dateFields = array_map(function ($dateFieldName) {
-        return (new FieldId())->setName($dateFieldName);
-    }, $dateFieldNames);
+    return (new Row())
+        ->setValues($rowValues);
+}, $csvRows);
 
-    // Construct the table object
-    $table = (new Table())
-        ->setHeaders($tableHeaders)
-        ->setRows($tableRows);
+// Convert date fields into protobuf objects
+$dateFields = array_map(function ($dateFieldName) {
+    return (new FieldId())->setName($dateFieldName);
+}, explode(',', $dateFieldNames));
 
-    $item = (new ContentItem())
-        ->setTable($table);
+// Construct the table object
+$table = (new Table())
+    ->setHeaders($tableHeaders)
+    ->setRows($tableRows);
 
-    // Construct dateShiftConfig
-    $dateShiftConfig = (new DateShiftConfig())
-        ->setLowerBoundDays($lowerBoundDays)
-        ->setUpperBoundDays($upperBoundDays);
+$item = (new ContentItem())
+    ->setTable($table);
 
-    if ($contextFieldName && $keyName && $wrappedKey) {
-        $contextField = (new FieldId())
-            ->setName($contextFieldName);
+// Construct dateShiftConfig
+$dateShiftConfig = (new DateShiftConfig())
+    ->setLowerBoundDays($lowerBoundDays)
+    ->setUpperBoundDays($upperBoundDays);
 
-        // Create the wrapped crypto key configuration object
-        $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
-            ->setWrappedKey(base64_decode($wrappedKey))
-            ->setCryptoKeyName($keyName);
+if ($contextFieldName && $keyName && $wrappedKey) {
+    $contextField = (new FieldId())
+        ->setName($contextFieldName);
 
-        $cryptoKey = (new CryptoKey())
-            ->setKmsWrapped($kmsWrappedCryptoKey);
+    // Create the wrapped crypto key configuration object
+    $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
+        ->setWrappedKey(base64_decode($wrappedKey))
+        ->setCryptoKeyName($keyName);
 
-        $dateShiftConfig
-            ->setContext($contextField)
-            ->setCryptoKey($cryptoKey);
-    } elseif ($contextFieldName || $keyName || $wrappedKey) {
-        throw new Exception('You must set either ALL or NONE of {$contextFieldName, $keyName, $wrappedKey}!');
-    }
+    $cryptoKey = (new CryptoKey())
+        ->setKmsWrapped($kmsWrappedCryptoKey);
 
-    // Create the information transform configuration objects
-    $primitiveTransformation = (new PrimitiveTransformation())
-        ->setDateShiftConfig($dateShiftConfig);
+    $dateShiftConfig
+        ->setContext($contextField)
+        ->setCryptoKey($cryptoKey);
+} elseif ($contextFieldName || $keyName || $wrappedKey) {
+    throw new Exception('You must set either ALL or NONE of {$contextFieldName, $keyName, $wrappedKey}!');
+}
 
-    $fieldTransformation = (new FieldTransformation())
-        ->setPrimitiveTransformation($primitiveTransformation)
-        ->setFields($dateFields);
+// Create the information transform configuration objects
+$primitiveTransformation = (new PrimitiveTransformation())
+    ->setDateShiftConfig($dateShiftConfig);
 
-    $recordTransformations = (new RecordTransformations())
-        ->setFieldTransformations([$fieldTransformation]);
+$fieldTransformation = (new FieldTransformation())
+    ->setPrimitiveTransformation($primitiveTransformation)
+    ->setFields($dateFields);
 
-    // Create the deidentification configuration object
-    $deidentifyConfig = (new DeidentifyConfig())
-        ->setRecordTransformations($recordTransformations);
+$recordTransformations = (new RecordTransformations())
+    ->setFieldTransformations([$fieldTransformation]);
 
-    $parent = $dlp->projectName($callingProjectId);
+// Create the deidentification configuration object
+$deidentifyConfig = (new DeidentifyConfig())
+    ->setRecordTransformations($recordTransformations);
 
-    // Run request
-    $response = $dlp->deidentifyContent($parent, [
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $item
-    ]);
+$parent = $dlp->projectName($callingProjectId);
 
-    // Check for errors
-    foreach ($response->getOverview()->getTransformationSummaries() as $summary) {
-        foreach ($summary->getResults() as $result) {
-            if ($details = $result->getDetails()) {
-                printf('Error: %s' . PHP_EOL, $details);
-                return;
-            }
+// Run request
+$response = $dlp->deidentifyContent($parent, [
+    'deidentifyConfig' => $deidentifyConfig,
+    'item' => $item
+]);
+
+// Check for errors
+foreach ($response->getOverview()->getTransformationSummaries() as $summary) {
+    foreach ($summary->getResults() as $result) {
+        if ($details = $result->getDetails()) {
+            printf('Error: %s' . PHP_EOL, $details);
+            return;
         }
     }
-
-    // Save the results to a file
-    $csvRef = fopen($outputCsvFile, 'w');
-    fputcsv($csvRef, $csvHeaders);
-    foreach ($response->getItem()->getTable()->getRows() as $tableRow) {
-        $values = array_map(function ($tableValue) {
-            if ($tableValue->getStringValue()) {
-                return $tableValue->getStringValue();
-            }
-            $protoDate = $tableValue->getDateValue();
-            $date = mktime(0, 0, 0, $protoDate->getMonth(), $protoDate->getDay(), $protoDate->getYear());
-            return strftime('%D', $date);
-        }, iterator_to_array($tableRow->getValues()));
-        fputcsv($csvRef, $values);
-    };
-    fclose($csvRef);
-    printf('Deidentified dates written to %s' . PHP_EOL, $outputCsvFile);
 }
+
+// Save the results to a file
+$csvRef = fopen($outputCsvFile, 'w');
+fputcsv($csvRef, $csvHeaders);
+foreach ($response->getItem()->getTable()->getRows() as $tableRow) {
+    $values = array_map(function ($tableValue) {
+        if ($tableValue->getStringValue()) {
+            return $tableValue->getStringValue();
+        }
+        $protoDate = $tableValue->getDateValue();
+        $date = mktime(0, 0, 0, $protoDate->getMonth(), $protoDate->getDay(), $protoDate->getYear());
+        return strftime('%D', $date);
+    }, iterator_to_array($tableRow->getValues()));
+    fputcsv($csvRef, $values);
+};
+fclose($csvRef);
+printf('Deidentified dates written to %s' . PHP_EOL, $outputCsvFile);
 # [END dlp_deidentify_date_shift]

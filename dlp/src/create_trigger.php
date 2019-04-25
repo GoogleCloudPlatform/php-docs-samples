@@ -15,7 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 3 || count($argv) > 9) {
+    return print("Usage: php create_trigger.php CALLING_PROJECT BUCKET [TRIGGER] [DISPLAY_NAME] [DESCRIPTION] [SCAN_PERIOD] [MAX_FINDINGS] [AUTO_POPULATE_TIMESPAN]\n");
+}
+list($_, $callingProjectId, $bucketName) = $argv;
+$triggerId = isset($argv[3]) ? $argv : '';
+$displayName = isset($argv[4]) ? $argv : '';
+$description = isset($argv[5]) ? $argv : '';
+$scanPeriod = isset($argv[6]) ? $argv : 1;
+$maxFindings = isset($argv[7]) ? $argv : 0;
+$autoPopulateTimespan = isset($argv[8]) ? $argv : false;
 
 // [START dlp_create_trigger]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -34,99 +53,85 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Protobuf\Duration;
 
-/**
- * Create a Data Loss Prevention API job trigger.
- *
- * @param string $callingProjectId The project ID to run the API call under
- * @param string $bucketName The name of the bucket to scan
- * @param string $triggerId (Optional) The name of the trigger to be created
- * @param string $displayName (Optional) The human-readable name to give the trigger
- * @param string $description (Optional) A description for the trigger to be created
- * @param int $scanPeriod (Optional) How often to wait between scans, in days (minimum = 1 day)
- * @param int $maxFindings (Optional) The maximum number of findings to report per request (0 = server maximum)
- * @param bool $autoPopulateTimespan (Optional) Automatically limit scan to new content only
- */
+/** Uncomment and populate these variables in your code */
+// $callingProjectId = 'The project ID to run the API call under';
+// $bucketName = 'The name of the bucket to scan';
+// $triggerId = '';   // (Optional) The name of the trigger to be created';
+// $displayName = ''; // (Optional) The human-readable name to give the trigger';
+// $description = ''; // (Optional) A description for the trigger to be created';
+// $scanPeriod = 1; // (Optional) How often to wait between scans, in days (minimum = 1 day)
+// $maxFindings = 0; // (Optional) The maximum number of findings to report per request (0 = server maximum)
+// $autoPopulateTimespan = true; // (Optional) Automatically limit scan to new content only
 
-function create_trigger(
-    $callingProjectId,
-    $bucketName,
-    $triggerId = '',
-    $displayName = '',
-    $description = '',
-    $scanPeriod = 1,
-    $maxFindings = 0,
-    $autoPopulateTimespan = false
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
+// Instantiate a client.
+$dlp = new DlpServiceClient();
 
-    // ----- Construct job config -----
-    // The infoTypes of information to match
-    $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
-    $phoneNumberInfoType = (new InfoType())
-        ->setName('PHONE_NUMBER');
-    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
+// ----- Construct job config -----
+// The infoTypes of information to match
+$personNameInfoType = (new InfoType())
+    ->setName('PERSON_NAME');
+$phoneNumberInfoType = (new InfoType())
+    ->setName('PHONE_NUMBER');
+$infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+// The minimum likelihood required before returning a match
+$minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-    // Specify finding limits
-    $limits = (new FindingLimits())
-        ->setMaxFindingsPerRequest($maxFindings);
+// Specify finding limits
+$limits = (new FindingLimits())
+    ->setMaxFindingsPerRequest($maxFindings);
 
-    // Create the inspectConfig object
-    $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood($minLikelihood)
-        ->setLimits($limits)
-        ->setInfoTypes($infoTypes);
+// Create the inspectConfig object
+$inspectConfig = (new InspectConfig())
+    ->setMinLikelihood($minLikelihood)
+    ->setLimits($limits)
+    ->setInfoTypes($infoTypes);
 
-    // Create triggers
-    $duration = (new Duration())
-        ->setSeconds($scanPeriod * 60 * 60 * 24);
+// Create triggers
+$duration = (new Duration())
+    ->setSeconds($scanPeriod * 60 * 60 * 24);
 
-    $schedule = (new Schedule())
-        ->setRecurrencePeriodDuration($duration);
+$schedule = (new Schedule())
+    ->setRecurrencePeriodDuration($duration);
 
-    $triggerObject = (new Trigger())
-        ->setSchedule($schedule);
+$triggerObject = (new Trigger())
+    ->setSchedule($schedule);
 
-    // Create the storageConfig object
-    $fileSet = (new CloudStorageOptions_FileSet())
-        ->setUrl('gs://' . $bucketName . '/*');
+// Create the storageConfig object
+$fileSet = (new CloudStorageOptions_FileSet())
+    ->setUrl('gs://' . $bucketName . '/*');
 
-    $storageOptions = (new CloudStorageOptions())
-        ->setFileSet($fileSet);
+$storageOptions = (new CloudStorageOptions())
+    ->setFileSet($fileSet);
 
-    // Auto-populate start and end times in order to scan new objects only.
-    $timespanConfig = (new StorageConfig_TimespanConfig())
-        ->setEnableAutoPopulationOfTimespanConfig($autoPopulateTimespan);
+// Auto-populate start and end times in order to scan new objects only.
+$timespanConfig = (new StorageConfig_TimespanConfig())
+    ->setEnableAutoPopulationOfTimespanConfig($autoPopulateTimespan);
 
-    $storageConfig = (new StorageConfig())
-        ->setCloudStorageOptions($storageOptions)
-        ->setTimespanConfig($timespanConfig);
+$storageConfig = (new StorageConfig())
+    ->setCloudStorageOptions($storageOptions)
+    ->setTimespanConfig($timespanConfig);
 
-    // Construct the jobConfig object
-    $jobConfig = (new InspectJobConfig())
-        ->setInspectConfig($inspectConfig)
-        ->setStorageConfig($storageConfig);
+// Construct the jobConfig object
+$jobConfig = (new InspectJobConfig())
+    ->setInspectConfig($inspectConfig)
+    ->setStorageConfig($storageConfig);
 
-    // ----- Construct trigger object -----
-    $jobTriggerObject = (new JobTrigger())
-        ->setTriggers([$triggerObject])
-        ->setInspectJob($jobConfig)
-        ->setStatus(Status::HEALTHY)
-        ->setDisplayName($displayName)
-        ->setDescription($description);
+// ----- Construct trigger object -----
+$jobTriggerObject = (new JobTrigger())
+    ->setTriggers([$triggerObject])
+    ->setInspectJob($jobConfig)
+    ->setStatus(Status::HEALTHY)
+    ->setDisplayName($displayName)
+    ->setDescription($description);
 
-    // Run trigger creation request
-    $parent = $dlp->projectName($callingProjectId);
-    $dlp->createJobTrigger($parent, [
-        'jobTrigger' => $jobTriggerObject,
-        'triggerId' => $triggerId
-    ]);
+// Run trigger creation request
+$parent = $dlp->projectName($callingProjectId);
+$dlp->createJobTrigger($parent, [
+    'jobTrigger' => $jobTriggerObject,
+    'triggerId' => $triggerId
+]);
 
-    // Print results
-    printf('Successfully created trigger %s' . PHP_EOL, $triggerId);
-}
+// Print results
+printf('Successfully created trigger %s' . PHP_EOL, $triggerId);
 // [END dlp_create_trigger]
