@@ -22,7 +22,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Google\Cloud\Utils\WordPressProject;
+use Google\Cloud\Utils\WordPress\Project;
 
 $application = new Application('Wordpress Helper');
 $application->add(new Command('setup'))
