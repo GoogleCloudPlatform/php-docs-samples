@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-bigtable": "^0.10.1"
+        "google/cloud-bigtable": "^0.12.1"
     },
     "require-dev": {
         "google/cloud-tools": "^0.8",

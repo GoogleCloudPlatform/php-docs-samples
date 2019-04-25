@@ -1,7 +1,7 @@
 {
     "require": {
-        "google/cloud-spanner": "^0.10",
-        "google/cloud-monitoring": "^0.7",
+        "google/cloud-spanner": "^1.15.0",
+        "google/cloud-monitoring": "^0.16.1",
         "google/appengine-php-sdk": "^1.9"
     },
     "require-dev": {
