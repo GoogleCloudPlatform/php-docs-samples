@@ -27,7 +27,7 @@ use Google\Cloud\Utils\WordPress\Project;
 $application = new Application('Wordpress Helper');
 $application->add(new Command('setup'))
     ->setDescription('Setup WordPress on GCP')
-    ->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Directory for the new project', WordPressProject::DEFAULT_DIR)
+    ->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Directory for the new project', Project::DEFAULT_DIR)
     ->addOption('project_id', null, InputOption::VALUE_REQUIRED, 'Google Cloud project id')
     ->addOption('db_region', null, InputOption::VALUE_REQUIRED, 'Cloud SQL region')
     ->addOption('db_instance', null, InputOption::VALUE_REQUIRED, 'Cloud SQL instance id', 'wp')
@@ -36,9 +36,9 @@ $application->add(new Command('setup'))
     ->addOption('db_password', null, InputOption::VALUE_REQUIRED, 'Cloud SQL database password')
     ->addOption('local_db_user', null, InputOption::VALUE_REQUIRED, 'Local SQL database username')
     ->addOption('local_db_password', null, InputOption::VALUE_REQUIRED, 'Local SQL database password')
-    ->addOption('wordpress_url', null, InputOption::VALUE_REQUIRED, 'URL of the WordPress archive', WordPressProject::LATEST_WP)
+    ->addOption('wordpress_url', null, InputOption::VALUE_REQUIRED, 'URL of the WordPress archive', Project::LATEST_WP)
     ->setCode(function (InputInterface $input, OutputInterface $output) {
-        $wordpress = new WordPressProject($input, $output);
+        $wordpress = new Project($input, $output);
 
         // Run the wizard to prompt user for project and database parameters.
         $dir = $wordpress->initializeProject();
