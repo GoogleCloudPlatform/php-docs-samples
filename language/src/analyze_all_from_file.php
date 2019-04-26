@@ -21,92 +21,95 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START analyze_all_from_file]
-namespace Google\Cloud\Samples\Language;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return printf("Usage: php %s FILE\n", __FILE__);
+}
+list($_, $uri) = $argv;
+
+# [START analyze_all_from_file]
 use Google\Cloud\Language\V1\AnnotateTextRequest\Features;
 use Google\Cloud\Language\V1\Document;
+use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\Entity\Type as EntityType;
 use Google\Cloud\Language\V1\EntityMention\Type as MentionType;
 use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 
-/**
- * Find the everything in text stored in a Cloud Storage bucket.
- * ```
- * analyze_all_from_file('my-bucket', 'file_with_text.txt');;
- * ```
- *
- * @param string $cloud_storage_uri Your Cloud Storage bucket URI
- * @param string $projectId (optional) Your Google Cloud Project ID
- *
- */
-function analyze_all_from_file($gcsUri, $projectId = null)
-{
-    // Create the Natural Language client
-    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-    try {
-        // Create a new Document
-        $document = new Document();
-        // Pass GCS URI and set document type to PLAIN_TEXT
-        $document->setGcsContentUri($gcsUri)->setType(1);
-        // Define features we need to extract.
-        $features = new Features();
-        // Set Features to extract ['entities', 'syntax', 'sentiment']
-        $features->setExtractEntities(true);
-        $features->setExtractSyntax(true);
-        $features->setExtractDocumentSentiment(true);
-        // Collect annotations
-        $response = $languageServiceClient->annotateText($document, $features);
-        // Process Entities
-        $entities = $response->getEntities();
-        foreach ($entities as $entity) {
-            printf('Name: %s' . PHP_EOL, $entity->getName());
-            printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
-            printf('Salience: %s' . PHP_EOL, $entity->getSalience());
-            if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
-                printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
-            }
-            if ($entity->getMetadata()->offsetExists('mid')) {
-                printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
-            }
-            printf('Mentions:' . PHP_EOL);
-            foreach ($entity->getMentions() as $mention) {
-                printf('  Begin Offset: %s' . PHP_EOL, $mention->getText()->getBeginOffset());
-                printf('  Content: %s' . PHP_EOL, $mention->getText()->getContent());
-                printf('  Mention Type: %s' . PHP_EOL, MentionType::name($mention->getType()));
-                printf(PHP_EOL);
-            }
+/** Uncomment and populate these variables in your code */
+// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
+
+// Create the Natural Language client
+$languageServiceClient = new LanguageServiceClient();
+try {
+    // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setGcsContentUri($uri)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Set Features to extract ['entities', 'syntax', 'sentiment']
+    $features = (new Features())
+        ->setExtractEntities(true)
+        ->setExtractSyntax(true)
+        ->setExtractDocumentSentiment(true);
+
+    // Collect annotations
+    $response = $languageServiceClient->annotateText($document, $features);
+
+    // Process Entities
+    $entities = $response->getEntities();
+    foreach ($entities as $entity) {
+        printf('Name: %s' . PHP_EOL, $entity->getName());
+        printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
+        printf('Salience: %s' . PHP_EOL, $entity->getSalience());
+        if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
+        }
+        if ($entity->getMetadata()->offsetExists('mid')) {
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
+        }
+        printf('Mentions:' . PHP_EOL);
+        foreach ($entity->getMentions() as $mention) {
+            printf('  Begin Offset: %s' . PHP_EOL, $mention->getText()->getBeginOffset());
+            printf('  Content: %s' . PHP_EOL, $mention->getText()->getContent());
+            printf('  Mention Type: %s' . PHP_EOL, MentionType::name($mention->getType()));
             printf(PHP_EOL);
         }
-        // Process Sentiment
-        $document_sentiment = $response->getDocumentSentiment();
-        // Print document information
-        printf('Document Sentiment:' . PHP_EOL);
-        printf('  Magnitude: %s' . PHP_EOL, $document_sentiment->getMagnitude());
-        printf('  Score: %s' . PHP_EOL, $document_sentiment->getScore());
         printf(PHP_EOL);
-        $sentences = $response->getSentences();
-        foreach ($sentences as $sentence) {
-            printf('Sentence: %s' . PHP_EOL, $sentence->getText()->getContent());
-            printf('Sentence Sentiment:' . PHP_EOL);
-            $sentiment = $sentence->getSentiment();
-            if ($sentiment) {
-                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
-                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
-            }
-            printf(PHP_EOL);
-        }
-        // Process Syntax
-        $tokens = $response->getTokens();
-        // Print out information about each entity
-        foreach ($tokens as $token) {
-            printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
-            printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
-            printf(PHP_EOL);
-        }
-    } finally {
-        $languageServiceClient->close();
     }
+
+    // Process Sentiment
+    $document_sentiment = $response->getDocumentSentiment();
+
+    // Print document information
+    printf('Document Sentiment:' . PHP_EOL);
+    printf('  Magnitude: %s' . PHP_EOL, $document_sentiment->getMagnitude());
+    printf('  Score: %s' . PHP_EOL, $document_sentiment->getScore());
+    printf(PHP_EOL);
+    $sentences = $response->getSentences();
+    foreach ($sentences as $sentence) {
+        printf('Sentence: %s' . PHP_EOL, $sentence->getText()->getContent());
+        printf('Sentence Sentiment:' . PHP_EOL);
+        $sentiment = $sentence->getSentiment();
+        if ($sentiment) {
+            printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+            printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
+        }
+        printf(PHP_EOL);
+    }
+
+    // Process Syntax
+    $tokens = $response->getTokens();
+
+    // Print out information about each entity
+    foreach ($tokens as $token) {
+        printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
+        printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
+        printf(PHP_EOL);
+    }
+} finally {
+    $languageServiceClient->close();
 }
 # [END analyze_all_from_file]

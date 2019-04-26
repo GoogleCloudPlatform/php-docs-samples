@@ -1,28 +1,10 @@
 {
     "require": {
         "google/cloud-language": "~0.18",
-        "google/cloud-storage": "^1.3",
-        "symfony/console": "^3.0"
+        "google/cloud-storage": "^1.3"
     },
-    "minimum-stability": "dev",
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "^5",
         "google/cloud-tools": "dev-master"
-    },
-    "autoload": {
-        "files": [
-            "src/analyze_all.php",
-            "src/analyze_all_from_file.php",
-            "src/analyze_entities.php",
-            "src/analyze_entities_from_file.php",
-            "src/analyze_sentiment.php",
-            "src/analyze_sentiment_from_file.php",
-            "src/analyze_syntax.php",
-            "src/analyze_syntax_from_file.php",
-            "src/analyze_entity_sentiment.php",
-            "src/analyze_entity_sentiment_from_file.php",
-            "src/classify_text.php",
-            "src/classify_text_from_file.php"
-        ]
     }
 }

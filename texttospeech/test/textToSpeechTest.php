@@ -16,94 +16,82 @@
  */
 namespace Google\Cloud\Samples\TextToSpeech;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
 
 /**
  * Unit Tests for vision commands.
  */
 class textToSpeechTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
-    }
+    use TestTrait;
+
     public function testListVoices()
     {
-        $output = $this->runCommand('list-voices');
+        $output = $this->runSnippet('list_voices');
         $this->assertContains('en-US', $output);
         $this->assertContains('FEMALE', $output);
     }
+
     public function testSynthesizeSsml()
     {
-        $output = $this->runCommand('synthesize-ssml', [
-            'text' => '<speak>Hello there.</speak>'
-        ]);
+        $output = $this->runSnippet(
+            'synthesize_ssml',
+            ['<speak>Hello there.</speak>']
+        );
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
     }
+
     public function testSynthesizeText()
     {
-        $output = $this->runCommand('synthesize-text', [
-            'text' => 'hello there'
-        ]);
+        $output = $this->runSnippet('synthesize_text', ['hello there']);
+
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
     }
+
     public function testSynthesizeTextEffectsProfile()
     {
-        $output = $this->runCommand('synthesize-text-effects-profile', [
-            'text' => 'hello there',
-            'effects_profile_id' => 'telephony-class-application'
-        ]);
+        $output = $this->runSnippet(
+            'synthesize_text_effects_profile',
+            ['hello there', 'telephony-class-application']
+        );
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
     }
+
     public function testSynthesizeSsmlFile()
     {
         $path = __DIR__ . '/../resources/hello.ssml';
-        $output = $this->runCommand('synthesize-ssml-file', [
-            'path' => $path
-        ]);
+        $output = $this->runSnippet('synthesize_ssml_file', [$path]);
+
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
     }
+
     public function testSynthesizeTextFile()
     {
         $path = __DIR__ . '/../resources/hello.txt';
-        $output = $this->runCommand('synthesize-text-file', [
-            'path' => $path
-        ]);
+        $output = $this->runSnippet('synthesize_text_file', [$path]);
+
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
     }
+
     public function testSynthesizeTextEffectsProfileFile()
     {
         $path = __DIR__ . '/../resources/hello.txt';
-        $output = $this->runCommand('synthesize-text-effects-profile-file', [
-            'path' => $path,
-            'effects_profile_id' => 'telephony-class-application'
-        ]);
+        $output = $this->runSnippet(
+            'synthesize_text_effects_profile_file',
+            [$path, 'telephony-class-application']
+        );
         $this->assertContains('Audio content written to', $output);
         $this->assertGreaterThan(0,filesize('output.mp3'));
         unlink('output.mp3');
-    }
-    private function runCommand($commandName, array $args = [])
-    {
-        $application = require __DIR__ . '/../texttospeech.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]);
-        return ob_get_clean();
     }
 }

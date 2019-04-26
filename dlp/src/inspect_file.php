@@ -86,9 +86,6 @@ function inspect_file(
         'item' => $content
     ]);
 
-    $likelihoods = ['Unknown', 'Very unlikely', 'Unlikely', 'Possible',
-                    'Likely', 'Very likely'];
-
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
@@ -100,7 +97,7 @@ function inspect_file(
                 print('  Quote: ' . $finding->getQuote() . PHP_EOL);
             }
             print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            print('  Likelihood: ' . $likelihoods[$finding->getLikelihood()] . PHP_EOL);
+            print('  Likelihood: ' . Likelihood::name($finding->getLikelihood()) . PHP_EOL);
         }
     }
 }

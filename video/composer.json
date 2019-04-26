@@ -2,25 +2,11 @@
     "name": "google/video-sample",
     "type": "project",
     "require": {
-        "symfony/console": "^3.1",
-        "google/cloud-videointelligence": "^1.4.0"
-    },
-    "autoload": {
-        "files": [
-            "src/analyze_labels.php",
-            "src/analyze_labels_file.php",
-            "src/analyze_explicit_content.php",
-            "src/analyze_shots.php",
-            "src/analyze_transcription.php",
-            "src/analyze_text_detection.php",
-            "src/analyze_text_detection_file.php",
-            "src/analyze_object_tracking.php",
-            "src/analyze_object_tracking_file.php"
-        ]
+        "google/cloud-videointelligence": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5",
+        "google/cloud-tools": "dev-master",
         "google/cloud-core": "^1.23"
     }
 }

@@ -60,165 +60,112 @@ authentication:
 
 ## Samples
 
-To run the Natural Language Samples:
+To run the Natural Language Samples, run `php src/SNIPPET_NAME.php`. For example:
 
-    $ php language.php
-    Cloud Natural Language
-
-    Usage:
-      command [options] [arguments]
-
-    Options:
-      -h, --help            Display this help message
-      -q, --quiet           Do not output any message
-      -V, --version         Display this application version
-          --ansi            Force ANSI output
-          --no-ansi         Disable ANSI output
-      -n, --no-interaction  Do not ask any interactive question
-      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-
-    Available commands:
-      all               Analyze syntax, sentiment and entities in text.
-      entities          Analyze entities in text.
-      help              Displays help for a command
-      list              Lists commands
-      sentiment         Analyze sentiment in text.
-      syntax            Analyze syntax in text.
-      entity-sentiment  Analyze sentiment of entities in text.
-      classify          Classify text into categories.
+```sh
+$ php src/analyze_all.php "This is some text to analyze"
+$ php src/analyze_all_from_file.php "gs://your-gcs-bucket/file-to-analyze.txt"
+```
 
 ### Run Analyze Entities
 
 To run the Analyze Entities sample:
 
-    $ php language.php entities 'I know the way to San Jose. Do You?'
-    entities:
-        -
-            name: way
-            type: OTHER
-            metadata: {  }
-            salience: 0.6970506
-            mentions:
-                -
-                    text:
-                        content: way
-                        beginOffset: 11
-                    type: COMMON
-        -
-            name: 'San Jose'
-            type: LOCATION
-            metadata:
-                mid: /m/0f04v
-                wikipedia_url: 'http://en.wikipedia.org/wiki/San_Jose,_California'
-            salience: 0.30294943
-            mentions:
-                -
-                    text:
-                        content: 'San Jose'
-                        beginOffset: 18
-                    type: PROPER
-    language: en
+```
+$ php src/analyze_entities.php 'I know the way to San Jose. Do You?'
+Name: way
+Type: OTHER
+Salience: 0.63484555
+
+Name: San Jose
+Type: LOCATION
+Salience: 0.36515442
+```
 
 ### Run Analyze Sentiment
 
 To run the Analyze Sentiment sample:
 
-    $ php language.php sentiment 'I know the way to San Jose. Do you?'
-    documentSentiment:
-        magnitude: 0.3
-        score: 0.3
-    language: en
-    sentences:
-        -
-            text:
-                content: 'I know the way to San Jose'
-                beginOffset: 0
-            sentiment:
-                magnitude: 0.3
-                score: 0.3
-        -
-            text:
-                content: 'Do you?'
-                beginOffset: 28
-            sentiment:
-                magnitude: 0.1
-                score: -0.1
+```
+Document Sentiment:
+  Magnitude: 0.1
+  Score: 0
+
+Sentence: I know the way to San Jose.
+Sentence Sentiment:
+Entity Magnitude: 0
+Entity Score: 0
+
+Sentence: Do you?
+Sentence Sentiment:
+Entity Magnitude: 0
+Entity Score: 0
+```
 
 ### Run Analyze Syntax
 
 To run the Analyze Syntax sample:
 
-    $ php language.php syntax 'I know the way to San Jose. Do you?'
-    sentences:
-        -
-            text:
-                content: 'I know the way to San Jose.'
-                beginOffset: 0
-        -
-            text:
-                content: 'Do you?'
-                beginOffset: 28
-    tokens:
-        -
-            text:
-                content: I
-                beginOffset: 0
-            partOfSpeech:
-                tag: PRON
-                aspect: ASPECT_UNKNOWN
-                case: NOMINATIVE
-                form: FORM_UNKNOWN
-                gender: GENDER_UNKNOWN
-                mood: MOOD_UNKNOWN
-                number: SINGULAR
-                person: FIRST
-                proper: PROPER_UNKNOWN
-                reciprocity: RECIPROCITY_UNKNOWN
-                tense: TENSE_UNKNOWN
-                voice: VOICE_UNKNOWN
-            dependencyEdge:
-                headTokenIndex: 1
-                label: NSUBJ
-            lemma: I
-                    score: 0.3
-        ...
-    language: en
-    entities: {  }
+```
+$ php src/analyze_syntax.php 'I know the way to San Jose. Do you?'
+Token text: I
+Token part of speech: PRON
 
+Token text: know
+Token part of speech: VERB
+
+Token text: the
+Token part of speech: DET
+
+Token text: way
+Token part of speech: NOUN
+
+Token text: to
+Token part of speech: ADP
+
+Token text: San
+Token part of speech: NOUN
+
+Token text: Jose
+Token part of speech: NOUN
+
+Token text: .
+Token part of speech: PUNCT
+
+Token text: Do
+Token part of speech: VERB
+
+Token text: you
+Token part of speech: PRON
+
+Token text: ?
+Token part of speech: PUNCT
+```
 
 ### Run Analyze Entity Sentiment
 
 To run the Analyze Entity Sentiment sample:
 
-    $ php language.php entity-sentiment 'New York is great. New York is good.'
-    Entity Name: New York
-    Entity Type: LOCATION
-    Entity Salience: 1
-    Entity Magnitude: 1.7999999523163
-    Entity Score: 0
-
-    Mentions:
-      Begin Offset: 0
-      Content: New York
-      Mention Type: PROPER
-      Mention Magnitude: 0.89999997615814
-      Mention Score: 0.89999997615814
-
-    Begin Offset: 17
-      Content: New York
-      Mention Type: PROPER
-      Mention Magnitude: 0.80000001192093
-      Mention Score: -0.80000001192093
+```
+$ php src/analyze_entity_sentiment.php 'New York is great. New York is good.'
+Entity Name: New York
+Entity Type: LOCATION
+Entity Salience: 1
+Entity Magnitude: 1.8
+Entity Score: 0.9
+```
 
 ### Run Classify Text
 
 To run the Classify Text sample:
 
-    $ php language.php classify 'The first two gubernatorial elections since
-    President Donald Trump took office went in favor of Democratic candidates
-    in Virginia and New Jersey.'
-    Category Name: /News/Politics
-    Confidence: 0.99000000953674
+```
+$ php src/classify_text.php 'The first two gubernatorial elections since
+President Donald Trump took office went in favor of Democratic candidates
+in Virginia and New Jersey.'
+Category Name: /News/Politics
+Confidence: 0.99
+```
 
 ## The client library
 

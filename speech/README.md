@@ -27,45 +27,25 @@ Configure your project using [Application Default Credentials][adc]
 
 ## Usage
 
-To run the Speech Samples:
+Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+are provided:
 
-    $ php speech.php
+```sh
+$ php src/transcribe_sync.php
+Usage: php src/transcribe_sync.php AUDIO_FILE
 
-    Cloud Speech
-
-    Usage:
-      command [options] [arguments]
-
-    Options:
-      -h, --help            Display this help message
-      -q, --quiet           Do not output any message
-      -V, --version         Display this application version
-          --ansi            Force ANSI output
-          --no-ansi         Disable ANSI output
-      -n, --no-interaction  Do not ask any interactive question
-      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-
-    Available commands:
-      help                    Displays help for a command
-      list                    Lists commands
-      transcribe              Transcribe an audio file using Google Cloud Speech API
-      transcribe-async        Transcribe an audio file asynchronously using Google Cloud Speech API
-      transcribe-async-gcs    Transcribe audio asynchronously from a Storage Object using Google Cloud Speech API
-      transcribe-async-words  Transcribe an audio file asynchronously and print word time offsets using Google Cloud Speech API
-      transcribe-enhanced     Transcribe an audio file with an enhanced model using  Google Cloud Speech API
-      transcribe-gcs          Transcribe audio from a Storage Object using Google Cloud Speech API
-      transcribe-model        Transcribe an audio file, with selected model, using Google Cloud Speech API
-      transcribe-punctuation  Transcribe an audio file with proper punctuation, using Google Cloud Speech API
-      transcribe-stream       Transcribe a stream of audio using Google Cloud Speech API
+$ php src/transcribe_sync.php test/data/audio32KHz.raw
+Transcript: how old is the Brooklyn Bridge
+Confidence: 0.98662775754929
+```
 
 Once you have a speech sample in the proper format, send it through the speech
 API using the transcribe command:
 
 ```sh
-php speech.php transcribe test/data/audio32KHz.raw
-php speech.php transcribe-async test/data/audio32KHz.raw
-php speech.php transcribe-words test/data/audio32KHz.raw
-
+php src/transcribe_sync.php test/data/audio32KHz.raw
+php src/transcribe_async.php test/data/audio32KHz.raw
+php src/transcribe_async_words.php test/data/audio32KHz.raw
 ```
 ## Troubleshooting
 

@@ -15,7 +15,19 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\TextToSpeech;
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 3) {
+    return print("Usage: php synthesize_text_effects_profile.php TEXT EFFECTS_PROFILE_ID\n");
+}
+list($_, $text, $effectsProfileId) = $argv;
 
 // [START tts_synthesize_text_audio_profile]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
@@ -25,31 +37,32 @@ use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
-function synthesize_text_effects_profile($text, $effectsProfileId)
-{
-    // create client object
-    $client = new TextToSpeechClient();
+/** Uncomment and populate these variables in your code */
+// $text = 'Text to synthesize';
+// $effectsProfileId = 'Audio Profile ID';
 
-    $inputText = (new SynthesisInput())
-        ->setText($text);
+// create client object
+$client = new TextToSpeechClient();
 
-    // note: the voice can also be specified by name
-    // names of voices can be retrieved with $client->listVoices()
-    $voice = (new VoiceSelectionParams())
-        ->setLanguageCode('en-US')
-        ->setSsmlGender(SsmlVoiceGender::FEMALE);
+$inputText = (new SynthesisInput())
+    ->setText($text);
 
-    // define effects profile id.
-    $audioConfig = (new AudioConfig())
-        ->setAudioEncoding(AudioEncoding::MP3)
-        ->setEffectsProfileId(array($effectsProfileId));
+// note: the voice can also be specified by name
+// names of voices can be retrieved with $client->listVoices()
+$voice = (new VoiceSelectionParams())
+    ->setLanguageCode('en-US')
+    ->setSsmlGender(SsmlVoiceGender::FEMALE);
 
-    $response = $client->synthesizeSpeech($inputText, $voice, $audioConfig);
-    $audioContent = $response->getAudioContent();
+// define effects profile id.
+$audioConfig = (new AudioConfig())
+    ->setAudioEncoding(AudioEncoding::MP3)
+    ->setEffectsProfileId(array($effectsProfileId));
 
-    file_put_contents('output.mp3', $audioContent);
-    print('Audio content written to "output.mp3"' . PHP_EOL);
+$response = $client->synthesizeSpeech($inputText, $voice, $audioConfig);
+$audioContent = $response->getAudioContent();
 
-    $client->close();
-}
+file_put_contents('output.mp3', $audioContent);
+print('Audio content written to "output.mp3"' . PHP_EOL);
+
+$client->close();
 // [END tts_synthesize_text_audio_profile]

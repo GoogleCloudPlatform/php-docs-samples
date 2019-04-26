@@ -14,19 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Speech;
 
 /**
- * This file is to be used as an example only!
+ * For instructions on how to run the full sample:
  *
- * Usage:
- * ```
- * $audioFile = '/path/to/YourAudio.raw';
- * $base64Audio = require '/path/to/base64_encode_audio.php';
- * ```
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
+
+if (count($argv) != 2) {
+    return print("Usage: php base64_encode_audio.php AUDIO_FILE\n");
+}
+list($_, $audioFile) = $argv;
+
 # [START base64_audio]
+/** Uncomment and populate these variables in your code */
+// $audioFile = 'path to an audio file';
+
 $audioFileResource = fopen($audioFile, 'r');
 $base64Audio = base64_encode(stream_get_contents($audioFileResource));
+print($base64Audio);
 # [end base64_audio]
-return $base64Audio;

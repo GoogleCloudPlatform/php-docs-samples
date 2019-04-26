@@ -28,33 +28,18 @@ https://cloud.google.com/translate/).
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  **Run**:
-```
-$ php translate.php
-Console Tool
+5.  **Run** with the command `php src/SNIPPET_NAME.php`. For example:
+    ```sh
+    $ php src/list_languages.php
+    af: Afrikaans
+    sq: Albanian
+    am: Amharic
+    ...
 
-Usage:
-  command [options] [arguments]
-
-Options:
-  -h, --help            Display this help message
-  -q, --quiet           Do not output any message
-  -V, --version         Display this application version
-      --ansi            Force ANSI output
-      --no-ansi         Disable ANSI output
-  -n, --no-interaction  Do not ask any interactive question
-  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-
-Available commands:
-  detect-language   Detect which language text was written in using Google Cloud Translate API
-  help              Displays help for a command
-  list              Lists commands
-  list-codes        List all the language codes in the Google Cloud Translate API
-  list-langs        List language codes and names in the Google Cloud Translate API
-  translate         Translate text using Google Cloud Translate API
-```
-
-6. Run `php translate.php COMMAND --help` to print information about the usage of each command.
+    $ php src/translate.php "This is my text to translate" fr
+    Source language: en
+    Translation: Ceci est mon texte à traduire
+    ```
 
 ## Contributing changes
 

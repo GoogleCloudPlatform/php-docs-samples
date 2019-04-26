@@ -1,27 +1,10 @@
 {
     "require": {
-        "google/cloud-speech": "~0.17",
-        "google/cloud-storage": "^1.3.1",
-        "symfony/console": "^3.0"
+        "google/cloud-speech": "^0.23.1",
+        "google/cloud-storage": "^1.3.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Speech\\": "src/"
-        },
-        "files": [
-            "src/streaming_recognize.php",
-            "src/transcribe_async.php",
-            "src/transcribe_async_gcs.php",
-            "src/transcribe_async_words.php",
-            "src/transcribe_auto_punctuation.php",
-            "src/transcribe_enhanced_model.php",
-            "src/transcribe_model_selection.php",
-            "src/transcribe_sync.php",
-            "src/transcribe_sync_gcs.php"
-        ]
+        "google/cloud-tools": "dev-master"
     }
 }

@@ -15,7 +15,19 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\TextToSpeech;
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 2) {
+    return print("Usage: php synthesize_text_file.php FILE\n");
+}
+list($_, $path) = $argv;
 
 // [START tts_synthesize_text_file]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
@@ -25,31 +37,31 @@ use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
-function synthesize_text_file($path)
-{
-    // create client object
-    $client = new TextToSpeechClient();
+/** Uncomment and populate these variables in your code */
+// $path = 'Path to file to synthesize';
 
-    // get text from file
-    $text = file_get_contents($path);
-    $input_text = (new SynthesisInput())
-        ->setText($text);
+// create client object
+$client = new TextToSpeechClient();
 
-    // note: the voice can also be specified by name
-    // names of voices can be retrieved with $client->listVoices()
-    $voice = (new VoiceSelectionParams())
-        ->setLanguageCode('en-US')
-        ->setSsmlGender(SsmlVoiceGender::FEMALE);
+// get text from file
+$text = file_get_contents($path);
+$input_text = (new SynthesisInput())
+    ->setText($text);
 
-    $audioConfig = (new AudioConfig())
-        ->setAudioEncoding(AudioEncoding::MP3);
+// note: the voice can also be specified by name
+// names of voices can be retrieved with $client->listVoices()
+$voice = (new VoiceSelectionParams())
+    ->setLanguageCode('en-US')
+    ->setSsmlGender(SsmlVoiceGender::FEMALE);
 
-    $response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
-    $audioContent = $response->getAudioContent();
+$audioConfig = (new AudioConfig())
+    ->setAudioEncoding(AudioEncoding::MP3);
 
-    file_put_contents('output.mp3', $audioContent);
-    print('Audio content written to "output.mp3"' . PHP_EOL);
+$response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
+$audioContent = $response->getAudioContent();
 
-    $client->close();
-}
+file_put_contents('output.mp3', $audioContent);
+print('Audio content written to "output.mp3"' . PHP_EOL);
+
+$client->close();
 // [END tts_synthesize_text_file]

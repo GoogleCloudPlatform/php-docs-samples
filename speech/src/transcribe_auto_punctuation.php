@@ -21,7 +21,13 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
-namespace Google\Cloud\Samples\Speech;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 2) {
+    return print("Usage: php transcribe_auto_punctiation.php AUDIO_FILE\n");
+}
+list($_, $audioFile) = $argv;
 
 # [START speech_transcribe_auto_punctuation]
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -29,42 +35,44 @@ use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-/**
- * Transcribe the given audio file with auto punctuation enabled
- */
-function transcribe_auto_punctuation($audioFile)
-{
-    // get contents of a file into a string
-    $content = file_get_contents($audioFile);
+/** Uncomment and populate these variables in your code */
+// $audioFile = 'path to an audio file';
 
-    // set string as audio content
-    $audio = (new RecognitionAudio())
-        ->setContent($content);
+// change these variables if necessary
+$encoding = AudioEncoding::LINEAR16;
+$sampleRateHertz = 32000;
+$languageCode = 'en-US';
 
-    // set config
-    $config = (new RecognitionConfig())
-        ->setEncoding(AudioEncoding::LINEAR16)
-        ->setSampleRateHertz(32000)
-        ->setLanguageCode('en-US')
-        ->setEnableAutomaticPunctuation(true);
+// get contents of a file into a string
+$content = file_get_contents($audioFile);
 
-    // create the speech client
-    $client = new SpeechClient();
+// set string as audio content
+$audio = (new RecognitionAudio())
+    ->setContent($content);
 
-    // make the API call
-    $response = $client->recognize($config, $audio);
-    $results = $response->getResults();
+// set config
+$config = (new RecognitionConfig())
+    ->setEncoding($encoding)
+    ->setSampleRateHertz($sampleRateHertz)
+    ->setLanguageCode($languageCode)
+    ->setEnableAutomaticPunctuation(true);
 
-    // print results
-    foreach ($results as $result) {
-        $alternatives = $result->getAlternatives();
-        $mostLikely = $alternatives[0];
-        $transcript = $mostLikely->getTranscript();
-        $confidence = $mostLikely->getConfidence();
-        printf('Transcript: %s' . PHP_EOL, $transcript);
-        printf('Confidence: %s' . PHP_EOL, $confidence);
-    }
+// create the speech client
+$client = new SpeechClient();
 
-    $client->close();
+// make the API call
+$response = $client->recognize($config, $audio);
+$results = $response->getResults();
+
+// print results
+foreach ($results as $result) {
+    $alternatives = $result->getAlternatives();
+    $mostLikely = $alternatives[0];
+    $transcript = $mostLikely->getTranscript();
+    $confidence = $mostLikely->getConfidence();
+    printf('Transcript: %s' . PHP_EOL, $transcript);
+    printf('Confidence: %s' . PHP_EOL, $confidence);
 }
+
+$client->close();
 # [END speech_transcribe_auto_punctuation]

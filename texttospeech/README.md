@@ -7,7 +7,7 @@
 
 ## Description
 
-This command-line application demonstrates how to invoke Cloud Text-to-Speech 
+These command-line samples demonstrates how to invoke Cloud Text-to-Speech
 API from PHP.
 
 ## Setup
@@ -26,41 +26,49 @@ This sample requires you to have authentication setup. Refer to the [Authenticat
 ## Samples
 
 ### List voices
-```
-Usage:
-  php texttospeech.php list-voices
 
+Run `php src/SNIPPET_NAME.php`. The usage will print for each if arguments are required:
+
+```sh
+$ php src/synthesize_text.php
+Usage: php src/synthesize_text.php TEXT
+
+$ php src/list_voices.php
+Name: ar-XA-Wavenet-A
+Supported language: ar-XA
+SSML voice gender: FEMALE
+Natural Sample Rate Hertz: 24000
+...
 ```
 
 ### Synthesize text/ssml
+
 ```
 Usage:
-  php texttospeech.php synthesize-text <TEXT>
-  php texttospeech.php synthesize-ssml <SSML>
+  php src/synthesize_text.php <TEXT>
+  php src/synthesize_ssml.php <SSML>
 
 Examples:
-  php texttospeech.php synthesize-text -h
-  php texttospeech.php synthesize-ssml -h
-  php texttospeech.php synthesize-text-audio-profile -h
-  php texttospeech.php synthesize-text "Hello there."
-  php texttospeech.php synthesize-ssml "<speak>Hello there.</speak>"
-  php texttospeech.php synthesize-text-effects-profile "Hello there." "handset-class-device"
+  php src/synthesize_text_audio_profile.php
+  php src/synthesize_text.php "Hello there."
+  php src/synthesize_ssml.php "<speak>Hello there.</speak>"
+  php src/synthesize_text_effects_profile.php "Hello there." "handset-class-device"
 ```
 
 ### Synthesize file
 ```
 Usage:
-  php texttospeech.php synthesize-text-file <FILE_PATH> 
-  php texttospeech.php synthesize-ssml-file <FILE_PATH> 
-  php texttospeech.php synthesize-text-effects-profile-file <FILE_PATH> <AUDIO_PROFILE>
-  
+  php src/synthesize_text_file.php <FILE_PATH>
+  php src/synthesize_ssml_file.php <FILE_PATH>
+  php src/synthesize_text_effects_profile_file.php <FILE_PATH> <AUDIO_PROFILE>
+
 Examples:
-  php texttospeech.php synthesize-text-file -h
-  php texttospeech.php synthesize-ssml-file -h
-  php texttospeech.php synthesize-text-audio-profile-file -h
-  php texttospeech.php synthesize-text-file resources/hello.txt
-  php texttospeech.php synthesize-ssml-file resources/hello.ssml
-  php texttospeech.php synthesize-text-effects-profile-file resources/hello.txt "handset-class-device"
+  php src/synthesize_text_file.php
+  php texttospeech.php synthesize_ssml_file.php
+  php src/synthesize_text_audio_profile_file.php
+  php src/synthesize_text_file.php resources/hello.txt
+  php src/synthesize_ssml_file.php resources/hello.ssml
+  php src/synthesize_text_effects_profile_file.php resources/hello.txt "handset-class-device"
 ```
 
 ## The client library

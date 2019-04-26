@@ -15,6 +15,18 @@
  * limitations under the License.
  */
 
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/translate/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 1) {
+    return printf("Usage: php %s\n", __FILE__);
+}
 
 // [START translate_list_codes]
 use Google\Cloud\Translate\TranslateClient;

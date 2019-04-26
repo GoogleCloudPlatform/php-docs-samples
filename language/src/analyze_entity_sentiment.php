@@ -21,50 +21,46 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-# [START language_entity_sentiment_text]
-namespace Google\Cloud\Samples\Language;
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return printf("Usage: php %s TEXT\n", __FILE__);
+}
+list($_, $text) = $argv;
+
+# [START language_entity_sentiment_text]
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\Entity\Type as EntityType;
 
-/**
- * Find the entities in text.
- * ```
- * analyze_entity_sentiment('Do you know the way to San Jose?');
- * ```
- *
- * @param string $text The text to analyze.
- * @param string $projectId (optional) Your Google Cloud Project ID
- *
- */
+/** Uncomment and populate these variables in your code */
+// $text = 'The text to analyze.';
 
-function analyze_entity_sentiment($text, $projectId = null)
-{
-    $languageServiceClient = new LanguageServiceClient(['projectId' => $projectId]);
-    try {
-        // Create a new Document
-        $document = new Document();
-        // Add text as content and set document type to PLAIN_TEXT
-        $document->setContent($text)->setType(Type::PLAIN_TEXT);
-        // Call the analyzeEntitySentiment function
-        $response = $languageServiceClient->analyzeEntitySentiment($document);
-        $entities = $response->getEntities();
-        // Print out information about each entity
-        foreach ($entities as $entity) {
-            printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-            printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
-            printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
-            $sentiment = $entity->getSentiment();
-            if ($sentiment) {
-                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
-                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
-            }
-            print(PHP_EOL);
+$languageServiceClient = new LanguageServiceClient();
+try {
+    // Create a new Document, add text as content and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setContent($text)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeEntitySentiment function
+    $response = $languageServiceClient->analyzeEntitySentiment($document);
+    $entities = $response->getEntities();
+    // Print out information about each entity
+    foreach ($entities as $entity) {
+        printf('Entity Name: %s' . PHP_EOL, $entity->getName());
+        printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
+        printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
+        $sentiment = $entity->getSentiment();
+        if ($sentiment) {
+            printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+            printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
         }
-    } finally {
-        $languageServiceClient->close();
+        print(PHP_EOL);
     }
+} finally {
+    $languageServiceClient->close();
 }
 # [END language_entity_sentiment_text]
