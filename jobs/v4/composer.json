@@ -1,0 +1,5 @@
+{
+    "require": {
+        "google/cloud-talent": ">0.0.1"
+    }
+}
