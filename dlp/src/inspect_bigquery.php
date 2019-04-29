@@ -122,11 +122,14 @@ function inspect_bigquery(
         }
     }
 
-    // Sleep for one second to avoid race condition with the job's status.
-    usleep(1000000);
-
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
+
+    // Sleep to avoid race condition with the job's status.
+    while ($job->getState() == JobState::RUNNING) {
+        usleep(1000000);
+        $job = $dlp->getDlpJob($job->getName());
+    }
 
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());

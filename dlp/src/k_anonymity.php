@@ -111,11 +111,14 @@ function k_anonymity(
         }
     }
 
-    // Sleep for one second to avoid race condition with the job's status.
-    usleep(1000000);
-
     // Get the updated job
     $job = $dlp->getDlpJob($job->getName());
+
+    // Sleep to avoid race condition with the job's status.
+    while ($job->getState() == JobState::RUNNING) {
+        usleep(1000000);
+        $job = $dlp->getDlpJob($job->getName());
+    }
 
     // Helper function to convert Protobuf values to strings
     $value_to_string = function ($value) {
