@@ -5,7 +5,7 @@
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "^5",
         "paragonie/random_compat": "^2.0",
         "google/cloud-tools": "^0.8.5"
     }

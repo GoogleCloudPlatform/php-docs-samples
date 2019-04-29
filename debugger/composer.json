@@ -8,6 +8,6 @@
         "twig/twig": "^2.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4"
+        "phpunit/phpunit": "^5"
     }
 }
