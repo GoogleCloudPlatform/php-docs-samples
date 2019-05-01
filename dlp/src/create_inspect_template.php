@@ -26,12 +26,12 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 6) {
-    return print("Usage: php create_inspect_template.php CALLING_PROJECT TEMPLATE [DISPLAY_NAME] [DESCRIPTIOPN] [MAX_FINDINGS]\n");
+    return print("Usage: php create_inspect_template.php CALLING_PROJECT TEMPLATE [DISPLAY_NAME] [DESCRIPTION] [MAX_FINDINGS]\n");
 }
 list($_, $callingProjectId, $templateId, $displayName, $description) = $argv;
-$displayName = isset($argv[3]) ? $argv : '';
-$description = isset($argv[4]) ? $argv : '';
-$maxFindings = isset($argv[5]) ? $argv : 0;
+$displayName = isset($argv[3]) ? $argv[3] : '';
+$description = isset($argv[4]) ? $argv[4] : '';
+$maxFindings = (int) (isset($argv[5]) ? $argv[5] : 0);
 
 // [START dlp_create_inspect_template]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -41,7 +41,10 @@ use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
-/** Uncomment and populate these variables in your code */
+/**
+ * Create a new DLP inspection configuration template.
+ * Uncomment and populate these variables in your code
+ */
 // $callingProjectId = 'The project ID to run the API call under';
 // $templateId = 'The name of the template to be created';
 // $displayName = ''; // (Optional) The human-readable name to give the template
@@ -84,15 +87,11 @@ $inspectTemplate = (new InspectTemplate())
 
 // Run request
 $parent = $dlp->projectName($callingProjectId);
-$dlp->createInspectTemplate($parent, [
+$template = $dlp->createInspectTemplate($parent, [
     'inspectTemplate' => $inspectTemplate,
     'templateId' => $templateId
 ]);
 
 // Print results
-printf(
-    'Successfully created template projects/%s/inspectTemplates/%s' . PHP_EOL,
-    $callingProjectId,
-    $templateId
-);
+printf('Successfully created template %s' . PHP_EOL, $template->name());
 // [END dlp_create_inspect_template]

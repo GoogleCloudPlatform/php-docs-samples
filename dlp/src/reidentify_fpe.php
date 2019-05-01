@@ -15,7 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 5 || count($argv) > 6) {
+    return print("Usage: php reidentify_fpe.php CALLING_PROJECT STRING KEY_NAME WRAPPED_KEY [SURROGATE_TYPE_NAME]\n");
+}
+list($_, $callingProjectId, $string, $keyName, $wrappedKey) = $argv;
+$surrogateTypeName = isset($argv[5]) ? $argv[5] : '';
 
 # [START dlp_reidentify_fpe]
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
@@ -35,90 +49,80 @@ use Google\Cloud\Dlp\V2\CustomInfoType\SurrogateType;
 
 /**
  * Reidentify a deidentified string using Format-Preserving Encryption (FPE).
- *
- * @param string $callingProjectId The GCP Project ID to run the API call under
- * @param string $string The string to deidentify
- * @param keyName $keyName The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
- * @param string $wrappedKey The AES-256 key to use, encrypted ('wrapped') with the KMS key
- *        defined by $keyName.
- * @param string $surrogateTypeName Optional surrogate custom info type to enable
- *        reidentification. Can be essentially any arbitrary string that doesn't
- *        appear in your dataset'
+ * Uncomment and populate these variables in your code:
  */
-function reidentify_fpe(
-    $callingProjectId,
-    $string,
-    $keyName,
-    $wrappedKey,
-    $surrogateTypeName = ''
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
+// $callingProjectId = 'The GCP Project ID to run the API call under';
+// $string = 'The string to reidentify';
+// $keyName = 'The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key';
+// $wrappedKey = 'The name of the Cloud KMS key use, encrypted with the KMS key in $keyName';
+// $surrogateTypeName = ''; // (Optional) Surrogate custom info type to enable reidentification
 
-    // The infoTypes of information to mask
-    $ssnInfoType = (new InfoType())
-        ->setName('US_SOCIAL_SECURITY_NUMBER');
-    $infoTypes = [$ssnInfoType];
+// Instantiate a client.
+$dlp = new DlpServiceClient();
 
-    // The set of characters to replace sensitive ones with
-    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2/organizations.deidentifyTemplates#ffxcommonnativealphabet
-    $commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
+// The infoTypes of information to mask
+$ssnInfoType = (new InfoType())
+    ->setName('US_SOCIAL_SECURITY_NUMBER');
+$infoTypes = [$ssnInfoType];
 
-    // Create the wrapped crypto key configuration object
-    $kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
-        ->setWrappedKey(base64_decode($wrappedKey))
-        ->setCryptoKeyName($keyName);
+// The set of characters to replace sensitive ones with
+// For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+$commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
 
-    // Create the crypto key configuration object
-    $cryptoKey = (new CryptoKey())
-        ->setKmsWrapped($kmsWrappedCryptoKey);
+// Create the wrapped crypto key configuration object
+$kmsWrappedCryptoKey = (new KmsWrappedCryptoKey())
+    ->setWrappedKey(base64_decode($wrappedKey))
+    ->setCryptoKeyName($keyName);
 
-    // Create the surrogate type object
-    $surrogateType = (new InfoType())
-        ->setName($surrogateTypeName);
+// Create the crypto key configuration object
+$cryptoKey = (new CryptoKey())
+    ->setKmsWrapped($kmsWrappedCryptoKey);
 
-    $customInfoType = (new CustomInfoType())
-        ->setInfoType($surrogateType)
-        ->setSurrogateType(new SurrogateType());
+// Create the surrogate type object
+$surrogateType = (new InfoType())
+    ->setName($surrogateTypeName);
 
-    // Create the crypto FFX FPE configuration object
-    $cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
-        ->setCryptoKey($cryptoKey)
-        ->setCommonAlphabet($commonAlphabet)
-        ->setSurrogateInfoType($surrogateType);
+$customInfoType = (new CustomInfoType())
+    ->setInfoType($surrogateType)
+    ->setSurrogateType(new SurrogateType());
 
-    // Create the information transform configuration objects
-    $primitiveTransformation = (new PrimitiveTransformation())
-        ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
+// Create the crypto FFX FPE configuration object
+$cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
+    ->setCryptoKey($cryptoKey)
+    ->setCommonAlphabet($commonAlphabet)
+    ->setSurrogateInfoType($surrogateType);
 
-    $infoTypeTransformation = (new InfoTypeTransformation())
-        ->setPrimitiveTransformation($primitiveTransformation);
+// Create the information transform configuration objects
+$primitiveTransformation = (new PrimitiveTransformation())
+    ->setCryptoReplaceFfxFpeConfig($cryptoReplaceFfxFpeConfig);
 
-    $infoTypeTransformations = (new InfoTypeTransformations())
-        ->setTransformations([$infoTypeTransformation]);
+$infoTypeTransformation = (new InfoTypeTransformation())
+    ->setPrimitiveTransformation($primitiveTransformation);
 
-    // Create the inspect configuration object
-    $inspectConfig = (new InspectConfig())
-        ->setCustomInfoTypes([$customInfoType]);
+$infoTypeTransformations = (new InfoTypeTransformations())
+    ->setTransformations([$infoTypeTransformation]);
 
-    // Create the reidentification configuration object
-    $reidentifyConfig = (new DeidentifyConfig())
-        ->setInfoTypeTransformations($infoTypeTransformations);
+// Create the inspect configuration object
+$inspectConfig = (new InspectConfig())
+    ->setCustomInfoTypes([$customInfoType]);
 
-    $item = (new ContentItem())
-        ->setValue($string);
+// Create the reidentification configuration object
+$reidentifyConfig = (new DeidentifyConfig())
+    ->setInfoTypeTransformations($infoTypeTransformations);
 
-    $parent = $dlp->projectName($callingProjectId);
+$item = (new ContentItem())
+    ->setValue($string);
 
-    // Run request
-    $response = $dlp->reidentifyContent($parent, [
-        'reidentifyConfig' => $reidentifyConfig,
-        'inspectConfig' => $inspectConfig,
-        'item' => $item
-    ]);
+$parent = $dlp->projectName($callingProjectId);
 
-    // Print the results
-    $reidentifiedValue = $response->getItem()->getValue();
-    print($reidentifiedValue);
-}
+// Run request
+$response = $dlp->reidentifyContent($parent, [
+    'reidentifyConfig' => $reidentifyConfig,
+    'inspectConfig' => $inspectConfig,
+    'item' => $item
+]);
+
+// Print the results
+$reidentifiedValue = $response->getItem()->getValue();
+print($reidentifiedValue);
 # [END dlp_reidentify_fpe]

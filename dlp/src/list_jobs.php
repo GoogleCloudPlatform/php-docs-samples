@@ -15,7 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 3) {
+    return print("Usage: php list_jobs.php CALLING_PROJECT FILTER\n");
+}
+list($_, $callingProjectId, $filter) = $argv;
 
 # [START dlp_list_jobs]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -23,43 +36,42 @@ use Google\Cloud\Dlp\V2\DlpJobType;
 
 /**
  * List Data Loss Prevention API jobs corresponding to a given filter.
- *
- * @param string $callingProjectId The project ID to run the API call under
- * @param string $filter The filter expression to use
- *        For more information and filter syntax, see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
+ * Uncomment and populate these variables in your code:
  */
-function list_jobs($callingProjectId, $filter)
-{
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
+// $callingProjectId = 'The project ID to run the API call under';
+// $filter = 'The filter expression to use';
 
-    // The type of job to list (either 'INSPECT_JOB' or 'REDACT_JOB')
-    $jobType = DlpJobType::INSPECT_JOB;
+// Instantiate a client.
+$dlp = new DlpServiceClient();
 
-    // Run job-listing request
-    $parent = $dlp->projectName($callingProjectId);
-    $response = $dlp->listDlpJobs($parent, [
-      'filter' => $filter,
-      'type' => $jobType
-    ]);
+// The type of job to list (either 'INSPECT_JOB' or 'REDACT_JOB')
+$jobType = DlpJobType::INSPECT_JOB;
 
-    // Print job list
-    $jobs = $response->iterateAllElements();
-    foreach ($jobs as $job) {
-        printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
-        $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+// Run job-listing request
+// For more information and filter syntax,
+// @see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
+$parent = $dlp->projectName($callingProjectId);
+$response = $dlp->listDlpJobs($parent, [
+  'filter' => $filter,
+  'type' => $jobType
+]);
 
-        if (count($infoTypeStats) > 0) {
-            foreach ($infoTypeStats as $infoTypeStat) {
-                printf(
-                    '  Found %s instance(s) of type %s' . PHP_EOL,
-                    $infoTypeStat->getCount(),
-                    $infoTypeStat->getInfoType()->getName()
-                );
-            }
-        } else {
-            print('  No findings.' . PHP_EOL);
+// Print job list
+$jobs = $response->iterateAllElements();
+foreach ($jobs as $job) {
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+    $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+
+    if (count($infoTypeStats) > 0) {
+        foreach ($infoTypeStats as $infoTypeStat) {
+            printf(
+                '  Found %s instance(s) of type %s' . PHP_EOL,
+                $infoTypeStat->getCount(),
+                $infoTypeStat->getInfoType()->getName()
+            );
         }
+    } else {
+        print('  No findings.' . PHP_EOL);
     }
 }
 # [END dlp_list_jobs]

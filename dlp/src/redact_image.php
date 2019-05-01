@@ -15,7 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 4) {
+    return print("Usage: php redact_image.php CALLING_PROJECT IMAGE_PATH OUTPUT_PATH\n");
+}
+list($_, $callingProjectId, $imagePath, $outputPath) = $argv;
 
 # [START dlp_redact_image]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -27,72 +40,67 @@ use Google\Cloud\Dlp\V2\ByteContentItem;
 
 /**
  * Redact sensitive data from an image.
- *
- * @param string $callingProjectId The GCP Project ID to run the API call under
- * @param string $imagePath The local filepath of the image to inspect
- * @param string $outputPath The local filepath to save the resulting image to
+ * Uncomment and populate these variables in your code:
  */
-function redact_image(
-    $callingProjectId,
-    $imagePath,
-    $outputPath
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
+// $callingProjectId = 'The project ID to run the API call under';
+// $imagePath = 'The local filepath of the image to inspect';
+// $outputPath = 'The local filepath to save the resulting image to';
 
-    // The infoTypes of information to match
-    $phoneNumberInfoType = (new InfoType())
-        ->setName('PHONE_NUMBER');
-    $infoTypes = [$phoneNumberInfoType];
+// Instantiate a client.
+$dlp = new DlpServiceClient();
 
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+// The infoTypes of information to match
+$phoneNumberInfoType = (new InfoType())
+    ->setName('PHONE_NUMBER');
+$infoTypes = [$phoneNumberInfoType];
 
-    // Whether to include the matching string in the response
-    $includeQuote = true;
+// The minimum likelihood required before returning a match
+$minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-    // Create the configuration object
-    $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood($minLikelihood)
-        ->setInfoTypes($infoTypes);
+// Whether to include the matching string in the response
+$includeQuote = true;
 
-    // Read image file into a buffer
-    $imageRef = fopen($imagePath, 'rb');
-    $imageBytes = fread($imageRef, filesize($imagePath));
-    fclose($imageRef);
+// Create the configuration object
+$inspectConfig = (new InspectConfig())
+    ->setMinLikelihood($minLikelihood)
+    ->setInfoTypes($infoTypes);
 
-    // Get the image's content type
-    $typeConstant = (int) array_search(
-        mime_content_type($imagePath),
-        [false, 'image/jpeg', 'image/bmp', 'image/png', 'image/svg']
-    );
+// Read image file into a buffer
+$imageRef = fopen($imagePath, 'rb');
+$imageBytes = fread($imageRef, filesize($imagePath));
+fclose($imageRef);
 
-    // Create the byte-storing object
-    $byteContent = (new ByteContentItem())
-        ->setType($typeConstant)
-        ->setData($imageBytes);
+// Get the image's content type
+$typeConstant = (int) array_search(
+    mime_content_type($imagePath),
+    [false, 'image/jpeg', 'image/bmp', 'image/png', 'image/svg']
+);
 
-    // Create the image redaction config objects
-    $imageRedactionConfigs = [];
-    foreach ($infoTypes as $infoType) {
-        $config = (new ImageRedactionConfig())
-            ->setInfoType($infoType);
-        $imageRedactionConfigs[] = $config;
-    }
+// Create the byte-storing object
+$byteContent = (new ByteContentItem())
+    ->setType($typeConstant)
+    ->setData($imageBytes);
 
-    $parent = $dlp->projectName($callingProjectId);
-
-    // Run request
-    $response = $dlp->redactImage($parent, [
-        'inspectConfig' => $inspectConfig,
-        'byteItem' => $byteContent,
-        'imageRedactionConfigs' => $imageRedactionConfigs
-    ]);
-
-    // Save result to file
-    file_put_contents($outputPath, $response->getRedactedImage());
-
-    // Print completion message
-    print('Redacted image saved to ' . $outputPath . PHP_EOL);
+// Create the image redaction config objects
+$imageRedactionConfigs = [];
+foreach ($infoTypes as $infoType) {
+    $config = (new ImageRedactionConfig())
+        ->setInfoType($infoType);
+    $imageRedactionConfigs[] = $config;
 }
+
+$parent = $dlp->projectName($callingProjectId);
+
+// Run request
+$response = $dlp->redactImage($parent, [
+    'inspectConfig' => $inspectConfig,
+    'byteItem' => $byteContent,
+    'imageRedactionConfigs' => $imageRedactionConfigs
+]);
+
+// Save result to file
+file_put_contents($outputPath, $response->getRedactedImage());
+
+// Print completion message
+print('Redacted image saved to ' . $outputPath . PHP_EOL);
 # [END dlp_redact_image]

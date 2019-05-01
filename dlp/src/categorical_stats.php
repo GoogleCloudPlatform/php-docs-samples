@@ -42,14 +42,17 @@ use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
-/** Uncomment and populate these variables in your code */
- // $callingProjectId = 'The project ID to run the API call under';
- // $dataProjectId = 'The project ID containing the target Datastore';
- // $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
- // $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
- // $datasetId = 'The ID of the dataset to inspect';
- // $tableId = 'The ID of the table to inspect';
- // $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
+/**
+ * Computes risk metrics of a column of data in a Google BigQuery table.
+ * Uncomment and populate these variables in your code:
+ */
+// $callingProjectId = 'The project ID to run the API call under';
+// $dataProjectId = 'The project ID containing the target Datastore';
+// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
+// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
+// $datasetId = 'The ID of the dataset to inspect';
+// $tableId = 'The ID of the table to inspect';
+// $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient([

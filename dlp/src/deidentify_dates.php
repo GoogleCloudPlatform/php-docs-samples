@@ -29,11 +29,10 @@ if (count($argv) < 7 || count($argv) > 10) {
     return print("Usage: php deidentify_dates.php CALLING_PROJECT INPUT_CSV OUTPUT_CSV DATE_FIELDS LOWER_BOUND_DAYS UPPER_BOUND_DAYS [CONTEXT_FIELDS] [KEY_NAME] [WRAPPED_KEY]\n");
 }
 list($_, $callingProjectId, $inputCsvFile, $outputCsvFile, $dateFieldNames, $lowerBoundDays, $upperBoundDays) = $argv;
-$contextFieldName = isset($argv[7]) ? $argv : '';
-$keyName = isset($argv[8]) ? $argv : '';
-$wrappedKey = isset($argv[9]) ? $argv : '';
+$contextFieldName = isset($argv[7]) ? $argv[7] : '';
+$keyName = isset($argv[8]) ? $argv[8] : '';
+$wrappedKey = isset($argv[9]) ? $argv[9] : '';
 
-use Exception;
 # [START dlp_deidentify_date_shift]
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoKey;
@@ -49,20 +48,24 @@ use Google\Cloud\Dlp\V2\Table;
 use Google\Cloud\Dlp\V2\Table\Row;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
-use DateTime;
 
-/** Uncomment and populate these variables in your code */
+/**
+ * Deidentify dates in a CSV file by pseudorandomly shifting them.
+ * Uncomment and populate these variables in your code:
+ */
 // $callingProject = 'The GCP Project ID to run the API call under';
 // $inputCsvFile = 'The path to the CSV file to deidentify';
 // $outputCsvFile = 'The path to save the date-shifted CSV file to';
 // $dateFieldNames = 'The comma-separated list of (date) fields in the CSV file to date shift';
 // $lowerBoundDays = 'The maximum number of days to shift a date backward';
 // $upperBoundDays = 'The maximum number of days to shift a date forward';
-/** If contextFieldName is not specified, a random shift amount will be used for every row.
-/** If contextFieldName is specified, then 'wrappedKey' and 'keyName' must also be set*/
-// contextFieldName = ''; (Optional) The column to determine date shift amount based on
-// keyName = ''; // Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
-// wrappedKey = ''; // (Optional) The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
+/**
+ * If contextFieldName is not specified, a random shift amount will be used for every row.
+ * If contextFieldName is specified, then 'wrappedKey' and 'keyName' must also be set
+ */
+// $contextFieldName = ''; (Optional) The column to determine date shift amount based on
+// $keyName = ''; // Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
+// $wrappedKey = ''; // (Optional) The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();

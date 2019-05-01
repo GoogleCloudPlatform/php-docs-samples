@@ -29,12 +29,12 @@ if (count($argv) < 3 || count($argv) > 9) {
     return print("Usage: php create_trigger.php CALLING_PROJECT BUCKET [TRIGGER] [DISPLAY_NAME] [DESCRIPTION] [SCAN_PERIOD] [MAX_FINDINGS] [AUTO_POPULATE_TIMESPAN]\n");
 }
 list($_, $callingProjectId, $bucketName) = $argv;
-$triggerId = isset($argv[3]) ? $argv : '';
-$displayName = isset($argv[4]) ? $argv : '';
-$description = isset($argv[5]) ? $argv : '';
-$scanPeriod = isset($argv[6]) ? $argv : 1;
-$maxFindings = isset($argv[7]) ? $argv : 0;
-$autoPopulateTimespan = isset($argv[8]) ? $argv : false;
+$triggerId = isset($argv[3]) ? $argv[3] : '';
+$displayName = isset($argv[4]) ? $argv[4] : '';
+$description = isset($argv[5]) ? $argv[5] : '';
+$scanPeriod = isset($argv[6]) ? (int) $argv[6] : 1;
+$maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
+$autoPopulateTimespan = isset($argv[8]) ? (bool) $argv[8] : false;
 
 // [START dlp_create_trigger]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -53,7 +53,10 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Protobuf\Duration;
 
-/** Uncomment and populate these variables in your code */
+/**
+ * Create a Data Loss Prevention API job trigger.
+ * Uncomment and populate these variables in your code:
+ */
 // $callingProjectId = 'The project ID to run the API call under';
 // $bucketName = 'The name of the bucket to scan';
 // $triggerId = '';   // (Optional) The name of the trigger to be created';
@@ -127,11 +130,11 @@ $jobTriggerObject = (new JobTrigger())
 
 // Run trigger creation request
 $parent = $dlp->projectName($callingProjectId);
-$dlp->createJobTrigger($parent, [
+$trigger = $dlp->createJobTrigger($parent, [
     'jobTrigger' => $jobTriggerObject,
     'triggerId' => $triggerId
 ]);
 
 // Print results
-printf('Successfully created trigger %s' . PHP_EOL, $triggerId);
+printf('Successfully created trigger %s' . PHP_EOL, $trigger->name());
 // [END dlp_create_trigger]

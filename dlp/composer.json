@@ -5,34 +5,8 @@
         "google/cloud-dlp": "^0.18.1",
         "google/cloud-pubsub": "^1.11.1"
     },
-    "autoload": {
-        "files": [
-            "src/inspect_datastore.php",
-            "src/inspect_bigquery.php",
-            "src/inspect_gcs.php",
-            "src/list_info_types.php",
-            "src/deidentify_mask.php",
-            "src/deidentify_fpe.php",
-            "src/reidentify_fpe.php",
-            "src/deidentify_dates.php",
-            "src/redact_image.php",
-            "src/create_trigger.php",
-            "src/list_triggers.php",
-            "src/delete_trigger.php",
-            "src/create_inspect_template.php",
-            "src/list_inspect_templates.php",
-            "src/delete_inspect_template.php",
-            "src/list_jobs.php",
-            "src/delete_job.php",
-            "src/numerical_stats.php",
-            "src/categorical_stats.php",
-            "src/k_anonymity.php",
-            "src/l_diversity.php",
-            "src/k_map.php"
-        ]
-    },
     "require-dev": {
         "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5"
+        "google/cloud-tools": "dev-master"
     }
 }

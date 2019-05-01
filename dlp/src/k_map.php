@@ -15,9 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
 
-use Exception;
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 10) {
+    return print("Usage: php k_map.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE REGION_CODE QUASI_ID_NAMES INFO_TYPES\n");
+}
+list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $regionCode, $quasiIdNames, $infoTypes) = $argv;
+// Convert comma-separated lists to arrays
+$quasiIdNames = explode(',', $quasiIdNames);
+$infoTypes = explode(',', $infoTypes);
+
 # [START dlp_k_map]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -34,162 +49,149 @@ use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Computes the k-map risk estimation of a column set in a Google BigQuery table.
- *
- * @param string $callingProjectId The project ID to run the API call under
- * @param string $dataProjectId The project ID containing the target Datastore
- * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
- * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId The ID of the dataset to inspect
- * @param string $tableId The ID of the table to inspect
- * @param string $regionCode The ISO 3166-1 region code that the data is representative of
- * @param array $quasiIdNames A set of columns that form a composite key ('quasi-identifiers'),
- *        and optionally their reidentification distributions
- * @param array $infoTypes The infoTypes corresponding to the chosen quasi-identifiers
-
+ * Uncomment and populate these variables in your code:
  */
-function k_map(
-  $callingProjectId,
-  $dataProjectId,
-  $topicId,
-  $subscriptionId,
-  $datasetId,
-  $tableId,
-  $regionCode,
-  $quasiIdNames,
-  $infoTypes
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $topic = $pubsub->topic($topicId);
+// $callingProjectId = 'The project ID to run the API call under';
+// $dataProjectId = 'The project ID containing the target Datastore';
+// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
+// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
+// $datasetId = 'The ID of the dataset to inspect';
+// $tableId = 'The ID of the table to inspect';
+// $regionCode = 'The ISO 3166-1 region code that the data is representative of';
+// $quasiIdNames = ['array columns that form a composite key (quasi-identifiers)'];
+// $infoTypes = ['array of infoTypes corresponding to the chosen quasi-identifiers'];
 
-    // Verify input
-    if (count($infoTypes) != count($quasiIdNames)) {
-        throw new Exception('Number of infoTypes and number of quasi-identifiers must be equal!');
-    }
+// Instantiate a client.
+$dlp = new DlpServiceClient([
+    'projectId' => $callingProjectId,
+]);
+$pubsub = new PubSubClient([
+    'projectId' => $callingProjectId,
+]);
+$topic = $pubsub->topic($topicId);
 
-    // Map infoTypes to quasi-ids
-    $quasiIdObjects = array_map(function ($quasiId, $infoType) {
-        $quasiIdField = (new FieldId())
-            ->setName($quasiId);
+// Verify input
+if (count($infoTypes) != count($quasiIdNames)) {
+    throw new Exception('Number of infoTypes and number of quasi-identifiers must be equal!');
+}
 
-        $quasiIdType = (new InfoType())
-            ->setName($infoType);
+// Map infoTypes to quasi-ids
+$quasiIdObjects = array_map(function ($quasiId, $infoType) {
+    $quasiIdField = (new FieldId())
+        ->setName($quasiId);
 
-        $quasiIdObject = (new TaggedField())
-            ->setInfoType($quasiIdType)
-            ->setField($quasiIdField);
+    $quasiIdType = (new InfoType())
+        ->setName($infoType);
 
-        return $quasiIdObject;
-    }, $quasiIdNames, $infoTypes);
+    $quasiIdObject = (new TaggedField())
+        ->setInfoType($quasiIdType)
+        ->setField($quasiIdField);
 
-    // Construct analysis config
-    $statsConfig = (new KMapEstimationConfig())
-        ->setQuasiIds($quasiIdObjects)
-        ->setRegionCode($regionCode);
+    return $quasiIdObject;
+}, $quasiIdNames, $infoTypes);
 
-    $privacyMetric = (new PrivacyMetric())
-        ->setKMapEstimationConfig($statsConfig);
+// Construct analysis config
+$statsConfig = (new KMapEstimationConfig())
+    ->setQuasiIds($quasiIdObjects)
+    ->setRegionCode($regionCode);
 
-    // Construct items to be analyzed
-    $bigqueryTable = (new BigQueryTable())
-        ->setProjectId($dataProjectId)
-        ->setDatasetId($datasetId)
-        ->setTableId($tableId);
+$privacyMetric = (new PrivacyMetric())
+    ->setKMapEstimationConfig($statsConfig);
 
-    // Construct the action to run when job completes
-    $pubSubAction = (new PublishToPubSub())
-        ->setTopic($topic->name());
+// Construct items to be analyzed
+$bigqueryTable = (new BigQueryTable())
+    ->setProjectId($dataProjectId)
+    ->setDatasetId($datasetId)
+    ->setTableId($tableId);
 
-    $action = (new Action())
-        ->setPubSub($pubSubAction);
+// Construct the action to run when job completes
+$pubSubAction = (new PublishToPubSub())
+    ->setTopic($topic->name());
 
-    // Construct risk analysis job config to run
-    $riskJob = (new RiskAnalysisJobConfig())
-        ->setPrivacyMetric($privacyMetric)
-        ->setSourceTable($bigqueryTable)
-        ->setActions([$action]);
+$action = (new Action())
+    ->setPubSub($pubSubAction);
 
-    // Listen for job notifications via an existing topic/subscription.
-    $subscription = $topic->subscription($subscriptionId);
+// Construct risk analysis job config to run
+$riskJob = (new RiskAnalysisJobConfig())
+    ->setPrivacyMetric($privacyMetric)
+    ->setSourceTable($bigqueryTable)
+    ->setActions([$action]);
 
-    // Submit request
-    $parent = $dlp->projectName($callingProjectId);
-    $job = $dlp->createDlpJob($parent, [
-        'riskJob' => $riskJob
-    ]);
+// Listen for job notifications via an existing topic/subscription.
+$subscription = $topic->subscription($subscriptionId);
 
-    // Poll via Pub/Sub until job finishes
-    while (true) {
-        foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
-                $subscription->acknowledge($message);
-                break 2;
-            }
+// Submit request
+$parent = $dlp->projectName($callingProjectId);
+$job = $dlp->createDlpJob($parent, [
+    'riskJob' => $riskJob
+]);
+
+// Poll via Pub/Sub until job finishes
+while (true) {
+    foreach ($subscription->pull() as $message) {
+        if (isset($message->attributes()['DlpJobName']) &&
+            $message->attributes()['DlpJobName'] === $job->getName()) {
+            $subscription->acknowledge($message);
+            break 2;
         }
     }
+}
 
-    // Get the updated job
+// Get the updated job
+$job = $dlp->getDlpJob($job->getName());
+
+// Sleep to avoid race condition with the job's status.
+while ($job->getState() == JobState::RUNNING) {
+    usleep(1000000);
     $job = $dlp->getDlpJob($job->getName());
+}
 
-    // Sleep to avoid race condition with the job's status.
-    while ($job->getState() == JobState::RUNNING) {
-        usleep(1000000);
-        $job = $dlp->getDlpJob($job->getName());
-    }
+// Helper function to convert Protobuf values to strings
+$value_to_string = function ($value) {
+    $json = json_decode($value->serializeToJsonString(), true);
+    return array_shift($json);
+};
 
-    // Helper function to convert Protobuf values to strings
-    $value_to_string = function ($value) {
-        $json = json_decode($value->serializeToJsonString(), true);
-        return array_shift($json);
-    };
+// Print finding counts
+printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+switch ($job->getState()) {
+    case JobState::DONE:
+        $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
 
-    // Print finding counts
-    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
-    switch ($job->getState()) {
-        case JobState::DONE:
-            $histBuckets = $job->getRiskDetails()->getKMapEstimationResult()->getKMapEstimationHistogram();
+        foreach ($histBuckets as $bucketIndex => $histBucket) {
+            // Print bucket stats
+            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+            printf(
+                '  Anonymity range: [%s, %s]' . PHP_EOL,
+                $histBucket->getMinAnonymity(),
+                $histBucket->getMaxAnonymity()
+            );
+            printf('  Size: %s' . PHP_EOL, $histBucket->getBucketSize());
 
-            foreach ($histBuckets as $bucketIndex => $histBucket) {
-                // Print bucket stats
-                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+            // Print bucket values
+            foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
                 printf(
-                    '  Anonymity range: [%s, %s]' . PHP_EOL,
-                    $histBucket->getMinAnonymity(),
-                    $histBucket->getMaxAnonymity()
+                    '  Estimated k-map anonymity: %s' . PHP_EOL,
+                    $valueBucket->getEstimatedAnonymity()
                 );
-                printf('  Size: %s' . PHP_EOL, $histBucket->getBucketSize());
 
-                // Print bucket values
-                foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
-                    printf(
-                        '  Estimated k-map anonymity: %s' . PHP_EOL,
-                        $valueBucket->getEstimatedAnonymity()
-                    );
-
-                    // Pretty-print quasi-ID values
-                    print('  Values: {');
-                    foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
-                        print(($index !== 0 ? ', ' : '') . $value_to_string($value));
-                    }
-                    print('}' . PHP_EOL);
+                // Pretty-print quasi-ID values
+                print('  Values: {');
+                foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
+                    print(($index !== 0 ? ', ' : '') . $value_to_string($value));
                 }
+                print('}' . PHP_EOL);
             }
-            break;
-        case JobState::FAILED:
-            printf('Job %s had errors:' . PHP_EOL, $job->getName());
-            $errors = $job->getErrors();
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            break;
-        default:
-            print('Unexpected job state. Most likely, the job is either running or has not yet started.');
-    }
+        }
+        break;
+    case JobState::FAILED:
+        printf('Job %s had errors:' . PHP_EOL, $job->getName());
+        $errors = $job->getErrors();
+        foreach ($errors as $error) {
+            var_dump($error->getDetails());
+        }
+        break;
+    default:
+        print('Unexpected job state. Most likely, the job is either running or has not yet started.');
 }
 # [END dlp_k_map]

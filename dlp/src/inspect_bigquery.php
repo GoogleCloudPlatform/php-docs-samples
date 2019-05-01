@@ -15,7 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) < 7 || count($argv) > 8) {
+    return print("Usage: php inspect_bigquery.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE [MAX_FINDINGS]\n");
+}
+list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId) = $argv;
+$maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 
 # [START dlp_inspect_bigquery]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -34,129 +48,121 @@ use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Inspect a BigQuery table , using Pub/Sub for job status notifications.
- *
- * @param string $callingProjectId The project ID to run the API call under
- * @param string $dataProjectId The project ID containing the target Datastore
- * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
- * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId The ID of the dataset to inspect
- * @param string $tableId The ID of the table to inspect
- * @param int $maxFindings The maximum number of findings to report per request (0 = server maximum)
+ * Uncomment and populate these variables in your code
  */
-function inspect_bigquery(
-  $callingProjectId,
-  $dataProjectId,
-  $topicId,
-  $subscriptionId,
-  $datasetId,
-  $tableId,
-  $maxFindings = 0
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient();
-    $topic = $pubsub->topic($topicId);
+// $callingProjectId = 'The project ID to run the API call under';
+// $dataProjectId = 'The project ID containing the target Datastore';
+// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
+// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
+// $datasetId = 'The ID of the dataset to inspect';
+// $tableId = 'The ID of the table to inspect';
+// $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
+// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
 
-    // The infoTypes of information to match
-    $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
-    $creditCardNumberInfoType = (new InfoType())
-        ->setName('CREDIT_CARD_NUMBER');
-    $infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
+// Instantiate a client.
+$dlp = new DlpServiceClient();
+$pubsub = new PubSubClient();
+$topic = $pubsub->topic($topicId);
 
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+// The infoTypes of information to match
+$personNameInfoType = (new InfoType())
+    ->setName('PERSON_NAME');
+$creditCardNumberInfoType = (new InfoType())
+    ->setName('CREDIT_CARD_NUMBER');
+$infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
 
-    // Specify finding limits
-    $limits = (new FindingLimits())
-        ->setMaxFindingsPerRequest($maxFindings);
+// The minimum likelihood required before returning a match
+$minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-    // Construct items to be inspected
-    $bigqueryTable = (new BigQueryTable())
-        ->setProjectId($dataProjectId)
-        ->setDatasetId($datasetId)
-        ->setTableId($tableId);
+// Specify finding limits
+$limits = (new FindingLimits())
+    ->setMaxFindingsPerRequest($maxFindings);
 
-    $bigQueryOptions = (new BigQueryOptions())
-        ->setTableReference($bigqueryTable);
+// Construct items to be inspected
+$bigqueryTable = (new BigQueryTable())
+    ->setProjectId($dataProjectId)
+    ->setDatasetId($datasetId)
+    ->setTableId($tableId);
 
-    $storageConfig = (new StorageConfig())
-        ->setBigQueryOptions($bigQueryOptions);
+$bigQueryOptions = (new BigQueryOptions())
+    ->setTableReference($bigqueryTable);
 
-    // Construct the inspect config object
-    $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood($minLikelihood)
-        ->setLimits($limits)
-        ->setInfoTypes($infoTypes);
+$storageConfig = (new StorageConfig())
+    ->setBigQueryOptions($bigQueryOptions);
 
-    // Construct the action to run when job completes
-    $pubSubAction = (new PublishToPubSub())
-        ->setTopic($topic->name());
+// Construct the inspect config object
+$inspectConfig = (new InspectConfig())
+    ->setMinLikelihood($minLikelihood)
+    ->setLimits($limits)
+    ->setInfoTypes($infoTypes);
 
-    $action = (new Action())
-        ->setPubSub($pubSubAction);
+// Construct the action to run when job completes
+$pubSubAction = (new PublishToPubSub())
+    ->setTopic($topic->name());
 
-    // Construct inspect job config to run
-    $inspectJob = (new InspectJobConfig())
-        ->setInspectConfig($inspectConfig)
-        ->setStorageConfig($storageConfig)
-        ->setActions([$action]);
+$action = (new Action())
+    ->setPubSub($pubSubAction);
 
-    // Listen for job notifications via an existing topic/subscription.
-    $subscription = $topic->subscription($subscriptionId);
+// Construct inspect job config to run
+$inspectJob = (new InspectJobConfig())
+    ->setInspectConfig($inspectConfig)
+    ->setStorageConfig($storageConfig)
+    ->setActions([$action]);
 
-    // Submit request
-    $parent = $dlp->projectName($callingProjectId);
-    $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJob
-    ]);
+// Listen for job notifications via an existing topic/subscription.
+$subscription = $topic->subscription($subscriptionId);
 
-    // Poll via Pub/Sub until job finishes
-    while (true) {
-        foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
-                $subscription->acknowledge($message);
-                break 2;
-            }
+// Submit request
+$parent = $dlp->projectName($callingProjectId);
+$job = $dlp->createDlpJob($parent, [
+    'inspectJob' => $inspectJob
+]);
+
+// Poll via Pub/Sub until job finishes
+while (true) {
+    foreach ($subscription->pull() as $message) {
+        if (isset($message->attributes()['DlpJobName']) &&
+            $message->attributes()['DlpJobName'] === $job->getName()) {
+            $subscription->acknowledge($message);
+            break 2;
         }
     }
+}
 
-    // Get the updated job
+// Get the updated job
+$job = $dlp->getDlpJob($job->getName());
+
+// Sleep to avoid race condition with the job's status.
+while ($job->getState() == JobState::RUNNING) {
+    usleep(1000000);
     $job = $dlp->getDlpJob($job->getName());
+}
 
-    // Sleep to avoid race condition with the job's status.
-    while ($job->getState() == JobState::RUNNING) {
-        usleep(1000000);
-        $job = $dlp->getDlpJob($job->getName());
-    }
-
-    // Print finding counts
-    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
-    switch ($job->getState()) {
-        case JobState::DONE:
-            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-            if (count($infoTypeStats) === 0) {
-                print('No findings.' . PHP_EOL);
-            } else {
-                foreach ($infoTypeStats as $infoTypeStat) {
-                    printf(
-                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
-                        $infoTypeStat->getCount(),
-                        $infoTypeStat->getInfoType()->getName()
-                    );
-                }
+// Print finding counts
+printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+switch ($job->getState()) {
+    case JobState::DONE:
+        $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+        if (count($infoTypeStats) === 0) {
+            print('No findings.' . PHP_EOL);
+        } else {
+            foreach ($infoTypeStats as $infoTypeStat) {
+                printf(
+                    '  Found %s instance(s) of infoType %s' . PHP_EOL,
+                    $infoTypeStat->getCount(),
+                    $infoTypeStat->getInfoType()->getName()
+                );
             }
-            break;
-        case JobState::FAILED:
-            printf('Job %s had errors:' . PHP_EOL, $job->getName());
-            $errors = $job->getErrors();
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            break;
-        default:
-            printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
-    }
+        }
+        break;
+    case JobState::FAILED:
+        printf('Job %s had errors:' . PHP_EOL, $job->getName());
+        $errors = $job->getErrors();
+        foreach ($errors as $error) {
+            var_dump($error->getDetails());
+        }
+        break;
+    default:
+        printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
 }
 # [END dlp_inspect_bigquery]

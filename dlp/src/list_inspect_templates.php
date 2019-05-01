@@ -15,44 +15,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 2) {
+    return print("Usage: php list_inspect_templates.php CALLING_PROJECT\n");
+}
+list($_, $callingProjectId) = $argv;
 
 // [START dlp_list_inspect_templates]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
  * List DLP inspection configuration templates.
- * @param string $callingProjectId The GCP Project ID to run the API call under
+ * Uncomment and populate these variables in your code:
  */
-function list_inspect_templates($callingProjectId)
-{
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
+// $callingProjectId = 'The project ID to run the API call under';
 
-    $parent = $dlp->projectName($callingProjectId);
+// Instantiate a client.
+$dlp = new DlpServiceClient();
 
-    // Run request
-    $response = $dlp->listInspectTemplates($parent);
+$parent = $dlp->projectName($callingProjectId);
 
-    // Print results
-    $templates = $response->iterateAllElements();
+// Run request
+$response = $dlp->listInspectTemplates($parent);
 
-    foreach ($templates as $template) {
-        printf('Template %s' . PHP_EOL, $template->getName());
-        printf('  Created: %s' . PHP_EOL, $template->getCreateTime()->getSeconds());
-        printf('  Updated: %s' . PHP_EOL, $template->getUpdateTime()->getSeconds());
-        printf('  Display Name: %s' . PHP_EOL, $template->getDisplayName());
-        printf('  Description: %s' . PHP_EOL, $template->getDescription());
+// Print results
+$templates = $response->iterateAllElements();
 
-        $inspectConfig = $template->getInspectConfig();
-        if ($inspectConfig === null) {
-            print('  No inspect config.' . PHP_EOL);
-        } else {
-            printf('  Minimum likelihood: %s' . PHP_EOL, $inspectConfig->getMinLikelihood());
-            printf('  Include quotes: %s' . PHP_EOL, $inspectConfig->getIncludeQuote());
-            $limits = $inspectConfig->getLimits();
-            printf('  Max findings per request: %s' . PHP_EOL, $limits->getMaxFindingsPerRequest());
-        }
+foreach ($templates as $template) {
+    printf('Template %s' . PHP_EOL, $template->getName());
+    printf('  Created: %s' . PHP_EOL, $template->getCreateTime()->getSeconds());
+    printf('  Updated: %s' . PHP_EOL, $template->getUpdateTime()->getSeconds());
+    printf('  Display Name: %s' . PHP_EOL, $template->getDisplayName());
+    printf('  Description: %s' . PHP_EOL, $template->getDescription());
+
+    $inspectConfig = $template->getInspectConfig();
+    if ($inspectConfig === null) {
+        print('  No inspect config.' . PHP_EOL);
+    } else {
+        printf('  Minimum likelihood: %s' . PHP_EOL, $inspectConfig->getMinLikelihood());
+        printf('  Include quotes: %s' . PHP_EOL, $inspectConfig->getIncludeQuote());
+        $limits = $inspectConfig->getLimits();
+        printf('  Max findings per request: %s' . PHP_EOL, $limits->getMaxFindingsPerRequest());
     }
 }
 // [END dlp_list_inspect_templates]
