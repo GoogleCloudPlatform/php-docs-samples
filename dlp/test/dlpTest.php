@@ -378,10 +378,10 @@ class dlpTest extends TestCase
         $output = $this->runSnippet('k_map', [
             self::$projectId,
             self::$projectId,
-            self::$dataset,
-            self::$table,
             $topicId,
             $subId,
+            self::$dataset,
+            self::$table,
             $regionCode,
             $quasiIds,
             $infoTypes,
