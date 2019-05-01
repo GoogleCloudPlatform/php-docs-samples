@@ -32,11 +32,6 @@ class dlpTest extends TestCase
     private static $dataset = 'integration_tests_dlp';
     private static $table = 'harmful';
 
-    public static function setUpBeforeClass()
-    {
-        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-    }
-
     public function setUp()
     {
         $this->useResourceExhaustedBackoff(5);
@@ -411,7 +406,7 @@ class dlpTest extends TestCase
         $jobId = $jobIds[0];
 
         $output = $this->runSnippet(
-            'delete-job',
+            'delete_job',
             [$jobId]
         );
         $this->assertContains('Successfully deleted job ' . $jobId, $output);
