@@ -45,9 +45,9 @@ $dlp = new DlpServiceClient();
 
 // Run request
 // The Parent project ID is automatically extracted from this parameter
-$templateName = $dlp->projectJobTriggerName($callingProjectId, $triggerId);
-$response = $dlp->deleteJobTrigger($triggerId);
+$triggerName = $dlp->projectJobTriggerName($callingProjectId, $triggerId);
+$response = $dlp->deleteJobTrigger($triggerName);
 
 // Print the results
-printf('Successfully deleted trigger %s' . PHP_EOL, $triggerId);
+printf('Successfully deleted trigger %s' . PHP_EOL, $triggerName);
 # [END dlp_delete_trigger]

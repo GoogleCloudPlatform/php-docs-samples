@@ -26,15 +26,15 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 9) {
-    return print("Usage: php create_trigger.php CALLING_PROJECT BUCKET [TRIGGER] [DISPLAY_NAME] [DESCRIPTION] [SCAN_PERIOD] [MAX_FINDINGS] [AUTO_POPULATE_TIMESPAN]\n");
+    return print("Usage: php create_trigger.php CALLING_PROJECT BUCKET [TRIGGER] [DISPLAY_NAME] [DESCRIPTION] [SCAN_PERIOD] [AUTO_POPULATE_TIMESPAN] [MAX_FINDINGS]\n");
 }
 list($_, $callingProjectId, $bucketName) = $argv;
 $triggerId = isset($argv[3]) ? $argv[3] : '';
 $displayName = isset($argv[4]) ? $argv[4] : '';
 $description = isset($argv[5]) ? $argv[5] : '';
 $scanPeriod = isset($argv[6]) ? (int) $argv[6] : 1;
-$maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
-$autoPopulateTimespan = isset($argv[8]) ? (bool) $argv[8] : false;
+$autoPopulateTimespan = isset($argv[7]) ? (bool) $argv[7] : false;
+$maxFindings = isset($argv[8]) ? (int) $argv[8] : 0;
 
 // [START dlp_create_trigger]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -63,8 +63,8 @@ use Google\Protobuf\Duration;
 // $displayName = ''; // (Optional) The human-readable name to give the trigger';
 // $description = ''; // (Optional) A description for the trigger to be created';
 // $scanPeriod = 1; // (Optional) How often to wait between scans, in days (minimum = 1 day)
-// $maxFindings = 0; // (Optional) The maximum number of findings to report per request (0 = server maximum)
 // $autoPopulateTimespan = true; // (Optional) Automatically limit scan to new content only
+// $maxFindings = 0; // (Optional) The maximum number of findings to report per request (0 = server maximum)
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -136,5 +136,5 @@ $trigger = $dlp->createJobTrigger($parent, [
 ]);
 
 // Print results
-printf('Successfully created trigger %s' . PHP_EOL, $trigger->name());
+printf('Successfully created trigger %s' . PHP_EOL, $trigger->getName());
 // [END dlp_create_trigger]

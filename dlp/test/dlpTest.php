@@ -235,22 +235,22 @@ class dlpTest extends TestCase
         $displayName = uniqid("My trigger display name ");
         $description = uniqid("My trigger description ");
         $triggerId = uniqid('my-php-test-trigger-');
-        $frequency = 1;
+        $scanPeriod = 1;
         $autoPopulateTimespan = true;
 
         $output = $this->runSnippet('create_trigger', [
             self::$projectId,
             $bucketName,
+            $triggerId,
             $displayName,
             $description,
-            $triggerId,
-            $frequency,
+            $scanPeriod,
             $autoPopulateTimespan,
         ]);
         $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', self::$projectId, $triggerId);
         $this->assertContains('Successfully created trigger ' . $fullTriggerId, $output);
 
-        $output = $this->runSnippet('list_triggers', []);
+        $output = $this->runSnippet('list_triggers', [self::$projectId]);
         $this->assertContains('Trigger ' . $fullTriggerId, $output);
         $this->assertContains('Display Name: ' . $displayName, $output);
         $this->assertContains('Description: ' . $description, $output);
@@ -278,7 +278,7 @@ class dlpTest extends TestCase
         ]);
         $this->assertContains('Successfully created template ' . $fullTemplateId, $output);
 
-        $output = $this->runSnippet('list_inspect_templates', []);
+        $output = $this->runSnippet('list_inspect_templates', [self::$projectId]);
         $this->assertContains('Template ' . $fullTemplateId, $output);
         $this->assertContains('Display Name: ' . $displayName, $output);
         $this->assertContains('Description: ' . $description, $output);
@@ -299,10 +299,10 @@ class dlpTest extends TestCase
         $output = $this->runSnippet('numerical_stats', [
             self::$projectId, // calling project
             self::$projectId, // data project
-            self::$dataset,
-            self::$table,
             $topicId,
             $subId,
+            self::$dataset,
+            self::$table,
             $columnName,
         ]);
 
@@ -319,10 +319,10 @@ class dlpTest extends TestCase
         $output = $this->runSnippet('categorical_stats', [
             self::$projectId, // calling project
             self::$projectId, // data project
-            self::$dataset,
-            self::$table,
             $topicId,
             $subId,
+            self::$dataset,
+            self::$table,
             $columnName,
         ]);
 
@@ -340,10 +340,10 @@ class dlpTest extends TestCase
         $output = $this->runSnippet('k_anonymity', [
             self::$projectId, // calling project
             self::$projectId, // data project
-            self::$dataset,
-            self::$table,
             $topicId,
             $subId,
+            self::$dataset,
+            self::$table,
             $quasiIds,
         ]);
         $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
@@ -354,18 +354,18 @@ class dlpTest extends TestCase
     {
         $topicId = $this->requireEnv('DLP_TOPIC');
         $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $quasiIds = 'Age,Gender';
         $sensitiveAttribute = 'Name';
+        $quasiIds = 'Age,Gender';
 
         $output = $this->runSnippet('l_diversity', [
             self::$projectId, // calling project
             self::$projectId, // data project
-            self::$dataset,
-            self::$table,
             $topicId,
             $subId,
-            $quasiIds,
+            self::$dataset,
+            self::$table,
             $sensitiveAttribute,
+            $quasiIds,
         ]);
         $this->assertRegExp('/Quasi-ID values: \{\d{2}, Female\}/', $output);
         $this->assertRegExp('/Class size: \d/', $output);

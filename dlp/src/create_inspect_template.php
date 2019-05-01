@@ -93,5 +93,5 @@ $template = $dlp->createInspectTemplate($parent, [
 ]);
 
 // Print results
-printf('Successfully created template %s' . PHP_EOL, $template->name());
+printf('Successfully created template %s' . PHP_EOL, $template->getName());
 // [END dlp_create_inspect_template]

@@ -75,4 +75,3 @@ if (count($findings) == 0) {
     }
 }
 // [END dlp_inspect_string]
-
