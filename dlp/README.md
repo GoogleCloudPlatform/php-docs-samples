@@ -31,10 +31,10 @@ DLP API from PHP.
     `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
     are provided:
     ```sh
-    $ php src/create_dataset.php
-    Usage: php src/dlp_inspect_string.php PROJECT_ID STRING
+    $ php src/inspect_string.php
+    Usage: php src/inspect_string.php PROJECT_ID STRING
 
-    $ php src/dlp_inspect_string.php your-project-id 'bob@example.com'
+    $ php src/inspect_string.php your-project-id 'bob@example.com'
     Findings:
       Quote: bob@example.com
       Info type: EMAIL_ADDRESS
