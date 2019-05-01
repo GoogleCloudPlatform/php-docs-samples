@@ -31,7 +31,7 @@ if (count($argv) < 3 || count($argv) > 6) {
 list($_, $callingProjectId, $templateId, $displayName, $description) = $argv;
 $displayName = isset($argv[3]) ? $argv[3] : '';
 $description = isset($argv[4]) ? $argv[4] : '';
-$maxFindings = (int) (isset($argv[5]) ? $argv[5] : 0);
+$maxFindings = isset($argv[5]) ? (int) $argv[5] : 0;
 
 // [START dlp_create_inspect_template]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
