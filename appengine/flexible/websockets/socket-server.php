@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+// [START gae_flex_websockets_server]
 // Install composer dependencies with "composer install"
 // @see http://getcomposer.org for more information.
 require __DIR__ . '/vendor/autoload.php';
@@ -30,12 +31,13 @@ $port = 8000;
 
 $server = IoServer::factory(
     new HttpServer(
-                new WsServer(
+        new WsServer(
                     $socketDemo
                 )
             ),
     $port
         );
+// [END gae_flex_websockets_server]
 
 if (PHP_SAPI == 'cli') {
     $server->run();
