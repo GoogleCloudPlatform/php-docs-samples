@@ -38,7 +38,7 @@ class LocalTest extends TestCase
     public function testIndex()
     {
         $connector = new Client\Connector($this->loop);
-        $basePromise = $connector('ws://nodejs-docs-samples.appspot.com/chat')
+        $basePromise = $connector('ws://' . getenv('GCLOUD_PROJECT') . '.appspot.com/ws')
             ->then(function ($conn) {
                 $endPromise = new Promise(function ($resolve) use ($conn) {
                     $conn->on('message', function ($msg) use ($resolve, $conn) {

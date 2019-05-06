@@ -33,7 +33,7 @@ $app->register(new TwigServiceProvider(), [
 $app->register(new Silex\Provider\RoutingServiceProvider());
 
 $app->get('/', function () use ($app) {
-    return $app['twig']->render('index.html.twig');
+    return file_get_contents('index.html');
 });
 
 // @codeCoverageIgnoreStart
