@@ -38,8 +38,10 @@ DLP API from PHP.
     Findings:
       Quote: bob@example.com
       Info type: EMAIL_ADDRESS
-      Likelihood: 4
+      Likelihood: LIKELY
     ```
+
+See the [DLP Documentation](https://cloud.google.com/dlp/docs/inspecting-text) for more information.
 
 ## Contributing changes
 

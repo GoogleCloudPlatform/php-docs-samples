@@ -34,6 +34,7 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\Likelihood;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'YOUR_PROJECT_ID';
@@ -71,7 +72,8 @@ if (count($findings) == 0) {
     foreach ($findings as $finding) {
         print('  Quote: ' . $finding->getQuote() . PHP_EOL);
         print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-        print('  Likelihood: ' . $finding->getLikelihood() . PHP_EOL);
+        $likelihoodString = Likelihood::name($finding->getLikelihood());
+        print('  Likelihood: ' . $likelihoodString . PHP_EOL);
     }
 }
 // [END dlp_inspect_string]

@@ -78,7 +78,8 @@ if (count($findings) == 0) {
     foreach ($findings as $finding) {
         print('  Quote: ' . $finding->getQuote() . PHP_EOL);
         print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-        print('  Likelihood: ' . $finding->getLikelihood() . PHP_EOL);
+        $likelihoodString = Likelihood::name($finding->getLikelihood());
+        print('  Likelihood: ' . $likelihoodString . PHP_EOL);
     }
 }
 // [END dlp_inspect_text_file]
