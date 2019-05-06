@@ -31,12 +31,10 @@ $port = 8000;
 
 $server = IoServer::factory(
     new HttpServer(
-        new WsServer(
-                    $socketDemo
-                )
-            ),
+        new WsServer($socketDemo)
+    ),
     $port
-        );
+);
 // [END gae_flex_websockets_server]
 
 if (PHP_SAPI == 'cli') {
