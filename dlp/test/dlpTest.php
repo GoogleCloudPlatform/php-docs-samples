@@ -341,7 +341,7 @@ class dlpTest extends TestCase
             self::$table,
             $quasiIds,
         ]);
-        $this->assertRegExp('/{"stringValue":"Female"}/', $output);
+        $this->assertContains('{"stringValue":"Female"}', $output);
         $this->assertRegExp('/Class size: \d/', $output);
     }
 
@@ -362,9 +362,9 @@ class dlpTest extends TestCase
             $sensitiveAttribute,
             $quasiIds,
         ]);
-        $this->assertRegExp('/{"stringValue":"Female"}/', $output);
+        $this->assertContains('{"stringValue":"Female"}', $output);
         $this->assertRegExp('/Class size: \d/', $output);
-        $this->assertRegExp('/Sensitive value James occurs \d time\(s\)/', $output);
+        $this->assertContains('{"stringValue":"James"}', $output);
     }
 
     public function testKMap()
@@ -388,7 +388,7 @@ class dlpTest extends TestCase
         ]);
         $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
         $this->assertRegExp('/Size: \d/', $output);
-        $this->assertRegExp('/{"stringValue":"Female"}/', $output);
+        $this->assertContains('{"stringValue":"Female"}', $output);
     }
 
     public function testJobs()
