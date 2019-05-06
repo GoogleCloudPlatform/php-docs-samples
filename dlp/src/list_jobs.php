@@ -32,13 +32,13 @@ list($_, $callingProjectId) = $argv;
 $filter = isset($argv[2]) ? $argv[2] : '';
 
 # [START dlp_list_jobs]
+/**
+ * List Data Loss Prevention API jobs corresponding to a given filter.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DlpJobType;
 
-/**
- * List Data Loss Prevention API jobs corresponding to a given filter.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $filter = 'The filter expression to use';
 

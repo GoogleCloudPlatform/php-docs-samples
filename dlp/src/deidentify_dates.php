@@ -34,6 +34,9 @@ $keyName = isset($argv[8]) ? $argv[8] : '';
 $wrappedKey = isset($argv[9]) ? $argv[9] : '';
 
 # [START dlp_deidentify_date_shift]
+/**
+ * Deidentify dates in a CSV file by pseudorandomly shifting them.
+ */
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DateShiftConfig;
@@ -49,10 +52,7 @@ use Google\Cloud\Dlp\V2\Table\Row;
 use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 
-/**
- * Deidentify dates in a CSV file by pseudorandomly shifting them.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProject = 'The GCP Project ID to run the API call under';
 // $inputCsvFile = 'The path to the CSV file to deidentify';
 // $outputCsvFile = 'The path to save the date-shifted CSV file to';

@@ -31,12 +31,12 @@ if (count($argv) != 3) {
 list($_, $callingProjectId, $templateId) = $argv;
 
 // [START dlp_delete_inspect_template]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-
 /**
  * Delete a DLP inspection configuration template.
- * Uncomment and populate these variables in your code:
  */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $templateId = 'The name of the template to delete';
 

@@ -31,6 +31,9 @@ if (count($argv) != 8) {
 list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $columnName) = $argv;
 
 # [START dlp_numerical_stats]
+/**
+ * Computes risk metrics of a column of numbers in a Google BigQuery table.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -43,16 +46,13 @@ use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\V1\PublisherClient;
 
-/**
- * Computes risk metrics of a column of numbers in a Google BigQuery table.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $dataProjectId = 'The project ID containing the target Datastore';
 // $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
 // $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $datasetId = 'The ID of the dataset to inspect';
-// $tableId = 'The ID of the table to inspect';
+// $datasetId = 'The ID of the BigQuery dataset to inspect';
+// $tableId = 'The ID of the BigQuery table to inspect';
 // $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
 
 // Instantiate a client.

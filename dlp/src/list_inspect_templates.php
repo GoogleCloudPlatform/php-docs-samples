@@ -31,12 +31,12 @@ if (count($argv) != 2) {
 list($_, $callingProjectId) = $argv;
 
 // [START dlp_list_inspect_templates]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-
 /**
  * List DLP inspection configuration templates.
- * Uncomment and populate these variables in your code:
  */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 
 // Instantiate a client.

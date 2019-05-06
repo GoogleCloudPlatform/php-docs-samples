@@ -31,12 +31,12 @@ if (count($argv) != 2) {
 list($_, $jobId) = $argv;
 
 // [START dlp_delete_job]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-
 /**
  * Delete results of a Data Loss Prevention API job
- * Uncomment and populate these variables in your code:
  */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
 // $jobId = 'The name of the job whose results should be deleted';
 
 // Instantiate a client.

@@ -31,6 +31,9 @@ if (count($argv) != 8) {
 list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $quasiIdNames) = $argv;
 
 # [START dlp_k_anomymity]
+/**
+ * Computes the k-anonymity of a column set in a Google BigQuery table.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -42,10 +45,7 @@ use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
-/**
- * Computes the k-anonymity of a column set in a Google BigQuery table.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $dataProjectId = 'The project ID containing the target Datastore';
 // $topicId = 'The name of the Pub/Sub topic to notify once the job completes';

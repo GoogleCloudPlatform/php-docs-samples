@@ -34,6 +34,9 @@ $description = isset($argv[4]) ? $argv[4] : '';
 $maxFindings = isset($argv[5]) ? (int) $argv[5] : 0;
 
 // [START dlp_create_inspect_template]
+/**
+ * Create a new DLP inspection configuration template.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -41,10 +44,7 @@ use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
-/**
- * Create a new DLP inspection configuration template.
- * Uncomment and populate these variables in your code
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $templateId = 'The name of the template to be created';
 // $displayName = ''; // (Optional) The human-readable name to give the template

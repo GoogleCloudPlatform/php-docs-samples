@@ -33,6 +33,9 @@ $numberToMask = isset($argv[3]) ? $argv[3] : 0;
 $maskingCharacter = isset($argv[4]) ? $argv[4] : 'x';
 
 # [START dlp_deidentify_masking]
+/**
+ * Deidentify sensitive data in a string by masking it with a character.
+ */
 use Google\Cloud\Dlp\V2\CharacterMaskConfig;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -42,10 +45,7 @@ use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
 
-/**
- * Deidentify sensitive data in a string by masking it with a character.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The GCP Project ID to run the API call under';
 // $string = 'The string to deidentify';
 // $numberToMask = 0; // (Optional) The maximum number of sensitive characters to mask in a match

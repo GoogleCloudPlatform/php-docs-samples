@@ -32,6 +32,9 @@ list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetI
 $maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 
 # [START dlp_inspect_bigquery]
+/**
+ * Inspect a BigQuery table , using Pub/Sub for job status notifications.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\BigQueryOptions;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -46,10 +49,7 @@ use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
-/**
- * Inspect a BigQuery table , using Pub/Sub for job status notifications.
- * Uncomment and populate these variables in your code
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $dataProjectId = 'The project ID containing the target Datastore';
 // $topicId = 'The name of the Pub/Sub topic to notify once the job completes';

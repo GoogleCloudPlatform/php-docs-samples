@@ -31,12 +31,12 @@ if (count($argv) != 2) {
 list($_, $callingProjectId) = $argv;
 
 # [START dlp_list_triggers]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-
 /**
  * List Data Loss Prevention API job triggers.
- * Uncomment and populate these variables in your code:
  */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 
 // Instantiate a client.

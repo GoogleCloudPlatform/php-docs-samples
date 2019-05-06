@@ -32,6 +32,9 @@ list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $kind, $n
 $maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 
 # [START dlp_inspect_datastore]
+/**
+ * Inspect Datastore, using Pub/Sub for job status notifications.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DatastoreOptions;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -47,10 +50,7 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
 
-/**
- * Inspect Datastore, using Pub/Sub for job status notifications.
- * Uncomment and populate these variables in your code
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $dataProjectId = 'The project ID containing the target Datastore';
 // $topicId = 'The name of the Pub/Sub topic to notify once the job completes';

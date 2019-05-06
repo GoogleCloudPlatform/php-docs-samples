@@ -37,6 +37,9 @@ $autoPopulateTimespan = isset($argv[7]) ? (bool) $argv[7] : false;
 $maxFindings = isset($argv[8]) ? (int) $argv[8] : 0;
 
 // [START dlp_create_trigger]
+/**
+ * Create a Data Loss Prevention API job trigger.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\JobTrigger;
 use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
@@ -53,10 +56,7 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Protobuf\Duration;
 
-/**
- * Create a Data Loss Prevention API job trigger.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $bucketName = 'The name of the bucket to scan';
 // $triggerId = '';   // (Optional) The name of the trigger to be created';

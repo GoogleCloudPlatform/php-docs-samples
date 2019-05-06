@@ -32,6 +32,9 @@ list($_, $callingProjectId, $topicId, $subscriptionId, $bucketId, $file) = $argv
 $maxFindings = isset($argv[6]) ? (int) $argv[6] : 0;
 
 # [START dlp_inspect_gcs]
+/**
+ * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
@@ -46,10 +49,7 @@ use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
-/**
- * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
- * Uncomment and populate these variables in your code
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
 // $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';

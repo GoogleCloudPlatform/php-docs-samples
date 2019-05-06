@@ -32,12 +32,12 @@ $filter = isset($argv[1]) ? $argv[1] : '';
 $languageCode = isset($argv[2]) ? $argv[2] : '';
 
 # [START dlp_list_info_types]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-
 /**
  * Lists all Info Types for the Data Loss Prevention (DLP) API.
- * Uncomment and populate these variables in your code:
  */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
 // $filter = ''; // (Optional) filter to use, empty for ''.
 // $languageCode = ''; // (Optional) language code, empty for 'en-US'.
 

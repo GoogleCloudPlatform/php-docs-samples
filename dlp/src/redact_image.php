@@ -31,6 +31,9 @@ if (count($argv) != 4) {
 list($_, $callingProjectId, $imagePath, $outputPath) = $argv;
 
 # [START dlp_redact_image]
+/**
+ * Redact sensitive data from an image.
+ */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -38,10 +41,7 @@ use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 
-/**
- * Redact sensitive data from an image.
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $imagePath = 'The local filepath of the image to inspect';
 // $outputPath = 'The local filepath to save the resulting image to';

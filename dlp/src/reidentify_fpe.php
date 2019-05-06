@@ -32,6 +32,9 @@ list($_, $callingProjectId, $string, $keyName, $wrappedKey) = $argv;
 $surrogateTypeName = isset($argv[5]) ? $argv[5] : '';
 
 # [START dlp_reidentify_fpe]
+/**
+ * Reidentify a deidentified string using Format-Preserving Encryption (FPE).
+ */
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
 use Google\Cloud\Dlp\V2\CryptoKey;
@@ -47,10 +50,7 @@ use Google\Cloud\Dlp\V2\CustomInfoType;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
 use Google\Cloud\Dlp\V2\CustomInfoType\SurrogateType;
 
-/**
- * Reidentify a deidentified string using Format-Preserving Encryption (FPE).
- * Uncomment and populate these variables in your code:
- */
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The GCP Project ID to run the API call under';
 // $string = 'The string to reidentify';
 // $keyName = 'The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key';

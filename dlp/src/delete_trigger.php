@@ -31,12 +31,12 @@ if (count($argv) != 3) {
 list($_, $callingProjectId, $triggerId) = $argv;
 
 # [START dlp_delete_trigger]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-
 /**
  * Delete a Data Loss Prevention API job trigger.
- * Uncomment and populate these variables in your code:
  */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
 // $triggerId = 'The name of the trigger to be deleted.';
 
