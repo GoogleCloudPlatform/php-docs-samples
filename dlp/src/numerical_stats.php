@@ -34,6 +34,7 @@ list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetI
 /**
  * Computes risk metrics of a column of numbers in a Google BigQuery table.
  */
+use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -103,47 +104,45 @@ $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);
 
-// Poll via Pub/Sub until job finishes
-while (true) {
+// Poll Pub/Sub using exponential backoff until job finishes
+$backoff = new ExponentialBackoff(20);
+$backoff->execute(function () use ($subscription, $dlp, &$job) {
+    printf('Waiting for job to complete' . PHP_EOL);
     foreach ($subscription->pull() as $message) {
         if (isset($message->attributes()['DlpJobName']) &&
             $message->attributes()['DlpJobName'] === $job->getName()) {
             $subscription->acknowledge($message);
-            break 2;
+            // Get the updated job. Loop to avoid race condition with DLP API.
+            do {
+                $job = $dlp->getDlpJob($job->getName());
+            } while ($job->getState() == JobState::RUNNING);
+            return true;
         }
     }
-}
-
-// Get the updated job
-$job = $dlp->getDlpJob($job->getName());
-
-// Sleep to avoid race condition with the job's status.
-while ($job->getState() == JobState::RUNNING) {
-    usleep(1000000);
-    $job = $dlp->getDlpJob($job->getName());
-}
+    throw new Exception('Job has not yet completed');
+});
 
 // Helper function to convert Protobuf values to strings
-$value_to_string = function ($value) {
+$valueToString = function ($value) {
     $json = json_decode($value->serializeToJsonString(), true);
     return array_shift($json);
 };
 
 // Print finding counts
-printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
 switch ($job->getState()) {
     case JobState::DONE:
         $results = $job->getRiskDetails()->getNumericalStatsResult();
         printf(
             'Value range: [%s, %s]' . PHP_EOL,
-            $value_to_string($results->getMinValue()),
-            $value_to_string($results->getMaxValue())
+            $valueToString($results->getMinValue()),
+            $valueToString($results->getMaxValue())
         );
 
         // Only print unique values
         $lastValue = null;
         foreach ($results->getQuantileValues() as $percent => $quantileValue) {
-            $value = $value_to_string($quantileValue);
+            $value = $valueToString($quantileValue);
             if ($value != $lastValue) {
                 printf('Value at %s quantile: %s' . PHP_EOL, $percent, $value);
                 $lastValue = $value;

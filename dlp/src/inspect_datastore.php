@@ -35,6 +35,7 @@ $maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 /**
  * Inspect Datastore, using Pub/Sub for job status notifications.
  */
+use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DatastoreOptions;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -122,28 +123,26 @@ $job = $dlp->createDlpJob($parent, [
     'inspectJob' => $inspectJob
 ]);
 
-// Poll via Pub/Sub until job finishes
-while (true) {
+// Poll Pub/Sub using exponential backoff until job finishes
+$backoff = new ExponentialBackoff(20);
+$backoff->execute(function () use ($subscription, $dlp, &$job) {
+    printf('Waiting for job to complete' . PHP_EOL);
     foreach ($subscription->pull() as $message) {
         if (isset($message->attributes()['DlpJobName']) &&
             $message->attributes()['DlpJobName'] === $job->getName()) {
             $subscription->acknowledge($message);
-            break 2;
+            // Get the updated job. Loop to avoid race condition with DLP API.
+            do {
+                $job = $dlp->getDlpJob($job->getName());
+            } while ($job->getState() == JobState::RUNNING);
+            return true;
         }
     }
-}
-
-// Get the updated job
-$job = $dlp->getDlpJob($job->getName());
-
-// Sleep to avoid race condition with the job's status.
-while ($job->getState() == JobState::RUNNING) {
-    usleep(1000000);
-    $job = $dlp->getDlpJob($job->getName());
-}
+    throw new Exception('Job has not yet completed');
+});
 
 // Print finding counts
-printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
 switch ($job->getState()) {
     case JobState::DONE:
         $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
@@ -163,6 +162,6 @@ switch ($job->getState()) {
         }
         break;
     default:
-        print('Unexpected job state. Most likely, the job is either running or has not yet started.');
+        print('Unexpected job state.');
 }
 # [END dlp_inspect_datastore]

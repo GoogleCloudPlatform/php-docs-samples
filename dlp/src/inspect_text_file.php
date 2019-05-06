@@ -36,6 +36,7 @@ use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 use Google\Cloud\Dlp\V2\ByteContentItem\BytesType;
+use Google\Cloud\Dlp\V2\Likelihood;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'YOUR_PROJECT_ID';
