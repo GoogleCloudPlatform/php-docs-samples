@@ -142,7 +142,7 @@ switch ($job->getState()) {
             // Print bucket values
             foreach ($histBucket->getBucketValues() as $percent => $valueBucket) {
                 // Pretty-print quasi-ID values
-                print('  Quasi-ID values:'  . PHP_EOL);
+                print('  Quasi-ID values:' . PHP_EOL);
                 foreach ($valueBucket->getQuasiIdsValues() as $index => $value) {
                     print('    ' . $value->serializeToJsonString() . PHP_EOL);
                 }
