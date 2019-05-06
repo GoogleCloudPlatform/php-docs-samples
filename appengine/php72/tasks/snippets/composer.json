@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-tasks": "^0.10.0"
+        "google/cloud-tasks": "^1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5",
