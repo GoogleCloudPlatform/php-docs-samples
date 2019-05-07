@@ -50,7 +50,7 @@ class LocalTest extends TestCase
                 return $endPromise;
             })
             ->otherwise(function ($e) {
-                echo "Error: " . $e->getMessage() ."\n";
+                echo "Error: " . $e->getMessage() . "\n";
                 throw $e;
             });
 

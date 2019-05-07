@@ -19,7 +19,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
-use Silex\Provider\RoutingServiceProvider;
 
 // create the Silex application
 $app = new Application();
