@@ -1,0 +1,14 @@
+{
+    "require": {
+        "cboden/ratchet": "^0.4.1",
+        "guzzlehttp/psr7": "^1.5",
+        "silex/silex": "^1.3"
+    },
+    "require-dev": {
+    	"phpunit/phpunit": "^5",
+    	"ratchet/pawl": "^0.3.4",
+        "react/promise": "^2.7",
+        "clue/block-react": "^1.3",
+        "google/cloud-tools": "^0.9.1"
+    }
+}
