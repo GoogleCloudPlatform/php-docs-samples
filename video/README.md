@@ -29,10 +29,10 @@ Video Intelligence API from PHP.
     (if composer is installed globally).
 5.  **Run** with the command `php src/SNIPPET_NAME.php`. For example:
     ```sh
-    $ php src/analyze_shots.php gs://demomaker/cat.mp4
+    $ php src/analyze_shots.php gs://cloud-samples-data/video/cat.mp4
     Usage: php src/analyze_shots.php URI
 
-    $ php src/analyze_shots.php gs://demomaker/cat.mp4
+    $ php src/analyze_shots.php gs://cloud-samples-data/video/cat.mp4
     Shot: 0s to 14.84s
     ```
 
