@@ -40,12 +40,7 @@ function get_object_v2_signed_url($bucketName, $objectName)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     # This URL is valid for 1 hour
-    $url = $object->signedUrl(
-        new \DateTime('next hour'),
-        [
-            'version' => 'v2'
-        ]
-    );
+    $url = $object->signedUrl(new \DateTime('next hour'));
 
     printf('The signed url for %s is %s\n', $objectName, $url);
 }
