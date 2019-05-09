@@ -56,5 +56,4 @@ class ObjectSignedUrlTest extends TestCase
 
         $this->assertContains("The signed url for " . self::$objectName . " is", $output);
     }
-
 }
