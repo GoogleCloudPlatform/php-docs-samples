@@ -41,15 +41,15 @@ function get_object_v4_signed_url($bucketName, $objectName)
     $object = $bucket->object($objectName);
     $url = $object->signedUrl(
         # This URL is valid for 15 minutes
-        new \DateTime('next 15 minutes'),
+        new \DateTime('15 min'),
         [
             'version' => 'v4',
         ]
     );
 
-    print('Generated GET signed URL:');
-    print($url);
-    print('You can use this URL with any user agent, for example:');
-    print('curl ' . $url);
+    print('Generated GET signed URL:' . PHP_EOL);
+    print($url . PHP_EOL);
+    print('You can use this URL with any user agent, for example:' . PHP_EOL);
+    print('curl ' . $url . PHP_EOL);
 }
 # [END storage_generate_signed_url_v4]

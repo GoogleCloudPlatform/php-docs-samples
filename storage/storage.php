@@ -487,6 +487,40 @@ EOF
         get_object_v2_signed_url($bucketName, $objectName);
     });
 
+$application->add(new Command('get-object-v4-signed-url'))
+    ->setDescription('Generate a v4 signed URL for downloading an object.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command generates a v4 signed URL for downloading an object.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        $objectName = $input->getArgument('object');
+        get_object_v4_signed_url($bucketName, $objectName);
+    });
+
+$application->add(new Command('get-object-v4-upload-signed-url'))
+    ->setDescription('Generate a v4 signed URL for uploading an object.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command generates a v4 signed URL for uploading an object.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        $objectName = $input->getArgument('object');
+        get_object_v4_upload_signed_url($bucketName, $objectName);
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

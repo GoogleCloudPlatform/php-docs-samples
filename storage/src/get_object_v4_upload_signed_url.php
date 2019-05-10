@@ -41,17 +41,18 @@ function get_object_v4_upload_signed_url($bucketName, $objectName)
     $object = $bucket->object($objectName);
     $url = $object->signedUrl(
         # This URL is valid for 15 minutes
-        new \DateTime('next 15 minutes'),
+        new \DateTime('15 min'),
         [
             'method' => 'PUT',
+            'contentType' => 'application/octet-stream',
             'version' => 'v4',
         ]
     );
 
-    print('Generated PUT signed URL:');
-    print($url);
-    print('You can use this URL with any user agent, for example:');
+    print('Generated PUT signed URL:' . PHP_EOL);
+    print($url . PHP_EOL);
+    print('You can use this URL with any user agent, for example:' . PHP_EOL);
     print("curl -X PUT -H 'Content-Type: application/octet-stream' " .
-        '--upload-file my-file ' . $url);
+        '--upload-file my-file ' . $url . PHP_EOL);
 }
 # [END storage_generate_upload_signed_url_v4]
