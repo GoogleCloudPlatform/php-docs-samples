@@ -458,7 +458,7 @@ EOF
     )
     ->addArgument('project', InputArgument::REQUIRED, 'Your billable Google Cloud Project ID')
     ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
-    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
     ->addArgument('upload-from', InputArgument::REQUIRED, 'Path to the file to upload')
     ->addArgument('kms-key-name', InputArgument::REQUIRED, 'KMS key ID used to encrypt objects server side.')
     ->setCode(function ($input, $output) {
@@ -468,6 +468,23 @@ EOF
         $uploadFrom = $input->getArgument('upload-from');
         $kmsKeyName = $input->getArgument('kms-key-name');
         upload_with_kms_key($projectId, $bucketName, $objectName, $uploadFrom, $kmsKeyName);
+    });
+
+$application->add(new Command('get-object-v2-signed-url'))
+    ->setDescription('Generate a v2 signed URL for downloading an object.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command generates a v2 signed URL for downloading an object.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        $objectName = $input->getArgument('object');
+        get_object_v2_signed_url($bucketName, $objectName);
     });
 
 // for testing

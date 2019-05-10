@@ -37,6 +37,7 @@
             "src/get_bucket_policy_only.php",
             "src/get_object_acl.php",
             "src/get_object_acl_for_entity.php",
+            "src/get_object_v2_signed_url.php",
             "src/get_requester_pays_status.php",
             "src/get_retention_policy.php",
             "src/get_default_event_based_hold.php",
