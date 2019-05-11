@@ -27,7 +27,12 @@ use Google\Cloud\Talent\V4beta1\RequestMetadata;
 use Google\Cloud\Talent\V4beta1\SearchJobsRequest_CustomRankingInfo;
 use Google\Cloud\Talent\V4beta1\SearchJobsRequest_CustomRankingInfo_ImportanceLevel;
 
-/** Search Jobs using custom rankings */
+/**
+ * Search Jobs using custom rankings.
+ *
+ * @param string $projectId Your Google Cloud Project ID
+ * @param string $tenantId  Identifier of the Tenantd
+ */
 function sampleSearchJobs($projectId, $tenantId)
 {
     // [START job_search_custom_ranking_search_core]

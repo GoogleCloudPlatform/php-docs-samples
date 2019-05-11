@@ -24,7 +24,12 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\CompletionClient;
 
-/** Complete job title given partial text (autocomplete) */
+/**
+ * Complete job title given partial text (autocomplete).
+ *
+ * @param string $projectId Your Google Cloud Project ID
+ * @param string $tenantId  Identifier of the Tenantd
+ */
 function sampleCompleteQuery($projectId, $tenantId, $query, $numResults, $languageCode)
 {
     // [START job_search_autocomplete_job_title_core]

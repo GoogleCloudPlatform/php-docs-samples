@@ -24,7 +24,12 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\CompanyServiceClient;
 
-/** List Companies */
+/**
+ * List Companies.
+ *
+ * @param string $projectId Your Google Cloud Project ID
+ * @param string $tenantId  Identifier of the Tenant
+ */
 function sampleListCompanies($projectId, $tenantId)
 {
     // [START job_search_list_companies_core]

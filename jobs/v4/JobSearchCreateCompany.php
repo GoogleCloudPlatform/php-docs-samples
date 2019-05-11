@@ -25,7 +25,12 @@ require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\Talent\V4beta1\CompanyServiceClient;
 use Google\Cloud\Talent\V4beta1\Company;
 
-/** Create Company */
+/**
+ * Create Company.
+ *
+ * @param string $projectId Your Google Cloud Project ID
+ * @param string $tenantId  Identifier of the Tenant
+ */
 function sampleCreateCompany($projectId, $tenantId, $displayName, $externalId)
 {
     // [START job_search_create_company_core]
