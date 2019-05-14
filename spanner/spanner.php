@@ -432,6 +432,18 @@ $application->add((new Command('write-data-with-dml'))
     })
 );
 
+// Query Data with Parameter
+$application->add((new Command('query-data-with-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Query DML inserted sample data using SQL with a parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // Write Data with DML Transaction
 $application->add((new Command('write-data-with-dml-transaction'))
     ->setDefinition($inputDefinition)
