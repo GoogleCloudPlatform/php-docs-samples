@@ -43,7 +43,7 @@ function query_data_with_parameter($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $results = $database->execute(
-        'SELECT SingerId, FirstName, LastName FROM Singers '.
+        'SELECT SingerId, FirstName, LastName FROM Singers ' .
         'WHERE LastName = @lastName',
         ['parameters' => ['lastName' => 'Garcia']]
     );
