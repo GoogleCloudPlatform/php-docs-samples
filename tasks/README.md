@@ -26,7 +26,7 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 5.  Create a Queue
     To create a queue using the Cloud SDK, use the following gcloud command:
     ```sh
-    gcloud beta tasks queues create-app-engine-queue my-appengine-queue
+    gcloud beta tasks queues create <QUEUE_NAME>
     ```
 
 ## Using an HTTP Target
@@ -39,13 +39,13 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 
     where:
     * `PROJECT_ID` is your Google Cloud Project id.
-    * `QUEUE_ID` is your queue id (ie my-appengine-queue).  
+    * `QUEUE_ID` is your queue id.
       Queue IDs already created can be listed with `gcloud alpha tasks queues list`.
     * `LOCATION_ID` is the location of your queue.  
       Determine the location ID, which can be discovered with
-      `gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
+      `gcloud beta tasks queues describe <QUEUE_NAME>`, with the location embedded in
       the "name" value (for instance, if the name is
-      "projects/my-project/locations/us-central1/queues/my-pull-queue", then the
+      "projects/my-project/locations/us-central1/queues/my-queue", then the
       location is "us-central1").
     * `URL` is the full URL to your target endpoint.
 

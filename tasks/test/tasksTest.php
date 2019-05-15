@@ -35,7 +35,7 @@ class TasksTest extends TestCase
         $output = $this->runSnippet('create_http_task', [
             $location,
             $queue,
-            'http://example.com',
+            'http://example.com/taskhandler',
             'Task Details',
         ]);
         $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
