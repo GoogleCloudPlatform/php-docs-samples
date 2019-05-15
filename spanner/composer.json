@@ -41,6 +41,7 @@
             "src/write_read_with_dml.php",
             "src/update_data_with_dml_structs.php",
             "src/write_data_with_dml.php",
+            "src/query_data_with_parameter.php",
             "src/write_data_with_dml_transaction.php",
             "src/update_data_with_partitioned_dml.php",
             "src/delete_data_with_partitioned_dml.php",

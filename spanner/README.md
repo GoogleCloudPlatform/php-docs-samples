@@ -84,7 +84,6 @@ To run the Spanner Samples:
       -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
     Available commands:
-      add-column                    Adds a new column to the Albums table in the example database.
       add-column                           Adds a new column to the Albums table in the example database.
       add-timestamp-column                 Adds a commit timestamp column to a table.
       batch-query-data                     Batch queries sample data from the database using SQL.
@@ -92,9 +91,12 @@ To run the Spanner Samples:
       create-index                         Adds a simple index to the example database.
       create-storing-index                 Adds an storing index to the example database.
       create-table-timestamp               Creates a table with a commit timestamp column.
+      delete-data-with-dml                 Remove sample data from the given database with a DML statement.
+      deleted-data-with-partitioned-dml    Deletes sample data in the database by partition with a DML statement.
       help                                 Displays help for a command
       insert-data                          Inserts sample data into the given database.
       insert-data-timestamp                Inserts data into a table with a commit timestamp column.
+      insert-data-with-dml                 Inserts sample data into the given database with a DML statement.
       insert-struct-data                   Inserts sample data that can be used to test STRUCT parameters in queries.
       list                                 Lists commands
       query-data                           Queries sample data from the database using SQL.
@@ -103,6 +105,7 @@ To run the Spanner Samples:
       query-data-with-index                Queries sample data from the database using SQL and an index.
       query-data-with-nested-struct-field  Queries sample data from the database with a nested struct field value.
       query-data-with-new-column           Queries sample data from the database using SQL.
+      query-data-with-parameter            Query DML inserted sample data using SQL with a parameter.
       query-data-with-struct               Queries sample data from the database with a struct.
       query-data-with-struct-field         Queries sample data from the database with a struct field value.
       read-data                            Reads sample data from the database.
@@ -113,6 +116,14 @@ To run the Spanner Samples:
       read-write-transaction               Performs a read-write transaction to update two sample records in the database.
       update-data                          Updates sample data in the database.
       update-data-timestamp                Updates sample data in a table with a commit timestamp column.
+      update-data-with-batch-dml           Updates sample data in the given database using Batch DML.
+      update-data-with-dml                 Updates sample data into the given database with a DML statement.
+      update-data-with-dml-structs         Updates data using DML statement with structs.
+      update-data-with-dml-timestamp       Update sample data from the given database with a DML statement and timestamp.
+      update-data-with-partitioned-dml     Updates sample data in the database by partition with a DML statement.
+      write-data-with-dml                  Writes sample data into the given database with a DML statement.
+      write-data-with-dml-transaction      Performs a read-write transaction to update two sample records in the database.
+      write-read-with-dml                  Writes then reads data inside a Transaction with a DML statement.
 
 
 ## Troubleshooting

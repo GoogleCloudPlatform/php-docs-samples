@@ -419,6 +419,16 @@ class spannerTest extends TestCase
     }
 
     /**
+     * @depends testWriteDataWithDML
+     */
+    public function testQueryDataWithParameter()
+    {
+        $output = $this->runCommand('query-data-with-parameter');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('SingerId: 12, FirstName: Melissa, LastName: Garcia', $output);
+    }
+
+    /**
      * @depends testAddColumn
      */
     public function testUpdateDataWithDmlTransaction()
