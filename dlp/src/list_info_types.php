@@ -15,36 +15,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
-
-# [START dlp_list_info_types]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
- * Lists all Info Types for the Data Loss Prevention (DLP) API.
+ * For instructions on how to run the samples:
  *
- * @param string $category Optional filter to use, empty for ''.
- * @param string $languageCode Optional language code, empty for 'en-US'.
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
  */
-function list_info_types($filter = '', $languageCode = '')
-{
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
 
-    // Run request
-    $response = $dlp->listInfoTypes([
-        'languageCode' => $languageCode,
-        'filter' => $filter
-    ]);
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    // Print the results
-    print('Info Types:' . PHP_EOL);
-    foreach ($response->getInfoTypes() as $infoType) {
-        printf(
-            '  %s (%s)' . PHP_EOL,
-            $infoType->getDisplayName(),
-            $infoType->getName()
-        );
-    }
+if (count($argv) > 3) {
+    return print("Usage: php list_info_types.php [FILTER] [LANGUAGE_CODE]\n");
+}
+$filter = isset($argv[1]) ? $argv[1] : '';
+$languageCode = isset($argv[2]) ? $argv[2] : '';
+
+# [START dlp_list_info_types]
+/**
+ * Lists all Info Types for the Data Loss Prevention (DLP) API.
+ */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
+// $filter = ''; // (Optional) filter to use, empty for ''.
+// $languageCode = ''; // (Optional) language code, empty for 'en-US'.
+
+// Instantiate a client.
+$dlp = new DlpServiceClient();
+
+// Run request
+$response = $dlp->listInfoTypes([
+    'languageCode' => $languageCode,
+    'filter' => $filter
+]);
+
+// Print the results
+print('Info Types:' . PHP_EOL);
+foreach ($response->getInfoTypes() as $infoType) {
+    printf(
+        '  %s (%s)' . PHP_EOL,
+        $infoType->getDisplayName(),
+        $infoType->getName()
+    );
 }
 # [END dlp_list_info_types]

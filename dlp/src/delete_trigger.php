@@ -15,25 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
-
-# [START dlp_delete_trigger]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /**
- * Delete a Data Loss Prevention API job trigger.
- * @param string $triggerId The name of the trigger to be deleted.
- *        Parent project ID is automatically extracted from this parameter
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
  */
-function delete_trigger($triggerId)
-{
-    // Instantiate a client.
-    $dlp = new DlpServiceClient();
 
-    // Run request
-    $response = $dlp->deleteJobTrigger($triggerId);
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    // Print the results
-    printf('Successfully deleted trigger %s' . PHP_EOL, $triggerId);
+if (count($argv) != 3) {
+    return print("Usage: php delete_trigger.php CALLING_PROJECT_ID TRIGGER_ID\n");
 }
+list($_, $callingProjectId, $triggerId) = $argv;
+
+# [START dlp_delete_trigger]
+/**
+ * Delete a Data Loss Prevention API job trigger.
+ */
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+
+/** Uncomment and populate these variables in your code */
+// $callingProjectId = 'The project ID to run the API call under';
+// $triggerId = 'The name of the trigger to be deleted.';
+
+// Instantiate a client.
+$dlp = new DlpServiceClient();
+
+// Run request
+// The Parent project ID is automatically extracted from this parameter
+$triggerName = $dlp->projectJobTriggerName($callingProjectId, $triggerId);
+$response = $dlp->deleteJobTrigger($triggerName);
+
+// Print the results
+printf('Successfully deleted trigger %s' . PHP_EOL, $triggerName);
 # [END dlp_delete_trigger]

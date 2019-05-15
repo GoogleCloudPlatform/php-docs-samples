@@ -25,28 +25,35 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3) {
-    return printf("Usage: php %s PROJECT_ID STRING\n", __FILE__);
+    return printf("Usage: php %s PROJECT_ID FILEPATH\n", __FILE__);
 }
-list($_, $projectId, $textToInspect) = $argv;
+list($_, $projectId, $filepath) = $argv;
 
-// [START dlp_inspect_string]
+// [START dlp_inspect_image_file]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\ByteContentItem;
+use Google\Cloud\Dlp\V2\ByteContentItem\BytesType;
 use Google\Cloud\Dlp\V2\Likelihood;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'YOUR_PROJECT_ID';
-// $textToInspect = 'My name is Gary and my email is gary@example.com';
+// $filepath = 'path/to/image.png';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
+// Get the bytes of the file
+$fileBytes = (new ByteContentItem())
+    ->setType(BytesType::IMAGE_PNG)
+    ->setData(file_get_contents($filepath));
+
 // Construct request
 $parent = $dlp->projectName($projectId);
 $item = (new ContentItem())
-    ->setValue($textToInspect);
+    ->setByteItem($fileBytes);
 $inspectConfig = (new InspectConfig())
     // The infoTypes of information to match
     ->setInfoTypes([
@@ -76,4 +83,4 @@ if (count($findings) == 0) {
         print('  Likelihood: ' . $likelihoodString . PHP_EOL);
     }
 }
-// [END dlp_inspect_string]
+// [END dlp_inspect_image_file]

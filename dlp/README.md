@@ -27,31 +27,21 @@ DLP API from PHP.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php dlp.php`. The following commands are available:
+5.  Execute the snippets in the [src/](src/) directory by running
+    `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+    are provided:
+    ```sh
+    $ php src/inspect_string.php
+    Usage: php src/inspect_string.php PROJECT_ID STRING
 
-    ```
-    help               Displays help for a command
-    inspect-datastore  Inspect Cloud Datastore using the Data Loss Prevention (DLP) API.
-    inspect-file       Inspect a file using the Data Loss Prevention (DLP) API.
-    inspect-string     Inspect a string using the Data Loss Prevention (DLP) API.
-    list               Lists commands
-    list-categories    Lists all Info Type Categories for the Data Loss Prevention (DLP) API.
-    list-info-types    Lists all Info Types for the Data Loss Prevention (DLP) API.
-    redact-string      Redact sensitive data from a string using the Data Loss Prevention (DLP) API.
-    ```
-
-    Example:
-
-    ```
-    $ php dlp.php inspect-string 'Robert Frost'
+    $ php src/inspect_string.php your-project-id 'bob@example.com'
     Findings:
-      Quote: Robert
-      Info type: US_MALE_NAME
-      Likelihood: Very likely
+      Quote: bob@example.com
+      Info type: EMAIL_ADDRESS
+      Likelihood: LIKELY
     ```
 
-
-6. Run `php dlp.php COMMAND --help` to print information about the usage of each command.
+See the [DLP Documentation](https://cloud.google.com/dlp/docs/inspecting-text) for more information.
 
 ## Contributing changes
 

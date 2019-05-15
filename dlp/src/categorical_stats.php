@@ -15,9 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Dlp;
+
+/**
+ * For instructions on how to run the samples:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ */
+
+// Include Google Cloud dependendencies using Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (count($argv) != 8) {
+    return print("Usage: php categorical_stats.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE COLUMN\n");
+}
+list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $columnName) = $argv;
 
 # [START dlp_categorical_stats]
+/**
+ * Computes risk metrics of a column of data in a Google BigQuery table.
+ */
+use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -29,129 +46,112 @@ use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
-/**
- * Computes risk metrics of a column of data in a Google BigQuery table.
- *
- * @param string $callingProjectId The project ID to run the API call under
- * @param string $dataProjectId The project ID containing the target Datastore
- * @param string $topicId The name of the Pub/Sub topic to notify once the job completes
- * @param string $subscriptionId The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId The ID of the dataset to inspect
- * @param string $tableId The ID of the table to inspect
- * @param string $columnName The name of the column to compute risk metrics for, e.g. 'age'
- */
-function categorical_stats(
-    $callingProjectId,
-    $dataProjectId,
-    $topicId,
-    $subscriptionId,
-    $datasetId,
-    $tableId,
-    $columnName
-) {
-    // Instantiate a client.
-    $dlp = new DlpServiceClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $topic = $pubsub->topic($topicId);
+/** Uncomment and populate these variables in your code */
+// $callingProjectId = 'The project ID to run the API call under';
+// $dataProjectId = 'The project ID containing the target Datastore';
+// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
+// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
+// $datasetId = 'The ID of the dataset to inspect';
+// $tableId = 'The ID of the table to inspect';
+// $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
 
-    // Construct risk analysis config
-    $columnField = (new FieldId())
-        ->setName($columnName);
+// Instantiate a client.
+$dlp = new DlpServiceClient([
+    'projectId' => $callingProjectId,
+]);
+$pubsub = new PubSubClient([
+    'projectId' => $callingProjectId,
+]);
+$topic = $pubsub->topic($topicId);
 
-    $statsConfig = (new CategoricalStatsConfig())
-        ->setField($columnField);
+// Construct risk analysis config
+$columnField = (new FieldId())
+    ->setName($columnName);
 
-    $privacyMetric = (new PrivacyMetric())
-        ->setCategoricalStatsConfig($statsConfig);
+$statsConfig = (new CategoricalStatsConfig())
+    ->setField($columnField);
 
-    // Construct items to be analyzed
-    $bigqueryTable = (new BigQueryTable())
-        ->setProjectId($dataProjectId)
-        ->setDatasetId($datasetId)
-        ->setTableId($tableId);
+$privacyMetric = (new PrivacyMetric())
+    ->setCategoricalStatsConfig($statsConfig);
 
-    // Construct the action to run when job completes
-    $pubSubAction = (new PublishToPubSub())
-        ->setTopic($topic->name());
+// Construct items to be analyzed
+$bigqueryTable = (new BigQueryTable())
+    ->setProjectId($dataProjectId)
+    ->setDatasetId($datasetId)
+    ->setTableId($tableId);
 
-    $action = (new Action())
-        ->setPubSub($pubSubAction);
+// Construct the action to run when job completes
+$pubSubAction = (new PublishToPubSub())
+    ->setTopic($topic->name());
 
-    // Construct risk analysis job config to run
-    $riskJob = (new RiskAnalysisJobConfig())
-        ->setPrivacyMetric($privacyMetric)
-        ->setSourceTable($bigqueryTable)
-        ->setActions([$action]);
+$action = (new Action())
+    ->setPubSub($pubSubAction);
 
-    // Submit request
-    $parent = $dlp->projectName($callingProjectId);
-    $job = $dlp->createDlpJob($parent, [
-        'riskJob' => $riskJob
-    ]);
+// Construct risk analysis job config to run
+$riskJob = (new RiskAnalysisJobConfig())
+    ->setPrivacyMetric($privacyMetric)
+    ->setSourceTable($bigqueryTable)
+    ->setActions([$action]);
 
-    // Listen for job notifications via an existing topic/subscription.
-    $subscription = $topic->subscription($subscriptionId);
+// Submit request
+$parent = $dlp->projectName($callingProjectId);
+$job = $dlp->createDlpJob($parent, [
+    'riskJob' => $riskJob
+]);
 
-    // Poll via Pub/Sub until job finishes
-    while (true) {
-        foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
-                $subscription->acknowledge($message);
-                break 2;
-            }
+// Listen for job notifications via an existing topic/subscription.
+$subscription = $topic->subscription($subscriptionId);
+
+// Poll Pub/Sub using exponential backoff until job finishes
+$backoff = new ExponentialBackoff(20);
+$backoff->execute(function () use ($subscription, $dlp, &$job) {
+    printf('Waiting for job to complete' . PHP_EOL);
+    foreach ($subscription->pull() as $message) {
+        if (isset($message->attributes()['DlpJobName']) &&
+            $message->attributes()['DlpJobName'] === $job->getName()) {
+            $subscription->acknowledge($message);
+            // Get the updated job. Loop to avoid race condition with DLP API.
+            do {
+                $job = $dlp->getDlpJob($job->getName());
+            } while ($job->getState() == JobState::RUNNING);
+            return true;
         }
     }
+    throw new Exception('Job has not yet completed');
+});
 
-    // Sleep for one second to avoid race condition with the job's status.
-    usleep(1000000);
+// Print finding counts
+printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
+switch ($job->getState()) {
+    case JobState::DONE:
+        $histBuckets = $job->getRiskDetails()->getCategoricalStatsResult()->getValueFrequencyHistogramBuckets();
 
-    // Get the updated job
-    $job = $dlp->getDlpJob($job->getName());
+        foreach ($histBuckets as $bucketIndex => $histBucket) {
+            // Print bucket stats
+            printf('Bucket %s:' . PHP_EOL, $bucketIndex);
+            printf('  Most common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyUpperBound());
+            printf('  Least common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyLowerBound());
+            printf('  %s unique value(s) total.', $histBucket->getBucketSize());
 
-    // Helper function to convert Protobuf values to strings
-    $value_to_string = function ($value) {
-        $json = json_decode($value->serializeToJsonString(), true);
-        return array_shift($json);
-    };
-
-    // Print finding counts
-    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
-    switch ($job->getState()) {
-        case JobState::DONE:
-            $histBuckets = $job->getRiskDetails()->getCategoricalStatsResult()->getValueFrequencyHistogramBuckets();
-
-            foreach ($histBuckets as $bucketIndex => $histBucket) {
-                // Print bucket stats
-                printf('Bucket %s:' . PHP_EOL, $bucketIndex);
-                printf('  Most common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyUpperBound());
-                printf('  Least common value occurs %s time(s)' . PHP_EOL, $histBucket->getValueFrequencyLowerBound());
-                printf('  %s unique value(s) total.', $histBucket->getBucketSize());
-
-                // Print bucket values
-                foreach ($histBucket->getBucketValues() as $percent => $quantile) {
-                    printf(
-                        '  Value %s occurs %s time(s).' . PHP_EOL,
-                        $value_to_string($quantile->getValue()),
-                        $quantile->getCount()
-                    );
-                }
+            // Print bucket values
+            foreach ($histBucket->getBucketValues() as $percent => $quantile) {
+                printf(
+                    '  Value %s occurs %s time(s).' . PHP_EOL,
+                    $quantile->getValue()->serializeToJsonString(),
+                    $quantile->getCount()
+                );
             }
+        }
 
-            break;
-        case JobState::FAILED:
-            $errors = $job->getErrors();
-            printf('Job %s had errors:' . PHP_EOL, $job->getName());
-            foreach ($errors as $error) {
-                var_dump($error->getDetails());
-            }
-            break;
-        default:
-            printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
-    }
+        break;
+    case JobState::FAILED:
+        $errors = $job->getErrors();
+        printf('Job %s had errors:' . PHP_EOL, $job->getName());
+        foreach ($errors as $error) {
+            var_dump($error->getDetails());
+        }
+        break;
+    default:
+        printf('Unexpected job state.');
 }
 # [END dlp_categorical_stats]
