@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 2) {
-    return print("Usage: php delete_job.php JOB_ID\n");
+    return print("Usage: php delete_job.php JOB_NAME\n");
 }
-list($_, $jobId) = $argv;
+list($_, $jobName) = $argv;
 
 // [START dlp_delete_job]
 /**
@@ -37,15 +37,17 @@ list($_, $jobId) = $argv;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /** Uncomment and populate these variables in your code */
-// $jobId = 'The name of the job whose results should be deleted';
+// The name of the job whose results should be deleted
+// Parent project ID is automatically extracted from this parameter
+// $jobName = 'projects/my-project/dlpJobs/X-#####'
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
 // Run job-deletion request
 // The Parent project ID is automatically extracted from this parameter
-$dlp->deleteDlpJob($jobId);
+$dlp->deleteDlpJob($jobName);
 
 // Print status
-printf('Successfully deleted job %s' . PHP_EOL, $jobId);
+printf('Successfully deleted job %s' . PHP_EOL, $jobName);
 // [END dlp_delete_job]

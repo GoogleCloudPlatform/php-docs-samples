@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 3) {
-    return print("Usage: php delete_inspect_template.php CALLING_PROJECT TEMPLATE\n");
+    return print("Usage: php delete_inspect_template.php PROJECT_ID TEMPLATE\n");
 }
-list($_, $callingProjectId, $templateId) = $argv;
+list($_, $projectId, $templateId) = $argv;
 
 // [START dlp_delete_inspect_template]
 /**
@@ -37,14 +37,17 @@ list($_, $callingProjectId, $templateId) = $argv;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $templateId = 'The name of the template to delete';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The name of the template to delete
+// $templateId = 'my-template';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
 // Run template deletion request
-$templateName = $dlp->projectInspectTemplateName($callingProjectId, $templateId);
+$templateName = $dlp->projectInspectTemplateName($projectId, $templateId);
 $dlp->deleteInspectTemplate($templateName);
 
 // Print results

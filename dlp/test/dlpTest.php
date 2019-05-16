@@ -129,7 +129,7 @@ class dlpTest extends TestCase
         // list info types with a filter
         $output = $this->runSnippet(
             'list_info_types',
-            ['supported_by=RISK_ANALYSIS']
+            ['en-US', 'supported_by=RISK_ANALYSIS']
         );
         $this->assertContains('AGE', $output);
         $this->assertNotContains('AMERICAN_BANKERS_CUSIP_ID', $output);
@@ -221,7 +221,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertContains($string, $reidOutput);
+        $this->assertEquals($string, $reidOutput);
     }
 
     public function testTriggers()

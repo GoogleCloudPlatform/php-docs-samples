@@ -27,7 +27,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 3) {
     return printf("Usage: php %s PROJECT_ID FILEPATH\n", __FILE__);
 }
-list($_, $projectId, $filepath) = $argv;
+list($_, $projectId, $fileName) = $argv;
 
 // [START dlp_inspect_image_file]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
@@ -39,8 +39,11 @@ use Google\Cloud\Dlp\V2\ByteContentItem\BytesType;
 use Google\Cloud\Dlp\V2\Likelihood;
 
 /** Uncomment and populate these variables in your code */
+// The project ID to run the API call under
 // $projectId = 'YOUR_PROJECT_ID';
-// $filepath = 'path/to/image.png';
+
+// The path to a local file to inspect.
+// $fileName = 'path/to/image.png';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -48,7 +51,7 @@ $dlp = new DlpServiceClient();
 // Get the bytes of the file
 $fileBytes = (new ByteContentItem())
     ->setType(BytesType::IMAGE_PNG)
-    ->setData(file_get_contents($filepath));
+    ->setData(file_get_contents($fileName));
 
 // Construct request
 $parent = $dlp->projectName($projectId);

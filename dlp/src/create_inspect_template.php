@@ -25,10 +25,11 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 6) {
-    return print("Usage: php create_inspect_template.php CALLING_PROJECT TEMPLATE [DISPLAY_NAME] [DESCRIPTION] [MAX_FINDINGS]\n");
+if (count($argv) < 2 || count($argv) > 6) {
+    return print("Usage: php create_inspect_template.php PROJECT_ID [TEMPLATE] [DISPLAY_NAME] [DESCRIPTION] [MAX_FINDINGS]\n");
 }
-list($_, $callingProjectId, $templateId, $displayName, $description) = $argv;
+list($_, $projectId) = $argv;
+$templateId = isset($argv[2]) ? $argv[2] : '';
 $displayName = isset($argv[3]) ? $argv[3] : '';
 $description = isset($argv[4]) ? $argv[4] : '';
 $maxFindings = isset($argv[5]) ? (int) $argv[5] : 0;
@@ -45,11 +46,20 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $templateId = 'The name of the template to be created';
-// $displayName = ''; // (Optional) The human-readable name to give the template
-// $description = ''; // (Optional) A description for the trigger to be created
-// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// (Optional) The name of the template to be created.
+// $templateId = 'my-template';
+
+// (Optional) The human-readable name to give the template
+// $displayName = '';
+
+// (Optional) A description for the trigger to be created
+// $description = '';
+
+// (Optional) The maximum number of findings to report per request (0 = server maximum)
+// $maxFindings = 0;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -86,7 +96,7 @@ $inspectTemplate = (new InspectTemplate())
     ->setDescription($description);
 
 // Run request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $template = $dlp->createInspectTemplate($parent, [
     'inspectTemplate' => $inspectTemplate,
     'templateId' => $templateId

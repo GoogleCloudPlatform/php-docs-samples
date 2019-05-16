@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 8) {
-    return print("Usage: php categorical_stats.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE COLUMN\n");
+    return print("Usage: php categorical_stats.php PROJECT_ID BIGQUERY_PROJECT TOPIC SUBSCRIPTION DATASET TABLE COLUMN\n");
 }
-list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $columnName) = $argv;
+list($_, $projectId, $bigqueryProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $columnName) = $argv;
 
 # [START dlp_categorical_stats]
 /**
@@ -47,20 +47,34 @@ use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $dataProjectId = 'The project ID containing the target Datastore';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $datasetId = 'The ID of the dataset to inspect';
-// $tableId = 'The ID of the table to inspect';
-// $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The project ID the table is stored under
+// This may or (for public datasets) may not equal the calling project ID
+// $bigqueryProjectId = 'YOUR_BIGQUERY_PROJECT_ID';
+
+// The Pub/Sub topic to notify once the job completes
+// $topicId = 'my-pubsub-topic';
+
+// The Pub/Sub subscription when listening for job completion notifications
+// $subscriptionId = 'my-pubsub-subscription';
+
+// The ID of the dataset to inspect, e.g. 'my_dataset'
+// $datasetId = 'my_dataset';
+
+// The ID of the table to inspect, e.g. 'my_table'
+// $tableId = my_table';
+
+// The name of the column to compute risk metrics for, e.g. "age"
+// $columnName = 'firstName';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $pubsub = new PubSubClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $topic = $pubsub->topic($topicId);
 
@@ -76,7 +90,7 @@ $privacyMetric = (new PrivacyMetric())
 
 // Construct items to be analyzed
 $bigqueryTable = (new BigQueryTable())
-    ->setProjectId($dataProjectId)
+    ->setProjectId($bigqueryProjectId)
     ->setDatasetId($datasetId)
     ->setTableId($tableId);
 
@@ -94,7 +108,7 @@ $riskJob = (new RiskAnalysisJobConfig())
     ->setActions([$action]);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);

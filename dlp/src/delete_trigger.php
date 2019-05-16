@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 3) {
-    return print("Usage: php delete_trigger.php CALLING_PROJECT_ID TRIGGER_ID\n");
+    return print("Usage: php delete_trigger.php PROJECT_ID TRIGGER_ID\n");
 }
-list($_, $callingProjectId, $triggerId) = $argv;
+list($_, $projectId, $triggerId) = $argv;
 
 # [START dlp_delete_trigger]
 /**
@@ -37,15 +37,18 @@ list($_, $callingProjectId, $triggerId) = $argv;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $triggerId = 'The name of the trigger to be deleted.';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The name of the trigger to be deleted
+// $triggerId = 'my-trigger';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
 // Run request
 // The Parent project ID is automatically extracted from this parameter
-$triggerName = $dlp->projectJobTriggerName($callingProjectId, $triggerId);
+$triggerName = $dlp->projectJobTriggerName($projectId, $triggerId);
 $response = $dlp->deleteJobTrigger($triggerName);
 
 // Print the results

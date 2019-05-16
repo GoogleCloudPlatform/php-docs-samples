@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 5) {
-    return print("Usage: php deidentify_mask.php CALLING_PROJECT STRING [NUMBER_TO_MASK] [MASKING_CHARACTER]\n");
+    return print("Usage: php deidentify_mask.php PROJECT_ID STRING [NUMBER_TO_MASK] [MASKING_CHARACTER]\n");
 }
-list($_, $callingProjectId, $string) = $argv;
+list($_, $projectId, $string) = $argv;
 $numberToMask = isset($argv[3]) ? $argv[3] : 0;
 $maskingCharacter = isset($argv[4]) ? $argv[4] : 'x';
 
@@ -46,10 +46,18 @@ use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The GCP Project ID to run the API call under';
-// $string = 'The string to deidentify';
-// $numberToMask = 0; // (Optional) The maximum number of sensitive characters to mask in a match
-// $maskingCharacter = 'x'; // (Optional) The character to mask matching sensitive data with
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The string to deidentify
+// $string = 'My SSN is 372819127';
+
+// (Optional) The maximum number of sensitive characters to mask in a match
+// If omitted from the request or set to 0, the API will mask any matching characters
+// $numberToMask = 0;
+
+// (Optional) The character to mask matching sensitive data with
+// $maskingCharacter = 'x';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -82,7 +90,7 @@ $deidentifyConfig = (new DeidentifyConfig())
 $item = (new ContentItem())
     ->setValue($string);
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 
 // Run request
 $response = $dlp->deidentifyContent($parent, [

@@ -26,9 +26,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 8) {
-    return print("Usage: php k_anonymity.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE QUASI_ID_NAMES\n");
+    return print("Usage: php k_anonymity.php PROJECT_ID BIGQUERY_PROJECT TOPIC SUBSCRIPTION DATASET TABLE QUASI_ID_NAMES\n");
 }
-list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $quasiIdNames) = $argv;
+list($_, $projectId, $bigqueryProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $quasiIdNames) = $argv;
+
+$quasiIdNames = explode(',', $quasiIdNames);
 
 # [START dlp_k_anomymity]
 /**
@@ -47,20 +49,34 @@ use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $dataProjectId = 'The project ID containing the target Datastore';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $datasetId = 'The ID of the dataset to inspect';
-// $tableId = 'The ID of the table to inspect';
-// $quasiIdNames = 'Comma-separated list of columns that form a composite key (quasi-identifiers)';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The project ID the table is stored under
+// This may or (for public datasets) may not equal the calling project ID
+// $bigqueryProjectId = 'YOUR_BIGQUERY_PROJECT_ID';
+
+// The name of the Pub/Sub topic to notify once the job completes
+// $topicId = 'my-pubsub-topic';
+
+// The name of the Pub/Sub subscription to use when listening for job
+// $subscriptionId = 'my-pubsub-subscription';
+
+// The ID of the dataset to inspect
+// $datasetId = 'my_dataset';
+
+// The ID of the table to inspect
+// $tableId = 'my_table';
+
+// A set of columns that form a composite key ('quasi-identifiers')
+// $quasiIdNames = ['name', 'age'];
 
 // Instantiate a client.
 $dlp = new DlpServiceClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $pubsub = new PubSubClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $topic = $pubsub->topic($topicId);
 
@@ -69,7 +85,7 @@ $quasiIds = array_map(
     function ($id) {
         return (new FieldId())->setName($id);
     },
-    explode(',', $quasiIdNames)
+    $quasiIdNames
 );
 
 $statsConfig = (new KAnonymityConfig())
@@ -80,7 +96,7 @@ $privacyMetric = (new PrivacyMetric())
 
 // Construct items to be analyzed
 $bigqueryTable = (new BigQueryTable())
-    ->setProjectId($dataProjectId)
+    ->setProjectId($bigqueryProjectId)
     ->setDatasetId($datasetId)
     ->setTableId($tableId);
 
@@ -101,7 +117,7 @@ $riskJob = (new RiskAnalysisJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);

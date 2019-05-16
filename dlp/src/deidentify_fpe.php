@@ -26,10 +26,10 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 5 || count($argv) > 6) {
-    return print("Usage: php deidentify_fpe.php CALLING_PROJECT STRING KEY_NAME WRAPPED_KEY [SURROGATE_TYPE_NAME]\n");
+    return print("Usage: php deidentify_fpe.php PROJECT_ID STRING KEY_NAME WRAPPED_KEY [SURROGATE_TYPE]\n");
 }
-list($_, $callingProjectId, $string, $keyName, $wrappedKey) = $argv;
-$surrogateTypeName = isset($argv[5]) ? $argv[5] : '';
+list($_, $projectId, $string, $keyName, $wrappedKey) = $argv;
+$surrogateType = isset($argv[5]) ? $argv[5] : '';
 
 # [START dlp_deidentify_fpe]
 /**
@@ -48,11 +48,24 @@ use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\ContentItem;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The GCP Project ID to run the API call under';
-// $string = 'The string to deidentify';
-// $keyName = 'The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key';
-// $wrappedKey = 'The name of the Cloud KMS key use, encrypted with the KMS key in $keyName';
-// $surrogateTypeName = ''; // (Optional) surrogate custom info type to enable reidentification
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The string to deidentify
+// $string = 'My SSN is 372819127';
+
+// The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
+// $keyName = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME';
+
+// The encrypted ('wrapped') AES-256 key to use
+// This key should be encrypted using the Cloud KMS key specified above
+// $wrappedKey = 'YOUR_ENCRYPTED_AES_256_KEY'
+
+// (Optional) The name of the surrogate custom info type to use
+// Only necessary if you want to reverse the deidentification process
+// Can be essentially any arbitrary string, as long as it doesn't appear
+// in your dataset otherwise.
+// $surrogateType = 'SOME_INFO_TYPE_DEID';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -80,9 +93,9 @@ $cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
     ->setCryptoKey($cryptoKey)
     ->setCommonAlphabet($commonAlphabet);
 
-if ($surrogateTypeName) {
+if ($surrogateType) {
     $surrogateType = (new InfoType())
-        ->setName($surrogateTypeName);
+        ->setName($surrogateType);
     $cryptoReplaceFfxFpeConfig->setSurrogateInfoType($surrogateType);
 }
 
@@ -104,7 +117,7 @@ $deidentifyConfig = (new DeidentifyConfig())
 $content = (new ContentItem())
     ->setValue($string);
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 
 // Run request
 $response = $dlp->deidentifyContent($parent, [

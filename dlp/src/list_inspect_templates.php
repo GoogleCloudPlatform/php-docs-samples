@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 2) {
-    return print("Usage: php list_inspect_templates.php CALLING_PROJECT\n");
+    return print("Usage: php list_inspect_templates.php PROJECT_ID\n");
 }
-list($_, $callingProjectId) = $argv;
+list($_, $projectId) = $argv;
 
 // [START dlp_list_inspect_templates]
 /**
@@ -37,12 +37,13 @@ list($_, $callingProjectId) = $argv;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 
 // Run request
 $response = $dlp->listInspectTemplates($parent);

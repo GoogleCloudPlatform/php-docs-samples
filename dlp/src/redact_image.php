@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return print("Usage: php redact_image.php CALLING_PROJECT IMAGE_PATH OUTPUT_PATH\n");
+    return print("Usage: php redact_image.php PROJECT_ID IMAGE_PATH OUTPUT_PATH\n");
 }
-list($_, $callingProjectId, $imagePath, $outputPath) = $argv;
+list($_, $projectId, $imagePath, $outputPath) = $argv;
 
 # [START dlp_redact_image]
 /**
@@ -42,9 +42,14 @@ use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $imagePath = 'The local filepath of the image to inspect';
-// $outputPath = 'The local filepath to save the resulting image to';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The path to a local file to inspect. Can be a JPG or PNG image file.
+// $imagePath = 'path/to/image.png';
+
+// The local path to save the resulting image to.
+// $outputPath = 'result.png';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -89,7 +94,7 @@ foreach ($infoTypes as $infoType) {
     $imageRedactionConfigs[] = $config;
 }
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 
 // Run request
 $response = $dlp->redactImage($parent, [

@@ -25,10 +25,11 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 7 || count($argv) > 8) {
-    return print("Usage: php inspect_datastore.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION KIND NAMESPACE [MAX_FINDINGS]\n");
+if (count($argv) < 6 || count($argv) > 8) {
+    return print("Usage: php inspect_datastore.php PROJECT_ID DATASTORE_PROJECT TOPIC SUBSCRIPTION KIND [NAMESPACE] [MAX_FINDINGS]\n");
 }
-list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $kind, $namespaceId) = $argv;
+list($_, $projectId, $datastoreProjectId, $topicId, $subscriptionId, $kind) = $argv;
+$namespaceId = isset($argv[6]) ? $argv[6] : '';
 $maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 
 # [START dlp_inspect_datastore]
@@ -52,13 +53,31 @@ use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $dataProjectId = 'The project ID containing the target Datastore';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $kind = 'The datastore kind to inspect';
-// $namespaceId = 'The ID namespace of the Datastore document to inspect';
-// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The project ID the target Datastore is stored under
+// This may or may not equal the calling project ID
+// $datastoreProjectId = 'YOUR_DATASTORE_PROJECT_ID';
+
+// The name of the Pub/Sub topic to notify once the job completes
+// TODO(developer): create a Pub/Sub topic to use for this
+// $topicId = 'MY-PUBSUB-TOPIC';
+
+// The name of the Pub/Sub subscription to use when listening for job
+// completion notifications
+// TODO(developer): create a Pub/Sub subscription to use for this
+// $subscriptionId = 'MY-PUBSUB-SUBSCRIPTION';
+
+// The kind of the Datastore entity to inspect.
+// $kind = 'Person';
+
+// (Optional) The ID namespace of the Datastore document to inspect.
+// To ignore Datastore namespaces, set this to an empty string ('')
+// $namespaceId = '';
+
+// The maximum number of findings to report per request (0 = server maximum)
+// $maxFindings = 0;
 
 // Instantiate clients
 $dlp = new DlpServiceClient();
@@ -81,7 +100,7 @@ $limits = (new FindingLimits())
 
 // Construct items to be inspected
 $partitionId = (new PartitionId())
-    ->setProjectId($dataProjectId)
+    ->setProjectId($datastoreProjectId)
     ->setNamespaceId($namespaceId);
 
 $kindExpression = (new KindExpression())
@@ -118,7 +137,7 @@ $inspectJob = (new InspectJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $job = $dlp->createDlpJob($parent, [
     'inspectJob' => $inspectJob
 ]);

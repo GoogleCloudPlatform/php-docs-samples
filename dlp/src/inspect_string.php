@@ -37,7 +37,10 @@ use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\Likelihood;
 
 /** Uncomment and populate these variables in your code */
+// The project ID to run the API call under
 // $projectId = 'YOUR_PROJECT_ID';
+
+// The string to inspect
 // $textToInspect = 'My name is Gary and my email is gary@example.com';
 
 // Instantiate a client.

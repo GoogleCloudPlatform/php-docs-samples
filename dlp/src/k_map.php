@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 10) {
-    return print("Usage: php k_map.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE REGION_CODE QUASI_ID_NAMES INFO_TYPES\n");
+    return print("Usage: php k_map.php PROJECT_ID BIGQUERY_PROJECT TOPIC SUBSCRIPTION DATASET TABLE REGION_CODE QUASI_ID_NAMES INFO_TYPES\n");
 }
-list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $regionCode, $quasiIdNames, $infoTypes) = $argv;
+list($_, $projectId, $bigqueryProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $regionCode, $quasiIdNames, $infoTypes) = $argv;
 // Convert comma-separated lists to arrays
 $quasiIdNames = explode(',', $quasiIdNames);
 $infoTypes = explode(',', $infoTypes);
@@ -52,22 +52,41 @@ use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $dataProjectId = 'The project ID containing the target Datastore';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $datasetId = 'The ID of the dataset to inspect';
-// $tableId = 'The ID of the table to inspect';
-// $regionCode = 'The ISO 3166-1 region code that the data is representative of';
-// $quasiIdNames = ['array columns that form a composite key (quasi-identifiers)'];
-// $infoTypes = ['array of infoTypes corresponding to the chosen quasi-identifiers'];
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The project ID the table is stored under
+// This may or (for public datasets) may not equal the calling project ID
+// $bigqueryProjectId = 'YOUR_BIGQUERY_PROJECT_ID';
+
+// The name of the Pub/Sub topic to notify once the job completes
+// $topicId = 'my-pubsub-topic';
+
+// The name of the Pub/Sub subscription to use when listening for job
+// $subscriptionId = 'my-pubsub-subscription';
+
+// The ID of the dataset to inspect
+// $datasetId = 'my_dataset';
+
+// The ID of the table to inspect
+// $tableId = 'my_table';
+
+// The ISO 3166-1 region code that the data is representative of
+// Can be omitted if using a region-specific infoType (such as US_ZIP_5)
+// $regionCode = 'USA';
+
+// A set of columns that form a composite key ('quasi-identifiers')
+// $quasiIdNames = ['name', 'age'];
+
+// Array of infoTypes corresponding to the chosen quasi-identifiers
+// $infoTypes = ['PERSON_NAME', 'AGE'];
 
 // Instantiate a client.
 $dlp = new DlpServiceClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $pubsub = new PubSubClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $topic = $pubsub->topic($topicId);
 
@@ -101,7 +120,7 @@ $privacyMetric = (new PrivacyMetric())
 
 // Construct items to be analyzed
 $bigqueryTable = (new BigQueryTable())
-    ->setProjectId($dataProjectId)
+    ->setProjectId($bigqueryProjectId)
     ->setDatasetId($datasetId)
     ->setTableId($tableId);
 
@@ -122,7 +141,7 @@ $riskJob = (new RiskAnalysisJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);

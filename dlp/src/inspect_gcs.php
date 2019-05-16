@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 6 || count($argv) > 7) {
-    return print("Usage: php inspect_datastore.php CALLING_PROJECT TOPIC SUBSCRIPTION BUCKET FILE [MAX_FINDINGS]\n");
+    return print("Usage: php inspect_datastore.php PROJECT_ID TOPIC SUBSCRIPTION BUCKET FILE [MAX_FINDINGS]\n");
 }
-list($_, $callingProjectId, $topicId, $subscriptionId, $bucketId, $file) = $argv;
+list($_, $projectId, $topicId, $subscriptionId, $bucketName, $file) = $argv;
 $maxFindings = isset($argv[6]) ? (int) $argv[6] : 0;
 
 # [START dlp_inspect_gcs]
@@ -51,19 +51,34 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $bucketId = 'The name of the bucket where the file resides';
-// $file = 'The path to the file within the bucket to inspect. Can contain wildcards e.g. "my-image.*"';
-// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The name of the Pub/Sub topic to notify once the job completes
+// TODO(developer): create a Pub/Sub topic to use for this
+// $topicId = 'MY-PUBSUB-TOPIC';
+
+// The name of the Pub/Sub subscription to use when listening for job
+// completion notifications
+// TODO(developer): create a Pub/Sub subscription to use for this
+// $subscriptionId = 'MY-PUBSUB-SUBSCRIPTION';
+
+// The name of the bucket where the file resides.
+// $bucketName = 'YOUR-BUCKET';
+
+// The path to the file within the bucket to inspect.
+// Can contain wildcards, e.g. "my-image.*"
+// $file = 'my-image.png';
+
+// The maximum number of findings to report per request (0 = server maximum)
+// $maxFindings = 0;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $pubsub = new PubSubClient([
-    'projectId' => $callingProjectId,
+    'projectId' => $projectId,
 ]);
 $topic = $pubsub->topic($topicId);
 
@@ -83,7 +98,7 @@ $limits = (new FindingLimits())
 
 // Construct items to be inspected
 $fileSet = (new FileSet())
-    ->setUrl('gs://' . $bucketId . '/' . $file);
+    ->setUrl('gs://' . $bucketName . '/' . $file);
 
 $cloudStorageOptions = (new CloudStorageOptions())
     ->setFileSet($fileSet);
@@ -114,7 +129,7 @@ $inspectJob = (new InspectJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $job = $dlp->createDlpJob($parent, [
     'inspectJob' => $inspectJob
 ]);

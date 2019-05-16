@@ -39,8 +39,11 @@ use Google\Cloud\Dlp\V2\ByteContentItem\BytesType;
 use Google\Cloud\Dlp\V2\Likelihood;
 
 /** Uncomment and populate these variables in your code */
+// The project ID to run the API call under
 // $projectId = 'YOUR_PROJECT_ID';
-// $filepath = 'path/to/image.png';
+
+// The path to a local file to inspect.
+// $fileName = 'path/to/file.txt';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();

@@ -26,12 +26,14 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 7 || count($argv) > 10) {
-    return print("Usage: php deidentify_dates.php CALLING_PROJECT INPUT_CSV OUTPUT_CSV DATE_FIELDS LOWER_BOUND_DAYS UPPER_BOUND_DAYS [CONTEXT_FIELDS] [KEY_NAME] [WRAPPED_KEY]\n");
+    return print("Usage: php deidentify_dates.php PROJECT_ID INPUT_CSV OUTPUT_CSV DATE_FIELDS LOWER_BOUND_DAYS UPPER_BOUND_DAYS [CONTEXT_FIELDS] [KEY_NAME] [WRAPPED_KEY]\n");
 }
-list($_, $callingProjectId, $inputCsvFile, $outputCsvFile, $dateFieldNames, $lowerBoundDays, $upperBoundDays) = $argv;
+list($_, $projectId, $inputCsvFile, $outputCsvFile, $dateFieldNames, $lowerBoundDays, $upperBoundDays) = $argv;
 $contextFieldName = isset($argv[7]) ? $argv[7] : '';
 $keyName = isset($argv[8]) ? $argv[8] : '';
 $wrappedKey = isset($argv[9]) ? $argv[9] : '';
+
+$dateFieldNames = explode(',', $dateFieldNames);
 
 # [START dlp_deidentify_date_shift]
 /**
@@ -53,19 +55,39 @@ use Google\Cloud\Dlp\V2\Value;
 use Google\Type\Date;
 
 /** Uncomment and populate these variables in your code */
-// $callingProject = 'The GCP Project ID to run the API call under';
-// $inputCsvFile = 'The path to the CSV file to deidentify';
-// $outputCsvFile = 'The path to save the date-shifted CSV file to';
-// $dateFieldNames = 'The comma-separated list of (date) fields in the CSV file to date shift';
-// $lowerBoundDays = 'The maximum number of days to shift a date backward';
-// $upperBoundDays = 'The maximum number of days to shift a date forward';
-/**
- * If contextFieldName is not specified, a random shift amount will be used for every row.
- * If contextFieldName is specified, then 'wrappedKey' and 'keyName' must also be set
- */
-// $contextFieldName = ''; (Optional) The column to determine date shift amount based on
-// $keyName = ''; // Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
-// $wrappedKey = ''; // (Optional) The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The path to the CSV file to deidentify
+// The first row of the file must specify column names, and all other rows
+// must contain valid values
+// $inputCsvFile = '/path/to/input/file.csv';
+
+// The path to save the date-shifted CSV file to
+// $outputCsvFile = '/path/to/output/file.csv';
+
+// The list of (date) fields in the CSV file to date shift
+// $dateFieldNames = ['birth_date', 'register_date'];
+
+// The maximum number of days to shift a date backward
+// $lowerBoundDays = 1;
+
+// The maximum number of days to shift a date forward
+// $upperBoundDays = 1;
+
+// (Optional) The column to determine date shift amount based on
+// If this is not specified, a random shift amount will be used for every row
+// If this is specified, then 'wrappedKey' and 'keyName' must also be set
+// $contextFieldId = 'user_id';
+
+// (Optional) The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key
+// If this is specified, then 'wrappedKey' and 'contextFieldId' must also be set
+// $keyName = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME';
+
+// (Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
+// This key should be encrypted using the Cloud KMS key specified above
+// If this is specified, then 'keyName' and 'contextFieldId' must also be set
+// $wrappedKey = 'YOUR_ENCRYPTED_AES_256_KEY';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -102,7 +124,7 @@ $tableRows = array_map(function ($csvRow) {
 // Convert date fields into protobuf objects
 $dateFields = array_map(function ($dateFieldName) {
     return (new FieldId())->setName($dateFieldName);
-}, explode(',', $dateFieldNames));
+}, $dateFieldNames);
 
 // Construct the table object
 $table = (new Table())
@@ -151,7 +173,7 @@ $recordTransformations = (new RecordTransformations())
 $deidentifyConfig = (new DeidentifyConfig())
     ->setRecordTransformations($recordTransformations);
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 
 // Run request
 $response = $dlp->deidentifyContent($parent, [

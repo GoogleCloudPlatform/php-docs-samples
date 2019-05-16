@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 7 || count($argv) > 8) {
-    return print("Usage: php inspect_bigquery.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE [MAX_FINDINGS]\n");
+    return print("Usage: php inspect_bigquery.php PROJECT_ID BIGQUERY_PROJECT TOPIC SUBSCRIPTION DATASET TABLE [MAX_FINDINGS]\n");
 }
-list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId) = $argv;
+list($_, $projectId, $bigqueryProjectId, $topicId, $subscriptionId, $datasetId, $tableId) = $argv;
 $maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 
 # [START dlp_inspect_bigquery]
@@ -51,14 +51,30 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $dataProjectId = 'The project ID containing the target Datastore';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $datasetId = 'The ID of the dataset to inspect';
-// $tableId = 'The ID of the table to inspect';
-// $columnName = 'The name of the column to compute risk metrics for, e.g. "age"';
-// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The project ID the table is stored under
+// This may or (for public datasets) may not equal the calling project ID
+// $bigqueryProjectId = 'YOUR_BIGQUERY_PROJECT_ID';
+
+// The name of the Pub/Sub topic to notify once the job completes
+// TODO(developer): create a Pub/Sub topic to use for this
+// $topicId = 'MY-PUBSUB-TOPIC';
+
+// The name of the Pub/Sub subscription to use when listening for job
+// completion notifications
+// TODO(developer): create a Pub/Sub subscription to use for this
+// $subscriptionId = 'MY-PUBSUB-SUBSCRIPTION';
+
+// The ID of the dataset to inspect, e.g. 'my_dataset'
+// $datasetId = 'my_dataset';
+
+// The ID of the table to inspect, e.g. 'my_table'
+// $tableId = 'my_table';
+
+// (Optional) The maximum number of findings to report per request (0 = server maximum)
+// $maxFindings = 0;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -81,7 +97,7 @@ $limits = (new FindingLimits())
 
 // Construct items to be inspected
 $bigqueryTable = (new BigQueryTable())
-    ->setProjectId($dataProjectId)
+    ->setProjectId($bigqueryProjectId)
     ->setDatasetId($datasetId)
     ->setTableId($tableId);
 
@@ -114,7 +130,7 @@ $inspectJob = (new InspectJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $job = $dlp->createDlpJob($parent, [
     'inspectJob' => $inspectJob
 ]);

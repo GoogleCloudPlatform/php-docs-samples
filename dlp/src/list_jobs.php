@@ -26,9 +26,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 2 || count($argv) > 3) {
-    return print("Usage: php list_jobs.php CALLING_PROJECT [FILTER]\n");
+    return print("Usage: php list_jobs.php PROJECT_ID [FILTER]\n");
 }
-list($_, $callingProjectId) = $argv;
+list($_, $projectId) = $argv;
 $filter = isset($argv[2]) ? $argv[2] : '';
 
 # [START dlp_list_jobs]
@@ -39,8 +39,12 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DlpJobType;
 
 /** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $filter = 'The filter expression to use';
+// The project ID to run the API call under
+// $projectId = 'YOUR_PROJECT_ID';
+
+// The filter expression to use
+// For more information and filter syntax, see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
+// $filter = 'state=DONE';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -51,14 +55,16 @@ $jobType = DlpJobType::INSPECT_JOB;
 // Run job-listing request
 // For more information and filter syntax,
 // @see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->projectName($projectId);
 $response = $dlp->listDlpJobs($parent, [
   'filter' => $filter,
   'type' => $jobType
 ]);
 
 // Print job list
-$jobs = $response->iterateAllElements();
+$jobs = $response->getPage();
+// To list all results, use `$response->iterateAllElements();`
+// To list just the next page, use `$jobs->getNextPage();`
 foreach ($jobs as $job) {
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();

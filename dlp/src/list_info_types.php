@@ -26,10 +26,10 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) > 3) {
-    return print("Usage: php list_info_types.php [FILTER] [LANGUAGE_CODE]\n");
+    return print("Usage: php list_info_types.php [LANGUAGE_CODE] [FILTER]\n");
 }
-$filter = isset($argv[1]) ? $argv[1] : '';
-$languageCode = isset($argv[2]) ? $argv[2] : '';
+$languageCode = isset($argv[1]) ? $argv[1] : '';
+$filter = isset($argv[2]) ? $argv[2] : '';
 
 # [START dlp_list_info_types]
 /**
@@ -38,8 +38,11 @@ $languageCode = isset($argv[2]) ? $argv[2] : '';
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
 /** Uncomment and populate these variables in your code */
-// $filter = ''; // (Optional) filter to use, empty for ''.
-// $languageCode = ''; // (Optional) language code, empty for 'en-US'.
+// The BCP-47 language code to use, e.g. 'en-US'
+// $languageCode = 'en-US';
+
+// The filter to use
+// $filter = 'supported_by=INSPECT';
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
