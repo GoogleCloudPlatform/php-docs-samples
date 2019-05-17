@@ -40,6 +40,7 @@ REST_TESTS=(
 ALT_PROJECT_TESTS=(
     appengine/flexible/storage
     bigquery/api
+    bigquery/quickstart
     datastore/api
     datastore/tutorial
     bigtable/api
