@@ -99,7 +99,7 @@ class ObjectSignedUrlTest extends TestCase
         // Assert file is correctly uploaded to the bucket.
         $content = self::$storage
             ->bucket(self::$bucketName)
-            ->object(self::$uploadObjectName)
+            ->object($uploadObjectName)
             ->downloadAsString();
         $this->assertEquals('upload content', $content);
     }
