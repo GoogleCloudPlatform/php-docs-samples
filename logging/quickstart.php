@@ -30,19 +30,14 @@ $logging = new LoggingClient([
     'projectId' => $projectId
 ]);
 
-# The name of the log to write to
-$logName = 'my-log';
-
 # Selects the log to write to
-$logger = $logging->logger($logName);
+$logger = $logging->logger('my-log');
 
 # The data to log
 $text = 'Hello, world!';
 
-# Creates the log entry
+# Creates and writes the log entry
 $entry = $logger->entry($text);
-
-# Writes the log entry
 $logger->write($entry);
 
 echo 'Logged ' . $text;
