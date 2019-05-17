@@ -32,16 +32,19 @@ This simple command-line application demonstrates how to invoke Google Cloud Sto
 5.  Run `php storage.php`. The following commands are available:
 
     ```sh
-    bucket-acl          Manage the ACL for Cloud Storage buckets.
-    bucket-default-acl  Manage the default ACL for Cloud Storage buckets.
-    bucket-labels       Manage Cloud Storage bucket labels
-    bucket-lock         Manage Cloud Storage retention policies and holds
-    buckets             Manage Cloud Storage buckets
-    encryption          Upload and download Cloud Storage objects with encryption
-    object-acl          Manage the ACL for Cloud Storage objects
-    objects             Manage Cloud Storage objects
-    requester-pays      Manage Cloud Storage requester pays buckets and objects
-    bucket-policy-only  Manage Cloud Storage bucket policy only buckets
+    bucket-acl                       Manage the ACL for Cloud Storage buckets.
+    bucket-default-acl               Manage the default ACL for Cloud Storage buckets.
+    bucket-labels                    Manage Cloud Storage bucket labels
+    bucket-lock                      Manage Cloud Storage retention policies and holds
+    buckets                          Manage Cloud Storage buckets
+    encryption                       Upload and download Cloud Storage objects with encryption
+    object-acl                       Manage the ACL for Cloud Storage objects
+    objects                          Manage Cloud Storage objects
+    requester-pays                   Manage Cloud Storage requester pays buckets and objects
+    bucket-policy-only               Manage Cloud Storage bucket policy only buckets
+    get-object-v2-signed-url         Generate a v2 signed URL for downloading an object.
+    get-object-v4-signed-url         Generate a v4 signed URL for downloading an object.
+    get-object-v4-upload-signed-url  Generate a v4 signed URL for uploading an object.
     ```
 6. Run `php storage.php COMMAND --help` to print information about the usage of each command.
 
