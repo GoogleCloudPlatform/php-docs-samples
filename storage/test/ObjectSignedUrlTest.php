@@ -34,7 +34,6 @@ class ObjectSignedUrlTest extends TestCase
     private static $storage;
     private static $bucketName;
     private static $objectName;
-    private static $uploadObjectName;
     private static $commandFile = __DIR__ . '/../storage.php';
 
     /** @beforeClass */
@@ -49,8 +48,6 @@ class ObjectSignedUrlTest extends TestCase
             ->upload("test file content", [
                 'name' => self::$objectName
             ]);
-        // Generate an object name for testing PUT signed urls
-        self::$uploadObjectName = sprintf('test-upload-object-%s', time());
     }
 
     public function testGetV2SignedUrl()
@@ -75,9 +72,11 @@ class ObjectSignedUrlTest extends TestCase
 
     public function testGetV4UploadSignedUrl()
     {
+        $uploadObjectName = sprintf('test-upload-object-%s', time());
+
         $output = $this->runCommand('get-object-v4-upload-signed-url', [
             'bucket' => self::$bucketName,
-            'object' => self::$uploadObjectName,
+            'object' => $uploadObjectName,
         ]);
 
         $this->assertContains('Generated PUT signed URL:', $output);
