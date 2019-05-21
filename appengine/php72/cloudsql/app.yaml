@@ -2,6 +2,7 @@
 # See app-postgres.yaml for running Cloud SQL with PostgreSQL.
 
 # [START gae_cloudsql_mysql_env]
+# Use the PHP 7.3 runtime (BETA) by replacing "php72" below with "php73"
 runtime: php72
 
 env_variables:
