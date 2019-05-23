@@ -32,7 +32,7 @@ use UnexpectedValueException;
  * Performs a read-write transaction to update two sample records in the
  * database.
  *
- * This will transfer 200,000 from the `MarketingBudget` field for the second
+ * This will transfer 100,000 from the `MarketingBudget` field for the second
  * Album to the first Album. If the `MarketingBudget` is too low, it will
  * raise an exception.
  *
@@ -68,7 +68,7 @@ function read_write_transaction($instanceId, $databaseId)
         if ($secondAlbumBudget < 300000) {
             // Throwing an exception will automatically roll back the transaction.
             throw new UnexpectedValueException(
-                'The second album doesn\'t have enough funds to transfer'
+                'The second album\'s budget doesn\'t meet the required minimum'
             );
         }
 
@@ -86,22 +86,24 @@ function read_write_transaction($instanceId, $databaseId)
         $firstAlbumBudget = $firstRow['MarketingBudget'];
 
         // Update the budgets.
-        $transferAmmount = 200000;
-        $secondAlbumBudget -= $transferAmmount;
-        $firstAlbumBudget += $transferAmmount;
-        printf('Setting first album\'s budget to %s and the second album\'s ' .
-            'budget to %s.' . PHP_EOL, $firstAlbumBudget, $secondAlbumBudget);
+        $transferAmount = 100000;
+        if ($firstAlbumBudget >= $transferAmount) {
+            $secondAlbumBudget += $transferAmount;
+            $firstAlbumBudget -= $transferAmount;
+            printf('Setting first album\'s budget to %s and the second album\'s ' .
+                'budget to %s.' . PHP_EOL, $firstAlbumBudget, $secondAlbumBudget);
 
-        // Update the rows.
-        $t->updateBatch('Albums', [
-            ['SingerId' => 1, 'AlbumId' => 1, 'MarketingBudget' => $firstAlbumBudget],
-            ['SingerId' => 2, 'AlbumId' => 2, 'MarketingBudget' => $secondAlbumBudget],
-        ]);
+            // Update the rows.
+            $t->updateBatch('Albums', [
+                ['SingerId' => 1, 'AlbumId' => 1, 'MarketingBudget' => $firstAlbumBudget],
+                ['SingerId' => 2, 'AlbumId' => 2, 'MarketingBudget' => $secondAlbumBudget],
+            ]);
 
-        // Commit the transaction!
-        $t->commit();
+            // Commit the transaction!
+            $t->commit();
+
+            print('Transaction complete.' . PHP_EOL);
+        }
     });
-
-    print('Transaction complete.' . PHP_EOL);
 }
 // [END spanner_read_write_transaction]
