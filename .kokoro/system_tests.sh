@@ -14,7 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
+
+if [ "${BASH_DEBUG}" = "true" ]; then
+    set -x
+fi
 
 # Kokoro directory for running these samples
 cd github/php-docs-samples
