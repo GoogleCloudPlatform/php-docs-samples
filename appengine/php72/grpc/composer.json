@@ -2,7 +2,7 @@
     "require": {
         "google/cloud-spanner": "^1.15.0",
         "google/cloud-monitoring": "^0.16.1",
-        "google/cloud-speech": "^0.23.1"
+        "google/cloud-speech": "^0.24.0"
     },
     "require-dev": {
         "google/cloud-tools": "^0.6.7",
