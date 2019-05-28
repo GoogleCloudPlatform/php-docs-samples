@@ -43,7 +43,7 @@ ALT_PROJECT_TESTS=(
     bigquery/quickstart
     datastore/api
     datastore/tutorial
-    bigtable/api
+    bigtable
     dialogflow
     dlp
     error_reporting
