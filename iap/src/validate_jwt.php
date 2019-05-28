@@ -24,8 +24,11 @@
 namespace Google\Cloud\Samples\Iap;
 
 # Imports OAuth Guzzle HTTP libraries.
-use Jose\Factory\JWKFactory;
-use Jose\Loader;
+use GuzzleHttp\Client;
+# Imports libraries for JWK validation
+use SimpleJWT\JWT;
+use SimpleJWT\Keys\KeySet;
+use SimpleJWT\InvalidTokenException;
 
 /**
  * Validate a JWT passed to your App Engine app by Identity-Aware Proxy.
@@ -74,22 +77,26 @@ function validate_jwt_from_compute_engine($iap_jwt, $cloud_project_number, $back
 
 function validate_jwt($iap_jwt, $expected_audience)
 {
+    // get the public key JWK Set object (RFC7517)
+    $httpclient = new Client();
+    $response = $httpclient->request('GET', 'https://www.gstatic.com/iap/verify/public_key-jwk', []);
+
     // Create a JWK Key Set from the gstatic URL
-    $jwk_set = JWKFactory::createFromJKU('https://www.gstatic.com/iap/verify/public_key-jwk');
+    $jwkset = new KeySet();
+    $jwkset->load((string) $response->getBody());
+
 
     // Validate the signature using the key set and ES256 algorithm.
-    $loader = new Loader();
-    $jws = $loader->loadAndVerifySignatureUsingKeySet(
-        $iap_jwt,
-        $jwk_set,
-        ['ES256']
-    );
-
+    try {
+        $jwt = JWT::decode($iap_jwt, $jwkset, 'ES256');
+    } catch (InvalidTokenException $e) {
+        return print("Failed to validate JWT: " . $e->getMessage() . PHP_EOL);
+    }
     // Validate token by checking issuer and audience fields.
-    assert($jws->getClaim('iss') == 'https://cloud.google.com/iap');
-    assert($jws->getClaim('aud') == $expected_audience);
+    assert($jwt->getClaim('iss') == 'https://cloud.google.com/iap');
+    assert($jwt->getClaim('aud') == $expected_audience);
 
     // Return the user identity (subject and user email) if JWT verification is successful.
-    return array('sub' => $jws->getClaim('sub'), 'email' => $jws->getClaim('email'));
+    return array('sub' => $jwt->getClaim('sub'), 'email' => $jwt->getClaim('email'));
 }
 # [END iap_validate_jwt]
