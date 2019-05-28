@@ -2,7 +2,8 @@
     "require": {
         "symfony/console": "^2.8",
         "google/auth":"^1.2",
-        "spomky-labs/jose": "^6.1|^7.0"
+        "guzzlehttp/guzzle": "^6.3",
+        "kelvinmo/simplejwt": "^0.2.4"
     },
     "autoload": {
         "psr-4": {

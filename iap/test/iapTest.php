@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Iap\Tests;
+namespace Google\Cloud\Samples\Iap;
 
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -42,6 +42,12 @@ class iapTest extends \PHPUnit_Framework_TestCase
     {
         $output = $this->runCommand('request');
         $this->assertContains('x-goog-authenticated-user-jwt:', $output);
+    }
+
+    public function testInvalidJwt()
+    {
+        validate_jwt('fake_jwt', 'fake_expected_audience');
+        $this->expectOutputRegex('/Failed to validate JWT:/');
     }
 
     public function testValidate()
