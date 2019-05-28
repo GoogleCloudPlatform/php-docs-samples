@@ -70,9 +70,9 @@ function detect_pdf_gcs($path, $output)
 
     # once the request has completed and the output has been
     # written to GCS, we can list all the output files.
-    preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $output, $match);
+    preg_match('/^gs:\/\/([a-zA-Z0-9\._\-]+)\/?(\S+)?$/', $output, $match);
     $bucketName = $match[1];
-    $prefix = $match[2];
+    $prefix = isset($match[2]) ? $match[2] : '';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
