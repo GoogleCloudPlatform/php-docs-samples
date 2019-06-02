@@ -158,7 +158,7 @@ class spannerTest extends TestCase
     {
         $this->runCommand('update-data');
         $output = $this->runCommand('read-write-transaction');
-        $this->assertContains('Setting first album\'s budget to 0 and the second album\'s budget to 600000', $output);
+        $this->assertContains('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
         $this->assertContains('Transaction complete.', $output);
     }
 

@@ -31,9 +31,9 @@ use Google\Cloud\Spanner\Transaction;
  * Performs a read-write transaction to update two sample records in the
  * database.
  *
- * This will transfer 100,000 from the `MarketingBudget` field for the first
- * Album to the second Album. If the `MarketingBudget` is too low, it will
- * raise an exception.
+ * This will transfer 200,000 from the `MarketingBudget` field for the second
+ * Album to the first Album. If the `MarketingBudget` for the second Album is
+ * too low, it will raise an exception.
  *
  * Before running this sample, you will need to run the `update_data` sample
  * to populate the fields.
@@ -54,25 +54,26 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         // Transfer marketing budget from one album to another. We do it in a transaction to
         // ensure that the transfer is atomic.
+        $transferAmount = 200000;
+
         $results = $t->execute(
-            "SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1"
+            "SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2"
         );
         $resultsRow = $results->rows()->current();
-        $album1budget = $resultsRow['MarketingBudget'];
-        $transferAmount = 100000;
+        $album2budget = $resultsRow['MarketingBudget'];
 
         // Transaction will only be committed if this condition still holds at the time of
         // commit. Otherwise it will be aborted and the callable will be rerun by the
         // client library.
-        if ($album1budget >= $transferAmount) {
+        if ($album2budget >= $transferAmount) {
             $results = $t->execute(
-                "SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2"
+                "SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1"
             );
             $resultsRow = $results->rows()->current();
-            $album2budget = $resultsRow['MarketingBudget'];
+            $album1budget = $resultsRow['MarketingBudget'];
 
-            $album2budget += $transferAmount;
-            $album1budget -= $transferAmount;
+            $album2budget -= $transferAmount;
+            $album1budget += $transferAmount;
 
             // Update the albums
             $t->executeUpdate(
