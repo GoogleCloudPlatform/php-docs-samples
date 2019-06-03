@@ -44,7 +44,6 @@ class loggingTest extends \PHPUnit_Framework_TestCase
     {
         $this->useResourceExhaustedBackoff(5);
         $this->catchAllExceptions = true;
-        $this->eventuallyConsistentRetryCount = 5;
     }
 
     public function testCreateSink()
@@ -156,7 +155,7 @@ class loggingTest extends \PHPUnit_Framework_TestCase
                 '--logger' => $loggerName,
             ]);
             $this->assertContains($message, $output);
-        });
+        }, $retries = 10);
     }
 
     /**
