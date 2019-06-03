@@ -41,9 +41,9 @@ ALT_PROJECT_TESTS=(
     appengine/flexible/storage
     bigquery/api
     bigquery/quickstart
+    bigtable
     datastore/api
     datastore/tutorial
-    bigtable
     dialogflow
     dlp
     error_reporting
