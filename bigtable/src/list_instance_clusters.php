@@ -22,7 +22,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
+// Include Google Cloud dependencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 3) {
