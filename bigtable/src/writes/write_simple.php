@@ -33,6 +33,7 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 // [START bigtable_writes_simple]
 
 use Google\Cloud\Bigtable\BigtableClient;
+use Google\Cloud\Bigtable\DataUtil;
 use Google\Cloud\Bigtable\Mutations;
 
 /** Uncomment and populate these variables in your code */
@@ -50,7 +51,7 @@ $timestamp = time() * 1000;
 $columnFamilyId = 'stats_summary';
 $mutations = (new Mutations())
     ->upsert($columnFamilyId, "connected_cell", 1, $timestamp)
-    ->upsert($columnFamilyId, "connected_wifi", 1, $timestamp)
+    ->upsert($columnFamilyId, "connected_wifi", DataUtil::intToByteString(1), $timestamp)
     ->upsert($columnFamilyId, "os_build", "PQ2A.190405.003", $timestamp);
 
 $table->mutateRow("phone#4c410523#20190501", $mutations);

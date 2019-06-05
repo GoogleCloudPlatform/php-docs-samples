@@ -33,6 +33,7 @@ list($_, $project_id, $instance_id, $table_id) = $argv;
 // [START bigtable_writes_conditional]
 
 use Google\Cloud\Bigtable\BigtableClient;
+use Google\Cloud\Bigtable\Filter;
 use Google\Cloud\Bigtable\Mutations;
 
 /** Uncomment and populate these variables in your code */
@@ -51,9 +52,9 @@ $columnFamilyId = 'stats_summary';
 
 $mutations = (new Mutations())->upsert($columnFamilyId, "os_name", "android", $timestamp);
 $predicateFilter = Filter::chain()
-    ->Filter::qualifier()->exactMatch($columnFamilyId)
-    ->Filter::family()->exactMatch('os_build')
-    -> Filter::value()->regex('PQ2A.*');
+    ->addFilter(Filter::family()->exactMatch($columnFamilyId))
+    ->addFilter(Filter::qualifier()->exactMatch('os_build'))
+    ->addFilter(Filter::value()->regex('PQ2A.*'));
 $options = ['predicateFilter' => $predicateFilter, 'trueMutations' => $mutations];
 
 $table->checkAndMutateRow("phone#4c410523#20190501", $options);

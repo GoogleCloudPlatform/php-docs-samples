@@ -78,13 +78,13 @@ final class WriteTest extends TestCase
 
     public function testWriteConditional()
     {
-        $output = $this->runSnippet('writes/write_conditional', [
+        $output = $this->runSnippet('writes/write_conditionally', [
             self::$projectId,
             self::$instanceId,
             self::$tableId
         ]);
 
-        $this->assertContains('Successfully updated row\'s os_name.', $output);
+        $this->assertContains('Successfully updated row\'s os_name', $output);
     }
 
     public function testWriteIncrement()
