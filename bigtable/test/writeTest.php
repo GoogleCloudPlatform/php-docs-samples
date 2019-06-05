@@ -18,6 +18,7 @@
 
 namespace Google\Cloud\Samples\Bigable\Tests;
 
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use PHPUnit\Framework\TestCase;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -31,7 +32,7 @@ final class WriteTest extends TestCase
     use ExponentialBackoffTrait;
 
     const TABLE_ID_PREFIX = 'mobile-time-series-';
-    private static $tableAdminClient;
+    private static $bigtableTableAdminClient;
     private static $instanceId;
     private static $tableId;
 
@@ -39,34 +40,74 @@ final class WriteTest extends TestCase
     {
         self::checkProjectEnvVarBeforeClass();
 
-        self::$tableAdminClient = new BigtableTableAdminClient();
+        self::$bigtableTableAdminClient = new BigtableTableAdminClient();
         self::$instanceId = self::requireEnv("BIGTABLE_INSTANCE");
         self::$tableId = uniqid(self::TABLE_ID_PREFIX);
+
+        $formattedParent = self::$bigtableTableAdminClient
+            ->instanceName(self::$projectId, self::$instanceId);
+        $table = (new Table())->setColumnFamilies(["stats_summary" => new ColumnFamily()]);
+        self::$bigtableTableAdminClient->createtable(
+            $formattedParent,
+            self::$tableId,
+            $table
+        );
     }
 
     public function setUp()
     {
         $this->useResourceExhaustedBackoff();
-
-        $formattedParent = self::$bigtableTableAdminClient
-            ->instanceName(self::$projectId, self::$instanceId);
-        $table = new Table();
-        self::$tableAdminClient->createtable(
-            $formattedParent,
-            self::$tableId,
-            $table
-        )->setColumnFamilies(["stats_summary"]);
     }
 
-//
-//    public function testWriteSimple()
-//    {
-//        $output = $this->runSnippet('writes/write_simple', [
-//            self::$projectId,
-//            self::$instanceId,
-//            self::$tableId
-//        ]);
-//
-//        $this->assertContains('Successfully wrote row.', $output);
-//    }
+    public static function tearDownAfterClass()
+    {
+        $tableName = self::$bigtableTableAdminClient->tableName(self::$projectId, self::$instanceId, self::$tableId);
+        self::$bigtableTableAdminClient->deleteTable($tableName);
+    }
+
+    public function testWriteSimple()
+    {
+        $output = $this->runSnippet('writes/write_simple', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId
+        ]);
+
+        $this->assertContains('Successfully wrote row.', $output);
+    }
+
+    public function testWriteConditional()
+    {
+        $output = $this->runSnippet('writes/write_conditional', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId
+        ]);
+
+        $this->assertContains('Successfully updated row\'s os_name.', $output);
+    }
+
+    public function testWriteIncrement()
+    {
+        $output = $this->runSnippet('writes/write_increment', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId
+        ]);
+
+        $this->assertContains('Successfully updated row.', $output);
+    }
+
+    public function testWriteBatch()
+    {
+        $output = $this->runSnippet('writes/write_batch', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId
+        ]);
+
+        $this->assertContains('Successfully wrote 2 rows.', $output);
+    }
+
+
 }
