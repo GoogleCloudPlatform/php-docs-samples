@@ -1,11 +1,11 @@
-# Google BigTable Sample
+# Google Bigtable Sample
 
 ## Description
 
 All code in the `src` directory demonstrates how to connect to Cloud Bigtable and run some basic operations to create instance, create cluster, delete instance and delete cluster.
 
 ## Build and Run
-1.  **Enable APIs** - [Enable the BigTable API](https://console.cloud.google.com/flows/enableapi?apiid=bigtable)
+1.  **Enable APIs** - [Enable the Bigtable API](https://console.cloud.google.com/flows/enableapi?apiid=bigtable)
     and create a new project or select an existing project.
 2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click "New Credentials"
     and select "Service Account Key". Create a new service account, use the JSON key type, and
