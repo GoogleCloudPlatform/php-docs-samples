@@ -118,6 +118,4 @@ final class WriteTest extends TestCase
 
         $this->assertContains('Successfully wrote 2 rows.', $output);
     }
-
-
 }
