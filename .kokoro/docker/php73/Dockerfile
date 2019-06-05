@@ -8,6 +8,7 @@ RUN apt-get update && \
             autoconf \
             build-essential \
             git-core \
+            jq \
             libbz2-dev \
             libcurl4-openssl-dev \
             libc-client2007e \
@@ -26,8 +27,10 @@ RUN apt-get update && \
             libxml2-dev \
             libxslt1-dev \
             libzip-dev \
+            python-ipaddr \
             wget \
-            zip
+            zip \
+            zlib1g-dev
 
 RUN wget -nv -O phpunit.phar https://phar.phpunit.de/phpunit-7.phar && \
     chmod +x phpunit.phar && \
@@ -96,3 +99,23 @@ RUN wget -nv -O phpunit.phar https://phar.phpunit.de/phpunit-7.phar && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
+
+# Install Google Cloud SDK
+RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+        -o ${HOME}/google-cloud-sdk.tar.gz \
+    && tar xzf ${HOME}/google-cloud-sdk.tar.gz -C $HOME \
+    && ${HOME}/google-cloud-sdk/install.sh \
+        --usage-reporting false \
+        --path-update false \
+        --command-completion false
+
+# Make composer and gcloud bins available via the PATH variable
+ENV PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
+
+# Configure Google Cloud SDK
+RUN gcloud config set app/promote_by_default false && \
+    gcloud config set disable_prompts true && \
+    gcloud -q components install app-engine-python && \
+    gcloud -q components install app-engine-php && \
+    gcloud -q components update
+
