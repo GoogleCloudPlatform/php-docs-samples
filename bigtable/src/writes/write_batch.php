@@ -30,7 +30,7 @@ if (count($argv) < 3 || count($argv) > 5) {
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_hw_write_rows]
+// [START bigtable_writes_batch]
 
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Mutations;
@@ -38,8 +38,7 @@ use Google\Cloud\Bigtable\Mutations;
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
 // $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
-
+// $table_id = 'mobile-time-series';
 
 // Connect to an existing table with an existing instance.
 $dataClient = new BigtableClient([
@@ -47,16 +46,20 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-printf('Writing some greetings to the table.' . PHP_EOL);
-$greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello PHP!'];
-$entries = [];
-$columnFamilyId = 'cf1';
-$column = 'greeting';
-foreach ($greetings as $i => $value) {
-    $row_key = sprintf('greeting%s', $i);
-    $rowMutation = new Mutations();
-    $rowMutation->upsert($columnFamilyId, $column, $value, time() * 1000);
-    $entries[$row_key] = $rowMutation;
-}
-$table->mutateRows($entries);
-// [END bigtable_hw_write_rows]
+$timestamp = time() * 1000;
+$columnFamilyId = 'stats_summary';
+$mutations = [
+    (new Mutations())
+        ->upsert($columnFamilyId, "connected_wifi", 1, $timestamp)
+        ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestamp),
+    (new Mutations())
+        ->upsert($columnFamilyId, "connected_wifi", 1, $timestamp)
+        ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestamp)];
+
+$table->mutateRows([
+        "tablet#a0b81f74#20190501" => $mutations[0],
+        "tablet#a0b81f74#20190502" => $mutations[1]]
+);
+
+printf('Successfully wrote 2 rows.' . PHP_EOL);
+// [END bigtable_writes_batch]

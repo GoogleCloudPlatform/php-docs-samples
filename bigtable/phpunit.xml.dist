@@ -26,8 +26,8 @@
          timeoutForMediumTests="30"
          timeoutForLargeTests="120">
     <testsuites>
-        <testsuite name="PHP bigtable Instance test">
-          <file>./test/bigtableTest.php</file>
+        <testsuite name="PHP Bigtable tests">
+            <directory>test</directory>
         </testsuite>
     </testsuites>
     <logging>

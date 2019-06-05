@@ -1,6 +1,6 @@
 <?php
 
-namespace Google\Cloud\Samples\BigTable\Tests;
+namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Google\Cloud\Bigtable\BigtableClient;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +12,7 @@ use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\ApiCore\ApiException;
 
-final class BigTableTest extends TestCase
+final class BigtableTest extends TestCase
 {
     use TestTrait, ExponentialBackoffTrait;
 
@@ -571,21 +571,5 @@ final class BigTableTest extends TestCase
             $projectId,
             $instanceId
         ]);
-    }
-
-    private static function runSnippet($sampleName, $params = [])
-    {
-        $testFunc = function () use ($sampleName, $params) {
-            $argv = array_merge([basename(__FILE__)], $params);
-            ob_start();
-            require __DIR__ . "/../src/$sampleName.php";
-            return ob_get_clean();
-        };
-
-        if (self::$backoff) {
-            return self::$backoff->execute($testFunc);
-        }
-
-        return $testFunc();
     }
 }
