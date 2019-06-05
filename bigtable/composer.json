@@ -4,7 +4,7 @@
         "psr/cache": "^1.0"
     },
     "require-dev": {
-        "google/cloud-tools": "^0.8",
+        "google/cloud-tools": "dev-master",
         "phpunit/phpunit": "^5"
     }
 }
