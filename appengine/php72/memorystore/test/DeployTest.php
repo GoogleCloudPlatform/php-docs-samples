@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,5 +53,11 @@ class DeployMySQLTest extends \PHPUnit_Framework_TestCase
         $appYaml['vpc_access_connector']['name'] = $connectorName;
 
         file_put_contents('app.yaml', Yaml::dump($appYaml));
+    }
+
+    private static function doDeploy()
+    {
+        // Ensure we use glcoud "beta" deploy
+        return self::$gcloudWrapper->deploy(['beta' => true]);
     }
 }
