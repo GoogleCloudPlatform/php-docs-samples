@@ -21,9 +21,7 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 
-require_once __DIR__ . '/../../../../testing/FileUtil.php';
-
-class DeployMySQLTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends \PHPUnit_Framework_TestCase
 {
     use TestTrait;
     use AppEngineDeploymentTrait;
