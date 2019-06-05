@@ -55,7 +55,7 @@ class DeployTest extends \PHPUnit_Framework_TestCase
 
     private static function doDeploy()
     {
-        // Ensure we use glcoud "beta" deploy
+        // Ensure we use gcloud "beta" deploy
         return self::$gcloudWrapper->deploy(['release_version' => 'beta']);
     }
 }
