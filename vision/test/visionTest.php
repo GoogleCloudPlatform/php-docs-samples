@@ -18,7 +18,6 @@
 
 namespace Google\Cloud\Samples\Vision;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
