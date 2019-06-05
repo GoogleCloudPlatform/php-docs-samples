@@ -851,7 +851,6 @@ function get_task_list_entities(DatastoreClient $datastore)
     foreach ($result as $task) {
         $taskListEntities[] = $task;
     }
-    $transaction->commit();
     // [END datastore_transactional_single_entity_group_read_only]
     return $taskListEntities;
 }
