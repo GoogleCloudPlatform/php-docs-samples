@@ -33,10 +33,10 @@ if (!$host = getenv('REDIS_HOST')) {
 $port = getenv('REDIS_PORT') ?: '6379';
 
 try {
-	$redis = new Redis();
-	$redis->connect($host, $port);
+    $redis = new Redis();
+    $redis->connect($host, $port);
 } catch (Exception $e) {
-	return print('Error: ' . $e->getMessage());
+    return print('Error: ' . $e->getMessage());
 }
 
 $value = $redis->incr('counter');
