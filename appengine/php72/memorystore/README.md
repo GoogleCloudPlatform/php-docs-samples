@@ -1,6 +1,8 @@
-# Cloud SQL & Google App Engine
+# Connect to Cloud Memorystore from Google App Engine 
 
-This sample application demonstrates how to use [Cloud SQL with Google App Engine](https://cloud.google.com/appengine/docs/php/cloud-sql/).
+This sample application demonstrates how to use
+[Cloud Memorystore for Redis](https://cloud.google.com/memorystore/docs/)
+with Google App Engine for PHP 7.2.
 
 **Prerequisites**
 
