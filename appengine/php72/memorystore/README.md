@@ -1,4 +1,4 @@
-# Connect to Cloud Memorystore from Google App Engine 
+# Connect to Cloud Memorystore from Google App Engine
 
 This sample application demonstrates how to use
 [Cloud Memorystore for Redis](https://cloud.google.com/memorystore/docs/)
@@ -85,15 +85,28 @@ vpc_access_connector:
 
 ## Deploy to App Engine
 
-**Deploy with gcloud**
-
 **IMPORTANT** Because Serverless VPC Connector is in *beta*, you must deploy to App Engine
 using the `gcloud beta app deploy` command. Without this, the connection to
 Memorystore *will not work*.
 
 ```
-gcloud beta app deploy --project PROJECT_ID
+$ gcloud beta app deploy --project PROJECT_ID
 ```
 
-The last command will open `https://{YOUR_PROJECT_ID}.appspot.com/`
-in your browser.
+Now open `https://{YOUR_PROJECT_ID}.appspot.com/` in your browser to see the running
+app.
+
+**Note**: This example requires the `redis.so` extension to be enabled on your App Engine
+instance. This is done by including [`php.ini`](php.ini) in your project root.
+
+## Troubleshooting
+
+If you receive the error "Error: Connection timed out", it's possible your VPC Connector
+is not fully set up. Run the following and check the property `state` is set to READY:
+
+```
+$ gcloud beta compute networks vpc-access connectors describe CONNECTOR_NAME --region=REGION_ID
+```
+
+If you continue to see the timeout error, try creating a new VPC connector with a different
+CIDR `range`.
