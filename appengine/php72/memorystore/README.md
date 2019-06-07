@@ -101,6 +101,8 @@ instance. This is done by including [`php.ini`](php.ini) in your project root.
 
 ## Troubleshooting
 
+### Connection timed out
+
 If you receive the error "Error: Connection timed out", it's possible your VPC Connector
 is not fully set up. Run the following and check the property `state` is set to READY:
 
@@ -110,3 +112,19 @@ $ gcloud beta compute networks vpc-access connectors describe CONNECTOR_NAME --r
 
 If you continue to see the timeout error, try creating a new VPC connector with a different
 CIDR `range`.
+
+### Name or service not known
+
+If you receive the following error, make sure you set the `REDIS_HOST` environment variable in `app.yaml` to be the
+host of your Memorystore for Redis instance.
+
+```
+PHP message: PHP Warning: Redis::connect(): php_network_getaddresses: getaddrinfo failed: Name or service not known in /srv/index.php
+```
+
+### Request contains an invalid argument
+
+If you receive this error, it is because either the `gcloud` command to create the VPC 
+Access connector was missing the `--range` option, or the value supplied to the
+`--range` option did not use the `/28` CIDR mask as required. Be sure to supply a valid
+CIDR range ending in `/28`.
