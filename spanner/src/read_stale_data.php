@@ -28,7 +28,8 @@ use Google\Cloud\Spanner\Duration;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Reads sample data from the database.  The data is exactly 10 seconds stale.
+ * Reads sample data from the database.  The data is exactly 15 seconds stale.
+ * Guarantees that all writes committed more than 15 seconds ago are visible.
  * Example:
  * ```
  * read_stale_data
