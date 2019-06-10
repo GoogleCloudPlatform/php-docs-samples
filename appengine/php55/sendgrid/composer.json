@@ -1,0 +1,12 @@
+{
+    "require": {
+        "silex/silex": "^1.3",
+        "sendgrid/sendgrid": "5.0.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5",
+        "google/cloud-tools": "dev-master",
+        "paragonie/random_compat": "^2.0",
+        "symfony/yaml": "^3.1"
+    }
+}
