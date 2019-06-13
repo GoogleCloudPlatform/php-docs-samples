@@ -7,8 +7,11 @@ if (!file_exists($testDir . '/phpunit.xml.dist')) {
 }
 
 if (file_exists($testDir . '/composer.json') && !file_exists($testDir . '/vendor/autoload.php')) {
-    throw new Exception('You need to run "composer install" in the sample directory');
+    throw new Exception('You need to run "composer install" in your current directory');
 }
 
-require_once $testDir .'/vendor/autoload.php';
+if (!trait_exists(Google\Cloud\TestUtils\TestTrait::class)) {
+	throw new Exception('You need to run "testing/composer.sh" to installed the required global packages');
+}
 
+require_once $testDir . '/vendor/autoload.php';
