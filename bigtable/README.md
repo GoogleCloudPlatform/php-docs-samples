@@ -2,7 +2,12 @@
 
 ## Description
 
+These samples show how to use the
+[Cloud Bigtable API][bigtable] from PHP.
+
 All code in the `src` directory demonstrates how to connect to Cloud Bigtable and run some basic operations to create instance, create cluster, delete instance and delete cluster.
+
+[bigtable]: https://cloud.google.com/bigtable/docs/reference/libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the Bigtable API](https://console.cloud.google.com/flows/enableapi?apiid=bigtable)

@@ -2,7 +2,10 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google Pub\Sub from PHP.
+This simple command-line application demonstrates how to invoke
+[Google Pub\Sub][pubsub] from PHP.
+
+[pubsub]: https://cloud.google.com/pubsub/docs/quickstart-client-libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the Pub\Sub API](https://console.cloud.google.com/flows/enableapi?apiid=pubsub)

@@ -2,7 +2,10 @@
 
 ## Description
 
-All code in the `snippets` directory demonstrate how to invoke Google BigQuery from PHP.
+All code in the `snippets` directory demonstrate how to invoke
+[Google BigQuery][bigquery] from PHP.
+
+[bigquery]: https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the BigQuery API](https://console.cloud.google.com/flows/enableapi?apiid=bigquery)

@@ -6,8 +6,10 @@ Google Cloud Spanner PHP Samples
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=spanner
 
-This directory contains samples for Google Cloud Spanner.
-[Google Cloud Spanner][spanner] is a highly scalable, transactional, managed,
+This directory contains samples for calling [Google Cloud Spanner][spanner]
+from PHP.
+
+Google Cloud Spanner is a highly scalable, transactional, managed,
 [NewSQL][newsql] database service. Cloud Spanner solves the need for a
 horizontally-scaling database with consistent global transactions and SQL
 semantics.
@@ -15,7 +17,7 @@ semantics.
 See [Getting Started in PHP][getting-started-php]
 for a walkthrough of these samples.
 
-[spanner]: https://cloud.google.com/spanner/docs
+[spanner]: https://cloud.google.com/spanner/docs/reference/libraries
 [newsql]: https://en.wikipedia.org/wiki/NewSQL
 [getting-started-php]: https://cloud.google.com/spanner/docs/getting-started/php/
 

@@ -63,9 +63,9 @@ If you have not set a timezone you may get an error from php. This can be resolv
   1. Editing the php.ini file (or creating one if it doesn't exist)
   1. Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
 
-[speech-api]: http://cloud.google.com/speech
+[speech-api]: https://cloud.google.com/speech-to-text/docs/quickstart-client-libraries
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php/
-[choose-encoding]: https://cloud.google.com/speech/docs/best-practices#choosing_an_audio_encoding
+[choose-encoding]: https://cloud.google.com/speech-to-text/docs/best-practices#choosing_an_audio_encoding
 [sox]: http://sox.sourceforge.net/
 [grpc]: http://grpc.io
 [adc]: https://developers.google.com/identity/protocols/application-default-credentials

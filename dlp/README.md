@@ -7,8 +7,10 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google
-DLP API from PHP.
+This simple command-line application demonstrates how to invoke
+[Google DLP API][dlp-api] from PHP.
+
+[dlp-api]: https://cloud.google.com/dlp/docs/libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the DLP API](

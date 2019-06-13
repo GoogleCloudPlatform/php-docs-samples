@@ -5,8 +5,15 @@
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=error_reporting
 
-`quickstart.php` and `error_reporting.php` are simple command-line programs to demonstrate logging
-exceptions, errors, and PHP fatral errors to Stackdriver Error Reporting.
+
+This directory contains samples for setting up and using
+[Stackdriver Error Reporting][error-reporting] for PHP.
+
+[error-reporting]: https://cloud.google.com/error-reporting/docs/setup/php
+
+`quickstart.php` and `src/report_error.php` are simple command-line programs to
+demonstrate logging exceptions, errors, and PHP fatral errors to
+Stackdriver Error Reporting.
 
 # Installation
 
