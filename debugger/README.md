@@ -3,7 +3,9 @@
 ## Description
 
 This simple [Silex][silex] application demonstrates how to
-install and run the Stackdriver Debugger Agent for PHP.
+install and run the [Stackdriver Debugger Agent][debugger] for PHP.
+
+[debugger]: https://cloud.google.com/debugger/docs/setup/php
 
 ## Build and Run
 

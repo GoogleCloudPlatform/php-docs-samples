@@ -7,7 +7,8 @@
 
 ## Description
 
-These samples show how to use the [Google Cloud KMS API](https://cloud.google.com/kms/).
+These samples show how to use the
+[Google Cloud KMS API](https://cloud.google.com/kms/docs/reference/libraries).
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the KMS API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)

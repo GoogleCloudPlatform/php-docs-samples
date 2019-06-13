@@ -2,7 +2,7 @@
 
 These samples show how to use the [Google Cloud Firestore API][cloud-firestore-api] to store and query data.
 
-[cloud-firestore-api]: http://cloud.google.com/cloud-firestore
+[cloud-firestore-api]: https://cloud.google.com/firestore/docs/quickstart-servers
 
 ## Setup
 

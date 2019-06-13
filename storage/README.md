@@ -7,7 +7,10 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google Cloud Storage from PHP.
+This simple command-line application demonstrates how to invoke
+[Google Cloud Storage][gcs-api] from PHP.
+
+[gcs-api]: https://cloud.google.com/storage/docs/reference/libraries
 
 ## Licensing
 

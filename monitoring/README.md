@@ -6,13 +6,15 @@ Stackdriver Monitoring PHP Samples
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=monitoring
 
-This directory contains samples for Stackdriver Monitoring.
-[Stackdriver Monitoring][monitoring] collects metrics, events, and metadata from
+This directory contains samples for calling [Stackdriver Monitoring][monitoring]
+from PHP.
+
+Stackdriver Monitoring collects metrics, events, and metadata from
 Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
 application instrumentation, and a variety of common application components
 including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others.
 
-[monitoring]: https://cloud.google.com/monitoring/docs
+[monitoring]: https://cloud.google.com/monitoring/docs/reference/libraries
 
 ## Setup
 

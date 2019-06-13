@@ -5,6 +5,9 @@
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=logging
 
+This directory contains samples for calling [Stackdriver Logging][logging]
+from PHP.
+
 `logging.php` is a simple command-line program to demonstrate writing to a log,
 listing its entries, deleting it, interacting with sinks to export logs to
 Google Cloud Storage.
@@ -30,3 +33,5 @@ Run the samples:
     php logging.php list # For getting sub command list
     php logging.php help write # For showing help for write sub command `write`
     ```
+
+[logging]: https://cloud.google.com/logging/docs/reference/libraries

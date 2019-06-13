@@ -7,8 +7,10 @@
 
 ## Description
 
-These samples show how to use the [Google Cloud Translate API](
-https://cloud.google.com/translate/).
+These samples show how to use the [Google Cloud Translate API][translate-api]
+from PHP.
+
+[translate-api]: https://cloud.google.com/translate/docs/quickstart-client-libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the Translate API](https://console.cloud.google.com/flows/enableapi?apiid=translate)

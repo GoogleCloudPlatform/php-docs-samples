@@ -6,9 +6,9 @@
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=language
 
 These samples show how to use the [Google Cloud Natural Language API][language-api]
-to analyze text.
+from PHP to analyze text.
 
-[language-api]: http://cloud.google.com/natural-language
+[language-api]: https://cloud.google.com/natural-language/docs/quickstart-client-libraries
 [google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php/
 
 ## Setup

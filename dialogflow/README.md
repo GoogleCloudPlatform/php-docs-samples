@@ -11,7 +11,7 @@ This command-line application demonstrates how to invoke Dialogflow
 API from PHP.
 
 ## Before you begin
-1. Follow the first 2 steps of [this quickstart](https://cloud.google.com/dialogflow-enterprise/docs/quickstart).
+1. Follow the first 2 steps of [this quickstart](https://cloud.google.com/dialogflow-enterprise/docs/quickstart-api).
 Feel free to stop after you've created an agent.
 
 2. This sample comes with a [sample agent](https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/dialogflow/resources/RoomReservation.zip) which you can use to try the samples with. Follow the instructions on [this page](https://dialogflow.com/docs/best-practices/import-export-for-versions) to import the agent from the [console](https://console.dialogflow.com/api-client).

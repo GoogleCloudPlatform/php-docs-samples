@@ -7,8 +7,10 @@
 
 ## Description
 
-These command-line samples demonstrates how to invoke Cloud Text-to-Speech
-API from PHP.
+These command-line samples demonstrates how to invoke
+[Cloud Text-to-Speech API][tts-api] from PHP.
+
+[tts-api]: https://cloud.google.com/text-to-speech/docs/quickstart-client-libraries
 
 ## Setup
 

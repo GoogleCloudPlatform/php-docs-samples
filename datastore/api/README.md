@@ -1,7 +1,7 @@
 # Cloud Datastore code snippets
 
 This code samples are intended to be in the following document:
-https://cloud.google.com/datastore/docs/
+https://cloud.google.com/datastore/docs/reference/libraries
 
 The code is using
 [Google Cloud Client Library for PHP](https://googlecloudplatform.github.io/google-cloud-php/#/).

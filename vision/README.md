@@ -8,7 +8,9 @@
 ## Description
 
 This simple command-line application demonstrates how to invoke Google
-Vision API from PHP.
+[Vision API][vision-api] from PHP.
+
+[vision-api]: https://cloud.google.com/vision/docs/quickstart-client-libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the Vision API](https://console.cloud.google.com/flows/enableapi?apiid=vision.googleapis.com)
