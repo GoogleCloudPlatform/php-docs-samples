@@ -8,7 +8,7 @@
 ## Description
 
 These samples show how to use the
-[Google Cloud KMS API](https://cloud.google.com/kms/docs/reference/libraries).
+[Google Cloud KMS API](https://cloud.google.com/kms/docs/reference/libraries) from PHP.
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the KMS API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)

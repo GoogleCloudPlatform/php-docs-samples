@@ -7,8 +7,8 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google
-[Video Intelligence API][video-api] from PHP.
+This simple command-line application demonstrates how to invoke
+[Google Video Intelligence API][video-api] from PHP.
 
 [video-api]: https://cloud.google.com/video-intelligence/docs/quickstart-client-libraries
 

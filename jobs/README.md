@@ -2,8 +2,10 @@
 
 ## Description
 
-These samples show how to use the [Google Cloud Job Discovery API]
-(https://cloud.google.com/talent-solution/job-search/v2/docs/libraries).
+These samples show how to use the [Google Cloud Job Discovery API][job-discovery]
+from PHP.
+
+[job-discovery]: https://cloud.google.com/talent-solution/job-search/v2/docs/libraries
 
 ## Build and Run
 1.  **Enable APIs** - [Enable the Job Discovery API](https://console.cloud.google.com/flows/enableapi?apiid=jobs.googleapis.com)

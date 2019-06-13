@@ -7,8 +7,8 @@
 
 ## Description
 
-This simple command-line application demonstrates how to invoke Google
-[Vision API][vision-api] from PHP.
+This simple command-line application demonstrates how to invoke
+[Google Vision API][vision-api] from PHP.
 
 [vision-api]: https://cloud.google.com/vision/docs/quickstart-client-libraries
 
