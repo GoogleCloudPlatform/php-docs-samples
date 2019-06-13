@@ -55,5 +55,8 @@ if [ "${RUN_CS_CHECK}" = "true" ]; then
   bash testing/run_cs_check.sh
 fi
 
+# Install global test dependencies
+bash testing/composer.sh
+
 # Run tests
 bash testing/run_test_suite.sh

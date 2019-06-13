@@ -1,9 +1,5 @@
 {
     "require": {
         "google/cloud-text-to-speech": "^0.4.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools": "dev-master"
     }
 }

@@ -20,11 +20,12 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for vision commands.
  */
-class visionTest extends \PHPUnit_Framework_TestCase
+class visionTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;

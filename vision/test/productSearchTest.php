@@ -20,11 +20,12 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for product search commands.
  */
-class productSearchTest extends \PHPUnit_Framework_TestCase
+class productSearchTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait {

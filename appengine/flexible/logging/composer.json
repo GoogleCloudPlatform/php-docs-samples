@@ -6,7 +6,6 @@
         "twig/twig": "^1.29"
     },
     "require-dev": {
-        "google/cloud-tools": "^0.6",
         "guzzlehttp/guzzle": "^6.3",
         "symfony/browser-kit": "^3.2"
     }

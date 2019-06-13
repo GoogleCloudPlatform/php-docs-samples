@@ -9,9 +9,5 @@
             "src/export_assets.php",
             "src/batch_get_assets_history.php"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5"
     }
 }

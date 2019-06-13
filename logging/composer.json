@@ -4,10 +4,6 @@
         "symfony/console": "^3.0",
         "monolog/monolog": "^1.23"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5"
-    },
     "autoload": {
         "files": [
             "src/log_entry_functions.php",

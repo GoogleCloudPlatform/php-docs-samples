@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="./vendor/autoload.php">
+<phpunit bootstrap="../../../testing/bootstrap.php">
     <testsuites>
         <testsuite name="App Engine for PHP 7.2 Error Reporting tests">
             <directory>test</directory>

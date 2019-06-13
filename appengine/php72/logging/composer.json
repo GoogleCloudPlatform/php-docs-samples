@@ -1,8 +1,5 @@
 {
     "require": {
         "google/cloud-logging": "^1.12"
-    },
-    "require-dev": {
-        "google/cloud-tools": "^0.8.5"
     }
 }

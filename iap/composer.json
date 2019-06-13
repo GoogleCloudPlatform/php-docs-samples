@@ -13,8 +13,5 @@
             "src/make_iap_request.php",
             "src/validate_jwt.php"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5"
     }
 }
