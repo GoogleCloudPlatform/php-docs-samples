@@ -21,13 +21,7 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Set `<your-bucket-name>` in `app.yaml` to the name of your Cloud Storage Bucket.
 
-## Deploy to App Engine
-
-**Prerequisites**
-
-- Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
-
-**Run Locally**
+## Run Locally
 
 First, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the
 path to a set of downloaded
@@ -44,6 +38,12 @@ php -S localhost:8080
 ```
 
 Now browse to `http://localhost:8080` to view the sample.
+
+## Deploy to App Engine
+
+**Prerequisites**
+
+- Install the [Google Cloud SDK](https://developers.google.com/cloud/sdk/).
 
 **Deploy with gcloud**
 
