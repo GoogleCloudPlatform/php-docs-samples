@@ -29,23 +29,19 @@ Before you can run or deploy the sample, you will need to do the following:
 
 **Run Locally**
 
-Create a local directory for the Dev AppServer to use for Cloud Storage:
+First, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the
+path to a set of downloaded
+[service account credentials](https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually).
+
+Next, set the `GOOGLE_STORAGE_BUCKET`environment variable to the name of a
+Cloud Storage bucket in the same project as the credentials you downloaded. 
+Make sure the service account you created has access.
+
+Finally, run the PHP built-in web server to serve the demo app:
 
 ```
-mkdir /tmp/gs
+php -S localhost:8080
 ```
-
-> Note: This directory can be wherever you like, as long as it's consistent with
-  the `--storage_path` option below.
-
-Run the sample with `dev_appserver.py`:
-
-```
-cd /path/to/php-docs-samples/appengine/standard/storage
-dev_appserver.py --php_executable=/usr/local/bin/php-cgi --storage_path=/tmp/gs .
-```
-
-> Note: Your PHP executable path may be different than the one above.
 
 Now browse to `http://localhost:8080` to view the sample.
 
