@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class quickstartTest extends PHPUnit_Framework_TestCase
+class quickstartTest extends TestCase
 {
     use TestTrait;
 
