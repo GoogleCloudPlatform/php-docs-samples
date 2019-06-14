@@ -32,10 +32,7 @@ RUN apt-get update && \
             zip \
             zlib1g-dev
 
-RUN wget -nv -O phpunit.phar https://phar.phpunit.de/phpunit-7.phar && \
-    chmod +x phpunit.phar && \
-    mv phpunit.phar /usr/local/bin/phpunit && \
-    ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
+RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir ${PHP_DIR} ${PHP_SRC_DIR} && \
     cd ${PHP_SRC_DIR} && \
     wget http://us1.php.net/get/php-7.3.0.tar.bz2/from/this/mirror \

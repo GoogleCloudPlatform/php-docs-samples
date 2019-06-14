@@ -20,10 +20,12 @@ namespace Google\Cloud\Samples\Auth;
 
 use Symfony\Component\Console\Tester\CommandTester;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Unit Tests for transcribe commands.
  */
-class authTest extends \PHPUnit_Framework_TestCase
+class authTest extends TestCase
 {
     private $serviceAccountPath;
     private $bucketName;

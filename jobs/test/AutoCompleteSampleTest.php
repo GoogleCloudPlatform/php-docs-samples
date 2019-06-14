@@ -17,9 +17,10 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class AutoCompleteSampleTest extends \PHPUnit_Framework_TestCase
+class AutoCompleteSampleTest extends TestCase
 {
     private $commandTester;
 

@@ -11,7 +11,7 @@ if (file_exists($testDir . '/composer.json') && !file_exists($testDir . '/vendor
 }
 
 if (!trait_exists(Google\Cloud\TestUtils\TestTrait::class)) {
-    throw new Exception('You need to run "testing/composer.sh" to installed the required global packages');
+    throw new Exception('You need to run "bash testing/composer.sh" to installed the required global packages');
 }
 
 require_once $testDir . '/vendor/autoload.php';

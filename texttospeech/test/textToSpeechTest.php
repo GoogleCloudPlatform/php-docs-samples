@@ -17,11 +17,12 @@
 namespace Google\Cloud\Samples\TextToSpeech;
 
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for vision commands.
  */
-class textToSpeechTest extends \PHPUnit_Framework_TestCase
+class textToSpeechTest extends TestCase
 {
     use TestTrait;
 

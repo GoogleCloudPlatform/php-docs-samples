@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
+use PHPUnit\Framework\TestCase;
 
-class compute_loggingTest extends PHPUnit_Framework_TestCase
+class compute_loggingTest extends TestCase
 {
     public function testExceptionHandler()
     {

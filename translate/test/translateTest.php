@@ -18,12 +18,13 @@
 
 namespace Google\Cloud\Samples\Translate;
 
+use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
 
 /**
  * Unit Tests for transcribe commands.
  */
-class translateTest extends \PHPUnit_Framework_TestCase
+class translateTest extends TestCase
 {
     use TestTrait;
 

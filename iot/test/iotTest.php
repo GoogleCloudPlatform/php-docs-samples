@@ -19,11 +19,12 @@ namespace Google\Cloud\Samples\Iot;
 require 'vendor/autoload.php';
 
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for iot commands.
  */
-class iotTest extends \PHPUnit_Framework_TestCase
+class iotTest extends TestCase
 {
     private static $testId;
     private static $registryId;

@@ -17,8 +17,9 @@
 
 use Google\Cloud\Samples\Appengine\Endpoints\EndpointsCommand;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
-class EndpointsCommandTest extends PHPUnit_Framework_TestCase
+class EndpointsCommandTest extends TestCase
 {
     private $host;
     private $apiKey;

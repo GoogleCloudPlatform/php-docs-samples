@@ -18,8 +18,9 @@
 namespace Google\Cloud\Samples\Jobs;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
-class FeaturedJobsSearchSampleTest extends \PHPUnit_Framework_TestCase
+class FeaturedJobsSearchSampleTest extends TestCase
 {
     private $commandTester;
 

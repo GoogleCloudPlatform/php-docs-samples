@@ -18,9 +18,10 @@ namespace Google\Cloud\Test\GettingStarted;
 
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
+use PHPUnit\Framework\TestCase;
 use PDO;
 
-class CloudSqlTest extends \PHPUnit_Framework_TestCase
+class CloudSqlTest extends TestCase
 {
     use TestTrait;
 

@@ -19,9 +19,10 @@ namespace Google\Cloud\Test\Memorystore;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     use TestTrait;
     use AppEngineDeploymentTrait;

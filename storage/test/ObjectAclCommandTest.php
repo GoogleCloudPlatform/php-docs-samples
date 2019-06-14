@@ -20,23 +20,19 @@ namespace Google\Cloud\Samples\Storage\Tests;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Samples\Storage\ObjectAclCommand;
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for ObjectAclCommand.
  */
-class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
+class ObjectAclCommandTest extends TestCase
 {
-    protected static $hasCredentials;
+    use TestTrait;
+
     protected $commandTester;
     protected $storage;
-
-    public static function setUpBeforeClass()
-    {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
 
     public function setUp()
     {
@@ -47,15 +43,8 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testObjectAcl()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
-        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
-            $this->markTestSkipped('No storage object name.');
-        }
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
         $this->commandTester->execute(
             [
@@ -73,12 +62,8 @@ class ObjectAclCommandTest extends \PHPUnit_Framework_TestCase
         if (!self::$hasCredentials) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
-        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
-            $this->markTestSkipped('No storage object name.');
-        }
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
         $bucket = $this->storage->bucket($bucketName);
         $object = $bucket->object($objectName);

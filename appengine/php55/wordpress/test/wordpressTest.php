@@ -17,7 +17,9 @@
 
 namespace Google\Cloud\Samples\AppEngine\Standard\WordPress;
 
-class wordpressTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class wordpressTest extends TestCase
 {
     use RunSetupCommandTrait;
 

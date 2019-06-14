@@ -17,10 +17,12 @@
 
 namespace Google\Cloud\Samples\Dialogflow;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Unit Tests for intent management commands.
  */
-class intentTest extends \PHPUnit_Framework_TestCase
+class intentTest extends TestCase
 {
     use DialogflowTestTrait;
 

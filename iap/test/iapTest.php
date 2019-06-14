@@ -17,11 +17,12 @@
 namespace Google\Cloud\Samples\Iap;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for IAP commands.
  */
-class iapTest extends \PHPUnit_Framework_TestCase
+class iapTest extends TestCase
 {
     private $url;
     private $clientId;

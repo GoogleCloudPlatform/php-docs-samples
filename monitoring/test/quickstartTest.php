@@ -17,26 +17,27 @@
 
 namespace Google\Cloud\Samples\Monitoring;
 
-class quickstartTest extends \PHPUnit_Framework_TestCase
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
+
+class quickstartTest extends TestCase
 {
+    use TestTrait;
+
     public function testMonitoringQuickstart()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
         $file = sys_get_temp_dir() . '/monitoring_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
             ['YOUR_PROJECT_ID', '__DIR__'],
-            [$projectId, sprintf('"%s/.."', __DIR__)],
+            [self::$projectId, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);
+
         // Invoke quickstart.php
-        ob_start();
-        include $file;
-        $output = ob_get_contents();
-        ob_end_clean();
+        $output = $this->runSnippet($file);
+
         $this->assertContains('Successfully submitted a time series', $output);
     }
 }

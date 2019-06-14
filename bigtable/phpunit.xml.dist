@@ -17,7 +17,7 @@
 <phpunit backupGlobals="false"
          strict="true"
          backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="../testing/bootstrap.php"
          colors="true"
          processIsolation="false"
          stopOnFailure="false"

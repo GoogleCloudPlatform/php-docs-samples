@@ -17,8 +17,9 @@
 namespace Google\Cloud\Test;
 
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     private $client;
 

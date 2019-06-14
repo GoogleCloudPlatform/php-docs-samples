@@ -17,8 +17,9 @@
 namespace Google\Cloud\Samples\AppEngine\HelloWorld;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use PHPUnit\Framework\TestCase;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 

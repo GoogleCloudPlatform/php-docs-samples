@@ -15,8 +15,13 @@
  * limitations under the License.
  */
 
-class quickstartTest extends PHPUnit_Framework_TestCase
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
+
+class quickstartTest extends TestCase
 {
+    use TestTrait;
+
     public function testQuickstart()
     {
         $file = sys_get_temp_dir() . '/tts_quickstart.php';

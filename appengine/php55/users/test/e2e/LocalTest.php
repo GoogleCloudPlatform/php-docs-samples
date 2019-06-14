@@ -17,8 +17,9 @@
 namespace Google\Cloud\Test;
 
 use Google\Cloud\TestUtils\DevAppserverTestTrait;
+use PHPUnit\Framework\TestCase;
 
-class LocalTest extends \PHPUnit_Framework_TestCase
+class LocalTest extends TestCase
 {
     use DevAppserverTestTrait;
     use E2EUsersTestTrait;

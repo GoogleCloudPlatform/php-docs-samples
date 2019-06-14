@@ -18,8 +18,9 @@
 namespace Google\Cloud\Samples\Jobs;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
-class EmailAlertSearchSampleTest extends \PHPUnit_Framework_TestCase
+class EmailAlertSearchSampleTest extends TestCase
 {
     private $commandTester;
 

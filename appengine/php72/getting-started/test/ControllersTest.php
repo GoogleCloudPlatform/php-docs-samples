@@ -22,12 +22,12 @@ use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test for application controllers
  */
-class ControllersTest extends PHPUnit_Framework_TestCase
+class ControllersTest extends TestCase
 {
     use TestTrait;
 
