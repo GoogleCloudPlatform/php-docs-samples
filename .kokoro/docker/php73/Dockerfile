@@ -107,7 +107,7 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         --command-completion false
 
 # Make composer and gcloud bins available via the PATH variable
-ENV PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
+ENV PATH="$PATH:/root/google-cloud-sdk/bin:/root/.composer/vendor/bin"
 
 # Configure Google Cloud SDK
 RUN gcloud config set app/promote_by_default false && \
