@@ -17,6 +17,9 @@
 use google\appengine\api\modules\ModulesService;
 use Silex\WebTestCase;
 
+require_once __DIR__ . '/mocks/Functions.php';
+require_once __DIR__ . '/mocks/ModulesService.php';
+
 class ModulesApiTest extends WebTestCase
 {
     public function createApplication()

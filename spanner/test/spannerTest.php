@@ -19,11 +19,14 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class spannerTest extends TestCase
 {
+    use TestTrait;
+
     /** @var string instanceId */
     protected static $instanceId;
 
@@ -38,21 +41,15 @@ class spannerTest extends TestCase
 
     public static function setUpBeforeClass()
     {
+        self::checkProjectEnvVars();
+
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::markTestSkipped('No application credentials were found');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            self::markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
-        if (!$instanceId = getenv('GOOGLE_SPANNER_INSTANCE_ID')) {
-            self::markTestSkipped('GOOGLE_SPANNER_INSTANCE_ID must be set.');
-        }
+        $instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
-            'projectId' => $projectId,
+            'projectId' => self::$projectId,
         ]);
 
         self::$databaseId = 'test-' . time() . rand();

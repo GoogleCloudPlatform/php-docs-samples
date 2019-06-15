@@ -17,11 +17,14 @@
 
 namespace Google\Cloud\Samples\PubSub\Tests;
 
+use Google\Cloud\TestUtils\TestTrait;
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\Client;
 
 class appTest extends WebTestCase
 {
+    use TestTrait;
+
     public function createApplication()
     {
         // pull the app and set parameters for testing
@@ -29,22 +32,9 @@ class appTest extends WebTestCase
 
         $app['session.test'] = true;
         $app['debug'] = true;
-        $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
-        $app['topic'] = getenv('GOOGLE_PUBSUB_TOPIC');
-        $app['subscription'] = getenv('GOOGLE_PUBSUB_SUBSCRIPTION');
-
-        // this will be set by travis, but may not be set locally
-        if (!$credentials = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $credentials = __DIR__ . '/../../credentials.json';
-            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $credentials);
-        }
-
-        if (!file_exists($credentials) || 0 == filesize($credentials)) {
-            $this->markTestSkipped('credentials not found');
-        }
-        if (empty($app['topic']) || empty($app['subscription'])) {
-            $this->markTestSkipped('topic or subscription not set');
-        }
+        $app['project_id'] = self::$projectId;
+        $app['topic'] = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $app['subscription'] = $this->reqiureEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);

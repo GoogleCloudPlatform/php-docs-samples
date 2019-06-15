@@ -74,9 +74,6 @@ class ObjectsCommandTest extends TestCase
 
     public function testManageObject()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $objectName = 'test-object-' . time();

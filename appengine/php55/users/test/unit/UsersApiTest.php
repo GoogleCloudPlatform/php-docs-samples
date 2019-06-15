@@ -18,6 +18,9 @@ use google\appengine\api\users\User;
 use google\appengine\api\users\UserService;
 use Silex\WebTestCase;
 
+require_once __DIR__ . '/mocks/User.php';
+require_once __DIR__ . '/mocks/UserService.php';
+
 class UsersApiTest extends WebTestCase
 {
     private $user;

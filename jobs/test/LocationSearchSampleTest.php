@@ -17,30 +17,23 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class LocationSearchSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('location-search'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testLocationSearchSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
+        $output = $this->runCommand('location-search');
         $this->setOutputCallback(function () {
             // disable output
         });
-        $this->assertEquals(5, substr_count($this->getActualOutput(), 'appliedJobLocationFilters'));
-        $this->assertEquals(5, substr_count($this->getActualOutput(), 'matchingJobs'));
+        $this->assertEquals(5, substr_count($output, 'appliedJobLocationFilters'));
+        $this->assertEquals(5, substr_count($output, 'matchingJobs'));
     }
 }

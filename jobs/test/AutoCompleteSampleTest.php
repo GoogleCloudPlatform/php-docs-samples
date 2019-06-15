@@ -17,30 +17,23 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class AutoCompleteSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('auto-complete'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testAutoCompleteSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/completionResults.*"suggestion"\s*:\s*"Google",\s+"type"\s*:\s*"COMPANY_NAME"/s');
+        $output = $this->runCommand('auto-complete');
+        $this->assertRegExp('/completionResults.*"suggestion"\s*:\s*"Google",\s+"type"\s*:\s*"COMPANY_NAME"/s', $output);
         $this->assertEquals(2,
             preg_match_all('/"suggestion"\s*:\s*"Software Engineer",\s+"type"\s*:\s*"JOB_TITLE"/s',
-                $this->getActualOutput()),
+                $output),
             2);
     }
 }

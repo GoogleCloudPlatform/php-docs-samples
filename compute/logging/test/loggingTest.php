@@ -17,6 +17,8 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/mocks/FluentLogger.php';
+
 class compute_loggingTest extends TestCase
 {
     public function testExceptionHandler()

@@ -19,6 +19,8 @@ namespace Google\Cloud\Test;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/E2EUsersTestTrait.php';
+
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;

@@ -59,9 +59,6 @@ class ObjectAclCommandTest extends TestCase
 
     public function testManageObjectAcl()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 

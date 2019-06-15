@@ -120,7 +120,7 @@ $job = $dlp->createDlpJob($parent, [
 ]);
 
 // Poll Pub/Sub using exponential backoff until job finishes
-$backoff = new ExponentialBackoff(20);
+$backoff = new ExponentialBackoff(25);
 $backoff->execute(function () use ($subscription, $dlp, &$job) {
     printf('Waiting for job to complete' . PHP_EOL);
     foreach ($subscription->pull() as $message) {

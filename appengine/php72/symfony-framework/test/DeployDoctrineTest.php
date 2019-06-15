@@ -20,6 +20,8 @@ namespace Google\Cloud\Samples\AppEngine\Symfony;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/DeploySymfonyTrait.php';
+
 class DeployDoctrineTest extends TestCase
 {
     use TestTrait;

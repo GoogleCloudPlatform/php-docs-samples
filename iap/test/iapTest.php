@@ -16,6 +16,7 @@
  */
 namespace Google\Cloud\Samples\Iap;
 
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
@@ -24,19 +25,17 @@ use PHPUnit\Framework\TestCase;
  */
 class iapTest extends TestCase
 {
+    use TestTrait;
+
     private $url;
     private $clientId;
     private $serviceAccountPath;
 
     public function setUp()
     {
-        if (!$this->url = getenv('IAP_URL')) {
-            $this->markTestSkipped('No IAP protected resource URL found.');
-        } elseif (!$this->clientId = getenv('IAP_CLIENT_ID')) {
-            $this->markTestSkipped('No OAuth client ID found.');
-        } elseif (!$this->serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('No IAP service account found.');
-        }
+        $this->url = $this->requireEnv('IAP_URL');
+        $this->clientId = $this->requireEnv('IAP_CLIENT_ID');
+        $this->serviceAccountPath = $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
     }
 
     public function testRequest()

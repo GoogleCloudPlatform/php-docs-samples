@@ -17,27 +17,20 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class BasicCompanySampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('basic-company'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testBasicCompanySample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/.*Company generated:.*Company created:.*Company existed:'
-            . '.*Company updated:.*elgoog.*Company updated:.*changedTitle.*Company deleted/s');
+        $output = $this->runCommand('basic-company');
+        $this->assertRegExp('/.*Company generated:.*Company created:.*Company existed:'
+            . '.*Company updated:.*elgoog.*Company updated:.*changedTitle.*Company deleted/s', $output);
     }
 }

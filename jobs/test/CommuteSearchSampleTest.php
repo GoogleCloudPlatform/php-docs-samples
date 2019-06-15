@@ -17,27 +17,20 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class CommuteSearchSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('commute-search'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testFeaturedJobsSearchSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/1600 Amphitheatre Pkwy/');
-        $this->expectOutputRegex('/appliedCommuteFilter/');
+        $output = $this->runCommand('commute-search');
+        $this->assertRegExp('/1600 Amphitheatre Pkwy/', $output);
+        $this->assertRegExp('/appliedCommuteFilter/', $output);
     }
 }
