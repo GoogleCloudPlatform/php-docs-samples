@@ -20,6 +20,8 @@ use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
+    use TestTrait;
+
     public function testQuickstart()
     {
         $file = sys_get_temp_dir() . '/translate_quickstart.php';
