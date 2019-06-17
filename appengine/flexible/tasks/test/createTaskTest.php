@@ -18,6 +18,7 @@
 namespace Google\Cloud\Samples\Tasks\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,8 +26,9 @@ use PHPUnit\Framework\TestCase;
  */
 class tasksTest extends TestCase
 {
-    use TestTrait;
+    use TestTrait, ExecuteCommandTrait;
 
+    private static $commandFile = __DIR__ . '/../tasks.php';
     protected static $queue;
     protected static $location;
 
@@ -50,18 +52,5 @@ class tasksTest extends TestCase
         );
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
         $this->assertContains($expectedOutput, $output);
-    }
-
-    private function runCommand($commandName, $args)
-    {
-        $application = require __DIR__ . '/../tasks.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]);
-        return ob_get_clean();
     }
 }

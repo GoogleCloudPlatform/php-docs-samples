@@ -18,7 +18,8 @@ namespace Google\Cloud\Samples\Iot;
 
 require 'vendor/autoload.php';
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,23 +27,13 @@ use PHPUnit\Framework\TestCase;
  */
 class iotTest extends TestCase
 {
+    use TestTrait, ExecuteCommandTrait;
+
+    private static $commandFile = __DIR__ . '/../iot.php';
     private static $testId;
     private static $registryId;
     private static $devices = [];
     private static $gateways = [];
-
-    public function checkEnv($var)
-    {
-        if (!getenv($var)) {
-            self::markTestSkipped(sprintf('Set the "%s" environment variable', $var));
-        }
-    }
-
-    public function setUp()
-    {
-        $this->checkEnv('GOOGLE_APPLICATION_CREDENTIALS');
-        $this->checkEnv('GCLOUD_PROJECT');
-    }
 
     public static function setUpBeforeClass()
     {
@@ -75,13 +66,13 @@ class iotTest extends TestCase
 
     public function testCreateRegistry()
     {
-        $this->checkEnv('GOOGLE_PUBSUB_TOPIC');
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
 
         $registryId = 'test-registry-' . self::$testId;
 
         $output = $this->runCommand('create-registry', [
             'registry' => $registryId,
-            'pubsub-topic' => getenv('GOOGLE_PUBSUB_TOPIC'),
+            'pubsub-topic' => $topic,
         ]);
         self::$registryId = $registryId;
         $this->assertContains('Id: ' . $registryId, $output);
@@ -137,9 +128,8 @@ class iotTest extends TestCase
     /** @depends testCreateRsaDevice */
     public function testSetDeviceState()
     {
-        $this->checkEnv('GOOGLE_IOT_DEVICE_CERTIFICATE_B64');
-
-        $iotCert = base64_decode(getenv('GOOGLE_IOT_DEVICE_CERTIFICATE_B64'));
+        $certB64 = $this->requireEnv('GOOGLE_IOT_DEVICE_CERTIFICATE_B64');
+        $iotCert = base64_decode($certB64);
         $iotCertFile = tempnam(sys_get_temp_dir(), 'iot-cert');
         file_put_contents($iotCertFile, $iotCert);
 
@@ -370,24 +360,5 @@ class iotTest extends TestCase
             'gateway' => $gatewayId,
             'device' => $deviceId,
         ]);
-    }
-
-    private static function runCommand($commandName, $args = [])
-    {
-        $application = require __DIR__ . '/../iot.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        try {
-            $commandTester->execute(
-                $args,
-                ['interactive' => false]
-            );
-        } catch (\Exception $e) {
-            print($e->getMessage() . PHP_EOL);
-        }
-
-        return ob_get_clean();
     }
 }

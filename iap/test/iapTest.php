@@ -17,7 +17,7 @@
 namespace Google\Cloud\Samples\Iap;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,22 +25,17 @@ use PHPUnit\Framework\TestCase;
  */
 class iapTest extends TestCase
 {
-    use TestTrait;
+    use TestTrait, ExecuteCommandTrait;
 
-    private $url;
-    private $clientId;
-    private $serviceAccountPath;
-
-    public function setUp()
-    {
-        $this->url = $this->requireEnv('IAP_URL');
-        $this->clientId = $this->requireEnv('IAP_CLIENT_ID');
-        $this->serviceAccountPath = $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
-    }
+    private static $commandFile = __DIR__ . '/../iap.php';
 
     public function testRequest()
     {
-        $output = $this->runCommand('request');
+        $output = $this->runCommand('request', [
+            'url' => $this->requireEnv('IAP_URL'),
+            'clientId' => $this->requireEnv('IAP_CLIENT_ID'),
+            'serviceAccountPath' => $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS'),
+        ]);
         $this->assertContains('x-goog-authenticated-user-jwt:', $output);
     }
 
@@ -52,35 +47,15 @@ class iapTest extends TestCase
 
     public function testValidate()
     {
-        if (version_compare(PHP_VERSION, '7.2.0') === 1) {
-            $this->markTestSkipped('Validate is not yet supported on PHP 7.2');
-        }
-        if (!$projectNumber = getenv('IAP_PROJECT_NUMBER')) {
-            $this->markTestSkipped('No IAP project number found.');
-        } elseif (!$projectId = getenv('IAP_PROJECT_ID')) {
-            $this->markTestSkipped('No IAP project ID found.');
-        }
         $output = $this->runCommand('validate', [
-            'projectNumber' => $projectNumber,
-            'projectId' => $projectId
+            'url' => $this->requireEnv('IAP_URL'),
+            'clientId' => $this->requireEnv('IAP_CLIENT_ID'),
+            'serviceAccountPath' => $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS'),
+            'projectNumber' => $this->requireEnv('IAP_PROJECT_NUMBER'),
+            'projectId' => $this->requireEnv('IAP_PROJECT_ID'),
         ]);
         $this->assertContains('Printing user identity information from ID token payload:', $output);
         $this->assertContains('sub: accounts.google.com', $output);
         $this->assertContains('email:', $output);
-    }
-
-    private function runCommand($name, $options = [])
-    {
-        $application = require __DIR__ . '/../iap.php';
-        $command = $application->get($name);
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'url' => $this->url,
-            'clientId' => $this->clientId,
-            'serviceAccountPath' => $this->serviceAccountPath
-        ] + $options, [
-            'interactive' => false
-        ]);
-        return $commandTester->getDisplay();
     }
 }

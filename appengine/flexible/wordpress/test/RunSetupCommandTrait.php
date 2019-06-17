@@ -17,10 +17,14 @@
 
 namespace Google\Cloud\Samples\AppEngine\Flexible\WordPress;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 
 trait RunSetupCommandTrait
 {
+    use ExecuteCommandTrait;
+
+    private static $commandFile = __DIR__ . '/../wordpress.php';
+
     private static function runSetupCommand(array $args = [])
     {
         // determine the deployment dir
@@ -34,14 +38,5 @@ trait RunSetupCommandTrait
         ]));
 
         return $dir;
-    }
-
-    private static function runCommand($commandName, array $args)
-    {
-        $application = require __DIR__ . '/../wordpress.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        return $commandTester->execute($args, ['interactive' => false]);
     }
 }

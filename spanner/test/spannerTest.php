@@ -19,13 +19,17 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class spannerTest extends TestCase
 {
-    use TestTrait;
+    use TestTrait, ExecuteCommandTrait {
+        ExecuteCommandTrait::runCommand as traitRunCommand;
+    }
+
+    private static $commandFile = __DIR__ . '/../spanner.php';
 
     /** @var string instanceId */
     protected static $instanceId;
@@ -468,19 +472,10 @@ class spannerTest extends TestCase
 
     private function runCommand($commandName)
     {
-        $application = require __DIR__ . '/../spanner.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute([
+        return $this->traitRunCommand($commandName, [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId,
-        ], [
-            'interactive' => false
         ]);
-
-        return ob_get_clean();
     }
 
     public static function tearDownAfterClass()
