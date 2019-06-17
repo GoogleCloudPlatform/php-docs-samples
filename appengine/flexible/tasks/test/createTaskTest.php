@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Tasks\Tests;
 
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 

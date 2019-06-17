@@ -34,7 +34,7 @@ class appTest extends WebTestCase
         $app['debug'] = true;
         $app['project_id'] = self::$projectId;
         $app['topic'] = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
-        $app['subscription'] = $this->reqiureEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
+        $app['subscription'] = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
         // prevent HTML error exceptions
         unset($app['exception_handler']);

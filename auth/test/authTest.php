@@ -32,7 +32,7 @@ class authTest extends TestCase
     private static $bucketName;
     private static $serviceAccountPath;
 
-    public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
         self::$serviceAccountPath = self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
