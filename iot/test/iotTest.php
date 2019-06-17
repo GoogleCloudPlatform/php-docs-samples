@@ -302,6 +302,7 @@ class iotTest extends TestCase
             'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
             'algorithm' => 'RS256',
         ]);
+        self::$gateways[] = $gatewayId;
 
         $this->runCommand('create-unauth-device', [
             'registry' => self::$registryId,
@@ -342,6 +343,7 @@ class iotTest extends TestCase
             'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
             'algorithm' => 'RS256',
         ]);
+        self::$gateways[] = $gatewayId;
 
         $this->runCommand('bind-device-to-gateway', [
             'registry' => self::$registryId,

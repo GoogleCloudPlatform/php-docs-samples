@@ -33,6 +33,7 @@ class TasksTest extends TestCase
         $location = $this->requireEnv('CLOUD_TASKS_LOCATION');
 
         $output = $this->runSnippet('create_task', [
+            self::$projectId,
             $location,
             $queue,
             'Task Details',
@@ -45,14 +46,5 @@ class TasksTest extends TestCase
 
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
         $this->assertContains($expectedOutput, $output);
-    }
-
-    private function runSnippet($sampleName, $params = [])
-    {
-        $argv = array_merge([0, self::$projectId], array_values($params));
-        $argc = count($argv);
-        ob_start();
-        require __DIR__ . "/../src/$sampleName.php";
-        return ob_get_clean();
     }
 }
