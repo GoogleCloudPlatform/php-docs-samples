@@ -2,9 +2,5 @@
     "require": {
         "google/cloud-bigtable": "^0.12.1",
         "psr/cache": "^1.0"
-    },
-    "require-dev": {
-        "google/cloud-tools": "dev-master",
-        "phpunit/phpunit": "^5"
     }
 }

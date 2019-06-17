@@ -20,9 +20,9 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 
-require_once __DIR__ . '/../../../../testing/FileUtil.php';
+use PHPUnit\Framework\TestCase;
 
-class DeployMySQLTest extends \PHPUnit_Framework_TestCase
+class DeployMySQLTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 

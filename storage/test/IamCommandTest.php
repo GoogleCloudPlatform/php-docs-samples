@@ -20,43 +20,33 @@ namespace Google\Cloud\Samples\Storage\Tests;
 use Google\Cloud\Samples\Storage\IamCommand;
 use Google\Cloud\Core\Iam\PolicyBuilder;
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for IamCommand.
  */
-class IamCommandTest extends \PHPUnit_Framework_TestCase
+class IamCommandTest extends TestCase
 {
-    protected static $hasCredentials;
+    use TestTrait;
+
     protected $commandTester;
     protected $storage;
     protected $user;
     protected $bucket;
-
-    public static function setUpBeforeClass()
-    {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
 
     public function setUp()
     {
         $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('iam'));
         $this->storage = new StorageClient();
-        if (!$this->user = getenv('GOOGLE_IAM_USER')) {
-            $this->markTestSkipped('Set GOOGLE_IAM_USER environemnt variable');
-        }
-        $this->bucket = getenv('GOOGLE_STORAGE_BUCKET');
+        $this->user = $this->requireEnv('GOOGLE_IAM_USER');
+        $this->bucket = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
     }
 
     public function testAddBucketIamMember()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-
         $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;
@@ -103,10 +93,6 @@ EOF;
      */
     public function testListIamMembers()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-
         $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;
@@ -127,10 +113,6 @@ EOF;
      */
     public function testRemoveBucketIamMember()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-
         $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
         $user = $this->user;

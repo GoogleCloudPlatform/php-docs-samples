@@ -18,8 +18,9 @@
 namespace Google\Cloud\Samples\Kms;
 
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class kmsTest extends \PHPUnit_Framework_TestCase
+class kmsTest extends TestCase
 {
     use TestTrait;
 

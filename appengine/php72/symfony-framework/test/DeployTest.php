@@ -21,6 +21,8 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/DeploySymfonyTrait.php';
+
 class DeployTest extends TestCase
 {
     use DeploySymfonyTrait;

@@ -18,6 +18,9 @@
 use google\appengine\api\taskqueue\PushTask;
 use Silex\WebTestCase;
 
+require_once __DIR__ . '/mocks/PushTask.php';
+require_once __DIR__ . '/mocks/PushQueue.php';
+
 class TaskQueueTest extends WebTestCase
 {
     public function createApplication()

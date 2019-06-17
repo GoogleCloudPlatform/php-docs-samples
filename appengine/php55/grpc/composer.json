@@ -3,9 +3,5 @@
         "google/cloud-spanner": "^1.15.0",
         "google/cloud-monitoring": "^0.16.1",
         "google/appengine-php-sdk": "^1.9"
-    },
-    "require-dev": {
-        "google/cloud-tools": "^0.6.7",
-        "phpunit/phpunit": "^5"
     }
 }

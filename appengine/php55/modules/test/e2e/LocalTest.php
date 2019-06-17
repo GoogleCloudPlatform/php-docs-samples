@@ -17,8 +17,11 @@
 namespace Google\Cloud\Test;
 
 use Google\Cloud\TestUtils\DevAppserverTestTrait;
+use PHPUnit\Framework\TestCase;
 
-class LocalTest extends \PHPUnit_Framework_TestCase
+require_once __DIR__ . '/ModulesTestTrait.php';
+
+class LocalTest extends TestCase
 {
     use DevAppserverTestTrait;
     use ModulesTestTrait;

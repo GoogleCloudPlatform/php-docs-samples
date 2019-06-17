@@ -2,9 +2,5 @@
     "require": {
         "google/cloud-bigquery": "^1.4",
         "google/cloud-storage": "^1.7"
-    },
-    "require-dev": {
-        "google/cloud-tools": "^0.8",
-        "phpunit/phpunit": "^5"
     }
 }

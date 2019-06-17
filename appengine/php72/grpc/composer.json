@@ -5,8 +5,6 @@
         "google/cloud-speech": "^0.24.0"
     },
     "require-dev": {
-        "google/cloud-tools": "^0.6.7",
-        "paragonie/random_compat": "^2.0",
-        "phpunit/phpunit": "^5"
+        "paragonie/random_compat": "^2.0"
     }
 }

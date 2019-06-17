@@ -18,25 +18,21 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for BucketLockCommand.
  */
-class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
+class BucketLockCommandTest extends TestCase
 {
-    protected static $hasCredentials;
+    use TestTrait;
+
     protected $commandTester;
     protected $storage;
     protected $bucket;
     protected $object;
-
-    public static function setUpBeforeClass()
-    {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
 
     public function setUp()
     {
@@ -45,10 +41,6 @@ class BucketLockCommandTest extends \PHPUnit_Framework_TestCase
         $application = require __DIR__ . '/../storage.php';
         $this->commandTester = new CommandTester($application->get('bucket-lock'));
         $this->storage = new StorageClient();
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-
         // Append random because tests for multiple PHP versions were running at the same time.
         $bucketName = 'php-bucket-lock-' . time() . '-' . rand(1000, 9999);
         $this->bucket = $this->storage->createBucket($bucketName);

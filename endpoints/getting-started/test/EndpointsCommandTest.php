@@ -16,24 +16,22 @@
  */
 
 use Google\Cloud\Samples\Appengine\Endpoints\EndpointsCommand;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
-class EndpointsCommandTest extends PHPUnit_Framework_TestCase
+class EndpointsCommandTest extends TestCase
 {
+    use TestTrait;
+
     private $host;
     private $apiKey;
     private $message;
 
     public function setUp()
     {
-        if (!$host = getenv('GOOGLE_ENDPOINTS_HOST')) {
-            return $this->markTestSkipped('Set the GOOGLE_ENDPOINTS_HOST environment variable');
-        }
-
-        if (!$api_key = getenv('GOOGLE_ENDPOINTS_APIKEY')) {
-            return $this->markTestSkipped('Set the GOOGLE_ENDPOINTS_APIKEY environment variable');
-        }
-
+        $host = $this->requireEnv('GOOGLE_ENDPOINTS_HOST');
+        $api_key = $this->requireEnv('GOOGLE_ENDPOINTS_APIKEY');
         $this->host = $host;
         $this->apiKey = $api_key;
     }
@@ -63,10 +61,7 @@ EOF;
 
     public function testEndpointsCommandWithApplicationCredentials()
     {
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS environment variable');
-        }
-
+        $creds = $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
         $command = new EndpointsCommand();
         $tester = new CommandTester($command);
         $arguments = [
@@ -86,10 +81,7 @@ EOF;
 
     public function testEndpointsCommandWithClientSecrets()
     {
-        if (!$creds = getenv('GOOGLE_CLIENT_SECRETS')) {
-            return $this->markTestSkipped('Set the GOOGLE_CLIENT_SECRETS environment variable');
-        }
-
+        $creds = $this->requireEnv('GOOGLE_CLIENT_SECRETS');
         $command = new EndpointsCommand();
         $tester = new CommandTester($command);
         $arguments = [

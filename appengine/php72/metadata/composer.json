@@ -1,9 +1,5 @@
 {
     "require": {
         "google/cloud-core": "^1.5"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools":"^0.6"
     }
 }

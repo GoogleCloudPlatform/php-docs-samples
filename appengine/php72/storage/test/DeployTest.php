@@ -19,12 +19,11 @@ namespace Google\Cloud\Test\AppEngine\Storage;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 use GuzzleHttp\Client;
 
-require_once __DIR__ . '/../../../../testing/FileUtil.php';
-
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 

@@ -20,14 +20,13 @@ namespace Google\Cloud\Samples\Bookshelf;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
-
-require_once __DIR__ . '/../../../../testing/FileUtil.php';
 
 /**
  * Class DeployTest
  */
-class DeployTest extends \PHPUnit_Framework_TestCase
+class DeployTest extends TestCase
 {
     use TestTrait,
         AppEngineDeploymentTrait;

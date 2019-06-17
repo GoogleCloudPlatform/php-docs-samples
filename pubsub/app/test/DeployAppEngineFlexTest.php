@@ -18,8 +18,9 @@ namespace Google\Cloud\Samples\PubSub\test;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
+use PHPUnit\Framework\TestCase;
 
-class DeployAppEngineFlexTest extends \PHPUnit_Framework_TestCase
+class DeployAppEngineFlexTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 

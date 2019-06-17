@@ -17,8 +17,11 @@
 namespace Google\Cloud\Test;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use PHPUnit\Framework\TestCase;
 
-class DeployTest extends \PHPUnit_Framework_TestCase
+require_once __DIR__ . '/ModulesTestTrait.php';
+
+class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
     use ModulesTestTrait;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2018 Google Inc.
+  Copyright 2016 Google Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="./vendor/autoload.php">
+<phpunit bootstrap="../../../testing/bootstrap.php">
     <testsuites>
-        <testsuite name="AppEngine for PHP 7.2 Hello World test">
+        <testsuite name="AppEngine Flex storage test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
+    <filter>
+        <whitelist>
+            <file>app.php</file>
+        </whitelist>
+    </filter>
 </phpunit>

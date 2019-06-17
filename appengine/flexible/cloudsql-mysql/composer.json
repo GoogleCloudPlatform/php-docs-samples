@@ -4,7 +4,6 @@
         "google/apiclient": "^2.0"
     },
     "require-dev": {
-        "google/cloud-tools": "^0.6",
         "paragonie/random_compat": "^2.0"
     }
 }

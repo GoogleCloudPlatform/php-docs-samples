@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
+<phpunit bootstrap="../../../testing/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="PHP static content test">
             <directory>test</directory>

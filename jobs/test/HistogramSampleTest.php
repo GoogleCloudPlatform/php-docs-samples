@@ -17,18 +17,17 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
-class HistogramSampleTest extends \PHPUnit_Framework_TestCase
+class HistogramSampleTest extends TestCase
 {
+    use TestTrait;
     private $commandTester;
 
     public function setUp()
     {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
         $application = require __DIR__ . '/../jobs.php';
         $this->commandTester = new CommandTester($application->get('histogram'));
     }

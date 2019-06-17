@@ -1,7 +1,5 @@
 {
     "require-dev": {
-        "phpunit/phpunit": "~5",
-        "google/cloud-tools": "dev-master",
         "paragonie/random_compat": "^2.0"
     }
 }

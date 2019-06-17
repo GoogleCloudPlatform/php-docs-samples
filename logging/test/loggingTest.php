@@ -21,11 +21,12 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Functional tests for ListSinkCommand.
  */
-class loggingTest extends \PHPUnit_Framework_TestCase
+class loggingTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;

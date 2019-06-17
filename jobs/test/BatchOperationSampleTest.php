@@ -17,27 +17,21 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class BatchOperationSampleTest extends \PHPUnit_Framework_TestCase
+class BatchOperationSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('batch-operation'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testBatchOperationSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/Company generated:.*Company created:.*Create Job:.*Create Job:.*'
+        $output = $this->runCommand('batch-operation');
+        $this->assertRegExp('/Company generated:.*Company created:.*Create Job:.*Create Job:.*'
             . 'Update Job:.*Engineer in Mountain View.*Update Job:.*Engineer in Mountain View.*'
-            . 'Job deleted.*Job deleted.*Company deleted./s');
+            . 'Job deleted.*Job deleted.*Company deleted./s', $output);
     }
 }

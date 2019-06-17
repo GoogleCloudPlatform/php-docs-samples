@@ -17,25 +17,19 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class EmailAlertSearchSampleTest extends \PHPUnit_Framework_TestCase
+class EmailAlertSearchSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('email-alert-search'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testFeaturedJobsSearchSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/matchingJobs/');
+        $output = $this->runCommand('email-alert-search');
+        $this->assertRegExp('/matchingJobs/', $output);
     }
 }

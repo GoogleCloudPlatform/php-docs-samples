@@ -19,11 +19,12 @@ namespace Google\Cloud\Samples\Language\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for language commands.
  */
-class languageTest extends \PHPUnit_Framework_TestCase
+class languageTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;

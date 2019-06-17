@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class quickstartTest extends PHPUnit_Framework_TestCase
+
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
+
+class quickstartTest extends TestCase
 {
+    use TestTrait;
+
     public function testQuickstart()
     {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
-
         $bucketName = 'my-new-bucket-' . time();
         $file = sys_get_temp_dir() . '/storage_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
             ['YOUR_PROJECT_ID', 'my-new-bucket', '__DIR__'],
-            [$projectId, $bucketName, sprintf('"%s/.."', __DIR__)],
+            [self::$projectId, $bucketName, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);

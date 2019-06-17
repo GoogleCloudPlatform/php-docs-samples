@@ -15,15 +15,12 @@
  * limitations under the License.
  */
 
-class quickstartTest extends \PHPUnit_Framework_TestCase
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
+
+class quickstartTest extends TestCase
 {
-    public function setUp()
-    {
-        if (!$creds = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
-    }
+    use TestTrait;
 
     public function testQuickstart()
     {

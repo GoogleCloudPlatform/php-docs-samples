@@ -17,26 +17,20 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class GeneralSearchSampleTest extends \PHPUnit_Framework_TestCase
+class GeneralSearchSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('general-search'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testGeneralSearchSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/matchingJobs.*matchingJobs.*matchingJobs.*matchingJobs.*'
-            . 'matchingJobs.*matchingJobs.*matchingJobs.*/s');
+        $output = $this->runCommand('general-search');
+        $this->assertRegExp('/matchingJobs.*matchingJobs.*matchingJobs.*matchingJobs.*'
+            . 'matchingJobs.*matchingJobs.*matchingJobs.*/s', $output);
     }
 }

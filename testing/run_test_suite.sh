@@ -39,6 +39,7 @@ REST_TESTS=(
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
 ALT_PROJECT_TESTS=(
     appengine/flexible/storage
+    asset
     bigquery/api
     bigquery/quickstart
     bigtable
@@ -82,13 +83,14 @@ if [ "${TEST_DIRECTORIES}" = "" ]; then
   TEST_DIRECTORIES="*"
 fi
 
+if ! type phpunit > /dev/null; then
+  echo "run \"bash testing/composer.sh\" to install testing dependencies"
+  exit 1
+fi
+
 run_tests()
 {
-    if [ -f "vendor/bin/phpunit" ]; then
-        CMD="vendor/bin/phpunit -v"
-    else
-        CMD="phpunit -v"
-    fi
+    CMD="phpunit -v"
     if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
         echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
         GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_ALT_APPLICATION_CREDENTIALS \

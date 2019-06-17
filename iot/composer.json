@@ -33,9 +33,5 @@
             "src/set_iam_policy.php",
             "src/unbind_device_from_gateway.php"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5"
     }
 }

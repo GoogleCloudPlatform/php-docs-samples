@@ -32,10 +32,7 @@ RUN apt-get update && \
             zip \
             zlib1g-dev
 
-RUN wget -nv -O phpunit.phar https://phar.phpunit.de/phpunit-7.phar && \
-    chmod +x phpunit.phar && \
-    mv phpunit.phar /usr/local/bin/phpunit && \
-    ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
+RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir ${PHP_DIR} ${PHP_SRC_DIR} && \
     cd ${PHP_SRC_DIR} && \
     wget http://us1.php.net/get/php-7.3.0.tar.bz2/from/this/mirror \
@@ -110,7 +107,7 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         --command-completion false
 
 # Make composer and gcloud bins available via the PATH variable
-ENV PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
+ENV PATH="$PATH:/root/google-cloud-sdk/bin:/root/.composer/vendor/bin"
 
 # Configure Google Cloud SDK
 RUN gcloud config set app/promote_by_default false && \

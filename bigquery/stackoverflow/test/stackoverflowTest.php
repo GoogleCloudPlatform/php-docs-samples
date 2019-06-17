@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class stackoverflowTest extends PHPUnit_Framework_TestCase
+
+use PHPUnit\Framework\TestCase;
+
+class stackoverflowTest extends TestCase
 {
     public function testStackoverflow()
     {

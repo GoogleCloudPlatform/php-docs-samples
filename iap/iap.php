@@ -44,8 +44,8 @@ EOF
             $input->getArgument('clientId'),
             $input->getArgument('serviceAccountPath'));
         $response_body = (string)$response->getBody();
-        $output->writeln('Printing out response body:');
-        $output->writeln($response_body);
+        print('Printing out response body:');
+        print($response_body);
     })
 );
 
@@ -74,11 +74,9 @@ EOF
             $iap_jwt,
             $input->getArgument('projectNumber'),
             $input->getArgument('projectId'));
-        $output->writeln([
-            'Printing user identity information from ID token payload:',
-            sprintf('sub: %s', $user_identity['sub']),
-            sprintf('email: %s', $user_identity['email'])
-        ]);
+        print('Printing user identity information from ID token payload:');
+        printf('sub: %s', $user_identity['sub']);
+        printf('email: %s', $user_identity['email']);
     })
 );
 

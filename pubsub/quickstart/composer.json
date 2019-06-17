@@ -2,8 +2,5 @@
     "require": {
         "php": ">=5.4",
         "google/cloud-pubsub": "^1.11.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5"
     }
 }

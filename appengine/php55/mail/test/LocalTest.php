@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
-class LocalTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/mocks/Message.php';
+
+class LocalTest extends TestCase
 {
     public function testSendMail()
     {

@@ -17,26 +17,20 @@
 
 namespace Google\Cloud\Samples\Jobs;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class CustomAttributeSampleTest extends \PHPUnit_Framework_TestCase
+class CustomAttributeSampleTest extends TestCase
 {
-    private $commandTester;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
-    {
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            return $this->markTestSkipped("Set the GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-        }
-
-        $application = require __DIR__ . '/../jobs.php';
-        $this->commandTester = new CommandTester($application->get('custom-attribute'));
-    }
+    private static $commandFile = __DIR__ . '/../jobs.php';
 
     public function testCustomAttributeSample()
     {
-        $this->commandTester->execute([], ['interactive' => false]);
-        $this->expectOutputRegex('/Job created:.*jobWithACustomAttribute.*matchingJobs.*jobWithACustomAttribute'
-            . '.*matchingJobs.*jobWithACustomAttribute.*matchingJobs.*jobWithACustomAttribute/s');
+        $output = $this->runCommand('custom-attribute');
+        $this->assertRegExp('/Job created:.*jobWithACustomAttribute.*matchingJobs.*jobWithACustomAttribute'
+            . '.*matchingJobs.*jobWithACustomAttribute.*matchingJobs.*jobWithACustomAttribute/s', $output);
     }
 }

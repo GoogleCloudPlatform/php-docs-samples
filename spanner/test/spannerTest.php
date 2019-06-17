@@ -19,11 +19,18 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class spannerTest extends TestCase
 {
+    use TestTrait, ExecuteCommandTrait {
+        ExecuteCommandTrait::runCommand as traitRunCommand;
+    }
+
+    private static $commandFile = __DIR__ . '/../spanner.php';
+
     /** @var string instanceId */
     protected static $instanceId;
 
@@ -38,21 +45,15 @@ class spannerTest extends TestCase
 
     public static function setUpBeforeClass()
     {
+        self::checkProjectEnvVars();
+
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            self::markTestSkipped('No application credentials were found');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            self::markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
-        if (!$instanceId = getenv('GOOGLE_SPANNER_INSTANCE_ID')) {
-            self::markTestSkipped('GOOGLE_SPANNER_INSTANCE_ID must be set.');
-        }
+        $instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
-            'projectId' => $projectId,
+            'projectId' => self::$projectId,
         ]);
 
         self::$databaseId = 'test-' . time() . rand();
@@ -471,19 +472,10 @@ class spannerTest extends TestCase
 
     private function runCommand($commandName)
     {
-        $application = require __DIR__ . '/../spanner.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        ob_start();
-        $commandTester->execute([
+        return $this->traitRunCommand($commandName, [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId,
-        ], [
-            'interactive' => false
         ]);
-
-        return ob_get_clean();
     }
 
     public static function tearDownAfterClass()

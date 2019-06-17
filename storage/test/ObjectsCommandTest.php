@@ -19,23 +19,19 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\ObjectsCommand;
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for ObjectsCommand.
  */
-class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
+class ObjectsCommandTest extends TestCase
 {
-    protected static $hasCredentials;
+    use TestTrait;
+
     protected $commandTester;
     protected $storage;
-
-    public static function setUpBeforeClass()
-    {
-        $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-        self::$hasCredentials = $path && file_exists($path) &&
-            filesize($path) > 0;
-    }
 
     public function setUp()
     {
@@ -46,12 +42,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testListObjects()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $this->commandTester->execute(
             [
@@ -65,15 +56,8 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testListObjectsWithPrefix()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
-        if (!$objectName = getenv('GOOGLE_STORAGE_OBJECT')) {
-            $this->markTestSkipped('No storage object name.');
-        }
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
         ob_start();
         $this->commandTester->execute(
@@ -90,12 +74,7 @@ class ObjectsCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testManageObject()
     {
-        if (!self::$hasCredentials) {
-            $this->markTestSkipped('No application credentials were found.');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('No storage bucket name.');
-        }
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $objectName = 'test-object-' . time();
         $bucket = $this->storage->bucket($bucketName);

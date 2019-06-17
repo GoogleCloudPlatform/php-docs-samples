@@ -15,91 +15,77 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Auth;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for transcribe commands.
  */
-class authTest extends \PHPUnit_Framework_TestCase
+class authTest extends TestCase
 {
-    private $serviceAccountPath;
-    private $bucketName;
-    private $projectId;
+    use TestTrait, ExecuteCommandTrait;
 
-    public function setUp()
+    private static $commandFile = __DIR__ . '/../auth.php';
+    private static $bucketName;
+    private static $serviceAccountPath;
+
+    public static function setUpBeforeClass()
     {
-        if (!$serviceAccountPath = getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-            $this->markTestSkipped('Set the GOOGLE_APPLICATION_CREDENTIALS ' .
-                'environment variable');
-        }
-        if (!$bucketName = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET ' .
-                'environment variable');
-        }
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID ' .
-                'environment variable');
-        }
-        $this->serviceAccountPath = $serviceAccountPath;
-        $this->bucketName = $bucketName;
-        $this->projectId = $projectId;
+        self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
+        self::$serviceAccountPath = self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
     }
 
     public function testAuthCloudImplicitCommand()
     {
-        $output = $this->runCommand('auth-cloud-implicit', $this->projectId);
-        $this->assertContains($this->bucketName, $output);
+        $output = $this->runCommand('auth-cloud-implicit', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertContains(self::$bucketName, $output);
     }
 
     public function testAuthCloudExplicitCommand()
     {
-        $output = $this->runCommand('auth-cloud-explicit', $this->projectId, $this->serviceAccountPath);
-        $this->assertContains($this->bucketName, $output);
+        $output = $this->runCommand('auth-cloud-explicit', [
+            'projectId' => self::$projectId,
+            'serviceAccountPath' => self::$serviceAccountPath,
+        ]);
+        $this->assertContains(self::$bucketName, $output);
     }
 
     public function testAuthApiImplicitCommand()
     {
-        $output = $this->runCommand('auth-api-implicit', $this->projectId);
-        $this->assertContains($this->bucketName, $output);
+        $output = $this->runCommand('auth-api-implicit', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertContains(self::$bucketName, $output);
     }
 
     public function testAuthApiExplicitCommand()
     {
-        $output = $this->runCommand('auth-api-explicit', $this->projectId, $this->serviceAccountPath);
-        $this->assertContains($this->bucketName, $output);
+        $output = $this->runCommand('auth-api-explicit', [
+            'projectId' => self::$projectId,
+            'serviceAccountPath' => self::$serviceAccountPath,
+        ]);
+        $this->assertContains(self::$bucketName, $output);
     }
 
     public function testAuthHttpImplicitCommand()
     {
-        $output = $this->runCommand('auth-http-implicit', $this->projectId);
-        $this->assertContains($this->bucketName, $output);
+        $output = $this->runCommand('auth-http-implicit', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertContains(self::$bucketName, $output);
     }
 
     public function testAuthHttpExplicitCommand()
     {
-        $output = $this->runCommand('auth-http-explicit', $this->projectId, $this->serviceAccountPath);
-        $this->assertContains($this->bucketName, $output);
-    }
-
-    private function runCommand($commandName, $projectId = null, $serviceAccountPath=null)
-    {
-        $application = require __DIR__ . '/../auth.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-        $args = array_filter([
-            'projectId' => $projectId,
-            'serviceAccountPath' => $serviceAccountPath,
+        $output = $this->runCommand('auth-http-explicit', [
+            'projectId' => self::$projectId,
+            'serviceAccountPath' => self::$serviceAccountPath
         ]);
-
-        ob_start();
-        $commandTester->execute(
-            $args,
-            ['interactive' => false]
-        );
-
-        return ob_get_clean();
+        $this->assertContains(self::$bucketName, $output);
     }
 }

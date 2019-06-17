@@ -17,14 +17,16 @@
 
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 
 trait DialogflowTestTrait
 {
-    use TestTrait;
-    use ExponentialBackoffTrait;
+    private static $commandFile = __DIR__ . '/../dialogflow.php';
+
+    use TestTrait, ExecuteCommandTrait {
+        ExecuteCommandTrait::runCommand as traitRunCommand;
+    }
 
     /** @before */
     public function setupDialogFlowTest()
@@ -34,17 +36,9 @@ trait DialogflowTestTrait
 
     private function runCommand($commandName, array $args = [])
     {
-        $application = require __DIR__ . '/../dialogflow.php';
-        $command = $application->get($commandName);
-        $commandTester = new CommandTester($command);
-
-        $args['project-id'] = self::$projectId;
-
         // run in exponential backoff in case of Resource Exhausted errors.
-        return self::$backoff->execute(function () use ($commandTester, $args) {
-            ob_start();
-            $commandTester->execute($args, ['interactive' => false]);
-            return ob_get_clean();
-        });
+        return $this->traitRunCommand($commandName, $args += [
+            'project-id' => self::$projectId
+        ]);
     }
 }

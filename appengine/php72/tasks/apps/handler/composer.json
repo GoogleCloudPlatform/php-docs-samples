@@ -1,9 +1,5 @@
 {
     "require": {
         "google/cloud-logging": "^1.14"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools": "^0.8.5"
     }
 }

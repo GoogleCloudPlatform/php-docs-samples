@@ -22,6 +22,8 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/DeployLaravelTrait.php';
+
 class DeployStackdriverTest extends TestCase
 {
     use DeployLaravelTrait;

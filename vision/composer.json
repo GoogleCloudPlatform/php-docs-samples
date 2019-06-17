@@ -56,9 +56,5 @@
             "src/product_set_remove_product.php",
             "src/product_update.php"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5",
-        "google/cloud-tools": "dev-master"
     }
 }
