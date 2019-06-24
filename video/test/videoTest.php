@@ -34,54 +34,54 @@ class videoTest extends TestCase
         $this->useResourceExhaustedBackoff();
     }
 
-    // public function testAnalyzeLabels()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_labels',
-    //         [$this->gcsUri(), 10]
-    //     );
-    //     $this->assertContains('cat', $output);
-    //     $this->assertContains('Video label description', $output);
-    //     $this->assertContains('Shot label description', $output);
-    //     $this->assertContains('Category', $output);
-    //     $this->assertContains('Segment', $output);
-    //     $this->assertContains('Shot', $output);
-    //     $this->assertContains('Confidence', $output);
-    // }
+    public function testAnalyzeLabels()
+    {
+        $output = $this->runSnippet(
+            'analyze_labels',
+            [$this->gcsUri(), 10]
+        );
+        $this->assertContains('cat', $output);
+        $this->assertContains('Video label description', $output);
+        $this->assertContains('Shot label description', $output);
+        $this->assertContains('Category', $output);
+        $this->assertContains('Segment', $output);
+        $this->assertContains('Shot', $output);
+        $this->assertContains('Confidence', $output);
+    }
 
-    // public function testAnalyzeLabelsFile()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_labels_file',
-    //         [__DIR__ . '/data/cat_shortened.mp4', 10]
-    //     );
-    //     $this->assertContains('cat', $output);
-    //     $this->assertContains('Video label description:', $output);
-    //     $this->assertContains('Shot label description:', $output);
-    //     $this->assertContains('Category:', $output);
-    //     $this->assertContains('Segment:', $output);
-    //     $this->assertContains('Shot:', $output);
-    //     $this->assertContains('Confidence:', $output);
-    // }
+    public function testAnalyzeLabelsFile()
+    {
+        $output = $this->runSnippet(
+            'analyze_labels_file',
+            [__DIR__ . '/data/cat_shortened.mp4', 10]
+        );
+        $this->assertContains('cat', $output);
+        $this->assertContains('Video label description:', $output);
+        $this->assertContains('Shot label description:', $output);
+        $this->assertContains('Category:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Shot:', $output);
+        $this->assertContains('Confidence:', $output);
+    }
 
-    // public function testAnalyzeExplicitContent()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_explicit_content',
-    //         [$this->gcsUri(), 10]
-    //     );
-    //     $this->assertContains('pornography:', $output);
-    // }
+    public function testAnalyzeExplicitContent()
+    {
+        $output = $this->runSnippet(
+            'analyze_explicit_content',
+            [$this->gcsUri(), 10]
+        );
+        $this->assertContains('pornography:', $output);
+    }
 
-    // public function testAnalyzeShots()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_shots',
-    //         [$this->gcsUri(), 10]
-    //     );
-    //     $this->assertContains('Shot:', $output);
-    //     $this->assertContains(' to ', $output);
-    // }
+    public function testAnalyzeShots()
+    {
+        $output = $this->runSnippet(
+            'analyze_shots',
+            [$this->gcsUri(), 10]
+        );
+        $this->assertContains('Shot:', $output);
+        $this->assertContains(' to ', $output);
+    }
 
     public function testTranscription()
     {
@@ -94,49 +94,49 @@ class videoTest extends TestCase
         $this->assertContains('France', $output);
     }
 
-    // public function testAnalyzeTextDetection()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_text_detection',
-    //         [$this->gcsUriTwo(), 10]
-    //     );
-    //     $this->assertContains('GOOGLE', $output);
-    //     $this->assertContains('Video text description:', $output);
-    //     $this->assertContains('Segment:', $output);
-    //     $this->assertContains('Confidence:', $output);
-    // }
+    public function testAnalyzeTextDetection()
+    {
+        $output = $this->runSnippet(
+            'analyze_text_detection',
+            [$this->gcsUriTwo(), 10]
+        );
+        $this->assertContains('GOOGLE', $output);
+        $this->assertContains('Video text description:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Confidence:', $output);
+    }
 
-    // public function testAnalyzeTextDetectionFile()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_text_detection_file',
-    //         [__DIR__ . '/data/googlework_short.mp4', 10]
-    //     );
-    //     $this->assertContains('GOOGLE', $output);
-    //     $this->assertContains('Video text description:', $output);
-    //     $this->assertContains('Segment:', $output);
-    //     $this->assertContains('Confidence:', $output);
-    // }
+    public function testAnalyzeTextDetectionFile()
+    {
+        $output = $this->runSnippet(
+            'analyze_text_detection_file',
+            [__DIR__ . '/data/googlework_short.mp4', 10]
+        );
+        $this->assertContains('GOOGLE', $output);
+        $this->assertContains('Video text description:', $output);
+        $this->assertContains('Segment:', $output);
+        $this->assertContains('Confidence:', $output);
+    }
 
-    // public function testObjectTracking()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_object_tracking',
-    //         [$this->gcsUriTwo(), 10]
-    //     );
-    //     $this->assertContains('/m/01g317', $output);
-    //     $this->assertContains('person', $output);
-    // }
+    public function testObjectTracking()
+    {
+        $output = $this->runSnippet(
+            'analyze_object_tracking',
+            [$this->gcsUriTwo(), 10]
+        );
+        $this->assertContains('/m/01g317', $output);
+        $this->assertContains('person', $output);
+    }
 
-    // public function testObjectTrackingFile()
-    // {
-    //     $output = $this->runSnippet(
-    //         'analyze_object_tracking_file',
-    //         [__DIR__ . '/data/googlework_short.mp4', 10]
-    //     );
-    //     $this->assertContains('/m/01g317', $output);
-    //     $this->assertContains('person', $output);
-    // }
+    public function testObjectTrackingFile()
+    {
+        $output = $this->runSnippet(
+            'analyze_object_tracking_file',
+            [__DIR__ . '/data/googlework_short.mp4', 10]
+        );
+        $this->assertContains('/m/01g317', $output);
+        $this->assertContains('person', $output);
+    }
 
     private function gcsUri()
     {

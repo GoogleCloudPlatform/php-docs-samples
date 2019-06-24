@@ -160,7 +160,7 @@ do
         echo "running phpunit in ${DIR}"
         run_tests $DIR
         set -e
-        if [ "$RUN_ALL_TESTS" = "true" ] && [ -f build/logs/clover.xml ]; then
+        if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
             cp build/logs/clover.xml \
                 ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
         fi

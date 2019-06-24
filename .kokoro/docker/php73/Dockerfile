@@ -93,7 +93,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         pecl install grpc && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
-        echo "extension=grpc.so" >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
+        echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
