@@ -55,6 +55,12 @@ if [ "${RUN_CS_CHECK}" = "true" ]; then
   bash testing/run_cs_check.sh
 fi
 
+# If we are running REST tests, disable gRPC
+if [ "${RUN_CS_CHECK}" = "true" ]; then
+  GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
+  mv $GRPC_INI "${GRPC_INI}.disabled"
+fi
+
 # Install global test dependencies
 bash testing/composer.sh
 

@@ -28,12 +28,16 @@ FLAKES=(
 
 # tests to run with grpc.so disabled
 REST_TESTS=(
+    asset
     bigquerydatatransfer
-    error_reporting
+    bigtable
     dialogflow
     dlp
+    error_reporting
+    iot
     monitoring
     video
+    vision
 )
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
@@ -57,8 +61,6 @@ ALT_PROJECT_TESTS=(
     video
     vision
 )
-
-GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
 
 TMP_REPORT_DIR=$(mktemp -d)
 
@@ -141,15 +143,11 @@ do
         fi
     else
         echo "running phpunit in ${DIR}"
-        if [[ "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
-            run_tests "${DIR} (grpc)"
-            # disable gRPC to test using REST only, then re-enable it
-            mv $GRPC_INI "${GRPC_INI}.disabled"
-            run_tests "${DIR} (rest)"
-            mv "${GRPC_INI}.disabled" $GRPC_INI
-        else
-            run_tests $DIR
+        if [ "$RUN_REST_TESTS_ONLY" -eq "1" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+            echo "Skipping tests in $DIR"
+            continue
         fi
+        run_tests $DIR
         set -e
         if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
             cp build/logs/clover.xml \
