@@ -131,7 +131,12 @@ do
         fi
     fi
     if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
-        echo "Skipping tests in $DIR (REST-only)"
+        echo "Skipping tests in $DIR (no REST tests)"
+        continue
+    fi
+    if [ "$RUN_DEPLOYMENT_TESTS" != "true" ] &&
+       [[ -z $(find $DIR/test/ -type f -name *Test.php -not -name Deploy*.php) ]]; then
+        echo "Skipping tests in $DIR (Deployment tests only)"
         continue
     fi
     pushd ${DIR}
