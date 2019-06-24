@@ -126,9 +126,13 @@ do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
         if ! grep -q ^$DIR <<< "$FILES_CHANGED" ; then
-            echo "Skipping tests in $DIR"
+            echo "Skipping tests in $DIR (unchanged)"
             continue
         fi
+    fi
+    if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+        echo "Skipping tests in $DIR (REST-only)"
+        continue
     fi
     pushd ${DIR}
     mkdir -p build/logs
@@ -141,7 +145,7 @@ do
     if [ $? != 0 ]; then
         # If the PHP required version is too low, skip the test
         if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
-            echo "Skipping tests in $DIR"
+            echo "Skipping tests in $DIR (incompatible PHP version)"
         else
             # Run composer without "-q"
             composer install
@@ -149,10 +153,6 @@ do
         fi
     else
         echo "running phpunit in ${DIR}"
-        if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
-            echo "Skipping tests in $DIR"
-            continue
-        fi
         run_tests $DIR
         set -e
         if [ "$RUN_ALL_TESTS" = "true" ] && [ -f build/logs/clover.xml ]; then
