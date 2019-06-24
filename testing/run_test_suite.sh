@@ -74,11 +74,17 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 
 # If the file RUN_ALL_TESTS is modified, or if we were not triggered from a Pull
 # Request, run the whole test suite.
-if grep -q ^testing\/RUN_ALL_TESTS$ <<< "$FILES_CHANGED" || \
-    [ -z "$IS_PULL_REQUEST" ]; then
+if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
 else
-    RUN_ALL_TESTS=0
+    # Check to see if the repo includes the "kokoro:run-all" label
+    if curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels" \
+        | grep -q "kokoro:run-all"; then
+        RUN_ALL_TESTS=1
+    else
+        RUN_ALL_TESTS=0
+    fi
+
 fi
 
 if [ "${TEST_DIRECTORIES}" = "" ]; then
@@ -143,13 +149,13 @@ do
         fi
     else
         echo "running phpunit in ${DIR}"
-        if [ "$RUN_REST_TESTS_ONLY" -eq "1" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+        if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
             echo "Skipping tests in $DIR"
             continue
         fi
         run_tests $DIR
         set -e
-        if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
+        if [ "$RUN_ALL_TESTS" = "true" ] && [ -f build/logs/clover.xml ]; then
             cp build/logs/clover.xml \
                 ${TEST_BUILD_DIR}/build/logs/clover-${DIR//\//_}.xml
         fi

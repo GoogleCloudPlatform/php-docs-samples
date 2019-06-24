@@ -33,7 +33,7 @@ RUN apt-get update && \
             zlib1g-dev
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
-    mkdir ${PHP_DIR} ${PHP_SRC_DIR} && \
+    mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
     wget http://us1.php.net/get/php-7.3.0.tar.bz2/from/this/mirror \
          -O php-7.3.0.tar.bz2 && \
@@ -41,6 +41,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     cd php-7.3.0 && \
     ./configure \
         --prefix=${PHP_DIR} \
+        --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
         --with-pdo-pgsql \
         --with-zlib-dir \
         --with-freetype-dir \
@@ -92,7 +93,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         pecl install grpc && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
-        echo 'extension=grpc.so' >> ${PHP_DIR}/lib/php.ini && \
+        echo "extension=grpc.so" >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin

@@ -46,7 +46,7 @@ source .kokoro/secrets.sh
 
 mkdir -p build/logs
 
-export IS_PULL_REQUEST=$KOKORO_GITHUB_PULL_REQUEST_COMMIT
+export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
 # Run code standards check when appropriate
 if [ "${RUN_CS_CHECK}" = "true" ]; then
@@ -56,8 +56,8 @@ if [ "${RUN_CS_CHECK}" = "true" ]; then
 fi
 
 # If we are running REST tests, disable gRPC
-if [ "${RUN_CS_CHECK}" = "true" ]; then
-  GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
+if [ "${RUN_REST_TESTS_ONLY}" = "true" ]; then
+  GRPC_INI=$(php -i | grep grpc.ini | sed 's/^Additional .ini files parsed => //g' | sed 's/,*$//g' )
   mv $GRPC_INI "${GRPC_INI}.disabled"
 fi
 
