@@ -28,12 +28,16 @@ FLAKES=(
 
 # tests to run with grpc.so disabled
 REST_TESTS=(
+    asset
     bigquerydatatransfer
-    error_reporting
+    bigtable
     dialogflow
     dlp
+    error_reporting
+    iot
     monitoring
     video
+    vision
 )
 
 # These tests run in a different project, determined by GOOGLE_ALT_PROJECT_ID
@@ -58,8 +62,6 @@ ALT_PROJECT_TESTS=(
     vision
 )
 
-GRPC_INI=$(php -i | grep grpc.ini | sed 's/,*$//g')
-
 TMP_REPORT_DIR=$(mktemp -d)
 
 SUCCEEDED_FILE=${TMP_REPORT_DIR}/succeeded
@@ -72,11 +74,17 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 
 # If the file RUN_ALL_TESTS is modified, or if we were not triggered from a Pull
 # Request, run the whole test suite.
-if grep -q ^testing\/RUN_ALL_TESTS$ <<< "$FILES_CHANGED" || \
-    [ -z "$IS_PULL_REQUEST" ]; then
+if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
 else
-    RUN_ALL_TESTS=0
+    # Check to see if the repo includes the "kokoro:run-all" label
+    if curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels" \
+        | grep -q "kokoro:run-all"; then
+        RUN_ALL_TESTS=1
+    else
+        RUN_ALL_TESTS=0
+    fi
+
 fi
 
 if [ "${TEST_DIRECTORIES}" = "" ]; then
@@ -118,9 +126,18 @@ do
     # Only run tests for samples that have changed.
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
         if ! grep -q ^$DIR <<< "$FILES_CHANGED" ; then
-            echo "Skipping tests in $DIR"
+            echo "Skipping tests in $DIR (unchanged)"
             continue
         fi
+    fi
+    if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+        echo "Skipping tests in $DIR (no REST tests)"
+        continue
+    fi
+    if [ "$RUN_DEPLOYMENT_TESTS" != "true" ] &&
+       [[ -z $(find $DIR/test/ -type f -name *Test.php -not -name Deploy*Test.php) ]]; then
+        echo "Skipping tests in $DIR (Deployment tests only)"
+        continue
     fi
     pushd ${DIR}
     mkdir -p build/logs
@@ -133,7 +150,7 @@ do
     if [ $? != 0 ]; then
         # If the PHP required version is too low, skip the test
         if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
-            echo "Skipping tests in $DIR"
+            echo "Skipping tests in $DIR (incompatible PHP version)"
         else
             # Run composer without "-q"
             composer install
@@ -141,15 +158,7 @@ do
         fi
     else
         echo "running phpunit in ${DIR}"
-        if [[ "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
-            run_tests "${DIR} (grpc)"
-            # disable gRPC to test using REST only, then re-enable it
-            mv $GRPC_INI "${GRPC_INI}.disabled"
-            run_tests "${DIR} (rest)"
-            mv "${GRPC_INI}.disabled" $GRPC_INI
-        else
-            run_tests $DIR
-        fi
+        run_tests $DIR
         set -e
         if [ "$RUN_ALL_TESTS" -eq "1" ] && [ -f build/logs/clover.xml ]; then
             cp build/logs/clover.xml \

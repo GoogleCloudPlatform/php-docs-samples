@@ -110,6 +110,8 @@ final class WriteTest extends TestCase
 
     public function testWriteBatch()
     {
+        $this->requireGrpc();
+
         $output = $this->runSnippet('writes/write_batch', [
             self::$projectId,
             self::$instanceId,

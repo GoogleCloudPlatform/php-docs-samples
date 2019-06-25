@@ -371,6 +371,8 @@ final class BigtableTest extends TestCase
 
     public function testWritingRows()
     {
+        $this->requireGrpc();
+
         $tableId = uniqid(self::TABLE_ID_PREFIX);
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
@@ -400,6 +402,8 @@ final class BigtableTest extends TestCase
 
     public function testGettingARow()
     {
+        $this->requireGrpc();
+
         $tableId = uniqid(self::TABLE_ID_PREFIX);
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
@@ -426,6 +430,8 @@ final class BigtableTest extends TestCase
 
     public function testScanningAllRows()
     {
+        $this->requireGrpc();
+
         $tableId = uniqid(self::TABLE_ID_PREFIX);
         $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
