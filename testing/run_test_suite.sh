@@ -135,7 +135,7 @@ do
         continue
     fi
     if [ "$RUN_DEPLOYMENT_TESTS" != "true" ] &&
-       [[ -z $(find $DIR/test/ -type f -name *Test.php -not -name Deploy*.php) ]]; then
+       [[ -z $(find $DIR/test/ -type f -name *Test.php -not -name Deploy*Test.php) ]]; then
         echo "Skipping tests in $DIR (Deployment tests only)"
         continue
     fi
