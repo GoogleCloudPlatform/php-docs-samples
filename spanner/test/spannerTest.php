@@ -470,6 +470,111 @@ class spannerTest extends TestCase
         $this->assertContains('Executed 2 SQL statements using Batch DML', $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testCreateTableDatatypes()
+    {
+        $output = $this->runCommand('create-table-with-datatypes');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Created Venues table in database test-', $output);
+    }
+
+    /**
+     * @depends testCreateTableDatatypes
+     */
+    public function testInsertDataWithDatatypes()
+    {
+        $output = $this->runCommand('insert-data-with-datatypes');
+        $this->assertEquals('Inserted data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithArray()
+    {
+        $output = $this->runCommand('query-data-with-array');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01', $output);
+        $this->assertContains('VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithBool()
+    {
+        $output = $this->runCommand('query-data-with-bool');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('eVnueId: 19, VenueName: Venue 19, OutdoorVenue: True', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithBytes()
+    {
+        $output = $this->runCommand('query-data-with-bytes');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 4, VenueName: Venue 4', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithDate()
+    {
+        $output = $this->runCommand('query-data-with-date');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02', $output);
+        $this->assertContains('VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithFloat()
+    {
+        $output = $this->runCommand('query-data-with-float');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8', $output);
+        $this->assertContains('VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithInt()
+    {
+        $output = $this->runCommand('query-data-with-int');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 19, VenueName: Venue 19, Capacity: 6300', $output);
+        $this->assertContains('VenueId: 42, VenueName: Venue 42, Capacity: 3000', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithString()
+    {
+        $output = $this->runCommand('query-data-with-string');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 42, VenueName: Venue 42', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithTimestamp()
+    {
+        $output = $this->runCommand('query-data-with-timestamp');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+        $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+        $this->assertContains('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+    }
+
     private function runCommand($commandName)
     {
         return $this->traitRunCommand($commandName, [

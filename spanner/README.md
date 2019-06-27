@@ -102,23 +102,33 @@ To run the Spanner Samples:
       create-index                         Adds a simple index to the example database.
       create-storing-index                 Adds an storing index to the example database.
       create-table-timestamp               Creates a table with a commit timestamp column.
+      create-table-with-datatypes          Creates a table with supported datatypes.
       delete-data-with-dml                 Remove sample data from the given database with a DML statement.
       deleted-data-with-partitioned-dml    Deletes sample data in the database by partition with a DML statement.
       help                                 Displays help for a command
       insert-data                          Inserts sample data into the given database.
       insert-data-timestamp                Inserts data into a table with a commit timestamp column.
+      insert-data-with-datatypes           Inserts data with supported datatypes.
       insert-data-with-dml                 Inserts sample data into the given database with a DML statement.
       insert-struct-data                   Inserts sample data that can be used to test STRUCT parameters in queries.
       list                                 Lists commands
       query-data                           Queries sample data from the database using SQL.
       query-data-timestamp                 Queries sample data from a database with a commit timestamp column.
+      query-data-with-array                Queries sample data using SQL with an ARRAY parameter.
       query-data-with-array-of-struct      Queries sample data from the database with an array of struct.
+      query-data-with-bool                 Queries sample data using SQL with a BOOL parameter.
+      query-data-with-bytes                Queries sample data using SQL with a BYTES parameter.
+      query-data-with-date                 Queries sample data using SQL with a DATE parameter.
+      query-data-with-float                Queries sample data using SQL with a FLOAT64 parameter.
       query-data-with-index                Queries sample data from the database using SQL and an index.
+      query-data-with-int                  Queries sample data using SQL with a INT64 parameter.
       query-data-with-nested-struct-field  Queries sample data from the database with a nested struct field value.
       query-data-with-new-column           Queries sample data from the database using SQL.
       query-data-with-parameter            Query DML inserted sample data using SQL with a parameter.
+      query-data-with-string               Queries sample data using SQL with a STRING parameter.
       query-data-with-struct               Queries sample data from the database with a struct.
       query-data-with-struct-field         Queries sample data from the database with a struct field value.
+      query-data-with-timestamp            Queries sample data using SQL with a TIMESTAMP parameter.
       read-data                            Reads sample data from the database.
       read-data-with-index                 Reads sample data from the database using an index.
       read-data-with-storing-index         Reads sample data from the database using an index with a storing clause.

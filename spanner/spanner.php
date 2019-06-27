@@ -492,6 +492,126 @@ $application->add((new Command('update-data-with-batch-dml'))
     })
 );
 
+// Create table with supported datatypes
+$application->add((new Command('create-table-with-datatypes'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Creates a table with supported datatypes.')
+    ->setCode(function ($input, $output) {
+        create_table_with_datatypes(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Insert data with supported datatypes
+$application->add((new Command('insert-data-with-datatypes'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Inserts data with supported datatypes.')
+    ->setCode(function ($input, $output) {
+        insert_data_with_datatypes(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Array Parameter
+$application->add((new Command('query-data-with-array'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with an ARRAY parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_array(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Bool Parameter
+$application->add((new Command('query-data-with-bool'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a BOOL parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_bool(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Bytes Parameter
+$application->add((new Command('query-data-with-bytes'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a BYTES parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_bytes(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Date Parameter
+$application->add((new Command('query-data-with-date'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a DATE parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_date(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Float Parameter
+$application->add((new Command('query-data-with-float'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a FLOAT64 parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_float(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Int Parameter
+$application->add((new Command('query-data-with-int'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a INT64 parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_int(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with String Parameter
+$application->add((new Command('query-data-with-string'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a STRING parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_string(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Timestamp Parameter
+$application->add((new Command('query-data-with-timestamp'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a TIMESTAMP parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_timestamp(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
