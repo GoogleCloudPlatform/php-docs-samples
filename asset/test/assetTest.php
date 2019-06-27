@@ -40,7 +40,7 @@ class assetTest extends TestCase
     public static function setUpBeforeClass()
     {
         self::$storage = new StorageClient();
-        self::$bucketName = 'assets-bucket-' . time();
+        self::$bucketName = sprintf('assets-bucket-%s-%s', time(), rand());
         self::$bucket = self::$storage->createBucket(self::$bucketName);
     }
 
