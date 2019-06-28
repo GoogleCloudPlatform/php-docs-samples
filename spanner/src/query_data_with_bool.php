@@ -43,7 +43,7 @@ function query_data_with_bool($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleBool = True;
+    $exampleBool = true;
 
     $results = $database->execute(
         'SELECT VenueId, VenueName, OutdoorVenue FROM Venues ' .

@@ -507,7 +507,7 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('query-data-with-bool');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('eVnueId: 19, VenueName: Venue 19, OutdoorVenue: True', $output);
+        $this->assertContains('VenueId: 19, VenueName: Venue 19, OutdoorVenue: True', $output);
     }
 
     /**
