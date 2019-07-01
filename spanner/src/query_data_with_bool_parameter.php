@@ -23,41 +23,42 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_query_with_string_parameter]
+// [START spanner_query_with_bool_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 
 /**
- * Queries sample data from the database using SQL with a STRING parameter.
+ * Queries sample data from the database using SQL with a BOOL parameter.
  * Example:
  * ```
- * query_data_with_string($instanceId, $databaseId);
+ * query_data_with_bool_parameter($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_string($instanceId, $databaseId)
+function query_data_with_bool_parameter($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleString = 'Venue 42';
+    $exampleBool = true;
 
     $results = $database->execute(
-        'SELECT VenueId, VenueName FROM Venues ' .
-        'WHERE VenueName = @venueName',
+        'SELECT VenueId, VenueName, OutdoorVenue FROM Venues ' .
+        'WHERE OutdoorVenue = @outdoorVenue',
         [
             'parameters' => [
-                'venueName' => $exampleString
+                'outdoorVenue' => $exampleBool
             ]
         ]
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName']);
+        printf('VenueId: %s, VenueName: %s, OutdoorVenue: %s' . PHP_EOL,
+            $row['VenueId'], $row['VenueName'],
+            $row['OutdoorVenue'] ? "True" : "False");
     }
 }
-// [END spanner_query_with_string_parameter]
+// [END spanner_query_with_bool_parameter]

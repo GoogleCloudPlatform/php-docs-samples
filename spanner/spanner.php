@@ -517,11 +517,11 @@ $application->add((new Command('insert-data-with-datatypes'))
 );
 
 // Query Data with Array Parameter
-$application->add((new Command('query-data-with-array'))
+$application->add((new Command('query-data-with-array-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with an ARRAY parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_array(
+        query_data_with_array_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -529,11 +529,11 @@ $application->add((new Command('query-data-with-array'))
 );
 
 // Query Data with Bool Parameter
-$application->add((new Command('query-data-with-bool'))
+$application->add((new Command('query-data-with-bool-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a BOOL parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_bool(
+        query_data_with_bool_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -541,11 +541,11 @@ $application->add((new Command('query-data-with-bool'))
 );
 
 // Query Data with Bytes Parameter
-$application->add((new Command('query-data-with-bytes'))
+$application->add((new Command('query-data-with-bytes-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a BYTES parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_bytes(
+        query_data_with_bytes_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -553,11 +553,11 @@ $application->add((new Command('query-data-with-bytes'))
 );
 
 // Query Data with Date Parameter
-$application->add((new Command('query-data-with-date'))
+$application->add((new Command('query-data-with-date-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a DATE parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_date(
+        query_data_with_date_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -565,11 +565,11 @@ $application->add((new Command('query-data-with-date'))
 );
 
 // Query Data with Float Parameter
-$application->add((new Command('query-data-with-float'))
+$application->add((new Command('query-data-with-float-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a FLOAT64 parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_float(
+        query_data_with_float_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -577,11 +577,11 @@ $application->add((new Command('query-data-with-float'))
 );
 
 // Query Data with Int Parameter
-$application->add((new Command('query-data-with-int'))
+$application->add((new Command('query-data-with-int-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a INT64 parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_int(
+        query_data_with_int_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -589,11 +589,11 @@ $application->add((new Command('query-data-with-int'))
 );
 
 // Query Data with String Parameter
-$application->add((new Command('query-data-with-string'))
+$application->add((new Command('query-data-with-string-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a STRING parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_string(
+        query_data_with_string_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -601,11 +601,11 @@ $application->add((new Command('query-data-with-string'))
 );
 
 // Query Data with Timestamp Parameter
-$application->add((new Command('query-data-with-timestamp'))
+$application->add((new Command('query-data-with-timestamp-parameter'))
     ->setDefinition($inputDefinition)
     ->setDescription('Queries sample data using SQL with a TIMESTAMP parameter.')
     ->setCode(function ($input, $output) {
-        query_data_with_timestamp(
+        query_data_with_timestamp_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );

@@ -31,13 +31,13 @@ use Google\Cloud\Spanner\Database;
  * Queries sample data from the database using SQL with a BYTES parameter.
  * Example:
  * ```
- * query_data_with_bytes($instanceId, $databaseId);
+ * query_data_with_bytes_parameter($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_bytes($instanceId, $databaseId)
+function query_data_with_bytes_parameter($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

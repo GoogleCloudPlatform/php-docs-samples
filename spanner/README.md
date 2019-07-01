@@ -114,21 +114,21 @@ To run the Spanner Samples:
       list                                 Lists commands
       query-data                           Queries sample data from the database using SQL.
       query-data-timestamp                 Queries sample data from a database with a commit timestamp column.
-      query-data-with-array                Queries sample data using SQL with an ARRAY parameter.
+      query-data-with-array-parameter      Queries sample data using SQL with an ARRAY parameter.
       query-data-with-array-of-struct      Queries sample data from the database with an array of struct.
-      query-data-with-bool                 Queries sample data using SQL with a BOOL parameter.
-      query-data-with-bytes                Queries sample data using SQL with a BYTES parameter.
-      query-data-with-date                 Queries sample data using SQL with a DATE parameter.
-      query-data-with-float                Queries sample data using SQL with a FLOAT64 parameter.
+      query-data-with-bool-parameter       Queries sample data using SQL with a BOOL parameter.
+      query-data-with-bytes-parameter      Queries sample data using SQL with a BYTES parameter.
+      query-data-with-date-parameter       Queries sample data using SQL with a DATE parameter.
+      query-data-with-float-parameter      Queries sample data using SQL with a FLOAT64 parameter.
       query-data-with-index                Queries sample data from the database using SQL and an index.
-      query-data-with-int                  Queries sample data using SQL with a INT64 parameter.
+      query-data-with-int-parameter        Queries sample data using SQL with a INT64 parameter.
       query-data-with-nested-struct-field  Queries sample data from the database with a nested struct field value.
       query-data-with-new-column           Queries sample data from the database using SQL.
       query-data-with-parameter            Query DML inserted sample data using SQL with a parameter.
-      query-data-with-string               Queries sample data using SQL with a STRING parameter.
+      query-data-with-string-parameter     Queries sample data using SQL with a STRING parameter.
       query-data-with-struct               Queries sample data from the database with a struct.
       query-data-with-struct-field         Queries sample data from the database with a struct field value.
-      query-data-with-timestamp            Queries sample data using SQL with a TIMESTAMP parameter.
+      query-data-with-timestamp-parameter  Queries sample data using SQL with a TIMESTAMP parameter.
       read-data                            Reads sample data from the database.
       read-data-with-index                 Reads sample data from the database using an index.
       read-data-with-storing-index         Reads sample data from the database using an index with a storing clause.

@@ -23,46 +23,41 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_query_with_array_parameter]
+// [START spanner_query_with_float_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
-use Google\Cloud\Spanner\Date;
 
 /**
- * Queries sample data from the database using SQL with an ARRAY parameter.
+ * Queries sample data from the database using SQL with a FLOAT64 parameter.
  * Example:
  * ```
- * query_data_with_array($instanceId, $databaseId);
+ * query_data_with_float_parameter($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_array($instanceId, $databaseId)
+function query_data_with_float_parameter($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleArray = [
-        new Date(new \DateTime('2020-10-01')),
-        new Date(new \DateTime('2020-11-01'))
-    ];
-   
+    $exampleFloat = 0.8;
+
     $results = $database->execute(
-        'SELECT VenueId, VenueName, AvailableDate FROM Venues v, ' .
-        'UNNEST(v.AvailableDates) as AvailableDate ' .
-        'WHERE AvailableDate in UNNEST(@availableDates)',
+        'SELECT VenueId, VenueName, PopularityScore FROM Venues ' .
+        'WHERE PopularityScore > @popularityScore',
         [
             'parameters' => [
-                'availableDates' => $exampleArray
+                'popularityScore' => $exampleFloat
             ]
         ]
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, AvailableDate: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['AvailableDate']);
+        printf('VenueId: %s, VenueName: %s, PopularityScore: %f' . PHP_EOL,
+            $row['VenueId'], $row['VenueName'], $row['PopularityScore']);
     }
 }
-// [END spanner_query_with_array_parameter]
+// [END spanner_query_with_float_parameter]

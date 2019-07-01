@@ -23,42 +23,46 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_query_with_bool_parameter]
+// [START spanner_query_with_array_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
+use Google\Cloud\Spanner\Date;
 
 /**
- * Queries sample data from the database using SQL with a BOOL parameter.
+ * Queries sample data from the database using SQL with an ARRAY parameter.
  * Example:
  * ```
- * query_data_with_bool($instanceId, $databaseId);
+ * query_data_with_array_parameter($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_bool($instanceId, $databaseId)
+function query_data_with_array_parameter($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleBool = true;
-
+    $exampleArray = [
+        new Date(new \DateTime('2020-10-01')),
+        new Date(new \DateTime('2020-11-01'))
+    ];
+   
     $results = $database->execute(
-        'SELECT VenueId, VenueName, OutdoorVenue FROM Venues ' .
-        'WHERE OutdoorVenue = @outdoorVenue',
+        'SELECT VenueId, VenueName, AvailableDate FROM Venues v, ' .
+        'UNNEST(v.AvailableDates) as AvailableDate ' .
+        'WHERE AvailableDate in UNNEST(@availableDates)',
         [
             'parameters' => [
-                'outdoorVenue' => $exampleBool
+                'availableDates' => $exampleArray
             ]
         ]
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, OutdoorVenue: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'],
-            $row['OutdoorVenue'] ? "True" : "False");
+        printf('VenueId: %s, VenueName: %s, AvailableDate: %s' . PHP_EOL,
+            $row['VenueId'], $row['VenueName'], $row['AvailableDate']);
     }
 }
-// [END spanner_query_with_bool_parameter]
+// [END spanner_query_with_array_parameter]

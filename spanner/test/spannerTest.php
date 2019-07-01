@@ -492,9 +492,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithArray()
+    public function testQueryDataWithArrayParameter()
     {
-        $output = $this->runCommand('query-data-with-array');
+        $output = $this->runCommand('query-data-with-array-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01', $output);
         $this->assertContains('VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01', $output);
@@ -503,9 +503,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithBool()
+    public function testQueryDataWithBoolParameter()
     {
-        $output = $this->runCommand('query-data-with-bool');
+        $output = $this->runCommand('query-data-with-bool-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 19, VenueName: Venue 19, OutdoorVenue: True', $output);
     }
@@ -513,9 +513,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithBytes()
+    public function testQueryDataWithBytesParameter()
     {
-        $output = $this->runCommand('query-data-with-bytes');
+        $output = $this->runCommand('query-data-with-bytes-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 4, VenueName: Venue 4', $output);
     }
@@ -523,9 +523,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithDate()
+    public function testQueryDataWithDateParameter()
     {
-        $output = $this->runCommand('query-data-with-date');
+        $output = $this->runCommand('query-data-with-date-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02', $output);
         $this->assertContains('VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01', $output);
@@ -534,9 +534,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithFloat()
+    public function testQueryDataWithFloatParameter()
     {
-        $output = $this->runCommand('query-data-with-float');
+        $output = $this->runCommand('query-data-with-float-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8', $output);
         $this->assertContains('VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9', $output);
@@ -545,9 +545,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithInt()
+    public function testQueryDataWithIntParameter()
     {
-        $output = $this->runCommand('query-data-with-int');
+        $output = $this->runCommand('query-data-with-int-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 19, VenueName: Venue 19, Capacity: 6300', $output);
         $this->assertContains('VenueId: 42, VenueName: Venue 42, Capacity: 3000', $output);
@@ -556,9 +556,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithString()
+    public function testQueryDataWithStringParameter()
     {
-        $output = $this->runCommand('query-data-with-string');
+        $output = $this->runCommand('query-data-with-string-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 42, VenueName: Venue 42', $output);
     }
@@ -566,9 +566,9 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
-    public function testQueryDataWithTimestamp()
+    public function testQueryDataWithTimestampParameter()
     {
-        $output = $this->runCommand('query-data-with-timestamp');
+        $output = $this->runCommand('query-data-with-timestamp-parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
         $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);

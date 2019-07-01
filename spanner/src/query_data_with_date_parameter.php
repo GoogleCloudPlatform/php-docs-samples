@@ -23,41 +23,41 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_query_with_timestamp_parameter]
+// [START spanner_query_with_date_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 
 /**
- * Queries sample data from the database using SQL with a TIMESTAMP parameter.
+ * Queries sample data from the database using SQL with a DATE parameter.
  * Example:
  * ```
- * query_data_with_timestamp($instanceId, $databaseId);
+ * query_data_with_date_parameter($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_timestamp($instanceId, $databaseId)
+function query_data_with_date_parameter($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleTimestamp = gmdate('Y-m-d\TH:i:s.u\Z');
+    $exampleDate = '2019-01-01';
 
     $results = $database->execute(
-        'SELECT VenueId, VenueName, LastUpdateTime FROM Venues ' .
-        'WHERE LastUpdateTime < @lastUpdateTime',
+        'SELECT VenueId, VenueName, LastContactDate FROM Venues ' .
+        'WHERE LastContactDate < @lastContactDate',
         [
             'parameters' => [
-                'lastUpdateTime' => $exampleTimestamp
+                'lastContactDate' => $exampleDate
             ]
         ]
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, LastUpdateTime: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['LastUpdateTime']);
+        printf('VenueId: %s, VenueName: %s, LastContactDate: %s' . PHP_EOL,
+            $row['VenueId'], $row['VenueName'], $row['LastContactDate']);
     }
 }
-// [END spanner_query_with_timestamp_parameter]
+// [END spanner_query_with_date_parameter]

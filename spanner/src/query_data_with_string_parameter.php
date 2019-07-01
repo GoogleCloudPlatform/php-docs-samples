@@ -23,41 +23,41 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_query_with_float_parameter]
+// [START spanner_query_with_string_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 
 /**
- * Queries sample data from the database using SQL with a FLOAT64 parameter.
+ * Queries sample data from the database using SQL with a STRING parameter.
  * Example:
  * ```
- * query_data_with_float($instanceId, $databaseId);
+ * query_data_with_string_parameter($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_float($instanceId, $databaseId)
+function query_data_with_string_parameter($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleFloat = 0.8;
+    $exampleString = 'Venue 42';
 
     $results = $database->execute(
-        'SELECT VenueId, VenueName, PopularityScore FROM Venues ' .
-        'WHERE PopularityScore > @popularityScore',
+        'SELECT VenueId, VenueName FROM Venues ' .
+        'WHERE VenueName = @venueName',
         [
             'parameters' => [
-                'popularityScore' => $exampleFloat
+                'venueName' => $exampleString
             ]
         ]
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, PopularityScore: %f' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['PopularityScore']);
+        printf('VenueId: %s, VenueName: %s' . PHP_EOL,
+            $row['VenueId'], $row['VenueName']);
     }
 }
-// [END spanner_query_with_float_parameter]
+// [END spanner_query_with_string_parameter]
