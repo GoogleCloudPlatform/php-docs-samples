@@ -42,7 +42,17 @@
             "src/write_data_with_dml_transaction.php",
             "src/update_data_with_partitioned_dml.php",
             "src/delete_data_with_partitioned_dml.php",
-            "src/update_data_with_batch_dml.php"
+            "src/update_data_with_batch_dml.php",
+            "src/create_table_with_datatypes.php",
+            "src/insert_data_with_datatypes.php",
+            "src/query_data_with_array_parameter.php",
+            "src/query_data_with_bool_parameter.php",
+            "src/query_data_with_bytes_parameter.php",
+            "src/query_data_with_date_parameter.php",
+            "src/query_data_with_float_parameter.php",
+            "src/query_data_with_int_parameter.php",
+            "src/query_data_with_string_parameter.php",
+            "src/query_data_with_timestamp_parameter.php"
         ]
     }
 }

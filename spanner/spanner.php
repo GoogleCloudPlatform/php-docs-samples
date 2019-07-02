@@ -492,6 +492,126 @@ $application->add((new Command('update-data-with-batch-dml'))
     })
 );
 
+// Create table with supported datatypes
+$application->add((new Command('create-table-with-datatypes'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Creates a table with supported datatypes.')
+    ->setCode(function ($input, $output) {
+        create_table_with_datatypes(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Insert data with supported datatypes
+$application->add((new Command('insert-data-with-datatypes'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Inserts data with supported datatypes.')
+    ->setCode(function ($input, $output) {
+        insert_data_with_datatypes(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Array Parameter
+$application->add((new Command('query-data-with-array-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with an ARRAY parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_array_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Bool Parameter
+$application->add((new Command('query-data-with-bool-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a BOOL parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_bool_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Bytes Parameter
+$application->add((new Command('query-data-with-bytes-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a BYTES parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_bytes_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Date Parameter
+$application->add((new Command('query-data-with-date-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a DATE parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_date_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Float Parameter
+$application->add((new Command('query-data-with-float-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a FLOAT64 parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_float_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Int Parameter
+$application->add((new Command('query-data-with-int-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a INT64 parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_int_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with String Parameter
+$application->add((new Command('query-data-with-string-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a STRING parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_string_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Timestamp Parameter
+$application->add((new Command('query-data-with-timestamp-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a TIMESTAMP parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_timestamp_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
