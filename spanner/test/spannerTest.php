@@ -61,6 +61,11 @@ class spannerTest extends TestCase
         self::$instance = $spanner->instance(self::$instanceId);
     }
 
+    public function setUp()
+    {
+        $this->useExpectationFailedBackoff();
+    }
+
     public function testCreateDatabase()
     {
         $output = $this->runCommand('create-database');

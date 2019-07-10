@@ -94,8 +94,7 @@ try {
         );
         $operationResponse->pollUntilComplete();
         if (!$operationResponse->operationSucceeded()) {
-            $error = $operationResponse->getError();
-            throw $error;
+            print('Error: ' . $operationResponse->getError());
         } else {
             printf("Instance %s created.", $instance_id);
         }
