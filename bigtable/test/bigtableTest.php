@@ -163,7 +163,7 @@ final class BigtableTest extends TestCase
 
         $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
         $this->assertContains('GC Rule:', $array);
-        $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000.000000000s"}]}}}', $array);
+        $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000s"}]}}}', $array);
     }
 
     public function testListInstanceClusters()
@@ -216,7 +216,7 @@ final class BigtableTest extends TestCase
                             'maxNumVersions' => 2
                         ],
                         [
-                            'maxAge' => '432000.000000000s'
+                            'maxAge' => '432000s'
                         ]
                     ]
                 ]
@@ -251,7 +251,7 @@ final class BigtableTest extends TestCase
                             'intersection' => [
                                 'rules' => [
                                     [
-                                        'maxAge' => '2592000.000000000s'
+                                        'maxAge' => '2592000s'
                                     ],
                                     [
                                         'maxNumVersions' => 2
@@ -306,7 +306,7 @@ final class BigtableTest extends TestCase
 
         $gcRuleCompare = [
             'gcRule' => [
-                'maxAge' => '432000.000000000s'
+                'maxAge' => '432000s'
             ]
         ];
 
@@ -332,7 +332,7 @@ final class BigtableTest extends TestCase
                 'intersection' => [
                     'rules' => [
                         [
-                            'maxAge' => '432000.000000000s'
+                            'maxAge' => '432000s'
                         ],
                         [
                             'maxNumVersions' => 2
