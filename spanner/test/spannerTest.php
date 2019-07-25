@@ -20,12 +20,13 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class spannerTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait {
+    use TestTrait, EventuallyConsistentTestTrait, ExecuteCommandTrait {
         ExecuteCommandTrait::runCommand as traitRunCommand;
     }
 
@@ -59,11 +60,6 @@ class spannerTest extends TestCase
         self::$databaseId = 'test-' . time() . rand();
         self::$instanceId = $instanceId;
         self::$instance = $spanner->instance(self::$instanceId);
-    }
-
-    public function setUp()
-    {
-        $this->useExpectationFailedBackoff();
     }
 
     public function testCreateDatabase()
@@ -573,11 +569,13 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithTimestampParameter()
     {
-        $output = $this->runCommand('query-data-with-timestamp-parameter');
-        self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
-        $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
-        $this->assertContains('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('query-data-with-timestamp-parameter');
+            self::$lastUpdateDataTimestamp = time();
+            $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+            $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+            $this->assertContains('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+        });
     }
 
     private function runCommand($commandName)
