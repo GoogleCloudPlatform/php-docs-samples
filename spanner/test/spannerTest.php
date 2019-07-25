@@ -63,7 +63,7 @@ class spannerTest extends TestCase
 
     public function setUp()
     {
-        $this->useExpectationFailedBackoff();
+        $this->useExpectationFailedBackoff(10);
     }
 
     public function testCreateDatabase()
