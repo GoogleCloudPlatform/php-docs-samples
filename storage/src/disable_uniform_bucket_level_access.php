@@ -39,7 +39,7 @@ function disable_uniform_bucket_level_access($bucketName)
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'iamConfiguration' => [
-            'uniformBucketLevelaccess' => [
+            'uniformBucketLevelAccess' => [
               'enabled' => false
             ]
         ]
