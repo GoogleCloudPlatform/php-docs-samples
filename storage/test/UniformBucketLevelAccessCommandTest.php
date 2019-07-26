@@ -23,9 +23,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for BucketPolicyOnlyCommand.
+ * Unit Tests for UniformBucketLevelAccessCommand.
  */
-class BucketPolicyOnlyCommandTest extends TestCase
+class UniformBucketLevelAccessCommandTest extends TestCase
 {
     use TestTrait;
 
@@ -38,11 +38,11 @@ class BucketPolicyOnlyCommandTest extends TestCase
         // Sleep to avoid the rate limit for creating/deleting.
         sleep(5 + rand(2, 4));
         $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('bucket-policy-only'));
+        $this->commandTester = new CommandTester($application->get('uniform-bucket-level-access'));
         $this->storage = new StorageClient();
 
         // Append random because tests for multiple PHP versions were running at the same time.
-        $bucketName = 'php-bucket-policy-only-' . time() . '-' . rand(1000, 9999);
+        $bucketName = 'php-ubla-' . time() . '-' . rand(1000, 9999);
         $this->bucket = $this->storage->createBucket($bucketName);
     }
 
@@ -51,7 +51,7 @@ class BucketPolicyOnlyCommandTest extends TestCase
         $this->bucket->delete();
     }
 
-    public function testEnableBucketPolicyOnly()
+    public function testEnableUniformBucketLevelAccess()
     {
         $this->commandTester->execute(
           [
@@ -61,18 +61,18 @@ class BucketPolicyOnlyCommandTest extends TestCase
           ['interactive' => false]
         );
         $outputString = <<<EOF
-Bucket Policy Only was enabled for {$this->bucket->name()}
+Uniform bucket-level access was enabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);
         $this->bucket->reload();
         $bucketInformation = $this->bucket->info();
-        $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
-        $this->assertTrue($bucketPolicyOnly['enabled']);
+        $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];
+        $this->assertTrue($ubla['enabled']);
     }
 
-    /** @depends testEnableBucketPolicyOnly */
-    public function testDisableBucketPolicyOnly()
+    /** @depends testEnableUniformBucketLevelAccess */
+    public function testDisableUniformBucketLevelAccess()
     {
         $this->commandTester->execute(
           [
@@ -83,18 +83,18 @@ EOF;
         );
 
         $outputString = <<<EOF
-Bucket Policy Only was disabled for {$this->bucket->name()}
+Uniform bucket-level access was disabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);
         $this->bucket->reload();
         $bucketInformation = $this->bucket->info();
-        $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
-        $this->assertFalse($bucketPolicyOnly['enabled']);
+        $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];
+        $this->assertFalse($ubla['enabled']);
     }
 
-    /** @depends testDisableBucketPolicyOnly */
-    public function testGetBucketPolicyOnly()
+    /** @depends testDisableUniformBucketLevelAccess */
+    public function testGetUniformBucketLevelAccess()
     {
         $this->commandTester->execute(
           [
@@ -105,13 +105,13 @@ EOF;
         );
 
         $outputString = <<<EOF
-Bucket Policy Only is disabled for {$this->bucket->name()}
+Uniform bucket-level access is disabled for {$this->bucket->name()}
 
 EOF;
         $this->expectOutputString($outputString);
         $this->bucket->reload();
         $bucketInformation = $this->bucket->info();
-        $bucketPolicyOnly = $bucketInformation['iamConfiguration']['bucketPolicyOnly'];
-        $this->assertFalse($bucketPolicyOnly['enabled']);
+        $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];
+        $this->assertFalse($ubla['enabled']);
     }
 }

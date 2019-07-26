@@ -44,7 +44,7 @@ This simple command-line application demonstrates how to invoke
     object-acl                       Manage the ACL for Cloud Storage objects
     objects                          Manage Cloud Storage objects
     requester-pays                   Manage Cloud Storage requester pays buckets and objects
-    bucket-policy-only               Manage Cloud Storage bucket policy only buckets
+    uniform-bucket-level-access      Manage Cloud Storage uniform bucket-level access buckets
     get-object-v2-signed-url         Generate a v2 signed URL for downloading an object.
     get-object-v4-signed-url         Generate a v4 signed URL for downloading an object.
     get-object-v4-upload-signed-url  Generate a v4 signed URL for uploading an object.

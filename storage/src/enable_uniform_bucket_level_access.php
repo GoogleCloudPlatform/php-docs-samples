@@ -23,27 +23,27 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_enable_bucket_policy_only]
+# [START storage_enable_uniform_bucket_level_access]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Enable Bucket Policy Only.
+ * Enable uniform bucket-level access.
  *
  * @param string $bucketName Name of your Google Cloud Storage bucket.
  *
  * @return void
  */
-function enable_bucket_policy_only($bucketName)
+function enable_uniform_bucket_level_access($bucketName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'iamConfiguration' => [
-            'bucketPolicyOnly' => [
+            'uniformBucketLevelAccess' => [
               'enabled' => true
             ]
         ]
     ]);
-    printf('Bucket Policy Only was enabled for %s' . PHP_EOL, $bucketName);
+    printf('Uniform bucket-level access was enabled for %s' . PHP_EOL, $bucketName);
 }
-# [END storage_enable_bucket_policy_only]
+# [END storage_enable_uniform_bucket_level_access]
