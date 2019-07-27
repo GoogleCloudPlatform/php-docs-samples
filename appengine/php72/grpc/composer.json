@@ -2,7 +2,7 @@
     "require": {
         "google/cloud-spanner": "^1.15.0",
         "google/cloud-monitoring": "^0.16.1",
-        "google/cloud-speech": "^0.24.0"
+        "google/cloud-speech": "^0.25.0"
     },
     "require-dev": {
         "paragonie/random_compat": "^2.0"
