@@ -120,7 +120,7 @@ class storageTest extends TestCase
           '--metadata' => true,
         ]);
 
-        $this->assertContains("BucketName:", $output);
+        $this->assertContains("Bucket Metadata:", $output);
     }
 
     public function testCreateAndDeleteBuckets()
