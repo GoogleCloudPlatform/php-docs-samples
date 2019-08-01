@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @return void
  */
-function get_bucket_metadata($bucketName, $objectName)
+function get_bucket_metadata($bucketName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
