@@ -57,7 +57,8 @@ function get_bucket_metadata($bucketName, $objectName)
       printf("RequesterPays: %s" . PHP_EOL, $info['billing']['requesterPays']);
     if ($info['versioning'])
       printf("VersioningEnabled: %s" . PHP_EOL, $info['versioning']['enabled']);
-    printf("Logging: %s" . PHP_EOL, $info['logging']);
+    if ($info['logging'])
+      printf("Logging: %s" . PHP_EOL, print_r($info['logging']));
     if ($info['labels'])
       printf("Labels: %s" . PHP_EOL, print_r($info['labels'], true));
 }
