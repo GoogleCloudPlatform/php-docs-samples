@@ -114,7 +114,6 @@ class storageTest extends TestCase
 
     public function testBucketMetadata()
     {
-
         $output = $this->runCommand('buckets', [
           'bucket' => self::$bucketName,
           '--metadata' => true,
