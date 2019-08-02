@@ -29,6 +29,7 @@
             "src/enable_default_kms_key.php",
             "src/enable_requester_pays.php",
             "src/generate_encryption_key.php",
+            "src/bucket_metadata.php",
             "src/get_bucket_acl.php",
             "src/get_bucket_acl_for_entity.php",
             "src/get_bucket_default_acl.php",

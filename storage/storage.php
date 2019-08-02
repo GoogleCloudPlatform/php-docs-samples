@@ -125,7 +125,7 @@ EOF
 $application->add(new Command('buckets'))
     ->setDescription('Manage Cloud Storage buckets')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command manages Cloud Storage ACL.
+The <info>%command.name%</info> command manages buckets.
 
 <info>php %command.full_name% --help</info>
 
@@ -134,12 +134,15 @@ EOF
     ->addArgument('bucket', InputArgument::OPTIONAL, 'The Cloud Storage bucket name')
     ->addOption('create', null, InputOption::VALUE_NONE, 'Create the bucket')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the bucket')
+    ->addOption('metadata', null, InputOption::VALUE_NONE, 'Get the bucket metadata')
     ->setCode(function ($input, $output) {
         if ($bucketName = $input->getArgument('bucket')) {
             if ($input->getOption('create')) {
                 create_bucket($bucketName);
             } elseif ($input->getOption('delete')) {
                 delete_bucket($bucketName);
+            } elseif ($input->getOption('metadata')) {
+                get_bucket_metadata($bucketName);
             } else {
                 throw new \Exception('Supply --create or --delete with bucket name');
             }
