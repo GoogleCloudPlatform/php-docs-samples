@@ -1,0 +1,8 @@
+runtime: php
+vm: true
+
+runtime_config:
+  document_root: web
+
+manual_scaling:
+  instances: 1
