@@ -112,7 +112,7 @@ class storageTest extends TestCase
         $this->assertContains("Bucket:", $output);
     }
 
-    public function testCreateAndDeleteBuckets()
+    public function testCreateGetDeleteBuckets()
     {
         $bucketName = sprintf('test-bucket-%s-%s', time(), rand());
         $bucket = self::$storage->bucket($bucketName);
@@ -128,6 +128,13 @@ class storageTest extends TestCase
         $this->assertTrue($bucket->exists());
 
         $output = $this->runCommand('buckets', [
+          'bucket' => $bucketName,
+          '--metadata' => true,
+        ]);
+
+        $this->assertContains("Bucket Metadata:", $output);
+
+        $output = $this->runCommand('buckets', [
             'bucket' => $bucketName,
             '--delete' => true,
         ]);
@@ -135,16 +142,6 @@ class storageTest extends TestCase
         $this->assertFalse($bucket->exists());
 
         $this->assertContains("Bucket deleted: $bucketName", $output);
-    }
-
-    public function testBucketMetadata()
-    {
-        $output = $this->runCommand('buckets', [
-          'bucket' => self::$bucketName,
-          '--metadata' => true,
-        ]);
-
-        $this->assertContains("Bucket Metadata:", $output);
     }
 
     public function testBucketDefaultAcl()
