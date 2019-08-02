@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,8 +28,9 @@ use PHPUnit\Framework\TestCase;
 class UniformBucketLevelAccessCommandTest extends TestCase
 {
     use TestTrait;
+    use ExecuteCommandTrait;
 
-    protected $commandTester;
+    private static $commandFile = __DIR__ . '/../storage.php';
     protected $storage;
     protected $bucket;
 
@@ -37,8 +38,6 @@ class UniformBucketLevelAccessCommandTest extends TestCase
     {
         // Sleep to avoid the rate limit for creating/deleting.
         sleep(5 + rand(2, 4));
-        $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('uniform-bucket-level-access'));
         $this->storage = new StorageClient();
 
         // Append random because tests for multiple PHP versions were running at the same time.
@@ -53,18 +52,15 @@ class UniformBucketLevelAccessCommandTest extends TestCase
 
     public function testEnableUniformBucketLevelAccess()
     {
-        $this->commandTester->execute(
-          [
-              'bucket' => $this->bucket->name(),
-              '--enable' => true,
-          ],
-          ['interactive' => false]
-        );
+        $output = $this->runCommand('uniform-bucket-level-access', [
+            'bucket' => $this->bucket->name(),
+            '--enable' => true,
+        ]);
         $outputString = <<<EOF
 Uniform bucket-level access was enabled for {$this->bucket->name()}
 
 EOF;
-        $this->expectOutputString($outputString);
+        $this->assertEquals($outputString, $output);
         $this->bucket->reload();
         $bucketInformation = $this->bucket->info();
         $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];
@@ -74,19 +70,16 @@ EOF;
     /** @depends testEnableUniformBucketLevelAccess */
     public function testDisableUniformBucketLevelAccess()
     {
-        $this->commandTester->execute(
-          [
-              'bucket' => $this->bucket->name(),
-              '--disable' => true,
-          ],
-          ['interactive' => false]
-        );
+        $output = $this->runCommand('uniform-bucket-level-access', [
+            'bucket' => $this->bucket->name(),
+            '--disable' => true,
+        ]);
 
         $outputString = <<<EOF
 Uniform bucket-level access was disabled for {$this->bucket->name()}
 
 EOF;
-        $this->expectOutputString($outputString);
+        $this->assertEquals($outputString, $output);
         $this->bucket->reload();
         $bucketInformation = $this->bucket->info();
         $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];
@@ -96,19 +89,16 @@ EOF;
     /** @depends testDisableUniformBucketLevelAccess */
     public function testGetUniformBucketLevelAccess()
     {
-        $this->commandTester->execute(
-          [
-              'bucket' => $this->bucket->name(),
-              '--get' => true,
-          ],
-          ['interactive' => false]
-        );
+        $output = $this->runCommand('uniform-bucket-level-access', [
+            'bucket' => $this->bucket->name(),
+            '--get' => true,
+        ]);
 
         $outputString = <<<EOF
 Uniform bucket-level access is disabled for {$this->bucket->name()}
 
 EOF;
-        $this->expectOutputString($outputString);
+        $this->assertEquals($outputString, $output);
         $this->bucket->reload();
         $bucketInformation = $this->bucket->info();
         $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];

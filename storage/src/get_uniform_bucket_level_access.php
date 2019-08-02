@@ -43,7 +43,7 @@ function get_uniform_bucket_level_access($bucketName)
         printf('Uniform bucket-level access is enabled for %s' . PHP_EOL, $bucketName);
         printf('Uniform bucket-level access will be locked on %s' . PHP_EOL, $ubla['LockedTime']);
     } else {
-        printf('Uniform bucket-level is disabled for %s' . PHP_EOL, $bucketName);
+        printf('Uniform bucket-level access is disabled for %s' . PHP_EOL, $bucketName);
     }
 }
 # [END storage_get_uniform_bucket_level_access]
