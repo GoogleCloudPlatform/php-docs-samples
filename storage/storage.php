@@ -30,8 +30,7 @@ $application = new Application();
 // Create Bucket ACL command
 $application->add(new Command('bucket-acl'))
     ->setDescription('Manage the ACL for Cloud Storage buckets.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 
 <info>php %command.full_name% --help</info>
@@ -63,8 +62,7 @@ EOF
 // Create Bucket Default ACL command
 $application->add(new Command('bucket-default-acl'))
     ->setDescription('Manage the default ACL for Cloud Storage buckets.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 
 <info>php %command.full_name% --help</info>
@@ -96,8 +94,7 @@ EOF
 // Create Bucket Labels command
 $application->add(new Command('bucket-labels'))
     ->setDescription('Manage Cloud Storage bucket labels')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage Bucket labels.
 
 <info>php %command.full_name% --help</info>
@@ -127,8 +124,7 @@ EOF
 // Create Buckets command
 $application->add(new Command('buckets'))
     ->setDescription('Manage Cloud Storage buckets')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages buckets.
 
 <info>php %command.full_name% --help</info>
@@ -159,8 +155,7 @@ EOF
 // Set Bucket Lock commands
 $application->add(new Command('bucket-lock'))
     ->setDescription('Manage Cloud Storage retention policies')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage retention policies.
 
 <info>php %command.full_name% --help</info>
@@ -223,8 +218,7 @@ EOF
 // Create Encryption command
 $application->add(new Command('encryption'))
     ->setDescription('Upload and download Cloud Storage objects with encryption')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 
 <info>php %command.full_name% --help</info>
@@ -266,8 +260,7 @@ EOF
 
 $application->add(new Command('iam'))
     ->setDescription('Manage IAM for Storage')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Storage IAM policies.
 
 <info>php %command.full_name% my-bucket</info>
@@ -304,8 +297,7 @@ EOF
 
 $application->add(new Command('object-acl'))
     ->setDescription('Manage the ACL for Cloud Storage objects')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage ACL.
 
 <info>php %command.full_name% --help</info>
@@ -338,8 +330,7 @@ EOF
 
 $application->add(new Command('objects'))
     ->setDescription('Manage Cloud Storage objects')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage objects.
 
 <info>php %command.full_name% --help</info>
@@ -384,8 +375,7 @@ EOF
 
 $application->add(new Command('requester-pays'))
     ->setDescription('Manage Cloud Storage requester pays buckets.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage requester pays buckets.
 
 <info>php %command.full_name% --help</info>
@@ -417,8 +407,7 @@ EOF
 
 $application->add(new Command('bucket-policy-only'))
     ->setDescription('Manage Cloud Storage bucket policy only buckets.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command manages Cloud Storage bucket policy only buckets.
 
 <info>php %command.full_name% --help</info>
@@ -444,8 +433,7 @@ EOF
 
 $application->add(new Command('enable-default-kms-key'))
     ->setDescription('Enable default KMS encryption for a bucket.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command enables default KMS encryption for bucket.
 
 <info>php %command.full_name% --help</info>
@@ -464,8 +452,7 @@ EOF
 
 $application->add(new Command('upload-with-kms-key'))
     ->setDescription('Upload a file using KMS encryption.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command uploads a file using KMS encryption.
 
 <info>php %command.full_name% --help</info>
@@ -488,8 +475,7 @@ EOF
 
 $application->add(new Command('get-object-v2-signed-url'))
     ->setDescription('Generate a v2 signed URL for downloading an object.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command generates a v2 signed URL for downloading an object.
 
 <info>php %command.full_name% --help</info>
@@ -506,8 +492,7 @@ EOF
 
 $application->add(new Command('get-object-v4-signed-url'))
     ->setDescription('Generate a v4 signed URL for downloading an object.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command generates a v4 signed URL for downloading an object.
 
 <info>php %command.full_name% --help</info>
@@ -524,8 +509,7 @@ EOF
 
 $application->add(new Command('get-object-v4-upload-signed-url'))
     ->setDescription('Generate a v4 signed URL for uploading an object.')
-    ->setHelp(
-        <<<EOF
+    ->setHelp(<<<EOF
 The <info>%command.name%</info> command generates a v4 signed URL for uploading an object.
 
 <info>php %command.full_name% --help</info>
