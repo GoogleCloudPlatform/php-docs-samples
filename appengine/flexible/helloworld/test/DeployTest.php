@@ -18,11 +18,12 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class BookshelfTest
  */
-class BookshelfTest extends \PHPUnit_Framework_TestCase
+class BookshelfTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 

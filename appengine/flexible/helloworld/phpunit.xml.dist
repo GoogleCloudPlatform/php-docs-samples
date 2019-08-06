@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="vendor/autoload.php" convertWarningsToExceptions="false">
+<phpunit bootstrap="../../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
         <testsuite name="PHP Getting Started Test Suite">
             <directory>test</directory>
