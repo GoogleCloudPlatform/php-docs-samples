@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-// [START index_php]
+// [START appengine_flex_helloworld_index_php]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
@@ -36,4 +36,4 @@ if (PHP_SAPI != 'cli') {
 // @codeCoverageIgnoreEnd
 
 return $app;
-// [END index_php]
+// [END appengine_flex_helloworld_index_php]
