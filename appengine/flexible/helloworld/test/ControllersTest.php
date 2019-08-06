@@ -43,7 +43,7 @@ class ControllersTest extends WebTestCase
         $this->assertContains('Hello World', $resp->getContent());
     }
 
-    public function testBlog()
+    public function testGoodbye()
     {
         $client = $this->createClient();
         $crawlerexport = $client->request('GET', '/goodbye');
