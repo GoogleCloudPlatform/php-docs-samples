@@ -26,6 +26,26 @@ $logger->info('This will show up as log level INFO');
 $logger->warning('This will show up as log level WARNING');
 $logger->error('This will show up as log level ERROR');
 
+// Create the proper filter to view the logs in Stackdriver
+$projectId = getenv('GOOGLE_CLOUD_PROJECT');
+$moduleId = getenv('GAE_SERVICE');
+$versionId = getenv('GAE_VERSION');
+
+$resource = sprintf(
+	'gae_app/module_id/%s/version_id/%s',
+	$moduleId,
+	$versionId
+);
+$logName = sprintf('projects/%s/logs/app', $projectId);
+
+$url = sprintf(
+	'https://console.cloud.google.com/logs/viewer?resource=%s&logName=%s',
+	urlencode($resource),
+	urlencode($logName)
+);
+
 ?>
 
-Logged INFO, WARNING, and ERROR log levels. Visit console.cloud.google.com/logs to see them
+<p>Logged INFO, WARNING, and ERROR log levels. Visit the URL below to see them:</p>
+
+<p><a href="<?= $url ?>"><?= $url ?></a></p>
