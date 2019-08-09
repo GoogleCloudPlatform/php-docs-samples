@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 Google Inc.
  *
@@ -32,16 +33,16 @@ $moduleId = getenv('GAE_SERVICE');
 $versionId = getenv('GAE_VERSION');
 
 $resource = sprintf(
-	'gae_app/module_id/%s/version_id/%s',
-	$moduleId,
-	$versionId
+    'gae_app/module_id/%s/version_id/%s',
+    $moduleId,
+    $versionId
 );
 $logName = sprintf('projects/%s/logs/app', $projectId);
 
 $url = sprintf(
-	'https://console.cloud.google.com/logs/viewer?resource=%s&logName=%s',
-	urlencode($resource),
-	urlencode($logName)
+    'https://console.cloud.google.com/logs/viewer?resource=%s&logName=%s',
+    urlencode($resource),
+    urlencode($logName)
 );
 
 ?>
@@ -49,3 +50,5 @@ $url = sprintf(
 <p>Logged INFO, WARNING, and ERROR log levels. Visit the URL below to see them:</p>
 
 <p><a href="<?= $url ?>"><?= $url ?></a></p>
+
+<?php phpinfo() ?>
