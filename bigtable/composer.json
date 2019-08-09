@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-bigtable": "^0.14.0",
+        "google/cloud-bigtable": "^0.15.0",
         "psr/cache": "^1.0"
     }
 }
