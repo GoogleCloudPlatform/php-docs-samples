@@ -218,6 +218,10 @@ composer require google/cloud-logging google/cloud-error-reporting
 
 ### Copy over App Engine files
 
+Firstly please install [Monolog extension](https://symfony.com/doc/current/logging.html). 
+After that you can find in `src/config` directory `yaml` files what you may change for 
+properly logging.
+
 For your Symfony application to integrate with Stackdriver Logging and Error Handling,
 you will need to copy over the `monolog.yaml` config file and the `ExceptionSubscriber.php`
 Exception Subscriber:
