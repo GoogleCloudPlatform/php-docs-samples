@@ -20,9 +20,9 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
  */
 
-# [START auth_cloud_implicit]
 namespace Google\Cloud\Samples\Auth;
 
+# [START auth_cloud_implicit]
 // Imports the Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
