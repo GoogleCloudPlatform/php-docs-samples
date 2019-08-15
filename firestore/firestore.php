@@ -706,6 +706,23 @@ EOF
     })
 );
 
+// Update Document Increment command
+$application->add((new Command('update-doc-increment'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Update a document number field using Increment.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command updates a document number field using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        update_doc_increment($projectId);
+    })
+);
+
 // Set Document Merge command
 $application->add((new Command('set-document-merge'))
     ->setDefinition($inputDefinition)
