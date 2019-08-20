@@ -35,10 +35,10 @@ use Google\Cloud\Storage\StorageClient;
  */
 function deactivate_hmac_key($options = ['projectId' => 'your-project-id'])
 {
-  $storage = new StorageClient();
-  $hmacKey = $storage->hmacKey($accessId, $options);
+    $storage = new StorageClient();
+    $hmacKey = $storage->hmacKey($accessId, $options);
 
-  $hmacKey = $hmacKey->update('INACTIVE');
-  printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
+    $hmacKey = $hmacKey->update('INACTIVE');
+    printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
 }
 # [END storage_deactivate_hmac_key]

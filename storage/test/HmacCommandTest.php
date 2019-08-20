@@ -58,13 +58,14 @@ class HmacCommandTest extends TestCase
         deleteAllHmacKeys($this->hmacServiceAccount);
     }
 
-    private function deleteAllHmacKeys($hmacServiceAccount) {
-      $storage = new StorageClient();
-      $hmacKeys = $storage->hmacKeys($options);
-      foreach($hmacKeys as $hmacKey) {
-        $hmacKey->update('INACTIVE');
-        $hmacKey->delete();
-      }
+    private function deleteAllHmacKeys($hmacServiceAccount)
+    {
+        $storage = new StorageClient();
+        $hmacKeys = $storage->hmacKeys($options);
+        foreach ($hmacKeys as $hmacKey) {
+            $hmacKey->update('INACTIVE');
+            $hmacKey->delete();
+        }
     }
 
     public function testHmacKeyList()
@@ -85,24 +86,24 @@ EOF;
     /** @depends testHmacKeyList */
     public function testHmacKeyCreate()
     {
-      $this->commandTesterCreate->execute(
+        $this->commandTesterCreate->execute(
         [
             'projectId' => $this->projectId,
             'serviceAccoutnEmail' => $this->serviceAccountEmail
         ],
         ['interactive' => false]
       );
-      $outputString = <<<EOF
+        $outputString = <<<EOF
 Create Create Create
 
 EOF;
-      $this->expectOutputString($outputString);
+        $this->expectOutputString($outputString);
     }
 
     /** @depends testHmacKeyCreate */
     public function testHmacKeyGet()
     {
-      $this->commandTesterManage->execute(
+        $this->commandTesterManage->execute(
         [
             'projectId' => $this->projectId,
             'accessId' => $this->accessId,
@@ -110,17 +111,17 @@ EOF;
         ],
         ['interactive' => false]
       );
-      $outputString = <<<EOF
+        $outputString = <<<EOF
 Create Create Create
 
 EOF;
-      $this->expectOutputString($outputString);
+        $this->expectOutputString($outputString);
     }
 
     /** @depends testHmacKeyGet */
     public function testHmacKeyDeactivate()
     {
-      $this->commandTesterManage->execute(
+        $this->commandTesterManage->execute(
         [
             'projectId' => $this->projectId,
             'accessId' => $this->accessId,
@@ -128,17 +129,17 @@ EOF;
         ],
         ['interactive' => false]
       );
-      $outputString = <<<EOF
+        $outputString = <<<EOF
 Create Create Create
 
 EOF;
-      $this->expectOutputString($outputString);
+        $this->expectOutputString($outputString);
     }
 
     /** @depends testHmacKeyDeactivate */
     public function testHmacKeyActivate()
     {
-      $this->commandTesterManage->execute(
+        $this->commandTesterManage->execute(
         [
             'projectId' => $this->projectId,
             'accessId' => $this->accessId,
@@ -146,17 +147,17 @@ EOF;
         ],
         ['interactive' => false]
       );
-      $outputString = <<<EOF
+        $outputString = <<<EOF
 Create Create Create
 
 EOF;
-      $this->expectOutputString($outputString);
+        $this->expectOutputString($outputString);
     }
 
     /** @depends testHmacKeyActivate */
     public function testHmacKeyDelete()
     {
-      $this->commandTesterManage->execute(
+        $this->commandTesterManage->execute(
         [
             'projectId' => $this->projectId,
             'accessId' => $this->accessId,
@@ -164,7 +165,7 @@ EOF;
         ],
         ['interactive' => false]
       );
-      $this->commandTesterManage->execute(
+        $this->commandTesterManage->execute(
         [
             'projectId' => $this->projectId,
             'accessId' => $this->accessId,
@@ -172,10 +173,10 @@ EOF;
         ],
         ['interactive' => false]
       );
-      $outputString = <<<EOF
+        $outputString = <<<EOF
 Create Create Create
 
 EOF;
-      $this->expectOutputString($outputString);
+        $this->expectOutputString($outputString);
     }
 }

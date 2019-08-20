@@ -431,6 +431,69 @@ EOF
         }
     });
 
+$application->add(new Command('hmac-sa-list'))
+    ->setDescription('List Cloud Storage HMAC Keys.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command list Cloud Storage HMAC Keys.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID HMAC Keys to list')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        list_hmac_keys(['projectId' => $projectId]);
+    });
+
+$application->add(new Command('hmac-sa-create'))
+    ->setDescription('Create a Cloud Storage HMAC Key.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command create cloud storage HMAC keys.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID of the service account email')
+    ->addArgument('serviceAccountEmail', InputArgument::REQUIRED, 'The service account to associate new HMAC Key')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        $serviceAccountEmail = $input->getArgument('serviceAccountEmail');
+        create_hmac_key($serviceAccountEmail, ['projectId' => $projectId]);
+    });
+
+$application->add(new Command('hmac-sa-manage'))
+    ->setDescription('Manage Cloud Storage HMAC Keys.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command manages Cloud Storage HMAC Keys.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('projectId', InputArgument::VALUE_REQUIRED, 'The Cloud Project Id associated to the HMAC key')
+    ->addArgument('accessId', InputArgument::VALUE_REQUIRED, 'The Cloud Storage HMAC key access Id')
+    ->addOption('activate', null, InputOption::VALUE_NONE, 'Activate an HMAC key')
+    ->addOption('deactivate', null, InputOption::VALUE_NONE, 'Deactivate an HMAC key')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC key metadata')
+    ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete an HMAC key')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        $accessId = $input->getArgument('accessId');
+        if ($input->getOption('activate')) {
+            activate_hmac_key($accessId, ['projectId' => $projectId]);
+        } elseif ($input->getOption('deactivate')) {
+            deactivate_hmac_key($accessId, ['projectId' => $projectId]);
+        } elseif ($input->getOption('get')) {
+            get_hmac_key($accessId, ['projectId' => $projectId]);
+        } elseif ($input->getOption('delete')) {
+            delete_hmac_key($accessId, ['projectId' => $projectId]);
+        } else {
+            throw new \Exception('You must provide --activate, --deactivate, --get, or --delete with an HMAC key accessId.');
+        }
+    });
+
 $application->add(new Command('enable-default-kms-key'))
     ->setDescription('Enable default KMS encryption for a bucket.')
     ->setHelp(<<<EOF

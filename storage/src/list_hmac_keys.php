@@ -36,8 +36,8 @@ function list_hmac_key($options = ['projectId' => 'your-project-id'])
 {
     $storage = new StorageClient();
     $hmacKeys = $storage->hmacKeys($options);
-    foreach($hmacKeys as $hmacKey) {
-      printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
+    foreach ($hmacKeys as $hmacKey) {
+        printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
     }
 }
 # [END storage_list_hmac_keys]
