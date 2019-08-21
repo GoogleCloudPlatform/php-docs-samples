@@ -33,7 +33,6 @@ class HmacCommandTest extends TestCase
     protected $commandTesterCreate;
     protected $commandTesterManage;
     protected $storage;
-    protected $projectId;
     protected $hmacServiceAccount;
     protected $accessId;
 
@@ -44,7 +43,6 @@ class HmacCommandTest extends TestCase
         $this->commandTesterCreate = new CommandTester($application->get('hmac-sa-create'));
         $this->commandTesterManage = new CommandTester($application->get('hmac-sa-manage'));
         $this->storage = new StorageClient();
-        $this->projectId = $this->requireEnv("GOOGLE_CLOUD_PROJECT");
         $this->hmacServiceAccount = $this->requireEnv('STORAGE_HMAC_KEY_SERVICE_ACCOUNT');
         // Delete all HMAC keys.
         deleteAllHmacKeys($this->hmacServiceAccount);
