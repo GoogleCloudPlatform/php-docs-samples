@@ -38,13 +38,13 @@ function update_doc_increment($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_update_doc_array]
+    # [START fs_update_doc_increment]
     $cityRef = $db->collection('cities')->document('DC');
 
     // Atomically increment the population of the city by 50.
     $cityRef->update([
         ['path' => 'regions', 'value' => FieldValue::incremet(50)]
     ]);
-    # [END fs_update_doc_array]
+    # [END fs_update_doc_increment]
     printf('Updated the population of the DC document in the cities collection.' . PHP_EOL);
 }
