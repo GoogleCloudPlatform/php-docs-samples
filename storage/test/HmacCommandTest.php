@@ -74,11 +74,8 @@ class HmacCommandTest extends TestCase
           ],
           ['interactive' => false]
         );
-        $outputString = <<<EOF
-List List list
-
-EOF;
-        $this->expectOutputString($outputString);
+        $outputString = "/HMAC key Metadata:/";
+        $this->expectOutputRegex($outputString);
     }
 
     /** @depends testHmacKeyList */
@@ -91,11 +88,8 @@ EOF;
         ],
         ['interactive' => false]
       );
-        $outputString = <<<EOF
-Create Create Create
-
-EOF;
-        $this->expectOutputString($outputString);
+        $outputString = "/The base64 encoded secret is:/";
+        $this->expectOutputRegex($outputString);
     }
 
     /** @depends testHmacKeyCreate */
@@ -109,11 +103,8 @@ EOF;
         ],
         ['interactive' => false]
       );
-        $outputString = <<<EOF
-Create Create Create
-
-EOF;
-        $this->expectOutputString($outputString);
+        $outputString = "/HMAC key Metadata:/";
+        $this->expectOutputRegex($outputString);
     }
 
     /** @depends testHmacKeyGet */
@@ -127,11 +118,8 @@ EOF;
         ],
         ['interactive' => false]
       );
-        $outputString = <<<EOF
-Create Create Create
-
-EOF;
-        $this->expectOutputString($outputString);
+        $outputString = "/The HMAC key is now inactive./";
+        $this->expectOutputRegex($outputString);
     }
 
     /** @depends testHmacKeyDeactivate */
@@ -145,11 +133,9 @@ EOF;
         ],
         ['interactive' => false]
       );
-        $outputString = <<<EOF
-Create Create Create
+        $outputString = "/The HMAC key is now active./";
 
-EOF;
-        $this->expectOutputString($outputString);
+        $this->expectOutputRegex($outputString);
     }
 
     /** @depends testHmacKeyActivate */
@@ -171,10 +157,7 @@ EOF;
         ],
         ['interactive' => false]
       );
-        $outputString = <<<EOF
-Create Create Create
-
-EOF;
-        $this->expectOutputString($outputString);
+        $outputString = "/The key is deleted, though it may still appear in StorageClient.hmacKeys() results./";
+        $this->expectOutputRegex($outputString);
     }
 }
