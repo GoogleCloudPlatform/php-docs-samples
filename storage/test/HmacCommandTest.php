@@ -72,8 +72,7 @@ class HmacCommandTest extends TestCase
           [
               'projectId' => self::$projectId
           ],
-          ['interactive' => false]
-        );
+          ['interactive' => false]);
         $outputString = "/HMAC key Metadata:/";
         $this->expectOutputRegex($outputString);
     }
@@ -86,8 +85,7 @@ class HmacCommandTest extends TestCase
             'projectId' => self::$projectId,
             'serviceAccountEmail' => $this->hmacServiceAccount
         ],
-        ['interactive' => false]
-      );
+        ['interactive' => false]);
         $outputString = "/The base64 encoded secret is:/";
         $this->expectOutputRegex($outputString);
     }
@@ -101,8 +99,7 @@ class HmacCommandTest extends TestCase
             'accessId' => $this->accessId,
             '--get' => true
         ],
-        ['interactive' => false]
-      );
+        ['interactive' => false]);
         $outputString = "/HMAC key Metadata:/";
         $this->expectOutputRegex($outputString);
     }
@@ -116,8 +113,7 @@ class HmacCommandTest extends TestCase
             'accessId' => $this->accessId,
             '--deactivate' => true
         ],
-        ['interactive' => false]
-      );
+        ['interactive' => false]);
         $outputString = "/The HMAC key is now inactive./";
         $this->expectOutputRegex($outputString);
     }
@@ -131,10 +127,8 @@ class HmacCommandTest extends TestCase
             'accessId' => $this->accessId,
             '--activate' => true
         ],
-        ['interactive' => false]
-      );
+        ['interactive' => false]);
         $outputString = "/The HMAC key is now active./";
-
         $this->expectOutputRegex($outputString);
     }
 
@@ -147,16 +141,14 @@ class HmacCommandTest extends TestCase
             'accessId' => $this->accessId,
             '--deactivate' => true
         ],
-        ['interactive' => false]
-      );
+        ['interactive' => false]);
         $this->commandTesterManage->execute(
         [
             'projectId' => self::$projectId,
             'accessId' => $this->accessId,
             '--delete' => true
         ],
-        ['interactive' => false]
-      );
+        ['interactive' => false]);
         $outputString = "/The key is deleted, though it may still appear in StorageClient.hmacKeys() results./";
         $this->expectOutputRegex($outputString);
     }
