@@ -47,7 +47,7 @@ class HmacCommandTest extends TestCase
         // Delete all HMAC keys.
         $this->deleteAllHmacKeys($this->hmacServiceAccount);
         // Create test key.
-        $hmacKeyCreated = $this->storage->createHmacKey($hmacServiceAccount, ['projectId' => self::$projectId]);
+        $hmacKeyCreated = $this->storage->createHmacKey($this->hmacServiceAccount, ['projectId' => self::$projectId]);
         $this->accessId = $hmacKeyCreated->hmacKey()->accessId();
     }
 
@@ -57,9 +57,9 @@ class HmacCommandTest extends TestCase
         $this->deleteAllHmacKeys($this->hmacServiceAccount);
     }
 
-    private function deleteAllHmacKeys($hmacServiceAccount)
+    private function deleteAllHmacKeys($serviceAccountEmail)
     {
-        $hmacKeys = $this->storage->hmacKeys();
+        $hmacKeys = $this->storage->hmacKeys(['serviceAccountEmail' => $serviceAccountEmail]);
         foreach ($hmacKeys as $hmacKey) {
             $hmacKey->update('INACTIVE');
             $hmacKey->delete();
