@@ -43,11 +43,11 @@ class HmacCommandTest extends TestCase
         $this->commandTesterCreate = new CommandTester($application->get('hmac-sa-create'));
         $this->commandTesterManage = new CommandTester($application->get('hmac-sa-manage'));
         $this->storage = new StorageClient();
-        $this->hmacServiceAccount = $this->projectId . '@appspot.gserviceaccount.com';
+        $this->hmacServiceAccount = self::$projectId . '@appspot.gserviceaccount.com';
         // Delete all HMAC keys.
         deleteAllHmacKeys($this->hmacServiceAccount);
         // Create test key.
-        $hmacKeyCreated = $this->storage->createHmacKey($hmacServiceAccount, ['projectId' => $this->projectId]);
+        $hmacKeyCreated = $this->storage->createHmacKey($hmacServiceAccount, ['projectId' => self::$projectId]);
         $this->accessId = $hmacKeyCreated->hmacKey()->accessId();
     }
 
@@ -70,7 +70,7 @@ class HmacCommandTest extends TestCase
     {
         $this->commandTesterList->execute(
           [
-              'projectId' => $this->projectId
+              'projectId' => self::$projectId
           ],
           ['interactive' => false]
         );
@@ -86,7 +86,7 @@ EOF;
     {
         $this->commandTesterCreate->execute(
         [
-            'projectId' => $this->projectId,
+            'projectId' => self::$projectId,
             'serviceAccoutnEmail' => $this->serviceAccountEmail
         ],
         ['interactive' => false]
@@ -103,7 +103,7 @@ EOF;
     {
         $this->commandTesterManage->execute(
         [
-            'projectId' => $this->projectId,
+            'projectId' => self::$projectId,
             'accessId' => $this->accessId,
             '--get' => true
         ],
@@ -121,7 +121,7 @@ EOF;
     {
         $this->commandTesterManage->execute(
         [
-            'projectId' => $this->projectId,
+            'projectId' => self::$projectId,
             'accessId' => $this->accessId,
             '--deactivate' => true
         ],
@@ -139,7 +139,7 @@ EOF;
     {
         $this->commandTesterManage->execute(
         [
-            'projectId' => $this->projectId,
+            'projectId' => self::$projectId,
             'accessId' => $this->accessId,
             '--activate' => true
         ],
@@ -157,7 +157,7 @@ EOF;
     {
         $this->commandTesterManage->execute(
         [
-            'projectId' => $this->projectId,
+            'projectId' => self::$projectId,
             'accessId' => $this->accessId,
             '--deactivate' => true
         ],
@@ -165,7 +165,7 @@ EOF;
       );
         $this->commandTesterManage->execute(
         [
-            'projectId' => $this->projectId,
+            'projectId' => self::$projectId,
             'accessId' => $this->accessId,
             '--delete' => true
         ],
