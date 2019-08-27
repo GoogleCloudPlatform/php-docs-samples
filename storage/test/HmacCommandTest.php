@@ -43,7 +43,7 @@ class HmacCommandTest extends TestCase
         $this->commandTesterCreate = new CommandTester($application->get('hmac-sa-create'));
         $this->commandTesterManage = new CommandTester($application->get('hmac-sa-manage'));
         $this->storage = new StorageClient();
-        $this->hmacServiceAccount = $this->requireEnv('STORAGE_HMAC_KEY_SERVICE_ACCOUNT');
+        $this->hmacServiceAccount = $this->projectId . '@appspot.gserviceaccount.com';
         // Delete all HMAC keys.
         deleteAllHmacKeys($this->hmacServiceAccount);
         // Create test key.
