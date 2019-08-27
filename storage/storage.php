@@ -472,8 +472,8 @@ The <info>%command.name%</info> command manages Cloud Storage HMAC Keys.
 
 EOF
     )
-    ->addArgument('projectId', InputArgument::VALUE_REQUIRED, 'The Cloud Project Id associated to the HMAC key')
-    ->addArgument('accessId', InputArgument::VALUE_REQUIRED, 'The Cloud Storage HMAC key access Id')
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project Id associated to the HMAC key')
+    ->addArgument('accessId', InputArgument::REQUIRED, 'The Cloud Storage HMAC key access Id')
     ->addOption('activate', null, InputOption::VALUE_NONE, 'Activate an HMAC key')
     ->addOption('deactivate', null, InputOption::VALUE_NONE, 'Deactivate an HMAC key')
     ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC key metadata')
