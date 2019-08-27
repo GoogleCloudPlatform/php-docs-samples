@@ -29,14 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * List HMAC keys.
  *
- * @param string $options options for the new HMAC key.
+ * @param string $projectId Google Cloud Project ID.
  *
  */
-function list_hmac_keys($options = ['projectId' => 'your-project-id'])
+function list_hmac_keys($projectId)
 {
     $storage = new StorageClient();
     // By default hmacKeys will use the projectId used by StorageClient() list HMAC Keys.
-    $hmacKeys = $storage->hmacKeys($options);
+    $hmacKeys = $storage->hmacKeys(['projectId' => $projectId]);
 
     foreach ($hmacKeys as $hmacKey) {
         printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));

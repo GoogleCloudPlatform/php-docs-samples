@@ -443,7 +443,7 @@ EOF
     ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID HMAC Keys to list')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('projectId');
-        list_hmac_keys(['projectId' => $projectId]);
+        list_hmac_keys($projectId);
     });
 
 $application->add(new Command('hmac-sa-create'))
@@ -460,7 +460,7 @@ EOF
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('projectId');
         $serviceAccountEmail = $input->getArgument('serviceAccountEmail');
-        create_hmac_key($serviceAccountEmail, ['projectId' => $projectId]);
+        create_hmac_key($serviceAccountEmail, $projectId);
     });
 
 $application->add(new Command('hmac-sa-manage'))
@@ -482,13 +482,13 @@ EOF
         $projectId = $input->getArgument('projectId');
         $accessId = $input->getArgument('accessId');
         if ($input->getOption('activate')) {
-            activate_hmac_key($accessId);
+            activate_hmac_key($accessId, $projectId);
         } elseif ($input->getOption('deactivate')) {
-            deactivate_hmac_key($accessId);
+            deactivate_hmac_key($accessId, $projectId);
         } elseif ($input->getOption('get')) {
             get_hmac_key($accessId, $projectId);
         } elseif ($input->getOption('delete')) {
-            delete_hmac_key($accessId);
+            delete_hmac_key($accessId, $projectId);
         } else {
             throw new \Exception('You must provide --activate, --deactivate, --get, or --delete with an HMAC key accessId.');
         }

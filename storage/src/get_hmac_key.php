@@ -30,7 +30,7 @@ use Google\Cloud\Storage\StorageClient;
  * Get HMAC key.
  *
  * @param string $accessId access ID for HMAC key.
- * @param string $projectId Google Cloud Project Id.
+ * @param string $projectId Google Cloud Project ID.
  *
  */
 function get_hmac_key($accessId, $projectId)

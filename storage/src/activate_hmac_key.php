@@ -30,15 +30,16 @@ use Google\Cloud\Storage\StorageClient;
  * Activate HMAC key.
  *
  * @param string $accessId access ID for an inactive HMAC key.
+ * @param string $projectId Google Cloud Project ID.
  *
  */
-function activate_hmac_key($accessId)
+function activate_hmac_key($accessId, $projectId)
 {
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().
-    $hmacKey = $storage->hmacKey($accessId);
+    $hmacKey = $storage->hmacKey($accessId, $projectId);
 
-    $hmacKey = $hmacKey->update('ACTIVE');
+    $hmacKey->update('ACTIVE');
 
     print("The HMAC key is now active.");
     printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
