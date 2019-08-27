@@ -84,7 +84,7 @@ class HmacCommandTest extends TestCase
         $this->commandTesterCreate->execute(
         [
             'projectId' => self::$projectId,
-            'serviceAccoutnEmail' => $this->hmacServiceAccount
+            'serviceAccountEmail' => $this->hmacServiceAccount
         ],
         ['interactive' => false]
       );

@@ -39,6 +39,7 @@ function activate_hmac_key($options = ['projectId' => 'your-project-id'])
     $hmacKey = $storage->hmacKey($accessId, $options);
 
     $hmacKey = $hmacKey->update('ACTIVE');
+
     print("The HMAC key is now active.");
     printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
 }
