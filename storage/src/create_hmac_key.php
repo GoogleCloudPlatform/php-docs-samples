@@ -30,13 +30,15 @@ use Google\Cloud\Storage\StorageClient;
  * Create a new HMAC key.
  *
  * @param string $serviceAccountEmail service account email to associate with new HMAC key.
- * @param string $options options for the new HMAC key.
+ * @param string $options options for the new HMAC key such as projectId.
  *
  */
 function create_hmac_key($serviceAccountEmail, $options = ['projectId' => 'your-project-id'])
 {
     $storage = new StorageClient();
+    // By default createHmacKey will use the projectId used by StorageClient().
     $hmacKeyCreated = $storage->createHmacKey($serviceAccountEmail, $options);
+
     printf("The base64 encoded secret is: %s", $hmacKeyCreated->secret());
     print("Do not miss that secret, there is no API to recover it.");
     printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKeyCreated->hmacKey()->info()));

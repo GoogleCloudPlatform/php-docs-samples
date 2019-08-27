@@ -482,13 +482,13 @@ EOF
         $projectId = $input->getArgument('projectId');
         $accessId = $input->getArgument('accessId');
         if ($input->getOption('activate')) {
-            activate_hmac_key($accessId, ['projectId' => $projectId]);
+            activate_hmac_key($accessId);
         } elseif ($input->getOption('deactivate')) {
-            deactivate_hmac_key($accessId, ['projectId' => $projectId]);
+            deactivate_hmac_key($accessId);
         } elseif ($input->getOption('get')) {
-            get_hmac_key($accessId, ['projectId' => $projectId]);
+            get_hmac_key($accessId, $projectId);
         } elseif ($input->getOption('delete')) {
-            delete_hmac_key($accessId, ['projectId' => $projectId]);
+            delete_hmac_key($accessId);
         } else {
             throw new \Exception('You must provide --activate, --deactivate, --get, or --delete with an HMAC key accessId.');
         }
