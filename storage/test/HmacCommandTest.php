@@ -87,7 +87,7 @@ EOF;
         $this->commandTesterCreate->execute(
         [
             'projectId' => self::$projectId,
-            'serviceAccoutnEmail' => $this->serviceAccountEmail
+            'serviceAccoutnEmail' => $this->hmacServiceAccount
         ],
         ['interactive' => false]
       );
