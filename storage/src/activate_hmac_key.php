@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $options options for the new HMAC key.
  *
  */
-function activate_hmac_key($options = ['projectId' => 'your-project-id'])
+function activate_hmac_key($accessId, $options = ['projectId' => 'your-project-id'])
 {
     $storage = new StorageClient();
     $hmacKey = $storage->hmacKey($accessId, $options);
