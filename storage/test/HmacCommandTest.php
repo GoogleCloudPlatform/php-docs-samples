@@ -45,7 +45,7 @@ class HmacCommandTest extends TestCase
         $this->storage = new StorageClient();
         $this->hmacServiceAccount = self::$projectId . '@appspot.gserviceaccount.com';
         // Delete all HMAC keys.
-        deleteAllHmacKeys($this->hmacServiceAccount);
+        $this->deleteAllHmacKeys($this->hmacServiceAccount);
         // Create test key.
         $hmacKeyCreated = $this->storage->createHmacKey($hmacServiceAccount, ['projectId' => self::$projectId]);
         $this->accessId = $hmacKeyCreated->hmacKey()->accessId();
@@ -54,7 +54,7 @@ class HmacCommandTest extends TestCase
     public function tearDown()
     {
         // Delete all HMAC keys.
-        deleteAllHmacKeys($this->hmacServiceAccount);
+        $this->deleteAllHmacKeys($this->hmacServiceAccount);
     }
 
     private function deleteAllHmacKeys($hmacServiceAccount)
