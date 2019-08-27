@@ -59,7 +59,7 @@ class HmacCommandTest extends TestCase
 
     private function deleteAllHmacKeys($hmacServiceAccount)
     {
-        $hmacKeys = $this->storage->hmacKeys($options);
+        $hmacKeys = $this->storage->hmacKeys();
         foreach ($hmacKeys as $hmacKey) {
             $hmacKey->update('INACTIVE');
             $hmacKey->delete();
