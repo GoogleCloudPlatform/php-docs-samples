@@ -49,6 +49,9 @@ class HmacCommandTest extends TestCase
         // Create test key.
         $hmacKeyCreated = $this->storage->createHmacKey($this->hmacServiceAccount, ['projectId' => self::$projectId]);
         $this->accessId = $hmacKeyCreated->hmacKey()->accessId();
+        $this->setOutputCallback(function () {
+          // disable output
+        });
     }
 
     public function tearDown()
@@ -61,7 +64,9 @@ class HmacCommandTest extends TestCase
     {
         $hmacKeys = $this->storage->hmacKeys(['serviceAccountEmail' => $serviceAccountEmail]);
         foreach ($hmacKeys as $hmacKey) {
-            $hmacKey->update('INACTIVE');
+            if ($hmacKey->info()['state'] == 'ACTIVE') {
+                $hmacKey->update('INACTIVE');
+            }
             $hmacKey->delete();
         }
     }
@@ -73,8 +78,7 @@ class HmacCommandTest extends TestCase
               'projectId' => self::$projectId
           ],
           ['interactive' => false]);
-        $outputString = "/HMAC key Metadata:/";
-        $this->expectOutputRegex($outputString);
+        $this->assertContains("HMAC key Metadata:", $this->getActualOutput());
     }
 
     /** @depends testHmacKeyList */
@@ -86,8 +90,7 @@ class HmacCommandTest extends TestCase
             'serviceAccountEmail' => $this->hmacServiceAccount
         ],
         ['interactive' => false]);
-        $outputString = "/The base64 encoded secret is:/";
-        $this->expectOutputRegex($outputString);
+        $this->assertContains("The base64 encoded secret is:", $this->getActualOutput());
     }
 
     /** @depends testHmacKeyCreate */
@@ -100,12 +103,11 @@ class HmacCommandTest extends TestCase
             '--get' => true
         ],
         ['interactive' => false]);
-        $outputString = "/HMAC key Metadata:/";
-        $this->expectOutputRegex($outputString);
+        $this->assertContains("HMAC key Metadata:", $this->getActualOutput());
     }
 
     /** @depends testHmacKeyGet */
-    public function testHmacKeyDeactivate()
+    public function testHmacKeyDeactivateActivate()
     {
         $this->commandTesterManage->execute(
         [
@@ -114,25 +116,17 @@ class HmacCommandTest extends TestCase
             '--deactivate' => true
         ],
         ['interactive' => false]);
-        $outputString = "/The HMAC key is now inactive./";
-        $this->expectOutputRegex($outputString);
-    }
-
-    /** @depends testHmacKeyDeactivate */
-    public function testHmacKeyActivate()
-    {
+        $this->assertContains("The HMAC key is now inactive", $this->getActualOutput());
         $this->commandTesterManage->execute(
-        [
-            'projectId' => self::$projectId,
-            'accessId' => $this->accessId,
-            '--activate' => true
-        ],
-        ['interactive' => false]);
-        $outputString = "/The HMAC key is now active./";
-        $this->expectOutputRegex($outputString);
+          [
+              'projectId' => self::$projectId,
+              'accessId' => $this->accessId,
+              '--activate' => true
+          ],
+          ['interactive' => false]);
+        $this->assertContains("The HMAC key is now active", $this->getActualOutput());
     }
-
-    /** @depends testHmacKeyActivate */
+    /** @depends testHmacKeyDeactivateActivate */
     public function testHmacKeyDelete()
     {
         $this->commandTesterManage->execute(
@@ -149,7 +143,6 @@ class HmacCommandTest extends TestCase
             '--delete' => true
         ],
         ['interactive' => false]);
-        $outputString = "/The key is deleted, though it may still appear in StorageClient.hmacKeys() results./";
-        $this->expectOutputRegex($outputString);
+        $this->assertContains("The key is deleted,", $this->getActualOutput());
     }
 }

@@ -39,8 +39,8 @@ function create_hmac_key($serviceAccountEmail, $projectId)
     // By default createHmacKey will use the projectId used by StorageClient().
     $hmacKeyCreated = $storage->createHmacKey($serviceAccountEmail, ['projectId' => $projectId]);
 
-    printf("The base64 encoded secret is: %s", $hmacKeyCreated->secret());
-    print("Do not miss that secret, there is no API to recover it.");
-    printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKeyCreated->hmacKey()->info()));
+    printf("The base64 encoded secret is: %s" . PHP_EOL, $hmacKeyCreated->secret());
+    print("Do not miss that secret, there is no API to recover it." . PHP_EOL);
+    printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKeyCreated->hmacKey()->info(), true));
 }
 # [END storage_create_hmac_key]

@@ -41,7 +41,7 @@ function deactivate_hmac_key($accessId, $projectId)
 
     $hmacKey->update('INACTIVE');
 
-    print("The HMAC key is now inactive.");
-    printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info()));
+    print("The HMAC key is now inactive." . PHP_EOL);
+    printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info(), true));
 }
 # [END storage_deactivate_hmac_key]
