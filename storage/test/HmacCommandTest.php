@@ -50,7 +50,7 @@ class HmacCommandTest extends TestCase
         $hmacKeyCreated = $this->storage->createHmacKey($this->hmacServiceAccount, ['projectId' => self::$projectId]);
         $this->accessId = $hmacKeyCreated->hmacKey()->accessId();
         $this->setOutputCallback(function () {
-          // disable output
+            // disable output
         });
     }
 
