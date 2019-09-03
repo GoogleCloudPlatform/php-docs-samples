@@ -152,7 +152,7 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/logo.jpg';
         $output = $this->runCommand('logo', ['path' => $path]);
-        $this->assertContains('google', $output);
+        $this->assertContains('Google', $output);
     }
 
     public function testLogoCommandGcs()
@@ -161,7 +161,7 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('logo', ['path' => $path]);
-        $this->assertContains('google', $output);
+        $this->assertContains('Google', $output);
     }
 
     public function testLocalizeObjectCommand()
