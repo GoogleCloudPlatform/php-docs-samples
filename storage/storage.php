@@ -476,7 +476,7 @@ EOF
     ->addArgument('accessId', InputArgument::REQUIRED, 'The Cloud Storage HMAC key access Id')
     ->addOption('activate', null, InputOption::VALUE_NONE, 'Activate an HMAC key')
     ->addOption('deactivate', null, InputOption::VALUE_NONE, 'Deactivate an HMAC key')
-    ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC key metadata')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC key\'s metadata')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete an HMAC key')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('projectId');

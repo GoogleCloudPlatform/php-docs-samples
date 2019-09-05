@@ -107,7 +107,7 @@ class HmacCommandTest extends TestCase
     }
 
     /** @depends testHmacKeyGet */
-    public function testHmacKeyDeactivateActivate()
+    public function testHmacKeyActivate()
     {
         $this->commandTesterManage->execute(
         [
@@ -117,6 +117,11 @@ class HmacCommandTest extends TestCase
         ],
         ['interactive' => false]);
         $this->assertContains("The HMAC key is now inactive", $this->getActualOutput());
+
+    }
+
+    /** @depends testHmacKeyActivate */
+    public function testHmacKeyDeactivate() {
         $this->commandTesterManage->execute(
           [
               'projectId' => self::$projectId,
@@ -126,7 +131,8 @@ class HmacCommandTest extends TestCase
           ['interactive' => false]);
         $this->assertContains("The HMAC key is now active", $this->getActualOutput());
     }
-    /** @depends testHmacKeyDeactivateActivate */
+
+    /** @depends testHmacKeyDeactivate */
     public function testHmacKeyDelete()
     {
         $this->commandTesterManage->execute(
