@@ -39,10 +39,13 @@ function detect_crop_hints($path)
             $vertices = $hint->getBoundingPoly()->getVertices();
             $bounds = [];
             foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-                    $vertex->getY());
+                $bounds[] = sprintf(
+                    '(%d,%d)',
+                    $vertex->getX(),
+                    $vertex->getY()
+                );
             }
-            print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+            print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         }
     } else {
         print('No crop hints' . PHP_EOL);

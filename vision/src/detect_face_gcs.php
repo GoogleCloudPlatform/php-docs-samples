@@ -51,7 +51,7 @@ function detect_face_gcs($path)
         foreach ($vertices as $vertex) {
             $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
         }
-        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+        print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         print(PHP_EOL);
     }
 
