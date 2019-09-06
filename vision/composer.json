@@ -54,7 +54,9 @@
             "src/product_set_list.php",
             "src/product_set_list_products.php",
             "src/product_set_remove_product.php",
-            "src/product_update.php"
+            "src/product_update.php",
+            "src/product_purge_orphan_products.php",
+            "src/product_purge_products_in_product_set.php"
         ]
     }
 }

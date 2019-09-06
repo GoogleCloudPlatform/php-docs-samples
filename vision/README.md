@@ -49,25 +49,27 @@ This simple command-line application demonstrates how to invoke
 ```
    For `product_search.php`, the following commands are available:
 ```
-  product-create              Create a product
-  product-delete              Delete a product
-  product-get                 Get information of a product
-  product-list                List information for all products
-  product-update              Update information for a product
-  product-image-create        Create reference image
-  product-image-delete        Delete reference image
-  product-image-get           Get reference image information for a product
-  product-image-list          List all reference image information for a product
-  product-search-similar      Search for similar products to local image
-  product-search-similar-gcs  Search for similar products to GCS image
-  product-set-create          Create a product set
-  product-set-delete          Delete a product set
-  product-set-get             Get information for a product set
-  product-set-import          Import a product set
-  product-set-list            List information for all product sets
-  product-set-add-product     Add product to a product set
-  product-set-list-products   List products in a product set
-  product-set-remove-product  Remove product from a product set
+  product-create                        Create a product
+  product-delete                        Delete a product
+  product-get                           Get information of a product
+  product-list                          List information for all products
+  product-update                        Update information for a product
+  product-image-create                  Create reference image
+  product-image-delete                  Delete reference image
+  product-image-get                     Get reference image information for a product
+  product-image-list                    List all reference image information for a product
+  product-search-similar                Search for similar products to local image
+  product-search-similar-gcs            Search for similar products to GCS image
+  product-set-create                    Create a product set
+  product-set-delete                    Delete a product set
+  product-set-get                       Get information for a product set
+  product-set-import                    Import a product set
+  product-set-list                      List information for all product sets
+  product-set-add-product               Add product to a product set
+  product-set-list-products             List products in a product set
+  product-set-remove-product            Remove product from a product set
+  product-purge-orphan                  Delete all products not in any product sets
+  product-purge-products-in-product-set Delete all products not in any product set
 ```
 
 7. Run `php vision.php COMMAND --help` or `php product_search.php COMMAND --help` to print information about the usage of each command.
