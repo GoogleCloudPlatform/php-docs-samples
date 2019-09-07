@@ -240,10 +240,10 @@ class visionTest extends TestCase
         $path = __DIR__ . '/data/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', ['path' => $path]);
         $this->assertContains('Crop hints:', $output);
-        $this->assertContains('(0,0)', $output);
-        $this->assertContains('(599,0)', $output);
-        $this->assertContains('(599,475)', $output);
-        $this->assertContains('(0,475)', $output);
+        $this->assertContains('(210,0)', $output);
+        $this->assertContains('(476,0)', $output);
+        $this->assertContains('(476,475)', $output);
+        $this->assertContains('(210,475)', $output);
     }
 
     public function testCropHintsCommandGcs()
@@ -253,10 +253,10 @@ class visionTest extends TestCase
         $path = 'gs://' . $bucketName . '/vision/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', ['path' => $path]);
         $this->assertContains('Crop hints:', $output);
-        $this->assertContains('(0,0)', $output);
-        $this->assertContains('(599,0)', $output);
-        $this->assertContains('(599,475)', $output);
-        $this->assertContains('(0,475)', $output);
+        $this->assertContains('(210,0)', $output);
+        $this->assertContains('(476,0)', $output);
+        $this->assertContains('(476,475)', $output);
+        $this->assertContains('(210,475)', $output);
     }
 
     public function testDocumentTextCommand()
