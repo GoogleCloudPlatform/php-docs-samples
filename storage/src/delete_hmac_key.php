@@ -40,7 +40,7 @@ function delete_hmac_key($accessId, $projectId)
     $hmacKey = $storage->hmacKey($accessId, $projectId);
 
     $hmacKey->delete();
-    print("The key is deleted, though it may still appear in StorageClient.hmacKeys(\$options=['showDeletedKeys'=>true])");
-    print("results when  is used." . PHP_EOL);
+    print("The key is deleted, though it may still appear in results StorageClient.hmacKeys(\$options=['showDeletedKeys'=>true])");
+    print(" when is used." . PHP_EOL);
 }
 # [END storage_get_hmac_key]
