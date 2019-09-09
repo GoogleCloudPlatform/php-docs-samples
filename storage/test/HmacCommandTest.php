@@ -104,8 +104,9 @@ class HmacCommandTest extends TestCase
         $this->assertContains("HMAC key Metadata:", $this->getActualOutput());
     }
 
-    public function testHmacKeyDeactivate() {
-      $this->commandTesterManage->execute(
+    public function testHmacKeyDeactivate()
+    {
+        $this->commandTesterManage->execute(
         [
             'projectId' => self::$projectId,
             'accessId' => $this->accessId,
