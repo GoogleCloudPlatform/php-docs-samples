@@ -81,7 +81,6 @@ class HmacCommandTest extends TestCase
         $this->assertContains("HMAC key Metadata:", $this->getActualOutput());
     }
 
-    /** @depends testHmacKeyList */
     public function testHmacKeyCreate()
     {
         $this->commandTesterCreate->execute(
@@ -93,7 +92,6 @@ class HmacCommandTest extends TestCase
         $this->assertContains("The base64 encoded secret is:", $this->getActualOutput());
     }
 
-    /** @depends testHmacKeyCreate */
     public function testHmacKeyGet()
     {
         $this->commandTesterManage->execute(
@@ -106,9 +104,26 @@ class HmacCommandTest extends TestCase
         $this->assertContains("HMAC key Metadata:", $this->getActualOutput());
     }
 
-    /** @depends testHmacKeyGet */
+    public function testHmacKeyDeactivate() {
+      $this->commandTesterManage->execute(
+        [
+            'projectId' => self::$projectId,
+            'accessId' => $this->accessId,
+            '--activate' => true
+        ],
+        ['interactive' => false]);
+      $this->assertContains("The HMAC key is now active", $this->getActualOutput());
+    }
+
     public function testHmacKeyActivate()
     {
+        $this->commandTesterManage->execute(
+        [
+            'projectId' => self::$projectId,
+            'accessId' => $this->accessId,
+            '--activate' => true
+        ],
+        ['interactive' => false]);
         $this->commandTesterManage->execute(
         [
             'projectId' => self::$projectId,
@@ -120,19 +135,6 @@ class HmacCommandTest extends TestCase
 
     }
 
-    /** @depends testHmacKeyActivate */
-    public function testHmacKeyDeactivate() {
-        $this->commandTesterManage->execute(
-          [
-              'projectId' => self::$projectId,
-              'accessId' => $this->accessId,
-              '--activate' => true
-          ],
-          ['interactive' => false]);
-        $this->assertContains("The HMAC key is now active", $this->getActualOutput());
-    }
-
-    /** @depends testHmacKeyDeactivate */
     public function testHmacKeyDelete()
     {
         $this->commandTesterManage->execute(
