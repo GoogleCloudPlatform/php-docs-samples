@@ -38,6 +38,6 @@ function get_hmac_key($accessId, $projectId)
     $storage = new StorageClient();
     $hmacKey = $storage->hmacKey($accessId, $projectId);
 
-    printf("HMAC key Metadata: %s" . PHP_EOL, print_r($hmacKey->info(), true));
+    printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
 }
 # [END storage_get_hmac_key]

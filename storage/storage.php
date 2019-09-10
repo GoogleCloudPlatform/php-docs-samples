@@ -490,7 +490,9 @@ EOF
         } elseif ($input->getOption('delete')) {
             delete_hmac_key($accessId, $projectId);
         } else {
-            throw new \Exception('You must provide --activate, --deactivate, --get, or --delete with an HMAC key accessId.');
+          throw new \Exception(
+            'You must provide --activate, --deactivate, --get, or --delete with an HMAC key accessId.'
+          );
         }
     });
 
