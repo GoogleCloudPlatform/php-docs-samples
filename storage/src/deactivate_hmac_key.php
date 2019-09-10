@@ -27,9 +27,9 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Deactivate HMAC key.
+ * Deactivate an HMAC key.
  *
- * @param string $accessId access ID for an inactive HMAC key.
+ * @param string $accessId Access ID for an inactive HMAC key.
  * @param string $projectId Google Cloud Project ID.
  *
  */

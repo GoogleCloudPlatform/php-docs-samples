@@ -434,13 +434,13 @@ EOF
 $application->add(new Command('hmac-sa-list'))
     ->setDescription('List Cloud Storage HMAC Keys.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command list Cloud Storage HMAC Keys.
+The <info>%command.name%</info> command lists Cloud Storage HMAC Keys.
 
 <info>php %command.full_name% --help</info>
 
 EOF
     )
-    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID HMAC Keys to list')
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID with HMAC Keys to list')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('projectId');
         list_hmac_keys($projectId);
@@ -449,14 +449,14 @@ EOF
 $application->add(new Command('hmac-sa-create'))
     ->setDescription('Create a Cloud Storage HMAC Key.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command create cloud storage HMAC keys.
+The <info>%command.name%</info> command creates Cloud Storage HMAC Keys.
 
 <info>php %command.full_name% --help</info>
 
 EOF
     )
-    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID of the service account email')
-    ->addArgument('serviceAccountEmail', InputArgument::REQUIRED, 'The service account to associate new HMAC Key')
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID associated with the service account email')
+    ->addArgument('serviceAccountEmail', InputArgument::REQUIRED, 'The service account to associate with the new HMAC Key')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('projectId');
         $serviceAccountEmail = $input->getArgument('serviceAccountEmail');
@@ -472,12 +472,12 @@ The <info>%command.name%</info> command manages Cloud Storage HMAC Keys.
 
 EOF
     )
-    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project Id associated to the HMAC key')
-    ->addArgument('accessId', InputArgument::REQUIRED, 'The Cloud Storage HMAC key access Id')
-    ->addOption('activate', null, InputOption::VALUE_NONE, 'Activate an HMAC key')
-    ->addOption('deactivate', null, InputOption::VALUE_NONE, 'Deactivate an HMAC key')
-    ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC key\'s metadata')
-    ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete an HMAC key')
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID associated with the HMAC Key')
+    ->addArgument('accessId', InputArgument::REQUIRED, 'The Cloud Storage HMAC Key access ID')
+    ->addOption('activate', null, InputOption::VALUE_NONE, 'Activate an HMAC Key')
+    ->addOption('deactivate', null, InputOption::VALUE_NONE, 'Deactivate an HMAC Key')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC Key\'s metadata')
+    ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete an HMAC Key')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('projectId');
         $accessId = $input->getArgument('accessId');

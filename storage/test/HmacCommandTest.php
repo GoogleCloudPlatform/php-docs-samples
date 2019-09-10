@@ -23,7 +23,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for BucketPolicyOnlyCommand.
+ * Unit Tests for HmacCommand.
  */
 class HmacCommandTest extends TestCase
 {

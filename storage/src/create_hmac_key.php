@@ -29,7 +29,7 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Create a new HMAC key.
  *
- * @param string $serviceAccountEmail service account email to associate with new HMAC key.
+ * @param string $serviceAccountEmail Service account email to associate with the new HMAC key.
  * @param string $projectId Google Cloud Project ID.
  *
  */
