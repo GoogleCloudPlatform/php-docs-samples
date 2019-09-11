@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,25 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START create_bucket]
+# [START storage_deactivate_hmac_key]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a Cloud Storage Bucket.
+ * Deactivate an HMAC key.
  *
- * @param string $bucketName name of the bucket to create.
- * @param string $options options for the new bucket.
+ * @param string $accessId Access ID for an inactive HMAC key.
+ * @param string $projectId Google Cloud Project ID.
  *
  */
-function create_bucket($bucketName, $options = [])
+function deactivate_hmac_key($accessId, $projectId)
 {
     $storage = new StorageClient();
-    $bucket = $storage->createBucket($bucketName, $options);
-    printf('Bucket created: %s' . PHP_EOL, $bucket->name());
+    // By default hmacKey will use the projectId used by StorageClient().
+    $hmacKey = $storage->hmacKey($accessId, $projectId);
+
+    $hmacKey->update('INACTIVE');
+
+    print('The HMAC key is now inactive.' . PHP_EOL);
+    printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
 }
-# [END create_bucket]
+# [END storage_deactivate_hmac_key]

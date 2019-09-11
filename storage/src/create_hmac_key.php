@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,24 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START create_bucket]
+# [START storage_create_hmac_key]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a Cloud Storage Bucket.
+ * Create a new HMAC key.
  *
- * @param string $bucketName name of the bucket to create.
- * @param string $options options for the new bucket.
+ * @param string $serviceAccountEmail Service account email to associate with the new HMAC key.
+ * @param string $projectId Google Cloud Project ID.
  *
  */
-function create_bucket($bucketName, $options = [])
+function create_hmac_key($serviceAccountEmail, $projectId)
 {
     $storage = new StorageClient();
-    $bucket = $storage->createBucket($bucketName, $options);
-    printf('Bucket created: %s' . PHP_EOL, $bucket->name());
+    // By default createHmacKey will use the projectId used by StorageClient().
+    $hmacKeyCreated = $storage->createHmacKey($serviceAccountEmail, ['projectId' => $projectId]);
+
+    printf('The base64 encoded secret is: %s' . PHP_EOL, $hmacKeyCreated->secret());
+    print('Do not miss that secret, there is no API to recover it.' . PHP_EOL);
+    printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKeyCreated->hmacKey()->info(), true));
 }
-# [END create_bucket]
+# [END storage_create_hmac_key]

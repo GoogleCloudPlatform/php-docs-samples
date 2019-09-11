@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,23 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START create_bucket]
+# [START storage_list_hmac_keys]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a Cloud Storage Bucket.
+ * List HMAC keys.
  *
- * @param string $bucketName name of the bucket to create.
- * @param string $options options for the new bucket.
+ * @param string $projectId Google Cloud Project ID.
  *
  */
-function create_bucket($bucketName, $options = [])
+function list_hmac_keys($projectId)
 {
     $storage = new StorageClient();
-    $bucket = $storage->createBucket($bucketName, $options);
-    printf('Bucket created: %s' . PHP_EOL, $bucket->name());
+    // By default hmacKeys will use the projectId used by StorageClient() to list HMAC Keys.
+    $hmacKeys = $storage->hmacKeys(['projectId' => $projectId]);
+
+    foreach ($hmacKeys as $hmacKey) {
+        printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
+    }
 }
-# [END create_bucket]
+# [END storage_list_hmac_keys]
