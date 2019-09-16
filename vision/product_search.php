@@ -129,6 +129,53 @@ EOF
     })
 );
 
+// Purge orphan products
+$application->add((new Command('product-purge-orphan'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('force', InputArgument::REQUIRED,
+        'Force purge.')
+    ->setDescription('Purge orphan products.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> Purge orphan products
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $force = $input->getArgument('force');
+        purge_orphan_products($projectId, $location, $force);
+    })
+);
+
+
+// Purge orphan products
+$application->add((new Command('product-purge-products-in-product-set'))
+    ->addArgument('project-id', InputArgument::REQUIRED,
+        'Project/agent id. Required.')
+    ->addArgument('location', InputArgument::REQUIRED,
+        'Name of compute region.')
+    ->addArgument('product-set-id', InputArgument::REQUIRED, 'ID of product set')
+    ->addArgument('force', InputArgument::REQUIRED,
+        'Force purge.')
+    ->setDescription('Purge orphan products.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> Purge orphan products
+    <info>php %command.full_name% PROJECT_ID COMPUTE_REGION</info>
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project-id');
+        $location = $input->getArgument('location');
+        $productSetId = $input->getArgument('product-set-id');
+        $force = $input->getArgument('force');
+        purge_products_in_product_set($projectId, $location, $productSetId, $force);
+    })
+);
+
 // create product
 $application->add((new Command('product-create'))
     ->addArgument('project-id', InputArgument::REQUIRED,
