@@ -19,7 +19,6 @@
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ProductSearchClient;
-use Google\Cloud\Vision\V1\PurgeProductsRequest;
 use Google\Cloud\Vision\V1\ProductSetPurgeConfig;
 
 /**

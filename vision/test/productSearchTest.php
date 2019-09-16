@@ -290,7 +290,6 @@ class productSearchTest extends TestCase
     /** @depends testAddProductToProductSet */
     public function testPurgeProductsInProductSet()
     {
-
         $this->runCommand('product-purge-products-in-product-set', [
             'product-set-id' => self::$productSetId,
             'force' => true
