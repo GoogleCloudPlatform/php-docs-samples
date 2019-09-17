@@ -39,8 +39,8 @@ function list_hmac_keys($projectId)
     $hmacKeys = $storage->hmacKeys(['projectId' => $projectId]);
 
     foreach ($hmacKeys as $hmacKey) {
-        printf('Service Account Email: %s' . PHP_EOL, $hmacKey['metadata']['serviceAccountEmail']);
-        printf('Access Id: %s' . PHP_EOL, $hmacKey['metadata']['accessId']);
+        printf('Service Account Email: %s' . PHP_EOL, $hmacKey->info()['serviceAccountEmail']);
+        printf('Access Id: %s' . PHP_EOL, $hmacKey->info()['accessId']);
     }
 }
 # [END storage_list_hmac_keys]
