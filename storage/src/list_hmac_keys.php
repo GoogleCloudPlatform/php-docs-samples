@@ -38,8 +38,10 @@ function list_hmac_keys($projectId)
     // By default hmacKeys will use the projectId used by StorageClient() to list HMAC Keys.
     $hmacKeys = $storage->hmacKeys(['projectId' => $projectId]);
 
+    printf('HMAC Key\'s:' . PHP_EOL);
     foreach ($hmacKeys as $hmacKey) {
-        printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
+        printf('Service Account Email: %s' . PHP_EOL, $hmacKey->info()['serviceAccountEmail']);
+        printf('Access Id: %s' . PHP_EOL, $hmacKey->info()['accessId']);
     }
 }
 # [END storage_list_hmac_keys]
