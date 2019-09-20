@@ -369,54 +369,13 @@ final class BigtableTest extends TestCase
         }
     }
 
-    public function testWritingRows()
+    public function testHelloWorld()
     {
         $this->requireGrpc();
 
         $tableId = uniqid(self::TABLE_ID_PREFIX);
-        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
 
-        $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
-        $this->checkTable($tableName);
-
-        $content = self::runSnippet('helloworld/write_rows', [
-            self::$projectId,
-            self::$instanceId,
-            $tableId
-        ]);
-
-        $table = self::$bigtableClient->table(self::$instanceId, $tableId);
-        $columnFamilyId = 'cf1';
-        $column = 'greeting';
-
-        $partial_rows = $table->readRows([])->readAll();
-        $array = [];
-        foreach ($partial_rows as $row) {
-            $array[] = $row[$columnFamilyId][$column][0]['value'];
-        }
-
-        $this->assertContains('Hello World!', $array);
-        $this->assertContains('Hello Cloud Bigtable!', $array);
-        $this->assertContains('Hello PHP!', $array);
-    }
-
-    public function testGettingARow()
-    {
-        $this->requireGrpc();
-
-        $tableId = uniqid(self::TABLE_ID_PREFIX);
-        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
-
-        $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
-        $this->checkTable($tableName);
-
-        self::runSnippet('helloworld/write_rows', [
-            self::$projectId,
-            self::$instanceId,
-            $tableId
-        ]);
-
-        $content = self::runSnippet('helloworld/get_with_filter', [
+        $content = self::runSnippet('hello_world', [
             self::$projectId,
             self::$instanceId,
             $tableId
@@ -424,38 +383,16 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
+        $this->assertContains(sprintf('Creating a Table: %s', $tableId), $array);
+        $this->assertContains(sprintf('Created table %s', $tableId), $array);
+        $this->assertContains('Writing some greetings to the table.', $array);
         $this->assertContains('Getting a single greeting by row key.', $array);
         $this->assertContains('Hello World!', $array);
-    }
-
-    public function testScanningAllRows()
-    {
-        $this->requireGrpc();
-
-        $tableId = uniqid(self::TABLE_ID_PREFIX);
-        $tableName = self::$tableAdminClient->tableName(self::$projectId, self::$instanceId, $tableId);
-
-        $this->createHWTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
-        $this->checkTable($tableName);
-
-        self::runSnippet('helloworld/write_rows', [
-            self::$projectId,
-            self::$instanceId,
-            $tableId
-        ]);
-
-        $content = self::runSnippet('helloworld/scan_all', [
-            self::$projectId,
-            self::$instanceId,
-            $tableId
-        ]);
-
-        $array = explode(PHP_EOL, $content);
-
         $this->assertContains('Scanning for all greetings:', $array);
         $this->assertContains('Hello World!', $array);
         $this->assertContains('Hello Cloud Bigtable!', $array);
         $this->assertContains('Hello PHP!', $array);
+        $this->assertContains(sprintf('Deleted %s table.', $tableId), $array);
     }
 
     private static function create_production_instance($projectId, $instanceId, $clusterId)
@@ -556,15 +493,6 @@ final class BigtableTest extends TestCase
     private function createTable($projectId, $instanceId, $clusterId, $tableId)
     {
         self::runSnippet('create_table', [
-            $projectId,
-            $instanceId,
-            $tableId
-        ]);
-    }
-
-    private function createHWTable($projectId, $instanceId, $clusterId, $tableId)
-    {
-        self::runSnippet('helloworld/create_table', [
             $projectId,
             $instanceId,
             $tableId
