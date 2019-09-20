@@ -69,7 +69,7 @@ printf('Creating a Table: %s' . PHP_EOL, $table_id);
 
 try {
     $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-    printf('Table %s alredy exists' . PHP_EOL, $table_id);
+    printf('Table %s already exists' . PHP_EOL, $table_id);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf('Creating the %s table' . PHP_EOL, $table_id);
