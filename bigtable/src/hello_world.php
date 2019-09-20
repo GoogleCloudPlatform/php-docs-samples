@@ -42,6 +42,7 @@ use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Mutations;
 use Google\Cloud\Bigtable\V2\RowFilter;
+
 // [END bigtable_hw_imports]
 
 // [START bigtable_hw_connect]
@@ -146,4 +147,3 @@ try {
 }
 // [END bigtable_hw_delete_table]
 // [END bigtable_hw]
-
