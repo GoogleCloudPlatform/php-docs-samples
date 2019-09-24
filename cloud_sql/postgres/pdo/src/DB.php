@@ -15,6 +15,7 @@
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres;
 
+# [START cloud_sql_postgres_pdo_create]
 use PDO;
 
 class DB
@@ -50,3 +51,4 @@ class DB
         return $this->connection;
     }
 }
+# [END cloud_sql_postgres_pdo_create]
