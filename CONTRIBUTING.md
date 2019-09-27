@@ -42,11 +42,15 @@ accept your pull requests.
    export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
    ```
 
-   To run the tests in a samples directory,
+   To run the tests in a samples directory, first install the global Composer
+   dependencies by running `bash test/composer.sh`. Then, run `composer install`
+   and `phpunit` in any directory containing a `phpunit.xml.dist` file to run
+   the tests.
    ```
+   bash test/composer.sh
    cd $SAMPLES_DIRECTORY
    composer install
-   vendor/bin/phpunit
+   phpunit
    ```
 
 1. Ensure that your code adheres to the existing style in the sample to which
