@@ -15,13 +15,15 @@
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres;
 
+use PDO;
+
 class Votes
 {
     private $connection;
 
-    public function __construct(DB $db)
+    public function __construct(PDO $connection)
     {
-        $this->connection = $db->get_connection();
+        $this->connection = $connection;
         $this->create_table();
     }
 
@@ -42,7 +44,7 @@ class Votes
         $sql = "SELECT candidate, time_cast FROM votes ORDER BY time_cast DESC LIMIT 5";
         $statement = $this->connection->prepare($sql);
         $statement->execute();
-        
+
         return $statement->fetchAll();
     }
 

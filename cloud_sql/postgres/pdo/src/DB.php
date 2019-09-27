@@ -19,34 +19,33 @@ use PDO;
 
 class DB
 {
-    private $connection;
-
-    public function __construct()
+    public static function createPdoConnection()
     {
-        $config = [
-            "username" => getenv("DB_USER"),
-            "password" => getenv("DB_PASS"),
-            "schema" => getenv("DB_NAME"),
-            "hostname" => getenv("DB_HOSTNAME") ?: "127.0.0.1",
-            "cloud_sql_instance_name" => getenv("CLOUD_SQL_INSTANCE_NAME")
-        ];
+        $username = getenv("DB_USER");
+        $password = getenv("DB_PASS");
+        $schema = getenv("DB_NAME");
+        $hostname = getenv("DB_HOSTNAME") ?: "127.0.0.1";
+        $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
+        # [START cloud_sql_postgres_pdo_create]
+        // $username = 'your_db_user';
+        // $password = 'yoursupersecretpassword';
+        // $schema = 'your_db_name';
+        // $cloud_sql_connection_name = 'Your Cloud SQL Connection name';
 
-        $this->connection = $this->connect($config);
-    }
-
-    private function connect($config)
-    {
-        $dsn = "pgsql:dbname={$config['schema']};host={$config['hostname']}";
-
-        if ($config["cloud_sql_instance_name"] != "") {
-            $dsn = "pgsql:dbname={$config['schema']};host=/cloudsql/{$config['cloud_sql_instance_name']}";
+        if ($cloud_sql_connection_name) {
+            // Connect using UNIX sockets
+            $dsn = sprintf(
+                'pgsql:dbname=%s;host=/cloudsql/%s',
+                $schema,
+                $cloud_sql_connection_name
+            );
+        } else {
+            // Connect using TCP
+            // $hostname = '127.0.0.1';
+            $dsn = sprintf('pgsql:dbname=%s;host=%s', $schema, $hostname);
         }
 
-        return new PDO($dsn, $config['username'], $config['password']);
-    }
-
-    public function get_connection()
-    {
-        return $this->connection;
+        return new PDO($dsn, $username, $password);
+        # [END cloud_sql_postgres_pdo_create]
     }
 }
