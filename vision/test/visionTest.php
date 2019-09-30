@@ -120,7 +120,7 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Eiffel', $output);
+        $this->assertContains('Champ de Mars', $output);
     }
 
     public function testLandmarkCommandGcs()
@@ -129,7 +129,7 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Eiffel', $output);
+        $this->assertContains('Champ de Mars', $output);
     }
 
     public function testLandmarkCommandWithImageLackingLandmarks()

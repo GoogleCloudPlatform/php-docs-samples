@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
@@ -28,8 +27,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class DeployTest extends TestCase
 {
-    use TestTrait,
-        AppEngineDeploymentTrait;
+    use AppEngineDeploymentTrait;
 
     private static function beforeDeploy()
     {
