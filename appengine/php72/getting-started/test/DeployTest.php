@@ -28,8 +28,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class DeployTest extends TestCase
 {
-    use TestTrait,
-        AppEngineDeploymentTrait;
+    use AppEngineDeploymentTrait;
 
     private static function beforeDeploy()
     {

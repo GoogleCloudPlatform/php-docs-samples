@@ -24,7 +24,6 @@ use PHPUnit\Framework\TestCase;
 
 class DeployTest extends TestCase
 {
-    use TestTrait;
     use AppEngineDeploymentTrait;
 
     public static function beforeDeploy()
