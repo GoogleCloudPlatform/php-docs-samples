@@ -25,12 +25,11 @@
 // Include Google Cloud dependencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 5) {
+if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
 list($_, $project_id, $instance_id, $table_id) = $argv;
 
-// [START bigtable_hw]
 // [START bigtable_hw_imports]
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
@@ -146,4 +145,3 @@ try {
     }
 }
 // [END bigtable_hw_delete_table]
-// [END bigtable_hw]
