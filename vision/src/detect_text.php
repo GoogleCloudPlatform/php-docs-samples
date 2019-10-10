@@ -41,7 +41,7 @@ function detect_text($path)
         foreach ($vertices as $vertex) {
             $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
         }
-        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+        print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
     }
 
     $imageAnnotator->close();

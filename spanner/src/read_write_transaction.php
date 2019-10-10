@@ -56,7 +56,7 @@ function read_write_transaction($instanceId, $databaseId)
         $transferAmount = 200000;
 
         // Read the second album's budget.
-        $secondAlbumKey = [2,2];
+        $secondAlbumKey = [2, 2];
         $secondAlbumKeySet = $spanner->keySet(['keys' => [$secondAlbumKey]]);
         $secondAlbumResult = $t->read(
             'Albums',
@@ -74,7 +74,7 @@ function read_write_transaction($instanceId, $databaseId)
             );
         }
 
-        $firstAlbumKey = [1,1];
+        $firstAlbumKey = [1, 1];
         $firstAlbumKeySet = $spanner->keySet(['keys' => [$firstAlbumKey]]);
         $firstAlbumResult = $t->read(
             'Albums',

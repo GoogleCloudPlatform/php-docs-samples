@@ -39,7 +39,7 @@ function detect_safe_search($path)
     
     # names of likelihood from google.cloud.vision.enums
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
-    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+    'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
 
     printf("Adult: %s" . PHP_EOL, $likelihoodName[$adult]);
     printf("Medical: %s" . PHP_EOL, $likelihoodName[$medical]);

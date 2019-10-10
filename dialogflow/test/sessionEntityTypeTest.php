@@ -37,7 +37,7 @@ class sessionEntityTypeTest extends TestCase
 
     public function testCreateSessionEntityType()
     {
-        $response = $this->runCommand('entity-type-create',[
+        $response = $this->runCommand('entity-type-create', [
             'display-name' => self::$entityTypeDisplayName
         ]);
         $this->runCommand('session-entity-type-create', [
