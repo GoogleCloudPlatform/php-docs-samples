@@ -13,7 +13,7 @@ These samples show how to use the
 ## Build and Run
 1.  **Enable APIs** - [Enable the KMS API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)
     and create a new project or select an existing project.
-2.  **Activate your Credentials** - If you do not already have an active set of credentials, create and download a [JSON Service Account key](https://pantheon.corp.google.com/apis/credentials/serviceaccountkey). Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` as the path to the downloaded JSON file.
+2.  **Activate your Credentials** - If you do not already have an active set of credentials, create and download a [JSON Service Account key](https://console.cloud.google.com/apis/credentials/serviceaccountkey). Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` as the path to the downloaded JSON file.
 3.  **Clone the repo** and cd into this directory
 
     ```
