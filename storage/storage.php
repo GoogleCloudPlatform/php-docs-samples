@@ -405,27 +405,27 @@ EOF
         }
     });
 
-$application->add(new Command('bucket-policy-only'))
-    ->setDescription('Manage Cloud Storage bucket policy only buckets.')
+$application->add(new Command('uniform-bucket-level-access'))
+    ->setDescription('Manage Cloud Storage uniform bucket-level access buckets.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command manages Cloud Storage bucket policy only buckets.
+The <info>%command.name%</info> command manages Cloud Storage uniform bucket-level access buckets.
 
 <info>php %command.full_name% --help</info>
 
 EOF
     )
-    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage Bucket Policy Only bucket name')
-    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable Bucket Policy Only on a Cloud Storage bucket')
-    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable Bucket Policy Only on a Cloud Storage bucket')
-    ->addOption('get', null, InputOption::VALUE_NONE, 'Get Bucket Policy Only on a Cloud Storage bucekt')
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage uniform bucket-level access bucket name')
+    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable uniform bucket-level access on a Cloud Storage bucket')
+    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable uniform bucket-level access on a Cloud Storage bucket')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get uniform bucket-level access on a Cloud Storage bucekt')
     ->setCode(function ($input, $output) {
         $bucketName = $input->getArgument('bucket');
         if ($input->getOption('enable')) {
-            enable_bucket_policy_only($bucketName);
+            enable_uniform_bucket_level_access($bucketName);
         } elseif ($input->getOption('disable')) {
-            disable_bucket_policy_only($bucketName);
+            disable_uniform_bucket_level_access($bucketName);
         } elseif ($input->getOption('get')) {
-            get_bucket_policy_only($bucketName);
+            get_uniform_bucket_level_access($bucketName);
         } else {
             throw new \Exception('You must provide --enable, --disable, or --get with a bucket name.');
         }
