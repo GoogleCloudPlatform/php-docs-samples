@@ -40,11 +40,11 @@ function enable_uniform_bucket_level_access($bucketName)
     $bucket->update([
         'iamConfiguration' => [
             'uniformBucketLevelAccess' => [
-              'enabled' => true
+                'enabled' => true
             ],
-	    // this is a workaround
+            // this is a workaround
             'bucketPolicyOnly' => [
-	      'enabled' => true
+                'enabled' => true
             ]
         ]
     ]);
