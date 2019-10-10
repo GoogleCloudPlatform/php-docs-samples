@@ -275,6 +275,29 @@ class productSearchTest extends TestCase
         $this->assertNotContains(self::$productId, $output);
     }
 
+    /** @depends testCreateProduct */
+    public function testPurgeOrphan()
+    {
+        # test
+        $this->runCommand('product-purge-orphan', [
+            'force' => true
+        ]);
+        $output = $this->runCommand('product-list', []);
+        # check
+        $this->assertNotContains(self::$productId, $output);
+    }
+
+    /** @depends testAddProductToProductSet */
+    public function testPurgeProductsInProductSet()
+    {
+        $this->runCommand('product-purge-products-in-product-set', [
+            'product-set-id' => self::$productSetId,
+            'force' => true
+        ]);
+        $output = $this->runCommand('product-list', []);
+        $this->assertNotContains(self::$productId, $output);
+    }
+
     /** @depends testCreateProductSet */
     public function testDeleteProductSet()
     {

@@ -209,10 +209,11 @@ class pubsubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
+        $fakeUrl = sprintf('https://%s.appspot.com/receive_message', self::$projectId);
         $output = $this->runCommand('subscription', [
             'subscription' => $subscription,
             '--topic' => $topic,
-            '--endpoint' => 'https://example.com/receive_message',
+            '--endpoint' => $fakeUrl,
             '--create' => true,
             'project' => self::$projectId,
         ]);

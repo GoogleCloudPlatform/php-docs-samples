@@ -125,7 +125,7 @@ EOF
 $application->add(new Command('buckets'))
     ->setDescription('Manage Cloud Storage buckets')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command manages Cloud Storage ACL.
+The <info>%command.name%</info> command manages buckets.
 
 <info>php %command.full_name% --help</info>
 
@@ -134,12 +134,15 @@ EOF
     ->addArgument('bucket', InputArgument::OPTIONAL, 'The Cloud Storage bucket name')
     ->addOption('create', null, InputOption::VALUE_NONE, 'Create the bucket')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the bucket')
+    ->addOption('metadata', null, InputOption::VALUE_NONE, 'Get the bucket metadata')
     ->setCode(function ($input, $output) {
         if ($bucketName = $input->getArgument('bucket')) {
             if ($input->getOption('create')) {
                 create_bucket($bucketName);
             } elseif ($input->getOption('delete')) {
                 delete_bucket($bucketName);
+            } elseif ($input->getOption('metadata')) {
+                get_bucket_metadata($bucketName);
             } else {
                 throw new \Exception('Supply --create or --delete with bucket name');
             }
@@ -425,6 +428,71 @@ EOF
             get_uniform_bucket_level_access($bucketName);
         } else {
             throw new \Exception('You must provide --enable, --disable, or --get with a bucket name.');
+        }
+    });
+
+$application->add(new Command('hmac-sa-list'))
+    ->setDescription('List Cloud Storage HMAC Keys.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command lists Cloud Storage HMAC Keys.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID with HMAC Keys to list')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        list_hmac_keys($projectId);
+    });
+
+$application->add(new Command('hmac-sa-create'))
+    ->setDescription('Create a Cloud Storage HMAC Key.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates Cloud Storage HMAC Keys.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID associated with the service account email')
+    ->addArgument('serviceAccountEmail', InputArgument::REQUIRED, 'The service account to associate with the new HMAC Key')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        $serviceAccountEmail = $input->getArgument('serviceAccountEmail');
+        create_hmac_key($serviceAccountEmail, $projectId);
+    });
+
+$application->add(new Command('hmac-sa-manage'))
+    ->setDescription('Manage Cloud Storage HMAC Keys.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command manages Cloud Storage HMAC Keys.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('projectId', InputArgument::REQUIRED, 'The Cloud Project ID associated with the HMAC Key')
+    ->addArgument('accessId', InputArgument::REQUIRED, 'The Cloud Storage HMAC Key access ID')
+    ->addOption('activate', null, InputOption::VALUE_NONE, 'Activate an HMAC Key')
+    ->addOption('deactivate', null, InputOption::VALUE_NONE, 'Deactivate an HMAC Key')
+    ->addOption('get', null, InputOption::VALUE_NONE, 'Get an HMAC Key\'s metadata')
+    ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete an HMAC Key')
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('projectId');
+        $accessId = $input->getArgument('accessId');
+        if ($input->getOption('activate')) {
+            activate_hmac_key($accessId, $projectId);
+        } elseif ($input->getOption('deactivate')) {
+            deactivate_hmac_key($accessId, $projectId);
+        } elseif ($input->getOption('get')) {
+            get_hmac_key($accessId, $projectId);
+        } elseif ($input->getOption('delete')) {
+            delete_hmac_key($accessId, $projectId);
+        } else {
+            throw new \Exception(
+            'You must provide --activate, --deactivate, --get, or --delete with an HMAC key accessId.'
+          );
         }
     });
 

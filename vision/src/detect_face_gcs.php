@@ -32,7 +32,7 @@ function detect_face_gcs($path)
 
     # names of likelihood from google.cloud.vision.enums
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
-    'POSSIBLE','LIKELY', 'VERY_LIKELY'];
+    'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
 
     printf("%d faces found:" . PHP_EOL, count($faces));
     foreach ($faces as $face) {
@@ -51,7 +51,7 @@ function detect_face_gcs($path)
         foreach ($vertices as $vertex) {
             $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
         }
-        print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+        print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         print(PHP_EOL);
     }
 

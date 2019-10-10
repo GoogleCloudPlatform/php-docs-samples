@@ -14,7 +14,7 @@ export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my-db-name'
-export DB_HOSTNAME='localhost' # If connecting using cloud_sql_proxy
+export DB_HOSTNAME='localhost' # If connecting using TCP instead of Unix Sockets
 ```
 
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep secrets safe.
@@ -31,21 +31,10 @@ $ ./cloud_sql_proxy -dir=/cloudsql --instances=$CLOUD_SQL_CONNECTION_NAME --cred
 
 Note: Make sure to run the command under a user with write access in the `/cloudsql` directory. This proxy will use this folder to create a unix socket the application will use to connect to Cloud SQL.
 
-Next, install the dependencies using Composer:
-
-```bash
-$ composer install
-```
-OR
-
-```bash
-$ php composer.phar install
-```
-
 Execute the following:
 
 ```bash
-$ php -S localhost:8080 index.php
+$ php -S localhost:8080
 ```
 
 Navigate towards http://localhost:8080 to verify your application is running correctly.

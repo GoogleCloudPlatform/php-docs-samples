@@ -32,7 +32,6 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName name of the bucket to create.
  * @param string $options options for the new bucket.
  *
- * @return Google\Cloud\Storage\Bucket the newly created bucket.
  */
 function create_bucket($bucketName, $options = [])
 {

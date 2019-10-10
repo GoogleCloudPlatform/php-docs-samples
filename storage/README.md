@@ -48,6 +48,9 @@ This simple command-line application demonstrates how to invoke
     get-object-v2-signed-url         Generate a v2 signed URL for downloading an object.
     get-object-v4-signed-url         Generate a v4 signed URL for downloading an object.
     get-object-v4-upload-signed-url  Generate a v4 signed URL for uploading an object.
+    hmac-sa-manage                   Manage HMAC Service Account keys.
+    hmac-sa-list                     List HMAC Service Account keys.
+    hmac-sa-create                   Create an HMAC Service Account key.
     ```
 6. Run `php storage.php COMMAND --help` to print information about the usage of each command.
 

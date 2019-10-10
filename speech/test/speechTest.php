@@ -54,14 +54,14 @@ class speechTest extends TestCase
             [$path, 'video']
         );
         // $this->assertContains('the weather outside is sunny',$output);
-        $this->assertContains('how old is the Brooklyn Bridge',$output);
+        $this->assertContains('how old is the Brooklyn Bridge', $output);
     }
 
     public function testTranscribePunctuation()
     {
         $path = __DIR__ . '/data/audio32KHz.raw';
         $output = $this->runSnippet('transcribe_auto_punctuation', [$path]);
-        $this->assertContains('How old is the Brooklyn Bridge',$output);
+        $this->assertContains('How old is the Brooklyn Bridge', $output);
     }
 
     /** @dataProvider provideTranscribe */

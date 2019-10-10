@@ -41,7 +41,7 @@ function detect_crop_hints_gcs($path)
                 $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
                     $vertex->getY());
             }
-            print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+            print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
         }
     } else {
         print('No crop hints' . PHP_EOL);

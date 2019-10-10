@@ -120,7 +120,7 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Eiffel', $output);
+        $this->assertContains('Champ de Mars', $output);
     }
 
     public function testLandmarkCommandGcs()
@@ -129,7 +129,7 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Eiffel', $output);
+        $this->assertContains('Champ de Mars', $output);
     }
 
     public function testLandmarkCommandWithImageLackingLandmarks()
@@ -152,7 +152,7 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/logo.jpg';
         $output = $this->runCommand('logo', ['path' => $path]);
-        $this->assertContains('google', $output);
+        $this->assertContains('Google', $output);
     }
 
     public function testLogoCommandGcs()
@@ -161,7 +161,7 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/logo.jpg';
         $output = $this->runCommand('logo', ['path' => $path]);
-        $this->assertContains('google', $output);
+        $this->assertContains('Google', $output);
     }
 
     public function testLocalizeObjectCommand()
@@ -240,10 +240,10 @@ class visionTest extends TestCase
         $path = __DIR__ . '/data/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', ['path' => $path]);
         $this->assertContains('Crop hints:', $output);
-        $this->assertContains('(0,0)', $output);
-        $this->assertContains('(599,0)', $output);
-        $this->assertContains('(599,475)', $output);
-        $this->assertContains('(0,475)', $output);
+        $this->assertContains('(210,0)', $output);
+        $this->assertContains('(476,0)', $output);
+        $this->assertContains('(476,475)', $output);
+        $this->assertContains('(210,475)', $output);
     }
 
     public function testCropHintsCommandGcs()
@@ -253,10 +253,10 @@ class visionTest extends TestCase
         $path = 'gs://' . $bucketName . '/vision/wakeupcat.jpg';
         $output = $this->runCommand('crop-hints', ['path' => $path]);
         $this->assertContains('Crop hints:', $output);
-        $this->assertContains('(0,0)', $output);
-        $this->assertContains('(599,0)', $output);
-        $this->assertContains('(599,475)', $output);
-        $this->assertContains('(0,475)', $output);
+        $this->assertContains('(210,0)', $output);
+        $this->assertContains('(476,0)', $output);
+        $this->assertContains('(476,475)', $output);
+        $this->assertContains('(210,475)', $output);
     }
 
     public function testDocumentTextCommand()

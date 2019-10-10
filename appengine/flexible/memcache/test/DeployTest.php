@@ -17,14 +17,12 @@
 namespace Google\Cloud\Test\Memcache;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Symfony\Component\Yaml\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class DeployTest extends TestCase
 {
-    use TestTrait;
     use AppEngineDeploymentTrait;
 
     public static function beforeDeploy()

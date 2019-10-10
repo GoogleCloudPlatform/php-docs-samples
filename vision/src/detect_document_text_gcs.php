@@ -55,7 +55,7 @@ function detect_document_text_gcs($path)
                     $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
                         $vertex->getY());
                 }
-                print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+                print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
 
                 print(PHP_EOL);
             }

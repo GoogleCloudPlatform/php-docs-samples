@@ -42,7 +42,7 @@ function create_push_subscription($projectId, $topicName, $subscriptionName, $en
     $topic = $pubsub->topic($topicName);
     $subscription = $topic->subscription($subscriptionName);
     $subscription->create([
-        'endpoint' => $endpoint
+        'pushConfig' => ['pushEndpoint' => $endpoint]
     ]);
 
     printf('Subscription created: %s' . PHP_EOL, $subscription->name());

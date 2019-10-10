@@ -1,0 +1,13 @@
+runtime: php55
+threadsafe: yes
+api_version: 1
+
+handlers:
+- url: .*
+  script: index.php
+
+# [START gae_sendgrid_yaml]
+env_variables:
+  SENDGRID_APIKEY: your-sendgrid-api-key
+  SENDGRID_SENDER: your-sendgrid-sender
+# [END gae_sendgrid_yaml]

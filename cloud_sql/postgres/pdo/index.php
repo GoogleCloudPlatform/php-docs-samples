@@ -13,12 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'vendor/autoload.php';
+require_once 'src/DB.php';
+require_once 'src/Votes.php';
 
 use Google\Cloud\Samples\CloudSQL\Postgres\DB;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 
-$votes = new Votes(new DB());
+$votes = new Votes(DB::createPdoConnection());
 
 if ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     $list = $votes->list();
