@@ -255,7 +255,7 @@ EOF
     ->setCode(function ($input, $output) {
         $path = $input->getArgument('path');
         $output = $input->getArgument('output');
-        detect_pdf_gcs($path,$output);
+        detect_pdf_gcs($path, $output);
     })
 );
 

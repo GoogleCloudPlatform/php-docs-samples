@@ -40,7 +40,7 @@ class textToSpeechTest extends TestCase
             ['<speak>Hello there.</speak>']
         );
         $this->assertContains('Audio content written to', $output);
-        $this->assertGreaterThan(0,filesize('output.mp3'));
+        $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
 
@@ -49,7 +49,7 @@ class textToSpeechTest extends TestCase
         $output = $this->runSnippet('synthesize_text', ['hello there']);
 
         $this->assertContains('Audio content written to', $output);
-        $this->assertGreaterThan(0,filesize('output.mp3'));
+        $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
 
@@ -60,7 +60,7 @@ class textToSpeechTest extends TestCase
             ['hello there', 'telephony-class-application']
         );
         $this->assertContains('Audio content written to', $output);
-        $this->assertGreaterThan(0,filesize('output.mp3'));
+        $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
 
@@ -70,7 +70,7 @@ class textToSpeechTest extends TestCase
         $output = $this->runSnippet('synthesize_ssml_file', [$path]);
 
         $this->assertContains('Audio content written to', $output);
-        $this->assertGreaterThan(0,filesize('output.mp3'));
+        $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
 
@@ -80,7 +80,7 @@ class textToSpeechTest extends TestCase
         $output = $this->runSnippet('synthesize_text_file', [$path]);
 
         $this->assertContains('Audio content written to', $output);
-        $this->assertGreaterThan(0,filesize('output.mp3'));
+        $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
 
@@ -92,7 +92,7 @@ class textToSpeechTest extends TestCase
             [$path, 'telephony-class-application']
         );
         $this->assertContains('Audio content written to', $output);
-        $this->assertGreaterThan(0,filesize('output.mp3'));
+        $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
 }
