@@ -63,8 +63,8 @@ class SolutionCountersTest extends TestCase
      */
     public function testCounter()
     {
-        $counter=new Counter(1000);
-        $this->assertEquals(1000, $counter->getNumShards());
+        $counter=new Counter(5);
+        $this->assertEquals(5, $counter->getNumShards());
 
         $counter2=new Counter(1);
         $this->assertEquals(1, $counter2->getNumShards());
@@ -75,11 +75,11 @@ class SolutionCountersTest extends TestCase
      */
     public function testShard()
     {
-        $shard = new Shard(1000);
-        $this->assertEquals(1000, $shard->getCount());
+        $shard = new Shard(7);
+        $this->assertEquals(7, $shard->getCount());
 
-        $shard2 = new Shard(1);
-        $this->assertEquals(1, $shard2->getCount());
+        $shard2 = new Shard(2);
+        $this->assertEquals(2, $shard2->getCount());
     }
 
     /**
@@ -92,7 +92,7 @@ class SolutionCountersTest extends TestCase
         $cnt=5;
         SolutionCounters::initCounter(self::$ref, $cnt);
 
-        $collect = self::$ref->collection(SolutionCounters::SHARD_COLLECT_NAME);
+        $collect = self::$ref->collection('SHARDS');
         $docCollection = $collect->documents();
         $docIdList=[];
 

@@ -25,8 +25,6 @@ use Google\Cloud\Firestore\DocumentReference;
  */
 class Counter
 {
-    const FIELD_NAME='Cnt';
-    
     /**
      * @var int
      */
@@ -64,17 +62,12 @@ class Shard
     {
         return $this->count;
     }
-
 }
 
 // [END fs_counter_classes]
 
 
 class SolutionCounters {
-    
-    const SHARD_COLLECT_NAME='SHARDS';
-    const SHARDS_COUNT=10;
-    
     // [START fs_create_counter]
     /**
      * InitCounter creates a given number of shards as
@@ -83,45 +76,36 @@ class SolutionCounters {
      * @param DocumentReference $ref Firestore document
      * @param int $numShards The number of counter fragments. (default 10)
      */
-    public static function initCounter(DocumentReference $ref, int $numShards=self::SHARDS_COUNT)
+    public static function initCounter(DocumentReference $ref, int $numShards = 10)
     {
         $counter = new Counter($numShards);
-        $colRef = $ref->collection(self::SHARD_COLLECT_NAME);
+        $colRef = $ref->collection('SHARDS');
         for ($i = 0; $i < $counter->getNumShards(); $i++) {
             $doc = $colRef->document($i);
-            $doc->set([Counter::FIELD_NAME=>0]);
+            $doc->set(['Cnt' => 0]);
         }
     }
-    
     // [END fs_create_counter]
-    
     
     // [START fs_increment_counter]
     /**
      * incrementCounter increments a randomly picked shard.
      * 
-     * Example:
-     * ``` 
-     * SolutionCounters::incrementCounter($db->collection('MyCollection')->document('CounterDoc'), $counter->getNumShards());
-     * ```
-     * 
      * @param DocumentReference $ref Firestore document
      * @param int $numShards The number of counter fragments. (default 10)
      */
-    public static function incrementCounter(DocumentReference $ref, int $numShards=self::SHARDS_COUNT)
+    public static function incrementCounter(DocumentReference $ref, int $numShards = 10)
     {
-        $colRef = $ref->collection(self::SHARD_COLLECT_NAME);
+        $colRef = $ref->collection('SHARDS');
         $shardIdx = random_int(0, $numShards-1);
         $doc = $colRef->document($shardIdx);
         $doc->update([
-            ['path' => Counter::FIELD_NAME, 'value' => FieldValue::increment(1)]
+            ['path' => 'Cnt', 'value' => FieldValue::increment(1)]
         ]);
     }
-
     // [END fs_increment_counter]
 
     // [START fs_get_count]
-
     /**
      * getCount returns a total count across all shards.
      * 
@@ -131,12 +115,11 @@ class SolutionCounters {
     public static function getCount(DocumentReference $ref)
     {
         $result = 0;
-        $docCollection = $ref->collection(self::SHARD_COLLECT_NAME)->documents();
+        $docCollection = $ref->collection('SHARDS')->documents();
         foreach ($docCollection as $doc) {
-            $result += $doc->data()[Counter::FIELD_NAME];
+            $result += $doc->data()['Cnt'];
         }
         return $result;
     }
-
     // [END fs_get_count]
 }
