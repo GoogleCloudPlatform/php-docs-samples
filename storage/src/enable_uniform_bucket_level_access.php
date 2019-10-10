@@ -42,7 +42,7 @@ function enable_uniform_bucket_level_access($bucketName)
             'uniformBucketLevelAccess' => [
                 'enabled' => true
             ],
-            // this is a workaround
+            // This is a workaround
             'bucketPolicyOnly' => [
                 'enabled' => true
             ]
