@@ -20,7 +20,6 @@
             "src/delete_object.php",
             "src/delete_object_acl.php",
             "src/delete_hmac_key.php",
-            "src/disable_bucket_policy_only.php",
             "src/disable_uniform_bucket_level_access.php",
             "src/disable_default_event_based_hold.php",
             "src/disable_requester_pays.php",
