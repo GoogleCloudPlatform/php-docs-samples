@@ -20,32 +20,10 @@ namespace Google\Cloud\Firestore;
 use Google\Cloud\Firestore\DocumentReference;
 
 // [START fs_counter_classes]
-/** Counter is a collection of documents (shards)
- * to realize counter with high frequency
- */
-class Counter
-{
-    /**
-     * @var int
-     */
-    private $numShards;
-    
-    public function __construct(int $numShards)
-    {
-        $this->numShards = $numShards;
-    }
-    
-    public function getNumShards()
-    {
-        return $this->numShards;
-    }
-}
-
-
-/** 
+/**
  * Shard is a single counter, which is used in a group
  * of other shards within Counter.
- *  */
+ */
 class Shard
 {
     /**
@@ -64,11 +42,18 @@ class Shard
     }
 }
 
+/** Counter is a collection of documents (shards)
+ * to realize counter with high frequency
+ */
+class Counter
+{
+    /**
+     * @var int
+     */
+    private $numShards;
 // [END fs_counter_classes]
 
-
-class SolutionCounters {
-    // [START fs_create_counter]
+// [START fs_create_counter]
     /**
      * InitCounter creates a given number of shards as
      * subcollection of specified document.
@@ -76,43 +61,42 @@ class SolutionCounters {
      * @param DocumentReference $ref Firestore document
      * @param int $numShards The number of counter fragments. (default 10)
      */
-    public static function initCounter(DocumentReference $ref, int $numShards = 10)
+    public function __construct(DocumentReference $ref, int $numShards)
     {
-        $counter = new Counter($numShards);
+        $this->numShards = $numShards;
         $colRef = $ref->collection('SHARDS');
-        for ($i = 0; $i < $counter->getNumShards(); $i++) {
+        for ($i = 0; $i < $numShards; $i++) {
             $doc = $colRef->document($i);
             $doc->set(['Cnt' => 0]);
         }
     }
-    // [END fs_create_counter]
+// [END fs_create_counter]
     
-    // [START fs_increment_counter]
+// [START fs_increment_counter]
     /**
      * incrementCounter increments a randomly picked shard.
      * 
      * @param DocumentReference $ref Firestore document
-     * @param int $numShards The number of counter fragments. (default 10)
      */
-    public static function incrementCounter(DocumentReference $ref, int $numShards = 10)
+    public function incrementCounter(DocumentReference $ref)
     {
         $colRef = $ref->collection('SHARDS');
-        $shardIdx = random_int(0, $numShards-1);
+        $shardIdx = random_int(0, $this->numShards-1);
         $doc = $colRef->document($shardIdx);
         $doc->update([
             ['path' => 'Cnt', 'value' => FieldValue::increment(1)]
         ]);
     }
-    // [END fs_increment_counter]
-
-    // [START fs_get_count]
+// [END fs_increment_counter]
+    
+// [START fs_get_count]
     /**
      * getCount returns a total count across all shards.
      * 
      * @param DocumentReference $ref Firestore document
      * @return int
      */
-    public static function getCount(DocumentReference $ref)
+    public function getCount(DocumentReference $ref)
     {
         $result = 0;
         $docCollection = $ref->collection('SHARDS')->documents();
@@ -121,5 +105,5 @@ class SolutionCounters {
         }
         return $result;
     }
-    // [END fs_get_count]
+// [END fs_get_count]
 }

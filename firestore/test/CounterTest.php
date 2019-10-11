@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Firestore;
 
-use Google\Cloud\Firestore\SolutionCounters;
 use Google\Cloud\Firestore\Counter;
 use Google\Cloud\Firestore\Shard;
 use Google\Cloud\TestUtils\TestTrait;
@@ -39,7 +38,7 @@ class SolutionCountersTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        require_once __DIR__."/../src/firestore_snippets/SolutionCounters.php";
+        require_once __DIR__."/../src/firestore_snippets/Counter.php";
         
         self::$firestoreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
 
@@ -57,17 +56,38 @@ class SolutionCountersTest extends TestCase
         }
     }
 
-
     /**
-     * @covers Google\Cloud\Firestore\Counter::getNumShards
+     * @covers Google\Cloud\Firestore\Counter::__construct
+     * @covers Google\Cloud\Firestore\Counter::incrementCounter
+     * @covers Google\Cloud\Firestore\Counter::getCount
      */
     public function testCounter()
     {
-        $counter=new Counter(5);
-        $this->assertEquals(5, $counter->getNumShards());
+        $counter = new Counter(self::$ref, 5);
 
-        $counter2=new Counter(1);
-        $this->assertEquals(1, $counter2->getNumShards());
+        $collect = self::$ref->collection('SHARDS');
+        $docCollection = $collect->documents();
+
+        $docIdList=[];
+        foreach ($docCollection as $docSnap) {
+            $docIdList[] = $docSnap->id();
+        }
+        $this->assertEquals(5, count($docIdList));
+
+        $this->assertEquals(0, $counter->getCount(self::$ref));
+
+        $counter->incrementCounter(self::$ref);
+        $this->assertEquals(1, $counter->getCount(self::$ref));
+
+        $counter->incrementCounter(self::$ref);
+        $this->assertEquals(2, $counter->getCount(self::$ref));
+
+        $counter->incrementCounter(self::$ref);
+        $this->assertEquals(3, $counter->getCount(self::$ref));
+
+        foreach ($docIdList as $docId) {
+            $collect->document($docId)->delete();
+        }
     }
     
     /**
@@ -80,41 +100,6 @@ class SolutionCountersTest extends TestCase
 
         $shard2 = new Shard(2);
         $this->assertEquals(2, $shard2->getCount());
-    }
-
-    /**
-     * @covers Google\Cloud\Firestore\SolutionCounters::initCounter
-     * @covers Google\Cloud\Firestore\SolutionCounters::incrementCounter
-     * @covers Google\Cloud\Firestore\SolutionCounters::getCount
-     */
-    public function testSolutionCounters()
-    {
-        $cnt=5;
-        SolutionCounters::initCounter(self::$ref, $cnt);
-
-        $collect = self::$ref->collection('SHARDS');
-        $docCollection = $collect->documents();
-        $docIdList=[];
-
-        foreach ($docCollection as $docSnap) {
-            $docIdList[] = $docSnap->id();
-        }
-        $this->assertEquals($cnt, count($docIdList));
-
-        $this->assertEquals(0, SolutionCounters::getCount(self::$ref));
-
-        SolutionCounters::incrementCounter(self::$ref, $cnt);
-        $this->assertEquals(1, SolutionCounters::getCount(self::$ref));
-
-        SolutionCounters::incrementCounter(self::$ref, $cnt);
-        $this->assertEquals(2, SolutionCounters::getCount(self::$ref));
-
-        SolutionCounters::incrementCounter(self::$ref, $cnt);
-        $this->assertEquals(3, SolutionCounters::getCount(self::$ref));
-
-        foreach ($docIdList as $docId){
-            $collect->document($docId)->delete();
-        }
     }
 
     /** Remove SHARD_NAME document
