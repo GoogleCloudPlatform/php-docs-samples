@@ -28,7 +28,7 @@ function entity_list($projectId, $entityTypeId)
     $parent = $entityTypesClient->entityTypeName($projectId,
         $entityTypeId);
     $entityType = $entityTypesClient->getEntityType($parent);
-    
+
     // get entities
     $entities = $entityType->getEntities();
     foreach ($entities as $entity) {

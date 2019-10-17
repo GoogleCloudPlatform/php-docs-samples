@@ -28,7 +28,7 @@ use Google\Cloud\Dialogflow\V2\EntityType_Kind;
 function entity_type_create($projectId, $displayName, $kind = EntityType_Kind::KIND_MAP)
 {
     $entityTypesClient = new EntityTypesClient();
-    
+
     // prepare entity type
     $parent = $entityTypesClient->projectAgentName($projectId);
     $entityType = new EntityType();

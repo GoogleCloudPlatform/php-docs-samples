@@ -31,7 +31,7 @@ function entity_type_delete($projectId, $entityTypeId)
         $entityTypeId);
     $entityTypesClient->deleteEntityType($parent);
     printf('Entity type deleted: %s' . PHP_EOL, $parent);
-    
+
     $entityTypesClient->close();
 }
 // [END dialogflow_delete_entity_type]

@@ -23,7 +23,7 @@ use Google\Cloud\Dialogflow\V2\ContextsClient;
 function context_delete($projectId, $contextId, $sessionId)
 {
     $contextsClient = new ContextsClient();
-    
+
     $contextName = $contextsClient->contextName($projectId, $sessionId,
         $contextId);
     $contextsClient->deleteContext($contextName);

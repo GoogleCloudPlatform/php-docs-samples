@@ -31,11 +31,11 @@ function context_create($projectId, $contextId, $sessionId, $lifespan = 1)
     $context = new Context();
     $context->setName($contextName);
     $context->setLifespanCount($lifespan);
-    
+
     // create context
     $response = $contextsClient->createContext($parent, $context);
     printf('Context created: %s' . PHP_EOL, $response->getName());
-    
+
     $contextsClient->close();
 }
 // [END dialogflow_create_context]
