@@ -73,6 +73,6 @@ class assetTest extends TestCase
             ]);
 
             $this->assertContains($assetName, $output);
-        }, 10);
+        }, 10, true);
     }
 }
