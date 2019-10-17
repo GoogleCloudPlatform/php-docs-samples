@@ -35,7 +35,7 @@ function session_entity_type_create($projectId, $displayName, $values,
     // prepare name
     $sessionEntityTypeName = $sessionEntityTypesClient
     ->sessionEntityTypeName($projectId, $sessionId, $displayName);
-    
+
     // prepare entities
     $entities = [];
     foreach ($values as $value) {

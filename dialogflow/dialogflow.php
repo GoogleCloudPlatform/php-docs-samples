@@ -41,10 +41,10 @@ $application->add((new Command('detect-intent-texts'))
         'Text inputs.')
     ->setDescription('Detect intent of text inputs using Dialogflow.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command detects the intent of provided text 
+The <info>%command.name%</info> command detects the intent of provided text
 using Dialogflow.
 
-    <info>php %command.full_name% PROJECT_ID [-s SESSION_ID] 
+    <info>php %command.full_name% PROJECT_ID [-s SESSION_ID]
     [-l LANGUAGE-CODE] text [texts ...]</info>
 EOF
     )
@@ -68,10 +68,10 @@ $application->add((new Command('detect-intent-audio'))
     ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
     ->setDescription('Detect intent of audio file using Dialogflow.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command detects the intent of provided audio 
+The <info>%command.name%</info> command detects the intent of provided audio
 using Dialogflow.
 
-    <info>php %command.full_name% PROJECT_ID [-s SESSION_ID] 
+    <info>php %command.full_name% PROJECT_ID [-s SESSION_ID]
     [-l LANGUAGE-CODE] AUDIO_FILE_PATH</info>
 EOF
     )
@@ -95,10 +95,10 @@ $application->add((new Command('detect-intent-stream'))
     ->addArgument('path', InputArgument::REQUIRED, 'Path to audio file.')
     ->setDescription('Detect intent of audio stream using Dialogflow.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command detects the intent of provided text 
+The <info>%command.name%</info> command detects the intent of provided text
 using Dialogflow.
 
-    <info>php %command.full_name% PROJECT_ID -s SESSION_ID 
+    <info>php %command.full_name% PROJECT_ID -s SESSION_ID
     -l LANGUAGE-CODE AUDIO_FILE_PATH</info>
 EOF
     )
@@ -143,7 +143,7 @@ $application->add((new Command('intent-create'))
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates intent of provided display name.
 
-    <info>php %command.full_name% PROJECT_ID DISPLAY_NAME -t training_phrase_part 
+    <info>php %command.full_name% PROJECT_ID DISPLAY_NAME -t training_phrase_part
     [-t trainining_phrase_part ...] -m message_text [-m message_text ...] </info>
 EOF
     )
@@ -331,7 +331,7 @@ $application->add((new Command('context-create'))
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates context of provided context id.
 
-    <info>php %command.full_name% PROJECT_ID -s SESSION_ID CONTEXT_ID 
+    <info>php %command.full_name% PROJECT_ID -s SESSION_ID CONTEXT_ID
     -c LIFESPAN_COUNT</info>
 EOF
     )
@@ -401,11 +401,11 @@ $application->add((new Command('session-entity-type-create'))
         SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
     ->setDescription('Create session entity type.')
     ->setHelp(<<<EOF
-The <info>%command.name%</info> command creates session entity type with 
+The <info>%command.name%</info> command creates session entity type with
 display name and values provided.
 
-    <info>php %command.full_name% PROJECT_ID -s SESSION_ID 
-    ENTITY_TYPE_DISPLAY_NAME entity_value [entity_values ...] 
+    <info>php %command.full_name% PROJECT_ID -s SESSION_ID
+    ENTITY_TYPE_DISPLAY_NAME entity_value [entity_values ...]
     -o ENTITY_OVERRIDE_MODE</info>
 EOF
     )
@@ -432,7 +432,7 @@ $application->add((new Command('session-entity-type-delete'))
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command deletes specified session entity type.
 
-    <info>php %command.full_name% PROJECT_ID SESSION_ID 
+    <info>php %command.full_name% PROJECT_ID SESSION_ID
      ENTITY_TYPE_DISPLAY_NAME </info>
 EOF
     )

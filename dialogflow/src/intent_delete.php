@@ -30,7 +30,7 @@ function intent_delete($projectId, $intentId)
 
     $intentsClient->deleteIntent($intentName);
     printf('Intent deleted: %s' . PHP_EOL, $intentName);
-    
+
     $intentsClient->close();
 }
 // [END dialogflow_delete_intent]

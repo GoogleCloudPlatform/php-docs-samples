@@ -62,7 +62,7 @@ function detect_intent_texts($projectId, $texts, $sessionId, $languageCode = 'en
         print(PHP_EOL);
         printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
     }
-    
+
     $sessionsClient->close();
 }
 // [END dialogflow_detect_intent_text]

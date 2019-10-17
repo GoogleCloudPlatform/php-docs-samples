@@ -26,7 +26,7 @@ use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 function entity_delete($projectId, $entityTypeId, $entityValue)
 {
     $entityTypesClient = new EntityTypesClient();
-    
+
     $parent = $entityTypesClient->entityTypeName($projectId,
         $entityTypeId);
     $entityTypesClient->batchDeleteEntities($parent, [$entityValue]);
