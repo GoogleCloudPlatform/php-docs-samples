@@ -64,6 +64,21 @@ accept your pull requests.
 Samples in this repository follow the [PSR2][psr2] and [PSR4][psr4]
 recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer].
 
+Install that by running
+
+```
+composer global require friendsofphp/php-cs-fixer
+```
+
+Then to fix your directory or file run 
+
+```
+php-cs-fixer fix .
+php-cs-fixer fix path/to/file
+```
+
+The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp) are an example of snippets following the latest style guidelines.
+
 [psr2]: http://www.php-fig.org/psr/psr-2/
 [psr4]: http://www.php-fig.org/psr/psr-4/
 [php-cs-fixer]: https://github.com/FriendsOfPHP/PHP-CS-Fixer
