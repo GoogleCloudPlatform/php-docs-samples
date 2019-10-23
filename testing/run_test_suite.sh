@@ -24,6 +24,8 @@ FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
     jobs
+    asset
+    dlp
 )
 
 # tests to run with grpc.so disabled
