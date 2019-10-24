@@ -22,20 +22,20 @@
 // sample-metadata
 //   title: Get Glossary
 //   description: Get Glossary
-//   usage: php v3_get_glossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+//   usage: php v3_get_glossary.php [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 // [START translate_v3_get_glossary]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Get Glossary */
-function sampleGetGlossary($project, $glossaryId)
+function sampleGetGlossary($projectId, $glossaryId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
-    // $project = '[Google Cloud Project ID]';
+    // $projectId = '[Google Cloud Project ID]';
     // $glossaryId = '[Glossary ID]';
-    $formattedName = $translationServiceClient->glossaryName($project, 'us-central1', $glossaryId);
+    $formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
 
     try {
         $response = $translationServiceClient->getGlossary($formattedName);
@@ -49,19 +49,19 @@ function sampleGetGlossary($project, $glossaryId)
 // [END translate_v3_get_glossary]
 
 $opts = [
-    'project::',
+    'project_id::',
     'glossary_id::',
 ];
 
 $defaultOptions = [
-    'project' => '[Google Cloud Project ID]',
+    'project_id' => '[Google Cloud Project ID]',
     'glossary_id' => '[Glossary ID]',
 ];
 
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
-$project = $options['project'];
+$projectId = $options['project_id'];
 $glossaryId = $options['glossary_id'];
 
-sampleGetGlossary($project, $glossaryId);
+sampleGetGlossary($projectId, $glossaryId);

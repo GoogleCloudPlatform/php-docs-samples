@@ -39,7 +39,7 @@ use Google\Cloud\Translate\V3\OutputConfig;
  * @param string $sourceLanguage Required. Source language code.
  * @param string $modelPath      The models to use for translation. Map's key is target language code.
  */
-function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelPath)
+function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -49,7 +49,8 @@ function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, 
     // $location = 'us-central1';
     // $targetLanguage = 'en';
     // $sourceLanguage = 'de';
-    // $modelPath = 'projects/{project-id}/locations/{location-id}/models/{your-model-id}';
+    // $modelId = '{your-model-id}';
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
     $targetLanguageCodes = [$targetLanguage];
     $gcsSource = new GcsSource();
     $gcsSource->setInputUri($inputUri);
@@ -92,7 +93,7 @@ $opts = [
     'location::',
     'target_language::',
     'source_language::',
-    'model_path::',
+    'model_id::',
 ];
 
 $defaultOptions = [
@@ -102,7 +103,7 @@ $defaultOptions = [
     'location' => 'us-central1',
     'target_language' => 'en',
     'source_language' => 'de',
-    'model_path' => 'projects/{project-id}/locations/{location-id}/models/{your-model-id}',
+    'model_id' => 'projects/{project-id}/locations/{location-id}/models/{your-model-id}',
 ];
 
 $options = getopt('', $opts);
@@ -114,6 +115,6 @@ $projectId = $options['project_id'];
 $location = $options['location'];
 $targetLanguage = $options['target_language'];
 $sourceLanguage = $options['source_language'];
-$modelPath = $options['model_path'];
+$modelId = $options['model_id'];
 
-sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelPath);
+sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId);

@@ -22,7 +22,7 @@
 // sample-metadata
 //   title: Detect Language
 //   description: Detecting the language of a text string
-//   usage: php v3_detect_language.php [--text "Hello, world!"] [--project "[Google Cloud Project ID]"]
+//   usage: php v3_detect_language.php [--text "Hello, world!"] [--project_id "[Google Cloud Project ID]"]
 // [START translate_v3_detect_language]
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -33,13 +33,13 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  *
  * @param string $text The text string for performing language detection
  */
-function sampleDetectLanguage($text, $project)
+function sampleDetectLanguage($text, $projectId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
     // $text = 'Hello, world!';
-    // $project = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($project, 'global');
+    // $projectId = '[Google Cloud Project ID]';
+    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
     // Optional. Can be "text/plain" or "text/html".
     $mimeType = 'text/plain';
@@ -62,18 +62,18 @@ function sampleDetectLanguage($text, $project)
 
 $opts = [
     'text::',
-    'project::',
+    'project_id::',
 ];
 
 $defaultOptions = [
     'text' => 'Hello, world!',
-    'project' => '[Google Cloud Project ID]',
+    'project_id' => '[Google Cloud Project ID]',
 ];
 
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
 $text = $options['text'];
-$project = $options['project'];
+$projectId = $options['project_id'];
 
 sampleDetectLanguage($text, $project);

@@ -22,7 +22,7 @@
 // sample-metadata
 //   title: Translating Text with Model
 //   description: Translating Text with Model
-//   usage: php v3_translate_text_with_model.php [--model_path "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
+//   usage: php v3_translate_text_with_model.php [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 // [START translate_v3_translate_text_with_model]
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -36,16 +36,17 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
  * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
  */
-function sampleTranslateText($modelPath, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
+function sampleTranslateText($modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
 {
     $translationServiceClient = new TranslationServiceClient();
 
-    // $modelPath = 'projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]';
+    // $modelId = '[MODEL ID]';
     // $text = 'Hello, world!';
     // $targetLanguage = 'fr';
     // $sourceLanguage = 'en';
     // $projectId = '[Google Cloud Project ID]';
     // $location = 'global';
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
     $contents = [$text];
     $formattedParent = $translationServiceClient->locationName($projectId, $location);
 
@@ -65,7 +66,7 @@ function sampleTranslateText($modelPath, $text, $targetLanguage, $sourceLanguage
 // [END translate_v3_translate_text_with_model]
 
 $opts = [
-    'model_path::',
+    'model_id::',
     'text::',
     'target_language::',
     'source_language::',
@@ -74,7 +75,7 @@ $opts = [
 ];
 
 $defaultOptions = [
-    'model_path' => 'projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]',
+    'model_id' => '[MODEL ID]',
     'text' => 'Hello, world!',
     'target_language' => 'fr',
     'source_language' => 'en',
@@ -85,11 +86,11 @@ $defaultOptions = [
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
-$modelPath = $options['model_path'];
+$modelId = $options['model_id'];
 $text = $options['text'];
 $targetLanguage = $options['target_language'];
 $sourceLanguage = $options['source_language'];
 $projectId = $options['project_id'];
 $location = $options['location'];
 
-sampleTranslateText($modelPath, $text, $targetLanguage, $sourceLanguage, $projectId, $location);
+sampleTranslateText($modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location);

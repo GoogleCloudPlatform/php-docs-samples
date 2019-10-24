@@ -29,12 +29,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** List Glossaries */
-function sampleListGlossaries($project)
+function sampleListGlossaries($projectId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
-    // $project = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($project, 'us-central1');
+    // $projectId = '[Google Cloud Project ID]';
+    $formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
 
     try {
         // Iterate through all elements
@@ -51,16 +51,16 @@ function sampleListGlossaries($project)
 // [END translate_v3_list_glossary]
 
 $opts = [
-    'project::',
+    'project_id::',
 ];
 
 $defaultOptions = [
-    'project' => '[Google Cloud Project ID]',
+    'project_id' => '[Google Cloud Project ID]',
 ];
 
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
-$project = $options['project'];
+$projectId = $options['project_id'];
 
-sampleListGlossaries($project);
+sampleListGlossaries($projectId);

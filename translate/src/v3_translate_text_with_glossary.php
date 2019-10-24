@@ -22,7 +22,7 @@
 // sample-metadata
 //   title: Translating Text with Glossary
 //   description: Translates a given text using a glossary.
-//   usage: php v3_translate_text_with_glossary.php [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project_id "[Google Cloud Project ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"]
+//   usage: php v3_translate_text_with_glossary.php [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project_id "[Google Cloud Project ID]"] [--glossary_id "[YOUR_GLOSSARY_ID]"]
 // [START translate_v3_translate_text_with_glossary]
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -35,9 +35,9 @@ use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
  * @param string $text           The content to translate in string format
  * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
- * @param string $glossaryPath   Specifies the glossary used for this translation.
+ * @param string $glossaryId   Specifies the glossary used for this translation.
  */
-function sampleTranslateText($text, $sourceLanguage, $targetLanguage, $projectId, $glossaryPath)
+function sampleTranslateText($text, $sourceLanguage, $targetLanguage, $projectId, $glossaryId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -45,7 +45,8 @@ function sampleTranslateText($text, $sourceLanguage, $targetLanguage, $projectId
     // $sourceLanguage = 'en';
     // $targetLanguage = 'fr';
     // $projectId = '[Google Cloud Project ID]';
-    // $glossaryPath = 'projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]';
+    // $glossaryId = '[YOUR_GLOSSARY_ID]';
+    $glossaryPath = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
     $contents = [$text];
     $formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
     $glossaryConfig = new TranslateTextGlossaryConfig();
@@ -71,7 +72,7 @@ $opts = [
     'source_language::',
     'target_language::',
     'project_id::',
-    'glossary_path::',
+    'glossary_id::',
 ];
 
 $defaultOptions = [
@@ -79,7 +80,7 @@ $defaultOptions = [
     'source_language' => 'en',
     'target_language' => 'fr',
     'project_id' => '[Google Cloud Project ID]',
-    'glossary_path' => 'projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]',
+    'glossary_id' => 'projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]',
 ];
 
 $options = getopt('', $opts);
@@ -89,6 +90,6 @@ $text = $options['text'];
 $sourceLanguage = $options['source_language'];
 $targetLanguage = $options['target_language'];
 $projectId = $options['project_id'];
-$glossaryPath = $options['glossary_path'];
+$glossaryId = $options['glossary_id'];
 
-sampleTranslateText($text, $sourceLanguage, $targetLanguage, $projectId, $glossaryPath);
+sampleTranslateText($text, $sourceLanguage, $targetLanguage, $projectId, $glossaryId);

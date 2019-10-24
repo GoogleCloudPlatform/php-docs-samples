@@ -22,7 +22,7 @@
 // sample-metadata
 //   title: Translating Text with Glossary and Model
 //   description: Translating Text with Glossary and Model
-//   usage: php v3_translate_text_with_glossary.php [--model_path "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
+//   usage: php v3_translate_text_with_glossary.php [--model_id "[MODEL ID]"] [--glossary_id "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 // [START translate_v3_translate_text_with_glossary_and_model]
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -32,23 +32,25 @@ use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
 /**
  * Translating Text with Glossary and Model.
  *
- * @param string $modelPath      The `model` type requested for this translation.
- * @param string $glossaryPath   Specifies the glossary used for this translation.
+ * @param string $modelId      The `model` type requested for this translation.
+ * @param string $glossaryId   Specifies the glossary used for this translation.
  * @param string $text           The content to translate in string format
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
  * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
  */
-function sampleTranslateText($modelPath, $glossaryPath, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
+function sampleTranslateText($modelId, $glossaryId, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
 {
     $translationServiceClient = new TranslationServiceClient();
 
-    // $modelPath = 'projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]';
-    // $glossaryPath = 'projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]';
+    // $modelId = '[MODEL ID]';
+    // $glossaryId = '[YOUR_GLOSSARY_ID]';
     // $text = 'Hello, world!';
     // $targetLanguage = 'fr';
     // $sourceLanguage = 'en';
     // $projectId = '[Google Cloud Project ID]';
     // $location = 'global';
+    $glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
     $contents = [$text];
     $glossaryConfig = new TranslateTextGlossaryConfig();
     $glossaryConfig->setGlossary($glossaryPath);
@@ -70,8 +72,8 @@ function sampleTranslateText($modelPath, $glossaryPath, $text, $targetLanguage, 
 // [END translate_v3_translate_text_with_glossary_and_model]
 
 $opts = [
-    'model_path::',
-    'glossary_path::',
+    'model_id::',
+    'glossary_id::',
     'text::',
     'target_language::',
     'source_language::',
@@ -80,8 +82,8 @@ $opts = [
 ];
 
 $defaultOptions = [
-    'model_path' => 'projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]',
-    'glossary_path' => 'projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]',
+    'model_id' => '[MODEL ID]',
+    'glossary_id' => '[YOUR_GLOSSARY_ID]',
     'text' => 'Hello, world!',
     'target_language' => 'fr',
     'source_language' => 'en',
@@ -92,12 +94,12 @@ $defaultOptions = [
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
-$modelPath = $options['model_path'];
-$glossaryPath = $options['glossary_path'];
+$modelId = $options['model_id'];
+$glossaryId = $options['glossary_id'];
 $text = $options['text'];
 $targetLanguage = $options['target_language'];
 $sourceLanguage = $options['source_language'];
 $projectId = $options['project_id'];
 $location = $options['location'];
 
-sampleTranslateText($modelPath, $glossaryPath, $text, $targetLanguage, $sourceLanguage, $projectId, $location);
+sampleTranslateText($modelId, $glossaryId, $text, $targetLanguage, $sourceLanguage, $projectId, $location);

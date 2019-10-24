@@ -22,20 +22,20 @@
 // sample-metadata
 //   title: Delete Glossary
 //   description: Delete Glossary
-//   usage: php v3_delete_glossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+//   usage: php v3_delete_glossary.php [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 // [START translate_v3_delete_glossary]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Delete Glossary */
-function sampleDeleteGlossary($project, $glossaryId)
+function sampleDeleteGlossary($projectId, $glossaryId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
-    // $project = '[Google Cloud Project ID]';
+    // $projectId = '[Google Cloud Project ID]';
     // $glossaryId = '[Glossary ID]';
-    $formattedName = $translationServiceClient->glossaryName($project, 'us-central1', $glossaryId);
+    $formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
 
     try {
         $operationResponse = $translationServiceClient->deleteGlossary($formattedName);
@@ -54,19 +54,19 @@ function sampleDeleteGlossary($project, $glossaryId)
 // [END translate_v3_delete_glossary]
 
 $opts = [
-    'project::',
+    'project_id::',
     'glossary_id::',
 ];
 
 $defaultOptions = [
-    'project' => '[Google Cloud Project ID]',
+    'project_id' => '[Google Cloud Project ID]',
     'glossary_id' => '[Glossary ID]',
 ];
 
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
-$project = $options['project'];
+$projectId = $options['project_id'];
 $glossaryId = $options['glossary_id'];
 
 sampleDeleteGlossary($project, $glossaryId);

@@ -22,20 +22,20 @@
 // sample-metadata
 //   title: List Supported Language Names and Codes
 //   description: Listing supported languages with target language name
-//   usage: php v3_get_supported_languages_for_target.php [--language_code en] [--project "[Google Cloud Project ID]"]
+//   usage: php v3_get_supported_languages_for_target.php [--language_code en] [--project_id "[Google Cloud Project ID]"]
 // [START translate_v3_get_supported_languages_for_target]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Listing supported languages with target language name */
-function sampleGetSupportedLanguages($languageCode, $project)
+function sampleGetSupportedLanguages($languageCode, $projectId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
     // $languageCode = 'en';
-    // $project = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($project, 'global');
+    // $projectId = '[Google Cloud Project ID]';
+    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
     try {
         $response = $translationServiceClient->getSupportedLanguages(['displayLanguageCode' => $languageCode, 'parent' => $formattedParent]);
@@ -52,18 +52,18 @@ function sampleGetSupportedLanguages($languageCode, $project)
 
 $opts = [
     'language_code::',
-    'project::',
+    'project_id::',
 ];
 
 $defaultOptions = [
     'language_code' => 'en',
-    'project' => '[Google Cloud Project ID]',
+    'project_id' => '[Google Cloud Project ID]',
 ];
 
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
 $languageCode = $options['language_code'];
-$project = $options['project'];
+$projectId = $options['project_id'];
 
-sampleGetSupportedLanguages($languageCode, $project);
+sampleGetSupportedLanguages($languageCode, $projectId);

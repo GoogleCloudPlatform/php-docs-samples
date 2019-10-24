@@ -34,15 +34,15 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $text           The content to translate in string format
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
  */
-function sampleTranslateText($text, $targetLanguage, $project)
+function sampleTranslateText($text, $targetLanguage, $projectId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
     // $text = 'Hello, world!';
     // $targetLanguage = 'fr';
-    // $project = '[Google Cloud Project ID]';
+    // $projectId = '[Google Cloud Project ID]';
     $contents = [$text];
-    $formattedParent = $translationServiceClient->locationName($project, 'global');
+    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
     try {
         $response = $translationServiceClient->translateText($contents, $targetLanguage, ['parent' => $formattedParent]);
@@ -59,13 +59,13 @@ function sampleTranslateText($text, $targetLanguage, $project)
 $opts = [
     'text::',
     'target_language::',
-    'project::',
+    'project_id::',
 ];
 
 $defaultOptions = [
     'text' => 'Hello, world!',
     'target_language' => 'fr',
-    'project' => '[Google Cloud Project ID]',
+    'project_id' => '[Google Cloud Project ID]',
 ];
 
 $options = getopt('', $opts);
@@ -73,6 +73,6 @@ $options += $defaultOptions;
 
 $text = $options['text'];
 $targetLanguage = $options['target_language'];
-$project = $options['project'];
+$projectId = $options['project_id'];
 
 sampleTranslateText($text, $targetLanguage, $project);

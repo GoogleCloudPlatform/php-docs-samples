@@ -95,23 +95,50 @@ class translateTest extends TestCase
         );
     }
 
-    // public function testV3TranslateTextWithGlossaryAndModel()
-    // {
-    //     $output = $this->runSnippet('v3_translate_text_with_glossary_and_model', ['ja']);
-    //     $this->assertContains('en: 英語', $output);
-    // }
+    public function testV3TranslateTextWithGlossaryAndModel()
+    {
+        $glossaryId = sprintf('please-delete-me-%', rand());
+        $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
-    // public function testV3TranslateTextWithGlossary()
-    // {
-    //     $output = $this->runSnippet('v3_translate_text_with_glossary', ['account', 'en', 'ja', self::$projectId, glossary]);
-    //     $this->assertContains('en: 英語', $output);
-    // }
+        $output = $this->runSnippet('v3_translate_text_with_glossary_and_model', ['TRL3089491334608715776', $glossaryId, "That' il do it. deception", "ja", "en", self::$projectId, "us-central1"]);
+        $this->assertContains('欺く', $output);
 
-    // public function testV3TranslateTextWithModel()
-    // {
-    //     $output = $this->runSnippet('v3_translate_text_with_model', ['ja']);
-    //     $this->assertContains('en: 英語', $output);
-    // }
+        $option1 = "それはそうだ";
+        $option2 = "それじゃあ";
+        $this->assertThat($output,
+            $this->logicalOr(
+                $this->stringContains($option1),
+                $this->stringContains($option2)
+            )
+        );
+
+        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+    }
+
+    public function testV3TranslateTextWithGlossary()
+    {
+        $glossaryId = sprintf('please-delete-me-%', rand());
+        $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+
+        $output = $this->runSnippet('v3_translate_text_with_glossary', ['account', 'en', 'ja', self::$projectId, $glossaryId]);
+
+        $option1 = "それはそうだ";
+        $option2 = "それじゃあ";
+        $this->assertThat($output,
+            $this->logicalOr(
+                $this->stringContains($option1),
+                $this->stringContains($option2)
+            )
+        );
+
+        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+    }
+
+    public function testV3TranslateTextWithModel()
+    {
+        $output = $this->runSnippet('v3_translate_text_with_model', ['TRL3089491334608715776', "That' il do it.", "ja", "en", self::$projectId, "us-central1"]);
+        $this->assertContains('en: 英語', $output);
+    }
 
     public function testV3CreateListGetDeleteGlossary()
     {
@@ -157,26 +184,52 @@ class translateTest extends TestCase
     {
         $storage = new StorageClient();
         $bucket = $storage->createBucket('who-lives-in-a-pineapple');
-        $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', sprintf('gs://%s/under-the-sea/', $bucket->name()), self::$projectId, 'us-central1', 'en', 'es']);
+        $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
+
+        $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $bucketName, self::$projectId, 'us-central1', 'en', 'es']);
+        
         $bucket->delete();
         $this->assertContains('Total Characters: 13', $output);
     }
 
-    // public function testV3BatchTranslateTextWithGlossaryAndModel()
-    // {
-    //     $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['ja']);
-    //     $this->assertContains('en: 英語', $output);
-    // }
+    public function testV3BatchTranslateTextWithGlossaryAndModel()
+    {
+        $storage = new StorageClient();
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
-    // public function testV3BatchTranslateTextWithGlossary()
-    // {
-    //     $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['ja']);
-    //     $this->assertContains('en: 英語', $output);
-    // }
+        $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
 
-    // public function testV3BatchTranslateTextWithModel()
-    // {
-    //     $output = $this->runSnippet('v3_batch_translate_text_with_model', ['ja']);
-    //     $this->assertContains('en: 英語', $output);
-    // }
+        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $bucket->delete();
+        $this->assertContains('Total Characters: 9', $output);
+    }
+
+    public function testV3BatchTranslateTextWithGlossary()
+    {
+        $storage = new StorageClient();
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
+
+        $glossaryId = sprintf('please-delete-me-%', rand());
+        $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+
+        $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', $glossaryId]);
+
+        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $bucket->delete();
+        $this->assertContains('Total Characters: 9', $output);
+    }
+
+    public function testV3BatchTranslateTextWithModel()
+    {
+        $storage = new StorageClient();
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
+
+        $output = $this->runSnippet('v3_batch_translate_text_with_model', ['gs://cloud-samples-data/translation/custom_model_text.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', 'TRL3089491334608715776']);
+        
+        $bucket->delete();
+        $this->assertContains('Total Characters: 15', $output);
+    }
 }
