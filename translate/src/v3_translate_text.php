@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 3) {
-    return printf("Usage: php %s TEXT TARGET_LANGUAGE PROJECT_ID\n", __FILE__);
+    return printf("%d Usage: php %s TEXT TARGET_LANGUAGE PROJECT_ID\n", count($argv), __FILE__);
 }
 list($_, $text, $targetLanguage, $projectId) = $argv;
 

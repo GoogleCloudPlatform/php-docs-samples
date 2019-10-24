@@ -56,6 +56,7 @@ function sampleTranslateTextWithGlossary($text, $sourceLanguage, $targetLanguage
     $mimeType = 'text/plain';
 
     try {
+        print($formattedParent);
         $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['sourceLanguageCode' => $sourceLanguage, 'glossaryConfig' => $glossaryConfig, 'mimeType' => $mimeType]);
         // Display the translation for each input text provided
         foreach ($response->getGlossaryTranslations() as $translation) {
