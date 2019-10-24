@@ -36,7 +36,7 @@ use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
  * @param string $targetLanguage Required. Specify up to 10 language codes here.
  * @param string $sourceLanguage Required. Source language code.
  */
-function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $glossaryId, $targetLanguage, $sourceLanguage)
+function sampleBatchTranslateTextWithGlossary($inputUri, $outputUri, $projectId, $location, $glossaryId, $targetLanguage, $sourceLanguage)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -116,4 +116,4 @@ $glossaryId = $options['glossary_id'];
 $targetLanguage = $options['target_language'];
 $sourceLanguage = $options['source_language'];
 
-sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $glossaryId, $targetLanguage, $sourceLanguage);
+sampleBatchTranslateTextWithGlossary($inputUri, $outputUri, $projectId, $location, $glossaryId, $targetLanguage, $sourceLanguage);

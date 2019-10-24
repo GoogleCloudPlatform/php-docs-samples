@@ -36,7 +36,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
  * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
  */
-function sampleTranslateText($modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
+function sampleTranslateTextWithModel($modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -93,4 +93,4 @@ $sourceLanguage = $options['source_language'];
 $projectId = $options['project_id'];
 $location = $options['location'];
 
-sampleTranslateText($modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location);
+sampleTranslateTextWithModel($modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location);

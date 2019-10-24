@@ -29,7 +29,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Listing supported languages with target language name */
-function sampleGetSupportedLanguages($languageCode, $projectId)
+function sampleGetSupportedLanguagesForTarget($languageCode, $projectId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -66,4 +66,4 @@ $options += $defaultOptions;
 $languageCode = $options['language_code'];
 $projectId = $options['project_id'];
 
-sampleGetSupportedLanguages($languageCode, $projectId);
+sampleGetSupportedLanguagesForTarget($languageCode, $projectId);

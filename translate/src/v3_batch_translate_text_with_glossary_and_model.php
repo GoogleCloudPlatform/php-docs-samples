@@ -41,7 +41,7 @@ use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
  * @param string $modelId      The models to use for translation. Map's key is target language code.
  * @param string $glossaryId   Required. Specifies the glossary used for this translation.
  */
-function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath)
+function sampleBatchTranslateTextWithGlossaryAndModel($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -127,4 +127,4 @@ $sourceLanguage = $options['source_language'];
 $modelId = $options['model_id'];
 $glossaryId = $options['glossary_id'];
 
-sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath);
+sampleBatchTranslateTextWithGlossaryAndModel($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath);

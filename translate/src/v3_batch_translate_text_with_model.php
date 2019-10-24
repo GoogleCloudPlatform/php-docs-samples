@@ -39,7 +39,7 @@ use Google\Cloud\Translate\V3\OutputConfig;
  * @param string $sourceLanguage Required. Source language code.
  * @param string $modelPath      The models to use for translation. Map's key is target language code.
  */
-function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId)
+function sampleBatchTranslateTextWithModel($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId)
 {
     $translationServiceClient = new TranslationServiceClient();
 
@@ -117,4 +117,4 @@ $targetLanguage = $options['target_language'];
 $sourceLanguage = $options['source_language'];
 $modelId = $options['model_id'];
 
-sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId);
+sampleBatchTranslateTextWithModel($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId);
