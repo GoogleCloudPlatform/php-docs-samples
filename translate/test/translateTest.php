@@ -191,7 +191,7 @@ class translateTest extends TestCase
 
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
 
-        $this->assertContains('Total Characters: 9', $output);
+        $this->assertContains('Total Characters: 25', $output);
     }
 
     public function testV3BatchTranslateTextWithGlossary()
