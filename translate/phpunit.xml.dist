@@ -14,7 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../testing/bootstrap.php">
+<phpunit bootstrap="../testing/bootstrap.php"
+         processIsolation="true">
     <testsuites>
         <testsuite name="PHP translate test">
             <directory>test</directory>
