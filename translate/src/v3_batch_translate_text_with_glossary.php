@@ -71,7 +71,7 @@ $glossariesItem->setGlossary($glossaryPath);
 $glossaries = ['ja' => $glossariesItem];
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['parent' => $formattedParent, 'glossaries' => $glossaries]);
+    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['glossaries' => $glossaries]);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();

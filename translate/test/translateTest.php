@@ -102,15 +102,7 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_translate_text_with_glossary_and_model', ['TRL3089491334608715776', $glossaryId, "That' il do it. deception", "ja", "en", getenv('GOOGLE_PROJECT_ID'), "us-central1"]);
         $this->assertContains('欺く', $output);
-
-        $option1 = "それはそうだ";
-        $option2 = "それじゃあ";
-        $this->assertThat($output,
-            $this->logicalOr(
-                $this->stringContains($option1),
-                $this->stringContains($option2)
-            )
-        );
+        $this->assertContains('やる', $output);
 
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
     }
@@ -122,8 +114,8 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_translate_text_with_glossary', ['account', 'en', 'ja', getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
 
-        $option1 = "それはそうだ";
-        $option2 = "それじゃあ";
+        $option1 = "アカウント";
+        $option2 = "口座";
         $this->assertThat($output,
             $this->logicalOr(
                 $this->stringContains($option1),
@@ -137,7 +129,7 @@ class translateTest extends TestCase
     public function testV3TranslateTextWithModel()
     {
         $output = $this->runSnippet('v3_translate_text_with_model', ['TRL3089491334608715776', "That' il do it.", "ja", "en", getenv('GOOGLE_PROJECT_ID'), "us-central1"]);
-        $this->assertContains('en: 英語', $output);
+        $this->assertContains('やる', $output);
     }
 
     public function testV3CreateListGetDeleteGlossary()

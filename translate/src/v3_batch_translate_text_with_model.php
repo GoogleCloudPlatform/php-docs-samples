@@ -43,7 +43,7 @@ use Google\Cloud\Translate\V3\OutputConfig;
  * @param string $targetLanguage Required. Specify up to 10 language codes here.
  * @param string $sourceLanguage Required. Source language code.
  * @param string $modelPath      The models to use for translation. Map's key is target language code.
- */)
+ */
 $translationServiceClient = new TranslationServiceClient();
 
 // $inputUri = 'gs://cloud-samples-data/text.txt';
@@ -72,7 +72,7 @@ $formattedParent = $translationServiceClient->locationName($projectId, $location
 $models = ['ja' => $modelPath];
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['parent' => $formattedParent, 'models' => $models]);
+    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['models' => $models]);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();

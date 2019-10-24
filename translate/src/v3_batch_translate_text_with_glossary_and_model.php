@@ -28,7 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 9 || count($argv) > 9) {
     return printf("Usage: php %s INPUT_URI OUTPUT_URI PROJECT_ID LOCATION TARGET_LANGUAGE SOURCE_LANGUAGE MODEL_ID GLOSSARY_PATH\n", __FILE__);
 }
-list($_, $inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath) = $argv;
+list($_, $inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryId) = $argv;
 
 // [START batch_translate_text_with_glossary_and_model]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
@@ -79,7 +79,7 @@ $glossariesItem->setGlossary($glossaryPath);
 $glossaries = ['ja' => $glossariesItem];
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['parent' => $formattedParent, 'models' => $models, 'glossaries' => $glossaries]);
+    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['models' => $models, 'glossaries' => $glossaries]);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();

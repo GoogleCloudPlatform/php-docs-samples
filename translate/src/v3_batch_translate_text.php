@@ -63,7 +63,7 @@ $outputConfig->setGcsDestination($gcsDestination);
 $formattedParent = $translationServiceClient->locationName($projectId, $location);
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($sourceLang, $targetLanguageCodes, $inputConfigs, $outputConfig, ['parent' => $formattedParent]);
+    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLang, $targetLanguageCodes, $inputConfigs, $outputConfig);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();
