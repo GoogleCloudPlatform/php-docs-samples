@@ -80,7 +80,7 @@ class translateTest extends TestCase
         $output = $this->runSnippet('list_languages', ['ja']);
         $this->assertContains('en: 英語', $output);
     }
-    
+
     public function testV3TranslateText()
     {
         $output = $this->runSnippet('v3_translate_text', ['Hello world', 'sr-Latn', self::$projectId]);
@@ -115,12 +115,23 @@ class translateTest extends TestCase
 
     public function testV3CreateListGetDeleteGlossary()
     {
-        $output = $this->runSnippet('v3_create_glossary', ['Hello.']);
-        $output = $this->runSnippet('v3_delete_glossary', ['Hello.']);
-        $output = $this->runSnippet('v3_list_glossary');
-        $output = $this->runSnippet('v3_get_glossary');
-        $this->assertContains("\nen\n", $output);
-        $this->assertContains("\nja\n", $output);
+        $glossaryId = sprintf('please-delete-me-%', rand());
+        $output = $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+        $this->assertContains("Created", $output);
+        $this->assertContains($glossaryId, $output);
+        $this->assertContains("gs://cloud-samples-data/translation/glossary_ja.csv", $output);
+
+        $output = $this->runSnippet('v3_list_glossary', [self::$projectId]);
+        $this->assertContains($glossaryId, $output);
+        $this->assertContains("gs://cloud-samples-data/translation/glossary_ja.csv", $output);
+
+        $output = $this->runSnippet('v3_get_glossary', [self::$projectId, $glossaryId]);
+        $this->assertContains($glossaryId, $output);
+        $this->assertContains("gs://cloud-samples-data/translation/glossary_ja.csv", $output);
+
+        $output = $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $this->assertContains("Deleted", $output);
+        $this->assertContains($glossaryId, $output);
     }
 
     public function testV3ListLanguagesWithTarget()

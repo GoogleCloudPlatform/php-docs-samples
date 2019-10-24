@@ -24,7 +24,7 @@
 //   description: Translates a given text using a glossary.
 //   usage: php v3_translate_text_with_glossary.php [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project_id "[Google Cloud Project ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"]
 // [START translate_v3_translate_text_with_glossary]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;

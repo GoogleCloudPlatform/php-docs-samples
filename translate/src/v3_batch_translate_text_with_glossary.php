@@ -24,7 +24,7 @@
 //   description: Batch Translate Text with Glossary a given URI using a glossary.
 //   usage: php v3_batch_translate_text_with_glossary.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--glossary_path "projects/[PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--target_language en] [--source_language de]
 // [START batch_translate_text_with_glossary]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;

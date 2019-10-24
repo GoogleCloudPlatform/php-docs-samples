@@ -24,7 +24,7 @@
 //   description: Delete Glossary
 //   usage: php v3_delete_glossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 // [START translate_v3_delete_glossary]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 

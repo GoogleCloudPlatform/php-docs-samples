@@ -24,7 +24,7 @@
 //   description: List Glossaries
 //   usage: php v3_list_glossary.php [--project "[Google Cloud Project ID]"]
 // [START translate_v3_list_glossary]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 

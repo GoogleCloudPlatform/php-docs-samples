@@ -24,7 +24,7 @@
 //   description: Detecting the language of a text string
 //   usage: php v3_detect_language.php [--text "Hello, world!"] [--project "[Google Cloud Project ID]"]
 // [START translate_v3_detect_language]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 

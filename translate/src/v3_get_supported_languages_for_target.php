@@ -24,7 +24,7 @@
 //   description: Listing supported languages with target language name
 //   usage: php v3_get_supported_languages_for_target.php [--language_code en] [--project "[Google Cloud Project ID]"]
 // [START translate_v3_get_supported_languages_for_target]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 

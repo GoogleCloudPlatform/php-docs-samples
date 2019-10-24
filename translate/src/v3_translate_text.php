@@ -24,7 +24,7 @@
 //   description: Translating Text
 //   usage: php v3_translate_text.php [--text "Hello, world!"] [--target_language fr] [--project "[Google Cloud Project ID]"]
 // [START translate_v3_translate_text]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 

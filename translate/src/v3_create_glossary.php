@@ -15,16 +15,12 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("LongRunningRequest",  "translate_v3_create_glossary")
- */
-
 // sample-metadata
 //   title: Create Glossary
 //   description: Create Glossary
-//   usage: php v3_create_glossary.php [--project_id "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"] [--input_uri "gs://translation_samples_beta/glossaries/glossary.csv"]
+//   usage: php v3_create_glossary.php [--project_id "[Google Cloud Project ID]"]  [--glossary_id "my_glossary_id_123"] [--input_uri "gs://cloud-samples-data/translation/glossary.csv"]
 // [START translate_v3_create_glossary]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsSource;
@@ -33,16 +29,15 @@ use Google\Cloud\Translate\V3\GlossaryInputConfig;
 use Google\Cloud\Translate\V3\Glossary\LanguageCodesSet;
 
 /** Create Glossary */
-function sampleCreateGlossary($projectId, $project2, $glossaryId, $inputUri)
+function sampleCreateGlossary($projectId, $glossaryId, $inputUri)
 {
     $translationServiceClient = new TranslationServiceClient();
 
     // $projectId = '[Google Cloud Project ID]';
-    // $project2 = '[Your Google Cloud Project ID]';
     // $glossaryId = 'my_glossary_id_123';
-    // $inputUri = 'gs://translation_samples_beta/glossaries/glossary.csv';
+    // $inputUri = 'gs://cloud-samples-data/translation/glossary.csv';
     $formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
-    $formattedName = $translationServiceClient->glossaryName($project2, 'us-central1', $glossaryId);
+    $formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
     $languageCodesElement = 'en';
     $languageCodesElement2 = 'ja';
     $languageCodes = [$languageCodesElement, $languageCodesElement2];
@@ -78,24 +73,21 @@ function sampleCreateGlossary($projectId, $project2, $glossaryId, $inputUri)
 
 $opts = [
     'project_id::',
-    'project_2::',
     'glossary_id::',
     'input_uri::',
 ];
 
 $defaultOptions = [
     'project_id' => '[Google Cloud Project ID]',
-    'project_2' => '[Your Google Cloud Project ID]',
     'glossary_id' => 'my_glossary_id_123',
-    'input_uri' => 'gs://translation_samples_beta/glossaries/glossary.csv',
+    'input_uri' => 'gs://cloud-samples-data/translation/glossary.csv',
 ];
 
 $options = getopt('', $opts);
 $options += $defaultOptions;
 
 $projectId = $options['project_id'];
-$project2 = $options['project_2'];
 $glossaryId = $options['glossary_id'];
 $inputUri = $options['input_uri'];
 
-sampleCreateGlossary($projectId, $project2, $glossaryId, $inputUri);
+sampleCreateGlossary($projectId, $glossaryId, $inputUri);

@@ -24,7 +24,7 @@
 //   description: Getting a list of supported language codes
 //   usage: php v3_get_supported_languages.php [--project "[Google Cloud Project ID]"]
 // [START translate_v3_get_supported_languages]
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
