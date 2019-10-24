@@ -15,17 +15,18 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_translate_text")
- */
-
 // sample-metadata
 //   title: Translating Text
 //   description: Translating Text
 //   usage: php v3_translate_text.php [--text "Hello, world!"] [--target_language fr] [--project_id "[Google Cloud Project ID]"]
-// [START translate_v3_translate_text]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 3 || count($argv) > 3) {
+    return printf("Usage: php %s TEXT TARGET_LANGUAGE PROJECT_ID\n", __FILE__);
+}
+list($_, $text, $targetLanguage, $projectId) = $argv;
+
+// [START translate_v3_translate_text]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /**
@@ -34,45 +35,22 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $text           The content to translate in string format
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
  */
-function sampleTranslateText($text, $targetLanguage, $projectId)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $text = 'Hello, world!';
-    // $targetLanguage = 'fr';
-    // $projectId = '[Google Cloud Project ID]';
-    $contents = [$text];
-    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
+// $text = 'Hello, world!';
+// $targetLanguage = 'fr';
+// $projectId = '[Google Cloud Project ID]';
+$contents = [$text];
+$formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
-    try {
-        $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent);
-        // Display the translation for each input text provided
-        foreach ($response->getTranslations() as $translation) {
-            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent);
+    // Display the translation for each input text provided
+    foreach ($response->getTranslations() as $translation) {
+        printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
     }
+} finally {
+    $translationServiceClient->close();
 }
+
 // [END translate_v3_translate_text]
-
-$opts = [
-    'text::',
-    'target_language::',
-    'project_id::',
-];
-
-$defaultOptions = [
-    'text' => 'Hello, world!',
-    'target_language' => 'fr',
-    'project_id' => '[Google Cloud Project ID]',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$text = $options['text'];
-$targetLanguage = $options['target_language'];
-$projectId = $options['project_id'];
-
-sampleTranslateText($text, $targetLanguage, $projectId);
