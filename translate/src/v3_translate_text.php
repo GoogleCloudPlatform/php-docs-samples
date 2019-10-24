@@ -21,8 +21,8 @@
 //   usage: php v3_translate_text.php [--text "Hello, world!"] [--target_language fr] [--project_id "[Google Cloud Project ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 3) {
-    return printf("%d Usage: php %s TEXT TARGET_LANGUAGE PROJECT_ID\n", count($argv), __FILE__);
+if (count($argv) < 4 || count($argv) > 4) {
+    return printf("Usage: php %s TEXT TARGET_LANGUAGE PROJECT_ID\n", __FILE__);
 }
 list($_, $text, $targetLanguage, $projectId) = $argv;
 
