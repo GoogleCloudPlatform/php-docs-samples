@@ -54,7 +54,7 @@ function sampleTranslateTextWithModel($modelId, $text, $targetLanguage, $sourceL
     $mimeType = 'text/plain';
 
     try {
-        $response = $translationServiceClient->translateText($contents, $targetLanguage, ['model' => $modelPath, 'sourceLanguageCode' => $sourceLanguage, 'parent' => $formattedParent, 'mimeType' => $mimeType]);
+        $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['model' => $modelPath, 'sourceLanguageCode' => $sourceLanguage, 'mimeType' => $mimeType]);
         // Display the translation for each input text provided
         foreach ($response->getTranslations() as $translation) {
             printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

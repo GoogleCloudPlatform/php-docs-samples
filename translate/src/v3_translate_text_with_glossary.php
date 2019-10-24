@@ -56,7 +56,7 @@ function sampleTranslateTextWithGlossary($text, $sourceLanguage, $targetLanguage
     $mimeType = 'text/plain';
 
     try {
-        $response = $translationServiceClient->translateText($contents, $targetLanguage, ['sourceLanguageCode' => $sourceLanguage, 'parent' => $formattedParent, 'glossaryConfig' => $glossaryConfig, 'mimeType' => $mimeType]);
+        $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['sourceLanguageCode' => $sourceLanguage, 'glossaryConfig' => $glossaryConfig, 'mimeType' => $mimeType]);
         // Display the translation for each input text provided
         foreach ($response->getGlossaryTranslations() as $translation) {
             printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

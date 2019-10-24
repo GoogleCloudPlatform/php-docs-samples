@@ -60,7 +60,7 @@ function sampleTranslateTextWithGlossaryAndModel($modelId, $glossaryId, $text, $
     $mimeType = 'text/plain';
 
     try {
-        $response = $translationServiceClient->translateText($contents, $targetLanguage, ['model' => $modelPath, 'glossaryConfig' => $glossaryConfig, 'sourceLanguageCode' => $sourceLanguage, 'parent' => $formattedParent, 'mimeType' => $mimeType]);
+        $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['model' => $modelPath, 'glossaryConfig' => $glossaryConfig, 'sourceLanguageCode' => $sourceLanguage, 'mimeType' => $mimeType]);
         // Display the translation for each input text provided
         foreach ($response->getGlossaryTranslations() as $translation) {
             printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

@@ -61,4 +61,4 @@ $options += $defaultOptions;
 
 $projectId = $options['project_id'];
 
-sampleGetSupportedLanguages($project);
+sampleGetSupportedLanguages($projectId);

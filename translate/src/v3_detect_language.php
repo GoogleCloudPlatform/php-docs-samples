@@ -76,4 +76,4 @@ $options += $defaultOptions;
 $text = $options['text'];
 $projectId = $options['project_id'];
 
-sampleDetectLanguage($text, $project);
+sampleDetectLanguage($text, $projectId);

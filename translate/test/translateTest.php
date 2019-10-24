@@ -183,7 +183,7 @@ class translateTest extends TestCase
     public function testV3BatchTranslateText()
     {
         $storage = new StorageClient();
-        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple-1');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
         $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $bucketName, self::$projectId, 'us-central1', 'en', 'es']);
@@ -195,7 +195,7 @@ class translateTest extends TestCase
     public function testV3BatchTranslateTextWithGlossaryAndModel()
     {
         $storage = new StorageClient();
-        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple-2');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
         $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
@@ -208,7 +208,7 @@ class translateTest extends TestCase
     public function testV3BatchTranslateTextWithGlossary()
     {
         $storage = new StorageClient();
-        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple-3');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
         $glossaryId = sprintf('please-delete-me-%', rand());
@@ -224,7 +224,7 @@ class translateTest extends TestCase
     public function testV3BatchTranslateTextWithModel()
     {
         $storage = new StorageClient();
-        $bucket = $storage->createBucket('who-lives-in-a-pineapple');
+        $bucket = $storage->createBucket('who-lives-in-a-pineapple-4');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
         $output = $this->runSnippet('v3_batch_translate_text_with_model', ['gs://cloud-samples-data/translation/custom_model_text.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', 'TRL3089491334608715776']);
