@@ -175,7 +175,7 @@ class translateTest extends TestCase
     {
         $outputUri = 'gs://who-lives-in-a-pineapple/under-the-sea/';
 
-        $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $bucketName, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'en', 'es']);
+        $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'en', 'es']);
         
         $this->assertContains('Total Characters: 13', $output);
     }
@@ -187,7 +187,7 @@ class translateTest extends TestCase
         $glossaryId = sprintf('please-delete-me-%d', rand());
         $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
-        $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $bucketName, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
+        $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
 
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $this->assertContains('Total Characters: 9', $output);
@@ -200,7 +200,7 @@ class translateTest extends TestCase
         $glossaryId = sprintf('please-delete-me-%d', rand());
         $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
-        $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', $glossaryId]);
+        $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', $glossaryId, 'ja', 'en']);
 
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $this->assertContains('Total Characters: 9', $output);

@@ -41,7 +41,7 @@ $formattedParent = $translationServiceClient->locationName($projectId, 'us-centr
 
 try {
     // Iterate through all elements
-    $pagedResponse = $translationServiceClient->listGlossaries(['parent' => $formattedParent]);
+    $pagedResponse = $translationServiceClient->listGlossaries($formattedParent);
     foreach ($pagedResponse->iterateAllElements() as $responseItem) {
         printf('Glossary name: %s' . PHP_EOL, $responseItem->getName());
         printf('Entry count: %s' . PHP_EOL, $responseItem->getEntryCount());
