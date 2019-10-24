@@ -45,7 +45,7 @@ function sampleDetectLanguage($text, $projectId)
     $mimeType = 'text/plain';
 
     try {
-        $response = $translationServiceClient->detectLanguage(['content' => $text, 'parent' => $formattedParent, 'mimeType' => $mimeType]);
+        $response = $translationServiceClient->detectLanguage($formattedParent, ['content' => $text, 'mimeType' => $mimeType]);
         // Display list of detected languages sorted by detection confidence.
         // The most probable language is first.
         foreach ($response->getLanguages() as $language) {

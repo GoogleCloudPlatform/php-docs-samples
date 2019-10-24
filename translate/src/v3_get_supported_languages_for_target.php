@@ -38,7 +38,7 @@ function sampleGetSupportedLanguagesForTarget($languageCode, $projectId)
     $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
     try {
-        $response = $translationServiceClient->getSupportedLanguages(['displayLanguageCode' => $languageCode, 'parent' => $formattedParent]);
+        $response = $translationServiceClient->getSupportedLanguages($formattedParent, ['displayLanguageCode' => $languageCode]);
         // List language codes of supported languages
         foreach ($response->getLanguages() as $language) {
             printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());

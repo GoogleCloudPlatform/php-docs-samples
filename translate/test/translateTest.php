@@ -83,7 +83,7 @@ class translateTest extends TestCase
 
     public function testV3TranslateText()
     {
-        $output = $this->runSnippet('v3_translate_text', ['Hello world', 'sr-Latn', self::$projectId]);
+        $output = $this->runSnippet('v3_translate_text', ['Hello world', 'sr-Latn', getenv('GOOGLE_PROJECT_ID')]);
         
         $option1 = "Zdravo svet";
         $option2 = "Pozdrav svijetu";
@@ -98,9 +98,9 @@ class translateTest extends TestCase
     public function testV3TranslateTextWithGlossaryAndModel()
     {
         $glossaryId = sprintf('please-delete-me-%', rand());
-        $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+        $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
-        $output = $this->runSnippet('v3_translate_text_with_glossary_and_model', ['TRL3089491334608715776', $glossaryId, "That' il do it. deception", "ja", "en", self::$projectId, "us-central1"]);
+        $output = $this->runSnippet('v3_translate_text_with_glossary_and_model', ['TRL3089491334608715776', $glossaryId, "That' il do it. deception", "ja", "en", getenv('GOOGLE_PROJECT_ID'), "us-central1"]);
         $this->assertContains('欺く', $output);
 
         $option1 = "それはそうだ";
@@ -112,15 +112,15 @@ class translateTest extends TestCase
             )
         );
 
-        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
     }
 
     public function testV3TranslateTextWithGlossary()
     {
         $glossaryId = sprintf('please-delete-me-%', rand());
-        $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+        $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
-        $output = $this->runSnippet('v3_translate_text_with_glossary', ['account', 'en', 'ja', self::$projectId, $glossaryId]);
+        $output = $this->runSnippet('v3_translate_text_with_glossary', ['account', 'en', 'ja', getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
 
         $option1 = "それはそうだ";
         $option2 = "それじゃあ";
@@ -131,52 +131,52 @@ class translateTest extends TestCase
             )
         );
 
-        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
     }
 
     public function testV3TranslateTextWithModel()
     {
-        $output = $this->runSnippet('v3_translate_text_with_model', ['TRL3089491334608715776', "That' il do it.", "ja", "en", self::$projectId, "us-central1"]);
+        $output = $this->runSnippet('v3_translate_text_with_model', ['TRL3089491334608715776', "That' il do it.", "ja", "en", getenv('GOOGLE_PROJECT_ID'), "us-central1"]);
         $this->assertContains('en: 英語', $output);
     }
 
     public function testV3CreateListGetDeleteGlossary()
     {
         $glossaryId = sprintf('please-delete-me-%', rand());
-        $output = $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+        $output = $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
         $this->assertContains("Created", $output);
         $this->assertContains($glossaryId, $output);
         $this->assertContains("gs://cloud-samples-data/translation/glossary_ja.csv", $output);
 
-        $output = $this->runSnippet('v3_list_glossary', [self::$projectId]);
+        $output = $this->runSnippet('v3_list_glossary', [getenv('GOOGLE_PROJECT_ID')]);
         $this->assertContains($glossaryId, $output);
         $this->assertContains("gs://cloud-samples-data/translation/glossary_ja.csv", $output);
 
-        $output = $this->runSnippet('v3_get_glossary', [self::$projectId, $glossaryId]);
+        $output = $this->runSnippet('v3_get_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $this->assertContains($glossaryId, $output);
         $this->assertContains("gs://cloud-samples-data/translation/glossary_ja.csv", $output);
 
-        $output = $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $output = $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $this->assertContains("Deleted", $output);
         $this->assertContains($glossaryId, $output);
     }
 
     public function testV3ListLanguagesWithTarget()
     {
-        $output = $this->runSnippet('v3_get_supported_languages_for_target', ['is', self::$projectId]);
+        $output = $this->runSnippet('v3_get_supported_languages_for_target', ['is', getenv('GOOGLE_PROJECT_ID')]);
         $this->assertContains("Language Code: sq", $output);
         $this->assertContains("Display Name: albanska", $output);
     }
 
     public function testV3ListLanguages()
     {
-        $output = $this->runSnippet('v3_get_supported_languages', [self::$projectId]);
+        $output = $this->runSnippet('v3_get_supported_languages', [getenv('GOOGLE_PROJECT_ID')]);
         $this->assertContains("zh-CN", $output);
     }
 
     public function testV3DetectLanguage()
     {
-        $output = $this->runSnippet('v3_detect_language', ['Hæ sæta', self::$projectId]);
+        $output = $this->runSnippet('v3_detect_language', ['Hæ sæta', getenv('GOOGLE_PROJECT_ID')]);
         $this->assertContains('is', $output);
     }
 
@@ -186,7 +186,7 @@ class translateTest extends TestCase
         $bucket = $storage->createBucket('who-lives-in-a-pineapple-1');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
-        $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $bucketName, self::$projectId, 'us-central1', 'en', 'es']);
+        $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $bucketName, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'en', 'es']);
         
         $bucket->delete();
         $this->assertContains('Total Characters: 13', $output);
@@ -198,9 +198,9 @@ class translateTest extends TestCase
         $bucket = $storage->createBucket('who-lives-in-a-pineapple-2');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
-        $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
+        $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $bucketName, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
 
-        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $bucket->delete();
         $this->assertContains('Total Characters: 9', $output);
     }
@@ -212,11 +212,11 @@ class translateTest extends TestCase
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
         $glossaryId = sprintf('please-delete-me-%', rand());
-        $this->runSnippet('v3_create_glossary', [self::$projectId, $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
+        $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
-        $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', $glossaryId]);
+        $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $bucketName, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', $glossaryId]);
 
-        $this->runSnippet('v3_delete_glossary', [self::$projectId, $glossaryId]);
+        $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $bucket->delete();
         $this->assertContains('Total Characters: 9', $output);
     }
@@ -227,7 +227,7 @@ class translateTest extends TestCase
         $bucket = $storage->createBucket('who-lives-in-a-pineapple-4');
         $bucketName = sprintf('gs://%s/under-the-sea/', $bucket->name());
 
-        $output = $this->runSnippet('v3_batch_translate_text_with_model', ['gs://cloud-samples-data/translation/custom_model_text.txt', $bucketName, self::$projectId, 'us-central1', 'ja', 'en', 'TRL3089491334608715776']);
+        $output = $this->runSnippet('v3_batch_translate_text_with_model', ['gs://cloud-samples-data/translation/custom_model_text.txt', $bucketName, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776']);
         
         $bucket->delete();
         $this->assertContains('Total Characters: 15', $output);
