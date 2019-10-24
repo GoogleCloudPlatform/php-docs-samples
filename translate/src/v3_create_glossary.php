@@ -19,9 +19,14 @@
 //   title: Create Glossary
 //   description: Create Glossary
 //   usage: php v3_create_glossary.php [--project_id "[Google Cloud Project ID]"]  [--glossary_id "my_glossary_id_123"] [--input_uri "gs://cloud-samples-data/translation/glossary.csv"]
-// [START translate_v3_create_glossary]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 4 || count($argv) > 4) {
+    return printf("Usage: php %s PROJECT_ID GLOSSARY_ID INPUT_URI\n", __FILE__);
+}
+list($_, $projectId, $glossaryId, $inputUri) = $argv;
+
+// [START translate_v3_create_glossary]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\Glossary;
@@ -29,65 +34,41 @@ use Google\Cloud\Translate\V3\GlossaryInputConfig;
 use Google\Cloud\Translate\V3\Glossary\LanguageCodesSet;
 
 /** Create Glossary */
-function sampleCreateGlossary($projectId, $glossaryId, $inputUri)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $projectId = '[Google Cloud Project ID]';
-    // $glossaryId = 'my_glossary_id_123';
-    // $inputUri = 'gs://cloud-samples-data/translation/glossary.csv';
-    $formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
-    $formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
-    $languageCodesElement = 'en';
-    $languageCodesElement2 = 'ja';
-    $languageCodes = [$languageCodesElement, $languageCodesElement2];
-    $languageCodesSet = new LanguageCodesSet();
-    $languageCodesSet->setLanguageCodes($languageCodes);
-    $gcsSource = new GcsSource();
-    $gcsSource->setInputUri($inputUri);
-    $inputConfig = new GlossaryInputConfig();
-    $inputConfig->setGcsSource($gcsSource);
-    $glossary = new Glossary();
-    $glossary->setName($formattedName);
-    $glossary->setLanguageCodesSet($languageCodesSet);
-    $glossary->setInputConfig($inputConfig);
+// $projectId = '[Google Cloud Project ID]';
+// $glossaryId = 'my_glossary_id_123';
+// $inputUri = 'gs://cloud-samples-data/translation/glossary.csv';
+$formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
+$formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
+$languageCodesElement = 'en';
+$languageCodesElement2 = 'ja';
+$languageCodes = [$languageCodesElement, $languageCodesElement2];
+$languageCodesSet = new LanguageCodesSet();
+$languageCodesSet->setLanguageCodes($languageCodes);
+$gcsSource = new GcsSource();
+$gcsSource->setInputUri($inputUri);
+$inputConfig = new GlossaryInputConfig();
+$inputConfig->setGcsSource($gcsSource);
+$glossary = new Glossary();
+$glossary->setName($formattedName);
+$glossary->setLanguageCodesSet($languageCodesSet);
+$glossary->setInputConfig($inputConfig);
 
-    try {
-        $operationResponse = $translationServiceClient->createGlossary($formattedParent, $glossary);
-        $operationResponse->pollUntilComplete();
-        if ($operationResponse->operationSucceeded()) {
-            $response = $operationResponse->getResult();
-            printf('Created Glossary.' . PHP_EOL);
-            printf('Glossary name: %s' . PHP_EOL, $response->getName());
-            printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
-            printf('Input URI: %s' . PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
-        } else {
-            $error = $operationResponse->getError();
-            // handleError($error)
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $operationResponse = $translationServiceClient->createGlossary($formattedParent, $glossary);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $response = $operationResponse->getResult();
+        printf('Created Glossary.' . PHP_EOL);
+        printf('Glossary name: %s' . PHP_EOL, $response->getName());
+        printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
+        printf('Input URI: %s' . PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END translate_v3_create_glossary]
-
-$opts = [
-    'project_id::',
-    'glossary_id::',
-    'input_uri::',
-];
-
-$defaultOptions = [
-    'project_id' => '[Google Cloud Project ID]',
-    'glossary_id' => 'my_glossary_id_123',
-    'input_uri' => 'gs://cloud-samples-data/translation/glossary.csv',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$projectId = $options['project_id'];
-$glossaryId = $options['glossary_id'];
-$inputUri = $options['input_uri'];
-
-sampleCreateGlossary($projectId, $glossaryId, $inputUri);

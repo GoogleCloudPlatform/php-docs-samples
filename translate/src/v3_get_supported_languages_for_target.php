@@ -23,47 +23,31 @@
 //   title: List Supported Language Names and Codes
 //   description: Listing supported languages with target language name
 //   usage: php v3_get_supported_languages_for_target.php [--language_code en] [--project_id "[Google Cloud Project ID]"]
-// [START translate_v3_get_supported_languages_for_target]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 3 || count($argv) > 3) {
+    return printf("Usage: php %s LANGUAGE_CODE PROJECT_ID\n", __FILE__);
+}
+list($_, $languageCode, $projectId) = $argv;
+
+// [START translate_v3_get_supported_languages_for_target]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Listing supported languages with target language name */
-function sampleGetSupportedLanguagesForTarget($languageCode, $projectId)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $languageCode = 'en';
-    // $projectId = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
+// $languageCode = 'en';
+// $projectId = '[Google Cloud Project ID]';
+$formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
-    try {
-        $response = $translationServiceClient->getSupportedLanguages($formattedParent, ['displayLanguageCode' => $languageCode]);
-        // List language codes of supported languages
-        foreach ($response->getLanguages() as $language) {
-            printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());
-            printf('Display Name: %s' . PHP_EOL, $language->getDisplayName());
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $response = $translationServiceClient->getSupportedLanguages($formattedParent, ['displayLanguageCode' => $languageCode]);
+    // List language codes of supported languages
+    foreach ($response->getLanguages() as $language) {
+        printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());
+        printf('Display Name: %s' . PHP_EOL, $language->getDisplayName());
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END translate_v3_get_supported_languages_for_target]
-
-$opts = [
-    'language_code::',
-    'project_id::',
-];
-
-$defaultOptions = [
-    'language_code' => 'en',
-    'project_id' => '[Google Cloud Project ID]',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$languageCode = $options['language_code'];
-$projectId = $options['project_id'];
-
-sampleGetSupportedLanguagesForTarget($languageCode, $projectId);

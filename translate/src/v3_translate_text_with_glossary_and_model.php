@@ -23,9 +23,14 @@
 //   title: Translating Text with Glossary and Model
 //   description: Translating Text with Glossary and Model
 //   usage: php v3_translate_text_with_glossary.php [--model_id "[MODEL ID]"] [--glossary_id "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
-// [START translate_v3_translate_text_with_glossary_and_model]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 8 || count($argv) > 8) {
+    return printf("Usage: php %s MODEL_ID GLOSSARY_ID TEXT TARGET_LANGUAGE SOURCE_LANGUAGE PROJECT_ID LOCATION\n", __FILE__);
+}
+list($_, $modelId, $glossaryId, $text, $targetLanguage, $sourceLanguage, $projectId, $location) = $argv;
+
+// [START translate_v3_translate_text_with_glossary_and_model]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
 
@@ -38,68 +43,32 @@ use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
  * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
  * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
  */
-function sampleTranslateTextWithGlossaryAndModel($modelId, $glossaryId, $text, $targetLanguage, $sourceLanguage, $projectId, $location)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $modelId = '[MODEL ID]';
-    // $glossaryId = '[YOUR_GLOSSARY_ID]';
-    // $text = 'Hello, world!';
-    // $targetLanguage = 'fr';
-    // $sourceLanguage = 'en';
-    // $projectId = '[Google Cloud Project ID]';
-    // $location = 'global';
-    $glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
-    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
-    $contents = [$text];
-    $glossaryConfig = new TranslateTextGlossaryConfig();
-    $glossaryConfig->setGlossary($glossaryPath);
-    $formattedParent = $translationServiceClient->locationName($projectId, $location);
+// $modelId = '[MODEL ID]';
+// $glossaryId = '[YOUR_GLOSSARY_ID]';
+// $text = 'Hello, world!';
+// $targetLanguage = 'fr';
+// $sourceLanguage = 'en';
+// $projectId = '[Google Cloud Project ID]';
+// $location = 'global';
+$glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
+$modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
+$contents = [$text];
+$glossaryConfig = new TranslateTextGlossaryConfig();
+$glossaryConfig->setGlossary($glossaryPath);
+$formattedParent = $translationServiceClient->locationName($projectId, $location);
 
-    // Optional. Can be "text/plain" or "text/html".
-    $mimeType = 'text/plain';
+// Optional. Can be "text/plain" or "text/html".
+$mimeType = 'text/plain';
 
-    try {
-        $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['model' => $modelPath, 'glossaryConfig' => $glossaryConfig, 'sourceLanguageCode' => $sourceLanguage, 'mimeType' => $mimeType]);
-        // Display the translation for each input text provided
-        foreach ($response->getGlossaryTranslations() as $translation) {
-            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['model' => $modelPath, 'glossaryConfig' => $glossaryConfig, 'sourceLanguageCode' => $sourceLanguage, 'mimeType' => $mimeType]);
+    // Display the translation for each input text provided
+    foreach ($response->getGlossaryTranslations() as $translation) {
+        printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END translate_v3_translate_text_with_glossary_and_model]
-
-$opts = [
-    'model_id::',
-    'glossary_id::',
-    'text::',
-    'target_language::',
-    'source_language::',
-    'project_id::',
-    'location::',
-];
-
-$defaultOptions = [
-    'model_id' => '[MODEL ID]',
-    'glossary_id' => '[YOUR_GLOSSARY_ID]',
-    'text' => 'Hello, world!',
-    'target_language' => 'fr',
-    'source_language' => 'en',
-    'project_id' => '[Google Cloud Project ID]',
-    'location' => 'global',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$modelId = $options['model_id'];
-$glossaryId = $options['glossary_id'];
-$text = $options['text'];
-$targetLanguage = $options['target_language'];
-$sourceLanguage = $options['source_language'];
-$projectId = $options['project_id'];
-$location = $options['location'];
-
-sampleTranslateTextWithGlossaryAndModel($modelId, $glossaryId, $text, $targetLanguage, $sourceLanguage, $projectId, $location);

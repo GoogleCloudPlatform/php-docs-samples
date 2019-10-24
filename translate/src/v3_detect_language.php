@@ -23,9 +23,14 @@
 //   title: Detect Language
 //   description: Detecting the language of a text string
 //   usage: php v3_detect_language.php [--text "Hello, world!"] [--project_id "[Google Cloud Project ID]"]
-// [START translate_v3_detect_language]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 3 || count($argv) > 3) {
+    return printf("Usage: php %s TEXT PROJECT_ID\n", __FILE__);
+}
+list($_, $text, $projectId) = $argv;
+
+// [START translate_v3_detect_language]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /**
@@ -33,47 +38,26 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  *
  * @param string $text The text string for performing language detection
  */
-function sampleDetectLanguage($text, $projectId)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $text = 'Hello, world!';
-    // $projectId = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
+// $text = 'Hello, world!';
+// $projectId = '[Google Cloud Project ID]';
+$formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
-    // Optional. Can be "text/plain" or "text/html".
-    $mimeType = 'text/plain';
+// Optional. Can be "text/plain" or "text/html".
+$mimeType = 'text/plain';
 
-    try {
-        $response = $translationServiceClient->detectLanguage($formattedParent, ['content' => $text, 'mimeType' => $mimeType]);
-        // Display list of detected languages sorted by detection confidence.
-        // The most probable language is first.
-        foreach ($response->getLanguages() as $language) {
-            // The language detected
-            printf('Language code: %s' . PHP_EOL, $language->getLanguageCode());
-            // Confidence of detection result for this language
-            printf('Confidence: %s' . PHP_EOL, $language->getConfidence());
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $response = $translationServiceClient->detectLanguage($formattedParent, ['content' => $text, 'mimeType' => $mimeType]);
+    // Display list of detected languages sorted by detection confidence.
+    // The most probable language is first.
+    foreach ($response->getLanguages() as $language) {
+        // The language detected
+        printf('Language code: %s' . PHP_EOL, $language->getLanguageCode());
+        // Confidence of detection result for this language
+        printf('Confidence: %s' . PHP_EOL, $language->getConfidence());
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END translate_v3_detect_language]
-
-$opts = [
-    'text::',
-    'project_id::',
-];
-
-$defaultOptions = [
-    'text' => 'Hello, world!',
-    'project_id' => '[Google Cloud Project ID]',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$text = $options['text'];
-$projectId = $options['project_id'];
-
-sampleDetectLanguage($text, $projectId);

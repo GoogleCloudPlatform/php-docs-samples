@@ -23,44 +23,31 @@
 //   title: List Glossaries
 //   description: List Glossaries
 //   usage: php v3_list_glossary.php [--project "[Google Cloud Project ID]"]
-// [START translate_v3_list_glossary]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 2 || count($argv) > 2) {
+    return printf("Usage: php %s PROJECT_ID \n", __FILE__);
+}
+list($_, $projectId) = $argv;
+
+// [START translate_v3_list_glossary]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** List Glossaries */
-function sampleListGlossaries($projectId)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $projectId = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
+// $projectId = '[Google Cloud Project ID]';
+$formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
 
-    try {
-        // Iterate through all elements
-        $pagedResponse = $translationServiceClient->listGlossaries(['parent' => $formattedParent]);
-        foreach ($pagedResponse->iterateAllElements() as $responseItem) {
-            printf('Glossary name: %s' . PHP_EOL, $responseItem->getName());
-            printf('Entry count: %s' . PHP_EOL, $responseItem->getEntryCount());
-            printf('Input URI: %s' . PHP_EOL, $responseItem->getInputConfig()->getGcsSource()->getInputUri());
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    // Iterate through all elements
+    $pagedResponse = $translationServiceClient->listGlossaries(['parent' => $formattedParent]);
+    foreach ($pagedResponse->iterateAllElements() as $responseItem) {
+        printf('Glossary name: %s' . PHP_EOL, $responseItem->getName());
+        printf('Entry count: %s' . PHP_EOL, $responseItem->getEntryCount());
+        printf('Input URI: %s' . PHP_EOL, $responseItem->getInputConfig()->getGcsSource()->getInputUri());
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END translate_v3_list_glossary]
-
-$opts = [
-    'project_id::',
-];
-
-$defaultOptions = [
-    'project_id' => '[Google Cloud Project ID]',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$projectId = $options['project_id'];
-
-sampleListGlossaries($projectId);

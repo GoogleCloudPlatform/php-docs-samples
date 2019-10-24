@@ -23,42 +23,29 @@
 //   title: List Supported Language Codes
 //   description: Getting a list of supported language codes
 //   usage: php v3_get_supported_languages.php [--project_id "[Google Cloud Project ID]"]
-// [START translate_v3_get_supported_languages]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 2 || count($argv) > 2) {
+    return printf("Usage: php %s PROJECT_ID\n", __FILE__);
+}
+list($_, $projectId) = $argv;
+
+// [START translate_v3_get_supported_languages]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Getting a list of supported language codes */
-function sampleGetSupportedLanguages($projectId)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $projectId = '[Google Cloud Project ID]';
-    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
+// $projectId = '[Google Cloud Project ID]';
+$formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
-    try {
-        $response = $translationServiceClient->getSupportedLanguages($formattedParent);
-        // List language codes of supported languages
-        foreach ($response->getLanguages() as $language) {
-            printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $response = $translationServiceClient->getSupportedLanguages($formattedParent);
+    // List language codes of supported languages
+    foreach ($response->getLanguages() as $language) {
+        printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END translate_v3_get_supported_languages]
-
-$opts = [
-    'project_id::',
-];
-
-$defaultOptions = [
-    'project_id' => '[Google Cloud Project ID]',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$projectId = $options['project_id'];
-
-sampleGetSupportedLanguages($projectId);

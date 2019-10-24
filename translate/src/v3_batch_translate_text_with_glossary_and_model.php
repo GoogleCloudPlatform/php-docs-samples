@@ -23,9 +23,14 @@
 //   title: Batch Translate with Model
 //   description: Batch translate text with Model and Glossary
 //   usage: php v3_batch_translate_text_with_glossary_and_model.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_id "projects/{project-id}/locations/{location-id}/models/{your-model-id}"] [--glossary_id "[YOUR_GLOSSARY_ID]"]
-// [START batch_translate_text_with_glossary_and_model]
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) < 9 || count($argv) > 9) {
+    return printf("Usage: php %s INPUT_URI OUTPUT_URI PROJECT_ID LOCATION TARGET_LANGUAGE SOURCE_LANGUAGE MODEL_ID GLOSSARY_PATH\n", __FILE__);
+}
+list($_, $inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath) = $argv;
+
+// [START batch_translate_text_with_glossary_and_model]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
@@ -41,90 +46,51 @@ use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
  * @param string $modelId      The models to use for translation. Map's key is target language code.
  * @param string $glossaryId   Required. Specifies the glossary used for this translation.
  */
-function sampleBatchTranslateTextWithGlossaryAndModel($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath)
-{
-    $translationServiceClient = new TranslationServiceClient();
+$translationServiceClient = new TranslationServiceClient();
 
-    // $inputUri = 'gs://cloud-samples-data/text.txt';
-    // $outputUri = 'gs://YOUR_BUCKET_ID/path_to_store_results/';
-    // $projectId = '[Google Cloud Project ID]';
-    // $location = 'us-central1';
-    // $targetLanguage = 'en';
-    // $sourceLanguage = 'de';
-    // $modelId = '{your-model-id}';
-    // $glossaryId = '[YOUR_GLOSSARY_ID]';
-    $glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
-    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
-    $targetLanguageCodes = [$targetLanguage];
-    $gcsSource = new GcsSource();
-    $gcsSource->setInputUri($inputUri);
+// $inputUri = 'gs://cloud-samples-data/text.txt';
+// $outputUri = 'gs://YOUR_BUCKET_ID/path_to_store_results/';
+// $projectId = '[Google Cloud Project ID]';
+// $location = 'us-central1';
+// $targetLanguage = 'en';
+// $sourceLanguage = 'de';
+// $modelId = '{your-model-id}';
+// $glossaryId = '[YOUR_GLOSSARY_ID]';
+$glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
+$modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
+$targetLanguageCodes = [$targetLanguage];
+$gcsSource = new GcsSource();
+$gcsSource->setInputUri($inputUri);
 
-    // Optional. Can be "text/plain" or "text/html".
-    $mimeType = 'text/plain';
-    $inputConfigsElement = new InputConfig();
-    $inputConfigsElement->setGcsSource($gcsSource);
-    $inputConfigsElement->setMimeType($mimeType);
-    $inputConfigs = [$inputConfigsElement];
-    $gcsDestination = new GcsDestination();
-    $gcsDestination->setOutputUriPrefix($outputUri);
-    $outputConfig = new OutputConfig();
-    $outputConfig->setGcsDestination($gcsDestination);
-    $formattedParent = $translationServiceClient->locationName($projectId, $location);
-    $models = ['ja' => $modelPath];
-    $glossariesItem = new TranslateTextGlossaryConfig();
-    $glossariesItem->setGlossary($glossaryPath);
-    $glossaries = ['ja' => $glossariesItem];
+// Optional. Can be "text/plain" or "text/html".
+$mimeType = 'text/plain';
+$inputConfigsElement = new InputConfig();
+$inputConfigsElement->setGcsSource($gcsSource);
+$inputConfigsElement->setMimeType($mimeType);
+$inputConfigs = [$inputConfigsElement];
+$gcsDestination = new GcsDestination();
+$gcsDestination->setOutputUriPrefix($outputUri);
+$outputConfig = new OutputConfig();
+$outputConfig->setGcsDestination($gcsDestination);
+$formattedParent = $translationServiceClient->locationName($projectId, $location);
+$models = ['ja' => $modelPath];
+$glossariesItem = new TranslateTextGlossaryConfig();
+$glossariesItem->setGlossary($glossaryPath);
+$glossaries = ['ja' => $glossariesItem];
 
-    try {
-        $operationResponse = $translationServiceClient->batchTranslateText($sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['parent' => $formattedParent, 'models' => $models, 'glossaries' => $glossaries]);
-        $operationResponse->pollUntilComplete();
-        if ($operationResponse->operationSucceeded()) {
-            $response = $operationResponse->getResult();
-            // Display the translation for each input text provided
-            printf('Total Characters: %s' . PHP_EOL, $response->getTotalCharacters());
-            printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
-        } else {
-            $error = $operationResponse->getError();
-            // handleError($error)
-        }
-    } finally {
-        $translationServiceClient->close();
+try {
+    $operationResponse = $translationServiceClient->batchTranslateText($sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['parent' => $formattedParent, 'models' => $models, 'glossaries' => $glossaries]);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $response = $operationResponse->getResult();
+        // Display the translation for each input text provided
+        printf('Total Characters: %s' . PHP_EOL, $response->getTotalCharacters());
+        printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
     }
+} finally {
+    $translationServiceClient->close();
 }
 // [END batch_translate_text_with_glossary_and_model]
-
-$opts = [
-    'input_uri::',
-    'output_uri::',
-    'project_id::',
-    'location::',
-    'target_language::',
-    'source_language::',
-    'model_id::',
-    'glossary_id::',
-];
-
-$defaultOptions = [
-    'input_uri' => 'gs://cloud-samples-data/text.txt',
-    'output_uri' => 'gs://YOUR_BUCKET_ID/path_to_store_results/',
-    'project_id' => '[Google Cloud Project ID]',
-    'location' => 'us-central1',
-    'target_language' => 'en',
-    'source_language' => 'de',
-    'model_id' => 'projects/{project-id}/locations/{location-id}/models/{your-model-id}',
-    'glossary_id' => '[YOUR_GLOSSARY_ID]',
-];
-
-$options = getopt('', $opts);
-$options += $defaultOptions;
-
-$inputUri = $options['input_uri'];
-$outputUri = $options['output_uri'];
-$projectId = $options['project_id'];
-$location = $options['location'];
-$targetLanguage = $options['target_language'];
-$sourceLanguage = $options['source_language'];
-$modelId = $options['model_id'];
-$glossaryId = $options['glossary_id'];
-
-sampleBatchTranslateTextWithGlossaryAndModel($inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryPath);
