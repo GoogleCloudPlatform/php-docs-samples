@@ -75,6 +75,12 @@ class translateTest extends TestCase
         $this->assertContains('ja: Japanese', $output);
     }
 
+    public function testListLanguagesInJapanese()
+    {
+        $output = $this->runSnippet('list_languages', ['ja']);
+        $this->assertContains('en: 英語', $output);
+    }
+    
     public function testV3TranslateText()
     {
         $output = $this->runSnippet('v3_translate_text', ['Hello world', 'sr-Latn', self::$projectId]);
