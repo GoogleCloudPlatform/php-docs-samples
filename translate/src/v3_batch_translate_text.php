@@ -71,7 +71,7 @@ try {
         printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
     } else {
         $error = $operationResponse->getError();
-        // handleError($error)
+        print($error);
     }
 } finally {
     $translationServiceClient->close();

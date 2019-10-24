@@ -149,7 +149,6 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
         $this->assertContains("Deleted", $output);
-        $this->assertContains($glossaryId, $output);
     }
 
     public function testV3ListLanguagesWithTarget()
