@@ -88,7 +88,7 @@ try {
         printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
     } else {
         $error = $operationResponse->getError();
-        print($error);
+        print($error->getMessage());
     }
 } finally {
     $translationServiceClient->close();
