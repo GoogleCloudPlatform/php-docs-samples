@@ -177,12 +177,6 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'en', 'es']);
 
-        $storage = new StorageClient();
-        $bucket = $storage->bucket($outputUri);
-        foreach ($bucket->objects() as $object) {
-            $object->delete();
-        }
-        
         $this->assertContains('Total Characters: 13', $output);
     }
 
@@ -195,11 +189,6 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
 
-        $storage = new StorageClient();
-        $bucket = $storage->bucket($outputUri);
-        foreach ($bucket->objects() as $object) {
-            $object->delete();
-        }
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
 
         $this->assertContains('Total Characters: 9', $output);
@@ -214,11 +203,6 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', $glossaryId, 'ja', 'en']);
 
-        $storage = new StorageClient();
-        $bucket = $storage->bucket($outputUri);
-        foreach ($bucket->objects() as $object) {
-            $object->delete();
-        }
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
 
         $this->assertContains('Total Characters: 9', $output);
@@ -230,12 +214,17 @@ class translateTest extends TestCase
 
         $output = $this->runSnippet('v3_batch_translate_text_with_model', ['gs://cloud-samples-data/translation/custom_model_text.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776']);
 
+        
+
+        $this->assertContains('Total Characters: 15', $output);
+    }
+
+    public function tearDown()
+    {
         $storage = new StorageClient();
-        $bucket = $storage->bucket($outputUri);
+        $bucket = $storage->bucket('who-lives-in-a-pineapple');
         foreach ($bucket->objects() as $object) {
             $object->delete();
         }
-
-        $this->assertContains('Total Characters: 15', $output);
     }
 }
