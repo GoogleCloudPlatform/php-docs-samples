@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Translate;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\Storage\StorageClient;
 
 /**
  * Unit Tests for transcribe commands.
@@ -172,45 +173,69 @@ class translateTest extends TestCase
 
     public function testV3BatchTranslateText()
     {
-        $outputUri = 'gs://who-lives-in-a-pineapple/under-the-sea/';
+        $outputUri = sprintf('gs://who-lives-in-a-pineapple/%d/', rand());
 
         $output = $this->runSnippet('v3_batch_translate_text', ['gs://cloud-samples-data/translation/text.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'en', 'es']);
+
+        $storage = new StorageClient();
+        $bucket = $storage->bucket($outputUri);
+        foreach ($bucket->objects() as $object) {
+            $object->delete();
+        }
         
         $this->assertContains('Total Characters: 13', $output);
     }
 
     public function testV3BatchTranslateTextWithGlossaryAndModel()
     {
-        $outputUri = 'gs://who-lives-in-a-pineapple/under-the-sea/';
+        $outputUri = sprintf('gs://who-lives-in-a-pineapple/%d/', rand());
 
         $glossaryId = sprintf('please-delete-me-%d', rand());
         $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
         $output = $this->runSnippet('v3_batch_translate_text_with_glossary_and_model', ['gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776', $glossaryId]);
 
+        $storage = new StorageClient();
+        $bucket = $storage->bucket($outputUri);
+        foreach ($bucket->objects() as $object) {
+            $object->delete();
+        }
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
+
         $this->assertContains('Total Characters: 9', $output);
     }
 
     public function testV3BatchTranslateTextWithGlossary()
     {
-        $outputUri = 'gs://who-lives-in-a-pineapple/under-the-sea/';
+        $outputUri = sprintf('gs://who-lives-in-a-pineapple/%d/', rand());
 
         $glossaryId = sprintf('please-delete-me-%d', rand());
         $this->runSnippet('v3_create_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId, 'gs://cloud-samples-data/translation/glossary_ja.csv']);
 
         $output = $this->runSnippet('v3_batch_translate_text_with_glossary', ['gs://cloud-samples-data/translation/text_with_glossary.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', $glossaryId, 'ja', 'en']);
 
+        $storage = new StorageClient();
+        $bucket = $storage->bucket($outputUri);
+        foreach ($bucket->objects() as $object) {
+            $object->delete();
+        }
         $this->runSnippet('v3_delete_glossary', [getenv('GOOGLE_PROJECT_ID'), $glossaryId]);
+
         $this->assertContains('Total Characters: 9', $output);
     }
 
     public function testV3BatchTranslateTextWithModel()
     {
-        $outputUri = 'gs://who-lives-in-a-pineapple/under-the-sea/';
+        $outputUri = sprintf('gs://who-lives-in-a-pineapple/%d/', rand());
 
         $output = $this->runSnippet('v3_batch_translate_text_with_model', ['gs://cloud-samples-data/translation/custom_model_text.txt', $outputUri, getenv('GOOGLE_PROJECT_ID'), 'us-central1', 'ja', 'en', 'TRL3089491334608715776']);
-        
+
+        $storage = new StorageClient();
+        $bucket = $storage->bucket($outputUri);
+        foreach ($bucket->objects() as $object) {
+            $object->delete();
+        }
+
         $this->assertContains('Total Characters: 15', $output);
     }
 }
