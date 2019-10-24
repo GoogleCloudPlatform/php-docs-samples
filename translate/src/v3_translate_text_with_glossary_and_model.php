@@ -50,7 +50,7 @@ function sampleTranslateTextWithGlossaryAndModel($modelId, $glossaryId, $text, $
     // $projectId = '[Google Cloud Project ID]';
     // $location = 'global';
     $glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
-    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
     $contents = [$text];
     $glossaryConfig = new TranslateTextGlossaryConfig();
     $glossaryConfig->setGlossary($glossaryPath);

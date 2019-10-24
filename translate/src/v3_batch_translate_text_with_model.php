@@ -50,7 +50,7 @@ function sampleBatchTranslateTextWithModel($inputUri, $outputUri, $projectId, $l
     // $targetLanguage = 'en';
     // $sourceLanguage = 'de';
     // $modelId = '{your-model-id}';
-    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
     $targetLanguageCodes = [$targetLanguage];
     $gcsSource = new GcsSource();
     $gcsSource->setInputUri($inputUri);

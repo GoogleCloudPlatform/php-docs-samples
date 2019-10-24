@@ -54,7 +54,7 @@ function sampleBatchTranslateTextWithGlossaryAndModel($inputUri, $outputUri, $pr
     // $modelId = '{your-model-id}';
     // $glossaryId = '[YOUR_GLOSSARY_ID]';
     $glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
-    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
     $targetLanguageCodes = [$targetLanguage];
     $gcsSource = new GcsSource();
     $gcsSource->setInputUri($inputUri);

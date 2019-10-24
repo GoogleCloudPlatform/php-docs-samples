@@ -46,7 +46,7 @@ function sampleTranslateTextWithModel($modelId, $text, $targetLanguage, $sourceL
     // $sourceLanguage = 'en';
     // $projectId = '[Google Cloud Project ID]';
     // $location = 'global';
-    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location ,$modelId)
+    $modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
     $contents = [$text];
     $formattedParent = $translationServiceClient->locationName($projectId, $location);
 
