@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: List Glossaries
 //   description: List Glossaries
-//   usage: php samples/V3beta1/TranslateV3ListGlossary.php [--project "[Google Cloud Project ID]"]
+//   usage: php v3_list_glossary.php [--project "[Google Cloud Project ID]"]
 // [START translate_v3_list_glossary]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** List Glossaries */
 function sampleListGlossaries($project)
@@ -40,9 +40,9 @@ function sampleListGlossaries($project)
         // Iterate through all elements
         $pagedResponse = $translationServiceClient->listGlossaries(['parent' => $formattedParent]);
         foreach ($pagedResponse->iterateAllElements() as $responseItem) {
-            printf('Glossary name: %s'.PHP_EOL, $responseItem->getName());
-            printf('Entry count: %s'.PHP_EOL, $responseItem->getEntryCount());
-            printf('Input URI: %s'.PHP_EOL, $responseItem->getInputConfig()->getGcsSource()->getInputUri());
+            printf('Glossary name: %s' . PHP_EOL, $responseItem->getName());
+            printf('Entry count: %s' . PHP_EOL, $responseItem->getEntryCount());
+            printf('Input URI: %s' . PHP_EOL, $responseItem->getInputConfig()->getGcsSource()->getInputUri());
         }
     } finally {
         $translationServiceClient->close();

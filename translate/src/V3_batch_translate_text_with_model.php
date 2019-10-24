@@ -22,15 +22,15 @@
 // sample-metadata
 //   title: Batch Translate with Model
 //   description: Batch translate text using AutoML Translation model
-//   usage: php samples/V3beta1/TranslateV3BatchTranslateTextWithModel.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
+//   usage: php v3_batch_translate_text_with_glossary_and_model.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
 // [START translate_v3_batch_translate_text_with_model]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
-use Google\Cloud\Translate\V3beta1\GcsDestination;
-use Google\Cloud\Translate\V3beta1\GcsSource;
-use Google\Cloud\Translate\V3beta1\InputConfig;
-use Google\Cloud\Translate\V3beta1\OutputConfig;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GcsDestination;
+use Google\Cloud\Translate\V3\GcsSource;
+use Google\Cloud\Translate\V3\InputConfig;
+use Google\Cloud\Translate\V3\OutputConfig;
 
 /**
  * Batch translate text using AutoML Translation model.
@@ -73,8 +73,8 @@ function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, 
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();
             // Display the translation for each input text provided
-            printf('Total Characters: %s'.PHP_EOL, $response->getTotalCharacters());
-            printf('Translated Characters: %s'.PHP_EOL, $response->getTranslatedCharacters());
+            printf('Total Characters: %s' . PHP_EOL, $response->getTotalCharacters());
+            printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
         } else {
             $error = $operationResponse->getError();
             // handleError($error)

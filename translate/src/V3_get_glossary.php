@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: Get Glossary
 //   description: Get Glossary
-//   usage: php samples/V3beta1/TranslateV3GetGlossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+//   usage: php v3_get_glossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 // [START translate_v3_get_glossary]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Get Glossary */
 function sampleGetGlossary($project, $glossaryId)
@@ -39,9 +39,9 @@ function sampleGetGlossary($project, $glossaryId)
 
     try {
         $response = $translationServiceClient->getGlossary($formattedName);
-        printf('Glossary name: %s'.PHP_EOL, $response->getName());
-        printf('Entry count: %s'.PHP_EOL, $response->getEntryCount());
-        printf('Input URI: %s'.PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
+        printf('Glossary name: %s' . PHP_EOL, $response->getName());
+        printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
+        printf('Input URI: %s' . PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
     } finally {
         $translationServiceClient->close();
     }

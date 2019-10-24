@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: Translating Text
 //   description: Translating Text
-//   usage: php samples/V3beta1/TranslateV3TranslateText.php [--text "Hello, world!"] [--target_language fr] [--project "[Google Cloud Project ID]"]
+//   usage: php v3_translate_text.php [--text "Hello, world!"] [--target_language fr] [--project "[Google Cloud Project ID]"]
 // [START translate_v3_translate_text]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /**
  * Translating Text.
@@ -48,7 +48,7 @@ function sampleTranslateText($text, $targetLanguage, $project)
         $response = $translationServiceClient->translateText($contents, $targetLanguage, ['parent' => $formattedParent]);
         // Display the translation for each input text provided
         foreach ($response->getTranslations() as $translation) {
-            printf('Translated text: %s'.PHP_EOL, $translation->getTranslatedText());
+            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
         }
     } finally {
         $translationServiceClient->close();

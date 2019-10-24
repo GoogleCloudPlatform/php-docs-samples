@@ -22,15 +22,15 @@
 // sample-metadata
 //   title: Create Glossary
 //   description: Create Glossary
-//   usage: php samples/V3beta1/TranslateV3CreateGlossary.php [--project_id "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"] [--input_uri "gs://translation_samples_beta/glossaries/glossary.csv"]
+//   usage: php v3_create_glossary.php [--project_id "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"] [--input_uri "gs://translation_samples_beta/glossaries/glossary.csv"]
 // [START translate_v3_create_glossary]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
-use Google\Cloud\Translate\V3beta1\GcsSource;
-use Google\Cloud\Translate\V3beta1\Glossary;
-use Google\Cloud\Translate\V3beta1\GlossaryInputConfig;
-use Google\Cloud\Translate\V3beta1\Glossary\LanguageCodesSet;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GcsSource;
+use Google\Cloud\Translate\V3\Glossary;
+use Google\Cloud\Translate\V3\GlossaryInputConfig;
+use Google\Cloud\Translate\V3\Glossary\LanguageCodesSet;
 
 /** Create Glossary */
 function sampleCreateGlossary($projectId, $project2, $glossaryId, $inputUri)
@@ -62,10 +62,10 @@ function sampleCreateGlossary($projectId, $project2, $glossaryId, $inputUri)
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();
-            printf('Created Glossary.'.PHP_EOL);
-            printf('Glossary name: %s'.PHP_EOL, $response->getName());
-            printf('Entry count: %s'.PHP_EOL, $response->getEntryCount());
-            printf('Input URI: %s'.PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
+            printf('Created Glossary.' . PHP_EOL);
+            printf('Glossary name: %s' . PHP_EOL, $response->getName());
+            printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
+            printf('Input URI: %s' . PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
         } else {
             $error = $operationResponse->getError();
             // handleError($error)

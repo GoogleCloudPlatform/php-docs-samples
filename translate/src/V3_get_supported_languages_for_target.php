@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: List Supported Language Names and Codes
 //   description: Listing supported languages with target language name
-//   usage: php samples/V3beta1/TranslateV3GetSupportedLanguagesForTarget.php [--language_code en] [--project "[Google Cloud Project ID]"]
+//   usage: php v3_get_supported_languages_for_target.php [--language_code en] [--project "[Google Cloud Project ID]"]
 // [START translate_v3_get_supported_languages_for_target]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Listing supported languages with target language name */
 function sampleGetSupportedLanguages($languageCode, $project)
@@ -41,8 +41,8 @@ function sampleGetSupportedLanguages($languageCode, $project)
         $response = $translationServiceClient->getSupportedLanguages(['displayLanguageCode' => $languageCode, 'parent' => $formattedParent]);
         // List language codes of supported languages
         foreach ($response->getLanguages() as $language) {
-            printf('Language Code: %s'.PHP_EOL, $language->getLanguageCode());
-            printf('Display Name: %s'.PHP_EOL, $language->getDisplayName());
+            printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());
+            printf('Display Name: %s' . PHP_EOL, $language->getDisplayName());
         }
     } finally {
         $translationServiceClient->close();

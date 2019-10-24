@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: Translating Text with Model
 //   description: Translating Text with Model
-//   usage: php samples/V3beta1/TranslateV3TranslateTextWithModel.php [--model_path "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
+//   usage: php v3_translate_text_with_model.php [--model_path "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 // [START translate_v3_translate_text_with_model]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /**
  * Translating Text with Model.
@@ -56,7 +56,7 @@ function sampleTranslateText($modelPath, $text, $targetLanguage, $sourceLanguage
         $response = $translationServiceClient->translateText($contents, $targetLanguage, ['model' => $modelPath, 'sourceLanguageCode' => $sourceLanguage, 'parent' => $formattedParent, 'mimeType' => $mimeType]);
         // Display the translation for each input text provided
         foreach ($response->getTranslations() as $translation) {
-            printf('Translated text: %s'.PHP_EOL, $translation->getTranslatedText());
+            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
         }
     } finally {
         $translationServiceClient->close();

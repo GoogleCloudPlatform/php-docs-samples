@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: Detect Language
 //   description: Detecting the language of a text string
-//   usage: php samples/V3beta1/TranslateV3DetectLanguage.php [--text "Hello, world!"] [--project "[Google Cloud Project ID]"]
+//   usage: php v3_detect_language.php [--text "Hello, world!"] [--project "[Google Cloud Project ID]"]
 // [START translate_v3_detect_language]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /**
  * Detecting the language of a text string.
@@ -50,9 +50,9 @@ function sampleDetectLanguage($text, $project)
         // The most probable language is first.
         foreach ($response->getLanguages() as $language) {
             // The language detected
-            printf('Language code: %s'.PHP_EOL, $language->getLanguageCode());
+            printf('Language code: %s' . PHP_EOL, $language->getLanguageCode());
             // Confidence of detection result for this language
-            printf('Confidence: %s'.PHP_EOL, $language->getConfidence());
+            printf('Confidence: %s' . PHP_EOL, $language->getConfidence());
         }
     } finally {
         $translationServiceClient->close();

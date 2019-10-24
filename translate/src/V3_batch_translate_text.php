@@ -22,15 +22,15 @@
 // sample-metadata
 //   title: Batch translate text
 //   description: Batch translate text
-//   usage: php samples/V3beta1/TranslateV3BatchTranslateText.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
+//   usage: php v3_batch_translate_text.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
 // [START translate_v3_batch_translate_text]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
-use Google\Cloud\Translate\V3beta1\GcsDestination;
-use Google\Cloud\Translate\V3beta1\GcsSource;
-use Google\Cloud\Translate\V3beta1\InputConfig;
-use Google\Cloud\Translate\V3beta1\OutputConfig;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GcsDestination;
+use Google\Cloud\Translate\V3\GcsSource;
+use Google\Cloud\Translate\V3\InputConfig;
+use Google\Cloud\Translate\V3\OutputConfig;
 
 /** Batch translate text */
 function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, $sourceLang, $targetLang)
@@ -64,8 +64,8 @@ function sampleBatchTranslateText($inputUri, $outputUri, $projectId, $location, 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();
-            printf('Total Characters: %s'.PHP_EOL, $response->getTotalCharacters());
-            printf('Translated Characters: %s'.PHP_EOL, $response->getTranslatedCharacters());
+            printf('Total Characters: %s' . PHP_EOL, $response->getTotalCharacters());
+            printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
         } else {
             $error = $operationResponse->getError();
             // handleError($error)

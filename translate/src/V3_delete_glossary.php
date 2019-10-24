@@ -22,11 +22,11 @@
 // sample-metadata
 //   title: Delete Glossary
 //   description: Delete Glossary
-//   usage: php samples/V3beta1/TranslateV3DeleteGlossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+//   usage: php v3_delete_glossary.php [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 // [START translate_v3_delete_glossary]
-require __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Google\Cloud\Translate\V3beta1\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /** Delete Glossary */
 function sampleDeleteGlossary($project, $glossaryId)
@@ -42,7 +42,7 @@ function sampleDeleteGlossary($project, $glossaryId)
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();
-            printf('Deleted Glossary.'.PHP_EOL);
+            printf('Deleted Glossary.' . PHP_EOL);
         } else {
             $error = $operationResponse->getError();
             // handleError($error)
