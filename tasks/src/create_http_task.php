@@ -30,10 +30,10 @@ if ($argc < 5 || $argc > 6) {
 list($_, $projectId, $locationId, $queueId, $url, $payload) = $argv;
 
 # [START cloud_tasks_create_http_task]
-use Google\Cloud\Tasks\V2beta3\CloudTasksClient;
-use Google\Cloud\Tasks\V2beta3\HttpMethod;
-use Google\Cloud\Tasks\V2beta3\HttpRequest;
-use Google\Cloud\Tasks\V2beta3\Task;
+use Google\Cloud\Tasks\V2\CloudTasksClient;
+use Google\Cloud\Tasks\V2\HttpMethod;
+use Google\Cloud\Tasks\V2\HttpRequest;
+use Google\Cloud\Tasks\V2\Task;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'The Google project ID';
