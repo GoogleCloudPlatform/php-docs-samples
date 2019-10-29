@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_get_supported_languages_for_target")
- */
-
-// sample-metadata
-//   title: List Supported Language Names and Codes
-//   description: Listing supported languages with target language name
-//   usage: php v3_get_supported_languages_for_target.php [--language_code en] [--project_id "[Google Cloud Project ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 3) {
@@ -33,15 +25,18 @@ list($_, $languageCode, $projectId) = $argv;
 // [START translate_v3_get_supported_languages_for_target]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/** Listing supported languages with target language name */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $languageCode = 'en';
 // $projectId = '[Google Cloud Project ID]';
 $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
 try {
-    $response = $translationServiceClient->getSupportedLanguages($formattedParent, ['displayLanguageCode' => $languageCode]);
+    $response = $translationServiceClient->getSupportedLanguages(
+    	$formattedParent,
+    	['displayLanguageCode' => $languageCode]
+    );
     // List language codes of supported languages
     foreach ($response->getLanguages() as $language) {
         printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());

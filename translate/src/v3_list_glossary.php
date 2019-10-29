@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("RequestPagedAll",  "translate_v3_list_glossary")
- */
-
-// sample-metadata
-//   title: List Glossaries
-//   description: List Glossaries
-//   usage: php v3_list_glossary.php [--project "[Google Cloud Project ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 2 || count($argv) > 2) {
@@ -33,11 +25,14 @@ list($_, $projectId) = $argv;
 // [START translate_v3_list_glossary]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/** List Glossaries */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $projectId = '[Google Cloud Project ID]';
-$formattedParent = $translationServiceClient->locationName($projectId, 'us-central1');
+$formattedParent = $translationServiceClient->locationName(
+	$projectId,
+	'us-central1'
+);
 
 try {
     // Iterate through all elements
@@ -45,7 +40,12 @@ try {
     foreach ($pagedResponse->iterateAllElements() as $responseItem) {
         printf('Glossary name: %s' . PHP_EOL, $responseItem->getName());
         printf('Entry count: %s' . PHP_EOL, $responseItem->getEntryCount());
-        printf('Input URI: %s' . PHP_EOL, $responseItem->getInputConfig()->getGcsSource()->getInputUri());
+        printf(
+        	'Input URI: %s' . PHP_EOL,
+        	$responseItem->getInputConfig()
+        		->getGcsSource()
+        		->getInputUri()
+        );
     }
 } finally {
     $translationServiceClient->close();

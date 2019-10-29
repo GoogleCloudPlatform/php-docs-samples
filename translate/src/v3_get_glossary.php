@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_get_glossary")
- */
-
-// sample-metadata
-//   title: Get Glossary
-//   description: Get Glossary
-//   usage: php v3_get_glossary.php [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 3) {
@@ -33,18 +25,27 @@ list($_, $projectId, $glossaryId) = $argv;
 // [START translate_v3_get_glossary]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/** Get Glossary */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $projectId = '[Google Cloud Project ID]';
 // $glossaryId = '[Glossary ID]';
-$formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
+$formattedName = $translationServiceClient->glossaryName(
+	$projectId,
+	'us-central1',
+	$glossaryId
+);
 
 try {
     $response = $translationServiceClient->getGlossary($formattedName);
     printf('Glossary name: %s' . PHP_EOL, $response->getName());
     printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
-    printf('Input URI: %s' . PHP_EOL, $response->getInputConfig()->getGcsSource()->getInputUri());
+    printf(
+    	'Input URI: %s' . PHP_EOL,
+    	$response->getInputConfig()
+    		->getGcsSource()
+    		->getInputUri()
+    );
 } finally {
     $translationServiceClient->close();
 }

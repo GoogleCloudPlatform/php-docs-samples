@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_translate_text_with_glossary_and_model")
- */
-
-// sample-metadata
-//   title: Translating Text with Glossary and Model
-//   description: Translating Text with Glossary and Model
-//   usage: php v3_translate_text_with_glossary.php [--model_id "[MODEL ID]"] [--glossary_id "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 8 || count($argv) > 8) {
@@ -31,20 +23,12 @@ if (count($argv) < 8 || count($argv) > 8) {
 list($_, $modelId, $glossaryId, $text, $targetLanguage, $sourceLanguage, $projectId, $location) = $argv;
 
 // [START translate_v3_translate_text_with_glossary_and_model]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/**
- * Translating Text with Glossary and Model.
- *
- * @param string $modelId      The `model` type requested for this translation.
- * @param string $glossaryId   Specifies the glossary used for this translation.
- * @param string $text           The content to translate in string format
- * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
- * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
- */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $modelId = '[MODEL ID]';
 // $glossaryId = '[YOUR_GLOSSARY_ID]';
 // $text = 'Hello, world!';
@@ -52,18 +36,40 @@ $translationServiceClient = new TranslationServiceClient();
 // $sourceLanguage = 'en';
 // $projectId = '[Google Cloud Project ID]';
 // $location = 'global';
-$glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
-$modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
+$glossaryPath = $translationServiceClient->glossaryName(
+	$projectId,
+	$location,
+	$glossaryId
+);
+$modelPath = sprintf(
+	'projects/%s/locations/%s/models/%s',
+	$projectId,
+	$location,
+	$modelId
+);
 $contents = [$text];
 $glossaryConfig = new TranslateTextGlossaryConfig();
 $glossaryConfig->setGlossary($glossaryPath);
-$formattedParent = $translationServiceClient->locationName($projectId, $location);
+$formattedParent = $translationServiceClient->locationName(
+	$projectId,
+	$location
+);
 
 // Optional. Can be "text/plain" or "text/html".
 $mimeType = 'text/plain';
 
 try {
-    $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['model' => $modelPath, 'glossaryConfig' => $glossaryConfig, 'sourceLanguageCode' => $sourceLanguage, 'mimeType' => $mimeType]);
+    $response = $translationServiceClient->translateText(
+    	$contents,
+    	$targetLanguage,
+    	$formattedParent,
+    	[
+    		'model' => $modelPath,
+    		'glossaryConfig' => $glossaryConfig,
+    		'sourceLanguageCode' => $sourceLanguage,
+    		'mimeType' => $mimeType
+    	]
+    );
     // Display the translation for each input text provided
     foreach ($response->getGlossaryTranslations() as $translation) {
         printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

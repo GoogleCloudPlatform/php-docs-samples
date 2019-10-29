@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("LongRunningRequest",  "batch_translate_text_with_glossary_and_model")
- */
-
-// sample-metadata
-//   title: Batch Translate with Model
-//   description: Batch translate text with Model and Glossary
-//   usage: php v3_batch_translate_text_with_glossary_and_model.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_id "projects/{project-id}/locations/{location-id}/models/{your-model-id}"] [--glossary_id "[YOUR_GLOSSARY_ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 9 || count($argv) > 9) {
@@ -31,23 +23,16 @@ if (count($argv) < 9 || count($argv) > 9) {
 list($_, $inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryId) = $argv;
 
 // [START batch_translate_text_with_glossary_and_model]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
 use Google\Cloud\Translate\V3\OutputConfig;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/**
- * Batch translate text with Model and Glossary.
- *
- * @param string $targetLanguage Required. Specify up to 10 language codes here.
- * @param string $sourceLanguage Required. Source language code.
- * @param string $modelId      The models to use for translation. Map's key is target language code.
- * @param string $glossaryId   Required. Specifies the glossary used for this translation.
- */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $inputUri = 'gs://cloud-samples-data/text.txt';
 // $outputUri = 'gs://YOUR_BUCKET_ID/path_to_store_results/';
 // $projectId = '[Google Cloud Project ID]';
@@ -56,30 +41,49 @@ $translationServiceClient = new TranslationServiceClient();
 // $sourceLanguage = 'de';
 // $modelId = '{your-model-id}';
 // $glossaryId = '[YOUR_GLOSSARY_ID]';
-$glossaryPath = $translationServiceClient->glossaryName($projectId, $location, $glossaryId);
-$modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
+$glossaryPath = $translationServiceClient->glossaryName(
+    $projectId,
+    $location,
+    $glossaryId
+);
+$modelPath = sprintf(
+    'projects/%s/locations/%s/models/%s',
+    $projectId,
+    $location,
+    $modelId
+);
 $targetLanguageCodes = [$targetLanguage];
-$gcsSource = new GcsSource();
-$gcsSource->setInputUri($inputUri);
+$gcsSource = (new GcsSource())
+    ->setInputUri($inputUri);
 
 // Optional. Can be "text/plain" or "text/html".
 $mimeType = 'text/plain';
-$inputConfigsElement = new InputConfig();
-$inputConfigsElement->setGcsSource($gcsSource);
-$inputConfigsElement->setMimeType($mimeType);
+$inputConfigsElement = (new InputConfig())
+    ->setGcsSource($gcsSource)
+    ->setMimeType($mimeType);
 $inputConfigs = [$inputConfigsElement];
-$gcsDestination = new GcsDestination();
-$gcsDestination->setOutputUriPrefix($outputUri);
-$outputConfig = new OutputConfig();
-$outputConfig->setGcsDestination($gcsDestination);
+$gcsDestination = (new GcsDestination())
+    ->setOutputUriPrefix($outputUri);
+$outputConfig = (new OutputConfig())
+    ->setGcsDestination($gcsDestination);
 $formattedParent = $translationServiceClient->locationName($projectId, $location);
 $models = ['ja' => $modelPath];
-$glossariesItem = new TranslateTextGlossaryConfig();
-$glossariesItem->setGlossary($glossaryPath);
+$glossariesItem = (new TranslateTextGlossaryConfig())
+    ->setGlossary($glossaryPath);
 $glossaries = ['ja' => $glossariesItem];
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['models' => $models, 'glossaries' => $glossaries]);
+    $operationResponse = $translationServiceClient->batchTranslateText(
+        $formattedParent,
+        $sourceLanguage,
+        $targetLanguageCodes,
+        $inputConfigs,
+        $outputConfig,
+        [
+            'models' => $models,
+            'glossaries' => $glossaries
+        ]
+    );
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();

@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_detect_language")
- */
-
-// sample-metadata
-//   title: Detect Language
-//   description: Detecting the language of a text string
-//   usage: php v3_detect_language.php [--text "Hello, world!"] [--project_id "[Google Cloud Project ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 3) {
@@ -33,13 +25,9 @@ list($_, $text, $projectId) = $argv;
 // [START translate_v3_detect_language]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/**
- * Detecting the language of a text string.
- *
- * @param string $text The text string for performing language detection
- */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $text = 'Hello, world!';
 // $projectId = '[Google Cloud Project ID]';
 $formattedParent = $translationServiceClient->locationName($projectId, 'global');
@@ -48,7 +36,13 @@ $formattedParent = $translationServiceClient->locationName($projectId, 'global')
 $mimeType = 'text/plain';
 
 try {
-    $response = $translationServiceClient->detectLanguage($formattedParent, ['content' => $text, 'mimeType' => $mimeType]);
+    $response = $translationServiceClient->detectLanguage(
+        $formattedParent,
+        [
+            'content' => $text,
+            'mimeType' => $mimeType
+        ]
+    );
     // Display list of detected languages sorted by detection confidence.
     // The most probable language is first.
     foreach ($response->getLanguages() as $language) {

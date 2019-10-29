@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_translate_text_with_model")
- */
-
-// sample-metadata
-//   title: Translating Text with Model
-//   description: Translating Text with Model
-//   usage: php v3_translate_text_with_model.php [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 7 || count($argv) > 7) {
@@ -33,31 +25,41 @@ list($_, $modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $locatio
 // [START translate_v3_translate_text_with_model]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/**
- * Translating Text with Model.
- *
- * @param string $modelPath      The `model` type requested for this translation.
- * @param string $text           The content to translate in string format
- * @param string $targetLanguage Required. The BCP-47 language code to use for translation.
- * @param string $sourceLanguage Optional. The BCP-47 language code of the input text.
- */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $modelId = '[MODEL ID]';
 // $text = 'Hello, world!';
 // $targetLanguage = 'fr';
 // $sourceLanguage = 'en';
 // $projectId = '[Google Cloud Project ID]';
 // $location = 'global';
-$modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
+$modelPath = sprintf(
+	'projects/%s/locations/%s/models/%s',
+	$projectId,
+	$location,
+	$modelId
+);
 $contents = [$text];
-$formattedParent = $translationServiceClient->locationName($projectId, $location);
+$formattedParent = $translationServiceClient->locationName(
+	$projectId,
+	$location
+);
 
 // Optional. Can be "text/plain" or "text/html".
 $mimeType = 'text/plain';
 
 try {
-    $response = $translationServiceClient->translateText($contents, $targetLanguage, $formattedParent, ['model' => $modelPath, 'sourceLanguageCode' => $sourceLanguage, 'mimeType' => $mimeType]);
+    $response = $translationServiceClient->translateText(
+    	$contents,
+    	$targetLanguage,
+    	$formattedParent,
+    	[
+    		'model' => $modelPath,
+    		'sourceLanguageCode' => $sourceLanguage,
+    		'mimeType' => $mimeType
+    	]
+	);
     // Display the translation for each input text provided
     foreach ($response->getTranslations() as $translation) {
         printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

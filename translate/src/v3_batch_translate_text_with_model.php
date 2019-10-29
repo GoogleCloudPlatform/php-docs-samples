@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("LongRunningRequest",  "translate_v3_batch_translate_text_with_model")
- */
-
-// sample-metadata
-//   title: Batch Translate with Model
-//   description: Batch translate text using AutoML Translation model
-//   usage: php v3_batch_translate_text_with_glossary_and_model.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 8 || count($argv) > 8) {
@@ -31,21 +23,15 @@ if (count($argv) < 8 || count($argv) > 8) {
 list($_, $inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId) = $argv;
 
 // [START translate_v3_batch_translate_text_with_model]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
 use Google\Cloud\Translate\V3\OutputConfig;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/**
- * Batch translate text using AutoML Translation model.
- *
- * @param string $targetLanguage Required. Specify up to 10 language codes here.
- * @param string $sourceLanguage Required. Source language code.
- * @param string $modelPath      The models to use for translation. Map's key is target language code.
- */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $inputUri = 'gs://cloud-samples-data/text.txt';
 // $outputUri = 'gs://YOUR_BUCKET_ID/path_to_store_results/';
 // $projectId = '[Google Cloud Project ID]';
@@ -53,26 +39,38 @@ $translationServiceClient = new TranslationServiceClient();
 // $targetLanguage = 'en';
 // $sourceLanguage = 'de';
 // $modelId = '{your-model-id}';
-$modelPath = sprintf('projects/%s/locations/%s/models/%s', $projectId, $location, $modelId);
+$modelPath = sprintf(
+    'projects/%s/locations/%s/models/%s',
+    $projectId,
+    $location,
+    $modelId
+);
 $targetLanguageCodes = [$targetLanguage];
-$gcsSource = new GcsSource();
-$gcsSource->setInputUri($inputUri);
+$gcsSource = (new GcsSource())
+    ->setInputUri($inputUri);
 
 // Optional. Can be "text/plain" or "text/html".
 $mimeType = 'text/plain';
-$inputConfigsElement = new InputConfig();
-$inputConfigsElement->setGcsSource($gcsSource);
-$inputConfigsElement->setMimeType($mimeType);
+$inputConfigsElement = (new InputConfig())
+    ->setGcsSource($gcsSource);
+    ->setMimeType($mimeType);
 $inputConfigs = [$inputConfigsElement];
-$gcsDestination = new GcsDestination();
-$gcsDestination->setOutputUriPrefix($outputUri);
-$outputConfig = new OutputConfig();
-$outputConfig->setGcsDestination($gcsDestination);
+$gcsDestination = (new GcsDestination())
+    ->setOutputUriPrefix($outputUri);
+$outputConfig = (new OutputConfig())
+    ->setGcsDestination($gcsDestination);
 $formattedParent = $translationServiceClient->locationName($projectId, $location);
 $models = ['ja' => $modelPath];
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLanguage, $targetLanguageCodes, $inputConfigs, $outputConfig, ['models' => $models]);
+    $operationResponse = $translationServiceClient->batchTranslateText(
+        $formattedParent,
+        $sourceLanguage,
+        $targetLanguageCodes,
+        $inputConfigs,
+        $outputConfig,
+        ['models' => $models]
+    );
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();

@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("LongRunningRequest",  "translate_v3_batch_translate_text")
- */
-
-// sample-metadata
-//   title: Batch translate text
-//   description: Batch translate text
-//   usage: php v3_batch_translate_text.php [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 7 || count($argv) > 7) {
@@ -31,15 +23,15 @@ if (count($argv) < 7 || count($argv) > 7) {
 list($_, $inputUri, $outputUri, $projectId, $location, $sourceLang, $targetLang) = $argv;
 
 // [START translate_v3_batch_translate_text]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
 use Google\Cloud\Translate\V3\OutputConfig;
+use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/** Batch translate text */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $inputUri = 'gs://cloud-samples-data/text.txt';
 // $outputUri = 'gs://YOUR_BUCKET_ID/path_to_store_results/';
 // $projectId = '[Google Cloud Project ID]';
@@ -47,23 +39,29 @@ $translationServiceClient = new TranslationServiceClient();
 // $sourceLang = 'en';
 // $targetLang = 'ja';
 $targetLanguageCodes = [$targetLang];
-$gcsSource = new GcsSource();
-$gcsSource->setInputUri($inputUri);
+$gcsSource = (new GcsSource())
+    ->setInputUri($inputUri);
 
 // Optional. Can be "text/plain" or "text/html".
 $mimeType = 'text/plain';
-$inputConfigsElement = new InputConfig();
-$inputConfigsElement->setGcsSource($gcsSource);
-$inputConfigsElement->setMimeType($mimeType);
+$inputConfigsElement = (new InputConfig())
+    ->setGcsSource($gcsSource)
+    ->setMimeType($mimeType);
 $inputConfigs = [$inputConfigsElement];
-$gcsDestination = new GcsDestination();
-$gcsDestination->setOutputUriPrefix($outputUri);
-$outputConfig = new OutputConfig();
-$outputConfig->setGcsDestination($gcsDestination);
+$gcsDestination = (new GcsDestination())
+    ->setOutputUriPrefix($outputUri);
+$outputConfig = (new OutputConfig())
+    ->setGcsDestination($gcsDestination);
 $formattedParent = $translationServiceClient->locationName($projectId, $location);
 
 try {
-    $operationResponse = $translationServiceClient->batchTranslateText($formattedParent, $sourceLang, $targetLanguageCodes, $inputConfigs, $outputConfig);
+    $operationResponse = $translationServiceClient->batchTranslateText(
+        $formattedParent,
+        $sourceLang,
+        $targetLanguageCodes,
+        $inputConfigs,
+        $outputConfig
+    );
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $response = $operationResponse->getResult();

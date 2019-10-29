@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-/*
- * DO NOT EDIT! This is a generated sample ("LongRunningRequest",  "translate_v3_delete_glossary")
- */
-
-// sample-metadata
-//   title: Delete Glossary
-//   description: Delete Glossary
-//   usage: php v3_delete_glossary.php [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 3) {
@@ -33,12 +25,16 @@ list($_, $projectId, $glossaryId) = $argv;
 // [START translate_v3_delete_glossary]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-/** Delete Glossary */
 $translationServiceClient = new TranslationServiceClient();
 
+/** Uncomment and populate these variables in your code */
 // $projectId = '[Google Cloud Project ID]';
 // $glossaryId = '[Glossary ID]';
-$formattedName = $translationServiceClient->glossaryName($projectId, 'us-central1', $glossaryId);
+$formattedName = $translationServiceClient->glossaryName(
+    $projectId,
+    'us-central1',
+    $glossaryId
+);
 
 try {
     $operationResponse = $translationServiceClient->deleteGlossary($formattedName);
