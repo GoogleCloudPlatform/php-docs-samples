@@ -107,8 +107,8 @@ class translateTest extends TestCase
                 self::$projectId
             ]
         );
-        $option1 = "Zdravo svet";
-        $option2 = "Pozdrav svijetu";
+        $option1 = 'Zdravo svet';
+        $option2 = 'Pozdrav svijetu';
         $this->assertThat($output,
             $this->logicalOr(
                 $this->stringContains($option1),
@@ -172,8 +172,8 @@ class translateTest extends TestCase
                 $glossaryId
             ]
         );
-        $option1 = "アカウント";
-        $option2 = "口座";
+        $option1 = 'アカウント';
+        $option2 = '口座';
         $this->assertThat($output,
             $this->logicalOr(
                 $this->stringContains($option1),
