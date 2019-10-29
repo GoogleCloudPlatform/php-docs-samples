@@ -4,7 +4,7 @@
     "require": {
         "google/cloud-translate": "^1.5"
     },
-   	"require-dev": {
+    "require-dev": {
         "google/cloud-storage": "^1.14"
-   	}
+    }
 }
