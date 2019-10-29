@@ -52,7 +52,7 @@ $gcsSource = (new GcsSource())
 // Optional. Can be "text/plain" or "text/html".
 $mimeType = 'text/plain';
 $inputConfigsElement = (new InputConfig())
-    ->setGcsSource($gcsSource);
+    ->setGcsSource($gcsSource)
     ->setMimeType($mimeType);
 $inputConfigs = [$inputConfigsElement];
 $gcsDestination = (new GcsDestination())
