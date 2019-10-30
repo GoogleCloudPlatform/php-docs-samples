@@ -34,7 +34,6 @@ class translateTest extends TestCase
     public static function setUpBeforeClass()
     {
         self::checkProjectEnvVars();
-        self::requireEnv('AUTOML_TRANSLATION_MODEL_ID');
         self::$bucket = (new StorageClient())->createBucket(
             sprintf('%s-test-bucket-%s', self::$projectId, time())
         );
@@ -131,7 +130,7 @@ class translateTest extends TestCase
         $output = $this->runSnippet(
             'v3_translate_text_with_glossary_and_model',
             [
-                getenv('AUTOML_TRANSLATION_MODEL_ID'),
+                'TRL3089491334608715776',
                 $glossaryId,
                 'That\' il do it. deception',
                 'ja',
@@ -194,7 +193,7 @@ class translateTest extends TestCase
         $output = $this->runSnippet(
             'v3_translate_text_with_model',
             [
-                getenv('AUTOML_TRANSLATION_MODEL_ID'),
+                'TRL3089491334608715776',
                 'That\' il do it.',
                 'ja',
                 'en',
@@ -333,7 +332,7 @@ class translateTest extends TestCase
                 'us-central1',
                 'ja',
                 'en',
-                getenv('AUTOML_TRANSLATION_MODEL_ID'),
+                'TRL3089491334608715776',
                 $glossaryId
             ]
         );
@@ -401,7 +400,7 @@ class translateTest extends TestCase
                 'us-central1',
                 'ja',
                 'en',
-                getenv('AUTOML_TRANSLATION_MODEL_ID')
+                'TRL3089491334608715776'
             ]
         );
         $this->assertContains('Total Characters: 15', $output);
