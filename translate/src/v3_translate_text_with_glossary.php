@@ -35,14 +35,14 @@ $translationServiceClient = new TranslationServiceClient();
 // $projectId = '[Google Cloud Project ID]';
 // $glossaryId = '[YOUR_GLOSSARY_ID]';
 $glossaryPath = $translationServiceClient->glossaryName(
-	$projectId,
-	'us-central1',
-	$glossaryId
+    $projectId,
+    'us-central1',
+    $glossaryId
 );
 $contents = [$text];
 $formattedParent = $translationServiceClient->locationName(
-	$projectId,
-	'us-central1'
+    $projectId,
+    'us-central1'
 );
 $glossaryConfig = new TranslateTextGlossaryConfig();
 $glossaryConfig->setGlossary($glossaryPath);
@@ -52,14 +52,14 @@ $mimeType = 'text/plain';
 
 try {
     $response = $translationServiceClient->translateText(
-    	$contents,
-    	$targetLanguage,
-    	$formattedParent,
-    	[
-    		'sourceLanguageCode' => $sourceLanguage,
-    		'glossaryConfig' => $glossaryConfig,
-    		'mimeType' => $mimeType
-    	]
+        $contents,
+        $targetLanguage,
+        $formattedParent,
+        [
+            'sourceLanguageCode' => $sourceLanguage,
+            'glossaryConfig' => $glossaryConfig,
+            'mimeType' => $mimeType
+        ]
     );
     // Display the translation for each input text provided
     foreach ($response->getGlossaryTranslations() as $translation) {

@@ -31,9 +31,9 @@ $translationServiceClient = new TranslationServiceClient();
 // $projectId = '[Google Cloud Project ID]';
 // $glossaryId = '[Glossary ID]';
 $formattedName = $translationServiceClient->glossaryName(
-	$projectId,
-	'us-central1',
-	$glossaryId
+    $projectId,
+    'us-central1',
+    $glossaryId
 );
 
 try {
@@ -41,10 +41,10 @@ try {
     printf('Glossary name: %s' . PHP_EOL, $response->getName());
     printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
     printf(
-    	'Input URI: %s' . PHP_EOL,
-    	$response->getInputConfig()
-    		->getGcsSource()
-    		->getInputUri()
+        'Input URI: %s' . PHP_EOL,
+        $response->getInputConfig()
+            ->getGcsSource()
+            ->getInputUri()
     );
 } finally {
     $translationServiceClient->close();

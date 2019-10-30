@@ -35,15 +35,15 @@ $translationServiceClient = new TranslationServiceClient();
 // $projectId = '[Google Cloud Project ID]';
 // $location = 'global';
 $modelPath = sprintf(
-	'projects/%s/locations/%s/models/%s',
-	$projectId,
-	$location,
-	$modelId
+    'projects/%s/locations/%s/models/%s',
+    $projectId,
+    $location,
+    $modelId
 );
 $contents = [$text];
 $formattedParent = $translationServiceClient->locationName(
-	$projectId,
-	$location
+    $projectId,
+    $location
 );
 
 // Optional. Can be "text/plain" or "text/html".
@@ -51,15 +51,15 @@ $mimeType = 'text/plain';
 
 try {
     $response = $translationServiceClient->translateText(
-    	$contents,
-    	$targetLanguage,
-    	$formattedParent,
-    	[
-    		'model' => $modelPath,
-    		'sourceLanguageCode' => $sourceLanguage,
-    		'mimeType' => $mimeType
-    	]
-	);
+        $contents,
+        $targetLanguage,
+        $formattedParent,
+        [
+            'model' => $modelPath,
+            'sourceLanguageCode' => $sourceLanguage,
+            'mimeType' => $mimeType
+        ]
+    );
     // Display the translation for each input text provided
     foreach ($response->getTranslations() as $translation) {
         printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

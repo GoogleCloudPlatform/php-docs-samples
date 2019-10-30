@@ -36,9 +36,9 @@ $formattedParent = $translationServiceClient->locationName($projectId, 'global')
 
 try {
     $response = $translationServiceClient->translateText(
-    	$contents,
-    	$targetLanguage,
-    	$formattedParent
+        $contents,
+        $targetLanguage,
+        $formattedParent
     );
     // Display the translation for each input text provided
     foreach ($response->getTranslations() as $translation) {
