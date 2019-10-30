@@ -35,12 +35,16 @@ class translateTest extends TestCase
     {
         self::checkProjectEnvVars();
         self::$bucket = (new StorageClient())->createBucket(
-            sprintf('%s-test-bucket-%s', self::$projectId, time())
+            sprintf('%s-translate-test-bucket-%s', self::$projectId, time())
         );
     }
 
     public static function tearDownAfterClass()
     {
+        foreach (self::$bucket->objects() as $object) {
+            $object->delete();
+        }
+
         self::$bucket->delete();
     }
 
