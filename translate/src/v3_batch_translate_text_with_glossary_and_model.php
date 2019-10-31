@@ -22,7 +22,7 @@ if (count($argv) < 9 || count($argv) > 9) {
 }
 list($_, $inputUri, $outputUri, $projectId, $location, $targetLanguage, $sourceLanguage, $modelId, $glossaryId) = $argv;
 
-// [START batch_translate_text_with_glossary_and_model]
+// [START translate_v3_batch_translate_text_with_glossary_and_model]
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
@@ -97,4 +97,4 @@ try {
 } finally {
     $translationServiceClient->close();
 }
-// [END batch_translate_text_with_glossary_and_model]
+// [END translate_v3_batch_translate_text_with_glossary_and_model]
