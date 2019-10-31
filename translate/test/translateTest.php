@@ -34,12 +34,9 @@ class translateTest extends TestCase
     public static function setUpBeforeClass()
     {
         self::checkProjectEnvVars();
-
-        if (!self::$bucket) {
-            self::$bucket = (new StorageClient())->createBucket(
-                sprintf('%s-translate-test-bucket-%s', self::$projectId, time())
-            );
-        }
+        self::$bucket = (new StorageClient())->createBucket(
+            sprintf('%s-translate-test-bucket-%s', self::$projectId, rand())
+        );
     }
 
     public static function tearDownAfterClass()
