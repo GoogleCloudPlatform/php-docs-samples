@@ -22,7 +22,7 @@ if (count($argv) < 8 || count($argv) > 8) {
 }
 list($_, $inputUri, $outputUri, $projectId, $location, $glossaryId, $targetLanguage, $sourceLanguage) = $argv;
 
-// [START batch_translate_text_with_glossary]
+// [START translate_v3_batch_translate_text_with_glossary]
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
@@ -89,4 +89,4 @@ try {
 } finally {
     $translationServiceClient->close();
 }
-// [END batch_translate_text_with_glossary]
+// [END translate_v3_batch_translate_text_with_glossary]
