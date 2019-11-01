@@ -75,6 +75,7 @@ EOF
     ->addArgument('message', InputArgument::OPTIONAL, 'A message to publish to the topic')
     ->addOption('create', null, InputOption::VALUE_NONE, 'Create the topic. ')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the topic. ')
+    ->addOption('batch', null, InputOption::VALUE_NONE, 'Use the batch publisher.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $topicName = $input->getArgument('topic');
@@ -84,6 +85,8 @@ EOF
             create_topic($projectId, $topicName);
         } elseif ($input->getOption('delete')) {
             delete_topic($projectId, $topicName);
+        } elseif ($input->getOption('batch') && $message = $input->getArgument('message')) {
+            publish_message_batch($projectId, $topicName, $message);
         } elseif ($message = $input->getArgument('message')) {
             publish_message($projectId, $topicName, $message);
         } else {

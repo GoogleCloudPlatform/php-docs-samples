@@ -252,4 +252,27 @@ class pubsubTest extends TestCase
             $this->assertRegExp('/This is a test message/', $output);
         });
     }
+
+    public function testPullMessagesBatchPublisher()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
+
+        $output = $this->runCommand('topic', [
+            'project' => self::$projectId,
+            'topic' => $topic,
+            'message' => 'This is a test message',
+            '--batch' => true
+        ]);
+
+        $this->assertRegExp('/Messages enqueued for publication/', $output);
+
+        $this->runEventuallyConsistentTest(function () use ($subscription) {
+            $output = $this->runCommand('subscription', [
+                'subscription' => $subscription,
+                'project' => self::$projectId,
+            ]);
+            $this->assertContains('This is a test message', $output);
+        });
+    }
 }

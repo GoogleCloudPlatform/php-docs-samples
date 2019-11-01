@@ -15,6 +15,7 @@
             "src/get_topic_policy.php",
             "src/list_subscriptions.php",
             "src/list_topics.php",
+            "src/publish_message_batch.php",
             "src/publish_message.php",
             "src/pull_messages.php",
             "src/set_subscription_policy.php",
