@@ -35,22 +35,26 @@ accept your pull requests.
    by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the
    path to a service account key JSON file.
 
-   Then set any environment variables needed by the test. Check the
-   `$SAMPLES_DIRECTORY/test` directory to see what specific variables are needed.
+   Then set any environment variables needed by the test. Take a look in
+   `.kokoro/secrets-example.sh` for a list of all environment variables used in
+   the tests, and in `$SAMPLES_DIRECTORY/test` to see the specific variables used
+   in each test.
    ```
    export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
    export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
    ```
 
-   To run the tests in a samples directory, first install the global Composer
-   dependencies by running `bash test/composer.sh`. Then, run `composer install`
-   and `phpunit` in any directory containing a `phpunit.xml.dist` file to run
-   the tests.
+   To run the tests in a samples directory, first run
+   `composer install -d testing/` to install shared test dependencies. Then run
+   `composer install` in any directory containing a `phpunit.xml.dist` file.
+   Invoke the `phpunit` contained in `testing/vendor/bin/phpunit` to run the
+   tests.
    ```
-   bash test/composer.sh
+   SAMPLES_DIRECTORY=translate
+   composer install -d testing/
    cd $SAMPLES_DIRECTORY
    composer install
-   phpunit
+   ../testing/vendor/bin/phpunit
    ```
 
 1. Ensure that your code adheres to the existing style in the sample to which

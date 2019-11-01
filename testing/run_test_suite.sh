@@ -98,18 +98,20 @@ if ! type phpunit > /dev/null; then
   exit 1
 fi
 
+TESTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TESTCMD="$TESTDIR/vendor/bin/phpunit -v"
+
 run_tests()
 {
-    CMD="phpunit -v"
     if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
         echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
         GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_ALT_APPLICATION_CREDENTIALS \
             GCLOUD_PROJECT=$GOOGLE_ALT_PROJECT_ID \
             GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID \
             GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET \
-            $CMD
+            $TESTCMD
     else
-        $CMD
+        $TESTCMD
     fi
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
