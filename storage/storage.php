@@ -586,7 +586,7 @@ EOF
     ->setCode(function ($input, $output) {
         $bucketName = $input->getArgument('bucket');
         $objectName = $input->getArgument('object');
-        get_object_v4_upload_signed_url($bucketName, $objectName);
+        upload_object_v4_signed_url($bucketName, $objectName);
     });
 
 // for testing
