@@ -41,8 +41,8 @@ use Google\Cloud\PubSub\PubSubClient;
 function publish_message_batch($projectId, $topicName, $message)
 {
     $batchOptions = [
-        'batchSize' => 10, // Max messages for each batch.
-        'callPeriod' => 2.0, // Max time in seconds between each batch publish.
+        'batchSize' => 100, // Max messages for each batch.
+        'callPeriod' => 0.01, // Max time in seconds between each batch publish.
     ];
 
     $pubsub = new PubSubClient([
