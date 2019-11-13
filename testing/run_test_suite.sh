@@ -93,13 +93,13 @@ if [ "${TEST_DIRECTORIES}" = "" ]; then
   TEST_DIRECTORIES="*"
 fi
 
-if ! type phpunit > /dev/null; then
-  echo "run \"bash testing/composer.sh\" to install testing dependencies"
+TESTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TESTCMD="$TESTDIR/vendor/bin/phpunit"
+
+if ! type $TESTCMD > /dev/null; then
+  echo "run \"composer install -d testing/\" to install testing dependencies"
   exit 1
 fi
-
-TESTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-TESTCMD="$TESTDIR/vendor/bin/phpunit -v"
 
 run_tests()
 {
@@ -109,9 +109,9 @@ run_tests()
             GCLOUD_PROJECT=$GOOGLE_ALT_PROJECT_ID \
             GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID \
             GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET \
-            $TESTCMD
+            $TESTCMD -v
     else
-        $TESTCMD
+        $TESTCMD -v
     fi
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
