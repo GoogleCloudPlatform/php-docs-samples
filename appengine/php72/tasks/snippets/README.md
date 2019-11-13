@@ -35,7 +35,7 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
         export PROJECT_ID=my-project-id
 
     Then the queue ID, as specified at queue creation time. Queue IDs already
-    created can be listed with `gcloud alpha tasks queues list`.
+    created can be listed with `gcloud tasks queues list`.
 
         export QUEUE_ID=my-appengine-queue
 
