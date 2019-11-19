@@ -64,7 +64,7 @@ if [ "${RUN_REST_TESTS_ONLY}" = "true" ]; then
 fi
 
 # Install global test dependencies
-bash testing/composer.sh
+composer install -d testing/
 
 # Run tests
 bash testing/run_test_suite.sh
