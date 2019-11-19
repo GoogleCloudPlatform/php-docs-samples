@@ -57,7 +57,6 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
     # Obtain an OpenID Connect token, which is a JWT signed by Google.
     $token = $oauth->fetchAuthToken();
     $idToken = $oauth->getIdToken();
-    var_dump($idToken);
 
     # Construct a ScopedAccessTokenMiddleware with the ID token.
     $middleware = new ScopedAccessTokenMiddleware(
