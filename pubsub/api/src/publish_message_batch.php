@@ -41,7 +41,7 @@ use Google\Cloud\PubSub\PubSubClient;
 function publish_message_batch($projectId, $topicName, $message)
 {
     // Check if the batch daemon is running.
-    if (getenv('IS_BATCH_DAEMON_RUNNING') !== "true") {
+    if (getenv('IS_BATCH_DAEMON_RUNNING') !== 'true') {
         trigger_error(
             "The batch daemon is not running. Call " .
             "`vendor/bin/google-cloud-batch daemon` from " .
