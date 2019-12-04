@@ -49,7 +49,7 @@ final class ReadTest extends TestCase
 
         self::$bigtableInstanceAdminClient = new BigtableInstanceAdminClient();
         self::$bigtableTableAdminClient = new BigtableTableAdminClient();
-        self::$instanceId = "central-instance";
+        self::$instanceId = "php-instance-5de5a80085438";
 //        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
 //        self::runSnippet('create_dev_instance', [
 //            self::$projectId,
@@ -113,13 +113,16 @@ final class ReadTest extends TestCase
 
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadRow()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readRow"
+            "read_row"
         ]);
 
         $result = sprintf('Reading data for row
@@ -131,13 +134,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadRowPartial()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readRowPartial"
+            "read_row_partial"
         ]);
 
         $result = sprintf('Reading data for row
@@ -147,13 +153,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadRows()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readRows"
+            "read_rows"
         ]);
 
         $result = sprintf('Reading data for row
@@ -171,13 +180,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadRowRange()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readRowRange"
+            "read_row_range"
         ]);
 
         $result = sprintf('Reading data for row
@@ -201,13 +213,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadRowRanges()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readRowRanges"
+            "read_row_ranges"
         ]);
 
         $result = sprintf('Reading data for row
@@ -243,13 +258,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadPrefix()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readPrefix"
+            "read_prefix"
         ]);
 
         $result = sprintf('Reading data for row
@@ -285,13 +303,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadFilter()
     {
         $output = self::runSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "readFilter"
+            "read_filter"
         ]);
 
         $result = sprintf('Reading data for row
