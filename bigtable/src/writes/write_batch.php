@@ -46,7 +46,7 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-$timestamp = time() * 1000;
+$timestamp = time() * 1000 * 1000;
 $columnFamilyId = 'stats_summary';
 $mutations = [
     (new Mutations())
@@ -56,7 +56,8 @@ $mutations = [
         ->upsert($columnFamilyId, "connected_wifi", 1, $timestamp)
         ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestamp)];
 
-$table->mutateRows([
+$table->mutateRows(
+    [
         "tablet#a0b81f74#20190501" => $mutations[0],
         "tablet#a0b81f74#20190502" => $mutations[1]]
 );

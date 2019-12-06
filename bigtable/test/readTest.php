@@ -42,6 +42,7 @@ final class ReadTest extends TestCase
     private static $instanceId;
     private static $tableId;
     private static $timestamp;
+    private static $timestamp_minus_hr;
 
     public static function setUpBeforeClass(): void
     {
@@ -49,13 +50,12 @@ final class ReadTest extends TestCase
 
         self::$bigtableInstanceAdminClient = new BigtableInstanceAdminClient();
         self::$bigtableTableAdminClient = new BigtableTableAdminClient();
-        self::$instanceId = "php-instance-5de5a80085438";
-//        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
-//        self::runSnippet('create_dev_instance', [
-//            self::$projectId,
-//            self::$instanceId,
-//            self::$instanceId,
-//        ]);
+        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
+        self::runSnippet('create_dev_instance', [
+            self::$projectId,
+            self::$instanceId,
+            self::$instanceId,
+        ]);
 
         self::$tableId = uniqid(self::TABLE_ID_PREFIX);
 
@@ -74,7 +74,7 @@ final class ReadTest extends TestCase
 
         $table = $dataClient->table(self::$instanceId, self::$tableId);
 
-        self::$timestamp = time() * 1000;
+        self::$timestamp = time() * 1000 * 1000;
         $table->mutateRows([
             "phone#4c410523#20190501" => (new Mutations())
                 ->upsert('stats_summary', "connected_cell", 1, self::$timestamp)
@@ -107,10 +107,7 @@ final class ReadTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         $instanceName = self::$bigtableInstanceAdminClient->instanceName(self::$projectId, self::$instanceId);
-//        self::$bigtableInstanceAdminClient->deleteInstance($instanceName);
-        $tableName = self::$bigtableTableAdminClient->tableName(self::$projectId, self::$instanceId, self::$tableId);
-        self::$bigtableTableAdminClient->deleteTable($tableName);
-
+        self::$bigtableInstanceAdminClient->deleteInstance($instanceName);
     }
 
     /**
@@ -125,7 +122,7 @@ final class ReadTest extends TestCase
             "read_row"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
@@ -146,7 +143,7 @@ Column Family stats_summary
             "read_row_partial"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	os_build: PQ2A.190405.003 @%1$s', self::$timestamp);
 
@@ -165,13 +162,13 @@ Column Family stats_summary
             "read_rows"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.003 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
@@ -192,19 +189,19 @@ Column Family stats_summary
             "read_row_range"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.003 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.004 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190505
 Column Family stats_summary
 	connected_cell: 0 @%1$s
 	connected_wifi: 1 @%1$s
@@ -225,31 +222,31 @@ Column Family stats_summary
             "read_row_ranges"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.003 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.004 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190505
 Column Family stats_summary
 	connected_cell: 0 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190406.000 @%1$s
 
-Reading data for row
+Reading data for row phone#5c10102#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190401.002 @%1$s
 
-Reading data for row
+Reading data for row phone#5c10102#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 0 @%1$s
@@ -270,31 +267,31 @@ Column Family stats_summary
             "read_prefix"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.003 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190405.004 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190505
 Column Family stats_summary
 	connected_cell: 0 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190406.000 @%1$s
 
-Reading data for row
+Reading data for row phone#5c10102#20190501
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
 	os_build: PQ2A.190401.002 @%1$s
 
-Reading data for row
+Reading data for row phone#5c10102#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 0 @%1$s
@@ -315,23 +312,23 @@ Column Family stats_summary
             "read_filter"
         ]);
 
-        $result = sprintf('Reading data for row
+        $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
 	os_build: PQ2A.190405.003 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190502
 Column Family stats_summary
 	os_build: PQ2A.190405.004 @%1$s
 
-Reading data for row
+Reading data for row phone#4c410523#20190505
 Column Family stats_summary
 	os_build: PQ2A.190406.000 @%1$s
 
-Reading data for row
+Reading data for row phone#5c10102#20190501
 Column Family stats_summary
 	os_build: PQ2A.190401.002 @%1$s
 
-Reading data for row
+Reading data for row phone#5c10102#20190502
 Column Family stats_summary
 	os_build: PQ2A.190406.000 @%1$s', self::$timestamp);
 

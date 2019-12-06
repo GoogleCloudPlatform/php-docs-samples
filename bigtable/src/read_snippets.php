@@ -28,13 +28,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) !== 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID READ_TYPE" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id, $readType) = $argv;
+list($_, $project_id, $instance_id, $table_id, $read_type) = $argv;
 
 $validReadTypes = ['read_row', 'read_rows', 'read_row_range', 'read_row_ranges',
     'read_prefix', 'read_filter', 'read_row_partial'];
-if (!in_array($readType, $validReadTypes)) {
-    throw new Exception(sprintf('Invalid READ_TYPE %s, must be one of: %s',
-        $readType, implode(', ', $validReadTypes)));
+if (!in_array($read_type, $validReadTypes)) {
+    throw new Exception(sprintf(
+        'Invalid READ_TYPE %s, must be one of: %s',
+        $read_type,
+        implode(', ', $validReadTypes)
+    ));
 }
 
 // [START bigtable_reads_row]
@@ -60,15 +63,23 @@ $dataClient = new BigtableClient([
 $table = $dataClient->table($instance_id, $table_id);
 
 // Helper function for printing the row data
-function print_row($row)
+function print_row($key, $row)
 {
-    print('Reading data for row' . PHP_EOL);
-    foreach ((array) $row as $family => $cols) {
+    printf('Reading data for row %s' . PHP_EOL, $key);
+    foreach ((array)$row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
-                printf("\t%s: %s @%s" . PHP_EOL,
-                    $col, $data[$i]['value'], $data[$i]['timeStamp']);
+                $labels =
+                    $data[$i]['labels'] == "" ? "" : sprintf(" [%s]", $data[$i]['labels']);
+
+                printf(
+                    "\t%s: %s @%s%s" . PHP_EOL,
+                    $col,
+                    $data[$i]['value'],
+                    $data[$i]['timeStamp'],
+                    $labels
+                );
             }
         }
     }
@@ -89,7 +100,7 @@ function read_row($table)
     $rowkey = "phone#4c410523#20190501";
     $row = $table->readRow($rowkey);
 
-    print_row($row);
+    print_row($rowkey, $row);
     // [END bigtable_reads_row]
 }
 
@@ -100,7 +111,7 @@ function read_row_partial($table)
     $rowFilter = Filter::qualifier()->exactMatch("os_build");
     $row = $table->readRow($rowkey, ['filter' => $rowFilter]);
 
-    print_row($row);
+    print_row($rowkey, $row);
     // [END bigtable_reads_row_partial]
 }
 
@@ -111,8 +122,8 @@ function read_rows($table)
         ["rowKeys" => ["phone#4c410523#20190501", "phone#4c410523#20190502"]]
     );
 
-    foreach ($rows as $row) {
-        print_row($row);
+    foreach ($rows as $key => $row) {
+        print_row($key, $row);
     }
     // [END bigtable_reads_rows]
 }
@@ -129,8 +140,8 @@ function read_row_range($table)
         ]
     ]);
 
-    foreach ($rows as $row) {
-        print_row($row);
+    foreach ($rows as $key => $row) {
+        print_row($key, $row);
     }
     // [END bigtable_reads_row_range]
 }
@@ -151,8 +162,8 @@ function read_row_ranges($table)
         ]
     ]);
 
-    foreach ($rows as $row) {
-        print_row($row);
+    foreach ($rows as $key => $row) {
+        print_row($key, $row);
     }
     // [END bigtable_reads_row_ranges]
 }
@@ -160,16 +171,23 @@ function read_row_ranges($table)
 function read_prefix($table)
 {
     // [START bigtable_reads_prefix]
+    $prefix = 'phone#';
+    $end = $prefix;
+    $end[-1] = chr(
+        ord($end[-1]) + 1
+    );
+
     $rows = $table->readRows([
         'rowRanges' => [
             [
-                'startKeyClosed' => 'phone#4c410523',
+                'startKeyClosed' => $prefix,
+                'endKeyClosed' => $end,
             ]
         ]
     ]);
 
-    foreach ($rows as $row) {
-        print_row($row);
+    foreach ($rows as $key => $row) {
+        print_row($key, $row);
     }
     // [END bigtable_reads_prefix]
 }
@@ -183,11 +201,11 @@ function read_filter($table)
         'filter' => $rowFilter
     ]);
 
-    foreach ($rows as $row) {
-        print_row($row);
+    foreach ($rows as $key => $row) {
+        print_row($key, $row);
     }
     // [END bigtable_reads_filter]
 }
 
 // Call the function for the supplied READ_TYPE
-call_user_func($readType, $table);
+call_user_func($read_type, $table);
