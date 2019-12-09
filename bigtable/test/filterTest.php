@@ -21,7 +21,6 @@ namespace Google\Cloud\Samples\Bigtable\Tests;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\BigtableClient;
-use Google\Cloud\Bigtable\DataUtil;
 use Google\Cloud\Bigtable\Mutations;
 use PHPUnit\Framework\TestCase;
 
@@ -46,6 +45,7 @@ final class FilterTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        self::requireGrpc();
         self::checkProjectEnvVarBeforeClass();
 
         self::$bigtableInstanceAdminClient = new BigtableInstanceAdminClient();
