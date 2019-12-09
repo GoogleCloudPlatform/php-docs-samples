@@ -19,15 +19,14 @@
 namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Mutations;
-use PHPUnit\Framework\TestCase;
-
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Table;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 final class ReadTest extends TestCase
 {
@@ -36,12 +35,12 @@ final class ReadTest extends TestCase
 
     const INSTANCE_ID_PREFIX = 'phpunit-test-';
     const TABLE_ID_PREFIX = 'mobile-time-series-';
+
     private static $bigtableInstanceAdminClient;
     private static $bigtableTableAdminClient;
     private static $instanceId;
     private static $tableId;
-    private static $timestamp;
-    private static $timestamp_minus_hr;
+    private static $timestampMicros;
 
     public static function setUpBeforeClass(): void
     {
@@ -74,28 +73,28 @@ final class ReadTest extends TestCase
 
         $table = $dataClient->table(self::$instanceId, self::$tableId);
 
-        self::$timestamp = time() * 1000 * 1000;
+        self::$timestampMicros = time() * 1000 * 1000;
         $table->mutateRows([
             "phone#4c410523#20190501" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestamp)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestamp)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestamp),
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestampMicros),
             "phone#4c410523#20190502" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestamp)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestamp)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestamp),
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestampMicros),
             "phone#4c410523#20190505" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 0, self::$timestamp)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestamp)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestamp),
+                ->upsert('stats_summary', "connected_cell", 0, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros),
             "phone#5c10102#20190501" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestamp)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestamp)
-                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestamp),
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestampMicros),
             "phone#5c10102#20190502" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestamp)
-                ->upsert('stats_summary', "connected_wifi", 0, self::$timestamp)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestamp)
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 0, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros)
         ]);
     }
 
@@ -126,7 +125,7 @@ final class ReadTest extends TestCase
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
-	os_build: PQ2A.190405.003 @%1$s', self::$timestamp);
+	os_build: PQ2A.190405.003 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }
@@ -145,7 +144,7 @@ Column Family stats_summary
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
 Column Family stats_summary
-	os_build: PQ2A.190405.003 @%1$s', self::$timestamp);
+	os_build: PQ2A.190405.003 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }
@@ -172,7 +171,7 @@ Reading data for row phone#4c410523#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 1 @%1$s
-	os_build: PQ2A.190405.004 @%1$s', self::$timestamp);
+	os_build: PQ2A.190405.004 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }
@@ -205,7 +204,7 @@ Reading data for row phone#4c410523#20190505
 Column Family stats_summary
 	connected_cell: 0 @%1$s
 	connected_wifi: 1 @%1$s
-	os_build: PQ2A.190406.000 @%1$s', self::$timestamp);
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }
@@ -250,7 +249,7 @@ Reading data for row phone#5c10102#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 0 @%1$s
-	os_build: PQ2A.190406.000 @%1$s', self::$timestamp);
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }
@@ -295,7 +294,7 @@ Reading data for row phone#5c10102#20190502
 Column Family stats_summary
 	connected_cell: 1 @%1$s
 	connected_wifi: 0 @%1$s
-	os_build: PQ2A.190406.000 @%1$s', self::$timestamp);
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }
@@ -330,7 +329,7 @@ Column Family stats_summary
 
 Reading data for row phone#5c10102#20190502
 Column Family stats_summary
-	os_build: PQ2A.190406.000 @%1$s', self::$timestamp);
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
 
         $this->assertEquals($result, trim($output));
     }

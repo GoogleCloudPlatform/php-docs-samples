@@ -70,15 +70,12 @@ function print_row($key, $row)
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
-                $labels =
-                    $data[$i]['labels'] == "" ? "" : sprintf(" [%s]", $data[$i]['labels']);
-
                 printf(
                     "\t%s: %s @%s%s" . PHP_EOL,
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $labels
+                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
                 );
             }
         }

@@ -94,9 +94,6 @@ try {
         );
         $operationResponse->pollUntilComplete();
         if (!$operationResponse->operationSucceeded()) {
-            print('Error creating dev instance');
-            print_r($operationResponse);
-            print_r($operationResponse->getError());
             print('Error: ' . $operationResponse->getError()->getMessage());
         } else {
             printf("Instance %s created.", $instance_id);

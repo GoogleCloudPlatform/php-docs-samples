@@ -47,10 +47,10 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-$timestamp = time() * 1000 * 1000;
+$timestampMicros = time() * 1000 * 1000;
 $columnFamilyId = 'stats_summary';
 
-$mutations = (new Mutations())->upsert($columnFamilyId, "os_name", "android", $timestamp);
+$mutations = (new Mutations())->upsert($columnFamilyId, "os_name", "android", $timestampMicros);
 $predicateFilter = Filter::chain()
     ->addFilter(Filter::family()->exactMatch($columnFamilyId))
     ->addFilter(Filter::qualifier()->exactMatch('os_build'))
