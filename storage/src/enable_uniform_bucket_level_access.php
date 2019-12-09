@@ -42,10 +42,6 @@ function enable_uniform_bucket_level_access($bucketName)
             'uniformBucketLevelAccess' => [
                 'enabled' => true
             ],
-            // This is a workaround
-            'bucketPolicyOnly' => [
-                'enabled' => true
-            ]
         ]
     ]);
     printf('Uniform bucket-level access was enabled for %s' . PHP_EOL, $bucketName);

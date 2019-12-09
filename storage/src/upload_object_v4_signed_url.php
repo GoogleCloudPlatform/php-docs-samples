@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @return void
  */
-function get_object_v4_upload_signed_url($bucketName, $objectName)
+function upload_object_v4_signed_url($bucketName, $objectName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
