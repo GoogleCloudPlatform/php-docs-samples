@@ -74,7 +74,7 @@ try {
     // [START automl_vision_classification_get_model_evaluation]
     printf('Model evaluation metrics: %s' . PHP_EOL, $modelEvaluation->getTextSentimentEvaluationMetrics());
     // [END automl_language_text_classification_get_model_evaluation]
-    // [START automl_vision_classification_get_model_evaluation]
+    // [END automl_vision_classification_get_model_evaluation]
 
     // [START automl_translate_get_model_evaluation]
     printf('Model evaluation metrics: %s' . PHP_EOL, $modelEvaluation->getTranslationEvaluationMetrics());
