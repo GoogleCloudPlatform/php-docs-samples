@@ -1,14 +1,23 @@
 #!/bin/bash
 
-################################################################################
-# Run the following gcloud command to decrypt secrets.sh.enc as follows:       #
-#                                                                              #
-# gcloud kms decrypt --location=global --keyring=ci --key=ci \                 #
-#   --ciphertext-file=.kokoro/secrets.sh.enc \                                 #
-#   --plaintext-file=.kokoro/secrets.sh                                        #
-#                                                                              #
-# Then run `source .kokoro/secrets.sh`                                         #
-################################################################################
+# This file contains the necessary environment variables for the kokoro 
+# tests. Contact the repository owners if you need access to view or modify
+# the variables.
+# 
+# Run the following gcloud command to decrypt secrets.sh.enc as follows:
+#
+# gcloud kms decrypt --location=global --keyring=ci --key=ci \
+#   --ciphertext-file=.kokoro/secrets.sh.enc \
+#   --plaintext-file=.kokoro/secrets.sh
+#
+# Then run `source .kokoro/secrets.sh`
+# 
+# To modify the file, edit .kokoro/secrets.sh then use the following gcloud 
+# command to encrypt it with the changes:
+#
+# gcloud kms encrypt --location=global --keyring=ci --key=ci \
+#   --ciphertext-file=.kokoro/secrets.sh.enc \
+#   --plaintext-file=.kokoro/secrets.sh
 
 # General
 export GOOGLE_PROJECT_ID=
