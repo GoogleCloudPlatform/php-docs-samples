@@ -25,38 +25,7 @@ accept your pull requests.
 1. The repo owner will respond to your issue promptly.
 1. If your proposed change is accepted, and you haven't already done so, sign a
    Contributor License Agreement (see details above).
-1. Fork the desired repo, develop and test your code changes.
-
-   Install dependencies via [Composer](http://getcomposer.org/doc/00-intro.md).
-   Run `composer install` (if composer is installed globally).
-
-   To run the tests, first set up [application default
-   credentials](https://cloud.google.com/docs/authentication/getting-started)
-   by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the
-   path to a service account key JSON file.
-
-   Then set any environment variables needed by the test. Take a look in
-   `.kokoro/secrets-example.sh` for a list of all environment variables used in
-   the tests, and in `$SAMPLES_DIRECTORY/test` to see the specific variables used
-   in each test.
-   ```
-   export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
-   export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
-   ```
-
-   To run the tests in a samples directory, first run
-   `composer install -d testing/` to install shared test dependencies. Then run
-   `composer install` in any directory containing a `phpunit.xml.dist` file.
-   Invoke the `phpunit` contained in `testing/vendor/bin/phpunit` to run the
-   tests.
-   ```
-   SAMPLES_DIRECTORY=translate
-   composer install -d testing/
-   cd $SAMPLES_DIRECTORY
-   composer install
-   ../testing/vendor/bin/phpunit
-   ```
-
+1. Fork this repo, develop and test your code changes.
 1. Ensure that your code adheres to the existing style in the sample to which
    you are contributing.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
@@ -66,26 +35,26 @@ accept your pull requests.
 
 ### Install dependencies
 
-  Install your samples' dependencies with [Composer](http://getcomposer.org/doc/00-intro.md).
-  ```
-  cd $SAMPLES_DIRECTORY
-  composer install
-  ```
+To run the tests in a samples directory, you will need to install
+[Composer](http://getcomposer.org/doc/00-intro.md).
 
-  Install the install the global Composer test dependencies by running
-  ```
-  bash testing/composer.sh 
-  ```
+First install the testing dependencies which are shared across all samples:
 
-  Add ~/.composer/vendor/bin to your $PATH, so you can access the test dependencies
-  ```
-  export PATH=$HOME/.composer/vendor/bin:$PATH
-  ```
+```
+composer install -d testing/
+```
 
+Next, install the dependencies for the individual sample you're testing:
+
+```
+SAMPLES_DIRECTORY=translate
+cd $SAMPLES_DIRECTORY
+composer install
+```
 
 ### Environment variables
 Set up [application default credentials](https://cloud.google.com/docs/authentication/getting-started)
-by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path to a service 
+by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path to a service
 account key JSON file.
 
 Then set any environment variables needed by the test. Check the
@@ -95,17 +64,19 @@ export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
 export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
 ```
 
-If your tests require new environment variables, you can set them up in 
-[.kokoro/secrets.sh.enc](.kokoro/secrets.sh.enc). For instructions on managing those variables, 
-view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more information. 
+If your tests require new environment variables, you can set them up in
+[.kokoro/secrets.sh.enc](.kokoro/secrets.sh.enc). For instructions on managing those variables,
+view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more information.
 
 ### Run the tests
 
-Once the dependencies are installed and the environment variables set, you can run the 
+Once the dependencies are installed and the environment variables set, you can run the
 tests in a samples directory.
 ```
 cd $SAMPLES_DIRECTORY
-phpunit
+# Execute the "phpunit" installed for the shared dependencies
+PATH_TO_REPO=/path/to/php-docs-samples
+$PATH_TO_REPO/testing/vendor/bin/phpunit
 ```
 
 Use `phpunit -v` to get a more detailed output if there are errors.
