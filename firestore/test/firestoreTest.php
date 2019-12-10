@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Firestore\Tests;
 
+use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
@@ -506,5 +507,39 @@ class firestoreTest extends TestCase
         return $this->runCommand($commandName, [
             'project' => self::$firestoreProjectId
         ]);
+    }
+
+    public function testDistributedCounter()
+    {
+        $this->runFirestoreCommand('initialize-distributed-counter');
+        $outputZero = $this->runFirestoreCommand('get-distributed-counter-value');
+        $this->assertContains('0', $outputZero);
+
+        //check count of shards
+        $db = new FirestoreClient([
+            'projectId' => self::$firestoreProjectId,
+        ]);
+        $ref = $db->collection('Shards_collection')->document('Distributed_counters');
+        $collect = $ref->collection('SHARDS');
+        $docCollection = $collect->documents();
+
+        $docIdList = [];
+        foreach ($docCollection as $docSnap) {
+            $docIdList[] = $docSnap->id();
+        }
+        $this->assertEquals(10, count($docIdList));
+
+        //call thrice and check the value
+        $this->runFirestoreCommand('update-distributed-counter');
+        $this->runFirestoreCommand('update-distributed-counter');
+        $this->runFirestoreCommand('update-distributed-counter');
+
+        $output = $this->runFirestoreCommand('get-distributed-counter-value');
+        $this->assertContains('3', $output);
+
+        //remove temporary data
+        foreach ($docIdList as $docId) {
+            $collect->document($docId)->delete();
+        }
     }
 }
