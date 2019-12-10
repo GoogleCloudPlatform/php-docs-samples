@@ -40,21 +40,49 @@ function object_metadata($bucketName, $objectName)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $info = $object->info();
-    printf('Blob: %s' . PHP_EOL, $info['name']);
-    printf('Bucket: %s' . PHP_EOL, $info['bucket']);
-    printf('Storage class: %s' . PHP_EOL, $info['storageClass']);
-    printf('ID: %s' . PHP_EOL, $info['id']);
-    printf('Size: %s' . PHP_EOL, $info['size']);
-    printf('Updated: %s' . PHP_EOL, $info['updated']);
-    printf('Generation: %s' . PHP_EOL, $info['generation']);
-    printf('Metageneration: %s' . PHP_EOL, $info['metageneration']);
-    printf('Etag: %s' . PHP_EOL, $info['etag']);
-    printf('Crc32c: %s' . PHP_EOL, $info['crc32c']);
-    printf('MD5 Hash: %s' . PHP_EOL, $info['md5Hash']);
-    printf('Content-type: %s' . PHP_EOL, $info['contentType']);
-    printf("Temporary hold: " . ($info['temporaryHold'] ? "enabled" : "disabled") . PHP_EOL);
-    printf("Event-based hold: " . ($info['eventBasedHold'] ? "enabled" : "disabled") . PHP_EOL);
-    if ($info['retentionExpirationTime']) {
+    if (isset($info['name'])) {
+        printf('Blob: %s' . PHP_EOL, $info['name']);
+    }
+    if (isset($info['bucket'])) {
+        printf('Bucket: %s' . PHP_EOL, $info['bucket']);
+    }
+    if (isset($info['storageClass'])) {
+        printf('Storage class: %s' . PHP_EOL, $info['storageClass']);
+    }
+    if (isset($info['id'])) {
+        printf('ID: %s' . PHP_EOL, $info['id']);
+    }
+    if (isset($info['size'])) {
+        printf('Size: %s' . PHP_EOL, $info['size']);
+    }
+    if (isset($info['updated'])) {
+        printf('Updated: %s' . PHP_EOL, $info['updated']);
+    }
+    if (isset($info['generation'])) {
+        printf('Generation: %s' . PHP_EOL, $info['generation']);
+    }
+    if (isset($info['metageneration'])) {
+        printf('Metageneration: %s' . PHP_EOL, $info['metageneration']);
+    }
+    if (isset($info['etag'])) {
+        printf('Etag: %s' . PHP_EOL, $info['etag']);
+    }
+    if (isset($info['crc32c'])) {
+        printf('Crc32c: %s' . PHP_EOL, $info['crc32c']);
+    }
+    if (isset($info['md5Hash'])) {
+        printf('MD5 Hash: %s' . PHP_EOL, $info['md5Hash']);
+    }
+    if (isset($info['contentType'])) {
+        printf('Content-type: %s' . PHP_EOL, $info['contentType']);
+    }
+    if (isset($info['temporaryHold'])) {
+        printf("Temporary hold: " . ($info['temporaryHold'] ? "enabled" : "disabled") . PHP_EOL);
+    }
+    if (isset($info['eventBasedHold'])) {
+        printf("Event-based hold: " . ($info['eventBasedHold'] ? "enabled" : "disabled") . PHP_EOL);
+    }
+    if (isset($info['retentionExpirationTime'])) {
         printf("retentionExpirationTime: " . $info['retentionExpirationTime'] . PHP_EOL);
     }
     if (isset($info['metadata'])) {
