@@ -252,4 +252,36 @@ class pubsubTest extends TestCase
             $this->assertRegExp('/This is a test message/', $output);
         });
     }
+
+    public function testPullMessagesBatchPublisher()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
+        $messageData = uniqid('message-');
+
+        $pid = shell_exec(
+            'php ' . __DIR__ . '/../vendor/bin/google-cloud-batch daemon > /dev/null 2>&1 & echo $!'
+        );
+        putenv('IS_BATCH_DAEMON_RUNNING=true');
+
+        $output = $this->runCommand('topic', [
+            'project' => self::$projectId,
+            'topic' => $topic,
+            'message' => $messageData,
+            '--batch' => true
+        ]);
+
+        $this->assertRegExp('/Messages enqueued for publication/', $output);
+
+        $this->runEventuallyConsistentTest(function () use ($subscription, $messageData) {
+            $output = $this->runCommand('subscription', [
+                'subscription' => $subscription,
+                'project' => self::$projectId,
+            ]);
+            $this->assertContains($messageData, $output);
+        });
+
+        shell_exec('kill -9 ' . $pid);
+        putenv('IS_BATCH_DAEMON_RUNNING=');
+    }
 }
