@@ -46,7 +46,6 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-$timestamp = time() * 1000;
 $columnFamilyId = 'stats_summary';
 
 $rules = (new ReadModifyWriteRowRules)->increment($columnFamilyId, 'connected_wifi', -1);

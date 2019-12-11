@@ -46,20 +46,20 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-$timestamp = time() * 1000;
+$timestampMicros = time() * 1000 * 1000;
 $columnFamilyId = 'stats_summary';
 $mutations = [
     (new Mutations())
-        ->upsert($columnFamilyId, "connected_wifi", 1, $timestamp)
-        ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestamp),
+        ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
+        ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestampMicros),
     (new Mutations())
-        ->upsert($columnFamilyId, "connected_wifi", 1, $timestamp)
-        ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestamp)];
+        ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
+        ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestampMicros)];
 
 $table->mutateRows([
-        "tablet#a0b81f74#20190501" => $mutations[0],
-        "tablet#a0b81f74#20190502" => $mutations[1]]
-);
+    "tablet#a0b81f74#20190501" => $mutations[0],
+    "tablet#a0b81f74#20190502" => $mutations[1]
+]);
 
 printf('Successfully wrote 2 rows.' . PHP_EOL);
 // [END bigtable_writes_batch]

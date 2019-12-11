@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bigable\Tests;
+namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
@@ -39,7 +39,7 @@ final class WriteTest extends TestCase
     private static $instanceId;
     private static $tableId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVarBeforeClass();
 
@@ -64,12 +64,12 @@ final class WriteTest extends TestCase
         );
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $instanceName = self::$bigtableInstanceAdminClient->instanceName(self::$projectId, self::$instanceId);
         self::$bigtableInstanceAdminClient->deleteInstance($instanceName);

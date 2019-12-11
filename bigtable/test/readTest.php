@@ -1,0 +1,336 @@
+<?php
+
+/**
+ * Copyright 2019 Google LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Google\Cloud\Samples\Bigtable\Tests;
+
+use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\Table;
+use Google\Cloud\Bigtable\BigtableClient;
+use Google\Cloud\Bigtable\Mutations;
+use Google\Cloud\TestUtils\ExponentialBackoffTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
+
+final class ReadTest extends TestCase
+{
+    use TestTrait;
+    use ExponentialBackoffTrait;
+
+    const INSTANCE_ID_PREFIX = 'phpunit-test-';
+    const TABLE_ID_PREFIX = 'mobile-time-series-';
+
+    private static $bigtableInstanceAdminClient;
+    private static $bigtableTableAdminClient;
+    private static $instanceId;
+    private static $tableId;
+    private static $timestampMicros;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::requireGrpc();
+        self::checkProjectEnvVarBeforeClass();
+
+        self::$bigtableInstanceAdminClient = new BigtableInstanceAdminClient();
+        self::$bigtableTableAdminClient = new BigtableTableAdminClient();
+        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
+        self::runSnippet('create_dev_instance', [
+            self::$projectId,
+            self::$instanceId,
+            self::$instanceId,
+        ]);
+
+        self::$tableId = uniqid(self::TABLE_ID_PREFIX);
+
+        $formattedParent = self::$bigtableTableAdminClient
+            ->instanceName(self::$projectId, self::$instanceId);
+        $table = (new Table())->setColumnFamilies(["stats_summary" => new ColumnFamily()]);
+        self::$bigtableTableAdminClient->createtable(
+            $formattedParent,
+            self::$tableId,
+            $table
+        );
+
+        $dataClient = new BigtableClient([
+            'projectId' => self::$projectId,
+        ]);
+
+        $table = $dataClient->table(self::$instanceId, self::$tableId);
+
+        self::$timestampMicros = time() * 1000 * 1000;
+        $table->mutateRows([
+            "phone#4c410523#20190501" => (new Mutations())
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestampMicros),
+            "phone#4c410523#20190502" => (new Mutations())
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestampMicros),
+            "phone#4c410523#20190505" => (new Mutations())
+                ->upsert('stats_summary', "connected_cell", 0, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros),
+            "phone#5c10102#20190501" => (new Mutations())
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestampMicros),
+            "phone#5c10102#20190502" => (new Mutations())
+                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
+                ->upsert('stats_summary', "connected_wifi", 0, self::$timestampMicros)
+                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros)
+        ]);
+    }
+
+    public function setUp(): void
+    {
+        $this->useResourceExhaustedBackoff();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        $instanceName = self::$bigtableInstanceAdminClient->instanceName(self::$projectId, self::$instanceId);
+        self::$bigtableInstanceAdminClient->deleteInstance($instanceName);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadRow()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_row"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.003 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadRowPartial()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_row_partial"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	os_build: PQ2A.190405.003 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadRows()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_rows"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.003 @%1$s
+
+Reading data for row phone#4c410523#20190502
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.004 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadRowRange()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_row_range"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.003 @%1$s
+
+Reading data for row phone#4c410523#20190502
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.004 @%1$s
+
+Reading data for row phone#4c410523#20190505
+Column Family stats_summary
+	connected_cell: 0 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadRowRanges()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_row_ranges"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.003 @%1$s
+
+Reading data for row phone#4c410523#20190502
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.004 @%1$s
+
+Reading data for row phone#4c410523#20190505
+Column Family stats_summary
+	connected_cell: 0 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190406.000 @%1$s
+
+Reading data for row phone#5c10102#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190401.002 @%1$s
+
+Reading data for row phone#5c10102#20190502
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 0 @%1$s
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadPrefix()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_prefix"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.003 @%1$s
+
+Reading data for row phone#4c410523#20190502
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190405.004 @%1$s
+
+Reading data for row phone#4c410523#20190505
+Column Family stats_summary
+	connected_cell: 0 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190406.000 @%1$s
+
+Reading data for row phone#5c10102#20190501
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 1 @%1$s
+	os_build: PQ2A.190401.002 @%1$s
+
+Reading data for row phone#5c10102#20190502
+Column Family stats_summary
+	connected_cell: 1 @%1$s
+	connected_wifi: 0 @%1$s
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadFilter()
+    {
+        $output = self::runSnippet('read_snippets', [
+            self::$projectId,
+            self::$instanceId,
+            self::$tableId,
+            "read_filter"
+        ]);
+
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family stats_summary
+	os_build: PQ2A.190405.003 @%1$s
+
+Reading data for row phone#4c410523#20190502
+Column Family stats_summary
+	os_build: PQ2A.190405.004 @%1$s
+
+Reading data for row phone#4c410523#20190505
+Column Family stats_summary
+	os_build: PQ2A.190406.000 @%1$s
+
+Reading data for row phone#5c10102#20190501
+Column Family stats_summary
+	os_build: PQ2A.190401.002 @%1$s
+
+Reading data for row phone#5c10102#20190502
+Column Family stats_summary
+	os_build: PQ2A.190406.000 @%1$s', self::$timestampMicros);
+
+        $this->assertEquals($result, trim($output));
+    }
+}
