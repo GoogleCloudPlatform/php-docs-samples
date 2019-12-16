@@ -2,5 +2,10 @@
     "require": {
         "google/cloud-bigtable": "^1.0.0",
         "psr/cache": "^1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Bigtable\\Tests\\": "test"
+        }
     }
 }
