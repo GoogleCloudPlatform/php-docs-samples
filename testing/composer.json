@@ -1,6 +1,6 @@
 {
     "require": {
         "google/cloud-tools": "dev-master",
-        "phpunit/phpunit": "^5"
+        "phpunit/phpunit": "^7"
     }
 }
