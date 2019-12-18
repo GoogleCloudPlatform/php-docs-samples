@@ -29,7 +29,10 @@ FLAKES=(
 )
 
 # Directories we do not want to run tests in, even if they exist
-SKIP_TESTS=$(find appengine/php55 -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \;)
+SKIP_TESTS=()
+SKIP_TESTS+=$(find appengine/php55 -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \;)
+# Try not skipping flex tests for now
+#SKIP_TESTS+=$(find appengine/flexible -name 'phpunit.xml*' -not -path '*vendor/*' -exec dirname {} \;)
 
 # tests to run with grpc.so disabled
 REST_TESTS=(
