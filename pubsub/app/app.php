@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\PubSub;
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Google\Cloud\PubSub\PubSubClient;
@@ -69,13 +70,12 @@ $app->get('/fetch_messages', function () use ($app) {
     return new JsonResponse($messages);
 });
 
-$app->post('/receive_message', function () use ($app) {
+$app->post('/receive_message', function (Request $request) use ($app) {
     // pull the message from the post body
-    $json = $app['request']->getContent();
-    $request = json_decode($json, true);
+    $json = json_decode($request->getContent(), true);
     if (
-        !isset($request['message']['data'])
-        || !$message = base64_decode($request['message']['data'])
+        !isset($json['message']['data'])
+        || !$message = base64_decode($json['message']['data'])
     ) {
         return new Response('', 400);
     }
@@ -88,11 +88,11 @@ $app->post('/receive_message', function () use ($app) {
     return new Response();
 });
 
-$app->post('/send_message', function () use ($app) {
+$app->post('/send_message', function (Request $request) use ($app) {
     $projectId = $app['project_id'];
     $topicName = $app['topic'];
     # [START gae_flex_pubsub_push]
-    if ($message = $app['request']->get('message')) {
+    if ($message = $request->get('message')) {
         // Publish the pubsub message to the topic
         $pubsub = new PubSubClient([
             'projectId' => $projectId,

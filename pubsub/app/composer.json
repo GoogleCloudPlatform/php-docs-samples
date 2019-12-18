@@ -4,8 +4,8 @@
     "google/cloud-pubsub": "^1.5",
     "google/cloud-datastore": "^1.2",
     "silex/silex": "^2.3",
-    "symfony/twig-bridge": "~2.7|3.0.*",
-    "twig/twig": "~1.8|~2.0"
+    "twig/twig": "^2.12",
+    "symfony/twig-bridge": "^4.4"
   },
   "require-dev": {
     "paragonie/random_compat": "^2.0",
