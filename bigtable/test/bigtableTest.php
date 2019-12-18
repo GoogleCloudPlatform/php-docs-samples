@@ -2,42 +2,23 @@
 
 namespace Google\Cloud\Samples\Bigtable\Tests;
 
-use Google\Cloud\Bigtable\BigtableClient;
-use PHPUnit\Framework\TestCase;
-
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
-use Google\Cloud\Bigtable\Admin\V2\Table\View;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
+use PHPUnit\Framework\TestCase;
 
 final class BigtableTest extends TestCase
 {
-    use TestTrait, ExponentialBackoffTrait;
+    use BigtableTestTrait;
 
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
-    private static $instanceAdminClient;
-    private static $tableAdminClient;
-    private static $bigtableClient;
-    private static $instanceId;
+
     private static $clusterId;
 
     public static function setUpBeforeClass()
     {
-        self::checkProjectEnvVarBeforeClass();
-        self::$instanceAdminClient = new BigtableInstanceAdminClient();
-        self::$tableAdminClient = new BigtableTableAdminClient();
-        self::$bigtableClient = new BigtableClient([
-            'projectId' => self::$projectId,
-        ]);
-
-        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
-        self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
-
-        self::create_production_instance(self::$projectId, self::$instanceId, self::$clusterId);
+        self::setUpBigtableVars();
     }
 
     public function setUp()
@@ -45,8 +26,31 @@ final class BigtableTest extends TestCase
         $this->useResourceExhaustedBackoff();
     }
 
+    public function testCreateProductionInstance()
+    {
+        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
+        self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
+
+        $content = self::runSnippet('create_production_instance', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId
+        ]);
+
+        $instanceName = self::$instanceAdminClient->instanceName(
+            self::$projectId,
+            self::$instanceId
+        );
+
+        $this->checkInstance($instanceName);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateAndDeleteCluster()
     {
+        // Create a new cluster as last cluster in an instance cannot be deleted
         $clusterId = uniqid(self::CLUSTER_ID_PREFIX);
 
         $content = self::runSnippet('create_cluster', [
@@ -57,7 +61,11 @@ final class BigtableTest extends TestCase
         ]);
         $array = explode(PHP_EOL, $content);
 
-        $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, self::$instanceId, $clusterId);
+        $clusterName = self::$instanceAdminClient->clusterName(
+            self::$projectId,
+            self::$instanceId,
+            $clusterId
+        );
 
         $this->checkCluster($clusterName);
 
@@ -95,23 +103,9 @@ final class BigtableTest extends TestCase
         $this->cleanInstance(self::$projectId, $instanceId);
     }
 
-    public function testCreateProductionInstance()
-    {
-        $instanceId = uniqid(self::INSTANCE_ID_PREFIX);
-        $clusterId = uniqid(self::CLUSTER_ID_PREFIX);
-
-        $content = self::runSnippet('create_production_instance', [
-            self::$projectId,
-            $instanceId,
-            $clusterId
-        ]);
-
-        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, $instanceId);
-
-        $this->checkInstance($instanceName);
-        $this->cleanInstance(self::$projectId, $instanceId);
-    }
-
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testListInstances()
     {
         $content = self::runSnippet('list_instance', [
@@ -125,6 +119,9 @@ final class BigtableTest extends TestCase
         $this->assertContains(self::$instanceId, $array);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testListTable()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -141,6 +138,9 @@ final class BigtableTest extends TestCase
         $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/tables/' . $tableId, $array);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testListColumnFamilies()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -166,6 +166,9 @@ final class BigtableTest extends TestCase
         $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000s"}]}}}', $array);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testListInstanceClusters()
     {
         $content = self::runSnippet('list_instance_clusters', [
@@ -179,7 +182,10 @@ final class BigtableTest extends TestCase
         $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
     }
 
-    public function testcreate_table()
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testCreateTable()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
 
@@ -194,6 +200,9 @@ final class BigtableTest extends TestCase
         $this->checkTable($tableName);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateFamilyGcUnion()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -226,6 +235,9 @@ final class BigtableTest extends TestCase
         $this->checkRule($tableName, 'cf3', $gcRuleCompare);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateFamilyGcNested()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -267,6 +279,9 @@ final class BigtableTest extends TestCase
         $this->checkRule($tableName, 'cf5', $gcRuleCompare);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateFamilyGcMaxVersions()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -290,6 +305,9 @@ final class BigtableTest extends TestCase
         $this->checkRule($tableName, 'cf2', $gcRuleCompare);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateFamilyGcMaxAge()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -313,6 +331,9 @@ final class BigtableTest extends TestCase
         $this->checkRule($tableName, 'cf1', $gcRuleCompare);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateFamilyGcIntersection()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -345,6 +366,9 @@ final class BigtableTest extends TestCase
         $this->checkRule($tableName, 'cf4', $gcRuleCompare);
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testDeleteTable()
     {
         $tableId = uniqid(self::TABLE_ID_PREFIX);
@@ -369,6 +393,9 @@ final class BigtableTest extends TestCase
         }
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testHelloWorld()
     {
         $this->requireGrpc();
@@ -395,15 +422,9 @@ final class BigtableTest extends TestCase
         $this->assertContains(sprintf('Deleted %s table.', $tableId), $array);
     }
 
-    private static function create_production_instance($projectId, $instanceId, $clusterId)
-    {
-        $content = self::runSnippet('create_production_instance', [
-            $projectId,
-            $instanceId,
-            $clusterId
-        ]);
-    }
-
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testDeleteInstance()
     {
         $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, self::$instanceId);
