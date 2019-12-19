@@ -19,5 +19,13 @@
         <testsuite name="PHP memcache test">
             <directory>test</directory>
         </testsuite>
-  </testsuites>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+            <exclude>
+              <directory suffix=".php">./vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

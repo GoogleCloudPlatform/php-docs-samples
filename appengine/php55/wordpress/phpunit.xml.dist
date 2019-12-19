@@ -23,4 +23,12 @@
     <php>
         <env name="PHPUNIT_TESTS" value="1"/>
     </php>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+            <exclude>
+              <directory suffix=".php">./vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

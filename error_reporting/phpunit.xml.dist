@@ -26,6 +26,9 @@
     <filter>
         <whitelist>
             <file>quickstart.php</file>
+            <exclude>
+              <directory suffix=".php">./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>

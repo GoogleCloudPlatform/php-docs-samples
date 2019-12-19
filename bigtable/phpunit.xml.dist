@@ -36,6 +36,9 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory>./src</directory>
+            <exclude>
+              <directory suffix=".php">./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
