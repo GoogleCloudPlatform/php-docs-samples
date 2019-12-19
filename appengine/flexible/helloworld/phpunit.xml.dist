@@ -27,7 +27,7 @@
         <whitelist>
             <directory suffix=".php">./web</directory>
             <exclude>
-                <directory suffix=".php">./vendor</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

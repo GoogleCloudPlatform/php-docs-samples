@@ -30,7 +30,7 @@
             <file>spanner.php</file>
             <file>datastore.php</file>
             <exclude>
-              <directory suffix=".php">./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

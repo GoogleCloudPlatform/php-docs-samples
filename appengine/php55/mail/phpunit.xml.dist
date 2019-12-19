@@ -29,7 +29,7 @@
             <file>handle_bounced_email.php</file>
             <file>handle_incoming_email.php</file>
             <exclude>
-              <directory suffix=".php">./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

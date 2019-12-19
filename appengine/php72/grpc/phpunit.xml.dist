@@ -29,7 +29,7 @@
             <file>monitoring.php</file>
             <file>spanner.php</file>
             <exclude>
-              <directory suffix=".php">./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

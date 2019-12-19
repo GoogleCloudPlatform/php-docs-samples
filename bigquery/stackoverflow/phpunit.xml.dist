@@ -28,7 +28,7 @@
             <file>shakespeare.php</file>
             <directory suffix=".php">./src</directory>
             <exclude>
-              <directory suffix=".php">./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

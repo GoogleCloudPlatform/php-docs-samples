@@ -19,7 +19,7 @@
         <testsuite name="App Engine for PHP 7.2 WordPress test">
             <directory>test</directory>
             <exclude>
-              <directory suffix=".php">./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </testsuite>
     </testsuites>

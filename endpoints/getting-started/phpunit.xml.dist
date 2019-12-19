@@ -28,7 +28,7 @@
             <file>app.php</file>
             <file>EndpointsCommand.php</file>
             <exclude>
-              <directory suffix=".php">./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
