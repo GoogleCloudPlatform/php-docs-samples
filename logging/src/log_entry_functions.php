@@ -18,10 +18,14 @@
 namespace Google\Cloud\Samples\Logging;
 
 use Google\Cloud\Core\Iterator\ItemIterator;
-// [START logging_use]
+// [START logging_write_log_entry]
+// [START logging_list_log_entries]
+// [START logging_delete_log]
 use Google\Cloud\Logging\LoggingClient;
 
-// [END logging_use]
+// [END logging_write_log_entry]
+// [END logging_list_log_entries]
+// [END logging_delete_log]
 
 // [START logging_write_log_entry]
 /** Write a log message via the Stackdriver Logging API.
