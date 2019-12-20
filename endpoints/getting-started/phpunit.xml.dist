@@ -27,6 +27,9 @@
         <whitelist>
             <file>app.php</file>
             <file>EndpointsCommand.php</file>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

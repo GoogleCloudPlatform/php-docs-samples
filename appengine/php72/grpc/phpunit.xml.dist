@@ -28,6 +28,9 @@
             <file>index.php</file>
             <file>monitoring.php</file>
             <file>spanner.php</file>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

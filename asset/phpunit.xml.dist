@@ -23,6 +23,9 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./src</directory>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>

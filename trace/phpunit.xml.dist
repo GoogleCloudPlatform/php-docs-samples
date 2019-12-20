@@ -26,6 +26,9 @@
     <filter>
         <whitelist>
             <file>trace-sample.php</file>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>

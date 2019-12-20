@@ -29,6 +29,9 @@
             <file>monitoring.php</file>
             <file>spanner.php</file>
             <file>datastore.php</file>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

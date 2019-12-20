@@ -26,6 +26,9 @@
     <filter>
         <whitelist>
             <file>app.php</file>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
