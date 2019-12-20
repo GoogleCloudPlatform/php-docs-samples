@@ -2,7 +2,7 @@
 
 ## Description
 
-All code in the `snippets` directory demonstrate how to invoke
+All code in the `src` directory demonstrate how to invoke
 [Google BigQuery][bigquery] from PHP.
 
 [bigquery]: https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
