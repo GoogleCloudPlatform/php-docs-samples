@@ -1,0 +1,5 @@
+runtime: custom
+env: flex
+
+env_variables:
+  PHP_OPCACHE_VALIDATE_TIMESTAMPS: 0
