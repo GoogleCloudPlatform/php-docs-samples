@@ -450,6 +450,8 @@ Column Family stats_summary
 
     /**
      * @runInSeparateProcess
+     * @retryAttempts 3
+     * @retryDelaySeconds 10
      */
     public function testFilterLimitTimestampRange()
     {
