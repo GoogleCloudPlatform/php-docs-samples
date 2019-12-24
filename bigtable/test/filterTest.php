@@ -20,10 +20,12 @@ namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Google\Cloud\Bigtable\Mutations;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 final class FilterTest extends TestCase
 {
     use BigtableTestTrait;
+    use RetryTrait;
 
     const INSTANCE_ID_PREFIX = 'phpunit-test-';
     const TABLE_ID_PREFIX = 'mobile-time-series-';
