@@ -72,9 +72,6 @@ final class ReadTest extends TestCase
         self::deleteBigtableInstance();
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadRow()
     {
         $output = self::runSnippet('read_snippets', [
@@ -93,9 +90,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadRowPartial()
     {
         $output = self::runSnippet('read_snippets', [
@@ -112,9 +106,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadRows()
     {
         $output = self::runSnippet('read_snippets', [
@@ -139,9 +130,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadRowRange()
     {
         $output = self::runSnippet('read_snippets', [
@@ -172,9 +160,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadRowRanges()
     {
         $output = self::runSnippet('read_snippets', [
@@ -217,9 +202,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadPrefix()
     {
         $output = self::runSnippet('read_snippets', [
@@ -262,9 +244,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadFilter()
     {
         $output = self::runSnippet('read_snippets', [
