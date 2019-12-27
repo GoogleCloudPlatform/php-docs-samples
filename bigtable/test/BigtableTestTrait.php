@@ -99,14 +99,7 @@ trait BigtableTestTrait
 
     private static function runSnippet($sampleName, $params = [])
     {
-        // Determine the snippet filename
-        $sampleFile = $sampleName;
-        if ('/' !== $sampleName[0]) {
-            // Default to 'src/' in sample directory
-            $reflector = new ReflectionClass(get_class());
-            $testDir = dirname($reflector->getFileName());
-            $sampleFile = sprintf('%s/../src/%s.php', $testDir, $sampleName);
-        }
+        $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
 
         $testFunc = function () use ($sampleFile, $params) {
             return shell_exec(sprintf(
