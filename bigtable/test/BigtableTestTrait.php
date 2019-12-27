@@ -26,7 +26,6 @@ use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
-use ReflectionClass;
 
 trait BigtableTestTrait
 {
