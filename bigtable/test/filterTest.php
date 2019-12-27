@@ -20,10 +20,12 @@ namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Google\Cloud\Bigtable\Mutations;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 final class FilterTest extends TestCase
 {
     use BigtableTestTrait;
+    use RetryTrait;
 
     const INSTANCE_ID_PREFIX = 'phpunit-test-';
     const TABLE_ID_PREFIX = 'mobile-time-series-';
@@ -84,9 +86,6 @@ final class FilterTest extends TestCase
         self::deleteBigtableInstance();
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitRowSample()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -99,9 +98,6 @@ final class FilterTest extends TestCase
         $this->assertContains($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitRowRegex()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -132,9 +128,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitCellsPerCol()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -189,9 +182,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitCellsPerRow()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -233,9 +223,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitCellsPerRowOffset()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -276,9 +263,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitColFamilyRegex()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -321,9 +305,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitColQualifierRegex()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -361,9 +342,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitColRange()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -390,9 +368,6 @@ Column Family cell_plan
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitValueRange()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -413,9 +388,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitValueRegex()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -449,7 +421,8 @@ Column Family stats_summary
     }
 
     /**
-     * @runInSeparateProcess
+     * @retryAttempts 3
+     * @retryDelaySeconds 10
      */
     public function testFilterLimitTimestampRange()
     {
@@ -467,9 +440,6 @@ Column Family cell_plan
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitBlockAll()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -484,9 +454,6 @@ Column Family cell_plan
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterLimitPassAll()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -541,9 +508,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterModifyStripValue()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -598,9 +562,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterModifyApplyLabel()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -655,9 +616,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterComposingChain()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -691,9 +649,6 @@ Column Family cell_plan
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterComposingInterleave()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -745,9 +700,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFilterComposingCondition()
     {
         $output = self::runSnippet('filter_snippets', [

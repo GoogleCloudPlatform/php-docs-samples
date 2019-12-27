@@ -95,4 +95,22 @@ trait BigtableTestTrait
         );
         self::$instanceAdminClient->deleteInstance($instanceName);
     }
+
+    private static function runSnippet($sampleName, $params = [])
+    {
+        $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
+
+        $testFunc = function () use ($sampleFile, $params) {
+            return shell_exec(sprintf(
+                'php %s %s',
+                $sampleFile,
+                implode(' ', array_map('escapeshellarg', $params))
+            ));
+        };
+
+        if (isset(self::$backoff)) {
+            return self::$backoff->execute($testFunc);
+        }
+        return $testFunc();
+    }
 }
