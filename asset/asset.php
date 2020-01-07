@@ -28,7 +28,8 @@ $application = new Application();
 // Create Bucket ACL command
 $application->add(new Command('export'))
     ->setDescription('Export assets for given projec to specified path.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command exports assets for given project to specified path.
 
 <info>php %command.full_name% --help</info>
@@ -46,7 +47,8 @@ EOF
 // Create Bucket Default ACL command
 $application->add(new Command('batch-get-history'))
     ->setDescription('Batch get the history of assets.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command batch gets history of assets.
 
 <info>php %command.full_name% --help</info>
@@ -65,7 +67,8 @@ EOF
 // Create Feed Default ACL command
 $application->add(new Command('create-feed'))
     ->setDescription('Create real time feed.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command create real time feed.
 
 <info>php %command.full_name% --help</info>
@@ -88,7 +91,8 @@ EOF
 // Get Feed Default ACL command
 $application->add(new Command('get-feed'))
     ->setDescription('Get real time feed.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command get real time feed.
 
 <info>php %command.full_name% --help</info>
@@ -105,7 +109,8 @@ EOF
 // List Feeds Default ACL command
 $application->add(new Command('list-feeds'))
     ->setDescription('List real time feed under a resource.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command list real time feeds.
 
 <info>php %command.full_name% --help</info>
@@ -122,7 +127,8 @@ EOF
 // Update Feed Default ACL command
 $application->add(new Command('update-feed'))
     ->setDescription('Update real time feed.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command update assetNames of a real time feed.
 
 <info>php %command.full_name% --help</info>
@@ -133,15 +139,16 @@ EOF
     ->addArgument('assetNames', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'The assets of which the feed will listen to')
 
     ->setCode(function ($input, $output) {
-        $feedId = $input->getArgument('feedId');
+        $feedName = $input->getArgument('feedName');
         $assetNames = $input->getArgument('assetNames');
-        update_feed($feedId, $assetNames);
+        update_feed($feedName, $assetNames);
     });
 
 // Delete Feed Default ACL command
 $application->add(new Command('delete-feed'))
     ->setDescription('Delete real time feed.')
-    ->setHelp(<<<EOF
+    ->setHelp(
+        <<<EOF
 The <info>%command.name%</info> command delete real time feed.
 
 <info>php %command.full_name% --help</info>

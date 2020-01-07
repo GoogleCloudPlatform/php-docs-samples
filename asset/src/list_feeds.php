@@ -22,8 +22,6 @@ use Google\Cloud\Asset\V1\AssetServiceClient;
 
 /**
  * List real time feeds sgiven their parents.
- *
- * @param string $parent of feeds.
  */
 function list_feeds($parent)
 {

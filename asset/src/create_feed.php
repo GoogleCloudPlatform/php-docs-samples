@@ -25,23 +25,21 @@ use Google\Cloud\Asset\V1\PubsubDestination;
 
 /**
  * Create a real time feed.
- *
- * @param string $parent of feeds.
  */
-function create_feed($parent, $feedId, $topic, $asset_names)
+function create_feed($parent, $feedId, $topic, $assetNames)
 {
     $client = new AssetServiceClient();
     
     $feed = new Feed();
-    $feed_output_config = new FeedOutputConfig();
-    $pubsub_destination = new PubsubDestination();
-    $pubsub_destination->setTopic($topic);
-    $feed_output_config->setPubsubDestination($pubsub_destination);
-    $feed->setAssetNames($asset_names);
-    $feed->setFeedOutputConfig($feed_output_config);
+    $feedOutputConfig = new FeedOutputConfig();
+    $pubsubDestination = new PubsubDestination();
+    $pubsubDestination->setTopic($topic);
+    $feedOutputConfig->setPubsubDestination($pubsubDestination);
+    $feed->setAssetNames($assetNames);
+    $feed->setFeedOutputConfig($feedOutputConfig);
 
-    $created_feed = $client->CreateFeed($parent, $feedId, $feed);
+    $createdFeed = $client->CreateFeed($parent, $feedId, $feed);
 
-    echo $created_feed->getName();
+    echo $createdFeed->getName();
 }
 # [END asset_quickstart_create_feed]

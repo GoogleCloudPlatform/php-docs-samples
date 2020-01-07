@@ -22,8 +22,6 @@ use Google\Cloud\Asset\V1\AssetServiceClient;
 
 /**
  * Get real time feed given its name.
- *
- * @param string $feedId the Name of feed.
  */
 function delete_feed($feedName)
 {

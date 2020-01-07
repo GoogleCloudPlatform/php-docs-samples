@@ -24,21 +24,19 @@ use Google\Protobuf\FieldMask;
 
 /**
  * Create a real time feed.
- *
- * @param string $parent of feeds.
  */
-function update_feed($feedName, $asset_names)
+function update_feed($feedName, $assetNames)
 {
     $client = new AssetServiceClient();
     
     $new_feed = new Feed();
     $new_feed->setName($feedName);
-    $new_feed->setAssetNames($asset_names);
+    $new_feed->setAssetNames($assetNames);
     $updateMask = new FieldMask();
     $updateMask->setPaths(['asset_names']);
     
     $updated_feed = $client->UpdateFeed($new_feed, $updateMask);
 
-    echo 'Feeds updated';
+    echo 'Feed Updated ' . $updated_feed;
 }
 # [END asset_quickstart_create_feed]
