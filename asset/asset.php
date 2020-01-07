@@ -62,6 +62,99 @@ EOF
         batch_get_assets_history($projectId, $assetNames);
     });
 
+// Create Feed Default ACL command
+$application->add(new Command('create-feed'))
+    ->setDescription('Create real time feed.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command create real time feed.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('parent', InputArgument::REQUIRED, 'The parent of the feed')
+    ->addArgument('feedId', InputArgument::REQUIRED, 'The Id of the feed')
+    ->addArgument('topic', InputArgument::REQUIRED, 'The topic of the feed')
+    ->addArgument('assetNames', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'The assets of which the feed will listen to')
+
+    ->setCode(function ($input, $output) {
+        $parent = $input->getArgument('parent');
+        $feedId = $input->getArgument('feedId');
+        $topic = $input->getArgument('topic');
+        $assetNames = $input->getArgument('assetNames');
+        create_feed($parent, $feedId, $topic, $assetNames);
+    });
+
+// Get Feed Default ACL command
+$application->add(new Command('get-feed'))
+    ->setDescription('Get real time feed.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command get real time feed.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('feedName', InputArgument::REQUIRED, 'The Name of the feed will be got')
+
+    ->setCode(function ($input, $output) {
+        $feedName = $input->getArgument('feedName');
+        get_feed($feedName);
+    });
+
+// List Feeds Default ACL command
+$application->add(new Command('list-feeds'))
+    ->setDescription('List real time feed under a resource.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command list real time feeds.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('parent', InputArgument::REQUIRED, 'The resource parent of the feeds will be got')
+
+    ->setCode(function ($input, $output) {
+        $parent = $input->getArgument('parent');
+        list_feeds($parent);
+    });
+
+// Update Feed Default ACL command
+$application->add(new Command('update-feed'))
+    ->setDescription('Update real time feed.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command update assetNames of a real time feed.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('feedName', InputArgument::REQUIRED, 'The Id of the feed')
+    ->addArgument('assetNames', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'The assets of which the feed will listen to')
+
+    ->setCode(function ($input, $output) {
+        $feedId = $input->getArgument('feedId');
+        $assetNames = $input->getArgument('assetNames');
+        update_feed($feedId, $assetNames);
+    });
+
+// Delete Feed Default ACL command
+$application->add(new Command('delete-feed'))
+    ->setDescription('Delete real time feed.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command delete real time feed.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('feedName', InputArgument::REQUIRED, 'The Name of the feed to be deleted')
+
+    ->setCode(function ($input, $output) {
+        $feedName = $input->getArgument('feedName');
+        delete_feed($feedName);
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

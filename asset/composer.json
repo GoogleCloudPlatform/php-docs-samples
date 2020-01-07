@@ -1,13 +1,19 @@
 {
     "require": {
         "google/cloud-storage": "^1.9",
-        "google/cloud-asset": "^0.4.0",
+        "google/cloud-pubsub": "^1.11.1",
+        "google/cloud-asset": "^0.5.0",
         "symfony/console": " ^3.0"
     },
     "autoload": {
         "files": [
             "src/export_assets.php",
-            "src/batch_get_assets_history.php"
+            "src/batch_get_assets_history.php",
+	        "src/create_feed.php",
+            "src/get_feed.php",
+            "src/list_feeds.php",
+            "src/delete_feed.php",
+            "src/update_feed.php"
         ]
     }
 }
