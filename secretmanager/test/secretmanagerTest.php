@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
+use Google\ApiCore\ApiException as GaxApiException;
 use Google\Cloud\SecretManager\V1beta1\Replication;
 use Google\Cloud\SecretManager\V1beta1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1beta1\Secret;
@@ -101,7 +102,7 @@ class secretmanagerTest extends TestCase
     {
         try {
             self::$client->deleteSecret($name);
-        } catch (\Google\ApiCore\ApiException $e) {
+        } catch (GaxApiException $e) {
             if ($e->getStatus() != 'NOT_FOUND') {
                 throw $e;
             }
