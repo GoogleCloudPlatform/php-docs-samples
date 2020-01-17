@@ -32,8 +32,8 @@ list($_, $projectId, $secretId) = $argv;
 
 // [START secretmanager_update_secret]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1Beta1\Secret;
-use Google\Cloud\SecretManager\V1Beta1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1beta1\Secret;
+use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
 use Google\Protobuf\FieldMask;
 
 /** Uncomment and populate these variables in your code */

@@ -19,12 +19,12 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
-use Google\Cloud\SecretManager\V1Beta1\Replication;
-use Google\Cloud\SecretManager\V1Beta1\Replication\Automatic;
-use Google\Cloud\SecretManager\V1Beta1\Secret;
-use Google\Cloud\SecretManager\V1Beta1\SecretManagerServiceClient;
-use Google\Cloud\SecretManager\V1Beta1\SecretPayload;
-use Google\Cloud\SecretManager\V1Beta1\SecretVersion;
+use Google\Cloud\SecretManager\V1beta1\Replication;
+use Google\Cloud\SecretManager\V1beta1\Replication\Automatic;
+use Google\Cloud\SecretManager\V1beta1\Secret;
+use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1beta1\SecretPayload;
+use Google\Cloud\SecretManager\V1beta1\SecretVersion;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
