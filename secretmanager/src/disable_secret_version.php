@@ -45,7 +45,7 @@ $client = new SecretManagerServiceClient();
 // Build the resource name of the secret version.
 $name = $client->secretVersionName($projectId, $secretId, $versionId);
 
-// Access the secret version.
+// Disable the secret version.
 $response = $client->disableSecretVersion($name);
 
 // Print a success message.
