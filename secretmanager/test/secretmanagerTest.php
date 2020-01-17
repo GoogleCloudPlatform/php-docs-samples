@@ -113,9 +113,9 @@ class secretmanagerTest extends TestCase
         $name = self::$client->parseName(self::$testSecretVersion->getName());
 
         $output = $this->runSnippet('access_secret_version', [
-          $name['project'],
-          $name['secret'],
-          $name['secret_version'],
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
         ]);
 
         $this->assertContains('my super secret data', $output);
