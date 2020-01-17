@@ -2,14 +2,14 @@
 /*
  * Copyright 2020 Google LLC.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an 'AS IS' BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -108,31 +108,14 @@ class secretmanagerTest extends TestCase
         }
     }
 
-    private static function explodeName(string $str): array
-    {
-        preg_match('/^projects\/(.+)(\/secrets\/(.+)(\/versions\/(.+))?)?$/U', $str, $matches);
-
-        if (count($matches) > 5) {
-            return [$matches[1], $matches[3], $matches[5]];
-        } elseif (count($matches) > 3) {
-            return [$matches[1], $matches[3]];
-        } elseif (count($matches) > 1) {
-            return [$matches[1]];
-        }
-
-        return [];
-    }
-
     public function testAccessSecretVersion()
     {
-        list($projectId, $secretId, $versionId) = self::explodeName(
-            self::$testSecretVersion->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretVersion->getName());
 
         $output = $this->runSnippet('access_secret_version', [
-          $projectId,
-          $secretId,
-          $versionId,
+          $name['project'],
+          $name['secret'],
+          $name['secret_version'],
         ]);
 
         $this->assertContains('my super secret data', $output);
@@ -140,13 +123,11 @@ class secretmanagerTest extends TestCase
 
     public function testAddSecretVersion()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecretWithVersions->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
         $output = $this->runSnippet('add_secret_version', [
-            $projectId,
-            $secretId,
+            $name['project'],
+            $name['secret'],
         ]);
 
         $this->assertContains('Added secret version', $output);
@@ -154,13 +135,11 @@ class secretmanagerTest extends TestCase
 
     public function testCreateSecret()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecretToCreateName
-        );
+        $name = self::$client->parseName(self::$testSecretToCreateName);
 
         $output = $this->runSnippet('create_secret', [
-            $projectId,
-            $secretId,
+            $name['project'],
+            $name['secret'],
         ]);
 
         $this->assertContains('Created secret', $output);
@@ -168,13 +147,11 @@ class secretmanagerTest extends TestCase
 
     public function testDeleteSecret()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecretToDelete->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretToDelete->getName());
 
         $output = $this->runSnippet('delete_secret', [
-            $projectId,
-            $secretId,
+            $name['project'],
+            $name['secret'],
         ]);
 
         $this->assertContains('Deleted secret', $output);
@@ -182,14 +159,12 @@ class secretmanagerTest extends TestCase
 
     public function testDestroySecretVersion()
     {
-        list($projectId, $secretId, $versionId) = self::explodeName(
-            self::$testSecretVersionToDestroy->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretVersionToDestroy->getName());
 
         $output = $this->runSnippet('destroy_secret_version', [
-            $projectId,
-            $secretId,
-            $versionId,
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
         ]);
 
         $this->assertContains('Destroyed secret version', $output);
@@ -197,14 +172,12 @@ class secretmanagerTest extends TestCase
 
     public function testDisableSecretVersion()
     {
-        list($projectId, $secretId, $versionId) = self::explodeName(
-            self::$testSecretVersionToDisable->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretVersionToDisable->getName());
 
         $output = $this->runSnippet('disable_secret_version', [
-            $projectId,
-            $secretId,
-            $versionId,
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
         ]);
 
         $this->assertContains('Disabled secret version', $output);
@@ -212,14 +185,12 @@ class secretmanagerTest extends TestCase
 
     public function testEnableSecretVersion()
     {
-        list($projectId, $secretId, $versionId) = self::explodeName(
-            self::$testSecretVersionToEnable->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretVersionToEnable->getName());
 
         $output = $this->runSnippet('enable_secret_version', [
-            $projectId,
-            $secretId,
-            $versionId,
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
         ]);
 
         $this->assertContains('Enabled secret version', $output);
@@ -227,14 +198,12 @@ class secretmanagerTest extends TestCase
 
     public function testGetSecretVersion()
     {
-        list($projectId, $secretId, $versionId) = self::explodeName(
-            self::$testSecretVersion->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretVersion->getName());
 
         $output = $this->runSnippet('get_secret_version', [
-            $projectId,
-            $secretId,
-            $versionId,
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
         ]);
 
         $this->assertContains('Got secret version', $output);
@@ -243,13 +212,11 @@ class secretmanagerTest extends TestCase
 
     public function testGetSecret()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecret->getName()
-        );
+        $name = self::$client->parseName(self::$testSecret->getName());
 
         $output = $this->runSnippet('get_secret', [
-            $projectId,
-            $secretId,
+            $name['project'],
+            $name['secret'],
         ]);
 
         $this->assertContains('secret', $output);
@@ -258,13 +225,11 @@ class secretmanagerTest extends TestCase
 
     public function testListSecretVersions()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecretWithVersions->getName()
-        );
+        $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
         $output = $this->runSnippet('list_secret_versions', [
-            $projectId,
-            $secretId,
+            $name['project'],
+            $name['secret'],
         ]);
 
         $this->assertContains('secret version', $output);
@@ -272,27 +237,23 @@ class secretmanagerTest extends TestCase
 
     public function testListSecrets()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecret->getName()
-        );
+        $name = self::$client->parseName(self::$testSecret->getName());
 
         $output = $this->runSnippet('list_secrets', [
-            $projectId,
+            $name['project'],
         ]);
 
         $this->assertContains('secret', $output);
-        $this->assertContains($secretId, $output);
+        $this->assertContains($name['secret'], $output);
     }
 
     public function testUpdateSecret()
     {
-        list($projectId, $secretId) = self::explodeName(
-            self::$testSecret->getName()
-        );
+        $name = self::$client->parseName(self::$testSecret->getName());
 
         $output = $this->runSnippet('update_secret', [
-            $projectId,
-            $secretId,
+            $name['project'],
+            $name['secret'],
         ]);
 
         $this->assertContains('Updated secret', $output);
