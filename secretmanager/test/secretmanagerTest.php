@@ -43,6 +43,8 @@ class secretmanagerTest extends TestCase
     private static $testSecretVersionToDisable;
     private static $testSecretVersionToEnable;
 
+    private static $iamUser = 'user:sethvargo@google.com';
+
     public static function setUpBeforeClass()
     {
         self::$client = new SecretManagerServiceClient();
@@ -222,6 +224,32 @@ class secretmanagerTest extends TestCase
 
         $this->assertContains('secret', $output);
         $this->assertContains('replication policy AUTOMATIC', $output);
+    }
+
+    public function testIamGrantAccess()
+    {
+        $name = self::$client->parseName(self::$testSecret->getName());
+
+        $output = $this->runSnippet('iam_grant_access', [
+            $name['project'],
+            $name['secret'],
+            self::$iamUser,
+        ]);
+
+        $this->assertContains('Updated IAM policy', $output);
+    }
+
+    public function testIamRevokeAccess()
+    {
+        $name = self::$client->parseName(self::$testSecret->getName());
+
+        $output = $this->runSnippet('iam_revoke_access', [
+            $name['project'],
+            $name['secret'],
+            self::$iamUser,
+        ]);
+
+        $this->assertContains('Updated IAM policy', $output);
     }
 
     public function testListSecretVersions()
