@@ -40,11 +40,30 @@ function remove_bucket_iam_member($bucketName, $role, $member)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $policy = $bucket->iam()->policy();
-    $policyBuilder = new PolicyBuilder($policy);
-    $policyBuilder->removeBinding($role, [$member]);
+    $iam = $bucket->iam();
+    $policy = $iam->policy(['requestedPolicyVersion' => 3]);
 
-    $bucket->iam()->setPolicy($policyBuilder->result());
-    printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
+    foreach ($policy['bindings'] as $i => $binding) {
+        // This example only remove member from bindings without a condition.
+        if ($binding['role'] == $role && !isset($binding['condition'])) {
+            $key = array_search($member, $binding['members']);
+            if ($key != false) {
+                unset($binding['members'][$key]);
+
+                // If the last member is removed from the binding, clean up
+                // the binding.
+                if (count($binding['members']) == 0) {
+                    unset($policy['bindings'][$i]);
+                }
+
+                $iam->setPolicy($policy);
+                printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
+                return;
+            }
+
+        }
+    }
+
+    throw new \RuntimeException('No matching role-member group(s) found.');
 }
 # [END remove_bucket_iam_member]
