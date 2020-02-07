@@ -49,6 +49,14 @@ function view_bucket_iam_members($bucketName)
         foreach ($binding['members'] as $member) {
             printf('  %s' . PHP_EOL, $member);
         }
+
+        if (isset($binding['condition'])) {
+            $condition = $binding['condition'];
+            printf('  with condition:' . PHP_EOL);
+            printf('    Title: %s' . PHP_EOL, $condition['title']);
+            printf('    Description: %s' . PHP_EOL, $condition['title']);
+            printf('    Expression: %s' . PHP_EOL, $condition['title']);
+        }
         printf(PHP_EOL);
     }
 }
