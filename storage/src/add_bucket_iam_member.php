@@ -31,12 +31,12 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  * @param string $role the role you want to add a given member to.
- * @param string $member the member you want to give the new role for the Cloud
+ * @param string[] $members the member(s) you want to give the new role for the Cloud
  * Storage bucket.
  *
  * @return void
  */
-function add_bucket_iam_member($bucketName, $role, $member)
+function add_bucket_iam_member($bucketName, $role, $members)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -45,11 +45,11 @@ function add_bucket_iam_member($bucketName, $role, $member)
 
     $policy['bindings'][] = [
         'role' => $role,
-        'members' => [$member]
+        'members' => $members
     ];
 
     $bucket->iam()->setPolicy($policy);
 
-    printf('User %s added to role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
+    printf('User %s added to role %s for bucket %s' . PHP_EOL, $members, $role, $bucketName);
 }
 # [END add_bucket_iam_member]

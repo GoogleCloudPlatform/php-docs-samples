@@ -25,6 +25,7 @@ namespace Google\Cloud\Samples\Storage;
 
 # [START add_bucket_conditional_iam_binding]
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Core\Iam\PolicyBuilder;
 
 /**
  * Adds a conditional IAM binding to a bucket's IAM policy.
@@ -41,19 +42,18 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @return void
  */
-function add_bucket_iam_member($bucketName, $role, $members, $title, $description, $expression)
+function add_bucket_conditional_iam_binding($bucketName, $role, $members, $title, $description, $expression)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
     $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
 
-    // Must set policy's version to 3 to use conditions.
-    $policy->setVersion(3);
+    $policy['version'] = 3;
 
     $policy['bindings'][] = [
         'role' => $role,
-        'members' => $member,
+        'members' => $members,
         'condition' => [
             'title' => $title,
             'description' => $description,

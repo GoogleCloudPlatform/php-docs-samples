@@ -7,6 +7,7 @@
     "autoload": {
         "files": [
             "src/add_bucket_acl.php",
+            "src/add_bucket_conditional_iam_binding.php",
             "src/add_bucket_default_acl.php",
             "src/add_bucket_iam_member.php",
             "src/add_bucket_label.php",
