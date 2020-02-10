@@ -60,7 +60,6 @@ function remove_bucket_iam_member($bucketName, $role, $member)
                 printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);
                 return;
             }
-
         }
     }
 

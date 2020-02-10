@@ -31,9 +31,9 @@ class IamCommandTest extends TestCase
 {
     use TestTrait;
 
-    static protected $storage;
-    static protected $user;
-    static protected $bucket;
+    protected static $storage;
+    protected static $user;
+    protected static $bucket;
     protected $commandTester;
 
     public static function setUpBeforeClass()
@@ -109,7 +109,8 @@ EOF;
         $this->assertTrue($foundRoleMember);
     }
 
-    public function testAddBucketConditionalIamBinding() {
+    public function testAddBucketConditionalIamBinding()
+    {
         $bucket = self::$bucket;
         $role = 'roles/storage.objectCreator';
         $user = self::$user;
@@ -154,7 +155,7 @@ EOF;
             }
         }
         $this->assertTrue($foundBinding);
-   }
+    }
 
     /**
      * @depends testAddBucketIamMember
