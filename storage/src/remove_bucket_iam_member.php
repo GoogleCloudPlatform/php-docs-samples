@@ -47,7 +47,7 @@ function remove_bucket_iam_member($bucketName, $role, $member)
         // This example only remove member from bindings without a condition.
         if ($binding['role'] == $role && !isset($binding['condition'])) {
             $key = array_search($member, $binding['members']);
-            if ($key != false) {
+            if ($key !== false) {
                 unset($binding['members'][$key]);
 
                 // If the last member is removed from the binding, clean up

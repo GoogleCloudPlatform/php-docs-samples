@@ -50,6 +50,9 @@ function add_bucket_iam_member($bucketName, $role, $members)
 
     $bucket->iam()->setPolicy($policy);
 
-    printf('User %s added to role %s for bucket %s' . PHP_EOL, $members, $role, $bucketName);
+    printf('Added the following member(s) to role %s for bucket %s' . PHP_EOL, $role, $bucketName);
+    foreach ($members as $member) {
+        printf('    %s' . PHP_EOL, $member);
+    }
 }
 # [END add_bucket_iam_member]
