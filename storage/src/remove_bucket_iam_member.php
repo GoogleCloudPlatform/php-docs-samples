@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Storage;
 
 # [START remove_bucket_iam_member]
-use Google\Cloud\Core\Iam\PolicyBuilder;
 use Google\Cloud\Storage\StorageClient;
 
 /**

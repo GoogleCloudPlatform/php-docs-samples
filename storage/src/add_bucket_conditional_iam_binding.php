@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Storage;
 
 # [START add_bucket_conditional_iam_binding]
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Core\Iam\PolicyBuilder;
 
 /**
  * Adds a conditional IAM binding to a bucket's IAM policy.

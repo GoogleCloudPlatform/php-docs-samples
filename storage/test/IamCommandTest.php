@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\IamCommand;
-use Google\Cloud\Core\Iam\PolicyBuilder;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
