@@ -23,8 +23,6 @@
 # [START iap_validate_jwt]
 namespace Google\Cloud\Samples\Iap;
 
-# Imports OAuth Guzzle HTTP libraries.
-use GuzzleHttp\Client;
 # Imports Google auth libraries for IAP validation
 use Google\Auth\AccessToken;
 
