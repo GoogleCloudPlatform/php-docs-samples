@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@
  * DO NOT EDIT! This is a generated sample ("Request",  "job_search_create_job_custom_attributes")
  */
 
+// sample-metadata
+//   title:
+//   description: Create Job with Custom Attributes
+//   usage: php samples/V4beta1/JobSearchCreateJobCustomAttributes.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"] [--company_name "Company name, e.g. projects/your-project/companies/company-id"] [--requisition_id "Job requisition ID, aka Posting ID. Unique per job."] [--language_code "en-US"]
 // [START job_search_create_job_custom_attributes]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\JobServiceClient;
 use Google\Cloud\Talent\V4beta1\Job;
@@ -33,8 +37,6 @@ use Google\Cloud\Talent\V4beta1\Job;
  */
 function sampleCreateJob($projectId, $tenantId, $companyName, $requisitionId, $languageCode)
 {
-    // [START job_search_create_job_custom_attributes_core]
-
     $jobServiceClient = new JobServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -54,8 +56,6 @@ function sampleCreateJob($projectId, $tenantId, $companyName, $requisitionId, $l
     } finally {
         $jobServiceClient->close();
     }
-
-    // [END job_search_create_job_custom_attributes_core]
 }
 // [END job_search_create_job_custom_attributes]
 

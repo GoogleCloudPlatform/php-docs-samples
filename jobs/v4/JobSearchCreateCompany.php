@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@
  * DO NOT EDIT! This is a generated sample ("Request",  "job_search_create_company")
  */
 
+// sample-metadata
+//   title:
+//   description: Create Company
+//   usage: php samples/V4beta1/JobSearchCreateCompany.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"] [--display_name "My Company Name"] [--external_id "Identifier of this company in my system"]
 // [START job_search_create_company]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\CompanyServiceClient;
 use Google\Cloud\Talent\V4beta1\Company;
@@ -33,8 +37,6 @@ use Google\Cloud\Talent\V4beta1\Company;
  */
 function sampleCreateCompany($projectId, $tenantId, $displayName, $externalId)
 {
-    // [START job_search_create_company_core]
-
     $companyServiceClient = new CompanyServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -55,8 +57,6 @@ function sampleCreateCompany($projectId, $tenantId, $displayName, $externalId)
     } finally {
         $companyServiceClient->close();
     }
-
-    // [END job_search_create_company_core]
 }
 // [END job_search_create_company]
 

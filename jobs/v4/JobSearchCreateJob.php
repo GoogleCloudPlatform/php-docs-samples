@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,16 @@
  * DO NOT EDIT! This is a generated sample ("Request",  "job_search_create_job")
  */
 
+// sample-metadata
+//   title:
+//   description: Create Job
+//   usage: php samples/V4beta1/JobSearchCreateJob.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"] [--company_name "Company name, e.g. projects/your-project/companies/company-id"] [--requisition_id "Job requisition ID, aka Posting ID. Unique per job."] [--title "Software Engineer"] [--description "This is a description of this <i>wonderful</i> job!"] [--job_application_url "https://www.example.org/job-posting/123"] [--address_one "1600 Amphitheatre Parkway, Mountain View, CA 94043"] [--address_two "111 8th Avenue, New York, NY 10011"] [--language_code "en-US"]
 // [START job_search_create_job]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\JobServiceClient;
 use Google\Cloud\Talent\V4beta1\Job;
-use Google\Cloud\Talent\V4beta1\Job_ApplicationInfo;
+use Google\Cloud\Talent\V4beta1\Job\ApplicationInfo;
 
 /**
  * Create Job.
@@ -34,8 +38,6 @@ use Google\Cloud\Talent\V4beta1\Job_ApplicationInfo;
  */
 function sampleCreateJob($projectId, $tenantId, $companyName, $requisitionId, $title, $description, $jobApplicationUrl, $addressOne, $addressTwo, $languageCode)
 {
-    // [START job_search_create_job_core]
-
     $jobServiceClient = new JobServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -50,7 +52,7 @@ function sampleCreateJob($projectId, $tenantId, $companyName, $requisitionId, $t
     // $languageCode = 'en-US';
     $formattedParent = $jobServiceClient->tenantName($projectId, $tenantId);
     $uris = [$jobApplicationUrl];
-    $applicationInfo = new Job_ApplicationInfo();
+    $applicationInfo = new ApplicationInfo();
     $applicationInfo->setUris($uris);
     $addresses = [$addressOne, $addressTwo];
     $job = new Job();
@@ -68,8 +70,6 @@ function sampleCreateJob($projectId, $tenantId, $companyName, $requisitionId, $t
     } finally {
         $jobServiceClient->close();
     }
-
-    // [END job_search_create_job_core]
 }
 // [END job_search_create_job]
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,17 @@
  * DO NOT EDIT! This is a generated sample ("RequestPagedAll",  "job_search_custom_ranking_search")
  */
 
+// sample-metadata
+//   title:
+//   description: Search Jobs using custom rankings
+//   usage: php samples/V4beta1/JobSearchCustomRankingSearch.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"]
 // [START job_search_custom_ranking_search]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\JobServiceClient;
 use Google\Cloud\Talent\V4beta1\RequestMetadata;
-use Google\Cloud\Talent\V4beta1\SearchJobsRequest_CustomRankingInfo;
-use Google\Cloud\Talent\V4beta1\SearchJobsRequest_CustomRankingInfo_ImportanceLevel;
+use Google\Cloud\Talent\V4beta1\SearchJobsRequest\CustomRankingInfo;
+use Google\Cloud\Talent\V4beta1\SearchJobsRequest\CustomRankingInfo\ImportanceLevel;
 
 /**
  * Search Jobs using custom rankings.
@@ -35,8 +39,6 @@ use Google\Cloud\Talent\V4beta1\SearchJobsRequest_CustomRankingInfo_ImportanceLe
  */
 function sampleSearchJobs($projectId, $tenantId)
 {
-    // [START job_search_custom_ranking_search_core]
-
     $jobServiceClient = new JobServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -49,9 +51,9 @@ function sampleSearchJobs($projectId, $tenantId)
     $requestMetadata->setDomain($domain);
     $requestMetadata->setSessionId($sessionId);
     $requestMetadata->setUserId($userId);
-    $importanceLevel = SearchJobsRequest_CustomRankingInfo_ImportanceLevel::EXTREME;
+    $importanceLevel = ImportanceLevel::EXTREME;
     $rankingExpression = '(someFieldLong + 25) * 0.25';
-    $customRankingInfo = new SearchJobsRequest_CustomRankingInfo();
+    $customRankingInfo = new CustomRankingInfo();
     $customRankingInfo->setImportanceLevel($importanceLevel);
     $customRankingInfo->setRankingExpression($rankingExpression);
     $orderBy = 'custom_ranking desc';
@@ -69,8 +71,6 @@ function sampleSearchJobs($projectId, $tenantId)
     } finally {
         $jobServiceClient->close();
     }
-
-    // [END job_search_custom_ranking_search_core]
 }
 // [END job_search_custom_ranking_search]
 

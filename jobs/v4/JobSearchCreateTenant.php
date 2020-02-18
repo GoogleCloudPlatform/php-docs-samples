@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@
  * DO NOT EDIT! This is a generated sample ("Request",  "job_search_create_tenant")
  */
 
+// sample-metadata
+//   title:
+//   description: Create Tenant for scoping resources, e.g. companies and jobs
+//   usage: php samples/V4beta1/JobSearchCreateTenant.php [--project_id "Your Google Cloud Project ID"] [--external_id "Your Unique Identifier for Tenant"]
 // [START job_search_create_tenant]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\TenantServiceClient;
 use Google\Cloud\Talent\V4beta1\Tenant;
@@ -28,8 +32,6 @@ use Google\Cloud\Talent\V4beta1\Tenant;
 /** Create Tenant for scoping resources, e.g. companies and jobs */
 function sampleCreateTenant($projectId, $externalId)
 {
-    // [START job_search_create_tenant_core]
-
     $tenantServiceClient = new TenantServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -46,8 +48,6 @@ function sampleCreateTenant($projectId, $externalId)
     } finally {
         $tenantServiceClient->close();
     }
-
-    // [END job_search_create_tenant_core]
 }
 // [END job_search_create_tenant]
 

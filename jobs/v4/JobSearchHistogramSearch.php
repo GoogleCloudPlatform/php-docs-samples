@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@
  * DO NOT EDIT! This is a generated sample ("RequestPagedAll",  "job_search_histogram_search")
  */
 
+// sample-metadata
+//   title:
+//   description: Search Jobs with histogram queries
+//   usage: php samples/V4beta1/JobSearchHistogramSearch.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"] [--query "count(base_compensation, [bucket(12, 20)])"]
 // [START job_search_histogram_search]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__. '/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\JobServiceClient;
 use Google\Cloud\Talent\V4beta1\HistogramQuery;
@@ -35,8 +39,6 @@ use Google\Cloud\Talent\V4beta1\RequestMetadata;
  */
 function sampleSearchJobs($projectId, $tenantId, $query)
 {
-    // [START job_search_histogram_search_core]
-
     $jobServiceClient = new JobServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -56,7 +58,7 @@ function sampleSearchJobs($projectId, $tenantId, $query)
 
     try {
         // Iterate through all elements
-        $pagedResponse = $jobServiceClient->searchJobs($formattedParent, $requestMetadata, ['customRankingInfo' => $customRankingInfo, 'orderBy' => $orderBy]);
+        $pagedResponse = $jobServiceClient->searchJobs($formattedParent, $requestMetadata, ['histogramQueries' => $histogramQueries]);
         foreach ($pagedResponse->iterateAllElements() as $responseItem) {
             printf('Job summary: %s'.PHP_EOL, $responseItem->getJobSummary());
             printf('Job title snippet: %s'.PHP_EOL, $responseItem->getJobTitleSnippet());
@@ -67,8 +69,6 @@ function sampleSearchJobs($projectId, $tenantId, $query)
     } finally {
         $jobServiceClient->close();
     }
-
-    // [END job_search_histogram_search_core]
 }
 // [END job_search_histogram_search]
 

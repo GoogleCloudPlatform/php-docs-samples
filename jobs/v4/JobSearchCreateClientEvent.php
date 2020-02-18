@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,17 @@
  * DO NOT EDIT! This is a generated sample ("Request",  "job_search_create_client_event")
  */
 
+// sample-metadata
+//   title:
+//   description: Creates a client event
+//   usage: php samples/V4beta1/JobSearchCreateClientEvent.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"] [--request_id "[request_id from ResponseMetadata]"] [--event_id "[Set this to a unique identifier]"]
 // [START job_search_create_client_event]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\EventServiceClient;
 use Google\Cloud\Talent\V4beta1\ClientEvent;
 use Google\Cloud\Talent\V4beta1\JobEvent;
-use Google\Cloud\Talent\V4beta1\JobEvent_JobEventType;
+use Google\Cloud\Talent\V4beta1\JobEvent\JobEventType;
 use Google\Protobuf\Timestamp;
 
 /**
@@ -39,8 +43,6 @@ use Google\Protobuf\Timestamp;
  */
 function sampleCreateClientEvent($projectId, $tenantId, $requestId, $eventId)
 {
-    // [START job_search_create_client_event_core]
-
     $eventServiceClient = new EventServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -57,7 +59,7 @@ function sampleCreateClientEvent($projectId, $tenantId, $requestId, $eventId)
     $createTime->setSeconds($seconds);
 
     // The type of event attributed to the behavior of the end user
-    $type = JobEvent_JobEventType::VIEW;
+    $type = JobEventType::VIEW;
 
     // List of job names associated with this event
     $jobsElement = 'projects/[Project ID]/tenants/[Tenant ID]/jobs/[Job ID]';
@@ -78,8 +80,6 @@ function sampleCreateClientEvent($projectId, $tenantId, $requestId, $eventId)
     } finally {
         $eventServiceClient->close();
     }
-
-    // [END job_search_create_client_event_core]
 }
 // [END job_search_create_client_event]
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,18 @@
  * DO NOT EDIT! This is a generated sample ("Request",  "job_search_delete_tenant")
  */
 
+// sample-metadata
+//   title:
+//   description: Delete Tenant
+//   usage: php samples/V4beta1/JobSearchDeleteTenant.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID)"]
 // [START job_search_delete_tenant]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\TenantServiceClient;
 
 /** Delete Tenant */
 function sampleDeleteTenant($projectId, $tenantId)
 {
-    // [START job_search_delete_tenant_core]
-
     $tenantServiceClient = new TenantServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -41,8 +43,6 @@ function sampleDeleteTenant($projectId, $tenantId)
     } finally {
         $tenantServiceClient->close();
     }
-
-    // [END job_search_delete_tenant_core]
 }
 // [END job_search_delete_tenant]
 

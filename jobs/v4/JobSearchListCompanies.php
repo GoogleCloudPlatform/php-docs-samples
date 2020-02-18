@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@
  * DO NOT EDIT! This is a generated sample ("RequestPagedAll",  "job_search_list_companies")
  */
 
+// sample-metadata
+//   title:
+//   description: List Companies
+//   usage: php samples/V4beta1/JobSearchListCompanies.php [--project_id "Your Google Cloud Project ID"] [--tenant_id "Your Tenant ID (using tenancy is optional)"]
 // [START job_search_list_companies]
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Google\Cloud\Talent\V4beta1\CompanyServiceClient;
 
@@ -32,8 +36,6 @@ use Google\Cloud\Talent\V4beta1\CompanyServiceClient;
  */
 function sampleListCompanies($projectId, $tenantId)
 {
-    // [START job_search_list_companies_core]
-
     $companyServiceClient = new CompanyServiceClient();
 
     // $projectId = 'Your Google Cloud Project ID';
@@ -51,8 +53,6 @@ function sampleListCompanies($projectId, $tenantId)
     } finally {
         $companyServiceClient->close();
     }
-
-    // [END job_search_list_companies_core]
 }
 // [END job_search_list_companies]
 
