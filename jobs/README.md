@@ -24,7 +24,7 @@ from PHP.
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ## Licensing
 
