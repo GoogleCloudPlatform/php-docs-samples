@@ -56,7 +56,8 @@ function sampleSearchJobs($projectId, $tenantId, $query)
 
     try {
         // Iterate through all elements
-        $pagedResponse = $jobServiceClient->searchJobs($formattedParent, $requestMetadata, ['customRankingInfo' => $customRankingInfo, 'orderBy' => $orderBy]);
+        $pagedResponse = $jobServiceClient->searchJobs($formattedParent, $requestMetadata, ['customRankingInfo' => $customRankingInfo, 'orderBy' => $orderBy, 'histogramQueries' => $histogramQueries]);
+        
         foreach ($pagedResponse->iterateAllElements() as $responseItem) {
             printf('Job summary: %s'.PHP_EOL, $responseItem->getJobSummary());
             printf('Job title snippet: %s'.PHP_EOL, $responseItem->getJobTitleSnippet());
