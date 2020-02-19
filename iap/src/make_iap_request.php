@@ -45,8 +45,8 @@ function make_iap_request($url, $clientId)
 
     // create the HTTP client
     $client = new Client([
-      'handler' => $stack,
-      'auth' => 'google_auth'
+        'handler' => $stack,
+        'auth' => 'google_auth'
     ]);
 
     // make the request
