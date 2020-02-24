@@ -267,7 +267,6 @@ the [Stackdriver Error Reporting UI][stackdriver-errorreporting-ui]! If you copi
 
 ## Send emails
 
-As stated in the [Migration guide from PHP 5.x to 7.x][cloud-migration] the Mail API or App Engine has been removed.
 The recommended way to send emails is to use a third-party mail provider such as [Sendgrid][sendgrid], [Mailgun][mailgun] or [Mailjet][mailjet]. 
 Hosting your application on GAE, most of these providers will offer you up to 30,000 emails per month and you will be charged only if you send more.
 You will have the possibility to track your email delivery and benefit from all the feature of a real email broadcasting system.
@@ -280,8 +279,7 @@ First you need to install the mailer component:
 composer require symfony/mailer
 ```
 
-Then depending on the provider you chose, you need to add the additional component, [Symfony mailer documentation][symfony-mailer]
-will give you all the specific per provider but here is an example with Mailgun:
+For this example, we will use `Mailgun`.  To use a different mail provider, see the [Symfony mailer documentation][symfony-mailer].
 
 ```
 composer require symfony/mailgun-mailer
@@ -310,7 +308,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class MailerController extends AbstractController
+class ExampleController extends AbstractController
 {
     /**
      * @Route("/email")
