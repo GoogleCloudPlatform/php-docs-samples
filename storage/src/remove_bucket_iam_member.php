@@ -40,8 +40,10 @@ function remove_bucket_iam_member($bucketName, $role, $member)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $policy = $bucket->iam()->policy();
+    $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
     $policyBuilder = new PolicyBuilder($policy);
+    $policyBuilder->setVersion(3);
+    // Replace with removing member.
     $policyBuilder->removeBinding($role, [$member]);
 
     $bucket->iam()->setPolicy($policyBuilder->result());
