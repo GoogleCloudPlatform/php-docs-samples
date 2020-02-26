@@ -41,10 +41,14 @@ function remove_bucket_iam_member($bucketName, $role, $member)
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
-    $policyBuilder = new PolicyBuilder($policy);
-    $policyBuilder->setVersion(3);
-    // Replace with removing member.
-    $policyBuilder->removeBinding($role, [$member]);
+    $policy['version'] = 3;
+
+    foreach ($policy['bindings'] as $binding) {
+      if ($binding['role'] == $role && !isset($binding['condition'])) {
+        array_diff($binding['members'], [$member]);
+        break;
+      }
+    }
 
     $bucket->iam()->setPolicy($policyBuilder->result());
     printf('User %s removed from role %s for bucket %s' . PHP_EOL, $member, $role, $bucketName);

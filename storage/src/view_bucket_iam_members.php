@@ -50,7 +50,7 @@ function view_bucket_iam_members($bucketName)
             printf('  %s' . PHP_EOL, $member);
         }
 
-        if (isset($policy['condition'])) {
+        if (isset($binding['condition'])) {
           printf('Condition Title: %s' . PHP_EOL, $policy['condition']['title']);
           printf('Condition Description: %s' . PHP_EOL, $policy['condition']['description']);
           printf('Condition Expression: %s' . PHP_EOL, $policy['condition']['expression']);
