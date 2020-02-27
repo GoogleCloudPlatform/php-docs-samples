@@ -41,9 +41,10 @@ function remove_bucket_iam_member($bucketName, $role, $member)
     $bucket = $storage->bucket($bucketName);
     $iam = $bucket->iam();
     $policy = $iam->policy(['requestedPolicyVersion' => 3]);
+    $policy['version'] = 3;
 
     foreach ($policy['bindings'] as $i => $binding) {
-        // This example only remove member from bindings without a condition.
+        // This example only removes member from bindings without a condition.
         if ($binding['role'] == $role && !isset($binding['condition'])) {
             $key = array_search($member, $binding['members']);
             if ($key !== false) {

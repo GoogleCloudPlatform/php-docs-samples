@@ -42,6 +42,7 @@ function add_bucket_iam_member($bucketName, $role, $members)
     $bucket = $storage->bucket($bucketName);
 
     $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
+    $policy['version'] = 3;
 
     $policy['bindings'][] = [
         'role' => $role,
