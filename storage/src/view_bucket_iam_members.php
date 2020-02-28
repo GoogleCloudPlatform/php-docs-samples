@@ -38,7 +38,7 @@ function view_bucket_iam_members($bucketName)
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
-    $policy = $bucket->iam()->policy();
+    $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
 
     printf('Printing Bucket IAM members for Bucket: %s' . PHP_EOL, $bucketName);
     printf(PHP_EOL);
@@ -48,6 +48,14 @@ function view_bucket_iam_members($bucketName)
         printf('Members:' . PHP_EOL);
         foreach ($binding['members'] as $member) {
             printf('  %s' . PHP_EOL, $member);
+        }
+
+        if (isset($binding['condition'])) {
+            $condition = $binding['condition'];
+            printf('  with condition:' . PHP_EOL);
+            printf('    Title: %s' . PHP_EOL, $condition['title']);
+            printf('    Description: %s' . PHP_EOL, $condition['description']);
+            printf('    Expression: %s' . PHP_EOL, $condition['expression']);
         }
         printf(PHP_EOL);
     }
