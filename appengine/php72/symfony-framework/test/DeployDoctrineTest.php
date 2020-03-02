@@ -24,7 +24,6 @@ require_once __DIR__ . '/DeploySymfonyTrait.php';
 
 class DeployDoctrineTest extends TestCase
 {
-    use TestTrait;
     use DeploySymfonyTrait;
 
     public static function beforeDeploy()
