@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START upload_object]
+# [START storage_upload_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -45,4 +45,4 @@ function upload_object($bucketName, $objectName, $source)
     ]);
     printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
 }
-# [END upload_object]
+# [END storage_upload_file]

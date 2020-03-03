@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START move_object]
+# [START storage_move_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -49,4 +49,4 @@ function move_object($bucketName, $objectName, $newBucketName, $newObjectName)
         $newBucketName,
         $newObjectName);
 }
-# [END move_object]
+# [END storage_move_file]

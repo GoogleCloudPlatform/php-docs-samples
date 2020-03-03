@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START add_bucket_conditional_iam_binding]
+# [START storage_add_bucket_conditional_iam_binding]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -71,4 +71,4 @@ function add_bucket_conditional_iam_binding($bucketName, $role, $members, $title
     printf('    Description: %s' . PHP_EOL, $description);
     printf('    Expression: %s' . PHP_EOL, $expression);
 }
-# [END add_bucket_conditional_iam_binding]
+# [END storage_add_bucket_conditional_iam_binding]

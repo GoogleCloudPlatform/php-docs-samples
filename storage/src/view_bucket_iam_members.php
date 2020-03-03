@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START view_bucket_iam_members]
+# [START storage_view_bucket_iam_members]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -60,4 +60,4 @@ function view_bucket_iam_members($bucketName)
         printf(PHP_EOL);
     }
 }
-# [END view_bucket_iam_members]
+# [END storage_view_bucket_iam_members]

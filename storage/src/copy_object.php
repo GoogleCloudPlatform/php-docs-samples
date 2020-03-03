@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START copy_object]
+# [START storage_copy_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -44,4 +44,4 @@ function copy_object($bucketName, $objectName, $newBucketName, $newObjectName)
     printf('Copied gs://%s/%s to gs://%s/%s' . PHP_EOL,
         $bucketName, $objectName, $newBucketName, $newObjectName);
 }
-# [END copy_object]
+# [END storage_copy_file]

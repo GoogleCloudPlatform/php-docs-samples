@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START get_object_acl]
+# [START storage_print_file_acl]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -44,4 +44,4 @@ function get_object_acl($bucketName, $objectName)
         printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
     }
 }
-# [END get_object_acl]
+# [END storage_print_file_acl]
