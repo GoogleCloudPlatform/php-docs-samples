@@ -39,6 +39,8 @@ function add_doc_data_types($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    // Set the reference document
+    $db->collection('data')->document('two')->set(['foo' => 'bar']);
     # [START fs_add_doc_data_types]
     $data = [
         'stringExample' => 'Hello World',
@@ -47,7 +49,8 @@ function add_doc_data_types($projectId)
         'dateExample' => new Timestamp(new DateTime()),
         'arrayExample' => array(5, true, 'hello'),
         'nullExample' => null,
-        'objectExample' => ['a' => 5, 'b' => true]
+        'objectExample' => ['a' => 5, 'b' => true],
+        'documentReferenceExample' => $db->collection('data')->document('two'),
     ];
     $db->collection('data')->document('one')->set($data);
     printf('Set multiple data-type data for the one document in the data collection.' . PHP_EOL);
