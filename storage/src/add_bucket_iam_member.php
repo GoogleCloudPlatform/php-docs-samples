@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START add_bucket_iam_member]
+# [START storage_add_bucket_iam_member]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -56,4 +56,4 @@ function add_bucket_iam_member($bucketName, $role, $members)
         printf('    %s' . PHP_EOL, $member);
     }
 }
-# [END add_bucket_iam_member]
+# [END storage_add_bucket_iam_member]

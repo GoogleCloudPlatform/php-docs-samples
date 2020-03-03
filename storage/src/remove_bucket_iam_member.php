@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START remove_bucket_iam_member]
+# [START storage_remove_bucket_iam_member]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -65,4 +65,4 @@ function remove_bucket_iam_member($bucketName, $role, $member)
 
     throw new \RuntimeException('No matching role-member group(s) found.');
 }
-# [END remove_bucket_iam_member]
+# [END storage_remove_bucket_iam_member]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START download_encrypted_object]
+# [START storage_download_encrypted_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -47,4 +47,4 @@ function download_encrypted_object($bucketName, $objectName, $destination, $base
     printf('Encrypted object gs://%s/%s downloaded to %s' . PHP_EOL,
         $bucketName, $objectName, basename($destination));
 }
-# [END download_encrypted_object]
+# [END storage_download_encrypted_file]

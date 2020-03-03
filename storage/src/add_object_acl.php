@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START add_object_acl]
+# [START storage_add_file_owner]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -47,4 +47,4 @@ function add_object_acl($bucketName, $objectName, $entity, $role, $options = [])
     $acl->add($entity, $role, $options);
     printf('Added %s (%s) to gs://%s/%s ACL' . PHP_EOL, $entity, $role, $bucketName, $objectName);
 }
-# [END add_object_acl]
+# [END storage_add_file_owner]
