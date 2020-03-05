@@ -326,6 +326,156 @@ class ExampleController extends AbstractController
 } 
 ```
 
+## Session Management
+
+As for the logs and the cache, you can not write session file on App Engine. This might create unexpected disconnections from your app.
+Fortunately, Symfony provides a way to handle this persisting the session in the database.
+We recommend to use the Symfony PDOSessionHandler so the session data will be persisted in the database instead of files.
+Here is the detailed [documentation][symfony-pdo-session-storage], and we will lead you through those simple steps.
+
+### Configuration
+
+Modify your Framework configuration in config/packages/framework.yaml and change the parameters under session to be the following:
+
+```
+session:
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        cookie_secure: auto
+        cookie_samesite: lax
+        # Adjust the max lifetime to your need
+        gc_maxlifetime: 36000
+```
+
+You should then activate the service in config/services.yaml.
+
+```
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
+            # If you get transaction issues (e.g. after login) uncomment the line below
+            # - { lock_mode: 1 }
+```
+
+### Database update
+
+In order to make it work, you will need to update your database with the missing table and fields.
+Connect to your database and execute the following query (MySQL example):
+
+```
+CREATE TABLE `sessions` (
+    `sess_id` VARCHAR(128) NOT NULL PRIMARY KEY,
+    `sess_data` BLOB NOT NULL,
+    `sess_time` INTEGER UNSIGNED NOT NULL,
+    `sess_lifetime` INTEGER UNSIGNED NOT NULL
+) COLLATE utf8mb4_bin, ENGINE = InnoDB;
+```
+
+You are now all set, the session will be persisted in the database and your users will remain authenticated.
+
+## Upload files
+
+Pre-requisites:
+In order to write files on App Engine you will need to use a Storage Bucket, so you have to [enable the Storage API][cloud-enable-api-storage].
+On top of that, you will need a service account having the Role Storage Admin, once this service account created you can download the private key in JSON format.
+
+### Install all the bundles
+
+First thing you will need is the [Google Cloud Storage for PHP][cloud-storage-php] package which will communicate with the Storage API:
+```
+    composer require google/cloud-storage
+```
+
+You will need the Google_client class from the [Google APIs Client Library for PHP][cloud-api-client].
+
+```
+    composer require google/apiclient:"^2.0"
+```
+
+You can then install the [KnpGaufretteBundle][knp-gaufrette] which will automate the communication with Google Storage:
+
+```
+    composer require knplabs/knp-gaufrette-bundle
+```
+
+To make it even easier, we use the famous [VichUploaderBundle][vich-uploader]:
+
+```
+    composer require vich/uploader-bundle
+```
+
+### Create an Uploadable Entity
+
+You can modify the [`src/Entity/ExampleEntity`](src/Entity/ExampleEntity.php) to your need and be careful that the field updatedAt is changed when the file is set.
+ 
+### Configuration
+
+Installing the Google Cloud API Client Library you should automatically add the following keys to your .env:
+
+```
+    # If you want to have Read and write access to your repository
+    GOOGLE_CLOUD_STORAGE_SCOPE='https://www.googleapis.com/auth/devstorage.full_control'
+    GCS_PRIVATE_KEY_LOCATION='path_to_your_service_account_private_key.json'
+    BUCKET_NAME='your-bucket-name'
+    GOOGLE_CLOUD_PROJECT='your-project-id'
+```
+
+You will need to create a Factory to create a Google Client, check the [`src/Factory/GoogleCloudStorageServiceFactory`](src/Factory/GoogleCloudStorageServiceFactory.php) for reference. 
+
+Then in your config/services.yaml you need to activate those 2 services, Google_Client_Storage will just use the Factory above to create the client:
+
+```
+    app.google_cloud_storage_factory:
+        class: App\Factory\GoogleCloudStorageServiceFactory
+        arguments:
+            - '%env(GOOGLE_CLOUD_STORAGE_SCOPE)%'
+            - '%kernel.project_dir%/%env(GCS_PRIVATE_KEY_LOCATION)%'
+
+    app.google_cloud_storage.service:
+        class: Google_Service_Storage
+        factory: ['@app.google_cloud_storage_factory', createService]
+``` 
+
+Finally you will have to configure KNPGaufrette and VichUploader, here is the logic:
+
+```
+    # in your config/packages/knp_gaufrette.yaml
+    knp_gaufrette:
+      stream_wrapper: ~
+      adapters:
+        # Each type of file to be uploaded in your app will need an adapter and a filesystem 
+        image_adapter:
+          google_cloud_storage:
+            service_id: 'app.google_cloud_storage.service'
+            bucket_name: '%env(BUCKET_NAME)%'
+            options:
+              directory: 'your-directory-in-your-bucket'
+    
+      filesystems:
+        image_filesystem:
+          adapter:    image_adapter
+          alias:      image_filesystem
+``` 
+
+```
+    # in your config/packages/vich_uploader.yaml
+    vich_uploader:
+        db_driver: orm
+        # This is how you connect VichUploader to KnpGaufrette
+        storage: gaufrette
+        # Each type of file needs its own mapping
+        mappings:
+            # See the method @Vich\UploadableField src/Entity/ExampleEntity
+            example_mapping:
+                uri_prefix: '/your-upload-directory'
+                # this is how you specify the correct Gaufrette filesystem
+                upload_destination: image_filesystem
+                # the name is not mandatory this one generates a unique ID instead of using your file name
+                namer: Vich\UploaderBundle\Naming\UniqidNamer
+```
+
+So every time an ExampleEntity will be persisted, the file will be automatically uploaded in your bucket.  
+
+
 [cloud-sdk]: https://cloud.google.com/sdk/
 [cloud-build]: https://cloud.google.com/cloud-build/
 [cloud-sql]: https://cloud.google.com/sql/docs/
@@ -333,6 +483,9 @@ class ExampleController extends AbstractController
 [cloud-sql-install]: https://cloud.google.com/sql/docs/mysql/connect-external-app#install
 [cloud-sql-apis]: https://console.cloud.google.com/apis/library/sqladmin.googleapis.com/?pro
 [cloud-migration]: https://cloud.google.com/appengine/docs/standard/php7/php-differences?hl=en#migrating_from_the_app_engine_php_sdk
+[cloud-enable-api-storage]: https://console.cloud.google.com/flows/enableapi?apiid=storage_api
+[cloud-api-client]: https://github.com/googleapis/google-api-php-client
+[cloud-storage-php]: https://github.com/googleapis/google-cloud-php-storage
 [create-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 [enable-billing]: https://support.google.com/cloud/answer/6293499?hl=en
 [symfony]: http://symfony.com
@@ -343,9 +496,12 @@ class ExampleController extends AbstractController
 [symfony-env]: https://symfony.com/doc/current/configuration/environments.html#executing-an-application-in-different-environments
 [symfony-override-cache]: https://symfony.com/doc/current/configuration/override_dir_structure.html#override-the-cache-directory
 [symfony-mailer]: https://symfony.com/doc/current/mailer.html
+[symfony-pdo-session-storage]: https://symfony.com/doc/current/doctrine/pdo_session_storage.html
 [stackdriver-logging-ui]: https://console.cloud.google.com/logs
 [stackdriver-errorreporting-ui]: https://console.cloud.google.com/errors
 [sendgrid]: https://sendgrid.com/
 [mailgun]: https://www.mailgun.com/
 [mailjet]: https://www.mailjet.com/
 [mailgun-add-domain]: https://help.mailgun.com/hc/en-us/articles/203637190-How-Do-I-Add-or-Delete-a-Domain-
+[vich-uploader]: https://github.com/dustin10/VichUploaderBundle
+[knp-gaufrette]: https://github.com/KnpLabs/KnpGaufretteBundle
