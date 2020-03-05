@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START add_bucket_label]
+# [START storage_add_bucket_label]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -41,4 +41,4 @@ function add_bucket_label($bucketName, $labelName, $labelValue)
     $bucket->update(['labels' => $newLabels]);
     printf('Added label %s (%s) to %s' . PHP_EOL, $labelName, $labelValue, $bucketName);
 }
-# [END add_bucket_label]
+# [END storage_add_bucket_label]

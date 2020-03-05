@@ -86,6 +86,10 @@ final class FilterTest extends TestCase
         self::deleteBigtableInstance();
     }
 
+    /**
+     * @retryAttempts 3
+     * @retryDelaySeconds 10
+     */
     public function testFilterLimitRowSample()
     {
         $output = self::runSnippet('filter_snippets', [

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START enable_requester_pays]
+# [START storage_enable_requester_pays]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -47,4 +47,4 @@ function enable_requester_pays($projectId, $bucketName)
     ]);
     printf('Requester pays has been enabled for %s' . PHP_EOL, $bucketName);
 }
-# [END enable_requester_pays]
+# [END storage_enable_requester_pays]

@@ -34,7 +34,7 @@ $targetLanguage = isset($argv[2]) ? $argv[2] : 'en';
 use Google\Cloud\Translate\TranslateClient;
 
 /** Uncomment and populate these variables in your code */
-// $text = 'The text to translate."
+// $text = 'The text to translate.";
 // $targetLanguage = 'ja';  // Language to translate to
 
 $translate = new TranslateClient();

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START rotate_encryption_key]
+# [START storage_rotate_encryption_key]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -53,4 +53,4 @@ function rotate_encryption_key(
     printf('Rotated encryption key for object gs://%s/%s' . PHP_EOL,
         $bucketName, $objectName);
 }
-# [END rotate_encryption_key]
+# [END storage_rotate_encryption_key]

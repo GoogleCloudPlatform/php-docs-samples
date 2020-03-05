@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START get_requester_pays_status]
+# [START storage_get_requester_pays_status]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -48,4 +48,4 @@ function get_requester_pays_status($projectId, $bucketName)
         printf('Requester Pays is disabled for %s' . PHP_EOL, $bucketName);
     }
 }
-# [END get_requester_pays_status]
+# [END storage_get_requester_pays_status]

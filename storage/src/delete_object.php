@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START delete_object]
+# [START storage_delete_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -43,4 +43,4 @@ function delete_object($bucketName, $objectName, $options = [])
     $object->delete();
     printf('Deleted gs://%s/%s' . PHP_EOL, $bucketName, $objectName);
 }
-# [END delete_object]
+# [END storage_delete_file]

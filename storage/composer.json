@@ -1,12 +1,13 @@
 {
     "require": {
-        "google/cloud-storage": "^1.14.0",
+        "google/cloud-storage": "^1.18.0",
         "paragonie/random_compat": "^2.0",
         "symfony/console": " ^3.0"
     },
     "autoload": {
         "files": [
             "src/add_bucket_acl.php",
+            "src/add_bucket_conditional_iam_binding.php",
             "src/add_bucket_default_acl.php",
             "src/add_bucket_iam_member.php",
             "src/add_bucket_label.php",

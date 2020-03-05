@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START get_bucket_labels]
+# [START storage_get_bucket_labels]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -42,4 +42,4 @@ function get_bucket_labels($bucketName)
         }
     }
 }
-# [END get_bucket_labels]
+# [END storage_get_bucket_labels]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START remove_bucket_label]
+# [START storage_remove_bucket_label]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -40,4 +40,4 @@ function remove_bucket_label($bucketName, $labelName)
     $bucket->update(['labels' => $labels]);
     printf('Removed label %s from %s' . PHP_EOL, $labelName, $bucketName);
 }
-# [END remove_bucket_label]
+# [END storage_remove_bucket_label]
