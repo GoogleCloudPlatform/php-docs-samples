@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START add_bucket_default_acl]
+# [START storage_add_bucket_default_owner]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -45,4 +45,4 @@ function add_bucket_default_acl($bucketName, $entity, $role, $options = [])
     $acl->add($entity, $role, $options);
     printf('Added %s (%s) to gs://%s default ACL' . PHP_EOL, $entity, $role, $bucketName);
 }
-# [END add_bucket_default_acl]
+# [END storage_add_bucket_default_owner]

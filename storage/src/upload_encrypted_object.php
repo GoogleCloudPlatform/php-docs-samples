@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START upload_encrypted_object]
+# [START storage_upload_encrypted_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -48,4 +48,4 @@ function upload_encrypted_object($bucketName, $objectName, $source, $base64Encry
     printf('Uploaded encrypted %s to gs://%s/%s' . PHP_EOL,
         basename($source), $bucketName, $objectName);
 }
-# [END upload_encrypted_object]
+# [END storage_upload_encrypted_file]

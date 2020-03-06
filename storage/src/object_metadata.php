@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START object_metadata]
+# [START storage_get_metadata]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -89,4 +89,4 @@ function object_metadata($bucketName, $objectName)
         printf('Metadata: %s', print_r($info['metadata'], true));
     }
 }
-# [END object_metadata]
+# [END storage_get_metadata]

@@ -18,10 +18,9 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Samples\Storage\IamCommand;
-use Google\Cloud\Core\Iam\PolicyBuilder;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,112 +29,186 @@ use PHPUnit\Framework\TestCase;
 class IamCommandTest extends TestCase
 {
     use TestTrait;
+    use ExecuteCommandTrait;
 
-    protected $commandTester;
-    protected $storage;
-    protected $user;
-    protected $bucket;
+    protected static $storage;
+    protected static $user;
+    protected static $bucket;
+    private static $commandFile = __DIR__ . '/../storage.php';
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('iam'));
-        $this->storage = new StorageClient();
-        $this->user = $this->requireEnv('GOOGLE_IAM_USER');
-        $this->bucket = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        self::$storage = new StorageClient();
+        self::$user = self::requireEnv('GOOGLE_IAM_USER');
+        self::$bucket = self::requireEnv('GOOGLE_STORAGE_BUCKET');
+        self::cleanUpIam();
+    }
+
+    private static function cleanUpIam()
+    {
+        $bucket = self::$storage->bucket(self::$bucket);
+
+        $bucket->update([
+            'iamConfiguration' => [
+                'uniformBucketLevelAccess' => [
+                    'enabled' => true
+                ],
+            ]
+        ]);
+
+        $iam = $bucket->iam();
+
+        $policy = $iam->policy(['requestedPolicyVersion' => 3]);
+        $roles = ['roles/storage.objectViewer', 'roles/storage.objectCreator'];
+
+        foreach ($policy['bindings'] as $i => $binding) {
+            if (
+                in_array($binding['role'], $roles) &&
+                in_array(self::$user, $binding['members'])
+            ) {
+                unset($policy['bindings'][$i]);
+            }
+        }
+
+        $iam->setPolicy($policy);
     }
 
     public function testAddBucketIamMember()
     {
-        $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
-        $user = $this->user;
+        $output = $this->runCommand('iam', [
+            'bucket' => self::$bucket,
+            '--role' => $role,
+            '--add-member' => [self::$user],
+        ]);
 
-        // clean up bucket IAM policy
-        $policy = $this->storage->bucket($bucket)->iam()->policy();
-        foreach ($policy['bindings'] as $binding) {
-            if ($binding['role'] == $role && in_array($user, $binding['members'])) {
-                $policyBuilder = new PolicyBuilder($policy);
-                $policyBuilder->removeBinding($role, [$user]);
-                $this->storage->bucket($bucket)->iam()->setPolicy($policyBuilder->result());
-                break;
-            }
-        }
+        $outputString = sprintf(
+            'Added the following member(s) to role %s for bucket %s
+    %s', $role, self::$bucket, self::$user);
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucket,
-                '--role' => $role,
-                '--add-member' => $user,
-            ],
-            ['interactive' => false]
-        );
-
-        $outputString = <<<EOF
-User $user added to role $role for bucket $bucket
-
-EOF;
-        $this->expectOutputString($outputString);
+        $this->assertStringContainsString($outputString, $output);
 
         $foundRoleMember = false;
-        $policy = $this->storage->bucket($bucket)->iam()->policy();
+        $policy = self::$storage->bucket(self::$bucket)->iam()->policy([
+            'requestedPolicyVersion' => 3
+        ]);
         foreach ($policy['bindings'] as $binding) {
             if ($binding['role'] == $role) {
-                $foundRoleMember = in_array($user, $binding['members']);
+                $foundRoleMember = in_array(self::$user, $binding['members']);
                 break;
             }
         }
         $this->assertTrue($foundRoleMember);
     }
 
-    /**
-     * @depends testAddBucketIamMember
-     */
-    public function testListIamMembers()
+    public function testAddBucketConditionalIamBinding()
     {
-        $bucket = $this->bucket;
-        $role = 'roles/storage.objectViewer';
-        $user = $this->user;
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucket,
-            ],
-            ['interactive' => false]
-        );
+        $role = 'roles/storage.objectCreator';
+        $title = 'always true';
+        $description = 'this condition is always true';
+        $expression = '1 < 2';
 
-        $this->expectOutputRegex("/Printing Bucket IAM members for Bucket: $bucket/");
-        $this->expectOutputRegex("/Role: $role/");
-        $this->expectOutputRegex("/$user/");
+        $output = $this->runCommand('iam', [
+            'bucket' => self::$bucket,
+            '--role' => $role,
+            '--add-member' => [self::$user],
+            '--title' => $title,
+            '--description' => $description,
+            '--expression' => $expression,
+        ]);
+
+        $outputString = sprintf(
+            'Added the following member(s) with role %s to %s:
+    %s
+with condition:
+    Title: %s
+    Description: %s
+    Expression: %s
+', $role, self::$bucket, self::$user, $title, $description, $expression);
+
+        $this->assertEquals($outputString, $output);
+
+        $foundBinding = false;
+        $policy = self::$storage->bucket(self::$bucket)->iam()->policy([
+            'requestedPolicyVersion' => 3
+        ]);
+        foreach ($policy['bindings'] as $binding) {
+            if ($binding['role'] == $role) {
+                $foundBinding =
+                    in_array(self::$user, $binding['members']) &&
+                    isset($binding['condition']) &&
+                    $binding['condition']['title'] == $title &&
+                    $binding['condition']['description'] == $description &&
+                    $binding['condition']['expression'] == $expression;
+                break;
+            }
+        }
+        $this->assertTrue($foundBinding);
     }
 
     /**
      * @depends testAddBucketIamMember
+     * @depends testAddBucketConditionalIamBinding
+     */
+    public function testListIamMembers()
+    {
+        $output = $this->runCommand('iam', ['bucket' => self::$bucket]);
+
+        $this->assertStringContainsString(
+            'Printing Bucket IAM members for Bucket: ' . self::$bucket,
+            $output
+        );
+
+        $binding = sprintf('/
+Role: roles\/storage.objectViewer
+Members:(.*)
+  %s
+
+/', self::$user);
+        $this->assertRegexp($binding, $output);
+
+        $bindingWithCondition = sprintf(
+            'Role: roles/storage.objectCreator
+Members:
+  %s
+  with condition:
+    Title: always true
+    Description: this condition is always true
+    Expression: 1 < 2
+', self::$user);
+        $this->assertStringContainsString($bindingWithCondition, $output);
+    }
+
+    /**
+     * @depends testAddBucketIamMember
+     * @depends testAddBucketConditionalIamBinding
+     * @depends testListIamMembers
      */
     public function testRemoveBucketIamMember()
     {
-        $bucket = $this->bucket;
         $role = 'roles/storage.objectViewer';
-        $user = $this->user;
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucket,
-                '--role' => 'roles/storage.objectViewer',
-                '--remove-member' => $user,
-            ],
-            ['interactive' => false]
+        $output = $this->runCommand('iam', [
+            'bucket' => self::$bucket,
+            '--role' => 'roles/storage.objectViewer',
+            '--remove-member' => self::$user,
+        ]);
+
+        $outputString = sprintf(
+            'User %s removed from role %s for bucket %s',
+            self::$user,
+            $role,
+            self::$bucket
         );
 
-        $outputString = <<<EOF
-User $user removed from role $role for bucket $bucket
-
-EOF;
-        $this->expectOutputString($outputString);
+        $this->assertStringContainsString($outputString, $output);
 
         $foundRoleMember = false;
-        $policy = $this->storage->bucket($bucket)->iam()->policy();
+        $policy = self::$storage->bucket(self::$bucket)->iam()->policy([
+            'requestedPolicyVersion' => 3
+        ]);
         foreach ($policy['bindings'] as $binding) {
             if ($binding['role'] == $role) {
-                $foundRoleMember = in_array($user, $binding['members']);
+                $foundRoleMember = in_array(self::$user, $binding['members']);
                 break;
             }
         }

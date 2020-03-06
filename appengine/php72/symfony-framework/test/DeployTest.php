@@ -65,7 +65,7 @@ class DeployTest extends TestCase
         $this->eventuallyConsistentRetryCount = 5;
 
         $logging = new LoggingClient([
-            'projectId' => self::getProjectId()
+            'projectId' => self::$projectId
         ]);
 
         $token = uniqid();
@@ -98,7 +98,7 @@ class DeployTest extends TestCase
     {
         $this->eventuallyConsistentRetryCount = 5;
         $logging = new LoggingClient([
-            'projectId' => self::getProjectId()
+            'projectId' => self::$projectId
         ]);
 
         $token = uniqid();
@@ -123,7 +123,7 @@ class DeployTest extends TestCase
                     $found = true;
                 }
             }
-            $this->assertTrue($found, 'The log entry was not found');
+            $this->assertTrue($found, 'The error reporting entry was not found');
         });
     }
 }

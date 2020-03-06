@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START disable_requester_pays]
+# [START storage_disable_requester_pays]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -47,4 +47,4 @@ function disable_requester_pays($projectId, $bucketName)
     ]);
     printf('Requester pays has been disabled for %s' . PHP_EOL, $bucketName);
 }
-# [END disable_requester_pays]
+# [END storage_disable_requester_pays]

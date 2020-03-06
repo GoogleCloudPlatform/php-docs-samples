@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START make_public]
+# [START storage_make_public]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -42,4 +42,4 @@ function make_public($bucketName, $objectName)
     $object->update(['acl' => []], ['predefinedAcl' => 'PUBLICREAD']);
     printf('gs://%s/%s is now public' . PHP_EOL, $bucketName, $objectName);
 }
-# [END make_public]
+# [END storage_make_public]

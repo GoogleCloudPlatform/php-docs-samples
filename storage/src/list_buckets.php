@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START list_buckets]
+# [START storage_list_buckets]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -38,4 +38,4 @@ function list_buckets()
         printf('Bucket: %s' . PHP_EOL, $bucket->name());
     }
 }
-# [END list_buckets]
+# [END storage_list_buckets]

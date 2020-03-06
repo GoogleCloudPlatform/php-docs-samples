@@ -265,26 +265,37 @@ The <info>%command.name%</info> command manages Storage IAM policies.
 
 <info>php %command.full_name% my-bucket</info>
 
-<info>php %command.full_name% my-bucket --role my-role --add-member user/test@email.com</info>
+<info>php %command.full_name% my-bucket --role my-role --add-member user:test1@email.com --add-member user:test2@email.com</info>
 
-<info>php %command.full_name% my-bucket --role my-role --remove-member user/test@email.com</info>
+<info>php %command.full_name% my-bucket --role my-role --remove-member user:test@email.com</info>
 
 EOF
     )
     ->addArgument('bucket', InputArgument::REQUIRED, 'The bucket that you want to change IAM for. ')
     ->addOption('role', null, InputOption::VALUE_REQUIRED, 'The new role to add to a bucket. ')
-    ->addOption('add-member', null, InputOption::VALUE_REQUIRED, 'The new member to add with the new role to the bucket. ')
+    ->addOption('add-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "The new member(s) to add with the new role to the bucket. ")
     ->addOption('remove-member', null, InputOption::VALUE_REQUIRED, 'The member to remove from a role for a bucket. ')
+    ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Optional. A title for the condition, if --expression is used. ')
+    ->addOption('description', null, InputOption::VALUE_REQUIRED, 'Optional. A description for the condition, if --expression is used. ')
+    ->addOption('expression', null, InputOption::VALUE_REQUIRED, 'Add the role/members pair with an IAM condition expression. ')
     ->setCode(function ($input, $output) {
         $bucketName = $input->getArgument('bucket');
         $role = $input->getOption('role');
-        $addMember = $input->getOption('add-member');
+        $members = $input->getOption('add-member');
         $removeMember = $input->getOption('remove-member');
-        if ($addMember) {
+        $expression = $input->getOption('expression');
+        $title = $input->getOption('title');
+        $description = $input->getOption('description');
+        if ($members) {
             if (!$role) {
                 throw new InvalidArgumentException('Must provide role as an option.');
             }
-            add_bucket_iam_member($bucketName, $role, $addMember);
+
+            if ($expression) {
+                add_bucket_conditional_iam_binding($bucketName, $role, $members, $title, $description, $expression);
+            } else {
+                add_bucket_iam_member($bucketName, $role, $members);
+            }
         } elseif ($removeMember) {
             if (!$role) {
                 throw new InvalidArgumentException('Must provide role as an option.');

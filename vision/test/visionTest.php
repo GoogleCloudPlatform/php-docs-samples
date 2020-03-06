@@ -21,13 +21,17 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 /**
  * Unit Tests for vision commands.
+ *
+ * @retryAttempts 2
  */
 class visionTest extends TestCase
 {
     use TestTrait;
+    use RetryTrait;
     use ExecuteCommandTrait;
 
     private static $commandFile = __DIR__ . '/../vision.php';

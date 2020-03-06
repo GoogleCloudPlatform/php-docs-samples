@@ -20,12 +20,6 @@ namespace Google\Cloud\Samples\AppEngine\Symfony;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
-use PhpParser\PrettyPrinter;
-use PhpParser\ParserFactory;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
 
 trait DeploySymfonyTrait
 {
@@ -35,15 +29,15 @@ trait DeploySymfonyTrait
     private static function createSymfonyProject()
     {
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
-        self::setWorkingDirectory($tmpDir);
-
 
         // install
-        $demoVersion = 'symfony/symfony-demo:^1.2';
+        $demoVersion = 'symfony/symfony-demo:^1.5';
         $cmd = sprintf('composer create-project %s %s || true', $demoVersion, $tmpDir);
         $process = self::createProcess($cmd);
         $process->setTimeout(300); // 5 minutes
+
         self::executeProcess($process);
+        self::setWorkingDirectory($tmpDir);
 
         // move app.yaml for the sample to the new symfony installation
         self::copyFiles(['app.yaml'], $tmpDir);
@@ -64,35 +58,43 @@ trait DeploySymfonyTrait
     private static function updateKernelCacheAndLogDir($projectDir)
     {
         $kernelFile = $projectDir . '/src/Kernel.php';
-        $parser = (new ParserFactory)->create(ParserFactory::ONLY_PHP7);
-        $ast = $parser->parse(file_get_contents($kernelFile));
-        $newStmts = $parser->parse(<<<'CODE'
-<?php
-if ($this->environment === 'prod') {
-    return sys_get_temp_dir();
+        $kernelContents = file_get_contents($kernelFile);
+
+        $newCode = <<<'EOF'
+
+    public function getCacheDir()
+    {
+        if ($this->environment === 'prod') {
+            return sys_get_temp_dir();
+        }
+        return parent::getCacheDir();
+    }
+
+    public function getLogDir()
+    {
+        if ($this->environment === 'prod') {
+            return sys_get_temp_dir();
+        }
+        return parent::getLogDir();
+    }
 }
-CODE
-);
+EOF;
 
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new class($newStmts) extends NodeVisitorAbstract {
-            public function __construct($newStmts)
-            {
-                $this->newStmts = $newStmts;
-            }
+        $newContents = preg_replace(
+            '/^}$/m',
+            $newCode,
+            $kernelContents,
+            1,
+            $count
+        );
 
-            public function enterNode(Node $node)
-            {
-                if ($node instanceof ClassMethod
-                    && in_array($node->name, ['getCacheDir', 'getLogDir'])) {
-                    $node->stmts = array_merge($this->newStmts, $node->stmts);
-                }
-            }
-        });
+        if ($count != 1) {
+            throw new \UnexpectedValueException(
+                'Failed to update Kernel Cache and Log Dir'
+            );
+        }
 
-        $ast = $traverser->traverse($ast);
-        $prettyPrinter = new PrettyPrinter\Standard();
-        file_put_contents($kernelFile, $prettyPrinter->prettyPrintFile($ast));
+        file_put_contents($kernelFile, $newContents);
     }
 
     private static function copyFiles(array $files, $dir)
