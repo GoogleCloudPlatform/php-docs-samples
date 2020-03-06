@@ -328,17 +328,15 @@ class ExampleController extends AbstractController
 
 ## Session Management
 
-As for the logs and the cache, you can not write session file on App Engine. This might create unexpected disconnections from your app.
-Fortunately, Symfony provides a way to handle this persisting the session in the database.
-We recommend to use the Symfony PDOSessionHandler so the session data will be persisted in the database instead of files.
-Here is the detailed [documentation][symfony-pdo-session-storage], and we will lead you through those simple steps.
+To persist sessions across multiple App Engine instances, you'll need to use a database.
+Fortunately, Symfony provides a way to handle this using [PDO session storage][symfony-pdo-session-storage].
 
 ### Configuration
 
-Modify your Framework configuration in config/packages/framework.yaml and change the parameters under session to be the following:
+Modify your Framework configuration in `config/packages/framework.yaml` and change the parameters under session to be the following:
 
 ```
-session:
+    session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         cookie_secure: auto
         cookie_samesite: lax
@@ -346,7 +344,7 @@ session:
         gc_maxlifetime: 36000
 ```
 
-You should then activate the service in config/services.yaml.
+You should then activate the service in `config/services.yaml.
 
 ```
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
@@ -358,10 +356,11 @@ You should then activate the service in config/services.yaml.
 
 ### Database update
 
-In order to make it work, you will need to update your database with the missing table and fields.
-Connect to your database and execute the following query (MySQL example):
+Next, add the `sessions` table to your database by connecting to your database and
+executing the following query:
 
 ```
+# MySQL Query
 CREATE TABLE `sessions` (
     `sess_id` VARCHAR(128) NOT NULL PRIMARY KEY,
     `sess_data` BLOB NOT NULL,
@@ -469,7 +468,7 @@ Finally you will have to configure KNPGaufrette and VichUploader, here is the lo
                 uri_prefix: '/your-upload-directory'
                 # this is how you specify the correct Gaufrette filesystem
                 upload_destination: image_filesystem
-                # the name is not mandatory this one generates a unique ID instead of using your file name
+                # the namer is not mandatory, this one generates a unique ID instead of using your file name
                 namer: Vich\UploaderBundle\Naming\UniqidNamer
 ```
 
