@@ -612,6 +612,30 @@ $application->add((new Command('query-data-with-timestamp-parameter'))
     })
 );
 
+// Query Data with Query Options
+$application->add((new Command('query-data-with-query-options'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with query options.')
+    ->setCode(function ($input, $output) {
+        query_data_with_timestamp_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Create Client With Query Options
+$application->add((new Command('create-client-with-query-options'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Create a client with query options.')
+    ->setCode(function ($input, $output) {
+        query_data_with_timestamp_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
