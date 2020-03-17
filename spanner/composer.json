@@ -52,7 +52,9 @@
             "src/query_data_with_float_parameter.php",
             "src/query_data_with_int_parameter.php",
             "src/query_data_with_string_parameter.php",
-            "src/query_data_with_timestamp_parameter.php"
+            "src/query_data_with_timestamp_parameter.php",
+            "src/create_client_with_query_options.php",
+            "src/query_data_with_query_options.php"
         ]
     }
 }
