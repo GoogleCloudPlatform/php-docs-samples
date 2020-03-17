@@ -578,6 +578,34 @@ class spannerTest extends TestCase
         });
     }
 
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithQueryOptions()
+    {
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('query-data-with-query-options');
+            self::$lastUpdateDataTimestamp = time();
+            $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+            $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+            $this->assertContains('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+        });
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testCreateClientWithQueryOptions()
+    {
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runCommand('create-client-with-query-options');
+            self::$lastUpdateDataTimestamp = time();
+            $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+            $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+            $this->assertContains('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+        });
+    }
+
     private function runCommand($commandName)
     {
         return $this->traitRunCommand($commandName, [
