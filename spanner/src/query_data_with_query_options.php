@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START query_data_with_query_options]
+// [START spanner_query_with_query_options]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 
@@ -58,4 +58,4 @@ function query_data_with_query_options($instanceId, $databaseId)
             $row['VenueId'], $row['VenueName'], $row['LastUpdateTime']);
     }
 }
-// [END query_data_with_query_options]
+// [END spanner_query_with_query_options]

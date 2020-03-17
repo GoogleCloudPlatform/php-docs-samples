@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START create_client_with_query_options]
+// [START spanner_create_client_with_query_options]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 
@@ -57,4 +57,4 @@ function create_client_with_query_options($instanceId, $databaseId)
             $row['VenueId'], $row['VenueName'], $row['LastUpdateTime']);
     }
 }
-// [END create_client_with_query_options]
+// [END spanner_create_client_with_query_options]
