@@ -48,8 +48,7 @@ function create_client_with_query_options($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $results = $database->execute(
-        'SELECT VenueId, VenueName, LastUpdateTime FROM Venues ' .
-        'WHERE LastUpdateTime < @lastUpdateTime'
+        'SELECT VenueId, VenueName, LastUpdateTime FROM Venues'
     );
 
     foreach ($results as $row) {
