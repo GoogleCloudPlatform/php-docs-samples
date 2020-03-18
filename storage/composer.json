@@ -61,6 +61,7 @@
             "src/release_event_based_hold.php",
             "src/release_temporary_hold.php",
             "src/remove_bucket_iam_member.php",
+            "src/remove_bucket_conditional_iam_binding.php",
             "src/remove_bucket_label.php",
             "src/remove_retention_policy.php",
             "src/rotate_encryption_key.php",

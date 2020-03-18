@@ -214,4 +214,45 @@ Members:
         }
         $this->assertFalse($foundRoleMember);
     }
+
+    /**
+     * @depends testAddBucketConditionalIamBinding
+     * @depends testListIamMembers
+     */
+    public function testRemoveBucketConditionalIamBinding()
+    {
+        $role = 'roles/storage.objectViewer';
+        $title = 'always true';
+        $description = 'this condition is always true';
+        $expression = '1 < 2';
+        $output = $this->runCommand('iam', [
+            'bucket' => self::$bucket,
+            '--role' => 'roles/storage.objectViewer',
+            '--remove-binding' => true,
+            '--title' => $title,
+            '--description' => $description,
+            '--expression' => $expression
+        ]);
+
+        $outputString = sprintf('Conditional Binding was removed.');
+
+        $this->assertStringContainsString($outputString, $output);
+
+        $foundBinding = false;
+        $policy = self::$storage->bucket(self::$bucket)->iam()->policy([
+            'requestedPolicyVersion' => 3
+        ]);
+        foreach ($policy['bindings'] as $binding) {
+            if ($binding['role'] == $role && $binding['condition'] != null) {
+                $condition = $binding['condition'];
+                if ($condition['title'] == $title
+                     && $condition['description'] == $description
+                     && $condition['expression'] == $expression) {
+                    $foundRoleMember = true;
+                    break;
+                }
+            }
+        }
+        $this->assertFalse($foundBinding);
+    }
 }

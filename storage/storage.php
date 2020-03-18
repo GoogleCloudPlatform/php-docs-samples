@@ -269,12 +269,15 @@ The <info>%command.name%</info> command manages Storage IAM policies.
 
 <info>php %command.full_name% my-bucket --role my-role --remove-member user:test@email.com</info>
 
+<info>php %command.full_name% my-bucket --role my-role --remove-binding --title cond-title --description cond-description --expression cond-expression</info>
+
 EOF
     )
     ->addArgument('bucket', InputArgument::REQUIRED, 'The bucket that you want to change IAM for. ')
     ->addOption('role', null, InputOption::VALUE_REQUIRED, 'The new role to add to a bucket. ')
     ->addOption('add-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "The new member(s) to add with the new role to the bucket. ")
     ->addOption('remove-member', null, InputOption::VALUE_REQUIRED, 'The member to remove from a role for a bucket. ')
+    ->addOption('remove-binding', null, InputOption::VALUE_NONE, 'Remove conditional policy')
     ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Optional. A title for the condition, if --expression is used. ')
     ->addOption('description', null, InputOption::VALUE_REQUIRED, 'Optional. A description for the condition, if --expression is used. ')
     ->addOption('expression', null, InputOption::VALUE_REQUIRED, 'Add the role/members pair with an IAM condition expression. ')
@@ -283,6 +286,7 @@ EOF
         $role = $input->getOption('role');
         $members = $input->getOption('add-member');
         $removeMember = $input->getOption('remove-member');
+        $removeBinding = $input->getOption('remove-binding');
         $expression = $input->getOption('expression');
         $title = $input->getOption('title');
         $description = $input->getOption('description');
@@ -301,6 +305,20 @@ EOF
                 throw new InvalidArgumentException('Must provide role as an option.');
             }
             remove_bucket_iam_member($bucketName, $role, $removeMember);
+        } elseif ($removeBinding) {
+            if (!$role) {
+                throw new InvalidArgumentException('Must provide role as an option.');
+            }
+            if (!$title) {
+                throw new InvalidArgumentException('Must provide title as an option.');
+            }
+            if (!$description) {
+                throw new InvalidArgumentException('Must provide description as an option.');
+            }
+            if (!$expression) {
+                throw new InvalidArgumentException('Must provide expression as an option.');
+            }
+            remove_bucket_conditional_iam_binding($bucket_name, $role, $title, $description, $expression);
         } else {
             view_bucket_iam_members($bucketName);
         }
