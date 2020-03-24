@@ -33,6 +33,21 @@ $inputDefinition = new InputDefinition([
     new InputArgument('database_id', InputArgument::REQUIRED, 'The database id'),
 ]);
 
+$instanceInputDefinition = new InputDefinition([
+    new InputArgument('instance_id', InputArgument::REQUIRED, 'The instance id'),
+]);
+
+$idbInputDefinition = new InputDefinition([
+    new InputArgument('instance_id', InputArgument::REQUIRED, 'The instance id'),
+    new InputArgument('database_id', InputArgument::REQUIRED, 'The database id'),
+    new InputArgument('backup_id', InputArgument::REQUIRED, 'The backup id'),
+]);
+
+$ibInputDefinition = new InputDefinition([
+    new InputArgument('instance_id', InputArgument::REQUIRED, 'The instance id'),
+    new InputArgument('backup_id', InputArgument::REQUIRED, 'The backup id'),
+]);
+
 // Create Database command
 $application->add((new Command('create-database'))
     ->setDefinition($inputDefinition)
@@ -632,6 +647,94 @@ $application->add((new Command('create-client-with-query-options'))
         create_client_with_query_options(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
+        );
+    })
+);
+
+$application->add((new Command('create-backup'))
+    ->setDefinition($idbInputDefinition)
+    ->setDescription('Lists existing backups for instance.')
+    ->setCode(function ($input, $output) {
+        create_backup(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id'),
+            $input->getArgument('backup_id')
+        );
+    })
+);
+
+$application->add((new Command('cancel-backup'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Cancels backup operation.')
+    ->setCode(function ($input, $output) {
+        cancel_backup_operation(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+$application->add((new Command('list-backups'))
+    ->setDefinition($instanceInputDefinition)
+    ->setDescription('Lists existing backups for instance.')
+    ->setCode(function ($input, $output) {
+        list_backups(
+            $input->getArgument('instance_id')
+        );
+    })
+);
+
+$application->add((new Command('restore-backup'))
+    ->setDefinition($idbInputDefinition)
+    ->setDescription('Restore database from backup.')
+    ->setCode(function ($input, $output) {
+        restore_backup(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id'),
+            $input->getArgument('backup_id')
+        );
+    })
+);
+
+$application->add((new Command('update-backup'))
+    ->setDefinition($ibInputDefinition)
+    ->setDescription('Update backup expire time.')
+    ->setCode(function ($input, $output) {
+        update_backup(
+            $input->getArgument('instance_id'),
+            $input->getArgument('backup_id')
+        );
+    })
+);
+
+$application->add((new Command('delete-backup'))
+    ->setDefinition($ibInputDefinition)
+    ->setDescription('Lists existing backups.')
+    ->setCode(function ($input, $output) {
+        delete_backup(
+            $input->getArgument('instance_id'),
+            $input->getArgument('backup_id')
+        );
+    })
+);
+
+$application->add((new Command('list-backup-operations'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Lists backup operations.')
+    ->setCode(function ($input, $output) {
+        list_backup_operations(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+$application->add((new Command('list-database-operations'))
+    ->setDefinition($instanceInputDefinition)
+    ->setDescription('Lists database operations.')
+    ->setCode(function ($input, $output) {
+        list_database_operations(
+            $input->getArgument('instance_id')
         );
     })
 );
