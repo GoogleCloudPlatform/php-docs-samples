@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.26",
+        "google/cloud-spanner": "^1.27",
         "symfony/console": "^3.2"
     },
     "autoload": {
