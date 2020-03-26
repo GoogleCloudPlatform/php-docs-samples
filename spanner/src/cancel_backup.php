@@ -55,6 +55,8 @@ function cancel_backup_operation($instanceId, $databaseId)
     printf('Cancel backup operation complete.' . PHP_EOL);
 
     // Operation may succeed before cancel() has been called. So we need to clean up created backup.
-    $backup->delete();
+    if ($backup->exists()) {
+        $backup->delete();
+    }
 }
 // [END spanner_cancel_backup_create]

@@ -79,7 +79,7 @@ function list_backups($instanceId)
     }
 
     // List backups that were created after a timestamp that are also ready.
-    $createTime = $spanner->timestamp(new \DateTime('-1 hour'));
+    $createTime = $spanner->timestamp(new \DateTime('-1 day'));
     print("All backups created after $createTime:" . PHP_EOL);
     $filter = "create_time >= \"$createTime\" AND state:READY";
     foreach ($instance->backups(['filter' => $filter]) as $backup) {

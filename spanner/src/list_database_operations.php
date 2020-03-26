@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * List all database operations in an instance.
+ * List all optimize restored database operations in an instance.
  * Example:
  * ```
  * list_database_operations($instanceId);

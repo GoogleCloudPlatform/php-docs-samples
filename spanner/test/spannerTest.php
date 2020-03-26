@@ -651,7 +651,7 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testListBackupOperations
+     * @depends testCreateBackup
      */
     public function testListBackups()
     {
@@ -659,11 +659,10 @@ class spannerTest extends TestCase
             'instance_id' => self::$instanceId,
         ]);
         $this->assertContains(self::$backupId, $output);
-        $this->assertContains(self::$backupId . '-pro', $output);
     }
 
     /**
-     * @depends testListBackups
+     * @depends testCreateBackup
      */
     public function testUpdateBackup()
     {
