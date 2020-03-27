@@ -34,6 +34,7 @@
             "src/enable_requester_pays.php",
             "src/activate_hmac_key.php",
             "src/generate_encryption_key.php",
+            "src/generate_v4_post_policy.php",
             "src/bucket_metadata.php",
             "src/get_bucket_acl.php",
             "src/get_bucket_acl_for_entity.php",
