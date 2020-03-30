@@ -22,31 +22,47 @@ class securitycenterTest extends TestCase
 {
     use TestTrait;
 
+    private static $testNotificationCreate;
+    private static $testNotificationGet;
+    private static $testNotificationUpdate;
+
+    public static function setUpBeforeClass()
+    {
+        self::$testNotificationCreate = self::randomNotificationId();
+        self::$testNotificationGet = self::randomNotificationId();
+        self::$testNotificationUpdate = self::randomNotificationId();
+    }
+
+    private function deleteConfig(string $configId)
+    {
+        $deleteOutput = $this->runSnippet('delete_notification', [
+            self::getOrganizationId(),
+            $configId,
+        ]);
+
+        $this->assertContains('Notification config was deleted', $deleteOutput);
+    }
+
     public function testCreateNotification()
     {
         $createOutput = $this->runSnippet('create_notification', [
             self::getOrganizationId(),
-            "php-notification-config-create",
-            self::getProject(),
+            self::$testNotificationCreate,
+            self::$projectId,
             self::getTopicName()
         ]);
 
         $this->assertContains('Notification config was created', $createOutput);
 
-        $deleteOutput = $this->runSnippet('delete_notification', [
-            self::getOrganizationId(),
-            "php-notification-config-create",
-        ]);
-
-        $this->assertContains('Notification config was deleted', $deleteOutput);
+        self::deleteConfig(self::$testNotificationCreate);
     }
 
     public function testGetNotificationConfig()
     {
         $createOutput = $this->runSnippet('create_notification', [
             self::getOrganizationId(),
-            "php-notification-config-get",
-            self::getProject(),
+            self::$testNotificationGet,
+            self::$projectId,
             self::getTopicName()
         ]);
 
@@ -54,26 +70,20 @@ class securitycenterTest extends TestCase
 
         $getOutput = $this->runSnippet('get_notification', [
             self::getOrganizationId(),
-            "php-notification-config-get",
+            self::$testNotificationGet
         ]);
 
         $this->assertContains('Notification config was retrieved', $getOutput);
 
-        $deleteOutput = $this->runSnippet('delete_notification', [
-            self::getOrganizationId(),
-            "php-notification-config-get",
-        ]);
-
-        $this->assertContains('Notification config was deleted', $deleteOutput);
-
+        self::deleteConfig(self::$testNotificationGet);
     }
 
     public function testUpdateNotificationConfig()
     {
         $createOutput = $this->runSnippet('create_notification', [
             self::getOrganizationId(),
-            "php-notification-config-update",
-            self::getProject(),
+            self::$testNotificationUpdate,
+            self::$projectId,
             self::getTopicName()
         ]);
 
@@ -81,20 +91,14 @@ class securitycenterTest extends TestCase
 
         $getOutput = $this->runSnippet('update_notification', [
             self::getOrganizationId(),
-            "php-notification-config-update",
-            self::getProject(),
+            self::$testNotificationUpdate,
+            self::$projectId,
             self::getTopicName()
         ]);
 
         $this->assertContains('Notification config was updated', $getOutput);
 
-        $deleteOutput = $this->runSnippet('delete_notification', [
-            self::getOrganizationId(),
-            "php-notification-config-update",
-        ]);
-
-        $this->assertContains('Notification config was deleted', $deleteOutput);
-
+        self::deleteConfig(self::$testNotificationUpdate);
     }
 
     public function testListNotificationConfig()
@@ -104,18 +108,20 @@ class securitycenterTest extends TestCase
         ]);
 
         $this->assertContains('Notification configs were listed', $listOutput);
-
     }
 
-    private static function getOrganizationId() {
-        return "1081635000895";
+    private static function getOrganizationId()
+    {
+        return self::requireEnv('GOOGLE_ORGANIZATION_ID');
     }
 
-    private static function getProject() {
-        return "project-a-id";
+    private static function getTopicName()
+    {
+        return self::requireEnv('GOOGLE_TOPIC_ID');
     }
 
-    private static function getTopicName() {
-        return "notifications-sample-topic";
+    private static function randomNotificationId()
+    {
+        return uniqid('php-notification-config-');
     }
 }
