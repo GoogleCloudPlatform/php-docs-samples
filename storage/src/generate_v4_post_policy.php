@@ -40,8 +40,8 @@ function generate_v4_post_policy($bucketName, $objectName)
     $bucket = $storage->bucket($bucketName);
     
     $response = $bucket->generateSignedPostPolicyV4(
-        new \DateTime('10 min'),
         $objectName,
+        new \DateTime('10 min'),
         [
             'fields' => [
                 'x-goog-meta-test' => 'data'
