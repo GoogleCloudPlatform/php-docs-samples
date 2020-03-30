@@ -18,12 +18,11 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 1) {
-    return printf("Usage: php %s PROJECT_ID STRING\n", __FILE__);
+    return printf("Usage: php %s ORGANIZATION_ID\n",  basename(__FILE__));
 }
 list($_, $organizationId) = $argv;
 
 // [START scc_list_notification_configs]
-
 use \Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
 /** Uncomment and populate these variables in your code */

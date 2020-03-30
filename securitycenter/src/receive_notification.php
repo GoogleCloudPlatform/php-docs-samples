@@ -17,13 +17,12 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 1) {
-    return printf("Usage: php %s PROJECT_ID STRING\n", __FILE__);
+if (count($argv) < 2) {
+    return printf("Usage: php %s PROJECT_ID SUSBSCRIPTION_ID\n",  basename(__FILE__));
 }
 list($_, $projectId, $subscriptionId) = $argv;
 
 // [START scc_receive_notifications]
-
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
