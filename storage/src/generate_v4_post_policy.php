@@ -58,6 +58,6 @@ function generate_v4_post_policy($bucketName, $objectName)
     $output .= "  <input type='submit' value='Upload File' name='submit'/>" . PHP_EOL;
     $output .= "</form>" . PHP_EOL;
 
-    print_r($output);
+    echo $output;
 }
 # [END storage_generate_post_policy_url_v4]
