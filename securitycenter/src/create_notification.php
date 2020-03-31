@@ -23,8 +23,8 @@ if (count($argv) < 4) {
 list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv;
 
 // [START scc_create_notification_config]
-use \Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
-use \Google\Cloud\SecurityCenter\V1\NotificationConfig;
+use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\NotificationConfig;
 
 /** Uncomment and populate these variables in your code */
 // $organizationId = "{your-org-id}";

@@ -23,7 +23,7 @@ if (count($argv) < 1) {
 list($_, $organizationId) = $argv;
 
 // [START scc_list_notification_configs]
-use \Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
 /** Uncomment and populate these variables in your code */
 // $organizationId = "{your-org-id}";

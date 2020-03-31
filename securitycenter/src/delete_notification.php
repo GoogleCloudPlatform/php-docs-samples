@@ -23,7 +23,7 @@ if (count($argv) < 2) {
 list($_, $organizationId, $notificationConfigId) = $argv;
 
 // [START scc_delete_notification_config]
-use \Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
 /** Uncomment and populate these variables in your code */
 // $organizationId = "{your-org-id}";
