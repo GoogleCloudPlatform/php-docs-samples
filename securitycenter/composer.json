@@ -2,7 +2,5 @@
     "require": {
         "google/cloud-security-center": "^0.5.0",
         "google/cloud-pubsub": "^1.21"
-    },
-    "require-dev": {
     }
 }
