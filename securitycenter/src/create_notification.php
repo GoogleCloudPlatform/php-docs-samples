@@ -18,7 +18,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 4) {
-    return printf("Usage: php %s ORGANIZATION_ID NOTIFICATION_ID PROJECT_ID TOPIC_NAME\n",  basename(__FILE__));
+    return printf('Usage: php %s ORGANIZATION_ID NOTIFICATION_ID PROJECT_ID TOPIC_NAME\n',  basename(__FILE__));
 }
 list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv;
 
@@ -33,22 +33,22 @@ use Google\Cloud\SecurityCenter\V1\NotificationConfig;
 // $topicName = "{your-topic}";
 
 $securityCenterClient = new SecurityCenterClient();
-$organizationName = "organizations/" . $organizationId;
-$pubsubTopic = "projects/" . $projectId . "/topics/" . $topicName;
+$organizationName = $securityCenterClient::organizationName($organizationId);
+$pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 
-try {
-    $streamingConfig = new NotificationConfig\StreamingConfig();
-    $streamingConfig->setFilter("state = \"ACTIVE\"");
-    $notificationConfig = new NotificationConfig();
-    $notificationConfig->setDescription("PHP notification config");
-    $notificationConfig->setPubsubTopic($pubsubTopic);
-    $notificationConfig->setStreamingConfig($streamingConfig);
+$streamingConfig = new NotificationConfig\StreamingConfig();
+$streamingConfig->setFilter("state = \"ACTIVE\"");
+$notificationConfig = new NotificationConfig();
+$notificationConfig->setDescription('A sample notification config');
+$notificationConfig->setPubsubTopic($pubsubTopic);
+$notificationConfig->setStreamingConfig($streamingConfig);
 
-    $response = $securityCenterClient->createNotificationConfig($organizationName, $notificationConfigId, $notificationConfig);
-    printf("Notification config was created: %s", $response->getName());
+$response = $securityCenterClient->createNotificationConfig(
+    $organizationName,
+    $notificationConfigId,
+    $notificationConfig
+);
+printf('Notification config was created: %s', $response->getName());
 
-} finally {
-    $securityCenterClient->close();
-}
-
+$securityCenterClient->close();
 // [END scc_create_notification_config]

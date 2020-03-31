@@ -18,7 +18,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 2) {
-    return printf("Usage: php %s PROJECT_ID SUSBSCRIPTION_ID\n",  basename(__FILE__));
+    return printf('Usage: php %s PROJECT_ID SUSBSCRIPTION_ID\n',  basename(__FILE__));
 }
 list($_, $projectId, $subscriptionId) = $argv;
 
@@ -26,15 +26,13 @@ list($_, $projectId, $subscriptionId) = $argv;
 use Google\Cloud\PubSub\PubSubClient;
 
 /** Uncomment and populate these variables in your code */
-// String projectId = "{your-project}";
-// String subscriptionId = "{your-subscription}";
-
-$projectSubscriptionName = "projects/" . $projectId . "/subscriptions/" . $subscriptionId;
-$subscription = $pubsub->subscription($projectSubscriptionName);
+// $projectId = "{your-project-id}";
+// $subscriptionId = "{your-subscription-id}";
 
 $pubsub = new PubSubClient([
     'projectId' => $projectId,
 ]);
+$subscription = $pubsub->subscription($subscriptionId);
 
 foreach ($subscription->pull() as $message) {
     printf('Message: %s' . PHP_EOL, $message->data());
