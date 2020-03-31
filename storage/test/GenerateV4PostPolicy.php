@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2020 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ use Google\Cloud\Storage\StorageClient;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for RequesterPaysCommand.
+ * Unit Tests for GenerateV4PostPolicy.
  */
-class ObjectSignedUrlTest extends TestCase
+class GenerateV4PostPolicy extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;

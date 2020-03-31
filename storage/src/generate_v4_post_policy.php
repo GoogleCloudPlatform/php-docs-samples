@@ -23,11 +23,11 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_generate_post_policy_url_v4]
+# [START storage_generate_signed_post_policy_v4]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Generates a V4 POST Policy to be used in an HTML form and echo's form. 
+ * Generates a V4 POST Policy to be used in an HTML form and echo's form.
  *
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of your Google Cloud object.
@@ -50,7 +50,7 @@ function generate_v4_post_policy($bucketName, $objectName)
     );
 
     $url = $response['url'];
-    $output = "<form action='$url' method='POST' enctype=''multipart/form-data>" . PHP_EOL;
+    $output = "<form action='$url' method='POST' enctype='multipart/form-data'>" . PHP_EOL;
     foreach ($response['fields'] as $name => $value) {
         $output .= "  <input name='$name' value='$value' type='hidden'/>" . PHP_EOL;
     }
@@ -60,4 +60,4 @@ function generate_v4_post_policy($bucketName, $objectName)
 
     echo $output;
 }
-# [END storage_generate_post_policy_url_v4]
+# [END storage_generate_signed_post_policy_v4]
