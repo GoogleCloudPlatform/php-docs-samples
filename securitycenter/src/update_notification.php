@@ -41,10 +41,8 @@ $securityCenterClient = new SecurityCenterClient();
 $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 $notificationConfigName = $securityCenterClient::notificationConfigName($organizationId, $notificationConfigId);
 
-$streamingConfig = new StreamingConfig();
-$streamingConfig->setFilter("state = \"ACTIVE\"");
-$fieldMask = new FieldMask();
-$fieldMask->setPaths(['description', 'pubsub_topic']);
+$streamingConfig = (new StreamingConfig())->setFilter("state = \"ACTIVE\"");
+$fieldMask = (new FieldMask())>setPaths(['description', 'pubsub_topic']);
 $notificationConfig = (new NotificationConfig())
     ->setName($notificationConfigName)
     ->setDescription('Updated description.')
