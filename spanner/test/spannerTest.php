@@ -756,7 +756,6 @@ class spannerTest extends TestCase
         while (true) {
             try {
                 return call_user_func_array($call, $args);
-
             } catch (FailedPreconditionException $e) {
                 if (!strstr($e->getMessage(), 'maximum number of pending') or time() >= $cutoffTime) {
                     throw $e;
