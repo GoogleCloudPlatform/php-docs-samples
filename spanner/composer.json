@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.26",
+        "google/cloud-spanner": "^1.27",
         "symfony/console": "^3.2"
     },
     "autoload": {
@@ -54,7 +54,15 @@
             "src/query_data_with_string_parameter.php",
             "src/query_data_with_timestamp_parameter.php",
             "src/create_client_with_query_options.php",
-            "src/query_data_with_query_options.php"
+            "src/query_data_with_query_options.php",
+            "src/cancel_backup.php",
+            "src/create_backup.php",
+            "src/delete_backup.php",
+            "src/list_backup_operations.php",
+            "src/list_backups.php",
+            "src/list_database_operations.php",
+            "src/restore_backup.php",
+            "src/update_backup.php"
         ]
     }
 }
