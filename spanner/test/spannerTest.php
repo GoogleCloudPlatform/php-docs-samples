@@ -25,6 +25,7 @@ use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use Google\Cloud\Core\Exception\FailedPreconditionException;
 
 class spannerTest extends TestCase
 {
@@ -628,11 +629,11 @@ class spannerTest extends TestCase
      */
     public function testCreateBackup()
     {
-        $output = $this->traitRunCommand('create-backup', [
+        $output = $this->retry([$this, 'traitRunCommand'], ['create-backup', [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId,
             'backup_id' => self::$backupId,
-        ]);
+        ]]);
         $this->assertContains(self::$backupId, $output);
     }
 
@@ -678,11 +679,11 @@ class spannerTest extends TestCase
      */
     public function testRestoreBackup()
     {
-        $output = $this->traitRunCommand('restore-backup', [
+        $output = $this->retry([$this, 'traitRunCommand'], ['restore-backup', [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId . '-res',
             'backup_id' => self::$backupId,
-        ]);
+        ]]);
         $this->assertContains(self::$backupId, $output);
         $this->assertContains(self::$databaseId, $output);
     }
@@ -713,7 +714,8 @@ class spannerTest extends TestCase
         $this->assertContains(self::$backupId, $output);
     }
 
-    private static function waitForBackupOperations($instance) {
+    private static function waitForBackupOperations($instance)
+    {
         $filter = "(metadata.@type:type.googleapis.com/" .
             "google.spanner.admin.database.v1.CreateBackupMetadata)";
 
@@ -725,7 +727,8 @@ class spannerTest extends TestCase
         }
     }
 
-    private static function waitForDatabaseOperations($instance) {
+    private static function waitForDatabaseOperations($instance)
+    {
         $filter = "(metadata.@type:type.googleapis.com/" .
             "google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)";
 
@@ -733,6 +736,33 @@ class spannerTest extends TestCase
         foreach ($operations as $operation) {
             if (!$operation->done()) {
                 $operation->pollUntilComplete();
+            }
+        }
+    }
+
+    /**
+     * A workaround for backup creation/restore operation limit
+     * when several testing scripts using the same Spanner instance run in parallel.
+     *
+     * @param callable $call
+     * @param array $args
+     * @return mixed
+     */
+    private function retry($call, $args)
+    {
+        $cutoffTime = time() + 20 * 60;
+        $sleepDuration = 10;
+
+        while (true) {
+            try {
+                return call_user_func_array($call, $args);
+
+            } catch (FailedPreconditionException $e) {
+                if (!strstr($e->getMessage(), 'maximum number of pending') or time() >= $cutoffTime) {
+                    throw $e;
+                }
+
+                sleep($sleepDuration);
             }
         }
     }
