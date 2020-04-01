@@ -45,8 +45,7 @@ $streamingConfig = new StreamingConfig();
 $streamingConfig->setFilter("state = \"ACTIVE\"");
 $fieldMask = new FieldMask();
 $fieldMask->setPaths(['description', 'pubsub_topic']);
-$notificationConfig = new NotificationConfig();
-$notificationConfig
+$notificationConfig = (new NotificationConfig())
     ->setName($notificationConfigName)
     ->setDescription('Updated description.')
     ->setPubsubTopic($pubsubTopic);
@@ -54,5 +53,4 @@ $notificationConfig
 $response = $securityCenterClient->updateNotificationConfig($notificationConfig, [$fieldMask]);
 printf('Notification config was updated: %s', $response->getName());
 
-$securityCenterClient->close();
 // [END scc_update_notification_config]

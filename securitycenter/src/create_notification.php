@@ -25,6 +25,7 @@ list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv
 // [START scc_create_notification_config]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig;
+use Google\Cloud\SecurityCenter\V1\NotificationConfig\StreamingConfig;
 
 /** Uncomment and populate these variables in your code */
 // $organizationId = "{your-org-id}";
@@ -36,12 +37,12 @@ $securityCenterClient = new SecurityCenterClient();
 $organizationName = $securityCenterClient::organizationName($organizationId);
 $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 
-$streamingConfig = new NotificationConfig\StreamingConfig();
+$streamingConfig = new StreamingConfig();
 $streamingConfig->setFilter("state = \"ACTIVE\"");
-$notificationConfig = new NotificationConfig();
-$notificationConfig->setDescription('A sample notification config');
-$notificationConfig->setPubsubTopic($pubsubTopic);
-$notificationConfig->setStreamingConfig($streamingConfig);
+$notificationConfig = (new NotificationConfig())
+    ->setDescription('A sample notification config')
+    ->setPubsubTopic($pubsubTopic)
+    ->setStreamingConfig($streamingConfig);
 
 $response = $securityCenterClient->createNotificationConfig(
     $organizationName,
@@ -50,5 +51,4 @@ $response = $securityCenterClient->createNotificationConfig(
 );
 printf('Notification config was created: %s', $response->getName());
 
-$securityCenterClient->close();
 // [END scc_create_notification_config]
