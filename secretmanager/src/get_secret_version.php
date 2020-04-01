@@ -32,8 +32,8 @@ list($_, $projectId, $secretId, $versionId) = $argv;
 
 // [START secretmanager_get_secret_version]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
-use Google\Cloud\SecretManager\V1beta1\SecretVersion\State;
+use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\SecretVersion\State;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');

@@ -26,11 +26,11 @@ list($_, $projectId, $secretId) = $argv;
 
 // [START secretmanager_quickstart]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1beta1\Replication;
-use Google\Cloud\SecretManager\V1beta1\Replication\Automatic;
-use Google\Cloud\SecretManager\V1beta1\Secret;
-use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
-use Google\Cloud\SecretManager\V1beta1\SecretPayload;
+use Google\Cloud\SecretManager\V1\Replication;
+use Google\Cloud\SecretManager\V1\Replication\Automatic;
+use Google\Cloud\SecretManager\V1\Secret;
+use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\SecretPayload;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
@@ -43,13 +43,13 @@ $client = new SecretManagerServiceClient();
 $parent = $client->projectName($projectId);
 
 // Create the parent secret.
-$secret = $client->createSecret($parent, $secretId, [
-    'secret' => new Secret([
+$secret = $client->createSecret($parent, $secretId,
+  new Secret([
         'replication' => new Replication([
             'automatic' => new Automatic(),
         ]),
     ]),
-]);
+);
 
 // Add the secret version.
 $version = $client->addSecretVersion($secret->getName(), new SecretPayload([

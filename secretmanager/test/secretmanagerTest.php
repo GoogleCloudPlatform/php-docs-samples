@@ -20,12 +20,12 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 use Google\ApiCore\ApiException as GaxApiException;
-use Google\Cloud\SecretManager\V1beta1\Replication;
-use Google\Cloud\SecretManager\V1beta1\Replication\Automatic;
-use Google\Cloud\SecretManager\V1beta1\Secret;
-use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
-use Google\Cloud\SecretManager\V1beta1\SecretPayload;
-use Google\Cloud\SecretManager\V1beta1\SecretVersion;
+use Google\Cloud\SecretManager\V1\Replication;
+use Google\Cloud\SecretManager\V1\Replication\Automatic;
+use Google\Cloud\SecretManager\V1\Secret;
+use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\SecretPayload;
+use Google\Cloud\SecretManager\V1\SecretVersion;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -79,13 +79,13 @@ class secretmanagerTest extends TestCase
         $parent = self::$client->projectName(self::$projectId);
         $secretId = self::randomSecretId();
 
-        return self::$client->createSecret($parent, $secretId, [
-            'secret' => new Secret([
+        return self::$client->createSecret($parent, $secretId,
+            new Secret([
                 'replication' => new Replication([
                     'automatic' => new Automatic(),
                 ]),
             ]),
-        ]);
+        );
     }
 
     private static function addSecretVersion(Secret $secret): SecretVersion
