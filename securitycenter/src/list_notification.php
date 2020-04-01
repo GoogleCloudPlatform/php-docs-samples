@@ -31,11 +31,10 @@ use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 $securityCenterClient = new SecurityCenterClient();
 $organizationName = $securityCenterClient::organizationName($organizationId);
 
-$pagedResponse = $securityCenterClient->listNotificationConfigs($organizationName);
-foreach ($pagedResponse->iterateAllElements() as $element) {
-    printf('Found notification config %s', $element->getName());
+foreach ($securityCenterClient->listNotificationConfigs($organizationName) as $element) {
+    printf('Found notification config %s' . PHP_EOL, $element->getName());
 }
 
 print('Notification configs were listed');
-$securityCenterClient->close();
+
 // [END scc_list_notification_configs]

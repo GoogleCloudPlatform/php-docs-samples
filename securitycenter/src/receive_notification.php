@@ -39,4 +39,5 @@ foreach ($subscription->pull() as $message) {
     // Acknowledge the Pub/Sub message has been received, so it will not be pulled multiple times.
     $subscription->acknowledge($message);
 }
+
 // [END scc_receive_notifications]

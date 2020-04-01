@@ -117,7 +117,7 @@ class securitycenterTest extends TestCase
 
     private static function getTopicName()
     {
-        return self::requireEnv('GOOGLE_TOPIC_ID');
+        return self::requireEnv('GOOGLE_PUBSUB_TOPIC');
     }
 
     private static function randomNotificationId()
