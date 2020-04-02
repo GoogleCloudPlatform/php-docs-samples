@@ -35,6 +35,6 @@ foreach ($securityCenterClient->listNotificationConfigs($organizationName) as $e
     printf('Found notification config %s' . PHP_EOL, $element->getName());
 }
 
-print('Notification configs were listed');
+print('Notification configs were listed' . PHP_EOL);
 
 // [END scc_list_notification_configs]

@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class securitycenterTest extends TestCase
+class securityCenterTest extends TestCase
 {
     use TestTrait;
 
@@ -117,7 +117,7 @@ class securitycenterTest extends TestCase
 
     private static function getTopicName()
     {
-        return self::requireEnv('GOOGLE_PUBSUB_TOPIC');
+        return self::requireEnv('GOOGLE_TOPIC_ID');
     }
 
     private static function randomNotificationId()

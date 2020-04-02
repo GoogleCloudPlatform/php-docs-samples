@@ -36,6 +36,6 @@ $notificationConfigName = $securityCenterClient::notificationConfigName(
 );
 
 $response = $securityCenterClient->getNotificationConfig($notificationConfigName);
-printf('Notification config was retrieved: %s', $response->getName());
+printf('Notification config was retrieved: %s' . PHP_EOL, $response->getName());
 
 // [END scc_get_notification_config]

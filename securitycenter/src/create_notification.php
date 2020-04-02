@@ -48,6 +48,6 @@ $response = $securityCenterClient->createNotificationConfig(
     $notificationConfigId,
     $notificationConfig
 );
-printf('Notification config was created: %s', $response->getName());
+printf('Notification config was created: %s' . PHP_EOL, $response->getName());
 
 // [END scc_create_notification_config]
