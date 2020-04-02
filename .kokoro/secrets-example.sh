@@ -102,7 +102,7 @@ export GOOGLE_PUBSUB_TOPIC=php-example-topic
 
 # Security Center
 export GOOGLE_ORGANIZATION_ID=
-export GOOGLE_TOPIC_ID=
+export GOOGLE_SECURITYCENTER_PUBSUB_TOPIC=
 
 # Spanner
 export GOOGLE_SPANNER_INSTANCE_ID=
