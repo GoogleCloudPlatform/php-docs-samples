@@ -49,6 +49,6 @@ $notificationConfig = (new NotificationConfig())
     ->setPubsubTopic($pubsubTopic);
 
 $response = $securityCenterClient->updateNotificationConfig($notificationConfig, [$fieldMask]);
-printf('Notification config was updated: %s', $response->getName());
+printf('Notification config was updated: %s' . PHP_EOL, $response->getName());
 
 // [END scc_update_notification_config]

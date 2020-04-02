@@ -36,6 +36,6 @@ $notificationConfigName = $securityCenterClient::notificationConfigName(
 );
 
 $response = $securityCenterClient->deleteNotificationConfig($notificationConfigName);
-print('Notification config was deleted');
+print('Notification config was deleted' . PHP_EOL);
 
 // [END scc_delete_notification_config]
