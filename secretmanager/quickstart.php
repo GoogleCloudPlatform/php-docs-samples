@@ -48,7 +48,7 @@ $secret = $client->createSecret($parent, $secretId,
         'replication' => new Replication([
             'automatic' => new Automatic(),
         ]),
-    ]),
+    ])
 );
 
 // Add the secret version.
