@@ -84,7 +84,7 @@ class secretmanagerTest extends TestCase
                 'replication' => new Replication([
                     'automatic' => new Automatic(),
                 ]),
-            ]),
+            ])
         );
     }
 
