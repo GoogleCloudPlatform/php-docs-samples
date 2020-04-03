@@ -18,7 +18,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 4) {
-    return printf('Usage: php %s ORGANIZATION_ID NOTIFICATION_ID PROJECT_ID TOPIC_NAME\n',  basename(__FILE__));
+    return printf('Usage: php %s ORGANIZATION_ID NOTIFICATION_ID PROJECT_ID TOPIC_NAME\n', basename(__FILE__));
 }
 list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv;
 
