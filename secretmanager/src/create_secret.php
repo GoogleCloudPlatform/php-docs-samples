@@ -53,7 +53,7 @@ $secret = $client->createSecret($parent, $secretId,
         'replication' => new Replication([
             'automatic' => new Automatic(),
         ]),
-    ]),
+    ])
 );
 
 // Print the new secret name.
