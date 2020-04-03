@@ -24,12 +24,14 @@ use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\Core\Exception\FailedPreconditionException;
 
 class spannerTest extends TestCase
 {
-    use TestTrait, EventuallyConsistentTestTrait, ExecuteCommandTrait {
+    use RetryTrait, TestTrait, EventuallyConsistentTestTrait;
+    use ExecuteCommandTrait {
         ExecuteCommandTrait::runCommand as traitRunCommand;
     }
 
@@ -65,10 +67,7 @@ class spannerTest extends TestCase
 
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
-        $instance = $spanner->instance(self::$instanceId);
-        if ($instance->exists()) {
-            self::$instance = $instance;
-        }
+        self::$instance = $spanner->instance(self::$instanceId);
     }
 
     public function testCreateDatabase()
@@ -626,14 +625,15 @@ class spannerTest extends TestCase
 
     /**
      * @depends testInsertData
+     * @retryAttempts 3
      */
     public function testCreateBackup()
     {
-        $output = $this->retry([$this, 'traitRunCommand'], ['create-backup', [
+        $output = $this->traitRunCommand('create-backup', [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId,
             'backup_id' => self::$backupId,
-        ]]);
+        ]);
         $this->assertContains(self::$backupId, $output);
     }
 
@@ -676,14 +676,15 @@ class spannerTest extends TestCase
 
     /**
      * @depends testUpdateBackup
+     * @retryAttempts 3
      */
     public function testRestoreBackup()
     {
-        $output = $this->retry([$this, 'traitRunCommand'], ['restore-backup', [
+        $output = $this->traitRunCommand('restore-backup', [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId . '-res',
             'backup_id' => self::$backupId,
-        ]]);
+        ]);
         $this->assertContains(self::$backupId, $output);
         $this->assertContains(self::$databaseId, $output);
     }
@@ -740,32 +741,6 @@ class spannerTest extends TestCase
         }
     }
 
-    /**
-     * A workaround for backup creation/restore operation limit
-     * when several testing scripts using the same Spanner instance run in parallel.
-     *
-     * @param callable $call
-     * @param array $args
-     * @return mixed
-     */
-    private function retry($call, $args)
-    {
-        $cutoffTime = time() + 20 * 60;
-        $sleepDuration = 10;
-
-        while (true) {
-            try {
-                return call_user_func_array($call, $args);
-            } catch (FailedPreconditionException $e) {
-                if (!strstr($e->getMessage(), 'maximum number of pending') or time() >= $cutoffTime) {
-                    throw $e;
-                }
-
-                sleep($sleepDuration);
-            }
-        }
-    }
-
     private function runCommand($commandName)
     {
         return $this->traitRunCommand($commandName, [
@@ -776,7 +751,7 @@ class spannerTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (!self::$instance) {
+        if (!self::$instance->exists()) {
             return;
         }
 
@@ -791,7 +766,6 @@ class spannerTest extends TestCase
             if (strstr($db->name(), self::$databaseId) !== false) {
                 try {
                     $db->drop();
-
                 } catch (\Exception $e) {
                     $exceptions[] = $e;
                 }
