@@ -177,7 +177,12 @@ class spannerBackupTest extends TestCase
             'filter' => sprintf($filter, 'OptimizeRestoredDatabaseMetadata')
         ]);
 
-        foreach (array_merge($backupOperations, $dbOperations) as $operation) {
+        foreach ($backupOperations as $operation) {
+            if (!$operation->done()) {
+                $operation->pollUntilComplete();
+            }
+        }
+        foreach ($dbOperations as $operation) {
             if (!$operation->done()) {
                 $operation->pollUntilComplete();
             }
