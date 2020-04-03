@@ -791,7 +791,6 @@ class spannerTest extends TestCase
             if (strstr($db->name(), self::$databaseId) !== false) {
                 try {
                     $db->drop();
-
                 } catch (\Exception $e) {
                     $exceptions[] = $e;
                 }
