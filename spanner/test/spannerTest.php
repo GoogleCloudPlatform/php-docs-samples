@@ -18,18 +18,18 @@
 namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\Database;
-use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\Core\Exception\FailedPreconditionException;
 
 class spannerTest extends TestCase
 {
-    use TestTrait, EventuallyConsistentTestTrait, ExecuteCommandTrait {
+    use RetryTrait, TestTrait, EventuallyConsistentTestTrait;
+    use ExecuteCommandTrait {
         ExecuteCommandTrait::runCommand as traitRunCommand;
     }
 
@@ -65,10 +65,7 @@ class spannerTest extends TestCase
 
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
-        $instance = $spanner->instance(self::$instanceId);
-        if ($instance->exists()) {
-            self::$instance = $instance;
-        }
+        self::$instance = $spanner->instance(self::$instanceId);
     }
 
     public function testCreateDatabase()
@@ -615,157 +612,6 @@ class spannerTest extends TestCase
         });
     }
 
-    /**
-     * @depends testCreateDatabase
-     */
-    public function testCancelBackup()
-    {
-        $output = $this->runCommand('cancel-backup');
-        $this->assertContains('Cancel backup operation complete', $output);
-    }
-
-    /**
-     * @depends testInsertData
-     */
-    public function testCreateBackup()
-    {
-        $output = $this->retry([$this, 'traitRunCommand'], ['create-backup', [
-            'instance_id' => self::$instanceId,
-            'database_id' => self::$databaseId,
-            'backup_id' => self::$backupId,
-        ]]);
-        $this->assertContains(self::$backupId, $output);
-    }
-
-    /**
-     * @depends testCreateBackup
-     */
-    public function testListBackupOperations()
-    {
-        $db2 = self::$databaseId . '-2';
-        self::$instance->database($db2)->create();
-        $backup = self::$instance->backup(self::$backupId . '-pro');
-        $lro = $backup->create($db2, new \DateTime('+7 hours'));
-        $output = $this->runCommand('list-backup-operations');
-        $this->assertContains(basename($lro->name()), $output);
-        $lro->pollUntilComplete();
-    }
-
-    /**
-     * @depends testCreateBackup
-     */
-    public function testListBackups()
-    {
-        $output = $this->traitRunCommand('list-backups', [
-            'instance_id' => self::$instanceId,
-        ]);
-        $this->assertContains(self::$backupId, $output);
-    }
-
-    /**
-     * @depends testCreateBackup
-     */
-    public function testUpdateBackup()
-    {
-        $output = $this->traitRunCommand('update-backup', [
-            'instance_id' => self::$instanceId,
-            'backup_id' => self::$backupId,
-        ]);
-        $this->assertContains(self::$backupId, $output);
-    }
-
-    /**
-     * @depends testUpdateBackup
-     */
-    public function testRestoreBackup()
-    {
-        $output = $this->retry([$this, 'traitRunCommand'], ['restore-backup', [
-            'instance_id' => self::$instanceId,
-            'database_id' => self::$databaseId . '-res',
-            'backup_id' => self::$backupId,
-        ]]);
-        $this->assertContains(self::$backupId, $output);
-        $this->assertContains(self::$databaseId, $output);
-    }
-
-
-    /**
-     * @depends testRestoreBackup
-     */
-    public function testListDatabaseOperations()
-    {
-        $output = $this->traitRunCommand('list-database-operations', [
-            'instance_id' => self::$instanceId,
-        ]);
-        $this->assertContains('Running optimize operation', $output);
-    }
-
-    /**
-     * @depends testListBackups
-     */
-    public function testDeleteBackup()
-    {
-        self::waitForBackupOperations(self::$instance);
-        self::waitForDatabaseOperations(self::$instance);
-        $output = $this->traitRunCommand('delete-backup', [
-            'instance_id' => self::$instanceId,
-            'backup_id' => self::$backupId,
-        ]);
-        $this->assertContains(self::$backupId, $output);
-    }
-
-    private static function waitForBackupOperations($instance)
-    {
-        $filter = "(metadata.@type:type.googleapis.com/" .
-            "google.spanner.admin.database.v1.CreateBackupMetadata)";
-
-        $operations = $instance->backupOperations(['filter' => $filter]);
-        foreach ($operations as $operation) {
-            if (!$operation->done()) {
-                $operation->pollUntilComplete();
-            }
-        }
-    }
-
-    private static function waitForDatabaseOperations($instance)
-    {
-        $filter = "(metadata.@type:type.googleapis.com/" .
-            "google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)";
-
-        $operations = $instance->databaseOperations(['filter' => $filter]);
-        foreach ($operations as $operation) {
-            if (!$operation->done()) {
-                $operation->pollUntilComplete();
-            }
-        }
-    }
-
-    /**
-     * A workaround for backup creation/restore operation limit
-     * when several testing scripts using the same Spanner instance run in parallel.
-     *
-     * @param callable $call
-     * @param array $args
-     * @return mixed
-     */
-    private function retry($call, $args)
-    {
-        $cutoffTime = time() + 20 * 60;
-        $sleepDuration = 10;
-
-        while (true) {
-            try {
-                return call_user_func_array($call, $args);
-            } catch (FailedPreconditionException $e) {
-                if (!strstr($e->getMessage(), 'maximum number of pending') or time() >= $cutoffTime) {
-                    throw $e;
-                }
-
-                sleep($sleepDuration);
-            }
-        }
-    }
-
     private function runCommand($commandName)
     {
         return $this->traitRunCommand($commandName, [
@@ -776,41 +622,9 @@ class spannerTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (!self::$instance) {
-            return;
-        }
-
-        self::waitForBackupOperations(self::$instance);
-        self::waitForDatabaseOperations(self::$instance);
-
-        $exceptions = [];
-
-        $dbs = self::$instance->databases();
-        /** @var Database $db */
-        foreach ($dbs as $db) {
-            if (strstr($db->name(), self::$databaseId) !== false) {
-                try {
-                    $db->drop();
-                } catch (\Exception $e) {
-                    $exceptions[] = $e;
-                }
-            }
-        }
-
-        $backups = self::$instance->backups();
-        /** @var Backup $backup */
-        foreach ($backups as $backup) {
-            if (strstr($backup->name(), self::$databaseId) !== false) {
-                try {
-                    $backup->delete();
-                } catch (\Exception $e) {
-                    $exceptions[] = $e;
-                }
-            }
-        }
-
-        if ($exceptions) {
-            throw new \RuntimeException(PHP_EOL . implode(PHP_EOL, $exceptions));
+        if (self::$instance->exists()) {// Clean up database
+            $database = self::$instance->database(self::$databaseId);
+            $database->drop();
         }
     }
 }

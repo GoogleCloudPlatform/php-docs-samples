@@ -66,6 +66,7 @@ ALT_PROJECT_TESTS=(
     monitoring
     pubsub/api
     storage
+    spanner
     video
     vision
 )
