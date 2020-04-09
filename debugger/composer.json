@@ -3,7 +3,7 @@
     "type": "project",
     "require": {
         "php": ">= 7.0",
-        "google/cloud-debugger": "^0.19.0",
+        "google/cloud-debugger": "^1.0.0",
         "silex/silex": "~2.0",
         "twig/twig": "^2.3"
     },

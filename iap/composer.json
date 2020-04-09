@@ -1,7 +1,7 @@
 {
     "require": {
         "symfony/console": "^2.8",
-        "google/auth":"^1.7.1",
+        "google/auth":"^1.8.0",
         "guzzlehttp/guzzle": "~6.3.3",
         "kelvinmo/simplejwt": "^0.2.4"
     },
