@@ -21,6 +21,7 @@ env_variables:
   DB_USER: my-db-user
   DB_PASS: my-db-pass
   DB_NAME: my_db
+  DB_HOSTNAME: localhost
 
 # Defaults to "serve index.php" and "serve public/index.php". Can be used to
 # serve a custom PHP front controller (e.g. "serve backend/index.php") or to

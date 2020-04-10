@@ -32,8 +32,9 @@ class DB
         // $username = 'your_db_user';
         // $password = 'yoursupersecretpassword';
         // $schema = 'your_db_name';
+        // $hostname = 'your_hostname';
 
-        $dsn = sprintf('sqlsrv:server=(local);Database=%s', $schema, $hostname);
+        $dsn = sprintf('sqlsrv:server=%s;Database=%s', $hostname, $schema);
 
         return new PDO($dsn, $username, $password);
         # [END cloud_sql_sqlserver_pdo_create]
