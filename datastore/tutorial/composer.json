@@ -4,7 +4,7 @@
         "symfony/console": "^3.0"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "6.5.2"
     },
     "autoload": {
         "psr-4": { "Google\\Cloud\\Samples\\Datastore\\Tasks\\": "src" },

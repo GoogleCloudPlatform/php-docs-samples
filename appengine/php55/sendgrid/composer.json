@@ -4,7 +4,7 @@
         "sendgrid/sendgrid": "5.0.4"
     },
     "require-dev": {
-        "paragonie/random_compat": "^2.0",
-        "symfony/yaml": "^3.1"
+        "paragonie/random_compat": "2.0.18",
+        "symfony/yaml": "3.4.39"
     }
 }

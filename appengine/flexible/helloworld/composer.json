@@ -4,7 +4,7 @@
     "silex/silex": "^2.3"
   },
   "require-dev": {
-    "symfony/browser-kit": "^4.4",
-    "symfony/http-kernel": "^4.4"
+    "symfony/browser-kit": "4.4.7",
+    "symfony/http-kernel": "4.4.7"
   }
 }

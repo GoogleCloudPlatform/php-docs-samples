@@ -1,8 +1,8 @@
 {
     "require-dev": {
-        "guzzlehttp/guzzle": "~6.0",
-        "symfony/browser-kit": "~2",
-        "twig/twig": "~1.0"
+        "guzzlehttp/guzzle": "6.5.2",
+        "symfony/browser-kit": "2.8.52",
+        "twig/twig": "1.42.5"
     },
     "autoload": {
         "psr-4": {"Google\\Cloud\\Test\\": "tests/"}

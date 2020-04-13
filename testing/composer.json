@@ -1,7 +1,7 @@
 {
     "require-dev": {
         "google/cloud-tools": "dev-master",
-        "phpunit/phpunit": "^7",
-        "bshaffer/phpunit-retry-annotations": "^0.1.0"
+        "phpunit/phpunit": "7.5.20",
+        "bshaffer/phpunit-retry-annotations": "0.1.0"
     }
 }

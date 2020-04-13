@@ -5,8 +5,8 @@
         "google/auth": "^1.8.0"
     },
     "require-dev": {
-        "symfony/browser-kit": " ^3.0",
-        "paragonie/random_compat": " ^2.0"
+        "symfony/browser-kit": " 3.4.39",
+        "paragonie/random_compat": " 2.0.18"
     },
     "autoload": {
         "psr-4": {

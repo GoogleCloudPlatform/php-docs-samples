@@ -2,9 +2,9 @@
     "name": "google/vision",
     "type": "project",
     "require": {
-        "google/cloud-vision": "^1.0.0",
-        "google/cloud-storage": "^1.20.1",
-        "symfony/console": "^3.1"
+        "google/cloud-vision": "1.0.0",
+        "google/cloud-storage": "1.20.1",
+        "symfony/console": "3.4.39"
     },
     "autoload": {
         "psr-4": {

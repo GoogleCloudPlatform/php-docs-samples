@@ -3,10 +3,10 @@
         "drush/drush": "^8.1"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
-        "monolog/monolog": "^1.19",
-        "symfony/console": " ^2.7",
-        "symfony/process": "^3.0",
-        "paragonie/random_compat": " ^2.0"
+        "guzzlehttp/guzzle": "6.5.2",
+        "monolog/monolog": "1.25.3",
+        "symfony/console": " 2.8.52",
+        "symfony/process": "3.4.39",
+        "paragonie/random_compat": " 2.0.18"
     }
 }

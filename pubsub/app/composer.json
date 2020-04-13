@@ -8,7 +8,7 @@
     "symfony/twig-bridge": "^4.4"
   },
   "require-dev": {
-    "paragonie/random_compat": "^2.0",
-    "symfony/browser-kit": "~2.7"
+    "paragonie/random_compat": "2.0.18",
+    "symfony/browser-kit": "2.8.52"
   }
 }

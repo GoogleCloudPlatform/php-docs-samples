@@ -6,7 +6,7 @@
         "twig/twig": "^1.29"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
-        "symfony/browser-kit": "^3.2"
+        "guzzlehttp/guzzle": "6.5.2",
+        "symfony/browser-kit": "3.4.39"
     }
 }

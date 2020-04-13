@@ -26,7 +26,7 @@
         ]
     },
     "require-dev": {
-        "google/cloud-core": "^1.20"
+        "google/cloud-core": "1.36.1"
     },
     "autoload-dev": {
         "psr-4": {"Google\\Cloud\\Samples\\Dialogflow\\": "test/"}

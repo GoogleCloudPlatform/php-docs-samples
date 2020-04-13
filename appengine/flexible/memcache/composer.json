@@ -4,9 +4,9 @@
         "twig/twig": "^1.24"
     },
     "require-dev": {
-        "gecko-packages/gecko-memcache-mock": "^2.0",
-        "paragonie/random_compat": "^2.0",
-        "monolog/monolog": "^1.19",
+        "gecko-packages/gecko-memcache-mock": "2.1.0",
+        "paragonie/random_compat": "2.0.18",
+        "monolog/monolog": "1.25.3",
         "symfony/yaml": "~3.0|~4.0"
     }
 }

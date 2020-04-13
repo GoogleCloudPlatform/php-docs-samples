@@ -4,6 +4,6 @@
         "google/apiclient": "^2.0"
     },
     "require-dev": {
-        "paragonie/random_compat": "^2.0"
+        "paragonie/random_compat": "2.0.18"
     }
 }
