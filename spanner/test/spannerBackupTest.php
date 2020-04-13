@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
+use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
@@ -198,40 +199,28 @@ class spannerBackupTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (!self::$instance->exists()) {
-            return;
-        }
+        if (self::$instance->exists()) {
+            self::waitForOperations();
 
-        self::waitForOperations();
+            $backoff = new ExponentialBackoff(3);
 
-        $exceptions = [];
-
-        $dbs = self::$instance->databases();
-        /** @var Database $db */
-        foreach ($dbs as $db) {
-            if (strstr($db->name(), self::$databaseId) !== false) {
-                try {
-                    $db->drop();
-                } catch (\Exception $e) {
-                    $exceptions[] = $e;
+            /** @var Database $db */
+            foreach (self::$instance->databases() as $db) {
+                if (false !== strpos($db->name(), self::$databaseId)) {
+                    $backoff->execute(function () use ($db) {
+                        $db->drop();
+                    });
                 }
             }
-        }
 
-        $backups = self::$instance->backups();
-        /** @var Backup $backup */
-        foreach ($backups as $backup) {
-            if (strstr($backup->name(), self::$databaseId) !== false) {
-                try {
-                    $backup->delete();
-                } catch (\Exception $e) {
-                    $exceptions[] = $e;
+            /** @var Backup $backup */
+            foreach (self::$instance->backups() as $backup) {
+                if (false !== strpos($backup->name(), self::$databaseId)) {
+                    $backoff->execute(function () use ($backup) {
+                        $backup->delete();
+                    });
                 }
             }
-        }
-
-        if ($exceptions) {
-            throw new \RuntimeException(PHP_EOL . implode(PHP_EOL, $exceptions));
         }
     }
 }

@@ -2,7 +2,7 @@
     "require": {
         "silex/silex": " ^2.3",
         "symfony/console": " ^3.0",
-        "google/auth": "^1.5.1"
+        "google/auth": "^1.8.0"
     },
     "require-dev": {
         "symfony/browser-kit": " ^3.0",
