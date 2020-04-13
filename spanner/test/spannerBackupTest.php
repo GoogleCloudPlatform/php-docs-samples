@@ -207,7 +207,7 @@ class spannerBackupTest extends TestCase
             /** @var Database $db */
             foreach (self::$instance->databases() as $db) {
                 if (false !== strpos($db->name(), self::$databaseId)) {
-                    $backoff->execute(function() use ($db) {
+                    $backoff->execute(function () use ($db) {
                         $db->drop();
                     });
                 }
@@ -216,7 +216,7 @@ class spannerBackupTest extends TestCase
             /** @var Backup $backup */
             foreach (self::$instance->backups() as $backup) {
                 if (false !== strpos($backup->name(), self::$databaseId)) {
-                    $backoff->execute(function() use ($backup) {
+                    $backoff->execute(function () use ($backup) {
                         $backup->delete();
                     });
                 }
