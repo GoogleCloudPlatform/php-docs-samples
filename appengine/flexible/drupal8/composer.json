@@ -1,6 +1,6 @@
 {
     "require": {
-        "drush/drush": "^8.1"
+        "drush/drush": "^10.0.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
