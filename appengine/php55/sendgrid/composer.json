@@ -1,6 +1,6 @@
 {
     "require": {
-        "silex/silex": "^1.3",
+        "silex/silex": "^2.0.0",
         "sendgrid/sendgrid": "5.0.4"
     },
     "require-dev": {
