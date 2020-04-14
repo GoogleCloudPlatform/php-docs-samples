@@ -7,5 +7,6 @@
   "ignorePaths": [
     "appengine/php55",
     "appengine/flexible"
-  ]
+  ],
+  "prConcurrentLimit": 5
 }
