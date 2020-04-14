@@ -1,6 +1,5 @@
 {
     "require": {
-        "opencensus/opencensus": "^0.2.1",
-        "google/cloud-trace": "^1.0.0"
+        "opencensus/opencensus-exporter-stackdriver": "^0.1.0"
     }
 }
