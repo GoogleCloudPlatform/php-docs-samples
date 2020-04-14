@@ -1,7 +1,7 @@
 {
     "require": {
         "silex/silex": "^2.3",
-        "twilio/sdk": "^4.10"
+        "twilio/sdk": "^6.0.0"
     },
     "require-dev": {
         "paragonie/random_compat": "^2.0",
