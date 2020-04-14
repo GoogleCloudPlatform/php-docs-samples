@@ -1,7 +1,7 @@
 {
     "require": {
         "silex/silex": "^2.3",
-        "sendgrid/sendgrid": "^5.0"
+        "sendgrid/sendgrid": "^7.0.0"
     },
     "require-dev": {
         "paragonie/random_compat": "^2.0",
