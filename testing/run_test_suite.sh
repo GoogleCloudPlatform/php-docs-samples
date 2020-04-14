@@ -110,7 +110,7 @@ fi
 
 run_tests()
 {
-    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
+    if [[ " ${ALT_PROJECT_TESTS[@]} " =~ " ${DIR} " ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
         echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
         GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_ALT_APPLICATION_CREDENTIALS \
             GCLOUD_PROJECT=$GOOGLE_ALT_PROJECT_ID \
@@ -123,7 +123,7 @@ run_tests()
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
     else
-        if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
+        if [[ " ${FLAKES[@]} " =~ " ${DIR} " ]]; then
             echo "$1: failed" >> "${FAILED_FLAKY_FILE}"
         else
             echo "$1: failed" >> "${FAILED_FILE}"
@@ -141,11 +141,11 @@ do
             continue
         fi
     fi
-    if [[ "${SKIP_TESTS[@]}" =~ "${DIR}" ]]; then
+    if [[ " ${SKIP_TESTS[@]} " =~ " ${DIR} " ]]; then
         echo "Skipping tests in $DIR (explicitly flagged to be skipped)"
         continue
     fi
-    if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+    if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! " ${REST_TESTS[@]} " =~ " ${DIR} " ]]; then
         echo "Skipping tests in $DIR (no REST tests)"
         continue
     fi
