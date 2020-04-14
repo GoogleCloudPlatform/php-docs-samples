@@ -98,6 +98,9 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
 
+# Install phpunit globally
+RUN composer global require phpunit/phpunit:^7.0
+
 # Install Google Cloud SDK
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         -o ${HOME}/google-cloud-sdk.tar.gz \
@@ -108,7 +111,7 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         --command-completion false
 
 # Make composer and gcloud bins available via the PATH variable
-ENV PATH="$PATH:/root/google-cloud-sdk/bin:/root/.composer/vendor/bin"
+ENV PATH="$PATH:/root/.composer/vendor/bin:/root/google-cloud-sdk/bin"
 
 # Configure Google Cloud SDK
 RUN gcloud config set app/promote_by_default false && \
