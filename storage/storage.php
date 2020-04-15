@@ -318,7 +318,7 @@ EOF
             if (!$expression) {
                 throw new InvalidArgumentException('Must provide expression as an option.');
             }
-            remove_bucket_conditional_iam_binding($bucket_name, $role, $title, $description, $expression);
+            remove_bucket_conditional_iam_binding($bucketName, $role, $title, $description, $expression);
         } else {
             view_bucket_iam_members($bucketName);
         }
