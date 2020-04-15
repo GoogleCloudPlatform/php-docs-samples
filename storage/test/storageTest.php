@@ -144,58 +144,6 @@ class storageTest extends TestCase
         $this->assertContains("Bucket deleted: $bucketName", $output);
     }
 
-    public function testBucketDefaultAcl()
-    {
-        $output = $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
-        ]);
-
-        $this->assertContains(": OWNER", $output);
-    }
-
-    public function testManageBucketDefaultAcl()
-    {
-        $bucket = self::$storage->bucket(self::$bucketName);
-        $acl = $bucket->defaultAcl();
-
-        $output = $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
-            '--entity' => 'allAuthenticatedUsers',
-            '--create' => true
-        ]);
-
-        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
-        $this->assertArrayHasKey('role', $aclInfo);
-        $this->assertEquals('READER', $aclInfo['role']);
-
-        $output .= $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
-            '--entity' => 'allAuthenticatedUsers'
-        ]);
-
-        $output .= $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
-            '--entity' => 'allAuthenticatedUsers',
-            '--delete' => true
-        ]);
-
-        try {
-            $acl->get(['entity' => 'allAuthenticatedUsers']);
-            $this->fail();
-        } catch (NotFoundException $e) {
-            $this->assertTrue(true);
-        }
-
-        $bucketUrl = sprintf('gs://%s', self::$bucketName);
-        $outputString = <<<EOF
-Added allAuthenticatedUsers (READER) to $bucketUrl default ACL
-allAuthenticatedUsers: READER
-Deleted allAuthenticatedUsers from $bucketUrl default ACL
-
-EOF;
-        $this->assertEquals($outputString, $output);
-    }
-
     public function testManageBucketLabels()
     {
         $label1 = 'label1-' . time();

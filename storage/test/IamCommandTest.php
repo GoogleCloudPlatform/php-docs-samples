@@ -141,7 +141,6 @@ with condition:
                     $foundBinding = true;
                     break;
                 }
-
             }
         }
         $this->assertTrue($foundBinding);
