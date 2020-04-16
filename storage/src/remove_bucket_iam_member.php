@@ -50,10 +50,18 @@ function remove_bucket_iam_member($bucketName, $role, $member)
             if ($key !== false) {
                 unset($binding['members'][$key]);
 
-                // If the last member is removed from the binding, clean up
-                // the binding.
+                // If the last member is removed from the binding, clean up the
+                // binding.
                 if (count($binding['members']) == 0) {
                     unset($policy['bindings'][$i]);
+                    // Ensure array keys are sequential, otherwise JSON encodes
+                    // the array as an object, which fails when calling the API.
+                    $policy['bindings'] = array_values($policy['bindings']);
+                } else {
+                    // Ensure array keys are sequential, otherwise JSON encodes
+                    // the array as an object, which fails when calling the API.
+                    $binding['members'] = array_values($binding['members']);
+                    $policy['bindings'][$i] = $binding;
                 }
 
                 $iam->setPolicy($policy);

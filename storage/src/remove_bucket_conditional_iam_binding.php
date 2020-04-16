@@ -40,7 +40,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @return void
  */
-function remove_bucket_conditional_iam_binding($bucketName, $role, $members, $title, $description, $expression)
+function remove_bucket_conditional_iam_binding($bucketName, $role, $title, $description, $expression)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -51,11 +51,11 @@ function remove_bucket_conditional_iam_binding($bucketName, $role, $members, $ti
 
     $key_of_conditional_binding = null;
     foreach ($policy['bindings'] as $key => $binding) {
-        if ($binding['role'] == $role && $binding['condition'] != null) {
+        if ($binding['role'] == $role && isset($binding['condition'])) {
             $condition = $binding['condition'];
             if ($condition['title'] == $title
-                 && $condition['description'] == description
-                 && $condition['expression'] == expression) {
+                 && $condition['description'] == $description
+                 && $condition['expression'] == $expression) {
                 $key_of_conditional_binding = $key;
                 break;
             }
@@ -64,6 +64,9 @@ function remove_bucket_conditional_iam_binding($bucketName, $role, $members, $ti
 
     if ($key_of_conditional_binding != null) {
         unset($policy['bindings'][$key_of_conditional_binding]);
+        // Ensure array keys are sequential, otherwise JSON encodes
+        // the array as an object, which fails when calling the API.
+        $policy['bindings'] = array_values($policy['bindings']);
         $bucket->iam()->setPolicy($policy);
         print('Conditional Binding was removed.' . PHP_EOL);
     } else {
