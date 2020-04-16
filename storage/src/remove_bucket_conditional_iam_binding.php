@@ -64,6 +64,9 @@ function remove_bucket_conditional_iam_binding($bucketName, $role, $title, $desc
 
     if ($key_of_conditional_binding != null) {
         unset($policy['bindings'][$key_of_conditional_binding]);
+        // Ensure array keys are sequential, otherwise JSON encodes
+        // the array as an object, which fails when calling the API.
+        $policy['bindings'] = array_values($policy['bindings']);
         $bucket->iam()->setPolicy($policy);
         print('Conditional Binding was removed.' . PHP_EOL);
     } else {
