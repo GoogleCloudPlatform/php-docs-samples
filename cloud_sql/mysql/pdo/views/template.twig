@@ -15,7 +15,7 @@ limitations under the License.
 -->
 <html lang="en">
 <head>
-    <title>Tabs VS Spaces</title>
+    <title>Tabs vs Spaces</title>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -24,58 +24,58 @@ limitations under the License.
 <body>
 <nav class="red lighten-1">
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">Tabs VS Spaces</a>
+        <a href="#" class="brand-logo center">Tabs vs Spaces</a>
     </div>
 </nav>
 <div class="section">
     <div class="center">
         <h4>
-            <?php if ($tab_count == $space_count): ?>
-            TABS and SPACES are evenly matched!
-            <?php elseif ($tab_count > $space_count): ?>
-            TABS are winning by <?=$tab_count - $space_count?>
-            <?= $tab_count - $space_count > 1 ? "votes" : "vote" ?>!
-            <?php elseif ($space_count > $tab_count): ?>
-            SPACES are winning by <?=$space_count - $tab_count?>
-            <?= $space_count - $tab_count > 1 ? "votes" : "vote" ?>!
-            <?php endif ?>
+            {% if tabCount == spaceCount %}
+                Tabs and Spaces are evenly matched!
+            {% elseif tabCount > spaceCount %}
+                Tabs are winning by {{ tabCount - spaceCount }}
+                {{ tabCount - spaceCount > 1 ? "votes" : "vote" }}!
+            {% elseif tabCount < spaceCount %}
+                Spaces are winning by {{ spaceCount - tabCount }}
+                {{ spaceCount - tabCount > 1 ? "votes" : "vote" }}!
+            {% endif %}
         </h4>
     </div>
     <div class="row center">
         <div class="col s6 m5 offset-m1">
-            <div class="card-panel <?= $tab_count > $space_count ?: 'green lighten-3' ?>">
+            <div class="card-panel {{ tabCount > spaceCount ?: 'green lighten-3' }}">
                 <i class="material-icons large">keyboard_tab</i>
-                <h3><?=$tab_count?> votes</h3>
+                <h3>{{ tabCount }} votes</h3>
                 <button id="voteTabs" class="btn green">Vote for TABS</button>
             </div>
         </div>
         <div class="col s6 m5">
-            <div class="card-panel <?= $tab_count < $space_count ?: 'blue lighten-3' ?>">
+            <div class="card-panel {{ tabCount < spaceCount ?: 'blue lighten-3' }}">
                 <i class="material-icons large">space_bar</i>
-                <h3><?=$space_count?> votes</h3>
+                <h3>{{ spaceCount }} votes</h3>
                 <button id="voteSpaces" class="btn blue">Vote for SPACES</button>
             </div>
         </div>
     </div>
     <h4 class="header center">Recent Votes</h4>
     <ul class="container collection center">
-        <?php foreach ($list as $vote): ?>
+        {% for vote in votes %}
             <li class="collection-item avatar">
-                <?php if ($vote['candidate'] == "TABS"): ?>
+                {% if vote.vote_value == "TABS" %}
                     <i class="material-icons circle green">keyboard_tab</i>
-                <?php elseif ($vote['candidate'] == "SPACES"): ?>
+                {% elseif vote.vote_value == "SPACES" %}
                     <i class="material-icons circle blue">space_bar</i>
-                <?php endif ?>
+                {% endif %}
             <span class="title">
-                    A vote for <b><?= $vote['candidate'] ?></b>
+                    A vote for <b>{{ vote.vote_value }}</b>
                 </span>
-            <p>was cast at <?= $vote['time_cast'] ?></p>
+            <p>was cast at {{ vote.time_cast }}</p>
         </li>
-        <?php endforeach ?>
+        {% endfor %}
     </ul>
 </div>
 <script>
-    function vote(team) {
+    function vote(voteValue) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState == 4) {
@@ -86,7 +86,7 @@ limitations under the License.
         };
         xhr.open("POST", "/", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send("team=" + team);
+        xhr.send("voteValue=" + voteValue);
     }
     document.getElementById("voteTabs").addEventListener("click", function () {
         vote("TABS");

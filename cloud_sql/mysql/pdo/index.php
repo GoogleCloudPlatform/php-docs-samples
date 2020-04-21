@@ -15,28 +15,36 @@
  * limitations under the License.
  */
 
-require_once 'src/DB.php';
-require_once 'src/Votes.php';
+declare(strict_types=1);
 
-use Google\Cloud\Samples\CloudSQL\MySQL\DB;
-use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
+use GuzzleHttp\Psr7;
 
-$votes = new Votes(DB::createPdoConnection());
+include __DIR__ . '/vendor/autoload.php';
 
-if ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'GET') {
-    $list = $votes->list();
+$app = include __DIR__ . '/src/app.php';
 
-    $vote_count = $votes->count_candidates();
-    $tab_count = $vote_count['tabs'];
-    $space_count = $vote_count['spaces'];
+$app->get('/', function ($request, $response) {
+    return $this->get('view')->render($response, 'template.twig', [
+        'votes' => $this->get('votes')->listVotes(),
+        'tabCount' => $this->get('votes')->getCountByValue('TABS'),
+        'spaceCount' => $this->get('votes')->getCountByValue('SPACES'),
+    ]);
+});
 
-    include_once("./template.php");
-} elseif ($_SERVER['REQUEST_URI'] == '/' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+$app->post('/', function ($request, $response) {
     $message = 'Invalid vote. Choose Between TABS and SPACES';
 
-    if (!empty($_POST['team']) && in_array($_POST['team'], ['SPACES', 'TABS'])) {
-        $message = $votes->save($_POST['team']);
+    $formData = $request->getParsedBody() + [
+        'voteValue' => ''
+    ];
+
+    if (in_array($formData['voteValue'], ['SPACES', 'TABS'])) {
+        $message = $this->get('votes')->insertVote($formData['voteValue'])
+            ? 'Vote cast for ' . $formData['voteValue']
+            : 'An error occurred';
     }
 
-    echo $message;
-}
+    return $response->withBody(Psr7\stream_for($message));
+});
+
+$app->run();
