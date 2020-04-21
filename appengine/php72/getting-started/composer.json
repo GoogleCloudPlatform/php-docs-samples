@@ -2,7 +2,7 @@
   "require": {
     "google/cloud-storage": "^1.6",
     "slim/slim": "^4.0",
-    "slim/twig-view": "^2.4",
+    "slim/twig-view": "^3.0",
     "slim/http": "^1.0",
     "slim/psr7": "^1.0"
   },
