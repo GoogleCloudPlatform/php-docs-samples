@@ -49,6 +49,9 @@ class spannerBackupTest extends TestCase
     /** @var string databaseId */
     protected static $databaseId;
 
+    /** @var string restoredDatabaseId */
+    protected static $restoredDatabaseId;
+
     /** @var $instance Instance */
     protected static $instance;
 
@@ -67,6 +70,7 @@ class spannerBackupTest extends TestCase
 
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
+        self::$restoredDatabaseId = self::$databaseId . '-res';
         self::$instance = $spanner->instance(self::$instanceId);
         self::$instance->database(self::$databaseId)->create();
     }
@@ -105,8 +109,10 @@ class spannerBackupTest extends TestCase
         $output = $this->runCommand('list-backup-operations', [
             'database_id' => self::$databaseId,
         ]);
-        $this->assertContains(basename($lro->name()), $output);
         $lro->pollUntilComplete();
+
+        $this->assertContains(basename($backup->name()), $output);
+        $this->assertContains($databaseId2, $output);
     }
 
     /**
@@ -135,7 +141,7 @@ class spannerBackupTest extends TestCase
     public function testRestoreBackup()
     {
         $output = $this->runCommand('restore-backup', [
-            'database_id' => self::$databaseId . '-res',
+            'database_id' => self::$restoredDatabaseId,
             'backup_id' => self::$backupId,
         ]);
         $this->assertContains(self::$backupId, $output);
@@ -149,7 +155,7 @@ class spannerBackupTest extends TestCase
     public function testListDatabaseOperations()
     {
         $output = $this->runCommand('list-database-operations');
-        $this->assertContains('Running optimize operation', $output);
+        $this->assertContains(self::$restoredDatabaseId, $output);
     }
 
     /**

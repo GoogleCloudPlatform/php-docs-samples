@@ -48,9 +48,10 @@ function list_database_operations($instanceId)
 
     foreach ($operations as $operation) {
         if (!$operation->done()) {
-            $operationName = basename($operation->name());
-            var_dump($operation->info());
-            print("Running optimize operation: $operationName" . PHP_EOL);
+            $meta = $operation->info()['metadata'];
+            $dbName = basename($meta['name']);
+            $progress = $meta['progress']['progressPercent'];
+            print("Database $dbName restored from backup is {$progress}% optimized." . PHP_EOL);
         }
     }
 }
