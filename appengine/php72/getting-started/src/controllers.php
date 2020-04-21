@@ -26,7 +26,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Google\Cloud\Storage\Bucket;
 
 $app->get('/', function (Request $request, Response $response) {
-    return $response->withRedirect('/books');
+    return $response
+        ->withHeader('Location', '/books')
+        ->withStatus(302);
 })->setName('home');
 
 $app->get('/books', function (Request $request, Response $response) {
@@ -60,7 +62,9 @@ $app->post('/books/add', function (Request $request, Response $response) {
     }
     $id = $this->cloudsql->create($book);
 
-    return $response->withRedirect("/books/$id");
+    return $response
+        ->withHeader('Location', "/books/$id")
+        ->withStatus(302);
 });
 
 $app->get('/books/{id}', function (Request $request, Response $response, $args) {
@@ -109,7 +113,9 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
         $book['image_url'] = $imageUrl;
     }
     if ($this->cloudsql->update($book)) {
-        return $response->withRedirect("/books/$args[id]");
+        return $response
+            ->withHeader('Location', "/books/$args[id]")
+            ->withStatus(302);
     }
 
     return new Response('Could not update book');
@@ -128,7 +134,9 @@ $app->post('/books/{id}/delete', function (Request $request, Response $response,
             $object->delete();
             // [END gae_php_app_delete_image]
         }
-        return $response->withRedirect('/books');
+        return $response
+            ->withHeader('Location', '/books')
+            ->withStatus(302);
     }
 
     return $response->withStatus(404);
