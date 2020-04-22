@@ -49,7 +49,7 @@ $container['db'] = function () {
         if ($cloud_sql_connection_name) {
             // Connect using UNIX sockets
             $dsn = sprintf(
-                'mysql:dbname=%s;unix_socket=/Users/jdp/cloudsql/%s',
+                'mysql:dbname=%s;unix_socket=/cloudsql/%s',
                 $schema,
                 $cloud_sql_connection_name
             );
