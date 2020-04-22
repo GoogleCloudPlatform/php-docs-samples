@@ -24,14 +24,16 @@ use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
+// Create and set the dependency injection container.
 $container = new Container;
 AppFactory::setContainer(new Psr11Container($container));
-$app = AppFactory::create();
 
+// add the votes manager to the container.
 $container['votes'] = function (Container $container) {
     return new Votes($container['db']);
 };
 
+// Setup the database connection in the container.
 $container['db'] = function () {
     $username = getenv("DB_USER");
     $password = getenv("DB_PASS");
@@ -75,12 +77,18 @@ $container['db'] = function () {
     return $conn;
 };
 
+// Configure the templating engine.
 $container['view'] = function() {
     return Twig::create(__DIR__ . '/../views');
 };
 
+// Create the application.
+$app = AppFactory::create();
+
+// Add the twig middleware
 $app->add(TwigMiddleware::createFromContainer($app));
 
+// Setup error handlinmg
 $app->addErrorMiddleware(true, false, false);
 
 return $app;
