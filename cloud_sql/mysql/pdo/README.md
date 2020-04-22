@@ -11,6 +11,12 @@
 
 To run this application locally, download and install the `cloud_sql_proxy` by following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
 
+To authenticate with Cloud SQL, set the `$GOOGLE_APPLICATION_CREDENTIALS` environment variable:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+```
+
 Once the proxy is ready, use one of the following commands to start the proxy in the background.
 
 You may connect to your instance via either unix sockets or TCP. To connect using a socket, you must provide the `-dir` option when starting the proxy. To connect via TCP, you must provide a port as part of the instance name. Both are demonstrated below.
@@ -36,7 +42,6 @@ $ ./cloud_sql_proxy \
 Set the required environment variables for your connection to Cloud SQL. If you are using TCP mode as described above, do not set the `CLOUD_SQL_CONNECTION_NAME` variable.
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
 export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
