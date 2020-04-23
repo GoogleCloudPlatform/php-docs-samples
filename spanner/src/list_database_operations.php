@@ -51,7 +51,7 @@ function list_database_operations($instanceId)
             $meta = $operation->info()['metadata'];
             $dbName = basename($meta['name']);
             $progress = $meta['progress']['progressPercent'];
-            print("Database $dbName restored from backup is {$progress}% optimized." . PHP_EOL);
+            printf('Database %s restored from backup is %d%% optimized.' . PHP_EOL, $dbName, $progress);
         }
     }
 }

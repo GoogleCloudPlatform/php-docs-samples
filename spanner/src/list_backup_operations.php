@@ -54,7 +54,7 @@ function list_backup_operations($instanceId, $databaseId)
             $backupName = basename($meta['name']);
             $dbName = basename($meta['database']);
             $progress = $meta['progress']['progressPercent'];
-            print("Backup operation $backupName on database $dbName is {$progress}% complete." . PHP_EOL);
+            printf('Backup %s on database %s is %d%% complete.' . PHP_EOL, $backupName, $dbName, $progress);
         }
     }
 }
