@@ -120,3 +120,5 @@ RUN gcloud config set app/promote_by_default false && \
     gcloud -q components install app-engine-php && \
     gcloud -q components update
 
+# Build php-cs-fixer
+RUN composer global require friendsofphp/php-cs-fixer
