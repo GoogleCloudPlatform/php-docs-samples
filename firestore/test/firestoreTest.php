@@ -41,6 +41,11 @@ class firestoreTest extends TestCase
         self::$firestoreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
     }
 
+    public static function tearDownAfterClass()
+    {
+        self::runFirestoreCommand('delete-test-collections');
+    }
+
     public function testInitialize()
     {
         $output = $this->runFirestoreCommand('initialize');
@@ -174,6 +179,40 @@ class firestoreTest extends TestCase
         $this->assertContains('Document SF returned by query regions array-contains west_coast', $output);
     }
 
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testArrayMembershipAny()
+    {
+        $output = $this->runFirestoreCommand('array-membership-any');
+        $this->assertContains('Document DC returned by query regions array-contains-any [west_coast, east_coast]', $output);
+        $this->assertContains('Document LA returned by query regions array-contains-any [west_coast, east_coast]', $output);
+        $this->assertContains('Document SF returned by query regions array-contains-any [west_coast, east_coast]', $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testInQuery()
+    {
+        $output = $this->runFirestoreCommand('in-query');
+        $this->assertContains('Document DC returned by query country in [USA, Japan]', $output);
+        $this->assertContains('Document LA returned by query country in [USA, Japan]', $output);
+        $this->assertContains('Document SF returned by query country in [USA, Japan]', $output);
+        $this->assertContains('Document TOK returned by query country in [USA, Japan]', $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testInArrayQuery()
+    {
+        $output = $this->runFirestoreCommand('in-array-query');
+        $this->assertContains('Document DC returned by query regions in [[west_coast], [east_coast]]', $output);
+        $this->assertNotContains('Document SF', $output);
+    }
+
     /**
      * @depends testQueryCreateExamples
      */
@@ -213,6 +252,37 @@ class firestoreTest extends TestCase
     /**
      * @depends testQueryCreateExamples
      */
+    public function testCollectionGroupQuerySetup()
+    {
+        $output = $this->runFirestoreCommand('collection-group-query-setup');
+        $this->assertContains('Added example landmarks collections to the cities collection.', $output);
+    }
+
+    /**
+     * @depends testCollectionGroupQuerySetup
+     */
+    public function testCollectionGroupQuery()
+    {
+        $output = $this->runFirestoreCommand('collection-group-query');
+        $this->assertContains('Beijing Ancient Observatory', $output);
+        $this->assertContains('National Air and Space Museum', $output);
+        $this->assertContains('The Getty', $output);
+        $this->assertContains('Legion of Honor', $output);
+        $this->assertContains('National Museum of Nature and Science', $output);
+        $this->assertNotContains('Golden Gate Bridge', $output);
+        $this->assertNotContains('Griffith Park', $output);
+        $this->assertNotContains('Lincoln Memorial', $output);
+        $this->assertNotContains('Ueno Park', $output);
+        $this->assertNotContains('Jingshan Park', $output);
+    }
+
+    /**
+     * @depends testArrayMembership
+     * @depends testArrayMembershipAny
+     * @depends testInQuery
+     * @depends testInArrayQuery
+     * @depends testCollectionGroupQuery
+     */
     public function testDeleteDocument()
     {
         $output = $this->runFirestoreCommand('delete-document');
@@ -220,7 +290,7 @@ class firestoreTest extends TestCase
     }
 
     /**
-     * @depends testQueryCreateExamples
+     * @depends testDeleteDocument
      */
     public function testDeleteField()
     {
@@ -229,7 +299,7 @@ class firestoreTest extends TestCase
     }
 
     /**
-     * @depends testQueryCreateExamples
+     * @depends testDeleteField
      */
     public function testDeleteCollection()
     {
@@ -240,6 +310,9 @@ class firestoreTest extends TestCase
         $this->assertContains('Deleting document SF', $output);
     }
 
+    /**
+     * @depends testDeleteField
+     */
     public function testRetrieveCreateExamples()
     {
         $output = $this->runFirestoreCommand('retrieve-create-examples');
@@ -497,14 +570,9 @@ class firestoreTest extends TestCase
         $output = $this->runFirestoreCommand('multiple-cursor-conditions');
     }
 
-    public function testDeleteTestCollections()
+    private static function runFirestoreCommand($commandName)
     {
-        $output = $this->runFirestoreCommand('delete-test-collections');
-    }
-
-    private function runFirestoreCommand($commandName)
-    {
-        return $this->runCommand($commandName, [
+        return self::runCommand($commandName, [
             'project' => self::$firestoreProjectId
         ]);
     }
