@@ -18,7 +18,7 @@ runtime: php72
 # something like https://cloud.google.com/secret-manager/ to help keep secrets
 # secret.
 env_variables:
-  CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
+  CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-INSTANCE>
   DB_USER: my-db-user
   DB_PASS: my-db-pass
   DB_NAME: my-db

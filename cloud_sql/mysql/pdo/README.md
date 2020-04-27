@@ -21,7 +21,7 @@ Once the proxy is ready, use one of the following commands to start the proxy in
 
 You may connect to your instance via either unix sockets or TCP. To connect using a socket, you must provide the `-dir` option when starting the proxy. To connect via TCP, you must provide a port as part of the instance name. Both are demonstrated below.
 
-#### Unix Socket mode
+### Unix Socket mode
 
 ```bash
 $ ./cloud_sql_proxy -dir=/cloudsql \
@@ -31,7 +31,7 @@ $ ./cloud_sql_proxy -dir=/cloudsql \
 
 Note: Make sure to run the command under a user with write access in the `/cloudsql` directory. This proxy will use this folder to create a unix socket the application will use to connect to Cloud SQL.
 
-#### TCP mode
+### TCP mode
 
 ```bash
 $ ./cloud_sql_proxy \
@@ -39,10 +39,11 @@ $ ./cloud_sql_proxy \
     --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
 ```
 
+### Set Configuration Values
 Set the required environment variables for your connection to Cloud SQL. If you are using TCP mode as described above, do not set the `CLOUD_SQL_CONNECTION_NAME` variable.
 
 ```bash
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
+export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-INSTANCE>'
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my-db-name'

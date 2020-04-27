@@ -35,39 +35,56 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
-    $username = getenv("DB_USER");
-    $password = getenv("DB_PASS");
-    $schema = getenv("DB_NAME");
-    $hostname = getenv("DB_HOSTNAME") ?: "127.0.0.1";
-    $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
+    $username = getenv('DB_USER');
+    $password = getenv('DB_PASS');
+    $dbName = getenv('DB_NAME');
+    $hostname = getenv('DB_HOSTNAME') ?: '127.0.0.1';
+    $cloud_sql_connection_name = getenv('CLOUD_SQL_CONNECTION_NAME');
 
     try {
         // # [START cloud_sql_mysql_pdo_create]
         // // $username = 'your_db_user';
         // // $password = 'yoursupersecretpassword';
-        // // $schema = 'your_db_name';
+        // // $dbName = 'your_db_name';
         // // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
+        // // $hostname = "127.0.0.1"; // Only used in TCP mode.
 
         if ($cloud_sql_connection_name) {
             // Connect using UNIX sockets
             $dsn = sprintf(
                 'mysql:dbname=%s;unix_socket=/cloudsql/%s',
-                $schema,
+                $dbName,
                 $cloud_sql_connection_name
             );
         } else {
             // Connect using TCP
-            // $hostname = '127.0.0.1';
-            $dsn = sprintf('mysql:dbname=%s;host=%s', $schema, $hostname);
+            $dsn = sprintf('mysql:dbname=%s;host=%s', $dbName, $hostname);
         }
 
         $conn = new PDO($dsn, $username, $password);
         # [END cloud_sql_mysql_pdo_create]
+    } catch (TypeError $e) {
+        throw new RuntimeException(
+            sprintf(
+                'Invalid or missing configuration! Make sure you have set ' .
+                '$username, $password, $dbName, and $hostname (for TCP mode) ' .
+                'or $cloud_sql_connection_name (for UNIX socket mode). ' .
+                'The PHP error was %s',
+                $e->getMessage()
+            ),
+            $e->getCode(),
+            $e
+        );
     } catch (PDOException $e) {
         throw new RuntimeException(
-            "Could not connect to the Cloud SQL Database. " .
-            "Refer to https://cloud.google.com/sql/docs/mysql/connect-admin-proxy " .
-            "for more assistance. The PDO error was " . $e->getMessage(),
+            sprintf(
+                'Could not connect to the Cloud SQL Database. Check that ' .
+                'your username and password are correct, that the Cloud SQL ' .
+                'proxy is running, and that the database exists and is ready ' .
+                'for use. For more assistance, refer to %s. The PDO error was %s',
+                'https://cloud.google.com/sql/docs/mysql/connect-external-app',
+                $e->getMessage()
+            ),
             $e->getCode(),
             $e
         );

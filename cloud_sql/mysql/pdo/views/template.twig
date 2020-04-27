@@ -59,19 +59,25 @@ limitations under the License.
     </div>
     <h4 class="header center">Recent Votes</h4>
     <ul class="container collection center">
-        {% for vote in votes %}
-            <li class="collection-item avatar">
-                {% if vote.vote_value == "TABS" %}
-                    <i class="material-icons circle green">keyboard_tab</i>
-                {% elseif vote.vote_value == "SPACES" %}
-                    <i class="material-icons circle blue">space_bar</i>
-                {% endif %}
-            <span class="title">
-                    A vote for <b>{{ vote.vote_value }}</b>
-                </span>
-            <p>was cast at {{ vote.time_cast }}</p>
-        </li>
-        {% endfor %}
+        {% if votes %}
+            {% for vote in votes %}
+                <li class="collection-item avatar">
+                    {% if vote.vote_value == "TABS" %}
+                        <i class="material-icons circle green">keyboard_tab</i>
+                    {% elseif vote.vote_value == "SPACES" %}
+                        <i class="material-icons circle blue">space_bar</i>
+                    {% endif %}
+                    <span class="title">
+                        A vote for <b>{{ vote.vote_value }}</b>
+                    </span>
+                <p>was cast at {{ vote.time_cast }}</p>
+            </li>
+            {% endfor %}
+        {% else %}
+            <li class="collection-item">
+                <span class="title">No votes have been cast!</span>
+            </li>
+        {% endif %}
     </ul>
 </div>
 <script>
