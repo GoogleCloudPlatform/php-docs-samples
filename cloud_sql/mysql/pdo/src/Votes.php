@@ -20,6 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\CloudSQL\MySQL;
 
 use PDO;
+use PDOException;
+use RuntimeException;
 
 /**
  * Manage votes using the Cloud SQL database.
@@ -94,10 +96,28 @@ class Votes
      */
     public function insertVote(string $value) : bool
     {
-        $sql = "INSERT INTO votes (time_cast, vote_value) VALUES (NOW(), :voteValue)";
-        $statement = $this->connection->prepare($sql);
-        $statement->bindParam('voteValue', $value);
+        $conn = $this->connection;
+        $res = false;
 
-        return $statement->execute();
+        # [START cloud_sql_mysql_pdo_connection]
+        // Use prepared statements to guard against SQL injection.
+        $sql = "INSERT INTO votes (time_cast, vote_value) VALUES (NOW(), :voteValue)";
+
+        try {
+            $statement = $conn->prepare($sql);
+            $statement->bindParam('voteValue', $value);
+
+            $res = $statement->execute();
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Could not insert vote into database. The PDO exception was " .
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+        # [END cloud_sql_mysql_pdo_connection]
+
+        return $res;
     }
 }

@@ -61,7 +61,13 @@ $container['db'] = function () {
             $dsn = sprintf('mysql:dbname=%s;host=%s', $dbName, $hostname);
         }
 
-        $conn = new PDO($dsn, $username, $password);
+        // Connect to the database.
+        // Here we set the connection timeout to five seconds and ask PDO to
+        // throw an exception if any errors occur.
+        $conn = new PDO($dsn, $username, $password, [
+            PDO::ATTR_TIMEOUT => 5,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
         # [END cloud_sql_mysql_pdo_create]
     } catch (TypeError $e) {
         throw new RuntimeException(
@@ -90,7 +96,6 @@ $container['db'] = function () {
         );
     }
 
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $conn;
 };
 
