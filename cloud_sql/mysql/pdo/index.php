@@ -24,6 +24,8 @@ include __DIR__ . '/vendor/autoload.php';
 $app = include __DIR__ . '/src/app.php';
 
 $app->get('/', function ($request, $response) {
+    $this->get('votes')->createTableIfNotExists();
+
     return $this->get('view')->render($response, 'template.twig', [
         'votes' => $this->get('votes')->listVotes(),
         'tabCount' => $this->get('votes')->getCountByValue('TABS'),
@@ -32,6 +34,8 @@ $app->get('/', function ($request, $response) {
 });
 
 $app->post('/', function ($request, $response) {
+    $this->get('votes')->createTableIfNotExists();
+
     $message = 'Invalid vote. Choose Between TABS and SPACES';
 
     $formData = $request->getParsedBody() + [

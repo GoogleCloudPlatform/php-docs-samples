@@ -39,7 +39,6 @@ class Votes
     public function __construct(PDO $connection)
     {
         $this->connection = $connection;
-        $this->createTable();
     }
 
     /**
@@ -47,16 +46,21 @@ class Votes
      *
      * @return void
      */
-    private function createTable()
+    public function createTableIfNotExists()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS votes (
-            vote_id INT NOT NULL AUTO_INCREMENT,
-            time_cast DATETIME NOT NULL,
-            vote_value VARCHAR(6) NOT NULL,
-            PRIMARY KEY (vote_id)
-        );";
+        try {
+            $stmt = $this->connection->prepare('SELECT 1 FROM votes');
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $sql = "CREATE TABLE votes (
+                vote_id INT NOT NULL AUTO_INCREMENT,
+                time_cast DATETIME NOT NULL,
+                vote_value VARCHAR(6) NOT NULL,
+                PRIMARY KEY (vote_id)
+            );";
 
-        $this->connection->exec($sql);
+            $this->connection->exec($sql);
+        }
     }
 
     /**
