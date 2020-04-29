@@ -45,7 +45,7 @@ try {
     // read the file
     $content = file_get_contents($filePath);
     $image = (new Image())
-        ->setImageBytes($image);
+        ->setImageBytes($content);
     // create payload
     $payload = (new ExamplePayload())
         ->setImage($image);
