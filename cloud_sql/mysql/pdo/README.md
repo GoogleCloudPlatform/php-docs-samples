@@ -65,6 +65,8 @@ $ php -S localhost:8080
 
 Navigate towards http://localhost:8080 to verify your application is running correctly.
 
+## Google App Engine Flex
+
 To run on App Engine Flex, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
 First, update `app.yaml` with the correct values to pass the environment variables into the runtime.
