@@ -15,83 +15,119 @@
  * limitations under the License.
  */
 
+declare(strict_types=1);
+
 namespace Google\Cloud\Samples\CloudSQL\SQLServer;
 
 use PDO;
+use PDOException;
+use RuntimeException;
 
+/**
+ * Manage votes using the Cloud SQL database.
+ */
 class Votes
 {
+    /**
+     * @var PDO
+     */
     private $connection;
 
+    /**
+     * @param PDO $connection A connection to the database.
+     */
     public function __construct(PDO $connection)
     {
         $this->connection = $connection;
-        $this->create_table();
     }
 
-    private function create_table()
+    /**
+     * Creates the table if it does not yet exist.
+     *
+     * @return void
+     */
+    public function createTableIfNotExists()
     {
-        $tableName = "votes";
-
         $existsStmt = "SELECT * FROM INFORMATION_SCHEMA.TABLES
             WHERE TABLE_NAME = ?";
 
         $stmt = $this->connection->prepare($existsStmt);
-        $stmt->execute([$tableName]);
+        $stmt->execute(['votes']);
 
-        // If table does not exist, create it!
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // If the table does not exist, create it.
         if (!$row) {
-            $sql = "
-            CREATE TABLE votes (
+            $sql = "CREATE TABLE votes (
                 vote_id INT NOT NULL IDENTITY,
                 time_cast DATETIME NOT NULL,
-                candidate VARCHAR(6) NOT NULL,
+                vote_value VARCHAR(6) NOT NULL,
                 PRIMARY KEY (vote_id)
             );";
-            if ($this->connection->exec($sql) !== 1) {
-                print_r($this->connection->errorInfo());
-                exit;
-            }
+
+            $this->connection->exec($sql);
         }
     }
 
-    public function list()
+    /**
+     * Returns a list of the last five votes
+     *
+     * @return array
+     */
+    public function listVotes() : array
     {
-        $sql = "SELECT TOP 5 candidate, time_cast FROM votes ORDER BY time_cast DESC";
+        $sql = "SELECT TOP 5 vote_value, time_cast FROM votes ORDER BY time_cast DESC";
         $statement = $this->connection->prepare($sql);
         $statement->execute();
-        return $statement->fetchAll();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function count_candidates()
+    /**
+     * Get the number of votes cast for a given value.
+     *
+     * @param string $value
+     * @param int
+     */
+    public function getCountByValue(string $value) : int
     {
-        $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE candidate = ?";
-        $count = [];
+        $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE vote_value = ?";
 
         $statement = $this->connection->prepare($sql);
+        $statement->execute([$value]);
 
-        //tabs
-        $statement->execute(['TABS']);
-        $count['tabs'] = $statement->fetch()[0];
-
-        //spaces
-        $statement->execute(['SPACES']);
-        $count['spaces'] = $statement->fetch()[0];
-
-        return $count;
+        return (int) $statement->fetch(PDO::FETCH_COLUMN);
     }
 
-    public function save($team)
+    /**
+     * Insert a new vote into the database
+     *
+     * @param string $value The value to vote for.
+     * @return boolean
+     */
+    public function insertVote(string $value) : bool
     {
-        $sql = "INSERT INTO votes (time_cast, candidate) VALUES (GETDATE(), :candidate)";
-        $statement = $this->connection->prepare($sql);
-        $statement->bindParam('candidate', $team);
+        $conn = $this->connection;
+        $res = false;
 
-        if ($statement->execute()) {
-            return "Vote successfully cast for '$team'";
+        # [START cloud_sql_sqlserver_pdo_connection]
+        // Use prepared statements to guard against SQL injection.
+        $sql = "INSERT INTO votes (time_cast, vote_value) VALUES (GETDATE(), :voteValue)";
+
+        try {
+            $statement = $conn->prepare($sql);
+            $statement->bindParam('voteValue', $value);
+
+            $res = $statement->execute();
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Could not insert vote into database. The PDO exception was " .
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
+        # [END cloud_sql_sqlserver_pdo_connection]
 
-        return print_r($statement->errorInfo(), true);
+        return $res;
     }
 }

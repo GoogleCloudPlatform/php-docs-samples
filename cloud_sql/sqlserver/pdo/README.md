@@ -3,36 +3,49 @@
 ## Before you begin
 
 1. This code sample requires the `pdo_sqlsrv` extension to be installed and enabled. For more information, including getting started guides, refer to the [source repository](https://github.com/Microsoft/msphpsql).
-2. Before you use this code sample, you need to have [Composer](https://getcomposer.org/) installed or downloaded into this folder. Download instructions can be found [here](https://getcomposer.org/download/).
+2. Before you use this code sample, you need to have [Composer](https://getcomposer.org/) installed or downloaded into this folder. Download instructions can be found [here](https://getcomposer.org/download/). Once you've installed composer, use it to install required dependencies by running `composer install`.
 3. Create a SQL Server Cloud SQL Instance by following these [instructions](https://cloud.google.com/sql/docs/sqlserver/create-instance). Note the connection string, database user, and database password that you create.
 4. Create a database for your application by following these [instructions](https://cloud.google.com/sql/docs/sqlserver/create-manage-databases). Note the database name.
 5. Create a service account with the 'Cloud SQL Client' permissions by following these [instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account). Download a JSON key to use to authenticate your connection.
-6. Use the information noted in the previous steps:
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
-export DB_USER='my-db-user'
-export DB_PASS='my-db-pass'
-export DB_NAME='my-db-name'
-export DB_HOSTNAME='(local)'
-```
-
-Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep secrets safe.
 
 ## Running Locally
 
 To run this application locally, download and install the `cloud_sql_proxy` by following the instructions [here](https://cloud.google.com/sql/docs/sqlserver/sql-proxy#install).
 
-Once the proxy is ready, use the following command to start the proxy in the background:
+To authenticate with Cloud SQL, set the `$GOOGLE_APPLICATION_CREDENTIALS` environment variable:
 
 ```bash
-$ ./cloud_sql_proxy -dir=/cloudsql \
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+```
+
+To run the Cloud SQL proxy, you need to set the instance connection name. See the instructions [here](https://cloud.google.com/sql/docs/sqlserver/quickstart-proxy-test#get_the_instance_connection_name) for finding the instance connection name.
+
+```bash
+export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
+```
+
+Once the proxy is ready, use one of the following commands to start the proxy in the background.
+
+You may connect to your instance via TCP. To connect via TCP, you must provide a port as part of the instance name, as demonstrated below.
+
+```bash
+$ ./cloud_sql_proxy \
     --instances=$CLOUD_SQL_CONNECTION_NAME=tcp:1433 \
     --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
 ```
 
-Note: Make sure to run the command under a user with write access in the `/cloudsql` directory. This proxy will use this folder to create a unix socket the application will use to connect to Cloud SQL.
+### Set Configuration Values
+
+Set the required environment variables for your connection to Cloud SQL.
+
+```bash
+export DB_USER='my-db-user'
+export DB_PASS='my-db-pass'
+export DB_NAME='my-db-name'
+export DB_HOSTNAME='127.0.0.1'
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets safe.
 
 Execute the following:
 
