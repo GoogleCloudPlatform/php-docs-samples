@@ -55,14 +55,18 @@ $ php -S localhost:8080
 
 Navigate towards http://localhost:8080 to verify your application is running correctly.
 
-## Google App Engine Standard
+## Google App Engine Flex
 
-To run on GAE-Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
+To run on App Engine Flex, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
 First, update `app.yaml` with the correct values to pass the environment variables into the runtime.
+
+In order to use the `sqlsrv` extension, you will need to build a [custom runtime](https://cloud.google.com/appengine/docs/flexible/custom-runtimes/quickstart). The `Dockerfile` in this sample contains a simple example of a custom PHP 7.2 runtime based off of the default App Engine Flex image with the `pdo_sqlsrv` extension installed.
+
+Then, make sure that the service account `service-{PROJECT_NUMBER}>@gae-api-prod.google.com.iam.gserviceaccount.com` has the IAM role `Cloud SQL Client`.
 
 Next, the following command will deploy the application to your Google Cloud project:
 
 ```bash
-$ gcloud app deploy
+$ gcloud beta app deploy
 ```

@@ -12,6 +12,7 @@
     },
     "require": {
         "php": ">= 7.2",
+        "ext-pdo_sqlsrv": "*",
         "slim/slim": "^4.5",
         "slim/twig-view": "^3.1",
         "pimple/pimple": "^3.3",
