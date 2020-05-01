@@ -50,4 +50,3 @@ Next, the following command will deploy the application to your Google Cloud pro
 ```bash
 $ gcloud app deploy
 ```
-
