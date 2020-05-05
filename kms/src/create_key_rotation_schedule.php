@@ -46,7 +46,7 @@ function create_key_rotation_schedule_sample(
 
         // Rotate the key every 30 days.
         ->setRotationPeriod((new Duration())
-            ->setSeconds(60*60 *24*30)
+            ->setSeconds(60*60*24*30)
         )
 
         // Start the first rotation in 24 hours.
