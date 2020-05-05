@@ -21,8 +21,8 @@ declare(strict_types=1);
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 function quickstart_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

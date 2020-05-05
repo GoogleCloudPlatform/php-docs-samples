@@ -26,10 +26,10 @@ use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\ProtectionLevel;
 
 function create_key_hsm_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $id = 'my-hsm-key'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $id = 'my-hsm-key'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

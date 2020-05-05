@@ -22,12 +22,12 @@ use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\Digest;
 
 function sign_asymmetric_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $keyId = 'my-key',
-    $versionId = '123',
-    $message = '...'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $keyId = 'my-key',
+    string $versionId = '123',
+    string $message = '...'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

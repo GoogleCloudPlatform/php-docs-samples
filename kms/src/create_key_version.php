@@ -22,10 +22,10 @@ use Google\Cloud\Kms\V1\CryptoKeyVersion;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 function create_key_version_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $keyId = 'my-key'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $keyId = 'my-key'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

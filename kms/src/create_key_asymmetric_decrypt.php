@@ -25,10 +25,10 @@ use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 function create_key_asymmetric_decrypt_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $id = 'my-asymmetric-decrypt-key'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $id = 'my-asymmetric-decrypt-key'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

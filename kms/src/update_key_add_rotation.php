@@ -25,10 +25,10 @@ use Google\Protobuf\FieldMask;
 use Google\Protobuf\Timestamp;
 
 function update_key_add_rotation_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $keyId = 'my-key'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $keyId = 'my-key'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

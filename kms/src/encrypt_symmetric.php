@@ -21,11 +21,11 @@ declare(strict_types=1);
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 function encrypt_symmetric_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $keyId = 'my-key',
-    $plaintext = '...'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $keyId = 'my-key',
+    string $plaintext = '...'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

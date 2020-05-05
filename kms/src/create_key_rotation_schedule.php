@@ -27,10 +27,10 @@ use Google\Protobuf\Duration;
 use Google\Protobuf\Timestamp;
 
 function create_key_rotation_schedule_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $id = 'my-key-with-rotation-schedule'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $id = 'my-key-with-rotation-schedule'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

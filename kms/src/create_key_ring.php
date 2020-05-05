@@ -22,9 +22,9 @@ use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\KeyRing;
 
 function create_key_ring_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $id = 'my-key-ring'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $id = 'my-key-ring'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();

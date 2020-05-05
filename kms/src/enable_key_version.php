@@ -24,11 +24,11 @@ use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Protobuf\FieldMask;
 
 function enable_key_version_sample(
-    $projectId = 'my-project',
-    $locationId = 'us-east1',
-    $keyRingId = 'my-key-ring',
-    $keyId = 'my-key',
-    $versionId = '123'
+    string $projectId = 'my-project',
+    string $locationId = 'us-east1',
+    string $keyRingId = 'my-key-ring',
+    string $keyId = 'my-key',
+    string $versionId = '123'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
