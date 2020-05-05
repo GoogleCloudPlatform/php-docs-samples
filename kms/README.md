@@ -7,32 +7,50 @@
 
 ## Description
 
-These samples show how to use the
-[Google Cloud KMS API](https://cloud.google.com/kms/docs/reference/libraries) from PHP.
+These samples demonstrate how to invoke [Google Cloud KMS][kms] from PHP.
 
 ## Build and Run
-1.  **Enable APIs** - [Enable the KMS API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)
-    and create a new project or select an existing project.
-2.  **Activate your Credentials** - If you do not already have an active set of credentials, create and download a [JSON Service Account key](https://console.cloud.google.com/apis/credentials/serviceaccountkey). Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` as the path to the downloaded JSON file.
-3.  **Clone the repo** and cd into this directory
 
-    ```
+1.  **Enable APIs** - [Enable the KMS
+    API](https://console.cloud.google.com/flows/enableapi?apiid=cloudkms.googleapis.com)
+    and create a new project or select an existing project.
+
+1.  **Download The Credentials** - Click "Go to credentials" after enabling the
+    APIs. Click "New Credentials" and select "Service Account Key". Create a new
+    service account, use the JSON key type, and select "Create". Once
+    downloaded, set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to
+    the path of the JSON key that was downloaded.
+
+1.  **Clone the repo** and cd into this directory
+
+    ```text
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
     $ cd php-docs-samples/kms
     ```
-4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
-    Run `php composer.phar install` (if composer is installed locally) or `composer install`
-    (if composer is installed globally).
-5.  Run `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
-    are provided:
-    ```sh
-    $ php src/create_dataset.php
-    Usage: php src/list_keyrings.php PROJECT_ID LOCATION
 
-    $ php src/list_keyrings.php your-project-id us-west1
-    Name: projects/your-project-id/locations/us-west1/keyRings/your-test-keyring
-    Create Time: 2018-12-28 06:27:56
+1.  **Install dependencies** via [Composer][install-composer]. If composer is
+    installed locally:
+
+    ```text
+    $ php composer.phar install
     ```
+
+    If composer is installed globally:
+
+    ```text
+    $ composer install
+    ```
+
+1.  Execute the snippets in the [src/](src/) directory by running:
+
+    ```text
+    $ php src/SNIPPET_NAME.php
+    ```
+
+    The usage will print for each if no arguments are provided.
+
+See the [Cloud KMS Documentation](https://cloud.google.com/kms/docs) for more
+information.
 
 ## Contributing changes
 
@@ -41,3 +59,6 @@ These samples show how to use the
 ## Licensing
 
 * See [LICENSE](../LICENSE)
+
+[install-composer]: http://getcomposer.org/doc/00-intro.md
+[kms]: https://cloud.google.com/kms
