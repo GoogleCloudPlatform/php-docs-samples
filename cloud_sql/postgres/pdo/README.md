@@ -79,3 +79,15 @@ Next, the following command will deploy the application to your Google Cloud pro
 ```bash
 $ gcloud beta app deploy
 ```
+
+## Google App Engine Standard
+
+To run on GAE-Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
+
+First, update `app-standard.yaml` with the correct values to pass the environment variables into the runtime.
+
+Next, the following command will deploy the application to your Google Cloud project:
+
+```bash
+$ gcloud app deploy app-standard.yaml
+```
