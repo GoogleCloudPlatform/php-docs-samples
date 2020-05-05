@@ -38,7 +38,7 @@ $container['db'] = function () {
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
     $dbName = getenv('DB_NAME');
-    $hostname = getenv('DB_HOSTNAME') ?: '127.0.0.1';
+    $hostname = getenv('DB_HOSTNAME');
     $cloud_sql_connection_name = getenv('CLOUD_SQL_CONNECTION_NAME');
 
     try {
@@ -49,16 +49,16 @@ $container['db'] = function () {
         // // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
         // // $hostname = "127.0.0.1"; // Only used in TCP mode.
 
-        if ($cloud_sql_connection_name) {
+        if ($hostname) {
+            // Connect using TCP
+            $dsn = sprintf('mysql:dbname=%s;host=%s', $dbName, $hostname);
+        } else {
             // Connect using UNIX sockets
             $dsn = sprintf(
                 'mysql:dbname=%s;unix_socket=/cloudsql/%s',
                 $dbName,
                 $cloud_sql_connection_name
             );
-        } else {
-            // Connect using TCP
-            $dsn = sprintf('mysql:dbname=%s;host=%s', $dbName, $hostname);
         }
 
         // Connect to the database.
