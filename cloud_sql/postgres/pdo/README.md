@@ -53,7 +53,7 @@ Set the required environment variables for your connection to Cloud SQL. If you 
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my-db-name'
-export DB_HOSTNAME='localhost'
+export DB_HOST='127.0.0.1'
 ```
 
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets safe.
