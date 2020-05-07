@@ -82,7 +82,7 @@ $ gcloud beta app deploy
 
 ## Google App Engine Standard
 
-To run on GAE-Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
+To run on App Engine Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
 First, update `app-standard.yaml` with the correct values to pass the environment variables into the runtime.
 
