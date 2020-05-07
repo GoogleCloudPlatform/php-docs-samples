@@ -1,5 +1,6 @@
-#!/bin/bash
-# Copyright 2016 Google Inc.
+#!/usr/bin/env bash
+
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,14 +16,36 @@
 
 set -ex
 
-# Loop through all directories containing "composer.json".
-# Update composer if a sample has a new major version that matches our requirements.
-find * -name "phpunit.xml*" -not -path '*vendor/*' -exec dirname {} \; | while read DIR; do
-    pushd $DIR
-    composer install
-    if composer outdated --direct -m | grep -q 'google/' ||
-        ! composer validate --no-check-publish ; then
-        composer update
+# Find all directories containing composer.json.
+directories=$(find . -name "composer.json" -not -path "**/vendor/*" -exec dirname {} \;)
+
+# Update dependencies in all directories containing composer.json.
+for SAMPLE_DIR in $directories; do
+  printf '\n### Checking dependencies in %s ###\n', "$SAMPLE_DIR"
+  pushd "$SAMPLE_DIR"
+  composer install --ignore-platform-reqs --no-dev
+
+  updatePackages=()
+  outdatedPackages=$(echo \
+    "$(composer outdated 'google/*' --direct --format=json | jq '.installed' 2>/dev/null) $(composer outdated 'firebase/*' --direct --format=json | jq '.installed' 2>/dev/null)" \
+    | jq -s add)
+
+  if [[ "$outdatedPackages" != "null" ]] && [[ "$outdatedPackages" != "[]" ]] ; then
+    count=$(echo "$outdatedPackages" | jq length)
+
+    for (( i = 0; i < count; i++ ))
+    do
+      name=$(echo "$outdatedPackages" | jq -r --arg i "$i" '.[$i | tonumber].name')
+      version=$(echo "$outdatedPackages" | jq -r --arg i "$i" '.[$i | tonumber].latest' | sed -e 's/^v//')
+      if [[ "${version:0:4}" != dev- ]]; then
+        updatePackages+=( "$name:^$version" )
+      fi
+    done
+
+    if [ ${#updatePackages[@]} -gt 0 ]; then
+      composer require --ignore-platform-reqs --update-no-dev --update-with-dependencies "${updatePackages[@]}"
     fi
-    popd
+  fi
+
+  popd
 done

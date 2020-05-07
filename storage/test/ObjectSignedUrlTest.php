@@ -24,7 +24,7 @@ use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for RequesterPaysCommand.
+ * Unit Tests for ObjectSignedUrl.
  */
 class ObjectSignedUrlTest extends TestCase
 {

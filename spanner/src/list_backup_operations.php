@@ -50,8 +50,11 @@ function list_backup_operations($instanceId, $databaseId)
 
     foreach ($operations as $operation) {
         if (!$operation->done()) {
-            $operationName = basename($operation->info()['name']);
-            print("Backup operation $operationName pending" . PHP_EOL);
+            $meta = $operation->info()['metadata'];
+            $backupName = basename($meta['name']);
+            $dbName = basename($meta['database']);
+            $progress = $meta['progress']['progressPercent'];
+            printf('Backup %s on database %s is %d%% complete.' . PHP_EOL, $backupName, $dbName, $progress);
         }
     }
 }

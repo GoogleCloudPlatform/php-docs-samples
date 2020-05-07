@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "config:base",
+    ":preserveSemverRanges",
+    ":rebaseStalePrs"
+  ],
+  "packageRules": [{
+    "paths": [
+        "testing/composer.json"
+    ],
+    "excludePackageNames": [
+      "phpunit/phpunit"
+    ]
+  }],
+  "ignorePaths": [
+    "appengine/php55",
+    "appengine/flexible"
+  ],
+  "prConcurrentLimit": 5
+}

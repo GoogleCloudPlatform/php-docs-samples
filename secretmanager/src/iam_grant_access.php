@@ -32,7 +32,7 @@ list($_, $projectId, $secretId, $member) = $argv;
 
 // [START secretmanager_iam_grant_access]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 
 // Import the Secret Manager IAM library.
 use Google\Cloud\Iam\V1\Binding;

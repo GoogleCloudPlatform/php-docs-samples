@@ -24,7 +24,11 @@ class quickstartTest extends TestCase
 
     public function testQuickstart()
     {
-        $bucketName = 'my-new-bucket-' . time();
+        $bucketName = sprintf(
+            '%s-%s',
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET'),
+            time()
+        );
         $file = sys_get_temp_dir() . '/storage_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(

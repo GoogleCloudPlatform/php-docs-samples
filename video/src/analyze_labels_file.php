@@ -25,7 +25,7 @@ if (count($argv) < 2 || count($argv) > 3) {
 list($_, $path) = $argv;
 $options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
 
-// [START video_analyze_labels_gcs]
+// [START video_analyze_labels]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
@@ -88,4 +88,4 @@ if ($operation->operationSucceeded()) {
 } else {
     print_r($operation->getError());
 }
-// [END video_analyze_labels_gcs]
+// [END video_analyze_labels]
