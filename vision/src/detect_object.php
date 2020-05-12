@@ -36,10 +36,10 @@ function detect_object($path)
         $score = $object->getScore();
         $vertices = $object->getBoundingPoly()->getNormalizedVertices();
 
-        printf('%s (confidence %d)):' . PHP_EOL, $name, $score);
+        printf('%s (confidence %f)):' . PHP_EOL, $name, $score);
         print('normalized bounding polygon vertices: ');
         foreach ($vertices as $vertex) {
-            printf(' (%d, %d)', $vertex->getX(), $vertex->getY());
+            printf(' (%f, %f)', $vertex->getX(), $vertex->getY());
         }
         print(PHP_EOL);
     }
