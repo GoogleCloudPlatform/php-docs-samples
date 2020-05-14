@@ -89,5 +89,5 @@ First, update `app-standard.yaml` with the correct values to pass the environmen
 Next, the following command will deploy the application to your Google Cloud project:
 
 ```bash
-$ gcloud app deploy app-standard.yaml
+$ gcloud app deploy app.standard.yaml
 ```
