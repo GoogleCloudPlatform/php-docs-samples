@@ -24,7 +24,7 @@ function intent_list($projectId)
 {
     // get intents
     $intentsClient = new IntentsClient();
-    $parent = $intentsClient->projectAgentName($projectId);
+    $parent = $intentsClient->agentName($projectId);
     $intents = $intentsClient->listIntents($parent);
 
     foreach ($intents->iterateAllElements() as $intent) {
