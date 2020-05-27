@@ -20,17 +20,17 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 use Google\Cloud\Dialogflow\V2\EntityType;
-use Google\Cloud\Dialogflow\V2\EntityType_Kind;
+use Google\Cloud\Dialogflow\V2\EntityType\Kind;
 
 /**
 * Create an entity type with the given display name.
 */
-function entity_type_create($projectId, $displayName, $kind = EntityType_Kind::KIND_MAP)
+function entity_type_create($projectId, $displayName, $kind = Kind::KIND_MAP)
 {
     $entityTypesClient = new EntityTypesClient();
 
     // prepare entity type
-    $parent = $entityTypesClient->projectAgentName($projectId);
+    $parent = $entityTypesClient->agentName($projectId);
     $entityType = new EntityType();
     $entityType->setDisplayName($displayName);
     $entityType->setKind($kind);
