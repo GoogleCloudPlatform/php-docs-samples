@@ -124,7 +124,10 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Champ de Mars', $output);
+        $this->assertRegexp(
+            '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
+            $output
+        );
     }
 
     public function testLandmarkCommandGcs()
@@ -133,7 +136,10 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Champ de Mars', $output);
+        $this->assertRegexp(
+            '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
+            $output
+        );
     }
 
     public function testLandmarkCommandWithImageLackingLandmarks()

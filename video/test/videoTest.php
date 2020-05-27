@@ -37,7 +37,7 @@ class videoTest extends TestCase
     public function testAnalyzeLabels()
     {
         $output = $this->runSnippet(
-            'analyze_labels',
+            'analyze_labels_gcs',
             [$this->gcsUri(), 10]
         );
         $this->assertContains('cat', $output);

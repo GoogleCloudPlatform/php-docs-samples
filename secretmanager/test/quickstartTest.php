@@ -18,7 +18,7 @@
 declare(strict_types=1);
 
 use Google\ApiCore\ApiException as GaxApiException;
-use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 

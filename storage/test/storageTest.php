@@ -147,7 +147,7 @@ class storageTest extends TestCase
     public function testBucketDefaultAcl()
     {
         $output = $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
+            'bucket' => self::$tempBucket->name(),
         ]);
 
         $this->assertContains(": OWNER", $output);
@@ -155,11 +155,11 @@ class storageTest extends TestCase
 
     public function testManageBucketDefaultAcl()
     {
-        $bucket = self::$storage->bucket(self::$bucketName);
-        $acl = $bucket->defaultAcl();
+        $bucketName = self::$tempBucket->name();
+        $acl = self::$tempBucket->defaultAcl();
 
         $output = $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
+            'bucket' => $bucketName,
             '--entity' => 'allAuthenticatedUsers',
             '--create' => true
         ]);
@@ -169,12 +169,12 @@ class storageTest extends TestCase
         $this->assertEquals('READER', $aclInfo['role']);
 
         $output .= $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
+            'bucket' => $bucketName,
             '--entity' => 'allAuthenticatedUsers'
         ]);
 
         $output .= $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$bucketName,
+            'bucket' => $bucketName,
             '--entity' => 'allAuthenticatedUsers',
             '--delete' => true
         ]);
@@ -186,7 +186,7 @@ class storageTest extends TestCase
             $this->assertTrue(true);
         }
 
-        $bucketUrl = sprintf('gs://%s', self::$bucketName);
+        $bucketUrl = sprintf('gs://%s', $bucketName);
         $outputString = <<<EOF
 Added allAuthenticatedUsers (READER) to $bucketUrl default ACL
 allAuthenticatedUsers: READER

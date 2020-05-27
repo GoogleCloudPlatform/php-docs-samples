@@ -1,7 +1,7 @@
 {
     "require": {
-        "google/cloud-storage": "^1.18.0",
-        "paragonie/random_compat": "^2.0",
+        "google/cloud-storage": "^1.20.1",
+        "paragonie/random_compat": "^9.0.0",
         "symfony/console": " ^3.0"
     },
     "autoload": {
@@ -34,6 +34,7 @@
             "src/enable_requester_pays.php",
             "src/activate_hmac_key.php",
             "src/generate_encryption_key.php",
+            "src/generate_v4_post_policy.php",
             "src/bucket_metadata.php",
             "src/get_bucket_acl.php",
             "src/get_bucket_acl_for_entity.php",

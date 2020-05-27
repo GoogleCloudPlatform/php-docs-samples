@@ -43,12 +43,12 @@ function list_gateways(
     $registryName = $deviceManager->registryName($projectId, $location, $registryId);
 
     // Pass field mask to retrieve the gateway configuration fields
-    $fieldMask = (new FieldMask())->setPaths(['config', 'gatewayConfig']);
+    $fieldMask = (new FieldMask())->setPaths(['config', 'gateway_config']);
 
     // Call the API
-    $devices = $deviceManager->listDevices($registryName,
-      ['fieldMask' => $fieldMask]
-    );
+    $devices = $deviceManager->listDevices($registryName, [
+        'fieldMask' => $fieldMask
+    ]);
 
     // Print the result
     $foundGateway = false;

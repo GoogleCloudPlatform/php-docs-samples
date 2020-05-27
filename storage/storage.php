@@ -318,7 +318,7 @@ EOF
             if (!$expression) {
                 throw new InvalidArgumentException('Must provide expression as an option.');
             }
-            remove_bucket_conditional_iam_binding($bucket_name, $role, $title, $description, $expression);
+            remove_bucket_conditional_iam_binding($bucketName, $role, $title, $description, $expression);
         } else {
             view_bucket_iam_members($bucketName);
         }
@@ -616,6 +616,23 @@ EOF
         $bucketName = $input->getArgument('bucket');
         $objectName = $input->getArgument('object');
         upload_object_v4_signed_url($bucketName, $objectName);
+    });
+
+$application->add(new Command('generate-v4-post-policy'))
+    ->setDescription('Generate a v4 post policy form for uploading an object.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command generates a v4 post policy form for uploading an object.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        $objectName = $input->getArgument('object');
+        generate_v4_post_policy($bucketName, $objectName);
     });
 
 // for testing
