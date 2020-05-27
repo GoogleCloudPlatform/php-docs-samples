@@ -38,7 +38,7 @@ class LocalTest extends WebTestCase
         return $app;
     }
 
-    public function testHome()
+    public function test_gaeMailjetImport_shouldTestHome()
     {
         $client = $this->createClient();
 
@@ -47,7 +47,7 @@ class LocalTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
-    public function testSendEmail()
+    public function test_gaeMailjetImport_gaeMailjetSendMessage_shouldTestSendEmail()
     {
         $client = $this->createClient();
 
