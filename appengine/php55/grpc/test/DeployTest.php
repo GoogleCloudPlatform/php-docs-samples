@@ -60,7 +60,7 @@ class DeployTest extends TestCase
         }
     }
 
-    public function testSpanner()
+    public function test_spannerQuickstart()
     {
         if (!getenv('SPANNER_INSTANCE_ID') || !getenv('SPANNER_DATABASE_ID')) {
             $this->markTestSkipped('Set the SPANNER_INSTANCE_ID and SPANNER_DATABASE_ID ' .
