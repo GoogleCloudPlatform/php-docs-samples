@@ -129,6 +129,15 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertData
      */
+    public function testDeleteData()
+    {
+        $output = $this->runCommand('delete-data');
+        $this->assertContains('Deleted data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
     public function testAddColumn()
     {
         $output = $this->runCommand('add-column');
