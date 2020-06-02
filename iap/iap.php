@@ -51,12 +51,10 @@ EOF
 
 // Create a validate Command.
 $application->add((new Command('validate'))
-    ->addArgument('url', InputArgument::REQUIRED, 'The Identity-Aware Proxy-protected URL to fetch.')
-    ->addArgument('clientId', InputArgument::REQUIRED, 'The client ID used by Identity-Aware Proxy.')
-    ->addArgument('serviceAccountPath', InputArgument::REQUIRED, 'Path for the service account you want to use.')
+    ->addArgument('jwt', InputArgument::REQUIRED, 'A JWT from the X-Goog-Iap-Jwt-Assertion heaer')
     ->addArgument('projectNumber', InputArgument::REQUIRED, 'The project *number* for your Google Cloud project. This is returned by gcloud projects describe $PROJECT_ID or in the Project Info card in Cloud Console.')
     ->addArgument('projectId', InputArgument::REQUIRED, 'The project ID for your Google Cloud Platform project.')
-    ->setDescription('Makes a request to an IAP-protected resource using a service account and then validates the JWT.')
+    ->setDescription('Validates the JWT in the X-Goog-Iap-Jwt-Assertion header of an IAP-protected resource.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command makes a request to an IAP-protected resource and then validates the JWT.
     <info>php %command.full_name%</info>
@@ -64,14 +62,8 @@ The <info>%command.name%</info> command makes a request to an IAP-protected reso
 EOF
     )
     ->setCode(function ($input, $output) {
-        $response = make_iap_request(
-            $input->getArgument('url'),
-            $input->getArgument('clientId'),
-            $input->getArgument('serviceAccountPath'));
-        $response_body = (string)$response->getBody();
-        $iap_jwt = explode(': ', $response_body)[1];
         $user_identity = validate_jwt_from_app_engine(
-            $iap_jwt,
+            $input->getArgument('jwt'),
             $input->getArgument('projectNumber'),
             $input->getArgument('projectId'));
         print('Printing user identity information from ID token payload:');
