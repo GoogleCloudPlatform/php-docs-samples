@@ -48,6 +48,8 @@ function delete_data($instanceId, $databaseId)
     $database->delete('Albums', $albumsToDelete);
 
     // Delete a range of rows where the column key is >=3 and <5
+    // NOTE: A KeyRange must include a start and end.
+    // NOTE: startType and endType both default to KeyRange::TYPE_OPEN.
     $singersRange = $spanner->keyRange([
         'startType' => KeyRange::TYPE_CLOSED,
         'start' => [3],
@@ -65,6 +67,8 @@ function delete_data($instanceId, $databaseId)
         'all' => true
     ]);
     $database->delete('Singers', $remainingSingers);
+
+
 
     print('Deleted data.' . PHP_EOL);
 }
