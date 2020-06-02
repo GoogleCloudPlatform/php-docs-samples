@@ -41,9 +41,6 @@ class iapTest extends TestCase
         // Verify an ID token was returned
         $this->assertContains('Printing out response body:', $output);
         list($_, $iapJwt) = explode(':', $output);
-        list($header, $payload, $signature) = explode('.', $iapJwt);
-        $decoded = json_decode(base64_decode($payload), true);
-        $this->assertArrayHasKey('aud', $decoded);
 
         // Now validate the JWT using the validation command
         $output = $this->runCommand('validate', [
