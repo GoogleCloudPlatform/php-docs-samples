@@ -51,7 +51,7 @@ EOF
 
 // Create a validate Command.
 $application->add((new Command('validate'))
-    ->addArgument('jwt', InputArgument::REQUIRED, 'A JWT from the X-Goog-Iap-Jwt-Assertion heaer')
+    ->addArgument('jwt', InputArgument::REQUIRED, 'A JWT from the X-Goog-Iap-Jwt-Assertion header')
     ->addArgument('projectNumber', InputArgument::REQUIRED, 'The project *number* for your Google Cloud project. This is returned by gcloud projects describe $PROJECT_ID or in the Project Info card in Cloud Console.')
     ->addArgument('projectId', InputArgument::REQUIRED, 'The project ID for your Google Cloud Platform project.')
     ->setDescription('Validates the JWT in the X-Goog-Iap-Jwt-Assertion header of an IAP-protected resource.')
