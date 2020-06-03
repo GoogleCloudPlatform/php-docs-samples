@@ -44,7 +44,7 @@ To run the Cloud Identity Aware Proxy Samples:
 
     Available commands:
       request    Make a request to an IAP-protected resource using a service account.
-      validate   Make a request to an IAP-protected resource using a service account and then validate the JWT.
+      validate   Validates the JWT in the X-Goog-Iap-Jwt-Assertion header of an IAP-protected resource.
 
 ### Run Request
 
@@ -56,7 +56,7 @@ To run the Request sample:
 
 To run the Analyze Sentiment sample:
 
-    $ php iap.php validate [YOUR_CLOUD_IAP_URL] [YOUR_CLIENT_ID] [PATH_TO_YOUR_SERVICE_ACCOUNT] [YOUR_PROJECT_NUMBER] [YOUR_PROJECT_ID]
+    $ php iap.php validate [YOUR_IAP_JWT] [YOUR_PROJECT_NUMBER] [YOUR_PROJECT_ID]
 
 [iap]: http://cloud.google.com/iap
 [iap-quickstart]: https://cloud.google.com/iap/docs/app-engine-quickstart
