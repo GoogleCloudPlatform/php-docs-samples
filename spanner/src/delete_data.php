@@ -68,8 +68,6 @@ function delete_data($instanceId, $databaseId)
     ]);
     $database->delete('Singers', $remainingSingers);
 
-
-
     print('Deleted data.' . PHP_EOL);
 }
 // [END spanner_delete_data]
