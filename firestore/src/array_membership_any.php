@@ -31,7 +31,7 @@ use Google\Cloud\Firestore\FirestoreClient;
  * array_membership_any('your-project-id');
  * ```
  */
-function array_membership_any($projectId)
+function array_membership_any(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

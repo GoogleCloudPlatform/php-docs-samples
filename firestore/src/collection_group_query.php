@@ -31,7 +31,7 @@ use Google\Cloud\Firestore\FirestoreClient;
  * collection_group_query('your-project-id');
  * ```
  */
-function collection_group_query($projectId)
+function collection_group_query(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
