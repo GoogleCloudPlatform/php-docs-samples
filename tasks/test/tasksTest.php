@@ -27,25 +27,67 @@ class TasksTest extends TestCase
 {
     use TestTrait;
 
+    private static $queue;
+    private static $location;
+    private static $url;
+    private static $email;
+    private static $payload;
+    private static $haveVariablesBeenInitialized = false;
+
     public function testCreateHttpTask()
     {
-        $queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
-        $location = $this->requireEnv('CLOUD_TASKS_LOCATION');
+        if(!self::$haveVariablesBeenInitialized){
+            $this->initializeVariables();
+            self::$haveVariablesBeenInitialized = true;
+        }
 
         $output = $this->runSnippet('create_http_task', [
-            $location,
-            $queue,
-            'http://example.com/taskhandler',
-            'Task Details',
+            self::$location,
+            self::$queue,
+            self::$url,
+            self::$payload,
         ]);
+
+        $expectedOutput = $this->getExpectedOutput();
+        $this->assertContains($expectedOutput, $output);
+    }
+
+    public function testCreateHttpTaskWithToken()
+    {
+        if(!self::$haveVariablesBeenInitialized){
+            $this->initializeVariables();
+            self::$haveVariablesBeenInitialized = true;
+        }
+
+        $output = $this->runSnippet('create_http_task_with_token', [
+            self::$location,
+            self::$queue,
+            self::$url,
+            self::$email,
+            self::$payload,
+        ]);
+
+        $expectedOutput = $this->getExpectedOutput();
+        $this->assertContains($expectedOutput, $output);
+    }
+
+    private function initializeVariables(){
+        self::$queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
+        self::$location = $this->requireEnv('CLOUD_TASKS_LOCATION');
+        self::$url = 'https://example.com/taskhandler';
+        self::$email = 'php-docs-samples-testing@php-docs-samples-testing.iam.gserviceaccount.com';
+        self::$payload = 'Task Details';
+    }
+
+    private function getExpectedOutput()
+    {
         $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
             self::$projectId,
-            $location,
-            $queue
+            self::$location,
+            self::$queue
         );
-
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        return $expectedOutput;
     }
 
     private function runSnippet($sampleName, $params = [])
