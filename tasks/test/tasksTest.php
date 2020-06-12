@@ -27,23 +27,20 @@ class TasksTest extends TestCase
 
     private static $queue;
     private static $location;
-    private static $url;
-    private static $email;
-    private static $payload;
-    private static $haveVariablesBeenInitialized = false;
-    
+
+    public static function setUpBeforeClass()
+    {
+        self::$queue = self::requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
+        self::$location = self::requireEnv('CLOUD_TASKS_LOCATION');
+    }
+
     public function testCreateHttpTask()
     {
-        if(!self::$haveVariablesBeenInitialized){
-            $this->initializeVariables();
-            self::$haveVariablesBeenInitialized = true;
-        }
-
         $output = $this->runSnippet('create_http_task', [
             self::$location,
             self::$queue,
-            self::$url,
-            self::$payload,
+            'https://example.com/taskhandler',
+            'Task Details',
         ]);
 
         $taskNamePrefix = $this->getTaskNamePrefix();
@@ -53,30 +50,17 @@ class TasksTest extends TestCase
 
     public function testCreateHttpTaskWithToken()
     {
-        if(!self::$haveVariablesBeenInitialized){
-            $this->initializeVariables();
-            self::$haveVariablesBeenInitialized = true;
-        }
-
         $output = $this->runSnippet('create_http_task_with_token', [
             self::$location,
             self::$queue,
-            self::$url,
-            self::$email,
-            self::$payload,
+            'https://example.com/taskhandler',
+            'php-docs-samples-testing@php-docs-samples-testing.iam.gserviceaccount.com',
+            'Task Details',
         ]);
 
         $taskNamePrefix = $this->getTaskNamePrefix();
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
         $this->assertContains($expectedOutput, $output);
-    }
-
-    private function initializeVariables(){
-        self::$queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
-        self::$location = $this->requireEnv('CLOUD_TASKS_LOCATION');
-        self::$url = 'https://example.com/taskhandler';
-        self::$email = 'php-docs-samples-testing@php-docs-samples-testing.iam.gserviceaccount.com';
-        self::$payload = 'Task Details';
     }
 
     private function getTaskNamePrefix()
