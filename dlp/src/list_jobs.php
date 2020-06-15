@@ -51,7 +51,7 @@ $jobType = DlpJobType::INSPECT_JOB;
 // Run job-listing request
 // For more information and filter syntax,
 // @see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->locationName($callingProjectId, "global");
 $response = $dlp->listDlpJobs($parent, [
   'filter' => $filter,
   'type' => $jobType

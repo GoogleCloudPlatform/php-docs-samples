@@ -89,7 +89,7 @@ foreach ($infoTypes as $infoType) {
     $imageRedactionConfigs[] = $config;
 }
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->locationName($callingProjectId, "global");
 
 // Run request
 $response = $dlp->redactImage($parent, [

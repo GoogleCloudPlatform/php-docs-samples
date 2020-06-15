@@ -122,7 +122,7 @@ $riskJob = (new RiskAnalysisJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = $dlp->locationName($callingProjectId, "global");
 $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);
