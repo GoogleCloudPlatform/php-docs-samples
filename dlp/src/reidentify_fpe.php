@@ -113,7 +113,7 @@ $reidentifyConfig = (new DeidentifyConfig())
 $item = (new ContentItem())
     ->setValue($string);
 
-$parent = "projects/$callingProjectId/locations/global"
+$parent = "projects/$callingProjectId/locations/global";
 
 // Run request
 $response = $dlp->reidentifyContent($parent, [

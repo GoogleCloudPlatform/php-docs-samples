@@ -151,7 +151,7 @@ $recordTransformations = (new RecordTransformations())
 $deidentifyConfig = (new DeidentifyConfig())
     ->setRecordTransformations($recordTransformations);
 
-$parent = "projects/$callingProjectId/locations/global"
+$parent = "projects/$callingProjectId/locations/global";
 
 // Run request
 $response = $dlp->deidentifyContent($parent, [

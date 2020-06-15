@@ -99,7 +99,7 @@ $topic = $pubsub->topic($topicId);
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = "projects/$callingProjectId/locations/global"
+$parent = "projects/$callingProjectId/locations/global";
 $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);

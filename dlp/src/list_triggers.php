@@ -42,7 +42,7 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 // Instantiate a client.
 $dlp = new DlpServiceClient();
 
-$parent = "projects/$callingProjectId/locations/global"
+$parent = "projects/$callingProjectId/locations/global";
 
 // Run request
 $response = $dlp->listJobTriggers($parent);
