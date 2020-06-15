@@ -81,5 +81,4 @@ class TasksTest extends TestCase
         require __DIR__ . "/../src/$sampleName.php";
         return ob_get_clean();
     }
-    
 }
