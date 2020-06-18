@@ -40,16 +40,14 @@ if (!in_array($read_type, $validReadTypes)) {
     ));
 }
 
-// [START bigtable_reads_row]
-// [START bigtable_reads_row_partial]
-// [START bigtable_reads_rows]
-// [START bigtable_reads_row_range]
-// [START bigtable_reads_row_ranges]
-// [START bigtable_reads_prefix]
-// [START bigtable_reads_filter]
+// [START bigtable_reads_imports]
 
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
+
+// [END bigtable_reads_imports]
+
+// [END bigtable_reads_print]
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -83,13 +81,7 @@ function print_row($key, $row)
     print(PHP_EOL);
 }
 
-// [END bigtable_reads_row]
-// [END bigtable_reads_row_partial]
-// [END bigtable_reads_rows]
-// [END bigtable_reads_row_range]
-// [END bigtable_reads_row_ranges]
-// [END bigtable_reads_prefix]
-// [END bigtable_reads_filter]
+// [END bigtable_reads_print]
 
 function read_row($table)
 {
