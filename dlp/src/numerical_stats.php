@@ -122,7 +122,7 @@ do {
     printf('Waiting for job to complete' . PHP_EOL);
     // Exponential backoff with max delay of 60 seconds
     sleep(min(60, pow(2, ++$attempt)));
-} while (time() - $startTime < 300); // 5 minute timeout
+} while (time() - $startTime < 600); // 10 minute timeout
 
 // Helper function to convert Protobuf values to strings
 $valueToString = function ($value) {
