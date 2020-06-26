@@ -35,7 +35,6 @@ $maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
 /**
  * Inspect Datastore, using Pub/Sub for job status notifications.
  */
-use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DatastoreOptions;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -124,9 +123,10 @@ $job = $dlp->createDlpJob($parent, [
 ]);
 
 // Poll Pub/Sub using exponential backoff until job finishes
-$backoff = new ExponentialBackoff(30);
-$backoff->execute(function () use ($subscription, $dlp, &$job) {
-    printf('Waiting for job to complete' . PHP_EOL);
+// Consider using an asynchronous execution model such as Cloud Functions
+$attempt = 1;
+$startTime = time();
+do {
     foreach ($subscription->pull() as $message) {
         if (isset($message->attributes()['DlpJobName']) &&
             $message->attributes()['DlpJobName'] === $job->getName()) {
@@ -135,11 +135,13 @@ $backoff->execute(function () use ($subscription, $dlp, &$job) {
             do {
                 $job = $dlp->getDlpJob($job->getName());
             } while ($job->getState() == JobState::RUNNING);
-            return true;
+            break 2; // break from parent do while
         }
     }
-    throw new Exception('Job has not yet completed');
-});
+    printf('Waiting for job to complete' . PHP_EOL);
+    // Exponential backoff with max delay of 60 seconds
+    sleep(min(60, pow(2, ++$attempt)));
+} while (time() - $startTime < 300); // 5 minute timeout
 
 // Print finding counts
 printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
@@ -160,6 +162,9 @@ switch ($job->getState()) {
         foreach ($errors as $error) {
             var_dump($error->getDetails());
         }
+        break;
+    case JobState::PENDING:
+        printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
         break;
     default:
         print('Unexpected job state.');
