@@ -46,7 +46,8 @@ $fieldMask = (new FieldMask())->setPaths(['description', 'pubsub_topic']);
 $notificationConfig = (new NotificationConfig())
     ->setName($notificationConfigName)
     ->setDescription('Updated description.')
-    ->setPubsubTopic($pubsubTopic);
+    ->setPubsubTopic($pubsubTopic)
+    ->setStreamingConfig($streamingConfig);
 
 $response = $securityCenterClient->updateNotificationConfig($notificationConfig, [$fieldMask]);
 printf('Notification config was updated: %s' . PHP_EOL, $response->getName());
