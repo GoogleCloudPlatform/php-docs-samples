@@ -118,7 +118,7 @@ $inspectJob = (new InspectJobConfig())
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = "projects/$callingProjectId/locations/global";
 $job = $dlp->createDlpJob($parent, [
     'inspectJob' => $inspectJob
 ]);
