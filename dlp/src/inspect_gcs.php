@@ -123,7 +123,9 @@ $job = $dlp->createDlpJob($parent, [
 $backoff = new ExponentialBackoff(30);
 $backoff->execute(function () use ($subscription, $dlp, &$job) {
     printf('Waiting for job to complete' . PHP_EOL);
+    printf('CRWILSON_DEBUG0a: ' . $job->getName() . "\n");
     foreach ($subscription->pull() as $message) {
+      printf('CRWILSON_DEBUG0b: ' . $message->attributes()['DlpJobName'] . "\n");
         if (isset($message->attributes()['DlpJobName']) &&
             $message->attributes()['DlpJobName'] === $job->getName()) {
             $subscription->acknowledge($message);
