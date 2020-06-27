@@ -27,11 +27,6 @@ class dlpTest extends TestCase
 {
     use TestTrait;
 
-    public function setUp()
-    {
-        $this->useResourceExhaustedBackoff(5);
-    }
-
     public function testInspectImageFile()
     {
         $output = $this->runSnippet('inspect_image_file', [
