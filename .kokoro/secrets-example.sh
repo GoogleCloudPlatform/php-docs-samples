@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# This file contains the necessary environment variables for the kokoro 
+# This file contains the necessary environment variables for the kokoro
 # tests. Contact the repository owners if you need access to view or modify
 # the variables.
-# 
+#
 # Run the following gcloud command to decrypt secrets.sh.enc as follows:
 #
 # gcloud kms decrypt --location=global --keyring=ci --key=ci \
@@ -11,8 +11,8 @@
 #   --plaintext-file=.kokoro/secrets.sh
 #
 # Then run `source .kokoro/secrets.sh`
-# 
-# To modify the file, edit .kokoro/secrets.sh then use the following gcloud 
+#
+# To modify the file, edit .kokoro/secrets.sh then use the following gcloud
 # command to encrypt it with the changes:
 #
 # gcloud kms encrypt --location=global --keyring=ci --key=ci \
@@ -66,8 +66,6 @@ export CLOUD_DATASTORE_NAMESPACE=
 export DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT=
 
 # DLP
-export DLP_TOPIC=dlp-tests
-export DLP_SUBSCRIPTION=dlp-tests
 export DLP_DEID_WRAPPED_KEY=
 export DLP_DEID_KEY_NAME=projects/$GOOGLE_PROJECT_ID/locations/global/keyRings/ci/cryptoKeys/ci
 
