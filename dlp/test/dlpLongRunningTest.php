@@ -67,7 +67,6 @@ class dlpLongRunningTest extends TestCase
 
     public function testInspectBigquery()
     {
-
         $output = $this->runSnippet('inspect_bigquery', [
             self::$projectId,
             self::$projectId,

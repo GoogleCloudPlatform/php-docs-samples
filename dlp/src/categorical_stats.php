@@ -34,7 +34,6 @@ list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetI
 /**
  * Computes risk metrics of a column of data in a Google BigQuery table.
  */
-use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
