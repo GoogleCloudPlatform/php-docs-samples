@@ -3,7 +3,7 @@
         "google/cloud-bigquery": "^1.16.0",
         "google/cloud-storage": "^1.9",
         "google/cloud-asset": "^1.2.0",
-        "symfony/console": " ^3.0"
+        "symfony/console": " ^5.0"
     },
     "autoload": {
         "files": [

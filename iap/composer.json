@@ -1,6 +1,6 @@
 {
     "require": {
-        "symfony/console": "^2.8",
+        "symfony/console": "^5.0",
         "google/auth":"^1.8.0",
         "guzzlehttp/guzzle": "~6.5.0",
         "kelvinmo/simplejwt": "^0.3.0"
