@@ -11,10 +11,10 @@
 
 To run this application locally, download and install the `cloud_sql_proxy` by following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
 
-Instructions are provided below for using the proxy with a TCP connection or a Unix domain socket. On Linux or macOS, you can use either opiton, but the Windows proxy currently requires a TCP connection.
+Instructions are provided below for using the proxy with a TCP connection or a Unix domain socket. On Linux or macOS, you can use either option, but the Windows proxy currently requires a TCP connection.
 
 ### Unix Socket mode
-NOTE: this opiton is currently only supported on Linux and macOS. Windows users whould use the TCP option.
+NOTE: this option is currently only supported on Linux and macOS. Windows users whould use the TCP option.
 
 To use a Unix socket, you'll need to create a directory and give write access to the user running the proxy. For example:
 
@@ -48,7 +48,7 @@ Then use the following command to launch the proxy in the background:
 ```
 
 ### TCP mode
-To run the sample locally with a TCP connection, set environment variables and launc the proxy as shown below.
+To run the sample locally with a TCP connection, set environment variables and launch the proxy as shown below.
 
 #### Linux / macOS
 Use these terminal commands to initialize environment variables:
@@ -94,7 +94,7 @@ Execute the following to start the application server:
 php -S localhost:8080
 ```
 
-Navigate towards (http://localhost:8080) to verify your application is running correctly.
+Navigate towards http://localhost:8080 to verify your application is running correctly.
 
 ## Google App Engine Flex
 
