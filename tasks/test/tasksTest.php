@@ -54,7 +54,7 @@ class TasksTest extends TestCase
             self::$location,
             self::$queue,
             'https://example.com/taskhandler',
-            'php-docs-samples-testing@php-docs-samples-testing.iam.gserviceaccount.com',
+            'example@your-project-id.iam.gserviceaccount.com',
             'Task Details',
         ]);
 
