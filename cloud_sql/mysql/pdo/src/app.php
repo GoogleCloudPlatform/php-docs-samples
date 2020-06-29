@@ -35,42 +35,97 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
+    # [START cloud_sql_mysql_pdo_timeout]
+    // Here we set the connection timeout to five seconds and ask PDO to
+    // throw an exception if any errors occur.
+    $conn_config = [
+        PDO::ATTR_TIMEOUT => 5,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ];
+    # [END cloud_sql_mysql_pdo_timeout]
+
+    if (empty(getenv('DB_HOST'))) {
+        return init_unix_database_connection($conn_config);
+    } else {
+        return init_tcp_database_connection($conn_config);
+    }
+};
+
+function init_tcp_database_connection (array $conn_config) : PDO {
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
-    $dbName = getenv('DB_NAME');
-    $hostname = getenv('DB_HOSTNAME');
-    $cloud_sql_connection_name = getenv('CLOUD_SQL_CONNECTION_NAME');
+    $db_name = getenv('DB_NAME');
+    $host = getenv('DB_HOST');
 
     try {
-        // # [START cloud_sql_mysql_pdo_create]
+        # [START cloud_sql_mysql_pdo_create_tcp]
         // // $username = 'your_db_user';
         // // $password = 'yoursupersecretpassword';
-        // // $dbName = 'your_db_name';
-        // // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
-        // // $hostname = "127.0.0.1"; // Only used in TCP mode.
+        // // $db_name = 'your_db_name';
+        // // $host = "127.0.0.1";
 
-        if ($hostname) {
-            // Connect using TCP
-            $dsn = sprintf('mysql:dbname=%s;host=%s', $dbName, $hostname);
-        } else {
-            // Connect using UNIX sockets
-            $dsn = sprintf(
-                'mysql:dbname=%s;unix_socket=/cloudsql/%s',
-                $dbName,
-                $cloud_sql_connection_name
-            );
-        }
+        // Connect using TCP
+        $dsn = sprintf('mysql:dbname=%s;host=%s', $db_name, $host);
 
         // Connect to the database.
-        # [START cloud_sql_mysql_pdo_timeout]
-        // Here we set the connection timeout to five seconds and ask PDO to
-        // throw an exception if any errors occur.
-        $conn = new PDO($dsn, $username, $password, [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
-        # [END cloud_sql_mysql_pdo_timeout]
-        # [END cloud_sql_mysql_pdo_create]
+        $conn = new PDO($dsn, $username, $password, $conn_config);
+        # [END cloud_sql_mysql_pdo_create_tcp]
+    } catch (TypeError $e) {
+        throw new RuntimeException(
+            sprintf(
+                'Invalid or missing configuration! Make sure you have set ' .
+                '$username, $password, $db_name, and $hostname (for TCP mode) ' .
+                'or $cloud_sql_connection_name (for UNIX socket mode). ' .
+                'The PHP error was %s',
+                $e->getMessage()
+            ),
+            $e->getCode(),
+            $e
+        );
+    } catch (PDOException $e) {
+        throw new RuntimeException(
+            sprintf(
+                'TCP Could not connect to the Cloud SQL Database. Check that ' .
+                'your username and password are correct, that the Cloud SQL ' .
+                'proxy is running, and that the database exists and is ready ' .
+                'for use. For more assistance, refer to %s. The PDO error was %s',
+                'https://cloud.google.com/sql/docs/mysql/connect-external-app',
+                $e->getMessage()
+            ),
+            $e->getCode(),
+            $e
+        );
+    }
+
+    return $conn;
+}
+
+function init_unix_database_connection (array $conn_config) : PDO {
+    $username = getenv('DB_USER');
+    $password = getenv('DB_PASS');
+    $db_name = getenv('DB_NAME');
+    $cloud_sql_connection_name = getenv('CLOUD_SQL_CONNECTION_NAME');
+    $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+
+    try {
+        // # [START cloud_sql_mysql_pdo_create_socket]
+        // // $username = 'your_db_user';
+        // // $password = 'yoursupersecretpassword';
+        // // $db_name = 'your_db_name';
+        // // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
+        // // $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+
+        // Connect using UNIX sockets
+        $dsn = sprintf(
+            'mysql:dbname=%s;unix_socket=%s/%s',
+            $db_name,
+            $socket_dir,
+            $cloud_sql_connection_name
+        );
+
+        // Connect to the database.
+        $conn = new PDO($dsn, $username, $password, $conn_config);
+        # [END cloud_sql_mysql_pdo_create_socket]
     } catch (TypeError $e) {
         throw new RuntimeException(
             sprintf(
@@ -99,7 +154,7 @@ $container['db'] = function () {
     }
 
     return $conn;
-};
+}
 
 // Configure the templating engine.
 $container['view'] = function () {
