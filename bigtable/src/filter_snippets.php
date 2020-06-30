@@ -58,14 +58,9 @@ if (!in_array($filter_type, $validFilterTypes)) {
     ));
 }
 
-// [START bigtable_filters_imports]
-
+// [START bigtable_filters_print]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
-
-// [END bigtable_filters_imports]
-
-// [START bigtable_filters_print]
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
@@ -110,6 +105,7 @@ function read_filter($table, $filter)
     }
 }
 
+// Write your code here.
 // [END bigtable_filters_print]
 
 
