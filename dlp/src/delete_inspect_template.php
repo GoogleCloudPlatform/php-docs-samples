@@ -44,7 +44,7 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
 $dlp = new DlpServiceClient();
 
 // Run template deletion request
-$templateName = $dlp->projectInspectTemplateName($callingProjectId, $templateId);
+$templateName = "projects/$callingProjectId/locations/global/inspectTemplates/$templateId"
 $dlp->deleteInspectTemplate($templateName);
 
 // Print results
