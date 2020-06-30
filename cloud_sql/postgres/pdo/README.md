@@ -11,54 +11,90 @@
 
 To run this application locally, download and install the `cloud_sql_proxy` by following the instructions [here](https://cloud.google.com/sql/docs/postgres/sql-proxy#install).
 
-To authenticate with Cloud SQL, set the `$GOOGLE_APPLICATION_CREDENTIALS` environment variable:
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-```
-
-To run the Cloud SQL proxy, you need to set the instance connection name. See the instructions [here](https://cloud.google.com/sql/docs/postgres/quickstart-proxy-test#get_the_instance_connection_name) for finding the instance connection name.
-
-```bash
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
-```
-
-Once the proxy is ready, use one of the following commands to start the proxy in the background.
-
-You may connect to your instance via either unix sockets or TCP. To connect using a socket, you must provide the `-dir` option when starting the proxy. To connect via TCP, you must provide a port as part of the instance name. Both are demonstrated below.
+Instructions are provided below for using the proxy with a TCP connection or a Unix domain socket. On Linux or macOS, you can use either option, but the Windows proxy requires a TCP connection.
 
 ### Unix Socket mode
 
+NOTE: this option is currently only supported on Linux and macOS. Windows users should use the TCP option.
+
+To use a Unix socket, you'll need to create a directory and give access to the user running the proxy. For example:
+
 ```bash
-$ ./cloud_sql_proxy -dir=/cloudsql \
-    --instances=$CLOUD_SQL_CONNECTION_NAME \
-    --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
+sudo mkdir /cloudsql
+sudo chown -R $USER /cloudsql
 ```
 
-Note: Make sure to run the command under a user with write access in the `/cloudsql` directory. This proxy will use this folder to create a unix socket the application will use to connect to Cloud SQL.
-
-### TCP mode
+You'll also need to initialize an environment variable pointing to the directory you just created:
 
 ```bash
-$ ./cloud_sql_proxy \
-    --instances=$CLOUD_SQL_CONNECTION_NAME=tcp:5432 \
-    --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
+export DB_SOCKET_DIR=/path/to/the/new/directory
 ```
 
-### Set Configuration Values
-
-Set the required environment variables for your connection to Cloud SQL. If you are using Unix Socket mode as described above, do not set the DB_HOSTNAME variable.
+Ues these terminal commands to initialize other environment variables as well:
 
 ```bash
-export DB_USER='my-db-user'
-export DB_PASS='my-db-pass'
-export DB_NAME='my-db-name'
-export DB_HOSTNAME='127.0.0.1'
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
 ```
 
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets safe.
 
-Execute the following:
+Then use the following command to launch the proxy in the background:
+
+```bash
+./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+```
+
+### TCP mode
+
+To run the sample locally with a TCP conneciton, set environment variables and launch the proxy as shown below.
+
+#### Linux / macOS
+
+Use these terminal commands to initalie environment variables:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+export DB_HOST='127.0.0.1'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets safe.
+
+Then use the following command to launch the proxy in the background:
+
+```bash
+./cloud_sql_proxy -instances=<project-id>:<region>:<instance-name>=tcp:5432 -credential_file=$GOOGLE_APPLICAITON_CREDENTIALS &
+```
+
+#### Windows/PowerShell
+
+Use these PowerShell commands to initialize environment variables:
+
+```bash
+$env:GOOGLE_APPLICATION_CREDENTIALS="<CREDENTIALS_JSON_FILE>"
+$env:DB_HOST="127.0.0.1"
+$env:DB_USER="<DB_USER_NAME>"
+$env:DB_PASS="<DB_PASSWORD>"
+$env:DB_NAME="<DB_NAME>
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets safe.
+
+Then use the following command to launch the proxy in a seperate PowerShell session:
+
+```powershell
+Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "-instances=<project-id>:<region>:<instance-name>=tcp:5432 -credential_file=<CREDENTIALS_JSON_FILE>"
+```
+
+### Testing the application
+
+Execute the following to start the application server:
 
 ```bash
 $ php -S localhost:8080
