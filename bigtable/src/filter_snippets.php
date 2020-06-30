@@ -59,7 +59,6 @@ if (!in_array($filter_type, $validFilterTypes)) {
 }
 
 // [START bigtable_filters_print]
-
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
 

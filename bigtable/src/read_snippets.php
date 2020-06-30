@@ -41,10 +41,8 @@ if (!in_array($read_type, $validReadTypes)) {
 }
 
 // [START bigtable_reads_print]
-
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
-
 
 /** Uncomment and populate these variables in your code */
 // $project_id = 'The Google project ID';
