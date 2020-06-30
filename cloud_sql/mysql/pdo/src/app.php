@@ -74,7 +74,7 @@ function init_tcp_database_connection (array $conn_config) : PDO {
         throw new RuntimeException(
             sprintf(
                 'Invalid or missing configuration! Make sure you have set ' .
-                '$username, $password, $db_name, and $hostname (for TCP mode) ' .
+                '$username, $password, $db_name, and $host (for TCP mode) ' .
                 'or $cloud_sql_connection_name (for UNIX socket mode). ' .
                 'The PHP error was %s',
                 $e->getMessage()
@@ -130,7 +130,7 @@ function init_unix_database_connection (array $conn_config) : PDO {
         throw new RuntimeException(
             sprintf(
                 'Invalid or missing configuration! Make sure you have set ' .
-                '$username, $password, $dbName, and $hostname (for TCP mode) ' .
+                '$username, $password, $db_name, and $host (for TCP mode) ' .
                 'or $cloud_sql_connection_name (for UNIX socket mode). ' .
                 'The PHP error was %s',
                 $e->getMessage()
