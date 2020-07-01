@@ -133,6 +133,18 @@ class spannerTest extends TestCase
     {
         $output = $this->runCommand('delete-data');
         $this->assertContains('Deleted data.' . PHP_EOL, $output);
+
+        $spanner = new SpannerClient();
+        $instance = $spanner->instance(spannerTest::$instanceId);
+        $database = $instance->database(spannerTest::$databaseId);
+
+        $results = $database->execute(
+            'SELECT SingerId FROM Albums UNION ALL SELECT SingerId FROM Singers'
+        );
+
+        foreach ($results as $row) {
+            $this->fail("Not all data was deleted.");
+        }
     }
 
     /**
