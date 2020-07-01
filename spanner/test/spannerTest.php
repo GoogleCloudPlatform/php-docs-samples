@@ -145,10 +145,13 @@ class spannerTest extends TestCase
         foreach ($results as $row) {
             $this->fail("Not all data was deleted.");
         }
+
+        $output = $this->runCommand('insert-data');
+        $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
 
     /**
-     * @depends testInsertData
+     * @depends testDeleteData
      */
     public function testAddColumn()
     {
