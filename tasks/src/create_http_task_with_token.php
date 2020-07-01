@@ -1,17 +1,19 @@
 <?php
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright 2020 Google LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -19,7 +21,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if ($argc < 6 || $argc > 7) {
     return printf("Usage: php %s PROJECT_ID LOCATION_ID QUEUE_ID URL SERVICE_ACCOUNT_EMAIL [PAYLOAD]\n", __FILE__);
 }
-list($_, $projectId, $locationId, $queueId, $url, $serviceAccountEmail, $payload) = $argv;
+list($_, $projectId, $locationId, $queueId, $url, $serviceAccountEmail) = $argv;
+$payload = isset($payload[6]) ? $payload[6] : null;
 
 # [START cloud_tasks_create_http_task]
 use Google\Cloud\Tasks\V2\CloudTasksClient;
