@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_instance]
-use Google\Cloud\Spanner\InstanceConfiguration;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
