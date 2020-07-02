@@ -627,7 +627,7 @@ class spannerTest extends TestCase
     private function runCommand($commandName, $params = [])
     {
         if (!empty($params)){
-            return $this->traitRunCommand($commandName, params);
+            return $this->traitRunCommand($commandName, $params);
         }
         return $this->traitRunCommand($commandName, [
             'instance_id' => self::$instanceId,
