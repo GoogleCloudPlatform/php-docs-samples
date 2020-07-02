@@ -48,6 +48,17 @@ $ibInputDefinition = new InputDefinition([
     new InputArgument('backup_id', InputArgument::REQUIRED, 'The backup id'),
 ]);
 
+// Create Instance command
+$application->add((new Command('create-instance'))
+    ->setDefinition($instanceInputDefinition)
+    ->setDescription('Creates an instance.')
+    ->setCode(function ($input, $output) {
+        create_instance(
+            $input->getArgument('instance_id')
+        );
+    })
+);
+
 // Create Database command
 $application->add((new Command('create-database'))
     ->setDefinition($inputDefinition)

@@ -57,17 +57,27 @@ class spannerTest extends TestCase
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        self::$instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
             'projectId' => self::$projectId,
         ]);
 
+        self::$instanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
     }
 
+    public function testCreateInstance()
+    {
+        $output = $this->runCommand('create-instance');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Created instance test-', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
     public function testCreateDatabase()
     {
         $output = $this->runCommand('create-database');
@@ -626,5 +636,6 @@ class spannerTest extends TestCase
             $database = self::$instance->database(self::$databaseId);
             $database->drop();
         }
+        self::$instance->delete();
     }
 }
