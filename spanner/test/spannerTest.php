@@ -70,7 +70,9 @@ class spannerTest extends TestCase
 
     public function testCreateInstance()
     {
-        $output = $this->runCommand('create-instance');
+        $output = $this->runCommand('create-instance', [
+            'instance_id' => self::$instanceId
+        ]);
         $this->assertContains('Waiting for operation to complete...', $output);
         $this->assertContains('Created instance test-', $output);
     }
@@ -622,8 +624,11 @@ class spannerTest extends TestCase
         });
     }
 
-    private function runCommand($commandName)
+    private function runCommand($commandName, $params = [])
     {
+        if (!empty($params)){
+            return $this->traitRunCommand($commandName, params);
+        }
         return $this->traitRunCommand($commandName, [
             'instance_id' => self::$instanceId,
             'database_id' => self::$databaseId,
