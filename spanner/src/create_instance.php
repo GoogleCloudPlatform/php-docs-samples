@@ -39,8 +39,11 @@ use Google\Cloud\Spanner\SpannerClient;
 function create_instance($instanceId)
 {
     $spanner = new SpannerClient();
+    $instanceConfig = $spanner->instanceConfiguration(
+        'regional-us-central1'
+    );
     $operation = $spanner->createInstance(
-        new InstanceConfiguration('regional-us-central1'),
+        $instanceConfig,
         $instanceId,
         [
             'displayName' => 'This is a display name.',
