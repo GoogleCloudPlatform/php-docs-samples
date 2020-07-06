@@ -47,7 +47,7 @@ $ ./cloud_sql_proxy \
 
 ### Set Configuration Values
 
-Set the required environment variables for your connection to Cloud SQL. If you are using Unix Socket mode as described above, do not set the DB_HOST variable.
+Set the required environment variables for your connection to Cloud SQL. If you are using Unix Socket mode as described above, do not set the DB_HOSTNAME variable.
 
 ```bash
 export DB_USER='my-db-user'
