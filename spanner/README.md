@@ -99,6 +99,7 @@ To run the Spanner Samples:
       add-timestamp-column                 Adds a commit timestamp column to a table.
       batch-query-data                     Batch queries sample data from the database using SQL.
       create-database                      Creates a database and tables for sample data.
+      create-instance                      Creates an instance.
       create-index                         Adds a simple index to the example database.
       create-storing-index                 Adds an storing index to the example database.
       create-table-timestamp               Creates a table with a commit timestamp column.

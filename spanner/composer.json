@@ -10,6 +10,7 @@
             "src/read_data.php",
             "src/read_write_transaction.php",
             "src/create_database.php",
+            "src/create_instance.php",
             "src/query_data.php",
             "src/read_data_with_index.php",
             "src/update_data.php",
