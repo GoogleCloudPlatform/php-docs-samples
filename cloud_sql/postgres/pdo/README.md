@@ -47,13 +47,13 @@ $ ./cloud_sql_proxy \
 
 ### Set Configuration Values
 
-Set the required environment variables for your connection to Cloud SQL. If you are using TCP mode as described above, do not set the `CLOUD_SQL_CONNECTION_NAME` variable.
+Set the required environment variables for your connection to Cloud SQL. If you are using Unix Socket mode as described above, do not set the DB_HOST variable.
 
 ```bash
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my-db-name'
-export DB_HOST='127.0.0.1'
+export DB_HOSTNAME='127.0.0.1'
 ```
 
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets safe.
@@ -66,6 +66,18 @@ $ php -S localhost:8080
 
 Navigate towards http://localhost:8080 to verify your application is running correctly.
 
+## Google App Engine Standard
+
+To run on App Engine Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
+
+First, update `app.standard.yaml` with the correct values to pass the environment variables into the runtime.
+
+Next, the following command will deploy the application to your Google Cloud project:
+
+```bash
+$ gcloud app deploy app.standard.yaml
+```
+
 ## Google App Engine Flex
 
 To run on App Engine Flex, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
@@ -77,17 +89,6 @@ Then, make sure that the service account `service-{PROJECT_NUMBER}>@gae-api-prod
 Next, the following command will deploy the application to your Google Cloud project:
 
 ```bash
-$ gcloud beta app deploy
+$ gcloud beta app deploy app.flex.yaml
 ```
 
-## Google App Engine Standard
-
-To run on App Engine Standard, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
-
-First, update `app-standard.yaml` with the correct values to pass the environment variables into the runtime.
-
-Next, the following command will deploy the application to your Google Cloud project:
-
-```bash
-$ gcloud app deploy app.standard.yaml
-```
