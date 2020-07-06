@@ -31,18 +31,16 @@ class BucketLifecycleManagementTest extends TestCase
     use ExecuteCommandTrait;
 
     private static $commandFile = __DIR__ . '/../storage.php';
-    protected $storage;
     protected $bucket;
 
     public function setUp()
     {
-        // Sleep to avoid the rate limit for creating/deleting.
-        sleep(5 + rand(2, 4));
-        $this->storage = new StorageClient();
-
-        // Append random because tests for multiple PHP versions were running at the same time.
-        $bucketName = 'php-olm-' . time() . '-' . rand(1000, 9999);
-        $this->bucket = $this->storage->createBucket($bucketName);
+        $storage = new StorageClient();
+        $bucketName = sprintf('php-olm-%s-%s', time(), rand(1000, 9999));
+        $this->useResourceExhaustedBackoff();
+        self::$backoff->execute(function() use ($storage, $bucketName) {
+            $this->bucket = $storage->createBucket($bucketName);
+        });
     }
 
     public function tearDown()
@@ -57,21 +55,19 @@ class BucketLifecycleManagementTest extends TestCase
             'bucket' => $bucketName,
             '--enable' => true,
         ]);
-        $match = 'Lifecycle management is enabled for bucket ' . $bucketName . ' and the rules are:';
+        $match = "Lifecycle management is enabled for bucket $bucketName and the rules are:";
         $this->assertContains($match, $output);
         $this->bucket->reload();
         $lifecycle = $this->bucket->currentLifecycle()->toArray();
         $rules = $lifecycle['rule'];
-        $this->assertContains(
-            [
-                'action' => [
-                    'type' => 'Delete'
-                ],
-                'condition' => [
-                    'age' => 100
-                ]
+        $this->assertContains([
+            'action' => [
+                'type' => 'Delete'
             ],
-            $rules);
+            'condition' => [
+                'age' => 100
+            ]
+        ], $rules);
     }
 
     /** @depends testEnableBucketLifecycleManagement */
@@ -82,7 +78,7 @@ class BucketLifecycleManagementTest extends TestCase
             'bucket' => $bucketName,
             '--disable' => true,
         ]);
-        $expectedOutput = 'Lifecycle management is disabled for bucket ' . $bucketName . '.' . PHP_EOL;
+        $expectedOutput = "Lifecycle management is disabled for bucket $bucketName.\n";
         $this->assertEquals($expectedOutput, $output);
         $this->bucket->reload();
         $lifecycle = $this->bucket->currentLifecycle()->toArray();
