@@ -37,11 +37,8 @@ use Google\Cloud\ServiceDirectory\V1beta1\PBNamespace;
 $client = new RegistrationServiceClient();
 
 // Run request.
-$namespace = $client->createNamespace(
-    RegistrationServiceClient::locationName($projectId, $locationId),
-    $namespaceId,
-    new PBNamespace()
-);
+$locationName = RegistrationServiceClient::locationName($projectId, $locationId);
+$namespace = $client->createNamespace($locationName, $namespaceId, new PBNamespace());
 
 // Print results.
 printf('Created Namespace: %s' . PHP_EOL, $namespace->getName());

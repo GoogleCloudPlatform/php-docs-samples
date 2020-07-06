@@ -34,11 +34,12 @@ use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 $client = new RegistrationServiceClient();
 
 // Run request.
-$pagedResponse = $client->listNamespaces(RegistrationServiceClient::locationName($projectId, $locationId));
+$locationName = RegistrationServiceClient::locationName($projectId, $locationId);
+$pagedResponse = $client->listNamespaces($locationName);
 
 // Iterate over each namespace and print its name.
 print('Namespaces: ' . PHP_EOL);
-foreach ($pagedResponse->iterateAllElements() as $namespace_pb) {
-    printf('%s' . PHP_EOL, $namespace_pb->getName());
+foreach ($pagedResponse->iterateAllElements() as $namespace) {
+    print($namespace->getName() . PHP_EOL);
 }
 // [END servicedirectory_quickstart]

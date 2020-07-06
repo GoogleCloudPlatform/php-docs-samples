@@ -37,11 +37,11 @@ use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 // Instantiate a client.
 $client = new RegistrationServiceClient();
 
-$endpoint_fqdn = RegistrationServiceClient::endpointName($projectId, $locationId, $namespaceId, $serviceId, $endpointId);
 
 // Run request.
-$endpoint = $client->deleteEndpoint($endpoint_fqdn);
+$endpointName = RegistrationServiceClient::endpointName($projectId, $locationId, $namespaceId, $serviceId, $endpointId);
+$endpoint = $client->deleteEndpoint($endpointName);
 
 // Print results.
-printf('Deleted Endpoint: %s' . PHP_EOL, $endpoint_fqdn);
+printf('Deleted Endpoint: %s' . PHP_EOL, $endpointName);
 // [END servicedirectory_delete_endpoint]

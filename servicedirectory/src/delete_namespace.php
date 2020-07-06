@@ -35,11 +35,10 @@ use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 // Instantiate a client.
 $client = new RegistrationServiceClient();
 
-$namespace_fqdn = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
-
 // Run request.
-$client->deleteNamespace($namespace_fqdn);
+$namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
+$client->deleteNamespace($namespaceName);
 
 // Print results.
-printf('Deleted Namespace: %s' . PHP_EOL, $namespace_fqdn);
+printf('Deleted Namespace: %s' . PHP_EOL, $namespaceName);
 // [END servicedirectory_delete_namespace]

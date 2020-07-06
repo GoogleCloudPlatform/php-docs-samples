@@ -38,11 +38,8 @@ use Google\Cloud\ServiceDirectory\V1beta1\Service;
 $client = new RegistrationServiceClient();
 
 // Run request.
-$service = $client->createService(
-    RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId),
-    $serviceId,
-    new Service()
-);
+$namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
+$service = $client->createService($namespaceName, $serviceId, new Service());
 
 // Print results.
 printf('Created Service: %s' . PHP_EOL, $service->getName());

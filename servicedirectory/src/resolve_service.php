@@ -38,7 +38,8 @@ use Google\Cloud\ServiceDirectory\V1beta1\Service;
 $client = new LookupServiceClient();
 
 // Run request.
-$service = $client->resolveService(LookupServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId))->getService();
+$serviceName = LookupServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
+$service = $client->resolveService($serviceName)->getService();
 
 // Print results.
 printf('Resolved Service: %s' . PHP_EOL, $service->getName());

@@ -48,11 +48,8 @@ $endpointObject = (new Endpoint())
     ->setPort($port);
 
 // Run request.
-$endpoint = $client->createEndpoint(
-    RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId),
-    $endpointId,
-    $endpointObject
-);
+$serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
+$endpoint = $client->createEndpoint($serviceName, $endpointId, $endpointObject);
 
 // Print results.
 printf('Created Endpoint: %s' . PHP_EOL, $endpoint->getName());

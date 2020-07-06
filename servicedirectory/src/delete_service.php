@@ -36,11 +36,10 @@ use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 // Instantiate a client.
 $client = new RegistrationServiceClient();
 
-$service_fqdn = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-
 // Run request.
-$client->deleteService($service_fqdn);
+$serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
+$client->deleteService($serviceName);
 
 // Print results.
-printf('Deleted Service: %s' . PHP_EOL, $service_fqdn);
+printf('Deleted Service: %s' . PHP_EOL, $serviceName);
 // [END servicedirectory_delete_service]
