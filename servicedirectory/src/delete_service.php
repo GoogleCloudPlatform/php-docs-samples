@@ -19,7 +19,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 5) {
+if ($argc != 5) {
     return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID SERVICE_ID\n", basename(__FILE__));
 }
 list($_, $projectId, $locationId, $namespaceId, $serviceId) = $argv;

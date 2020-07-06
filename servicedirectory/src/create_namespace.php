@@ -19,7 +19,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 4) {
+if ($argc != 4) {
     return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID\n", basename(__FILE__));
 }
 list($_, $projectId, $locationId, $namespaceId) = $argv;
@@ -37,12 +37,12 @@ use Google\Cloud\ServiceDirectory\V1beta1\PBNamespace;
 $client = new RegistrationServiceClient();
 
 // Run request.
-$namespace_pb = $client->createNamespace(
+$namespace = $client->createNamespace(
     RegistrationServiceClient::locationName($projectId, $locationId),
     $namespaceId,
     new PBNamespace()
 );
 
 // Print results.
-printf('Created Namespace: %s' . PHP_EOL, $namespace_pb->getName());
+printf('Created Namespace: %s' . PHP_EOL, $namespace->getName());
 // [END servicedirectory_create_namespace]

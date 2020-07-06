@@ -28,13 +28,4 @@ class quickstartTest extends TestCase
         $output = $this->runSnippet('quickstart', [self::$projectId, $locationId]);
         $this->assertContains('Namespaces: ', $output);
     }
-
-    private function runSnippet($sampleName, $params = [])
-    {
-        $argv = array_merge([0], array_values($params));
-        $argc = count($argv);
-        ob_start();
-        require __DIR__ . "/../src/$sampleName.php";
-        return ob_get_clean();
-    }
 }

@@ -32,12 +32,6 @@ class servicedirectoryTest extends TestCase
 
     private static $locationId = 'us-east1';
 
-    // public static function setUpBeforeClass()
-    // {
-    //   $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
-    //   $this->requireEnv('GOOGLE_PROJECT_ID');
-    // }
-
     public static function tearDownAfterClass()
     {
         // Delete any namespaces created during the tests.
@@ -51,148 +45,148 @@ class servicedirectoryTest extends TestCase
     public function testNamespaces()
     {
         $namespaceId = uniqid('sd-php-namespace-');
-        $namespaceFqdn = sprintf('projects/%s/locations/%s/namespaces/%s', self::$projectId, self::$locationId, $namespaceId);
+        $namespaceName = sprintf('projects/%s/locations/%s/namespaces/%s', self::$projectId, self::$locationId, $namespaceId);
 
         $output = $this->runSnippet('create_namespace', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId
-      ]);
-        $this->assertContains('Created Namespace: ' . $namespaceFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId
+        ]);
+        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
 
         $output = $this->runSnippet('delete_namespace', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId
-      ]);
-        $this->assertContains('Deleted Namespace: ' . $namespaceFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId
+        ]);
+        $this->assertContains('Deleted Namespace: ' . $namespaceName, $output);
     }
 
     public function testServices()
     {
         $namespaceId = uniqid('sd-php-namespace-');
+        $namespaceName = sprintf('projects/%s/locations/%s/namespaces/%s', self::$projectId, self::$locationId, $namespaceId);
         $serviceId = uniqid('sd-php-service-');
-        $serviceFqdn = sprintf('projects/%s/locations/%s/namespaces/%s/services/%s', self::$projectId, self::$locationId, $namespaceId, $serviceId);
+        $serviceName = sprintf('%s/services/%s', $namespaceName, $serviceId);
 
         // Setup: create a namespace for the service to live in.
-        $this->runSnippet('create_namespace', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId
-      ]);
-
+        $output = $this->runSnippet('create_namespace', [
+            self::$projectId,
+            self::$locationId,
+            $namespaceId
+        ]);
+        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
         $output = $this->runSnippet('create_service', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId
-      ]);
-        $this->assertContains('Created Service: ' . $serviceFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId
+        ]);
+        $this->assertContains('Created Service: ' . $serviceName, $output);
 
         $output = $this->runSnippet('delete_service', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId
-      ]);
-        $this->assertContains('Deleted Service: ' . $serviceFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId
+        ]);
+        $this->assertContains('Deleted Service: ' . $serviceName, $output);
     }
 
     public function testEndpoints()
     {
         $namespaceId = uniqid('sd-php-namespace-');
+        $namespaceName = sprintf('projects/%s/locations/%s/namespaces/%s', self::$projectId, self::$locationId, $namespaceId);
         $serviceId = uniqid('sd-php-service-');
+        $serviceName = sprintf('%s/services/%s', $namespaceName, $serviceId);
         $endpointId = uniqid('sd-php-endpoint-');
-        $endpointFqdn = sprintf('projects/%s/locations/%s/namespaces/%s/services/%s/endpoints/%s', self::$projectId, self::$locationId, $namespaceId, $serviceId, $endpointId);
-        $ip = "1.2.3.4";
+        $endpointName = sprintf('%s/endpoints/%s', $serviceName, $endpointId);
+        $ip = '1.2.3.4';
         $port = 8080;
 
         // Setup: create a namespace and service for the service to live in.
-        $this->runSnippet('create_namespace', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId
-      ]);
-        $this->runSnippet('create_service', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId
-      ]);
+        $output = $this->runSnippet('create_namespace', [
+            self::$projectId,
+            self::$locationId,
+            $namespaceId
+        ]);
+        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
+        $output = $this->runSnippet('create_service', [
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId
+        ]);
+        $this->assertContains('Created Service: ' . $serviceName, $output);
 
         $output = $this->runSnippet('create_endpoint', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId,
-          $endpointId,
-          $ip,
-          $port
-      ]);
-        $this->assertContains('Created Endpoint: ' . $endpointFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId,
+            $endpointId,
+            $ip,
+            $port
+        ]);
+        $this->assertContains('Created Endpoint: ' . $endpointName, $output);
         $this->assertContains('IP: ' . $ip, $output);
         $this->assertContains('Port: ' . $port, $output);
 
         $output = $this->runSnippet('delete_endpoint', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId,
-          $endpointId
-      ]);
-        $this->assertContains('Deleted Endpoint: ' . $endpointFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId,
+            $endpointId
+        ]);
+        $this->assertContains('Deleted Endpoint: ' . $endpointName, $output);
     }
 
     public function testResolveService()
     {
         $namespaceId = uniqid('sd-php-namespace-');
+        $namespaceName = sprintf('projects/%s/locations/%s/namespaces/%s', self::$projectId, self::$locationId, $namespaceId);
         $serviceId = uniqid('sd-php-service-');
-        $serviceFqdn = sprintf('projects/%s/locations/%s/namespaces/%s/services/%s', self::$projectId, self::$locationId, $namespaceId, $serviceId);
+        $serviceName = sprintf('%s/services/%s', $namespaceName, $serviceId);
         $endpointId = uniqid('sd-php-endpoint-');
-        $endpointFqdn = sprintf('%s/endpoints/%s', $serviceFqdn, $endpointId);
-        $ip = "1.2.3.4";
+        $endpointName = sprintf('%s/endpoints/%s', $serviceName, $endpointId);
+        $ip = '1.2.3.4';
         $port = 8080;
 
         // Setup: create a namespace, service, and endpoint.
-        $this->runSnippet('create_namespace', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId
-      ]);
-        $this->runSnippet('create_service', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId
-      ]);
-        $this->runSnippet('create_endpoint', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId,
-          $endpointId,
-          $ip,
-          $port
-      ]);
+        $output = $this->runSnippet('create_namespace', [
+            self::$projectId,
+            self::$locationId,
+            $namespaceId
+        ]);
+        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
+        $output = $this->runSnippet('create_service', [
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId
+        ]);
+        $this->assertContains('Created Service: ' . $serviceName, $output);
+        $output = $this->runSnippet('create_endpoint', [
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId,
+            $endpointId,
+            $ip,
+            $port
+        ]);
+        $this->assertContains('Created Endpoint: ' . $endpointName, $output);
 
         $output = $this->runSnippet('resolve_service', [
-          self::$projectId,
-          self::$locationId,
-          $namespaceId,
-          $serviceId
-      ]);
-        $this->assertContains('Resolved Service: ' . $serviceFqdn, $output);
-        $this->assertContains('Name: ' . $endpointFqdn, $output);
+            self::$projectId,
+            self::$locationId,
+            $namespaceId,
+            $serviceId
+        ]);
+        $this->assertContains('Resolved Service: ' . $serviceName, $output);
+        $this->assertContains('Name: ' . $endpointName, $output);
         $this->assertContains('IP: ' . $ip, $output);
         $this->assertContains('Port: ' . $port, $output);
-    }
-
-    private function runSnippet($sampleName, $params = [])
-    {
-        $argv = array_merge([0], array_values($params));
-        $argc = count($argv);
-        ob_start();
-        require __DIR__ . "/../src/$sampleName.php";
-        return ob_get_clean();
     }
 }

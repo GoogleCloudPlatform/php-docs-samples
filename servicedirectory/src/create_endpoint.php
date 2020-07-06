@@ -19,7 +19,7 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 6 || count($argv) > 8) {
+if ($argc < 6 || $argc > 8) {
     return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID SERVICE_ID ENDPOINT_ID [IP] [PORT]\n", basename(__FILE__));
 }
 list($_, $projectId, $locationId, $namespaceId, $serviceId, $endpointId) = $argv;
@@ -36,6 +36,8 @@ use Google\Cloud\ServiceDirectory\V1beta1\Endpoint;
 // $namespaceId = '[YOUR_NAMESPACE_NAME]';
 // $serviceId = '[YOUR_SERVICE_NAME]';
 // $endpointId = '[YOUR_ENDPOINT_NAME]';
+// $ip = '';
+// $port = 0;
 
 // Instantiate a client.
 $client = new RegistrationServiceClient();
