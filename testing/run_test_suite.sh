@@ -25,7 +25,6 @@ FLAKES=(
     datastore/api
     jobs
     asset
-    dlp
 )
 
 # Directories we do not want to run tests in, even if they exist

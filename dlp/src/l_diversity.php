@@ -29,6 +29,7 @@ if (count($argv) != 9) {
     return print("Usage: php l_diversity.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION DATASET TABLE SENSITIVE_ATTRIBUTE QUASI_ID_NAMES\n");
 }
 list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetId, $tableId, $sensitiveAttribute, $quasiIdNames) = $argv;
+
 // Convert comma-separated list to arrays
 $quasiIdNames = explode(',', $quasiIdNames);
 
@@ -36,7 +37,6 @@ $quasiIdNames = explode(',', $quasiIdNames);
 /**
  * Computes the l-diversity of a column set in a Google BigQuery table.
  */
-use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -114,9 +114,10 @@ $job = $dlp->createDlpJob($parent, [
 ]);
 
 // Poll Pub/Sub using exponential backoff until job finishes
-$backoff = new ExponentialBackoff(30);
-$backoff->execute(function () use ($subscription, $dlp, &$job) {
-    printf('Waiting for job to complete' . PHP_EOL);
+// Consider using an asynchronous execution model such as Cloud Functions
+$attempt = 1;
+$startTime = time();
+do {
     foreach ($subscription->pull() as $message) {
         if (isset($message->attributes()['DlpJobName']) &&
             $message->attributes()['DlpJobName'] === $job->getName()) {
@@ -125,11 +126,13 @@ $backoff->execute(function () use ($subscription, $dlp, &$job) {
             do {
                 $job = $dlp->getDlpJob($job->getName());
             } while ($job->getState() == JobState::RUNNING);
-            return true;
+            break 2; // break from parent do while
         }
     }
-    throw new Exception('Job has not yet completed');
-});
+    printf('Waiting for job to complete' . PHP_EOL);
+    // Exponential backoff with max delay of 60 seconds
+    sleep(min(60, pow(2, ++$attempt)));
+} while (time() - $startTime < 600); // 10 minute timeout
 
 // Print finding counts
 printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
@@ -177,6 +180,9 @@ switch ($job->getState()) {
         foreach ($errors as $error) {
             var_dump($error->getDetails());
         }
+        break;
+    case JobState::PENDING:
+        printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
         break;
     default:
         printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
