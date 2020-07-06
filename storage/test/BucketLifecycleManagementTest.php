@@ -38,7 +38,7 @@ class BucketLifecycleManagementTest extends TestCase
         $storage = new StorageClient();
         $bucketName = sprintf('php-olm-%s-%s', time(), rand(1000, 9999));
         $this->useResourceExhaustedBackoff();
-        self::$backoff->execute(function() use ($storage, $bucketName) {
+        self::$backoff->execute(function () use ($storage, $bucketName) {
             $this->bucket = $storage->createBucket($bucketName);
         });
     }
