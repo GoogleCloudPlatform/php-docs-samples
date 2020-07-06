@@ -242,7 +242,7 @@ class dlpTest extends TestCase
             $scanPeriod,
             $autoPopulateTimespan,
         ]);
-        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', self::$projectId, $triggerId);
+        $fullTriggerId = sprintf('projects/%s/locations/global/jobTriggers/%s', self::$projectId, $triggerId);
         $this->assertContains('Successfully created trigger ' . $fullTriggerId, $output);
 
         $output = $this->runSnippet('list_triggers', [self::$projectId]);
@@ -263,7 +263,7 @@ class dlpTest extends TestCase
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
-        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', self::$projectId, $templateId);
+        $fullTemplateId = sprintf('projects/%s/locations/global/inspectTemplates/%s', self::$projectId, $templateId);
 
         $output  = $this->runSnippet('create_inspect_template', [
             self::$projectId,

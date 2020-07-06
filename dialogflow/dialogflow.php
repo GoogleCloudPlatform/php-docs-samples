@@ -21,8 +21,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Google\Cloud\Dialogflow\V2\EntityType_Kind;
-use Google\Cloud\Dialogflow\V2\SessionEntityType_EntityOverrideMode;
+use Google\Cloud\Dialogflow\V2\EntityType\Kind;
+use Google\Cloud\Dialogflow\V2\SessionEntityType\EntityOverrideMode;
 
 # includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
@@ -199,7 +199,7 @@ $application->add((new Command('entity-type-create'))
     ->addArgument('display-name', InputArgument::REQUIRED,
         'Display name of the entity.')
     ->addOption('kind', 'k', InputOption::VALUE_REQUIRED,
-        'Kind of entity. KIND_MAP (default) or KIND_LIST', EntityType_Kind::KIND_MAP)
+        'Kind of entity. KIND_MAP (default) or KIND_LIST', Kind::KIND_MAP)
     ->setDescription('Create entity types with provided display name.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates entity type with provided name.
@@ -398,7 +398,7 @@ $application->add((new Command('session-entity-type-create'))
         InputArgument::REQUIRED, 'Entity values of the session entity type.')
     ->addOption('entity-override-mode', 'o', InputOption::VALUE_REQUIRED,
         'ENTITY_OVERRIDE_MODE_OVERRIDE (default) or ENTITY_OVERRIDE_MODE_SUPPLEMENT',
-        SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
+        EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
     ->setDescription('Create session entity type.')
     ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates session entity type with

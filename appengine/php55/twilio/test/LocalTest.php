@@ -60,7 +60,7 @@ class LocalTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
-    public function testTwiml()
+    public function test_twiml_shouldTestTwiml()
     {
         $client = $this->createClient();
 

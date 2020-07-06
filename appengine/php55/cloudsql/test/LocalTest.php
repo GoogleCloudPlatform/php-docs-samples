@@ -40,7 +40,7 @@ class LocalTest extends WebTestCase
         return $app;
     }
 
-    public function testHome()
+    public function test_gaePhpMysqlApp_shouldTestHome()
     {
         $client = $this->createClient();
 

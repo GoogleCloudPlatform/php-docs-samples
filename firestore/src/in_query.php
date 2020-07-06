@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,28 +23,25 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
-use Google\Cloud\Firestore\FieldValue;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Update a document array field.
+ * Create a query with IN clause.
  * ```
- * update_doc_array('your-project-id');
+ * in_query('your-project-id');
  * ```
  */
-function update_doc_increment($projectId)
+function in_query(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_update_doc_increment]
-    $cityRef = $db->collection('cities')->document('DC');
-
-    // Atomically increment the population of the city by 50.
-    $cityRef->update([
-        ['path' => 'regions', 'value' => FieldValue::increment(50)]
-    ]);
-    # [END fs_update_doc_increment]
-    printf('Updated the population of the DC document in the cities collection.' . PHP_EOL);
+    $citiesRef = $db->collection('cities');
+    # [START fs_query_filter_in]
+    $rangeQuery = $citiesRef->where('country', 'in', ['USA', 'Japan']);
+    # [END fs_query_filter_in]
+    foreach ($rangeQuery->documents() as $document) {
+        printf('Document %s returned by query country in [USA, Japan]' . PHP_EOL, $document->id());
+    }
 }

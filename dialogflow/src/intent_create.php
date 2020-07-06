@@ -19,10 +19,10 @@
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\IntentsClient;
-use Google\Cloud\Dialogflow\V2\Intent_TrainingPhrase_Part;
-use Google\Cloud\Dialogflow\V2\Intent_TrainingPhrase;
-use Google\Cloud\Dialogflow\V2\Intent_Message_Text;
-use Google\Cloud\Dialogflow\V2\Intent_Message;
+use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase\Part;
+use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase;
+use Google\Cloud\Dialogflow\V2\Intent\Message\Text;
+use Google\Cloud\Dialogflow\V2\Intent\Message;
 use Google\Cloud\Dialogflow\V2\Intent;
 
 /**
@@ -34,31 +34,31 @@ function intent_create($projectId, $displayName, $trainingPhraseParts = [],
     $intentsClient = new IntentsClient();
 
     // prepare parent
-    $parent = $intentsClient->projectAgentName($projectId);
+    $parent = $intentsClient->agentName($projectId);
 
     // prepare training phrases for intent
     $trainingPhrases = [];
     foreach ($trainingPhraseParts as $trainingPhrasePart) {
-        $part = new Intent_TrainingPhrase_Part;
-        $part->setText($trainingPhrasePart);
+        $part = (new Part())
+            ->setText($trainingPhrasePart);
 
         // create new training phrase for each provided part
-        $trainingPhrase = new Intent_TrainingPhrase();
-        $trainingPhrase->setParts([$part]);
+        $trainingPhrase = (new TrainingPhrase())
+            ->setParts([$part]);
         $trainingPhrases[] = $trainingPhrase;
     }
 
     // prepare messages for intent
-    $text = new Intent_Message_Text();
-    $text->setText($messageTexts);
-    $message = new Intent_Message();
-    $message->setText($text);
+    $text = (new Text())
+        ->setText($messageTexts);
+    $message = (new Message())
+        ->setText($text);
 
     // prepare intent
-    $intent = new Intent();
-    $intent->setDisplayName($displayName);
-    $intent->setTrainingPhrases($trainingPhrases);
-    $intent->setMessages([$message]);
+    $intent = (new Intent())
+        ->setDisplayName($displayName)
+        ->setTrainingPhrases($trainingPhrases)
+        ->setMessages([$message]);
 
     // create intent
     $response = $intentsClient->createIntent($parent, $intent);

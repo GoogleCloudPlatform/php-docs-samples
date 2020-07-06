@@ -47,7 +47,7 @@ $notificationConfig = (new NotificationConfig())
     ->setName($notificationConfigName)
     ->setDescription('Updated description.')
     ->setPubsubTopic($pubsubTopic)
-    ->setStreamingConfig((new StreamingConfig)->setFilter('state = \"INACTIVE\"'));
+    ->setStreamingConfig($streamingConfig);
 
 $response = $securityCenterClient->updateNotificationConfig($notificationConfig, [$fieldMask]);
 printf('Notification config was updated: %s' . PHP_EOL, $response->getName());
