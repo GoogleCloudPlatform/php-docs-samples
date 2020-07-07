@@ -93,99 +93,99 @@ class dlpLongRunningTest extends TestCase
         $this->assertContains('PERSON_NAME', $output);
     }
 
-    // public function testNumericalStats()
-    // {
-    //     $columnName = 'Age';
+    public function testNumericalStats()
+    {
+        $columnName = 'Age';
 
-    //     $output = $this->runSnippet('numerical_stats', [
-    //         self::$projectId, // calling project
-    //         self::$projectId, // data project
-    //         self::$topic->name(),
-    //         self::$subscription->name(),
-    //         self::$dataset,
-    //         self::$table,
-    //         $columnName,
-    //     ]);
+        $output = $this->runSnippet('numerical_stats', [
+            self::$projectId, // calling project
+            self::$projectId, // data project
+            self::$topic->name(),
+            self::$subscription->name(),
+            self::$dataset,
+            self::$table,
+            $columnName,
+        ]);
 
-    //     $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
-    //     $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
-    // }
+        $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
+        $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
+    }
 
-    // public function testCategoricalStats()
-    // {
-    //     $columnName = 'Gender';
+    public function testCategoricalStats()
+    {
+        $columnName = 'Gender';
 
-    //     $output = $this->runSnippet('categorical_stats', [
-    //         self::$projectId, // calling project
-    //         self::$projectId, // data project
-    //         self::$topic->name(),
-    //         self::$subscription->name(),
-    //         self::$dataset,
-    //         self::$table,
-    //         $columnName,
-    //     ]);
+        $output = $this->runSnippet('categorical_stats', [
+            self::$projectId, // calling project
+            self::$projectId, // data project
+            self::$topic->name(),
+            self::$subscription->name(),
+            self::$dataset,
+            self::$table,
+            $columnName,
+        ]);
 
-    //     $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
-    //     $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
-    //     $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
-    // }
+        $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
+        $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
+        $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
+    }
 
-    // public function testKAnonymity()
-    // {
-    //     $quasiIds = 'Age,Gender';
+    public function testKAnonymity()
+    {
+        $quasiIds = 'Age,Gender';
 
-    //     $output = $this->runSnippet('k_anonymity', [
-    //         self::$projectId, // calling project
-    //         self::$projectId, // data project
-    //         self::$topic->name(),
-    //         self::$subscription->name(),
-    //         self::$dataset,
-    //         self::$table,
-    //         $quasiIds,
-    //     ]);
-    //     $this->assertContains('{"stringValue":"Female"}', $output);
-    //     $this->assertRegExp('/Class size: \d/', $output);
-    // }
+        $output = $this->runSnippet('k_anonymity', [
+            self::$projectId, // calling project
+            self::$projectId, // data project
+            self::$topic->name(),
+            self::$subscription->name(),
+            self::$dataset,
+            self::$table,
+            $quasiIds,
+        ]);
+        $this->assertContains('{"stringValue":"Female"}', $output);
+        $this->assertRegExp('/Class size: \d/', $output);
+    }
 
-    // public function testLDiversity()
-    // {
-    //     $sensitiveAttribute = 'Name';
-    //     $quasiIds = 'Age,Gender';
+    public function testLDiversity()
+    {
+        $sensitiveAttribute = 'Name';
+        $quasiIds = 'Age,Gender';
 
-    //     $output = $this->runSnippet('l_diversity', [
-    //         self::$projectId, // calling project
-    //         self::$projectId, // data project
-    //         self::$topic->name(),
-    //         self::$subscription->name(),
-    //         self::$dataset,
-    //         self::$table,
-    //         $sensitiveAttribute,
-    //         $quasiIds,
-    //     ]);
-    //     $this->assertContains('{"stringValue":"Female"}', $output);
-    //     $this->assertRegExp('/Class size: \d/', $output);
-    //     $this->assertContains('{"stringValue":"James"}', $output);
-    // }
+        $output = $this->runSnippet('l_diversity', [
+            self::$projectId, // calling project
+            self::$projectId, // data project
+            self::$topic->name(),
+            self::$subscription->name(),
+            self::$dataset,
+            self::$table,
+            $sensitiveAttribute,
+            $quasiIds,
+        ]);
+        $this->assertContains('{"stringValue":"Female"}', $output);
+        $this->assertRegExp('/Class size: \d/', $output);
+        $this->assertContains('{"stringValue":"James"}', $output);
+    }
 
-    // public function testKMap()
-    // {
-    //     $regionCode = 'US';
-    //     $quasiIds = 'Age,Gender';
-    //     $infoTypes = 'AGE,GENDER';
+    public function testKMap()
+    {
+        $regionCode = 'US';
+        $quasiIds = 'Age,Gender';
+        $infoTypes = 'AGE,GENDER';
 
-    //     $output = $this->runSnippet('k_map', [
-    //         self::$projectId,
-    //         self::$projectId,
-    //         self::$topic->name(),
-    //         self::$subscription->name(),
-    //         self::$dataset,
-    //         self::$table,
-    //         $regionCode,
-    //         $quasiIds,
-    //         $infoTypes,
-    //     ]);
-    //     $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
-    //     $this->assertRegExp('/Size: \d/', $output);
-    //     $this->assertContains('{"stringValue":"Female"}', $output);
-    // }
+        $output = $this->runSnippet('k_map', [
+            self::$projectId,
+            self::$projectId,
+            self::$topic->name(),
+            self::$subscription->name(),
+            self::$dataset,
+            self::$table,
+            $regionCode,
+            $quasiIds,
+            $infoTypes,
+        ]);
+        $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
+        $this->assertRegExp('/Size: \d/', $output);
+        $this->assertContains('{"stringValue":"Female"}', $output);
+    }
 }

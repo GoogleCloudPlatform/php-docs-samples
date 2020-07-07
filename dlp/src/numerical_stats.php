@@ -44,7 +44,6 @@ use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric\NumericalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\V1\PublisherClient;
 
 /** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
@@ -62,6 +61,7 @@ $dlp = new DlpServiceClient([
 $pubsub = new PubSubClient([
     'projectId' => $callingProjectId
 ]);
+$topic = $pubsub->topic($topicId);
 
 // Construct risk analysis config
 $columnField = (new FieldId())
@@ -80,9 +80,8 @@ $bigqueryTable = (new BigQueryTable())
     ->setTableId($tableId);
 
 // Construct the action to run when job completes
-$fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
 $pubSubAction = (new PublishToPubSub())
-    ->setTopic($fullTopicId);
+    ->setTopic($topic->name());
 
 $action = (new Action())
     ->setPubSub($pubSubAction);
@@ -94,7 +93,6 @@ $riskJob = (new RiskAnalysisJobConfig())
     ->setActions([$action]);
 
 // Listen for job notifications via an existing topic/subscription.
-$topic = $pubsub->topic($topicId);
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
