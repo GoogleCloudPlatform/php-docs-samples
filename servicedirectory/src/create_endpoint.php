@@ -36,8 +36,8 @@ use Google\Cloud\ServiceDirectory\V1beta1\Endpoint;
 // $namespaceId = '[YOUR_NAMESPACE_NAME]';
 // $serviceId = '[YOUR_SERVICE_NAME]';
 // $endpointId = '[YOUR_ENDPOINT_NAME]';
-// $ip = '';
-// $port = 0;
+// $ip = '[IP_ADDRESS]';  // (Optional) Defaults to ''
+// $port = [PORT];  // (Optional) Defaults to 0
 
 // Instantiate a client.
 $client = new RegistrationServiceClient();
