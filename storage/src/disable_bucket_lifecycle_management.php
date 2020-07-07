@@ -41,6 +41,6 @@ function disable_bucket_lifecycle_management($bucketName)
         'lifecycle' => null
     ]);
 
-    printf('Lifecycle management is disabled for bucket ' . $bucketName . '.' . PHP_EOL);
+    printf('Lifecycle management is disabled for bucket %s.' . PHP_EOL, $bucketName);
 }
 # [END storage_disable_bucket_lifecycle_management]

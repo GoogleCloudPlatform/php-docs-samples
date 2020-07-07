@@ -48,9 +48,10 @@ function enable_bucket_lifecycle_management($bucketName)
 
     $lifecycle = $bucket->currentLifecycle();
 
-    printf('Lifecycle management is enabled for bucket ' . $bucketName . ' and the rules are:' . PHP_EOL);
+    printf('Lifecycle management is enabled for bucket %s and the rules are:' . PHP_EOL, $bucketName);
     foreach ($lifecycle as $rule) {
-        printf("%s" . PHP_EOL, print_r($rule));
+        print_r($rule);
+        print(PHP_EOL);
     }
 }
 # [END storage_enable_bucket_lifecycle_management]
