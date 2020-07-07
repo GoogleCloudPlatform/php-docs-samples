@@ -44,7 +44,6 @@ use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric\NumericalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\V1\PublisherClient;
 
 /** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
