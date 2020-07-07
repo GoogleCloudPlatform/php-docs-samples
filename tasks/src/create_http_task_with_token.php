@@ -24,7 +24,7 @@ if ($argc < 6 || $argc > 7) {
 list($_, $projectId, $locationId, $queueId, $url, $serviceAccountEmail) = $argv;
 $payload = isset($payload[6]) ? $payload[6] : null;
 
-# [START cloud_tasks_create_http_task]
+# [START cloud_tasks_create_http_task_with_token]
 use Google\Cloud\Tasks\V2\CloudTasksClient;
 use Google\Cloud\Tasks\V2\HttpMethod;
 use Google\Cloud\Tasks\V2\HttpRequest;
@@ -36,8 +36,8 @@ use Google\Cloud\Tasks\V2\OidcToken;
 // $locationId = 'The Location ID';
 // $queueId = 'The Cloud Tasks Queue ID';
 // $url = 'The full url path that the task request will be sent to.';
-// $payload = 'The payload your task should carry to the task handler. Optional';
 // $serviceAccountEmail = 'The Cloud IAM service account to be used at the construction of the token';
+// $payload = 'The payload your task should carry to the task handler. Optional';
 
 // Instantiate the client and queue name.
 $client = new CloudTasksClient();
@@ -69,4 +69,4 @@ $task->setHttpRequest($httpRequest);
 $response = $client->createTask($queueName, $task);
 printf('Created task %s' . PHP_EOL, $response->getName());
 
-# [END cloud_tasks_create_http_task]
+# [END cloud_tasks_create_http_task_with_token]
