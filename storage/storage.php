@@ -635,6 +635,29 @@ EOF
         generate_v4_post_policy($bucketName, $objectName);
     });
 
+$application->add(new Command('bucket-lifecycle-management'))
+    ->setDescription('Manages lifecycle rules for a bucket.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command enables or disables lifecycles rules for a bucket.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable lifecycle management on a Cloud Storage bucket')
+    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable lifecycle management on a Cloud Storage bucket')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        if ($input->getOption('enable')) {
+            enable_bucket_lifecycle_management($bucketName);
+        } elseif ($input->getOption('disable')) {
+            disable_bucket_lifecycle_management($bucketName);
+        } else {
+            throw new \Exception('You must provide --enable or --disable with a bucket name.');
+        }
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
