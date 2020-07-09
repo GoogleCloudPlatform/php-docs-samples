@@ -103,7 +103,7 @@ To run the Spanner Samples:
       create-storing-index                 Adds an storing index to the example database.
       create-table-timestamp               Creates a table with a commit timestamp column.
       create-table-with-datatypes          Creates a table with supported datatypes.
-      delete-data                          Deletes sample data from the given database.d
+      delete-data                          Deletes sample data from the given database.
       delete-data-with-dml                 Remove sample data from the given database with a DML statement.
       deleted-data-with-partitioned-dml    Deletes sample data in the database by partition with a DML statement.
       help                                 Displays help for a command
