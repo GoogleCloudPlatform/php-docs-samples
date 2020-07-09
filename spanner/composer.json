@@ -22,6 +22,7 @@
             "src/read_only_transaction.php",
             "src/read_stale_data.php",
             "src/batch_query_data.php",
+            "src/delete_data.php",
             "src/create_table_with_timestamp_column.php",
             "src/insert_data_with_timestamp_column.php",
             "src/add_timestamp_column.php",

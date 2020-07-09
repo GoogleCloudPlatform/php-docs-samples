@@ -118,6 +118,19 @@ $application->add((new Command('read-stale-data'))
         );
     })
 );
+
+// Delete data command
+$application->add((new Command('delete-data'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Deletes sample data from the given database.')
+    ->setCode(function ($input, $output) {
+        delete_data(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // Add column command
 $application->add((new Command('add-column'))
     ->setDefinition($inputDefinition)
