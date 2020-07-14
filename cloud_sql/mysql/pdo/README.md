@@ -16,11 +16,11 @@ Instructions are provided below for using the proxy with a TCP connection or a U
 ### Unix Socket mode
 NOTE: this option is currently only supported on Linux and macOS. Windows users whould use the TCP option.
 
-To use a Unix socket, you'll need to create a directory and give write access to the user running the proxy. For example:
+To use a Unix socket, you'll need to create a directory and give write access to the user running the proxy:
 
 ```bash
-sudo mkdir /cloudsql
-sudo chown -R $USER /cloudsql
+sudo mkdir /path/to/the/new/directory
+sudo chown -R $USER /path/to/the/new/directory
 ```
 
 You'll also need to initialize an environment variable pointing to the directory you just created:
