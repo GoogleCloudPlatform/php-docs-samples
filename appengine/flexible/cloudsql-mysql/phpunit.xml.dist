@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="../../../testing/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite>
+        <testsuite name="App Engine Flex CloudSQL MySQL tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
