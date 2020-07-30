@@ -67,7 +67,7 @@ try {
             ->getNormalizedVertices();
         print('Normalized bounding box vertices: ');
         foreach ($vertices as $vertex) {
-            printf(' (%d, %d)', $vertex->getX(), $vertex->getY());
+            printf(' (%f, %f)', $vertex->getX(), $vertex->getY());
         }
         print(PHP_EOL);
     }
