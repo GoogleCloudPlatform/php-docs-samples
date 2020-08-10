@@ -231,6 +231,30 @@ class pubsubTest extends TestCase
         $this->assertRegExp(sprintf('/%s/', $subscription), $output);
     }
 
+    public function testCreateAndDetachSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $output = $this->runCommand('subscription', [
+            'subscription' => $subscription,
+            '--topic' => $topic,
+            '--create' => true,
+            'project' => self::$projectId,
+        ]);
+
+        $this->assertRegExp('/Subscription created:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runCommand('subscription', [
+            'subscription' => $subscription,
+            '--detach' => true,
+            'project' => self::$projectId,
+        ]);
+
+        $this->assertRegExp('/Subscription detached:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+    }
+
     public function testPullMessages()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
