@@ -234,7 +234,7 @@ class pubsubTest extends TestCase
     public function testCreateAndDetachSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
-        $subscription = 'test-subscription-' . rand();
+        $subscription = 'testdetachsubsxyz-' . rand();
         $output = $this->runCommand('subscription', [
             'subscription' => $subscription,
             '--topic' => $topic,
@@ -252,6 +252,16 @@ class pubsubTest extends TestCase
         ]);
 
         $this->assertRegExp('/Subscription detached:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+
+        // delete test resource
+        $output = $this->runCommand('subscription', [
+            'subscription' => $subscription,
+            '--delete' => true,
+            'project' => self::$projectId,
+        ]);
+
+        $this->assertRegExp('/Subscription deleted:/', $output);
         $this->assertRegExp(sprintf('/%s/', $subscription), $output);
     }
 
