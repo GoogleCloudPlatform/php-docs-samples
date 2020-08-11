@@ -40,6 +40,7 @@ EOF
     ->addOption('topic', null, InputOption::VALUE_REQUIRED, 'The topic for the subscription (when using --create).')
     ->addOption('endpoint', null, InputOption::VALUE_REQUIRED, 'An optional endpoint for push subscriptions.')
     ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the subscription.')
+    ->addOption('detach', null, InputOption::VALUE_NONE, 'Detach the subscription.')
     ->setCode(function ($input, $output) {
         $projectId = $input->getArgument('project');
         $subscriptionName = $input->getArgument('subscription');
@@ -56,6 +57,8 @@ EOF
             }
         } elseif ($input->getOption('delete')) {
             delete_subscription($projectId, $subscriptionName);
+        } elseif ($input->getOption('detach')) {
+            detach_subscription($projectId, $subscriptionName);
         } else {
             pull_messages($projectId, $subscriptionName);
         }
