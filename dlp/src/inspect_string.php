@@ -58,7 +58,8 @@ $inspectConfig = (new InspectConfig())
     ->setIncludeQuote(true);
 
 // Run request
-$response = $dlp->inspectContent($parent, [
+$response = $dlp->inspectContent([
+    'parent' => $parent,
     'inspectConfig' => $inspectConfig,
     'item' => $item
 ]);

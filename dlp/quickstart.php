@@ -65,10 +65,11 @@ $content = (new ContentItem())
 $parent = $dlp->projectName(getEnv('GOOGLE_PROJECT_ID'));
 
 // Run request
-$response = $dlp->inspectContent($parent, array(
+$response = $dlp->inspectContent([
+    'parent' => $parent,
     'inspectConfig' => $inspectConfig,
     'item' => $content
-));
+]);
 
 // Print the results
 $findings = $response->getResult()->getFindings();
