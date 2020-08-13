@@ -130,9 +130,7 @@ $jobTriggerObject = (new JobTrigger())
 
 // Run trigger creation request
 $parent = "projects/$callingProjectId/locations/global";
-$trigger = $dlp->createJobTrigger([
-    'parent' => $parent,
-    'jobTrigger' => $jobTriggerObject,
+$trigger = $dlp->createJobTrigger($parent, $jobTriggerObject, [
     'triggerId' => $triggerId
 ]);
 
