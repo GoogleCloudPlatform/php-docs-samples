@@ -1,0 +1,5 @@
+{
+    "require": {
+        "google/cloud-automl": "^1.1"
+    }
+}
