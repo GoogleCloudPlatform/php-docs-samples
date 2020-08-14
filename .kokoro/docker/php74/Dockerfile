@@ -91,6 +91,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-gettext \
         --with-xmlrpc \
         --with-xsl \
+        --with-zip \
         --with-kerberos \
         --enable-fpm && \
         make && \
