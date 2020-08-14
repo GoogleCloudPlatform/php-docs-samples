@@ -31,7 +31,7 @@ class CloudSqlTest extends TestCase
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
         $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
         $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-        $socket = "/cloudsql/${connection}";
+        $socket = "/tmp/cloudsql/${connection}";
 
         if (!file_exists($socket)) {
             $this->markTestSkipped(
