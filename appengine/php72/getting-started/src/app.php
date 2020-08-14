@@ -26,11 +26,8 @@ use Google\Cloud\Storage\StorageClient;
 
 // [END gae_php_app_storage_client_import]
 
-$app = new Slim\App([
-    'settings' => [
-        'displayErrorDetails' => true,
-    ],
-]);
+$app = Slim\Factory\AppFactory::create();
+$app->addErrorMiddleware(true, true, true);
 
 // Get container
 $container = $app->getContainer();

@@ -1,11 +1,12 @@
 {
+    "require": {
+        "php": "^7.2|^7.3|7.4"
+    },
     "require-dev": {
         "google/cloud-tools": "dev-master",
         "phpunit/phpunit": "^7",
         "bshaffer/phpunit-retry-annotations": "^0.1.0",
-        "guzzlehttp/guzzle": "^6.3"
-    },
-    "require": {
+        "guzzlehttp/guzzle": "^7.0",
         "symfony/browser-kit": "^4.0"
     }
 }

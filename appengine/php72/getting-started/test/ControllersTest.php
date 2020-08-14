@@ -19,9 +19,8 @@ namespace Google\Cloud\Test\GettingStarted;
 
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Slim\Psr7\Factory\RequestFactory;
+use Slim\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -48,8 +47,7 @@ class ControllersTest extends TestCase
     public function testRoot()
     {
         $action = $this->getAction('home');
-        $environment = Environment::mock();
-        $request = Request::createFromEnvironment($environment);
+        $request = (new RequestFactory)->createRequest('get', '/');
         $response = $action($request, new Response());
 
         $this->assertEquals(302, $response->getStatusCode());
@@ -205,7 +203,9 @@ class ControllersTest extends TestCase
 
     private function getAction($name)
     {
-        $route = $this->app->getContainer()->get('router')->getNamedRoute($name);
+        $route = $this->app->getRouteCollector()
+            ->getNamedRoute($name);
+
         return $route->getCallable();
     }
 }
