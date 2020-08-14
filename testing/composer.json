@@ -4,5 +4,8 @@
         "phpunit/phpunit": "^7",
         "bshaffer/phpunit-retry-annotations": "^0.1.0",
         "guzzlehttp/guzzle": "^6.3"
+    },
+    "require": {
+        "symfony/browser-kit": "^4.0"
     }
 }

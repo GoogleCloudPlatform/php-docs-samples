@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Tasks\Tests;
 
+use Google\Auth\CredentialsLoader;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -52,11 +53,12 @@ class TasksTest extends TestCase
 
     public function testCreateHttpTaskWithToken()
     {
+        $jsonKey = CredentialsLoader::fromEnv();
         $output = $this->runSnippet('create_http_task_with_token', [
             self::$location,
             self::$queue,
             'https://example.com/taskhandler',
-            'example@your-project-id.iam.gserviceaccount.com',
+            $jsonKey['client_email'],
             'Task Details',
         ]);
 
