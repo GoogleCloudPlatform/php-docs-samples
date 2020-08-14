@@ -103,6 +103,9 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
 
+# Remove old version of PHP
+RUN apt purge -y php7.0-common
+
 # Install phpunit globally
 RUN composer global require phpunit/phpunit:^7.0
 
@@ -122,7 +125,6 @@ ENV PATH="$PATH:/root/.composer/vendor/bin:/root/google-cloud-sdk/bin"
 RUN gcloud config set app/promote_by_default false && \
     gcloud config set disable_prompts true && \
     gcloud -q components install app-engine-python && \
-    gcloud -q components install app-engine-php && \
     gcloud -q components update
 
 # Build php-cs-fixer
