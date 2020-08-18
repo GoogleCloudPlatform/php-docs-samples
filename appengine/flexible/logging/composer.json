@@ -4,9 +4,5 @@
         "google/cloud-error-reporting": "^0.16.2",
         "silex/silex": "^2.0",
         "twig/twig": "^1.29"
-    },
-    "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
-        "symfony/browser-kit": "^3.2"
     }
 }

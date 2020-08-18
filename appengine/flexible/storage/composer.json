@@ -2,9 +2,5 @@
     "require": {
         "silex/silex": "^2.3",
         "google/cloud-storage": "^1.0"
-    },
-    "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
-        "symfony/browser-kit": "^3.0"
     }
 }

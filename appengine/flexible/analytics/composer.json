@@ -2,7 +2,7 @@
     "require": {
         "silex/silex": "^2.3",
         "twig/twig": "^1.24",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^7.0",
         "symfony/css-selector": "^3.1"
     }
 }
