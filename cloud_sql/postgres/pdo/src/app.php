@@ -51,6 +51,9 @@ $container['db'] = function () {
     }
 };
 
+/**
+ *  @param $conn_config array driver-specific options for PDO
+ */
 function init_tcp_database_connection(array $conn_config) : PDO
 {
     $username = getenv('DB_USER');
@@ -100,6 +103,9 @@ function init_tcp_database_connection(array $conn_config) : PDO
     return $conn;
 }
 
+/**
+ *  @param $conn_config array driver-specific options for PDO
+ */
 function init_unix_database_connection(array $conn_config)
 {
     $username = getenv('DB_USER');
