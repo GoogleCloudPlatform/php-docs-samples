@@ -24,8 +24,18 @@ env_variables:
   DB_PASS: my-db-pass
   DB_NAME: my-db
 
+  # TCP domain socket setup; uncomment if using a TCP domain socket
+  # DB_HOST: 172.17.0.1
+
+# Choose to enable either a TCP or Unix domain socket for your database
+# connection:
+# Enable a Unix domain socket:
 beta_settings:
   cloud_sql_instances: "<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+
+# Enable a TCP domain socket:
+# beta_settings:
+#   cloud_sql_instances: <MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:5432
 
 runtime_config:
   document_root: .

@@ -37,17 +37,17 @@ $container['votes'] = function (Container $container) {
 $container['db'] = function () {
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
-    $dbName = getenv('DB_NAME');
-    $hostname = getenv('DB_HOSTNAME') ?: '127.0.0.1';
+    $db_name = getenv('DB_NAME');
+    $host = getenv('DB_HOST');
 
     try {
-        // # [START cloud_sql_server_pdo_create]
+        // # [START cloud_sql_sqlserver_pdo_create_tcp]
         // // $username = 'your_db_user';
         // // $password = 'yoursupersecretpassword';
-        // // $dbName = 'your_db_name';
-        // // $hostname = "127.0.0.1";
+        // // $db_name = 'your_db_name';
+        // // $host = "127.0.0.1";
 
-        $dsn = sprintf('sqlsrv:server=%s;Database=%s', $hostname, $dbName);
+        $dsn = sprintf('sqlsrv:server=%s;Database=%s', $host, $db_name);
 
         // Connect to the database.
         # [START cloud_sql_server_pdo_timeout]
@@ -58,12 +58,12 @@ $container['db'] = function () {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
         # [END cloud_sql_server_pdo_timeout]
-        # [END cloud_sql_server_pdo_create]
+        # [END cloud_sql_server_pdo_create_tcp]
     } catch (TypeError $e) {
         throw new RuntimeException(
             sprintf(
                 'Invalid or missing configuration! Make sure you have set ' .
-                '$username, $password, $dbName, and $hostname. ' .
+                '$username, $password, $db_name, and $host. ' .
                 'The PHP error was %s',
                 $e->getMessage()
             ),
