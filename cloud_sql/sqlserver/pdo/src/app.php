@@ -41,7 +41,7 @@ $container['db'] = function () {
     $host = getenv('DB_HOST');
 
     try {
-        // # [START cloud_sql_sqlserver_pdo_create_tcp]
+        # [START cloud_sql_sqlserver_pdo_create_tcp]
         // // $username = 'your_db_user';
         // // $password = 'yoursupersecretpassword';
         // // $db_name = 'your_db_name';
