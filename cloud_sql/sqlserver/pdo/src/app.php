@@ -42,10 +42,10 @@ $container['db'] = function () {
 
     try {
         # [START cloud_sql_sqlserver_pdo_create_tcp]
-        // // $username = 'your_db_user';
-        // // $password = 'yoursupersecretpassword';
-        // // $db_name = 'your_db_name';
-        // // $host = "127.0.0.1";
+        // $username = 'your_db_user';
+        // $password = 'yoursupersecretpassword';
+        // $db_name = 'your_db_name';
+        // $host = "127.0.0.1";
 
         $dsn = sprintf('sqlsrv:server=%s;Database=%s', $host, $db_name);
 
