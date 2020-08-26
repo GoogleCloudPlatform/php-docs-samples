@@ -33,6 +33,7 @@ class LocalTest extends WebTestCase
     {
         $app = require __DIR__ . '/../app.php';
         $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
+        $app['debug'] = true;
         return $app;
     }
 
@@ -40,7 +41,7 @@ class LocalTest extends WebTestCase
     {
         $this->client->request('GET', '/');
         $response = $this->client->getResponse();
-        $this->assertTrue($response->isOk());
+        $this->assertEquals(200, $response->getStatusCode());
         $text = $response->getContent();
         $this->assertContains("Logs:", $text);
     }
