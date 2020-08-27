@@ -43,7 +43,7 @@ function detect_web_with_geo_metadata($path)
     $response = $imageAnnotator->webDetection($image, ['imageContext' => $imageContext]);
     $web = $response->getWebDetection();
 
-    if ($web->getWebEntities()) {
+    if ($web && $web->getWebEntities()) {
         printf('%d web entities found:' . PHP_EOL,
             count($web->getWebEntities()));
         foreach ($web->getWebEntities() as $entity) {
