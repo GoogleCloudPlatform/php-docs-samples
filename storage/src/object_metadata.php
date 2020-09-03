@@ -86,7 +86,7 @@ function object_metadata($bucketName, $objectName)
         printf("retentionExpirationTime: " . $info['retentionExpirationTime'] . PHP_EOL);
     }
     if (isset($info['customTime'])) {
-        printf("customTime: " . $info['customTime'] . PHP_EOL);  
+        printf("customTime: " . $info['customTime'] . PHP_EOL);
     }
     if (isset($info['metadata'])) {
         printf('Metadata: %s', print_r($info['metadata'], true));
