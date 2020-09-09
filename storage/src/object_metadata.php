@@ -77,19 +77,19 @@ function object_metadata($bucketName, $objectName)
         printf('Content-type: %s' . PHP_EOL, $info['contentType']);
     }
     if (isset($info['temporaryHold'])) {
-        printf("Temporary hold: " . ($info['temporaryHold'] ? "enabled" : "disabled") . PHP_EOL);
+        printf('Temporary hold: %s' . PHP_EOL, ($info['temporaryHold'] ? 'enabled' : 'disabled'));
     }
     if (isset($info['eventBasedHold'])) {
-        printf("Event-based hold: " . ($info['eventBasedHold'] ? "enabled" : "disabled") . PHP_EOL);
+        printf('Event-based hold: %s' . PHP_EOL, ($info['eventBasedHold'] ? 'enabled' : 'disabled'));
     }
     if (isset($info['retentionExpirationTime'])) {
-        printf("retentionExpirationTime: " . $info['retentionExpirationTime'] . PHP_EOL);
+        printf('Retention Expiration Time: %s' . PHP_EOL, $info['retentionExpirationTime']);
     }
     if (isset($info['customTime'])) {
-        printf("customTime: " . $info['customTime'] . PHP_EOL);
+        printf('Custom Time: %s' . PHP_EOL, $info['customTime']);
     }
     if (isset($info['metadata'])) {
-        printf('Metadata: %s', print_r($info['metadata'], true));
+        printf('Metadata: %s' . PHP_EOL, print_r($info['metadata'], true));
     }
 }
 # [END storage_get_metadata]
