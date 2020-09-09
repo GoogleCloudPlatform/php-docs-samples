@@ -1,8 +1,7 @@
 {
   "extends": [
     "config:base",
-    ":preserveSemverRanges",
-    ":rebaseStalePrs"
+    ":preserveSemverRanges"
   ],
   "packageRules": [{
     "paths": [
