@@ -387,6 +387,18 @@ $application->add((new Command('query-data-with-nested-struct-field'))
     })
 );
 
+// Set custom timeout and retry
+$application->add((new Command('set_custom_timeout_and_retry'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Sets custom timeout and retry settings.')
+    ->setCode(function ($input, $output) {
+        set_custom_timeout_and_retry(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // Insert data with DML
 $application->add((new Command('insert-data-with-dml'))
     ->setDefinition($inputDefinition)

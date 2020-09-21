@@ -424,6 +424,15 @@ class spannerTest extends TestCase
     }
 
     /**
+     * @depends testDeleteDataWithDml
+     */
+    public function testSetCustomTimeoutAndRetry()
+    {
+        $output = $this->runCommand('set-custom-timeout-and-retry');
+        $this->assertContains('Inserted 1 row(s)', $output);
+    }
+
+    /**
      * @depends testInsertData
      */
     public function testUpdateDataWithDmlTimestamp()
