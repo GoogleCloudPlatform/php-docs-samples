@@ -2,7 +2,7 @@
     "require": {
         "symfony/console": "^2.8",
         "google/auth":"^1.8.0",
-        "guzzlehttp/guzzle": "~7.0.0",
+        "guzzlehttp/guzzle": "~7.1.0",
         "kelvinmo/simplejwt": "^0.4.0"
     },
     "autoload": {
