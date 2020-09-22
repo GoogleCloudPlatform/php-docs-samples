@@ -4,7 +4,7 @@
     "google/cloud-pubsub": "^1.23.0",
     "google/cloud-datastore": "^1.11.2",
     "silex/silex": "^2.3",
-    "twig/twig": "^2.12",
+    "twig/twig": "^3.0",
     "symfony/twig-bridge": "^4.4"
   },
   "require-dev": {
