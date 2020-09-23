@@ -165,6 +165,25 @@ class spannerTest extends TestCase
     /**
      * @depends testDeleteData
      */
+    public function testSetCustomTimeoutAndRetry()
+    {
+        $output = $this->runCommand('set-custom-timeout-and-retry');
+        $this->assertContains('Inserted 1 row(s)', $output);
+
+        // Clear database for other samples
+        $spanner = new SpannerClient();
+        $instance = $spanner->instance(spannerTest::$instanceId);
+        $database = $instance->database(spannerTest::$databaseId);
+
+        $remainingSingers = $spanner->keySet([
+            'all' => true
+        ]);
+        $database->delete('Singers', $remainingSingers);
+    }
+
+    /**
+     * @depends testSetCustomTimeoutAndRetry
+     */
     public function testAddColumn()
     {
         $output = $this->runCommand('add-column');
@@ -421,15 +440,6 @@ class spannerTest extends TestCase
         $output = $this->runCommand('delete-data-with-dml');
         self::$lastUpdateDataTimestamp = time();
         $this->assertContains('Deleted 1 row(s)', $output);
-    }
-
-    /**
-     * @depends testDeleteDataWithDml
-     */
-    public function testSetCustomTimeoutAndRetry()
-    {
-        $output = $this->runCommand('set-custom-timeout-and-retry');
-        $this->assertContains('Inserted 1 row(s)', $output);
     }
 
     /**
