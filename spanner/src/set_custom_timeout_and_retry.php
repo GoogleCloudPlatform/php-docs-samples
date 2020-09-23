@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_set_custom_timeout_and_retry]
 use Google\ApiCore\ApiStatus;
-use Google\ApiCore\RetrySettings;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
 
@@ -46,12 +45,12 @@ function set_custom_timeout_and_retry($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $customTimeoutMillis = 60000;
-    $customRetrySettings = new RetrySettings([
+    $customRetrySettings = [
         'initialRetryDelayMillis' => 500,
         'retryDelayMultiplier' => 1.5,
         'maxRetryDelayMillis' => 64000,
         'retryableCodes' => [ApiStatus::DEADLINE_EXCEEDED, ApiStatus::UNAVAILABLE],
-    ]);
+    ];
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
             "INSERT Singers (SingerId, FirstName, LastName) "
