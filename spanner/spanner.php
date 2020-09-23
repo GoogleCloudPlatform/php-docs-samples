@@ -388,7 +388,7 @@ $application->add((new Command('query-data-with-nested-struct-field'))
 );
 
 // Set custom timeout and retry
-$application->add((new Command('set_custom_timeout_and_retry'))
+$application->add((new Command('set-custom-timeout-and-retry'))
     ->setDefinition($inputDefinition)
     ->setDescription('Sets custom timeout and retry settings.')
     ->setCode(function ($input, $output) {
