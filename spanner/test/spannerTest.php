@@ -176,7 +176,7 @@ class spannerTest extends TestCase
         $database = $instance->database(spannerTest::$databaseId);
 
         $remainingSingers = $spanner->keySet([
-            'all' => true
+            'keys' =>  [10],
         ]);
         $database->delete('Singers', $remainingSingers);
     }
