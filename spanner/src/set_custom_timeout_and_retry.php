@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Spanner;
 // [START spanner_set_custom_timeout_and_retry]
 use Google\ApiCore\ApiStatus;
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Database;
+use Google\Cloud\Spanner\Transaction;
 
 /**
  * Set custom timeout and retry settings.
