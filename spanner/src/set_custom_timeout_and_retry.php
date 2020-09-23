@@ -44,20 +44,18 @@ function set_custom_timeout_and_retry($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $customTimeoutMillis = 60000;
-    $customRetrySettings = [
-        'initialRetryDelayMillis' => 500,
-        'retryDelayMultiplier' => 1.5,
-        'maxRetryDelayMillis' => 64000,
-        'retryableCodes' => [ApiStatus::DEADLINE_EXCEEDED, ApiStatus::UNAVAILABLE],
-    ];
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
             "INSERT Singers (SingerId, FirstName, LastName) "
             . " VALUES (10, 'Virginia', 'Watson')",
             [
-                'retrySettings' => $customRetrySettings,
-                'timeoutMillis' => $timeoutMillis,
+                'retrySettings' => [
+                    'initialRetryDelayMillis' => 500,
+                    'retryDelayMultiplier' => 1.5,
+                    'maxRetryDelayMillis' => 64000,
+                    'retryableCodes' => [ApiStatus::DEADLINE_EXCEEDED, ApiStatus::UNAVAILABLE],
+                ],
+                'timeoutMillis' => 60000,
             ]);
         $t->commit();
         printf('Inserted %d row(s).' . PHP_EOL, $rowCount);
