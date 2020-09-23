@@ -64,7 +64,8 @@
             "src/list_backups.php",
             "src/list_database_operations.php",
             "src/restore_backup.php",
-            "src/update_backup.php"
+            "src/update_backup.php",
+            "src/set_custom_timeout_and_retry.php"
         ]
     }
 }
