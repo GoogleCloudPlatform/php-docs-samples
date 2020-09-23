@@ -347,6 +347,34 @@ class spannerTest extends TestCase
     }
 
     /**
+     * @depends testCreateTableDatatypes
+     */
+    public function testAddNumericColumn()
+    {
+        $output = $this->runCommand('add-numeric-column');
+        $this->assertContains('Waiting for operation to complete...', $output);
+        $this->assertContains('Added Revenue as a NUMERIC column in Venues table', $output);
+    }
+
+    /**
+     * @depends testAddNumericColumn
+     */
+    public function testUpdateDataNumeric()
+    {
+        $output = $this->runCommand('update-data-numeric');
+        $this->assertEquals('Updated data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testUpdateDataTimestamp
+     */
+    public function testQueryDataNumeric()
+    {
+        $output = $this->runCommand('query-data-numeric');
+        $this->assertContains('VenueId: 4, Revenue: 35000', $output);
+    }
+
+    /**
      * @depends testCreateDatabase
      */
     public function testInsertStructData()
