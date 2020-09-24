@@ -315,7 +315,7 @@ $application->add((new Command('add-timestamp-column'))
     })
 );
 
-// Update data with timestamp column command
+// Update data with numeric column command
 $application->add((new Command('update-data-numeric'))
     ->setDefinition($inputDefinition)
     ->setDescription('Updates sample data in a table with a NUMERIC column.')
