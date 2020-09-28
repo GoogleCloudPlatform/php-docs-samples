@@ -46,7 +46,7 @@ function update_data_with_numeric_column($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $operation = $database->transaction(['singleUse' => true])
+    $database->transaction(['singleUse' => true])
         ->updateBatch('Venues', [
             ['VenueId' => 4, 'Revenue' => $spanner->numeric("35000")],
             ['VenueId' => 19, 'Revenue' => $spanner->numeric("104500")],
