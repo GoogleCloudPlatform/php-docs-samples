@@ -98,6 +98,10 @@ class spannerBackupTest extends TestCase
      */
     public function testListBackupOperations()
     {
+        $this->markTestSkipped(
+            "This test is failing due to a bug in production. Skipping until it is fixed."
+        );
+
         $databaseId2 = self::$databaseId . '-2';
         $database2 = self::$instance->database($databaseId2);
         // DB may already exist if the test timed out and retried
