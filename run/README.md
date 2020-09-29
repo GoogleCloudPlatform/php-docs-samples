@@ -30,7 +30,7 @@ For more Cloud Run samples beyond PHP, see the main list in the [Cloud Run Sampl
 
     ```sh
     export SAMPLE='helloworld'
-    cd $SAMPLE
+    cd php-docs-samples/run/$SAMPLE
     docker build --tag $SAMPLE .
     ```
 
@@ -86,4 +86,4 @@ for more information.
 [run_build]: https://cloud.google.com/run/docs/building/containers
 [run_deploy]: https://cloud.google.com/run/docs/deploying
 [helloworld]: helloworld/
-[run_button_helloworld]: https://deploy.cloud.run/?git_repo=https://github.com/knative/docs&dir=docs/serving/samples/hello-world/helloworld-nodejs
+[run_button_helloworld]: https://deploy.cloud.run/?dir=run/helloworld
