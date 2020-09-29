@@ -99,7 +99,7 @@ class spannerBackupTest extends TestCase
     public function testListBackupOperations()
     {
         $this->markTestSkipped(
-            "This test is failing due to a bug in production. Skipping until it is fixed."
+            "See: https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1186"
         );
 
         $databaseId2 = self::$databaseId . '-2';
