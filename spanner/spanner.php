@@ -291,12 +291,36 @@ $application->add((new Command('insert-data-timestamp'))
     })
 );
 
+// Add numeric column command
+$application->add((new Command('add-numeric-column'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Adds a NUMERIC column to a table.')
+    ->setCode(function ($input, $output) {
+        add_numeric_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
 // Add timestamp column command
 $application->add((new Command('add-timestamp-column'))
     ->setDefinition($inputDefinition)
     ->setDescription('Adds a commit timestamp column to a table.')
     ->setCode(function ($input, $output) {
         add_timestamp_column(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Update data with numeric column command
+$application->add((new Command('update-data-numeric'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Updates sample data in a table with a NUMERIC column.')
+    ->setCode(function ($input, $output) {
+        update_data_with_numeric_column(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
@@ -621,6 +645,18 @@ $application->add((new Command('query-data-with-int-parameter'))
     ->setDescription('Queries sample data using SQL with a INT64 parameter.')
     ->setCode(function ($input, $output) {
         query_data_with_int_parameter(
+            $input->getArgument('instance_id'),
+            $input->getArgument('database_id')
+        );
+    })
+);
+
+// Query Data with Numeric Parameter
+$application->add((new Command('query-data-with-numeric-parameter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Queries sample data using SQL with a NUMERIC parameter.')
+    ->setCode(function ($input, $output) {
+        query_data_with_numeric_parameter(
             $input->getArgument('instance_id'),
             $input->getArgument('database_id')
         );
