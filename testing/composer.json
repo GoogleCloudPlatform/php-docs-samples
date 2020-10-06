@@ -7,6 +7,7 @@
         "phpunit/phpunit": "^7",
         "bshaffer/phpunit-retry-annotations": "^0.1.0",
         "guzzlehttp/guzzle": "^7.0",
-        "symfony/browser-kit": "^4.0"
+        "symfony/browser-kit": "^4.0",
+        "google/auth": "^1.12"
     }
 }
