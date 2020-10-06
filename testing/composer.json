@@ -4,7 +4,7 @@
     },
     "require-dev": {
         "google/cloud-tools": "dev-master",
-        "phpunit/phpunit": "^7",
+        "phpunit/phpunit": "^9",
         "bshaffer/phpunit-retry-annotations": "^0.1.0",
         "guzzlehttp/guzzle": "^7.0",
         "symfony/browser-kit": "^4.0",

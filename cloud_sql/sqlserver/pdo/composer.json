@@ -20,6 +20,6 @@
         "http-interop/http-factory-guzzle": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^9.0"
     }
 }
