@@ -27,7 +27,7 @@ class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
 
-    private static $name = 'helloHttp';
+    private static $name = 'helloGet';
 
     public function testFunction()
     {

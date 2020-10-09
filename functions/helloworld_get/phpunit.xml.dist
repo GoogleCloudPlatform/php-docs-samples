@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="Cloud Functions Hello World Test Suite">
+        <testsuite name="Cloud Functions Hello World (Get) Test Suite">
             <directory>test</directory>
         </testsuite>
     </testsuites>

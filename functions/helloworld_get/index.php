@@ -18,9 +18,9 @@
 
 use Psr\Http\Message\ServerRequestInterface;
 
-function helloHttp(ServerRequestInterface $request): string
+function helloGet(ServerRequestInterface $request): string
 {
-    return 'Hello, World!'.PHP_EOL;
+    return 'Hello, World!' . PHP_EOL;
 }
 
 // [END functions_helloworld_get]
