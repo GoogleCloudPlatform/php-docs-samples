@@ -32,7 +32,7 @@ class DeployTest extends TestCase
     public function testFunction()
     {
         // Send a request to the function.
-        $resp = $this->client->get('/'.self::$name);
+        $resp = $this->client->get('/' . self::$name);
 
         // Assert status code.
         $this->assertEquals('200', $resp->getStatusCode());

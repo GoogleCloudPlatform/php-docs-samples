@@ -25,15 +25,17 @@ use PHPUnit\Framework\TestCase;
  */
 class FunctionTest extends TestCase
 {
+    private static $name = 'helloGet';
+
     public function setUp()
     {
-        require __DIR__.'/../index.php';
+        require __DIR__ . '/../index.php';
     }
 
     public function testHelloHttp()
     {
         $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction('helloHttp', [$request]);
+        $output = $this->runFunction(self::$name, [$request]);
         $this->assertContains('Hello, World!', $output);
     }
 
