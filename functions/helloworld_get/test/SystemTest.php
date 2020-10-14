@@ -17,27 +17,22 @@
 
 namespace Google\Cloud\Samples\Functions\Helloworld\Test;
 
-use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\CloudFunctionSystemTestTrait;
 
 /**
- * Class DeployTest.
- *
- * This test is not run by the CI system.
- *
- * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
- * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * Class SystemTest.
  */
-class DeployTest extends TestCase
+class SystemTest extends TestCase
 {
-    use CloudFunctionDeploymentTrait;
+    use CloudFunctionSystemTestTrait;
 
     private static $name = 'helloGet';
 
     public function testFunction()
     {
         // Send a request to the function.
-        $resp = $this->client->get('/' . self::$name);
+        $resp = $this->client->get('/');
 
         // Assert status code.
         $this->assertEquals('200', $resp->getStatusCode());

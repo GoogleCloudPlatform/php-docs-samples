@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Unit tests for the Cloud Function.
  */
-class FunctionTest extends TestCase
+class UnitTest extends TestCase
 {
     private static $name = 'helloGet';
 
