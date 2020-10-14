@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Functions\Helloworld\Test;
+declare(strict_types=1);
+
+namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +36,7 @@ class DeployTest extends TestCase
 
     private static $name = 'helloGet';
 
-    public function testFunction()
+    public function testFunction() : void
     {
         // Send a request to the function.
         $resp = $this->client->get('/' . self::$name);
@@ -45,6 +47,7 @@ class DeployTest extends TestCase
         // Assert function output.
         $expected = trim('Hello, World!');
         $actual = trim((string) $resp->getBody());
-        $this->assertEquals($expected, $actual);
+        // Failures often lead to a large HTML page in the response body.
+        $this->assertEquals($expected, substr($actual, 0, 300));
     }
 }

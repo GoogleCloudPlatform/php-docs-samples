@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\Helloworld\Test;
+namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionSystemTestTrait;
@@ -29,7 +30,7 @@ class SystemTest extends TestCase
 
     private static $name = 'helloGet';
 
-    public function testFunction()
+    public function testFunction() : void
     {
         // Send a request to the function.
         $resp = $this->client->get('/');

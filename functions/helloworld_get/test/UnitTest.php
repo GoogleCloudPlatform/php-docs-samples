@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\Helloworld\Test;
+namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
@@ -27,19 +28,19 @@ class UnitTest extends TestCase
 {
     private static $name = 'helloGet';
 
-    public function setUp()
+    public static function setUpBeforeClass() : void
     {
-        require __DIR__ . '/../index.php';
+        require_once __DIR__ . '/../index.php';
     }
 
-    public function testHelloHttp()
+    public function testFunction() : void
     {
         $request = new ServerRequest('GET', '/');
         $output = $this->runFunction(self::$name, [$request]);
         $this->assertContains('Hello, World!', $output);
     }
 
-    private static function runFunction($functionName, array $params = [])
+    private static function runFunction($functionName, array $params = []) : string
     {
         return call_user_func_array($functionName, $params);
     }
