@@ -1,6 +1,0 @@
-{
-    "require-dev": {
-        "google/appengine-php-sdk": "^1.9",
-        "wp-cli/wp-cli": "~1.1"
-    }
-}

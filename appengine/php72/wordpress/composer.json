@@ -1,8 +1,0 @@
-{
-    "require": {
-        "ext-phar": "*",
-        "ext-zip": "*",
-        "paragonie/random_compat": "^9.0.0",
-        "google/cloud-tools": "^0.12.0"
-    }
-}
