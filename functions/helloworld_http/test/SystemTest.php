@@ -20,14 +20,14 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\CloudFunctionSystemTestTrait;
+use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 /**
  * Class SystemTest.
  */
 class SystemTest extends TestCase
 {
-    use CloudFunctionSystemTestTrait;
+    use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
     private static $name = 'helloHttp';
