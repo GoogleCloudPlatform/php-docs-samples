@@ -18,7 +18,6 @@
     <testsuites>
         <testsuite name="Cloud Functions Hello World HTTP Test Suite">
             <directory>test</directory>
-
         </testsuite>
     </testsuites>
     <logging>
