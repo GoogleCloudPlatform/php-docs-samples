@@ -41,15 +41,16 @@ class DeployTest extends TestCase
     {
         foreach (self::cases() as $test) {
             $body = json_encode($test['body']);
-            $resp = $resp = $this->client->post('/' . self::$name, [
+            $resp = $this->client->post('', [
                 'body' => $body,
                 'query' => $test['query'],
+                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+                // 'debug' => true,
             ]);
             $actual = trim((string) $resp->getBody());
-
-            $this->assertEquals($test[], $resp->getStatusCode(), $test['label'] . ':');
+            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ':');
             // Failures often lead to a large HTML page in the response body.
-            $this->assertContains($test['expected'], substr($actual, 0, 300), $test['label'] . ':');
+            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
         }
     }
 }

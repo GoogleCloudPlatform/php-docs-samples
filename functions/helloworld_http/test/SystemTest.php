@@ -36,7 +36,7 @@ class SystemTest extends TestCase
     {
         foreach (self::cases() as $test) {
             $body = json_encode($test['body']);
-            $resp = $resp = $this->client->post('/', [
+            $resp = $this->client->post('/', [
                 'body' => $body,
                 'query' => $test['query'],
             ]);

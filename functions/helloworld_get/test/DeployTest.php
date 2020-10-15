@@ -39,15 +39,18 @@ class DeployTest extends TestCase
     public function testFunction() : void
     {
         // Send a request to the function.
-        $resp = $this->client->get('/' . self::$name);
+        $resp = $this->client->get('', [
+            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+            // 'debug' => true
+        ]);
 
         // Assert status code.
         $this->assertEquals('200', $resp->getStatusCode());
 
         // Assert function output.
-        $expected = trim('Hello, World!');
+        $expected = 'Hello, World!';
         $actual = trim((string) $resp->getBody());
         // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, substr($actual, 0, 300));
+        $this->assertEquals($expected, $actual);
     }
 }
