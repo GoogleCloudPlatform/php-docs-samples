@@ -1,0 +1,10 @@
+runtime: php55
+api_version: 1
+
+handlers:
+- url: /monitoring
+  script: monitoring.php
+- url: /spanner
+  script: spanner.php
+- url: /.*
+  script: index.html

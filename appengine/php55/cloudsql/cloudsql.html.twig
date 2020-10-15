@@ -1,0 +1,18 @@
+<html>
+    <body>
+        {% if results %}
+            <h2>Guestbook Entries</h2>
+
+            {% for row in results %}
+                <div><strong> {{ row.guestName }} </strong> wrote <br> {{ row.content }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <h2>Sign the Guestbook</h2>
+        <form action="/" method="post">
+            <div>Name: <input name="name" /></div>
+            <div><textarea name="content" rows="3" cols="60"></textarea></div>
+            <div><input type="submit" value="Sign Guestbook"></div>
+        </form>
+    </body>
+</html>
