@@ -22,21 +22,18 @@ use Psr\Http\Message\ServerRequestInterface;
 function helloHttp(ServerRequestInterface $request): string
 {
     $name = 'World';
-    $queryString = $request->getQueryParams();
-    if (isset($queryString['name'])) {
-        $name = $queryString['name'];
-    } else {
-        $body = $request->getBody()->getContents();
-        if (!empty($body)) {
-            $json = json_decode($body, true);
-            if (json_last_error() != JSON_ERROR_NONE) {
-                throw new RuntimeException(sprintf(
-                    'Could not parse body: %s', json_last_error_msg()
-                ));
-            }
-            $name = $json['name'] ?? $name;
+    $body = $request->getBody()->getContents();
+    if (!empty($body)) {
+        $json = json_decode($body, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            throw new RuntimeException(sprintf(
+                'Could not parse body: %s', json_last_error_msg()
+            ));
         }
+        $name = $json['name'] ?? $name;
     }
+    $queryString = $request->getQueryParams();
+    $name = $queryString['name'] ?? $name;
 
     return sprintf('Hello, %s!', htmlspecialchars($name));
 }
