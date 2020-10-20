@@ -53,4 +53,10 @@ class DeployTest extends TestCase
         // Failures often lead to a large HTML page in the response body.
         $this->assertEquals($expected, $actual);
     }
+
+    protected static function deployFlags(array $flags = []) : array
+    {
+        $flags['--update-env-vars'] = 'FOO=bar;';
+        return $flags;
+    }
 }

@@ -25,18 +25,27 @@ function helloHttp(ServerRequestInterface $request): Response
     switch ($request->getMethod()) {
         case 'GET':
             return new Response(
-                200, [], 'Hello, World!' . PHP_EOL);
+                200,
+                [],
+                'Hello, World!' . PHP_EOL
+            );
             break;
         case 'PUT':
             return new Response(
-                403, [], 'Forbidden!' . PHP_EOL);
+                403,
+                [],
+                'Forbidden!' . PHP_EOL
+            );
             break;
         default:
             $json_payload = json_encode([
                 'error' => 'something blew up!'
             ]);
             return new Response(
-                405, [], $json_payload);
+                405,
+                [],
+                $json_payload
+            );
             break;
     }
 }
