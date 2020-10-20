@@ -27,7 +27,7 @@ trait TestCasesTrait
                 'label' => 'Empty',
                 'method' => 'post',
                 'multipart' => [],
-                'expected' => 'No files sent for upload',
+                'expected' => 'no files sent for upload',
                 'code' => '400',
             ],
             // Fails on DeployTest with 400 error. curl returns:
@@ -54,7 +54,7 @@ trait TestCasesTrait
                         'contents' => 'Bob Ross',
                     ]
                 ],
-                'expected' => 'No files sent for upload',
+                'expected' => 'no files sent for upload',
                 'code' => '400',
             ],
         ];
