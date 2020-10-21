@@ -20,6 +20,8 @@ namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class DeployTest.
  *
@@ -35,7 +37,7 @@ class DeployTest extends TestCase
 
     private static $name = 'helloContent';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $resp = $this->client->post('', [

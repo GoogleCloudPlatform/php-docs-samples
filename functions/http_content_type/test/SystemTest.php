@@ -22,6 +22,8 @@ namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class SystemTest.
  */
@@ -32,7 +34,7 @@ class SystemTest extends TestCase
 
     private static $name = 'helloContent';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $resp = $resp = $this->client->post('/', [

@@ -22,6 +22,8 @@ namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Unit tests for the Cloud Function.
  */
@@ -36,7 +38,7 @@ class UnitTest extends TestCase
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $request = new ServerRequest('POST', '/', ['content-type' => $test['content-type']], $test['body']);
@@ -45,7 +47,7 @@ class UnitTest extends TestCase
         }
     }
 
-    private static function runFunction($functionName, array $params = [])
+    private static function runFunction($functionName, array $params = []): string
     {
         return call_user_func_array($functionName, $params);
     }
