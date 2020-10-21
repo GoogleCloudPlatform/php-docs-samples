@@ -31,12 +31,12 @@ class UnitTest extends TestCase
 
     private static $name = 'helloHttp';
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $body = json_encode($test['body']);

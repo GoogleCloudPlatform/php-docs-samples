@@ -22,6 +22,8 @@ namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class DeployTest.
  *
@@ -37,7 +39,7 @@ class DeployTest extends TestCase
 
     private static $name = 'helloHttp';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $body = json_encode($test['body']);

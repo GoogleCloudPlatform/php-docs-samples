@@ -1,10 +1,5 @@
 {
     "require": {
         "google/cloud-functions-framework": "^0.6"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Functions\\HelloworldHttp\\Test\\": "test"
-        }
     }
 }
