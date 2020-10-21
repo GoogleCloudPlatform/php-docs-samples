@@ -19,7 +19,6 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 
 use GuzzleHttp\Psr7\ServerRequest;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
