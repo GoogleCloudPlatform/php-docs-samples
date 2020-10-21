@@ -23,6 +23,8 @@ use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class DeployTest.
  *
@@ -38,7 +40,7 @@ class DeployTest extends TestCase
 
     private static $name = 'uploadFile';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $method = $test['method'];
@@ -51,7 +53,7 @@ class DeployTest extends TestCase
         }
     }
 
-    public function testErrorCases() : void
+    public function testErrorCases(): void
     {
         $actual = $actualCode = null;
         foreach (self::errorCases() as $test) {

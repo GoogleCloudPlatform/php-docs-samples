@@ -24,17 +24,12 @@ use GuzzleHttp\Psr7\Response;
 function uploadFile(ServerRequestInterface $request): ResponseInterface
 {
     if ($request->getMethod() != 'POST') {
-        return (new Response())
-            ->withBody(GuzzleHttp\Psr7\stream_for('Method Not Allowed: expected POST, found ' . $request->getMethod()))
-            ->withStatus(405);
+        return new Response(405, [], 'Method Not Allowed: expected POST, found ' . $request->getMethod());
     }
 
     $contentType = $request->getHeader('Content-Type')[0];
     if (strpos($contentType, 'multipart/form-data') !== 0) {
-        $body = GuzzleHttp\Psr7\stream_for('Bad Request: content of type "multipart/form-data" not provided, found ' . $contentType);
-        return (new Response(400))
-            ->withBody($body)
-            ->withStatus(400);
+        return new Response(400, [], 'Bad Request: content of type "multipart/form-data" not provided, found ' . $contentType);
     }
 
     $fileList = [];
@@ -55,15 +50,10 @@ function uploadFile(ServerRequestInterface $request): ResponseInterface
     if (empty($fileList)) {
         $msg = 'Bad Request: no files sent for upload';
         errorLog($msg);
-        return (new Response(400))
-            ->withBody(GuzzleHttp\Psr7\stream_for($msg))
-            ->withStatus(400);
+        return new Response(400, [], $msg);
     }
 
-    $body = GuzzleHttp\Psr7\stream_for('Saved ' . join(', ', $fileList));
-    return (new Response())
-        ->withStatus(201)
-        ->withBody($body);
+    return new Response(201, [], 'Saved ' . join(', ', $fileList));
 }
 
 function errorLog($msg)

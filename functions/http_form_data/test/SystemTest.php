@@ -23,6 +23,8 @@ use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class SystemTest.
  */

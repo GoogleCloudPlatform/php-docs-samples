@@ -8,10 +8,5 @@
             "Composer\\Config::disableProcessTimeout",
             "TMPDIR=./tmp FUNCTION_TARGET=uploadFile php -S localhost:${PORT:-8080} vendor/bin/router.php"
         ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Functions\\HelloworldHttp\\Test\\": "test"
-        }
     }
 }
