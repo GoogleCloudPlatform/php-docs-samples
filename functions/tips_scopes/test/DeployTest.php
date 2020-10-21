@@ -48,9 +48,8 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $resp->getStatusCode());
 
         // Assert function output.
-        $expected = 'Hello, World!';
-        $actual = trim((string) $resp->getBody());
-        // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, $actual);
+        $output = trim((string) $resp->getBody());
+        $this->assertContains('Per instance: 120', $output);
+        $this->assertContains('Per function: 15', $output);
     }
 }
