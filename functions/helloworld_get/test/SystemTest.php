@@ -30,7 +30,7 @@ class SystemTest extends TestCase
 
     private static $name = 'helloGet';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         // Send a request to the function.
         $resp = $this->client->get('/');

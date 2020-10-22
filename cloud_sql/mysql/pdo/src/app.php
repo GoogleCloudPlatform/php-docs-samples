@@ -54,7 +54,7 @@ $container['db'] = function () {
 /**
  *  @param $conn_config array driver-specific options for PDO
  */
-function init_tcp_database_connection(array $conn_config) : PDO
+function init_tcp_database_connection(array $conn_config): PDO
 {
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
@@ -107,7 +107,7 @@ function init_tcp_database_connection(array $conn_config) : PDO
 /**
  *  @param $conn_config array driver-specific options for PDO
  */
-function init_unix_database_connection(array $conn_config) : PDO
+function init_unix_database_connection(array $conn_config): PDO
 {
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
