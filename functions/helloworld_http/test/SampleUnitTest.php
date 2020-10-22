@@ -34,7 +34,7 @@ class SampleUnitTest extends TestCase
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         $name = uniqid();
         $request = new ServerRequest('POST', '/', [], json_encode(['name' => $name]));
