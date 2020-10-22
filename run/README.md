@@ -30,7 +30,7 @@ For more Cloud Run samples beyond PHP, see the main list in the [Cloud Run Sampl
 
     ```sh
     export SAMPLE='helloworld'
-    cd php-docs-samples/run/$SAMPLE
+    cd $SAMPLE
     docker build --tag $SAMPLE .
     ```
 
