@@ -17,42 +17,35 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
+namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 
-use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class DeployTest.
- *
- * This test is not run by the CI system.
- *
- * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
- * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * Class SystemTest.
  */
-class DeployTest extends TestCase
+class SystemTest extends TestCase
 {
-    use CloudFunctionDeploymentTrait;
+    use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $name = 'helloContent';
 
     public function testFunction(): void
     {
         foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $resp = $this->client->post('', [
-                'body' => $body,
-                'query' => $test['query'],
-                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-                // 'debug' => true,
+            $resp = $resp = $this->client->post('/', [
+                'headers' => ['content-type' => $test['content-type']],
+                'body' => $test['body'],
             ]);
             $actual = trim((string) $resp->getBody());
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ':');
+
+            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['content-type'] . ':');
             // Failures often lead to a large HTML page in the response body.
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
+            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
         }
     }
 }

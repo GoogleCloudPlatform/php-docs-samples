@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-declare(strict_types=1);
-
-namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
+namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
@@ -37,22 +35,23 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $name = 'helloContent';
 
     public function testFunction(): void
     {
         foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
             $resp = $this->client->post('', [
-                'body' => $body,
-                'query' => $test['query'],
+                'headers' => ['content-type' => $test['content-type']],
+                'body' => $test['body'],
                 // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
                 // 'debug' => true,
             ]);
+
             $actual = trim((string) $resp->getBody());
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ':');
+
+            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['content-type'] . ':');
             // Failures often lead to a large HTML page in the response body.
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
+            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
         }
     }
 }

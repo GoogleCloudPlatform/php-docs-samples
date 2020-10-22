@@ -17,34 +17,38 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
+namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class SystemTest.
+ * Unit tests for the Cloud Function.
  */
-class SystemTest extends TestCase
+class UnitTest extends TestCase
 {
-    use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $name = 'helloContent';
+
+    public static function setUpBeforeClass()
+    {
+        require_once __DIR__ . '/../index.php';
+    }
 
     public function testFunction(): void
     {
         foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $resp = $this->client->post('/', [
-                'body' => $body,
-                'query' => $test['query'],
-            ]);
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ' code:');
-            $actual = trim((string) $resp->getBody());
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
+            $request = new ServerRequest('POST', '/', ['content-type' => $test['content-type']], $test['body']);
+            $actual = $this->runFunction(self::$name, [$request]);
+            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
         }
+    }
+
+    private static function runFunction($functionName, array $params = []): string
+    {
+        return call_user_func_array($functionName, $params);
     }
 }
