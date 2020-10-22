@@ -33,11 +33,11 @@ class UnitTest extends TestCase
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         $request = new ServerRequest('GET', '/');
-        $this->runFunction(self::$name, [$request]);
-        $this->expectOutputRegex("/index\.php/");
+        $response = $this->runFunction(self::$name, [$request]);
+        $this->assertContains("index.php", $response);
     }
 
     private static function runFunction($functionName, array $params = []) : string

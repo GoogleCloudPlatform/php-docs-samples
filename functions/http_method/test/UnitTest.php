@@ -27,14 +27,14 @@ use PHPUnit\Framework\TestCase;
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'helloHttp';
+    private static $name = 'httpMethod';
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testHelloHttpHandlesGET() : void
+    public function testHelloHttpHandlesGET(): void
     {
         $request = new ServerRequest('GET', '/');
         $output = $this->runFunction(self::$name, [$request]);
@@ -42,7 +42,7 @@ class UnitTest extends TestCase
         $this->assertContains('Hello, World!', (string) $output->getBody());
     }
 
-    public function testHelloHttpHandlesPUT() : void
+    public function testHelloHttpHandlesPUT(): void
     {
         $request = new ServerRequest('PUT', '/');
         $output = $this->runFunction(self::$name, [$request]);
@@ -50,7 +50,7 @@ class UnitTest extends TestCase
         $this->assertContains('Forbidden!', (string) $output->getBody());
     }
 
-    public function testHelloHttpHandlesOtherMethods() : void
+    public function testHelloHttpHandlesOtherMethods(): void
     {
         $request = new ServerRequest('POST', '/');
         $output = $this->runFunction(self::$name, [$request]);

@@ -34,9 +34,9 @@ class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
 
-    private static $name = 'helloHttp';
+    private static $name = 'httpMethod';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         // Send a request to the function.
         $resp = $this->client->get('', [

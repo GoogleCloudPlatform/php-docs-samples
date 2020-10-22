@@ -20,7 +20,7 @@
 use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;
 
-function helloHttp(ServerRequestInterface $request): Response
+function httpMethod(ServerRequestInterface $request): Response
 {
     switch ($request->getMethod()) {
         case 'GET':
@@ -43,7 +43,7 @@ function helloHttp(ServerRequestInterface $request): Response
             ]);
             return new Response(
                 405,
-                [],
+                ['Content-Type' => 'application/json'],
                 $json_payload
             );
             break;

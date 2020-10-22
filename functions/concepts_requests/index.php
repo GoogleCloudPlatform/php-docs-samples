@@ -18,21 +18,24 @@
 // [START functions_concepts_requests]
 
 use Psr\Http\Message\ServerRequestInterface;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 
 function makeRequest(ServerRequestInterface $request): Response
 {
-    $curl = new Curl\Curl();
+    $client = new Client([
+        'base_uri' => 'https://example.com',
+    ]);
 
-    // URL to send the request to
-    $url = 'https://example.com';
+    $url_response = $client->get('/');
 
-    $curl->get($url);
+    $function_response = new Response(
+        $url_response->getStatusCode(),
+        [],
+        ''
+    );
 
-    $status = $curl->error ? 500 : 200;
-    $response = new Response($status, [], '');
-
-    return $response;
+    return $function_response;
 }
 
 // [END functions_concepts_requests]

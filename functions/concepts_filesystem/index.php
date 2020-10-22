@@ -21,16 +21,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 function listFiles(ServerRequestInterface $request): string
 {
-    $directory = dirname(__FILE__);
-    $contents = scandir($directory);
+    $contents = scandir(__DIR__);
 
-    echo "Files:" . PHP_EOL;
+    $output = "Files:" . PHP_EOL;
 
     foreach ($contents as $file) {
-        echo "\t" . $file . PHP_EOL;
+        $output .= "\t" . $file . PHP_EOL;
     }
 
-    return '';
+    return $output;
 }
 
 // [END functions_concepts_filesystem]
