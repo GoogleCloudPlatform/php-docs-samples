@@ -20,6 +20,7 @@ For more Cloud Run samples beyond PHP, see the main list in the [Cloud Run Sampl
 
     ```sh
     git clone https://github.com/GoogleCloudPlatform/php-docs-samples.git
+    cd php-docs-samples/run
     ```
 
 ## How to run a sample locally
@@ -30,7 +31,7 @@ For more Cloud Run samples beyond PHP, see the main list in the [Cloud Run Sampl
 
     ```sh
     export SAMPLE='helloworld'
-    cd php-docs-samples/run/$SAMPLE
+    cd $SAMPLE
     docker build --tag $SAMPLE .
     ```
 
