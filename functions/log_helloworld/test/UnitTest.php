@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'helloWorld';
+    private static $name = 'helloLogging';
 
     public static function setUpBeforeClass() : void
     {
@@ -36,11 +36,14 @@ class UnitTest extends TestCase
     public function testFunction() : void
     {
         $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction(self::$name, [$request]);
 
-        $this->expectOutputRegex("/echo()/");
-        $this->expectOutputRegex("/print()/");
-        $this->expectOutputRegex("/fwrite()/");
+        $response = $this->runFunction(self::$name, [$request]);
+        $output = $this->getActualOutput();
+
+        $this->assertContains("echo()", $output);
+        $this->assertContains("print()", $output);
+        $this->assertContains("HTTP message from fwrite()", $output);
+        $this->assertNotContains("Log entry from fwrite()", $output);
     }
 
     private static function runFunction($functionName, array $params = []) : string

@@ -28,7 +28,7 @@ class SystemTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
 
-    private static $name = 'helloWorld';
+    private static $name = 'helloLogging';
 
     public function testFunction() : void
     {

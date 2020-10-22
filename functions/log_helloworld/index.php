@@ -19,11 +19,11 @@
 
 use Psr\Http\Message\ServerRequestInterface;
 
-function helloWorld(ServerRequestInterface $request): string
+function helloLogging(ServerRequestInterface $request): string
 {
     // These will be sent back as part
     // of the function's HTTP response
-    echo("HTTP message from echo().");
+    echo "HTTP message from echo().";
     print("HTTP message from print().");
 
     // Note: this is different than STDOUT
@@ -34,8 +34,12 @@ function helloWorld(ServerRequestInterface $request): string
 
     // Code running in Google Cloud Functions itself
     // writes log entries to Stackdriver Logging
-    $error = fopen('php://stderr', 'wb');
-    fwrite($error, "Log entry from fwrite().\n");
+    // (Log severity is INFO, even for stderr logs.)
+    $log = fopen('php://stderr', 'wb');
+    fwrite($log, "Log entry from fwrite().\n");
+
+    // This doesn't log anything
+    error_log('error_log does not log in Cloud Functions!');
 
     return '';
 }

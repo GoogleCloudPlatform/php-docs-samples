@@ -34,7 +34,7 @@ class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
 
-    private static $name = 'helloWorld';
+    private static $name = 'helloLogging';
 
     public function testFunction() : void
     {
@@ -52,6 +52,7 @@ class DeployTest extends TestCase
 
         $this->assertContains('print()', $response);
         $this->assertContains('echo()', $response);
-        $this->assertContains('fwrite()', $response);
+        $this->assertContains('HTTP message from fwrite()', $response);
+        $this->assertNotContains('Log entry from fwrite()', $response);
     }
 }
