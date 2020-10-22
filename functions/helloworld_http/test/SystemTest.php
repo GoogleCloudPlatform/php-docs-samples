@@ -32,7 +32,7 @@ class SystemTest extends TestCase
 
     private static $name = 'helloHttp';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $body = json_encode($test['body']);
