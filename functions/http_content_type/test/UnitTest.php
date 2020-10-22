@@ -14,30 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpContentType\Test;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Unit tests for the Cloud Function.
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'helloGet';
+    use TestCasesTrait;
 
-    public static function setUpBeforeClass(): void
+    private static $name = 'helloContent';
+
+    public static function setUpBeforeClass()
     {
         require_once __DIR__ . '/../index.php';
     }
 
     public function testFunction(): void
     {
-        $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction(self::$name, [$request]);
-        $this->assertContains('Hello, World!', $output);
+        foreach (self::cases() as $test) {
+            $request = new ServerRequest('POST', '/', ['content-type' => $test['content-type']], $test['body']);
+            $actual = $this->runFunction(self::$name, [$request]);
+            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
+        }
     }
 
     private static function runFunction($functionName, array $params = []): string

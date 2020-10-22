@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 trait TestCasesTrait
 {
-    public static function cases() : array
+    public static function cases(): array
     {
         return [
             [
