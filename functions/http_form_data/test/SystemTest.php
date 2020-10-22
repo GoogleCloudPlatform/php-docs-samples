@@ -35,7 +35,7 @@ class SystemTest extends TestCase
 
     private static $name = 'uploadFile';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             $method = $test['method'];
@@ -48,7 +48,7 @@ class SystemTest extends TestCase
         }
     }
 
-    public function testErrorCases() : void
+    public function testErrorCases(): void
     {
         $actual = null;
         foreach (self::errorCases() as $test) {

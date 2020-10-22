@@ -56,14 +56,14 @@ function uploadFile(ServerRequestInterface $request): ResponseInterface
     return new Response(201, [], 'Saved ' . join(', ', $fileList));
 }
 
-function errorLog($msg)
+function errorLog($msg): void
 {
     $stream = fopen('php://stderr', 'wb');
     $entry = json_encode(['msg' => $msg, 'severity' => 'error'], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
     fwrite($stream, $entry . PHP_EOL);
 }
 
-function infoLog($msg)
+function infoLog($msg): void
 {
     $stream = fopen('php://stderr', 'wb');
     $entry = json_encode(['message' => $msg, 'severity' => 'info'], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
