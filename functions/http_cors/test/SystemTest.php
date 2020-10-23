@@ -16,10 +16,12 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpCors\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Class SystemTest.
@@ -27,20 +29,51 @@ use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 class SystemTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
+    use TestCasesTrait;
 
     private static $name = 'corsEnabledFunction';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
-        // Send a request to the function.
-        $resp = $this->client->get('/');
+        foreach (self::cases() as $test) {
+            // Send a request to the function.
+            $resp = $this->client->request(
+                $test['method'],
+                $test['url']
+            );
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+            // Assert status code.
+            $this->assertEquals($test['status_code'], $resp->getStatusCode());
 
-        // Assert function output.
-        $expected = trim('Hello World!');
-        $actual = trim((string) $resp->getBody());
-        $this->assertEquals($expected, $actual);
+            // Assert headers.
+            $header_names = array_keys($resp->getHeaders());
+            if (isset($test['contains_header'])) {
+                $this->assertContains(
+                    $test['contains_header'],
+                    $header_names
+                );
+            }
+            if (isset($test['not_contains_header'])) {
+                $this->assertNotContains(
+                    $test['not_contains_header'],
+                    $header_names
+                );
+            }
+
+            // Assert function output.
+            $content = trim((string) $resp->getBody());
+            if (isset($test['contains_content'])) {
+                $this->assertContains(
+                    $test['contains_content'],
+                    $content
+                );
+            }
+            if (isset($test['not_contains_content'])) {
+                $this->assertNotContains(
+                    $test['not_contains_content'],
+                    $content
+                );
+            }
+        }
     }
 }

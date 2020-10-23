@@ -16,17 +16,21 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpMethod\Test;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Unit tests for the Cloud Function.
  */
 class UnitTest extends TestCase
 {
+    use TestCasesTrait;
+
     private static $name = 'httpMethod';
 
     public static function setUpBeforeClass(): void
@@ -34,31 +38,26 @@ class UnitTest extends TestCase
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testHelloHttpHandlesGET(): void
+    public function testFunction(): void
     {
-        $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction(self::$name, [$request]);
-        $this->assertEquals($output->getStatusCode(), 200);
-        $this->assertContains('Hello, World!', (string) $output->getBody());
+        foreach (self::cases() as $test) {
+            $request = new ServerRequest(
+                $test['method'],
+                $test['url']
+            );
+            $output = $this->runFunction(self::$name, [$request]);
+            $this->assertEquals(
+                $test['status_code'],
+                $output->getStatusCode()
+            );
+            $this->assertContains(
+                $test['content'],
+                (string) $output->getBody()
+            );
+        }
     }
 
-    public function testHelloHttpHandlesPUT(): void
-    {
-        $request = new ServerRequest('PUT', '/');
-        $output = $this->runFunction(self::$name, [$request]);
-        $this->assertEquals($output->getStatusCode(), 403);
-        $this->assertContains('Forbidden!', (string) $output->getBody());
-    }
-
-    public function testHelloHttpHandlesOtherMethods(): void
-    {
-        $request = new ServerRequest('POST', '/');
-        $output = $this->runFunction(self::$name, [$request]);
-        $this->assertEquals($output->getStatusCode(), 405);
-        $this->assertContains('something blew up!', (string) $output->getBody());
-    }
-
-    private static function runFunction($functionName, array $params = []) : Response
+    private static function runFunction($functionName, array $params = []): Response
     {
         return call_user_func_array($functionName, $params);
     }

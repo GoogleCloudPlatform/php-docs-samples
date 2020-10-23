@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\ConceptsRequests\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Class DeployTest.
@@ -33,18 +35,21 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use TestCasesTrait;
 
     private static $name = 'makeRequest';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
-        // Send a request to the function.
-        $resp = $this->client->get('', [
-            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-            // 'debug' => true
-        ]);
+        foreach (self::cases() as $test) {
+            // Send a request to the function.
+            $resp = $this->client->get($test['url'], [
+                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+                // 'debug' => true
+            ]);
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+            // Assert status code.
+            $this->assertEquals($test['status_code'], $resp->getStatusCode());
+        }
     }
 }

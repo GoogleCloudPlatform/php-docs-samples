@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\ConceptsEnvVars\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Class DeployTest.
@@ -33,10 +35,11 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use TestCasesTrait;
 
     private static $name = 'envVar';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         // Send a request to the function.
         $resp = $this->client->get('', [
@@ -54,7 +57,7 @@ class DeployTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    protected static function deployFlags(array $flags = []) : array
+    protected static function deployFlags(array $flags = []): array
     {
         $flags['--update-env-vars'] = 'FOO=bar;';
         return $flags;

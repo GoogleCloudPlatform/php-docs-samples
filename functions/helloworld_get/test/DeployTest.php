@@ -22,6 +22,8 @@ namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class DeployTest.
  *
@@ -33,24 +35,29 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use TestCasesTrait;
 
     private static $name = 'helloGet';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
-        // Send a request to the function.
-        $resp = $this->client->get('', [
-            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-            // 'debug' => true
-        ]);
+        foreach (self::cases() as $test) {
+            // Send a request to the function.
+            $resp = $this->client->get($test['url'], [
+                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+                // 'debug' => true
+            ]);
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+            // Assert status code.
+            $this->assertEquals(
+                $test['status_code'],
+                $resp->getStatusCode()
+            );
 
-        // Assert function output.
-        $expected = 'Hello, World!';
-        $actual = trim((string) $resp->getBody());
-        // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, $actual);
+            // Assert function output.
+            $output = trim((string) $resp->getBody());
+            // Failures often lead to a large HTML page in the response body.
+            $this->assertEquals($test['expected'], $output);
+        }
     }
 }

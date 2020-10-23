@@ -18,29 +18,12 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\ConceptsRequests\Test;
 
-use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
-
-require_once __DIR__ . '/TestCasesTrait.php';
-
-/**
- * Class SystemTest.
- */
-class SystemTest extends TestCase
+trait TestCasesTrait
 {
-    use CloudFunctionLocalTestTrait;
-    use TestCasesTrait;
-
-    private static $name = 'makeRequest';
-
-    public function testFunction(): void
+    public static function cases(): array
     {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            $resp = $this->client->get($test['url']);
-
-            // Assert status code.
-            $this->assertEquals($test['status_code'], $resp->getStatusCode());
-        }
+        return [
+            [ 'url' => '', 'status_code' => 200 ],
+        ];
     }
 }

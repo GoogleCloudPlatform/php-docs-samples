@@ -16,10 +16,12 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\ConceptsFilesystem\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Class SystemTest.
@@ -27,20 +29,22 @@ use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 class SystemTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
+    use TestCasesTrait;
 
     private static $name = 'listFiles';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
-        // Send a request to the function.
-        $resp = $this->client->get('/');
+        foreach (self::cases() as $test) {
+            // Send a request to the function.
+            $resp = $this->client->get('/');
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+            // Assert status code.
+            $this->assertEquals('200', $resp->getStatusCode());
 
-        // Assert function output.
-        $expected = trim('index.php');
-        $actual = trim((string) $resp->getBody());
-        $this->assertContains($expected, $actual);
+            // Assert function output.
+            $output = trim((string) $resp->getBody());
+            $this->assertContains($test['file'], $output);
+        }
     }
 }

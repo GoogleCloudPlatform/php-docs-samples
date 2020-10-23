@@ -21,6 +21,8 @@ namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Unit tests for the Cloud Function.
  */
@@ -28,19 +30,23 @@ class UnitTest extends TestCase
 {
     private static $name = 'helloGet';
 
-    public static function setUpBeforeClass() : void
+    use TestCasesTrait;
+
+    public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
-        $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction(self::$name, [$request]);
-        $this->assertContains('Hello, World!', $output);
+        foreach (self::cases() as $test) {
+            $request = new ServerRequest('GET', $test['url']);
+            $output = $this->runFunction(self::$name, [$request]);
+            $this->assertContains($test['expected'], $output);
+        }
     }
 
-    private static function runFunction($functionName, array $params = []) : string
+    private static function runFunction($functionName, array $params = []): string
     {
         return call_user_func_array($functionName, $params);
     }
