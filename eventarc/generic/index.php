@@ -25,7 +25,7 @@ echo "\nHEADERS:\n";
 $headers = getallheaders();
 unset($headers['Authorization']); // do not log authorization header
 foreach ($headers as $name => $value) {
-  echo "$name: $value\n";
+    echo "$name: $value\n";
 }
 
 echo "\nBODY:\n";
