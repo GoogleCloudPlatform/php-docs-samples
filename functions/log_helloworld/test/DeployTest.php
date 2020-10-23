@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HelloLogging\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Class DeployTest.
@@ -33,26 +35,28 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use TestCasesTrait;
 
     private static $name = 'helloLogging';
 
     public function testFunction() : void
     {
-        // Send a request to the function.
-        $resp = $this->client->get('', [
-            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-            // 'debug' => true
-        ]);
+        foreach (self::cases() as $test) {
+            // Send a request to the function.
+            $resp = $this->client->get('');
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+            // Assert status code.
+            $this->assertEquals('200', $resp->getStatusCode());
 
-        // Assert function output.
-        $response = trim((string) $resp->getBody());
+            // Assert function output.
+            $output = trim((string) $resp->getBody());
 
-        $this->assertContains('print()', $response);
-        $this->assertContains('echo()', $response);
-        $this->assertContains('HTTP message from fwrite()', $response);
-        $this->assertNotContains('Log entry from fwrite()', $response);
+            if (isset($test['contains'])) {
+                $this->assertContains($test['contains'], $output);
+            }
+            if (isset($test['not_contains'])) {
+                $this->assertNotContains($test['not_contains'], $output);
+            }
+        }
     }
 }

@@ -16,16 +16,20 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HelloLogging\Test;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
  * Unit tests for the Cloud Function.
  */
 class UnitTest extends TestCase
 {
+    use TestCasesTrait;
+
     private static $name = 'helloLogging';
 
     public static function setUpBeforeClass() : void
@@ -35,15 +39,19 @@ class UnitTest extends TestCase
 
     public function testFunction() : void
     {
-        $request = new ServerRequest('GET', '/');
+        foreach (self::cases() as $test) {
+            $request = new ServerRequest('GET', '/');
 
-        $response = $this->runFunction(self::$name, [$request]);
-        $output = $this->getActualOutput();
+            $response = $this->runFunction(self::$name, [$request]);
+            $output = $this->getActualOutput();
 
-        $this->assertContains("echo()", $output);
-        $this->assertContains("print()", $output);
-        $this->assertContains("HTTP message from fwrite()", $output);
-        $this->assertNotContains("Log entry from fwrite()", $output);
+            if (isset($test['contains'])) {
+                $this->assertContains($test['contains'], $output);
+            }
+            if (isset($test['not_contains'])) {
+                $this->assertNotContains($test['not_contains'], $output);
+            }
+        }
     }
 
     private static function runFunction($functionName, array $params = []) : string
