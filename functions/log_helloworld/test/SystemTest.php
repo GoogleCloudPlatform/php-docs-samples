@@ -33,7 +33,7 @@ class SystemTest extends TestCase
 
     private static $name = 'helloLogging';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         foreach (self::cases() as $test) {
             // Send a request to the function.
