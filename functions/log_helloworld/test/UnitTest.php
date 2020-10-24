@@ -42,20 +42,17 @@ class UnitTest extends TestCase
         foreach (self::cases() as $test) {
             $request = new ServerRequest('GET', '/');
 
-            $response = $this->runFunction(self::$name, [$request]);
+            $this->runFunction(self::$name, [$request]);
             $output = $this->getActualOutput();
 
-            if (isset($test['contains'])) {
-                $this->assertContains($test['contains'], $output);
-            }
             if (isset($test['not_contains'])) {
                 $this->assertNotContains($test['not_contains'], $output);
             }
         }
     }
 
-    private static function runFunction($functionName, array $params = []): string
+    private static function runFunction($functionName, array $params = []): void
     {
-        return call_user_func_array($functionName, $params);
+        call_user_func_array($functionName, $params);
     }
 }

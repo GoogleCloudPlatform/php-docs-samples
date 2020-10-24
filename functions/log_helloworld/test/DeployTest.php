@@ -51,9 +51,6 @@ class DeployTest extends TestCase
             // Assert function output.
             $output = trim((string) $resp->getBody());
 
-            if (isset($test['contains'])) {
-                $this->assertContains($test['contains'], $output);
-            }
             if (isset($test['not_contains'])) {
                 $this->assertNotContains($test['not_contains'], $output);
             }

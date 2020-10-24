@@ -23,8 +23,7 @@ trait TestCasesTrait
     public static function cases(): array
     {
         return [
-            [ 'contains' => 'print' ],
-            [ 'contains' => 'HTTP message from fwrite()', ],
+            /* These should show up in logs, not the response */
             [ 'not_contains' => 'Log entry from fwrite()', ],
             [ 'not_contains' => 'Structured log', ],
         ];

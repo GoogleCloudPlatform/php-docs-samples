@@ -21,16 +21,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 function helloLogging(ServerRequestInterface $request): string
 {
-    // This will be sent back as part
-    // of the function's HTTP response
-    print("HTTP message from print().");
-
-    // Note: this is different than STDOUT
-    // See this page for more info:
-    // https://www.php.net/manual/en/wrappers.php.php
-    $output = fopen('php://output', 'wb');
-    fwrite($output, "HTTP message from fwrite().\n");
-
     // Code running in Google Cloud Functions itself
     // writes log entries to Stackdriver Logging
     // (Default log severity level is INFO.)
@@ -49,6 +39,7 @@ function helloLogging(ServerRequestInterface $request): string
     // This doesn't log anything
     error_log('error_log does not log in Cloud Functions!');
 
+    // Functions must return a String or PSR-7 Response object
     return '';
 }
 

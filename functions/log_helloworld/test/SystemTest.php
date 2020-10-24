@@ -45,9 +45,6 @@ class SystemTest extends TestCase
             // Assert function output.
             $response = trim((string) $resp->getBody());
 
-            if (isset($test['contains'])) {
-                $this->assertContains($test['contains'], $response);
-            }
             if (isset($test['not_contains'])) {
                 $this->assertNotContains($test['not_contains'], $response);
             }
