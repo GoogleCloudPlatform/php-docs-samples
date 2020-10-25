@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
+use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
@@ -37,22 +38,41 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $name = 'uploadFile';
 
     public function testFunction(): void
     {
         foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $resp = $this->client->post('', [
-                'body' => $body,
-                'query' => $test['query'],
-                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-                // 'debug' => true,
+            $method = $test['method'];
+            $resp = $this->client->$method('', [
+                'multipart' => $test['multipart'],
             ]);
+            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ' code:');
             $actual = trim((string) $resp->getBody());
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ':');
-            // Failures often lead to a large HTML page in the response body.
             $this->assertContains($test['expected'], $actual, $test['label'] . ':');
+        }
+    }
+
+    public function testErrorCases(): void
+    {
+        $actual = $actualCode = null;
+        foreach (self::errorCases() as $test) {
+            try {
+                $method = $test['method'];
+                $resp = $this->client->$method('', [
+                    'multipart' => $test['multipart'],
+                ]);
+
+                $actual = $resp->getBody()->getContents();
+                $actualCode = $resp->getStatusCode();
+            } catch (ClientException $e) {
+                // Expected exception, nothing to do here.
+                $actual = $actualCode = $e->getMessage();
+            } finally {
+                print $actual . $actualCode;
+                $this->assertContains($test['code'], $actualCode, $test['label'] . ' code:');
+                $this->assertContains($test['expected'], $actual, $test['label'] . ':');
+            }
         }
     }
 }

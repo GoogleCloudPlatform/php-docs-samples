@@ -54,7 +54,7 @@ $container['db'] = function () {
 /**
  *  @param $conn_config array driver-specific options for PDO
  */
-function init_tcp_database_connection(array $conn_config) : PDO
+function init_tcp_database_connection(array $conn_config): PDO
 {
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
@@ -62,17 +62,18 @@ function init_tcp_database_connection(array $conn_config) : PDO
     $host = getenv('DB_HOST');
 
     try {
-        // # [START cloud_sql_postgres_pdo_create_tcp]
-        // // $username = 'your_db_user';
-        // // $password = 'yoursupersecretpassword';
-        // // $db_name = 'your_db_name';
-        // // $host = "127.0.0.1";
+        # [START cloud_sql_postgres_pdo_create_tcp]
+        // $username = 'your_db_user';
+        // $password = 'yoursupersecretpassword';
+        // $db_name = 'your_db_name';
+        // $host = "127.0.0.1";
 
         // Connect using TCP
         $dsn = sprintf('pgsql:dbname=%s;host=%s', $db_name, $host);
 
         // Connect to the database
         $conn = new PDO($dsn, $username, $password, $conn_config);
+        # [END cloud_sql_postgres_pdo_create_tcp]
     } catch (TypeError $e) {
         throw new RuntimeException(
             sprintf(
@@ -115,12 +116,12 @@ function init_unix_database_connection(array $conn_config)
     $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
 
     try {
-        // # [START cloud_sql_postgres_pdo_create_socket]
-        // // $username = 'your_db_user';
-        // // $password = 'yoursupersecretpassword';
-        // // $db_name = 'your_db_name';
-        // // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
-        // // $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+        # [START cloud_sql_postgres_pdo_create_socket]
+        // $username = 'your_db_user';
+        // $password = 'yoursupersecretpassword';
+        // $db_name = 'your_db_name';
+        // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
+        // $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
 
         // Connect using UNIX sockets
         $dsn = sprintf(

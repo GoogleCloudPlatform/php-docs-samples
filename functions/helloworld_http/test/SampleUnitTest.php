@@ -15,36 +15,33 @@
  * limitations under the License.
  */
 
-declare(strict_types=1);
+// [START functions_http_unit_test]
 
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
-
-require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class SystemTest.
+ * Class SampleUnitTest.
+ *
+ * Unit test for helloHttp.
  */
-class SystemTest extends TestCase
+class SampleUnitTest extends TestCase
 {
-    use CloudFunctionLocalTestTrait;
-    use TestCasesTrait;
-
-    private static $name = 'helloHttp';
+    public static function setUpBeforeClass(): void
+    {
+        require_once __DIR__ . '/../index.php';
+    }
 
     public function testFunction(): void
     {
-        foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $resp = $this->client->post('/', [
-                'body' => $body,
-                'query' => $test['query'],
-            ]);
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ' code:');
-            $actual = trim((string) $resp->getBody());
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-        }
+        $name = uniqid();
+        $request = new ServerRequest('POST', '/', [], json_encode(['name' => $name]));
+        $expected = sprintf('Hello, %s!', $name);
+        $actual = helloHttp($request);
+        $this->assertContains($expected, $actual);
     }
 }
+
+// [END functions_http_unit_test]

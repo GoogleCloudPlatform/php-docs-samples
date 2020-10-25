@@ -10,6 +10,9 @@ return PhpCsFixer\Config::create()
         'method_argument_space' => [
             'keep_multiple_spaces_after_comma' => true
         ],
+        'return_type_declaration' => [
+            'space_before' => 'none'
+        ],
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
