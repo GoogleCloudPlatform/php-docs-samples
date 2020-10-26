@@ -39,8 +39,15 @@ class DeployTest extends TestCase
 
     private static $name = 'envVar';
 
-    public function testFunction(): void
-    {
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $url,
+        $status_code,
+        $var_name,
+        $var_value
+    ): void {
         // Send a request to the function.
         $resp = $this->client->get('', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.

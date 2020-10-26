@@ -39,23 +39,28 @@ class DeployTest extends TestCase
 
     private static $name = 'httpMethod';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            // ($test['url'] is an absolute URL, so don't use it here)
-            $resp = $this->client->request($test['method'], '', [
-                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-                // 'debug' => true
-            ]);
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $method,
+        $url,
+        $status_code,
+        $content
+    ): void {
+        // Send a request to the function.
+        // ($test['url'] is an absolute URL, so don't use it here)
+        $resp = $this->client->request($method, '', [
+            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+            // 'debug' => true
+        ]);
 
-            // Assert status code.
-            $this->assertEquals($test['status_code'], $resp->getStatusCode());
+        // Assert status code.
+        $this->assertEquals($status_code, $resp->getStatusCode());
 
-            // Assert function output.
-            $output = trim((string) $resp->getBody());
-            // Failures often lead to a large HTML page in the response body.
-            $this->assertEquals($test['content'], $output);
-        }
+        // Assert function output.
+        $output = trim((string) $resp->getBody());
+        // Failures often lead to a large HTML page in the response body.
+        $this->assertEquals($content, $output);
     }
 }

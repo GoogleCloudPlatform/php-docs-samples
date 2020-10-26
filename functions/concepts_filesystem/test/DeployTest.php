@@ -39,22 +39,23 @@ class DeployTest extends TestCase
 
     private static $name = 'listFiles';
 
-    public function testFunction(): void
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction($file): void
     {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            $resp = $this->client->get('', [
-                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-                // 'debug' => true
-            ]);
+        // Send a request to the function.
+        $resp = $this->client->get('', [
+            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+            // 'debug' => true
+        ]);
 
-            // Assert status code.
-            $this->assertEquals('200', $resp->getStatusCode());
+        // Assert status code.
+        $this->assertEquals('200', $resp->getStatusCode());
 
-            // Assert function output.
-            $output = trim((string) $resp->getBody());
-            // Failures often lead to a large HTML page in the response body.
-            $this->assertContains($test['file'], $output);
-        }
+        // Assert function output.
+        $output = trim((string) $resp->getBody());
+        // Failures often lead to a large HTML page in the response body.
+        $this->assertContains($file, $output);
     }
 }

@@ -37,13 +37,14 @@ class UnitTest extends TestCase
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction(): void
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction($file): void
     {
-        foreach (self::cases() as $test) {
-            $request = new ServerRequest('GET', '/');
-            $response = $this->runFunction(self::$name, [$request]);
-            $this->assertContains($test['file'], $response);
-        }
+        $request = new ServerRequest('GET', '/');
+        $response = $this->runFunction(self::$name, [$request]);
+        $this->assertContains($file, $response);
     }
 
     private static function runFunction($functionName, array $params = []): string

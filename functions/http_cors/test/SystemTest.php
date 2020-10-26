@@ -33,47 +33,52 @@ class SystemTest extends TestCase
 
     private static $name = 'corsEnabledFunction';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            $resp = $this->client->request(
-                $test['method'],
-                $test['url']
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $url,
+        $method,
+        $status_code,
+        $contains_header,
+        $not_contains_header,
+        $contains_content,
+        $not_contains_content
+    ): void {
+        // Send a request to the function.
+        $resp = $this->client->request($method, $url);
+
+        // Assert status code.
+        $this->assertEquals($status_code, $resp->getStatusCode());
+
+        // Assert headers.
+        $header_names = array_keys($resp->getHeaders());
+        if ($contains_header) {
+            $this->assertContains(
+                $contains_header,
+                $header_names
             );
+        }
+        if ($not_contains_header) {
+            $this->assertNotContains(
+                $not_contains_header,
+                $header_names
+            );
+        }
 
-            // Assert status code.
-            $this->assertEquals($test['status_code'], $resp->getStatusCode());
-
-            // Assert headers.
-            $header_names = array_keys($resp->getHeaders());
-            if (isset($test['contains_header'])) {
-                $this->assertContains(
-                    $test['contains_header'],
-                    $header_names
-                );
-            }
-            if (isset($test['not_contains_header'])) {
-                $this->assertNotContains(
-                    $test['not_contains_header'],
-                    $header_names
-                );
-            }
-
-            // Assert function output.
-            $content = trim((string) $resp->getBody());
-            if (isset($test['contains_content'])) {
-                $this->assertContains(
-                    $test['contains_content'],
-                    $content
-                );
-            }
-            if (isset($test['not_contains_content'])) {
-                $this->assertNotContains(
-                    $test['not_contains_content'],
-                    $content
-                );
-            }
+        // Assert function output.
+        $content = trim((string) $resp->getBody());
+        if ($contains_content) {
+            $this->assertContains(
+                $contains_content,
+                $content
+            );
+        }
+        if ($not_contains_content) {
+            $this->assertNotContains(
+                $not_contains_content,
+                $content
+            );
         }
     }
 }

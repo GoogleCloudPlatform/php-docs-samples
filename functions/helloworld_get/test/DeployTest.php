@@ -39,25 +39,26 @@ class DeployTest extends TestCase
 
     private static $name = 'helloGet';
 
-    public function testFunction(): void
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction($url, $status_code, $expected): void
     {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            $resp = $this->client->get($test['url'], [
-                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-                // 'debug' => true
-            ]);
+        // Send a request to the function.
+        $resp = $this->client->get($url, [
+            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+            // 'debug' => true
+        ]);
 
-            // Assert status code.
-            $this->assertEquals(
-                $test['status_code'],
-                $resp->getStatusCode()
-            );
+        // Assert status code.
+        $this->assertEquals(
+            $status_code,
+            $resp->getStatusCode()
+        );
 
-            // Assert function output.
-            $output = trim((string) $resp->getBody());
-            // Failures often lead to a large HTML page in the response body.
-            $this->assertEquals($test['expected'], $output);
-        }
+        // Assert function output.
+        $output = trim((string) $resp->getBody());
+        // Failures often lead to a large HTML page in the response body.
+        $this->assertEquals($expected, $output);
     }
 }

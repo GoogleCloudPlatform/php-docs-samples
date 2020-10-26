@@ -33,19 +33,19 @@ class SystemTest extends TestCase
 
     private static $name = 'helloGet';
 
-    public function testFunction(): void
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction($url, $status_code, $expected): void
     {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            $resp = $this->client->get($test['url']);
+        // Send a request to the function.
+        $resp = $this->client->get($url);
 
-            // Assert status code.
-            $this->assertEquals($test['status_code'], $resp->getStatusCode());
+        // Assert status code.
+        $this->assertEquals($status_code, $resp->getStatusCode());
 
-            // Assert function output.
-            $expected = trim($test['expected']);
-            $actual = trim((string) $resp->getBody());
-            $this->assertEquals($expected, $actual);
-        }
+        // Assert function output.
+        $actual = trim((string) $resp->getBody());
+        $this->assertEquals($expected, $actual);
     }
 }

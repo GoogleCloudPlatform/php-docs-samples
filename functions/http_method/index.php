@@ -19,7 +19,7 @@
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use GuzzleHttp\Psr7\ResponseInterface;
+use GuzzleHttp\Psr7\Response;
 
 function httpMethod(ServerRequestInterface $request): ResponseInterface
 {

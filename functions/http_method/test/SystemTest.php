@@ -33,24 +33,29 @@ class SystemTest extends TestCase
 
     private static $name = 'httpMethod';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            // Send a request to the function.
-            $resp = $this->client->request(
-                $test['method'],
-                $test['url']
-            );
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $method,
+        $url,
+        $status_code,
+        $content
+    ): void {
+        // Send a request to the function.
+        $resp = $this->client->request(
+            $method,
+            $url
+        );
 
-            // Assert status code.
-            $this->assertEquals(
-                $test['status_code'],
-                $resp->getStatusCode()
-            );
+        // Assert status code.
+        $this->assertEquals(
+            $status_code,
+            $resp->getStatusCode()
+        );
 
-            // Assert function output.
-            $output = trim((string) $resp->getBody());
-            $this->assertContains($test['content'], $output);
-        }
+        // Assert function output.
+        $output = trim((string) $resp->getBody());
+        $this->assertContains($content, $output);
     }
 }

@@ -33,25 +33,30 @@ class SystemTest extends TestCase
 
     private static $name = 'envVar';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            // Check the target env variable
-            $this->requireEnv($test['var_name']);
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $url,
+        $status_code,
+        $var_name,
+        $var_value
+    ): void {
+        // Check the target env variable
+        $this->requireEnv($var_name);
 
-            // Send a request to the function.
-            $resp = $this->client->get($test['url']);
+        // Send a request to the function.
+        $resp = $this->client->get($url);
 
-            // Assert status code.
-            $this->assertEquals(
-                $test['status_code'],
-                $resp->getStatusCode()
-            );
+        // Assert status code.
+        $this->assertEquals(
+            $status_code,
+            $resp->getStatusCode()
+        );
 
-            // Assert function output.
-            $expected = trim($test['var_value']);
-            $actual = trim((string) $resp->getBody());
-            $this->assertEquals($expected, $actual);
-        }
+        // Assert function output.
+        $expected = trim($var_value);
+        $actual = trim((string) $resp->getBody());
+        $this->assertEquals($expected, $actual);
     }
 }

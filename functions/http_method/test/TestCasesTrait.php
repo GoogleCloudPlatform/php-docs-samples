@@ -29,14 +29,7 @@ trait TestCasesTrait
                 'status_code' => 200,
                 'content' => 'Hello, World!'
             ],
-            /*
-             * TODO(ace-n):
-             *
-             * Uncomment when this PR is merged:
-             *
-             * https://github.com/GoogleCloudPlatform/php-tools/pull/89
-             */
-            /*[
+             [
                 'method' => 'PUT',
                 'url' => '/',
                 'status_code' => 403,
@@ -47,7 +40,7 @@ trait TestCasesTrait
                 'url' => '/',
                 'status_code' => 405,
                 'content' => 'something blew up!'
-            ],*/
+            ],
         ];
     }
 }

@@ -39,13 +39,18 @@ class UnitTest extends TestCase
         putenv("FOO=bar");
     }
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            $request = new ServerRequest('GET', $test['url']);
-            $output = $this->runFunction(self::$name, [$request]);
-            $this->assertContains($test['var_value'], $output);
-        }
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $url,
+        $status_code,
+        $var_name,
+        $var_value
+    ): void {
+        $request = new ServerRequest('GET', $url);
+        $output = $this->runFunction(self::$name, [$request]);
+        $this->assertContains($var_value, $output);
     }
 
     private static function runFunction($functionName, array $params = []): string

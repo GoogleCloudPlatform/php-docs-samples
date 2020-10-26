@@ -28,6 +28,8 @@ trait TestCasesTrait
                 'method' => 'OPTIONS',
                 'status_code' => 204,
                 'contains_header' => 'Access-Control-Max-Age',
+                'not_contains_header' => null,
+                'contains_content' => null,
                 'not_contains_content' => 'Hello World!'
             ],
             [
@@ -35,8 +37,10 @@ trait TestCasesTrait
                 'method' => 'GET',
                 'status_code' => 200,
                 'contains_header' => 'Access-Control-Allow-Origin',
+                'contains_header' => null,
                 'not_contains_header' => 'Access-Control-Max-Age',
-                'contains_content' => 'Hello World!'
+                'contains_content' => 'Hello World!',
+                'not_contains_content' => null,
             ],
         ];
     }
