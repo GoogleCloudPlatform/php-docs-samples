@@ -21,14 +21,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 function helloLogging(ServerRequestInterface $request): string
 {
-    // Code running in Google Cloud Functions itself
-    // writes log entries to Cloud Logging
-    // (Default log severity level is INFO.)
+    // Code running in Google Cloud Functions itself writes log entries to
+    // Cloud Logging. (Default log severity level is INFO.)
     $log = fopen('php://stderr', 'wb');
     fwrite($log, "Log entry from fwrite().\n");
 
-    // You can also specify a severity level
-    // explicitly using structured logs.
+    // You can also specify a severity level explicitly using structured logs.
     // See this page for a list of log severity values:
     //   https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity
     fwrite($log, json_encode([
