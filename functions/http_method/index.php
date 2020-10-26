@@ -25,25 +25,28 @@ function httpMethod(ServerRequestInterface $request): ResponseInterface
 {
     switch ($request->getMethod()) {
         case 'GET':
+            // Example: read request
             return new Response(
-                200,
+                200, // OK
                 [],
                 'Hello, World!' . PHP_EOL
             );
             break;
         case 'PUT':
+            // Example: write request to a read-only resource
             return new Response(
-                403,
+                403, // Permission denied
                 [],
                 'Forbidden!' . PHP_EOL
             );
             break;
         default:
+            // Example: request type not supported by the application
             $json_payload = json_encode([
                 'error' => 'something blew up!'
             ]);
             return new Response(
-                405,
+                405, // Method not allowed
                 ['Content-Type' => 'application/json'],
                 $json_payload
             );

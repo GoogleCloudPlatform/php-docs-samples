@@ -59,7 +59,7 @@ class DeployTest extends TestCase
 
     protected static function deployFlags(array $flags = []): array
     {
-        $flags['--update-env-vars'] = 'FOO=bar;';
+        $flags['--update-env-vars'] = 'FOO=bar';
         return $flags;
     }
 }

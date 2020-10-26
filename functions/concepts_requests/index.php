@@ -32,8 +32,8 @@ function makeRequest(ServerRequestInterface $request): ResponseInterface
 
     $function_response = new Response(
         $url_response->getStatusCode(),
-        [],
-        ''
+        [], // headers
+        ''  // body
     );
 
     return $function_response;
