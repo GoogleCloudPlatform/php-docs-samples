@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 function helloLogging(ServerRequestInterface $request): string
 {
     // Code running in Google Cloud Functions itself
-    // writes log entries to Stackdriver Logging
+    // writes log entries to Cloud Logging
     // (Default log severity level is INFO.)
     $log = fopen('php://stderr', 'wb');
     fwrite($log, "Log entry from fwrite().\n");
