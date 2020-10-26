@@ -18,10 +18,11 @@
 // [START functions_concepts_requests]
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 
-function makeRequest(ServerRequestInterface $request): Response
+function makeRequest(ServerRequestInterface $request): ResponseInterface
 {
     $client = new Client([
         'base_uri' => 'https://example.com',

@@ -17,10 +17,11 @@
 
 // [START functions_http_method]
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ResponseInterface;
 
-function httpMethod(ServerRequestInterface $request): Response
+function httpMethod(ServerRequestInterface $request): ResponseInterface
 {
     switch ($request->getMethod()) {
         case 'GET':

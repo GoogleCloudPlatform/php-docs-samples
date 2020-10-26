@@ -17,10 +17,11 @@
 
 // [START functions_http_cors]
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;
 
-function corsEnabledFunction(ServerRequestInterface $request): Response
+function corsEnabledFunction(ServerRequestInterface $request): ResponseInterface
 {
     // Set CORS headers for preflight requests
     // Allows GETs from any origin with the Content-Type header
