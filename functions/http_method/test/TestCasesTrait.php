@@ -26,19 +26,19 @@ trait TestCasesTrait
             [
                 'method' => 'GET',
                 'url' => '/',
-                'status_code' => 200,
+                'statusCode' => 200,
                 'content' => 'Hello, World!'
             ],
              [
                 'method' => 'PUT',
                 'url' => '/',
-                'status_code' => 403,
+                'statusCode' => 403,
                 'content' => 'Forbidden!'
             ],
             [
                 'method' => 'POST',
                 'url' => '/',
-                'status_code' => 405,
+                'statusCode' => 405,
                 'content' => 'something blew up!'
             ],
         ];

@@ -44,13 +44,13 @@ class UnitTest extends TestCase
     public function testFunction(
         $method,
         $url,
-        $status_code,
+        $statusCode,
         $content
     ): void {
         $request = new ServerRequest($method, $url);
         $output = $this->runFunction(self::$name, [$request]);
         $this->assertEquals(
-            $status_code,
+            $statusCode,
             $output->getStatusCode()
         );
         $this->assertContains(

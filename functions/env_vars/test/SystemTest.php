@@ -38,24 +38,24 @@ class SystemTest extends TestCase
       */
     public function testFunction(
         $url,
-        $status_code,
-        $var_name,
-        $var_value
+        $statusCode,
+        $varName,
+        $varValue
     ): void {
         // Check the target env variable
-        $this->requireEnv($var_name);
+        $this->requireEnv($varName);
 
         // Send a request to the function.
         $resp = $this->client->get($url);
 
         // Assert status code.
         $this->assertEquals(
-            $status_code,
+            $statusCode,
             $resp->getStatusCode()
         );
 
         // Assert function output.
-        $expected = trim($var_value);
+        $expected = trim($varValue);
         $actual = trim((string) $resp->getBody());
         $this->assertEquals($expected, $actual);
     }

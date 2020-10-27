@@ -44,13 +44,13 @@ class UnitTest extends TestCase
       */
     public function testFunction(
         $url,
-        $status_code,
-        $var_name,
-        $var_value
+        $statusCode,
+        $varName,
+        $varValue
     ): void {
         $request = new ServerRequest('GET', $url);
         $output = $this->runFunction(self::$name, [$request]);
-        $this->assertContains($var_value, $output);
+        $this->assertContains($varValue, $output);
     }
 
     private static function runFunction($functionName, array $params = []): string

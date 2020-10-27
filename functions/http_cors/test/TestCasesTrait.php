@@ -26,21 +26,21 @@ trait TestCasesTrait
             [
                 'url' => '/',
                 'method' => 'OPTIONS',
-                'status_code' => 204,
-                'contains_header' => 'Access-Control-Max-Age',
-                'not_contains_header' => null,
-                'contains_content' => null,
-                'not_contains_content' => 'Hello World!'
+                'statusCode' => 204,
+                'containsHeader' => 'Access-Control-Max-Age',
+                'notContainsHeader' => null,
+                'containsContent' => null,
+                'notContainsContent' => 'Hello World!'
             ],
             [
                 'url' => '/',
                 'method' => 'GET',
-                'status_code' => 200,
-                'contains_header' => 'Access-Control-Allow-Origin',
-                'contains_header' => null,
-                'not_contains_header' => 'Access-Control-Max-Age',
-                'contains_content' => 'Hello World!',
-                'not_contains_content' => null,
+                'statusCode' => 200,
+                'containsHeader' => 'Access-Control-Allow-Origin',
+                'containsHeader' => null,
+                'notContainsHeader' => 'Access-Control-Max-Age',
+                'containsContent' => 'Hello World!',
+                'notContainsContent' => null,
             ],
         ];
     }

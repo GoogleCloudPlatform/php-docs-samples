@@ -44,11 +44,11 @@ class UnitTest extends TestCase
     public function testFunction(
         $url,
         $method,
-        $status_code,
-        $contains_header,
-        $not_contains_header,
-        $contains_content,
-        $not_contains_content
+        $statusCode,
+        $containsHeader,
+        $notContainsHeader,
+        $containsContent,
+        $notContainsContent
     ): void {
         $request = new ServerRequest($method, $url);
         $response = $this->runFunction(self::$name, [$request]);
@@ -56,35 +56,35 @@ class UnitTest extends TestCase
         // Assert status code.
         $this->assertEquals(
             $response->getStatusCode(),
-            $status_code
+            $statusCode
         );
         
         // Assert headers.
         $header_names = array_keys($response->getHeaders());
-        if ($contains_header) {
+        if ($containsHeader) {
             $this->assertContains(
-                $contains_header,
+                $containsHeader,
                 $header_names
             );
         }
-        if ($not_contains_header) {
+        if ($notContainsHeader) {
             $this->assertNotContains(
-                $not_contains_header,
+                $notContainsHeader,
                 $header_names
             );
         }
 
         // Assert content.
         $content = (string) $response->getBody();
-        if ($contains_content) {
+        if ($containsContent) {
             $this->assertContains(
-                $contains_content,
+                $containsContent,
                 $content
             );
         }
-        if ($not_contains_content) {
+        if ($notContainsContent) {
             $this->assertNotContains(
-                $not_contains_content,
+                $notContainsContent,
                 $content
             );
         }

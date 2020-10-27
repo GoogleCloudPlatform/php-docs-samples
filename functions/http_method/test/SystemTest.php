@@ -39,7 +39,7 @@ class SystemTest extends TestCase
     public function testFunction(
         $method,
         $url,
-        $status_code,
+        $statusCode,
         $content
     ): void {
         // Send a request to the function.
@@ -50,7 +50,7 @@ class SystemTest extends TestCase
 
         // Assert status code.
         $this->assertEquals(
-            $status_code,
+            $statusCode,
             $resp->getStatusCode()
         );
 

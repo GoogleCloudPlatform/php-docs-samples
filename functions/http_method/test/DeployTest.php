@@ -45,7 +45,7 @@ class DeployTest extends TestCase
     public function testFunction(
         $method,
         $url,
-        $status_code,
+        $statusCode,
         $content
     ): void {
         // Send a request to the function.
@@ -56,7 +56,7 @@ class DeployTest extends TestCase
         ]);
 
         // Assert status code.
-        $this->assertEquals($status_code, $resp->getStatusCode());
+        $this->assertEquals($statusCode, $resp->getStatusCode());
 
         // Assert function output.
         $output = trim((string) $resp->getBody());

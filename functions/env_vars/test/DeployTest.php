@@ -44,9 +44,9 @@ class DeployTest extends TestCase
       */
     public function testFunction(
         $url,
-        $status_code,
-        $var_name,
-        $var_value
+        $statusCode,
+        $varName,
+        $varValue
     ): void {
         // Send a request to the function.
         $resp = $this->client->get('', [
