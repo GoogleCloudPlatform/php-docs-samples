@@ -40,39 +40,43 @@ class DeployTest extends TestCase
 
     private static $name = 'uploadFile';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            $method = $test['method'];
-            $resp = $this->client->$method('', [
-                'multipart' => $test['multipart'],
-            ]);
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ' code:');
-            $actual = trim((string) $resp->getBody());
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-        }
+    /**
+     * @dataProvider cases
+     */
+    public function testFunction(
+        $label,
+        $method,
+        $multipart,
+        $expected,
+        $statusCode
+    ): void {
+        $resp = $this->client->$method('', [
+            'multipart' => $multipart,
+        ]);
+        $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
+        $actual = trim((string) $resp->getBody());
+        $this->assertContains($expected, $actual, $label . ':');
     }
 
-    public function testErrorCases(): void
-    {
-        $actual = $actualCode = null;
-        foreach (self::errorCases() as $test) {
-            try {
-                $method = $test['method'];
-                $resp = $this->client->$method('', [
-                    'multipart' => $test['multipart'],
-                ]);
+    /**
+     * @dataProvider errorCases
+     */
+    public function testErrorCases(
+        $label,
+        $method,
+        $multipart,
+        $expected,
+        $statusCode
+    ): void {
+        $method = $method;
+        $resp = $this->client->$method('', [
+            'multipart' => $multipart,
+        ]);
 
-                $actual = $resp->getBody()->getContents();
-                $actualCode = $resp->getStatusCode();
-            } catch (ClientException $e) {
-                // Expected exception, nothing to do here.
-                $actual = $actualCode = $e->getMessage();
-            } finally {
-                print $actual . $actualCode;
-                $this->assertContains($test['code'], $actualCode, $test['label'] . ' code:');
-                $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-            }
-        }
+        $actual = $resp->getBody()->getContents();
+        $actualCode = $resp->getStatusCode();
+
+        $this->assertEquals($statusCode, $actualCode, $label . ' code:');
+        $this->assertContains($expected, $actual, $label . ':');
     }
 }
