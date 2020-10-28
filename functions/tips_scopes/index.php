@@ -29,16 +29,25 @@ function _lightComputation(): int
 
 use Psr\Http\Message\ServerRequestInterface;
 
-// Global (instance-wide) scope
-// This computation runs at instance cold-start
-$instanceVar = _heavyComputation();
-
 function scopeDemo(ServerRequestInterface $request): string
 {
-    global $instanceVar;
+    // Heavy computations should be cached between invocations.
+    // The PHP runtime does NOT preserve variables between invocations, so we
+    // must write their values to a file.
+    // (All writable directories in Cloud Functions are in-memory, so these
+    // operations are typically fast.)
+    $cachePath = '/tmp/cached_value.txt';
 
-    // Per-function scope
-    // This computation runs every time this function is called
+    if (file_exists($cachePath)) {
+        // Read cached value from file
+        $instanceVar = file_get_contents($cachePath);
+    } else {
+        // Compute cached value + write to file
+        $instanceVar = _heavyComputation();
+        file_put_contents($cachePath, $instanceVar);
+    }
+
+    // Lighter computations can re-run on each function invocation.
     $functionVar = _lightComputation();
 
     $response = 'Per instance: ' . $instanceVar . PHP_EOL;
