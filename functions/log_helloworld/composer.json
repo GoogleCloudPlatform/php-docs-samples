@@ -8,5 +8,4 @@
            "FUNCTION_TARGET=helloLogging php -S localhost:${PORT:-8080} vendor/bin/router.php"
         ]
     }
-
 }
