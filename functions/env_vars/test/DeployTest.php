@@ -43,7 +43,6 @@ class DeployTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
-        $url,
         $statusCode,
         $varName,
         $varValue

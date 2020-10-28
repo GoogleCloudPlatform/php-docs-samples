@@ -38,15 +38,11 @@ class SystemTest extends TestCase
       */
     public function testFunction(
         $method,
-        $url,
         $statusCode,
         $content
     ): void {
         // Send a request to the function.
-        $resp = $this->client->request(
-            $method,
-            $url
-        );
+        $resp = $this->client->request($method, '/');
 
         // Assert status code.
         $this->assertEquals(

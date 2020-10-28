@@ -43,12 +43,11 @@ class UnitTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
-        $url,
         $statusCode,
         $varName,
         $varValue
     ): void {
-        $request = new ServerRequest('GET', $url);
+        $request = new ServerRequest('GET', '/');
         $output = $this->runFunction(self::$name, [$request]);
         $this->assertContains($varValue, $output);
     }

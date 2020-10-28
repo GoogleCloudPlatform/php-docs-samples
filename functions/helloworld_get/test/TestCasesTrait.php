@@ -24,7 +24,6 @@ trait TestCasesTrait
     {
         return [
             [
-                'url' => '',
                 'status_code' => 200,
                 'expected' => 'Hello, World!'
             ],

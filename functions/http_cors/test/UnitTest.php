@@ -42,7 +42,6 @@ class UnitTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
-        $url,
         $method,
         $statusCode,
         $containsHeader,
@@ -50,7 +49,7 @@ class UnitTest extends TestCase
         $containsContent,
         $notContainsContent
     ): void {
-        $request = new ServerRequest($method, $url);
+        $request = new ServerRequest($method, '/');
         $response = $this->runFunction(self::$name, [$request]);
 
         // Assert status code.

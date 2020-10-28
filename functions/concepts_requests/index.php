@@ -24,10 +24,16 @@ use GuzzleHttp\Psr7\Response;
 
 function makeRequest(ServerRequestInterface $request): ResponseInterface
 {
+    // This sample uses the GuzzleHTTP client
+    // See its documentation for usage information
+    // https://docs.guzzlephp.org/en/stable/
+
+    // Specify the URL to send requests to
     $client = new Client([
         'base_uri' => 'https://example.com',
     ]);
 
+    // Send the request
     $url_response = $client->get('/');
 
     $function_response = new Response(

@@ -24,7 +24,6 @@ trait TestCasesTrait
     {
         return [
             [
-                'url' => '/',
                 'method' => 'OPTIONS',
                 'statusCode' => 204,
                 'containsHeader' => 'Access-Control-Max-Age',
@@ -33,7 +32,6 @@ trait TestCasesTrait
                 'notContainsContent' => 'Hello World!'
             ],
             [
-                'url' => '/',
                 'method' => 'GET',
                 'statusCode' => 200,
                 'containsHeader' => 'Access-Control-Allow-Origin',

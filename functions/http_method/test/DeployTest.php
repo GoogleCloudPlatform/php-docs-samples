@@ -44,12 +44,10 @@ class DeployTest extends TestCase
       */
     public function testFunction(
         $method,
-        $url,
         $statusCode,
         $content
     ): void {
         // Send a request to the function.
-        // ($test['url'] is an absolute URL, so don't use it here)
         $resp = $this->client->request($method, '', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true

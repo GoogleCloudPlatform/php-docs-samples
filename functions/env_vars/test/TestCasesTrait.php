@@ -24,7 +24,6 @@ trait TestCasesTrait
     {
         return [
             [
-                'url' => '/',
                 'statusCode' => 200,
                 'varName' => 'FOO',
                 'varValue' => 'bar'

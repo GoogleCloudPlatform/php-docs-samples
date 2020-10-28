@@ -43,7 +43,6 @@ class DeployTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
-        $url,
         $method,
         $statusCode,
         $containsHeader,
@@ -52,7 +51,6 @@ class DeployTest extends TestCase
         $notContainsContent
     ): void {
         // Send a request to the function.
-        // ($test['url'] is absolute, so don't use it here)
         $response = $this->client->request($method, '', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true

@@ -41,9 +41,9 @@ class UnitTest extends TestCase
     /**
       * @dataProvider cases
       */
-    public function testFunction($url, $statusCode): void
+    public function testFunction($statusCode): void
     {
-        $request = new ServerRequest('GET', $url);
+        $request = new ServerRequest('GET', '');
         $output = $this->runFunction(self::$name, [$request]);
         $this->assertEquals(
             $statusCode,

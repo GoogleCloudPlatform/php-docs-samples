@@ -37,7 +37,6 @@ class SystemTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
-        $url,
         $statusCode,
         $varName,
         $varValue
@@ -46,7 +45,7 @@ class SystemTest extends TestCase
         $this->requireEnv($varName);
 
         // Send a request to the function.
-        $resp = $this->client->get($url);
+        $resp = $this->client->get('/');
 
         // Assert status code.
         $this->assertEquals(

@@ -37,7 +37,6 @@ class SystemTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
-        $url,
         $method,
         $statusCode,
         $containsHeader,
@@ -46,7 +45,7 @@ class SystemTest extends TestCase
         $notContainsContent
     ): void {
         // Send a request to the function.
-        $resp = $this->client->request($method, $url);
+        $resp = $this->client->request($method, '/');
 
         // Assert status code.
         $this->assertEquals($statusCode, $resp->getStatusCode());

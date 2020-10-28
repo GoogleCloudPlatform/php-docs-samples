@@ -36,10 +36,10 @@ class SystemTest extends TestCase
     /**
       * @dataProvider cases
       */
-    public function testFunction($url, $statusCode): void
+    public function testFunction($statusCode): void
     {
         // Send a request to the function.
-        $resp = $this->client->get($url);
+        $resp = $this->client->get('');
 
         // Assert status code.
         $this->assertEquals($statusCode, $resp->getStatusCode());

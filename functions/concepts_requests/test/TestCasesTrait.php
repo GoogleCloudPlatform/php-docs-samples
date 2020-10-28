@@ -23,7 +23,7 @@ trait TestCasesTrait
     public static function cases(): array
     {
         return [
-            [ 'url' => '', 'statusCode' => 200 ],
+            [ 'statusCode' => 200 ],
         ];
     }
 }
