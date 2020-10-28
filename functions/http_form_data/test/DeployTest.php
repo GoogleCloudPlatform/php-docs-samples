@@ -20,7 +20,6 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
-use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
