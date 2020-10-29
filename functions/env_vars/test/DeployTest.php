@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\ConceptsEnvVars\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
@@ -37,13 +37,16 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $name = 'envVar';
 
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
-    {
+    public function testFunction(
+        $statusCode,
+        $varName,
+        $varValue
+    ): void {
         // Send a request to the function.
         $resp = $this->client->get('', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
@@ -51,14 +54,18 @@ class DeployTest extends TestCase
         ]);
 
         // Assert status code.
-        $this->assertEquals(
-            $status_code,
-            $resp->getStatusCode()
-        );
+        $this->assertEquals('200', $resp->getStatusCode());
 
         // Assert function output.
-        $output = trim((string) $resp->getBody());
+        $expected = 'bar';
+        $actual = trim((string) $resp->getBody());
         // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, $output);
+        $this->assertEquals($expected, $actual);
+    }
+
+    protected static function deployFlags(array $flags = []): array
+    {
+        $flags['--update-env-vars'] = 'FOO=bar';
+        return $flags;
     }
 }

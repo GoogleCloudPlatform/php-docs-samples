@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpMethod\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
@@ -37,28 +37,28 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $name = 'httpMethod';
 
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
-    {
+    public function testFunction(
+        $method,
+        $statusCode,
+        $content
+    ): void {
         // Send a request to the function.
-        $resp = $this->client->get('', [
+        $resp = $this->client->request($method, '', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true
         ]);
 
         // Assert status code.
-        $this->assertEquals(
-            $status_code,
-            $resp->getStatusCode()
-        );
+        $this->assertEquals($statusCode, $resp->getStatusCode());
 
         // Assert function output.
         $output = trim((string) $resp->getBody());
         // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, $output);
+        $this->assertContains($content, $output);
     }
 }

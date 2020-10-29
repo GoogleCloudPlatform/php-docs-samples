@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpCors\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
@@ -37,28 +37,59 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $name = 'corsEnabledFunction';
 
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
-    {
+    public function testFunction(
+        $method,
+        $statusCode,
+        $containsHeader,
+        $notContainsHeader,
+        $containsContent,
+        $notContainsContent
+    ): void {
         // Send a request to the function.
-        $resp = $this->client->get('', [
+        $response = $this->client->request($method, '', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true
         ]);
 
         // Assert status code.
         $this->assertEquals(
-            $status_code,
-            $resp->getStatusCode()
+            $response->getStatusCode(),
+            $statusCode
         );
+        
+        // Assert headers.
+        $header_names = array_keys($response->getHeaders());
+        if ($containsHeader) {
+            $this->assertContains(
+                $containsHeader,
+                $header_names
+            );
+        }
+        if ($notContainsHeader) {
+            $this->assertNotContains(
+                $notContainsHeader,
+                $header_names
+            );
+        }
 
-        // Assert function output.
-        $output = trim((string) $resp->getBody());
-        // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, $output);
+        // Assert content.
+        $content = (string) $response->getBody();
+        if ($containsContent) {
+            $this->assertContains(
+                $containsContent,
+                $content
+            );
+        }
+        if ($notContainsContent) {
+            $this->assertNotContains(
+                $notContainsContent,
+                $content
+            );
+        }
     }
 }

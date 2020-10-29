@@ -16,36 +16,43 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\ConceptsRequests\Test;
 
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class SystemTest.
+ * Unit tests for the Cloud Function.
  */
-class SystemTest extends TestCase
+class UnitTest extends TestCase
 {
-    use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $name = 'makeRequest';
+
+    public static function setUpBeforeClass(): void
+    {
+        require_once __DIR__ . '/../index.php';
+    }
 
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
+    public function testFunction($statusCode): void
     {
-        // Send a request to the function.
-        $resp = $this->client->get('');
+        $request = new ServerRequest('GET', '');
+        $output = $this->runFunction(self::$name, [$request]);
+        $this->assertEquals(
+            $statusCode,
+            $output->getStatusCode()
+        );
+    }
 
-        // Assert status code.
-        $this->assertEquals($status_code, $resp->getStatusCode());
-
-        // Assert function output.
-        $actual = trim((string) $resp->getBody());
-        $this->assertEquals($expected, $actual);
+    private static function runFunction($functionName, array $params = []): Response
+    {
+        return call_user_func_array($functionName, $params);
     }
 }

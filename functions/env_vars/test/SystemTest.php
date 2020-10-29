@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\ConceptsEnvVars\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
@@ -31,20 +31,30 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $name = 'envVar';
 
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
-    {
+    public function testFunction(
+        $statusCode,
+        $varName,
+        $varValue
+    ): void {
+        // Check the target env variable
+        $this->requireEnv($varName);
+
         // Send a request to the function.
-        $resp = $this->client->get('');
+        $resp = $this->client->get('/');
 
         // Assert status code.
-        $this->assertEquals($status_code, $resp->getStatusCode());
+        $this->assertEquals(
+            $statusCode,
+            $resp->getStatusCode()
+        );
 
         // Assert function output.
+        $expected = trim($varValue);
         $actual = trim((string) $resp->getBody());
         $this->assertEquals($expected, $actual);
     }

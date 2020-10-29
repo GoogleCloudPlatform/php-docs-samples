@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpMethod\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
@@ -31,21 +31,27 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $name = 'httpMethod';
 
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
-    {
+    public function testFunction(
+        $method,
+        $statusCode,
+        $content
+    ): void {
         // Send a request to the function.
-        $resp = $this->client->get('');
+        $resp = $this->client->request($method, '/');
 
         // Assert status code.
-        $this->assertEquals($status_code, $resp->getStatusCode());
+        $this->assertEquals(
+            $statusCode,
+            $resp->getStatusCode()
+        );
 
         // Assert function output.
-        $actual = trim((string) $resp->getBody());
-        $this->assertEquals($expected, $actual);
+        $output = trim((string) $resp->getBody());
+        $this->assertContains($content, $output);
     }
 }

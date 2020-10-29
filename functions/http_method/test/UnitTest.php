@@ -16,9 +16,10 @@
  */
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
+namespace Google\Cloud\Samples\Functions\HttpMethod\Test;
 
 use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
@@ -28,9 +29,9 @@ require_once __DIR__ . '/TestCasesTrait.php';
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'helloGet';
-
     use TestCasesTrait;
+
+    private static $name = 'httpMethod';
 
     public static function setUpBeforeClass(): void
     {
@@ -40,16 +41,24 @@ class UnitTest extends TestCase
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
-    {
-        foreach (self::cases() as $test) {
-            $request = new ServerRequest('GET', '');
-            $output = $this->runFunction(self::$name, [$request]);
-            $this->assertContains($expected, $output);
-        }
+    public function testFunction(
+        $method,
+        $statusCode,
+        $content
+    ): void {
+        $request = new ServerRequest($method, '/');
+        $output = $this->runFunction(self::$name, [$request]);
+        $this->assertEquals(
+            $statusCode,
+            $output->getStatusCode()
+        );
+        $this->assertContains(
+            $content,
+            (string) $output->getBody()
+        );
     }
 
-    private static function runFunction($functionName, array $params = []): string
+    private static function runFunction($functionName, array $params = []): Response
     {
         return call_user_func_array($functionName, $params);
     }
