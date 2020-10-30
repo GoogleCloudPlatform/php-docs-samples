@@ -47,7 +47,6 @@ function isValidSlackWebhook(ServerRequestInterface $request): bool
 
     // Compute signature
     $plaintext = 'v0:' . $timestamp . ':' . (string) $request->getBody();
-    //var_dump($plaintext);
     $hash = 'v0=' . hash_hmac('sha256', $plaintext, $SLACK_SECRET);
 
     return $hash === $signature;
@@ -109,7 +108,6 @@ function formatSlackMessage($kgResponse, $query): string
 */
 function searchKnowledgeGraph($query): Google_Service_Kgsearch_SearchResponse
 {
-
     /**
     * PHP Functions Framework does not support "global"/instance-scoped
     * constants, so we fetch these values within PHP functions themselves.
@@ -135,7 +133,6 @@ function searchKnowledgeGraph($query): Google_Service_Kgsearch_SearchResponse
 */
 function receiveRequest(ServerRequestInterface $request): ResponseInterface
 {
-
     // Validate request
     if ($request->getMethod() !== 'POST') {
         // [] = empty headers

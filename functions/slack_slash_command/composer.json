@@ -2,5 +2,13 @@
     "require": {
         "google/cloud-functions-framework": "^0.6",
         "google/apiclient": "^2.8"
+    },
+    "scripts": {
+        "post-update-cmd": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Kgsearch"
+        ]
     }
 }
