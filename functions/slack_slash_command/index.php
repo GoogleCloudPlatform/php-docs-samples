@@ -45,9 +45,6 @@ function isValidSlackWebhook(ServerRequestInterface $request): bool
         $signature = $signature[0];
     }
 
-
-    //$nowInMs = round(microtime(true) * 1000);
-
     // Compute signature
     $plaintext = 'v0:' . $timestamp . ':' . (string) $request->getBody();
     //var_dump($plaintext);
