@@ -36,7 +36,7 @@ function scopeDemo(ServerRequestInterface $request): string
     // must write their values to a file.
     // (All writable directories in Cloud Functions are in-memory, so these
     // operations are typically fast.)
-    $cachePath = sys_get_temp_dir() . 'cached_value.txt';
+    $cachePath = sys_get_temp_dir() . '/cached_value.txt';
 
     if (file_exists($cachePath)) {
         // Read cached value from file
