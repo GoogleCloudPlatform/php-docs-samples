@@ -51,7 +51,7 @@ class DeployTest extends TestCase
     ): void {
         $response = $this->client->request(
             $method,
-            '/',
+            '',
             ['headers' => $headers, 'body' => $body]
         );
         $this->assertEquals($statusCode, $response->getStatusCode());
@@ -68,7 +68,7 @@ class DeployTest extends TestCase
         $envVars = 'SLACK_SECRET=' . getenv('SLACK_SECRET') . ',';
         $envVars .= 'KG_API_KEY=' . getenv('KG_API_KEY');
 
-        $flags['--update-env-vars'] = $envVars;
+        $flags['--update-env-vars'] = '"' . $envVars . '"';
         return $flags;
     }
 }
