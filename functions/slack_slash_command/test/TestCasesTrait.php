@@ -18,15 +18,19 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\SlackSlashCommand\Test;
 
-function _valid_headers($body): array {
+function _valid_headers($body): array
+{
 
     // Calculate test case signature
     $key = getenv('SLACK_SECRET');
     $plaintext = 'v0:0:' . $body;
+    //var_dump($plaintext);
     $hash = 'v0=' . hash_hmac('sha256', $plaintext, $key);
+    //var_dump($hash);
 
     // Return new test case
     return [
+        'plaintext' => $plaintext,
         'X-Slack-Request-Timestamp' => '0',
         'X-Slack-Signature' => $hash,
     ];
@@ -74,7 +78,7 @@ trait TestCasesTrait
                 'statusCode' => '403',
                 'headers' => [
                     'X-Slack-Request-Timestamp' => '0',
-                    'X-Slack-Signature' => 
+                    'X-Slack-Signature' =>
                     'bad_signature'
                 ],
             ],
@@ -92,7 +96,7 @@ trait TestCasesTrait
             [
                 'body' => 'text=lion',
                 'method' => 'POST',
-                'expected' => 'https://en.wikipedia.org/wiki/Lion',
+                'expected' => 'https:\/\/en.wikipedia.org\/wiki\/Lion',
                 'statusCode' => '200',
                 'headers' => _valid_headers('text=lion'),
             ],
@@ -101,7 +105,7 @@ trait TestCasesTrait
             [
                 'body' => 'unused=foo&text=lion',
                 'method' => 'POST',
-                'expected' => 'https://en.wikipedia.org/wiki/Lion',
+                'expected' => 'https:\/\/en.wikipedia.org\/wiki\/Lion',
                 'statusCode' => '200',
                 'headers' => _valid_headers('unused=foo&text=lion'),
             ],

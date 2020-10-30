@@ -44,14 +44,15 @@ class SystemTest extends TestCase
         $statusCode,
         $headers
     ): void {
-        $resp = $this->client->post('/', [
-            'headers' => $headers,
-            'body' => $body,
-        ]);
-        $this->assertEquals($statusCode, $resp->getStatusCode());
-        $output = trim((string) $resp->getBody());
+        $response = $this->client->request(
+            $method,
+            '/',
+            ['headers' => $headers, 'body' => $body]
+        );
+        $this->assertEquals($statusCode, $response->getStatusCode());
 
-        if ($expected) {
+        if ($expected !== null) {
+            $output = (string) $response->getBody();
             $this->assertContains($expected, $output);
         }
     }

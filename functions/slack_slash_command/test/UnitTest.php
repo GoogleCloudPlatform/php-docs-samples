@@ -46,14 +46,14 @@ class UnitTest extends TestCase
         $expected,
         $statusCode,
         $headers
-    ): void
-    {
-        $request = new ServerRequest('POST', '/', $headers, $body);
-        $output = $this->runFunction(self::$name, [$request]);
+    ): void {
+        $request = new ServerRequest($method, '/', $headers, $body);
+        $response = $this->runFunction(self::$name, [$request]);
 
-        $this->assertEquals($statusCode, $output->getStatusCode());
+        $this->assertEquals($statusCode, $response->getStatusCode());
 
-        if ($expected) {
+        if ($expected !== null) {
+            $output = (string) $response->getBody();
             $this->assertContains($expected, $output);
         }
     }

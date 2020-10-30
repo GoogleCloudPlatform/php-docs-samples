@@ -49,15 +49,26 @@ class DeployTest extends TestCase
         $statusCode,
         $headers
     ): void {
-        $resp = $this->client->post('', [
-            'body' => $body,
-            'query' => $query,
-            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-            // 'debug' => true,
-        ]);
-        $output = trim((string) $resp->getBody());
-        $this->assertEquals($statusCode, $resp->getStatusCode());
-        // Failures often lead to a large HTML page in the response body.
-        $this->assertContains($expected, $output);
+        $response = $this->client->request(
+            $method,
+            '/',
+            ['headers' => $headers, 'body' => $body]
+        );
+        $this->assertEquals($statusCode, $response->getStatusCode());
+
+        if ($expected !== null) {
+            $output = (string) $response->getBody();
+            $this->assertContains($expected, $output);
+        }
+    }
+
+    protected static function deployFlags(array $flags = []): array
+    {
+        // Forward required env variables to Cloud Functions
+        $envVars = 'SLACK_SECRET=' . getenv('SLACK_SECRET') . ',';
+        $envVars .= 'KG_API_KEY=' . getenv('KG_API_KEY');
+
+        $flags['--update-env-vars'] = $envVars;
+        return $flags;
     }
 }
