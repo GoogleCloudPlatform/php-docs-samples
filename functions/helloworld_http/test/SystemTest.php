@@ -49,7 +49,7 @@ class SystemTest extends TestCase
             'body' => $body,
             'query' => $query,
         ]);
-        $this->assertEquals($code, $resp->getStatusCode(), $label . ' code:');
+        $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
         $actual = trim((string) $resp->getBody());
         $this->assertContains($expected, $actual, $label . ':');
     }

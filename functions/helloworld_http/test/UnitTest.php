@@ -36,6 +36,9 @@ class UnitTest extends TestCase
         require_once __DIR__ . '/../index.php';
     }
 
+    /**
+      * @dataProvider cases
+      */
     public function testFunction(
         $label,
         $query,
