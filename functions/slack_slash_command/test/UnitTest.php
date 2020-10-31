@@ -41,6 +41,7 @@ class UnitTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
+        $label,
         $body,
         $method,
         $expected,
@@ -50,11 +51,15 @@ class UnitTest extends TestCase
         $request = new ServerRequest($method, '/', $headers, $body);
         $response = $this->runFunction(self::$name, [$request]);
 
-        $this->assertEquals($statusCode, $response->getStatusCode());
+        $this->assertEquals(
+            $statusCode,
+            $response->getStatusCode(),
+            $label . ": status code"
+        );
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
-            $this->assertContains($expected, $output);
+            $this->assertContains($expected, $output, $label . ": contains");
         }
     }
 

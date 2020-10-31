@@ -20,24 +20,26 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
-require_once './vendor/autoload.php';
+use Google_Service_Kgsearch;
+use Google_Service_Kgsearch_SearchResponse;
+
 // [END functions_slack_setup]
 
 // [START functions_verify_webhook]
 /**
-* Verify that the webhook request came from Slack.
-*/
+ * Verify that the webhook request came from Slack.
+ */
 function isValidSlackWebhook(ServerRequestInterface $request): bool
 {
     /**
-    * PHP Functions Framework does not support "global"/instance-scoped
-    * constants, so we fetch these values within PHP functtions themselves.
-    */
-    $SLACK_SECRET = getenv("SLACK_SECRET");
+     * PHP Functions Framework does not support "global"/instance-scoped
+     * constants, so we fetch these values within PHP functtions themselves.
+     */
+    $SLACK_SECRET = getenv('SLACK_SECRET');
 
     // Check for headers
-    $timestamp = $request->getHeader("X-Slack-Request-Timestamp");
-    $signature = $request->getHeader("X-Slack-Signature");
+    $timestamp = $request->getHeader('X-Slack-Request-Timestamp');
+    $signature = $request->getHeader('X-Slack-Signature');
     if (!$timestamp || !$signature) {
         return false;
     } else {
@@ -55,48 +57,48 @@ function isValidSlackWebhook(ServerRequestInterface $request): bool
 
 // [START functions_slack_format]
 /**
-* Format the Knowledge Graph API response into a richly formatted Slack message.
-*/
+ * Format the Knowledge Graph API response into a richly formatted Slack message.
+ */
 function formatSlackMessage($kgResponse, $query): string
 {
     $responseJson = [
-        "response_type" => "in_channel",
-        "text" => "Query: " . $query
+        'response_type' => 'in_channel',
+        'text' => 'Query: ' . $query
     ];
 
-    $entityList = $kgResponse["itemListElement"];
+    $entityList = $kgResponse['itemListElement'];
 
     // Extract the first entity from the result list, if any
     if (empty($entityList)) {
-        $attachmentJson = ["text" => "No results match your query..."];
-        $responseJson["attachments"] = $attachmentJson;
+        $attachmentJson = ['text' => 'No results match your query...'];
+        $responseJson['attachments'] = $attachmentJson;
 
         return json_encode($responseJson);
     }
 
-    $entity = $entityList[0]["result"];
+    $entity = $entityList[0]['result'];
 
     // Construct Knowledge Graph response attachment
-    $title = $entity["name"];
-    if (isset($entity["description"])) {
-        $title = $title . " " . $entity["description"];
+    $title = $entity['name'];
+    if (isset($entity['description'])) {
+        $title = $title . ' ' . $entity['description'];
     }
-    $attachmentJson = ["title" => $title];
+    $attachmentJson = ['title' => $title];
 
-    if (isset($entity["detailedDescription"])) {
-        $detailedDescJson = $entity["detailedDescription"];
+    if (isset($entity['detailedDescription'])) {
+        $detailedDescJson = $entity['detailedDescription'];
         $attachmentJson = array_merge([
-            "title_link" => $detailedDescJson[ "url"],
-            "text" => $detailedDescJson["articleBody"],
+            'title_link' => $detailedDescJson[ 'url'],
+            'text' => $detailedDescJson['articleBody'],
         ], $attachmentJson);
     }
 
-    if ($entity["image"]) {
-        $imageJson = $entity["image"];
-        $attachmentJson["image_url"] = $imageJson["contentUrl"];
+    if ($entity['image']) {
+        $imageJson = $entity['image'];
+        $attachmentJson['image_url'] = $imageJson['contentUrl'];
     }
 
-    $responseJson["attachments"] = array($attachmentJson);
+    $responseJson['attachments'] = array($attachmentJson);
 
     return json_encode($responseJson);
 }
@@ -104,14 +106,14 @@ function formatSlackMessage($kgResponse, $query): string
 
 // [START functions_slack_request]
 /**
-* Send the user's search query to the Knowledge Graph API.
-*/
+ * Send the user's search query to the Knowledge Graph API.
+ */
 function searchKnowledgeGraph($query): Google_Service_Kgsearch_SearchResponse
 {
     /**
-    * PHP Functions Framework does not support "global"/instance-scoped
-    * constants, so we fetch these values within PHP functions themselves.
-    */
+     * PHP Functions Framework does not support "global"/instance-scoped
+     * constants, so we fetch these values within PHP functions themselves.
+     */
     $API_KEY = getenv("KG_API_KEY");
 
     $apiClient = new Google\Client();
@@ -129,31 +131,32 @@ function searchKnowledgeGraph($query): Google_Service_Kgsearch_SearchResponse
 
 // [START functions_slack_search]
 /**
-* Receive a Slash Command request from Slack.
-*/
+ * Receive a Slash Command request from Slack.
+ */
 function receiveRequest(ServerRequestInterface $request): ResponseInterface
 {
     // Validate request
     if ($request->getMethod() !== 'POST') {
         // [] = empty headers
-        return new Response(405, [], '');
+        return new Response(405);
     }
 
-    // Slack sends requests as URL-encoded strings
+    // Parse incoming URL-encoded requests from Slack
+    // (Slack requests use the "application/x-www-form-urlencoded" format)
     $bodyStr = $request->getBody();
     parse_str($bodyStr, $bodyParams);
 
-    if (!isset($bodyParams["text"])) {
+    if (!isset($bodyParams['text'])) {
         // [] = empty headers
-        return new Response(400, [], '');
+        return new Response(400);
     }
 
     if (!isValidSlackWebhook($request, $bodyStr)) {
         // [] = empty headers
-        return new Response(403, [], '');
+        return new Response(403);
     }
 
-    $query = $bodyParams["text"];
+    $query = $bodyParams['text'];
 
     // Call knowledge graph API
     $kgResponse = searchKnowledgeGraph($query);
@@ -164,7 +167,7 @@ function receiveRequest(ServerRequestInterface $request): ResponseInterface
 
     return new Response(
         200,
-        ["Content-Type" => "application/json"],
+        ['Content-Type' => 'application/json'],
         $formatted_message
     );
 }

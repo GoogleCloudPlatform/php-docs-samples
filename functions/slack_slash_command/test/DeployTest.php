@@ -43,6 +43,7 @@ class DeployTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
+        $label,
         $body,
         $method,
         $expected,
@@ -54,11 +55,15 @@ class DeployTest extends TestCase
             '',
             ['headers' => $headers, 'body' => $body]
         );
-        $this->assertEquals($statusCode, $response->getStatusCode());
+        $this->assertEquals(
+            $statusCode,
+            $response->getStatusCode(),
+            $label . ': status code'
+        );
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
-            $this->assertContains($expected, $output);
+            $this->assertContains($expected, $output, $label . ': contains');
         }
     }
 

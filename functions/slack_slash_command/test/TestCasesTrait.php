@@ -40,38 +40,33 @@ trait TestCasesTrait
 {
     public static function cases(): array
     {
-        $SLACK_SIGNATURE = getenv('SLACK_TEST_SIGNATURE');
-
         return [
-            // Only allows POST
             [
+                'label' => 'Only allows POST',
                 'body' => '',
                 'method' => 'GET',
                 'expected' => null,
                 'statusCode' => '405',
-                'headers' => _valid_headers(''),
+                'headers' => _valid_headers('')
             ],
-
-            // Requires valid auth headers
             [
+                'label' => 'Requires valid auth headers',
                 'body' => 'text=foo',
                 'method' => 'POST',
                 'expected' => null,
                 'statusCode' => '403',
                 'headers' => [],
             ],
-
-            // Doesn't allow blank body
             [
+                'label' => 'Doesn\'t allow blank body',
                 'body' => '',
                 'method' => 'POST',
                 'expected' => null,
                 'statusCode' => '400',
                 'headers' => _valid_headers(''),
             ],
-
-            // Prohibits invalid signature
             [
+                'label' => 'Prohibits invalid signature',
                 'body' => 'text=foo',
                 'method' => 'POST',
                 'expected' => null,
@@ -82,27 +77,24 @@ trait TestCasesTrait
                     'bad_signature'
                 ],
             ],
-
-            // Handles no-result query
             [
+                'label' => 'Handles no-result query',
                 'body' => 'text=asdfjkl13579',
                 'method' => 'POST',
                 'expected' => 'No results match your query',
                 'statusCode' => '200',
                 'headers' => _valid_headers('text=asdfjkl13579'),
             ],
-
-            // Handles query with results
             [
+                'label' => 'Handles query with results',
                 'body' => 'text=lion',
                 'method' => 'POST',
                 'expected' => 'https:\/\/en.wikipedia.org\/wiki\/Lion',
                 'statusCode' => '200',
                 'headers' => _valid_headers('text=lion'),
             ],
-
-            // Ignores extra URL parameters
             [
+                'label' => 'Ignores extra URL parameters',
                 'body' => 'unused=foo&text=lion',
                 'method' => 'POST',
                 'expected' => 'https:\/\/en.wikipedia.org\/wiki\/Lion',

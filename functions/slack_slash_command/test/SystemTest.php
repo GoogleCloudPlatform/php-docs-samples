@@ -38,6 +38,7 @@ class SystemTest extends TestCase
       * @dataProvider cases
       */
     public function testFunction(
+        $label,
         $body,
         $method,
         $expected,
@@ -49,7 +50,8 @@ class SystemTest extends TestCase
             '/',
             ['headers' => $headers, 'body' => $body]
         );
-        $this->assertEquals($statusCode, $response->getStatusCode());
+        $this->assertEquals(
+            $statusCode, $response->getStatusCode(), $label . ": status code");
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
