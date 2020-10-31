@@ -40,13 +40,11 @@ class UnitTest extends TestCase
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
+    public function testFunction($statusCode, $expected): void
     {
-        foreach (self::cases() as $test) {
-            $request = new ServerRequest('GET', '');
-            $output = $this->runFunction(self::$name, [$request]);
-            $this->assertContains($expected, $output);
-        }
+        $request = new ServerRequest('GET', '');
+        $output = $this->runFunction(self::$name, [$request]);
+        $this->assertContains($expected, $output);
     }
 
     private static function runFunction($functionName, array $params = []): string

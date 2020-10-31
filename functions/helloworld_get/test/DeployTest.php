@@ -42,7 +42,7 @@ class DeployTest extends TestCase
     /**
       * @dataProvider cases
       */
-    public function testFunction($status_code, $expected): void
+    public function testFunction($statusCode, $expected): void
     {
         // Send a request to the function.
         $resp = $this->client->get('', [
@@ -52,7 +52,7 @@ class DeployTest extends TestCase
 
         // Assert status code.
         $this->assertEquals(
-            $status_code,
+            $statusCode,
             $resp->getStatusCode()
         );
 
