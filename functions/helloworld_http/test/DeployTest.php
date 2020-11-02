@@ -39,20 +39,26 @@ class DeployTest extends TestCase
 
     private static $name = 'helloHttp';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $resp = $this->client->post('', [
-                'body' => $body,
-                'query' => $test['query'],
-                // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-                // 'debug' => true,
-            ]);
-            $actual = trim((string) $resp->getBody());
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ':');
-            // Failures often lead to a large HTML page in the response body.
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-        }
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $label,
+        $query,
+        $body,
+        $expected,
+        $statusCode
+    ): void {
+        $body = json_encode($body);
+        $resp = $this->client->post('', [
+            'body' => $body, 'query' => $query ]);
+        $actual = trim((string) $resp->getBody());
+        $this->assertEquals(
+            $statusCode,
+            $resp->getStatusCode(),
+            $label . ':'
+        );
+        // Failures often lead to a large HTML page in the response body.
+        $this->assertContains($expected, $actual, $label . ':');
     }
 }
