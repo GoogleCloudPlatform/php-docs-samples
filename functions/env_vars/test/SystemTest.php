@@ -38,6 +38,14 @@ class SystemTest extends TestCase
     }
 
     /**
+     * Overrides CloudFunctionLocalTestTrait::doRun().
+     */
+    private static function doRun()
+    {
+        return self::$fn->run(['FOO' => 'bar']);
+    }
+
+    /**
       * @dataProvider cases
       */
     public function testFunction(
@@ -45,9 +53,6 @@ class SystemTest extends TestCase
         $varName,
         $varValue
     ): void {
-        // Check the target env variable
-        $this->requireEnv($varName);
-
         // Send a request to the function.
         $resp = $this->client->get('/');
 
