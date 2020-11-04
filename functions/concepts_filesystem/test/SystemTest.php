@@ -31,7 +31,11 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'listFiles';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'listFiles';
+        return $props;
+    }
 
     /**
       * @dataProvider cases

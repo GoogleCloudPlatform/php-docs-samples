@@ -31,7 +31,11 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'corsEnabledFunction';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'corsEnabledFunction';
+        return $props;
+    }
 
     /**
       * @dataProvider cases

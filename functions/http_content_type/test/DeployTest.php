@@ -35,7 +35,11 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloContent';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'helloContent';
+        return $props;
+    }
 
     public function testFunction(): void
     {

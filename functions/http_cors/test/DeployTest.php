@@ -37,7 +37,11 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'corsEnabledFunction';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'corsEnabledFunction';
+        return $props;
+    }
 
     /**
       * @dataProvider cases

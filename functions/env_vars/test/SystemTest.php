@@ -31,7 +31,11 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'envVar';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'envVar';
+        return $props;
+    }
 
     /**
       * @dataProvider cases

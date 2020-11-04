@@ -29,6 +29,11 @@ use PHPUnit\Framework\TestCase;
  */
 class SampleUnitTest extends TestCase
 {
+    /**
+     * Include the Cloud Function code before running any tests.
+     *
+     * @see https://phpunit.readthedocs.io/en/latest/fixtures.html
+     */
     public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';

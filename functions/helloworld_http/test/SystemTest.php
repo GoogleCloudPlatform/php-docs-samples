@@ -32,7 +32,11 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'helloHttp';
+        return $props;
+    }
 
     /**
       * @dataProvider cases

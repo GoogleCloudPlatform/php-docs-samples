@@ -37,7 +37,11 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'httpMethod';
+    private static function initFunctionProperties(array $props = [])
+    {
+        $props['entryPoint'] = 'httpMethod';
+        return $props;
+    }
 
     /**
       * @dataProvider cases
