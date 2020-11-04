@@ -33,9 +33,11 @@ function scopeDemo(ServerRequestInterface $request): string
 {
     // Heavy computations should be cached between invocations.
     // The PHP runtime does NOT preserve variables between invocations, so we
-    // must write their values to a file.
-    // (All writable directories in Cloud Functions are in-memory, so these
-    // operations are typically fast.)
+    // must write their values to a file or otherwise cache them.
+    // (All writable directories in Cloud Functions are in-memory, so
+    // file-based caching operations are typically fast.)
+    // You can also use PSR-6 caching libraries for this task:
+    // https://packagist.org/providers/psr/cache-implementation
     $cachePath = sys_get_temp_dir() . '/cached_value.txt';
 
     if (file_exists($cachePath)) {
