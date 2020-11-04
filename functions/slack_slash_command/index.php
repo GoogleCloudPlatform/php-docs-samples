@@ -20,9 +20,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
-use Google_Service_Kgsearch;
-use Google_Service_Kgsearch_SearchResponse;
-
 // [END functions_slack_setup]
 
 // [START functions_verify_webhook]
@@ -60,7 +57,7 @@ function isValidSlackWebhook(ServerRequestInterface $request): bool
 /**
  * Format the Knowledge Graph API response into a richly formatted Slack message.
  */
-function formatSlackMessage($kgResponse, $query): string
+function formatSlackMessage(Google_Service_Kgsearch_SearchResponse $kgResponse, string $query): string
 {
     $responseJson = [
         'response_type' => 'in_channel',
@@ -109,7 +106,7 @@ function formatSlackMessage($kgResponse, $query): string
 /**
  * Send the user's search query to the Knowledge Graph API.
  */
-function searchKnowledgeGraph($query): Google_Service_Kgsearch_SearchResponse
+function searchKnowledgeGraph(string $query): Google_Service_Kgsearch_SearchResponse
 {
     /**
      * Unlike most other Cloud Functions languages, PHP does not preserve
