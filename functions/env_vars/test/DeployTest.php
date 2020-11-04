@@ -44,8 +44,21 @@ class DeployTest extends TestCase
     }
 
     /**
-      * @dataProvider cases
-      */
+     * Deploy the Cloud Function, called from DeploymentTrait::deployApp().
+     *
+     * Overrides CloudFunctionDeploymentTrait::doDeploy().
+     */
+    private static function doDeploy()
+    {
+        self::$bucket = self::requireEnv('GOOGLE_STORAGE_BUCKET');
+        return self::$fn->deploy([
+            '--update-env-vars' => 'FOO=bar',
+        ]);
+    }
+
+    /**
+     * @dataProvider cases
+     */
     public function testFunction(
         $statusCode,
         $varName,
@@ -65,11 +78,5 @@ class DeployTest extends TestCase
         $actual = trim((string) $resp->getBody());
         // Failures often lead to a large HTML page in the response body.
         $this->assertEquals($expected, $actual);
-    }
-
-    protected static function deployFlags(array $flags = []): array
-    {
-        $flags['--update-env-vars'] = 'FOO=bar';
-        return $flags;
     }
 }
