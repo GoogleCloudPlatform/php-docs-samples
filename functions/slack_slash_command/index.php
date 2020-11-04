@@ -32,8 +32,9 @@ use Google_Service_Kgsearch_SearchResponse;
 function isValidSlackWebhook(ServerRequestInterface $request): bool
 {
     /**
-     * PHP Functions Framework does not support "global"/instance-scoped
-     * constants, so we fetch these values within PHP functtions themselves.
+     * Unlike most other Cloud Functions languages, PHP does not preserve
+     * global values between requests. Since we don't use this value elsewhere
+     * in the sample, it's easiest to declare it within this method itself.
      */
     $SLACK_SECRET = getenv('SLACK_SECRET');
 
@@ -111,8 +112,9 @@ function formatSlackMessage($kgResponse, $query): string
 function searchKnowledgeGraph($query): Google_Service_Kgsearch_SearchResponse
 {
     /**
-     * PHP Functions Framework does not support "global"/instance-scoped
-     * constants, so we fetch these values within PHP functions themselves.
+     * Unlike most other Cloud Functions languages, PHP does not preserve
+     * global values between requests. Since we don't use this value elsewhere
+     * in the sample, it's easiest to declare it within this method itself.
      */
     $API_KEY = getenv("KG_API_KEY");
 

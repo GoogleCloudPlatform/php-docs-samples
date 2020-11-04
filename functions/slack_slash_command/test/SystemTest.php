@@ -51,7 +51,10 @@ class SystemTest extends TestCase
             ['headers' => $headers, 'body' => $body]
         );
         $this->assertEquals(
-            $statusCode, $response->getStatusCode(), $label . ": status code");
+            $statusCode,
+            $response->getStatusCode(),
+            $label . ": status code"
+        );
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
