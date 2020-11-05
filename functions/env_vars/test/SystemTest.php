@@ -31,7 +31,19 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'envVar';
+    private static $entryPoint = 'envVar';
+
+    /**
+     * Run the PHP server locally for the defined function.
+     *
+     * Overrides CloudFunctionLocalTestTrait::doRun().
+     */
+    private static function doRun()
+    {
+        $cases = self::cases();
+        $case = reset($cases);
+        self::$fn->run([$case['varName'] => $case['varValue']]);
+    }
 
     /**
       * @dataProvider cases
@@ -41,9 +53,6 @@ class SystemTest extends TestCase
         $varName,
         $varValue
     ): void {
-        // Check the target env variable
-        $this->requireEnv($varName);
-
         // Send a request to the function.
         $resp = $this->client->get('/');
 

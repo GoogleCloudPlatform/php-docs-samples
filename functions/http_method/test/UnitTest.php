@@ -31,7 +31,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'httpMethod';
+    private static $entryPoint = 'httpMethod';
 
     public static function setUpBeforeClass(): void
     {
@@ -47,7 +47,7 @@ class UnitTest extends TestCase
         $content
     ): void {
         $request = new ServerRequest($method, '/');
-        $output = $this->runFunction(self::$name, [$request]);
+        $output = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertEquals(
             $statusCode,
             $output->getStatusCode()

@@ -29,7 +29,7 @@ require_once __DIR__ . '/TestCasesTrait.php';
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'corsEnabledFunction';
+    private static $entryPoint = 'corsEnabledFunction';
 
     use TestCasesTrait;
 

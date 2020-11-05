@@ -29,7 +29,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $entryPoint = 'helloHttp';
 
     public static function setUpBeforeClass(): void
     {
@@ -49,7 +49,7 @@ class UnitTest extends TestCase
         $body = json_encode($body);
         $request = (new ServerRequest('POST', '/', [], $body))
           ->withQueryParams($query);
-        $actual = $this->runFunction(self::$name, [$request]);
+        $actual = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertContains($expected, $actual, $label . ':');
     }
 
