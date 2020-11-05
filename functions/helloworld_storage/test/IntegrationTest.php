@@ -31,12 +31,11 @@ class IntegrationTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
 
-    private static function initFunctionProperties(array $props = [])
-    {
-        $props['entryPoint'] = 'helloGCS';
-        $props['functionSignatureType'] = 'cloudevent';
-        return $props;
-    }
+    /** @var string */
+    private static $entryPoint = 'helloGCS';
+    
+    /** @var string */
+    private static $functionSignatureType = 'cloudevent';
 
     public function dataProvider()
     {

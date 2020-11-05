@@ -23,6 +23,7 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 
@@ -40,6 +41,12 @@ class DeployTest extends TestCase
     use EventuallyConsistentTestTrait;
 
     /** @var string */
+    private static $entryPoint = 'helloGCS';
+    
+    /** @var string */
+    private static $functionSignatureType = 'cloudevent';
+
+    /** @var string */
     private static $bucket;
 
     /** @var LoggingClient */
@@ -47,13 +54,6 @@ class DeployTest extends TestCase
 
     /** @var StorageClient */
     private static $storageClient;
-
-    private static function initFunctionProperties(array $props = [])
-    {
-        $props['entryPoint'] = 'helloGCS';
-        $props['functionSignatureType'] = 'cloudevent';
-        return $props;
-    }
 
     /**
      * Deploy the Cloud Function, called from DeploymentTrait::deployApp().
@@ -90,7 +90,7 @@ class DeployTest extends TestCase
         sleep(5);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
-        $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected) {
+        $this->processFunctionLogs(self::$fn, $fiveMinAgo, function (\Iterator $logs) use ($expected) {
             // Concatenate all relevant log messages.
             $actual = '';
             foreach ($logs as $log) {
@@ -104,7 +104,14 @@ class DeployTest extends TestCase
         });
     }
 
-    private function processFunctionLogs(string $startTime, callable $process)
+    /**
+     * Retrieve and process logs for the defined function.
+     *
+     * @param CloudFunction @fn function whose logs should be checked.
+     * @param string $startTime RFC3339 timestamp marking start of time range to retrieve.
+     * @param callable $process callback function to run on the logs.
+     */
+    private function processFunctionLogs(CloudFunction $fn, string $startTime, callable $process)
     {
         if (empty(self::$loggingClient)) {
             self::$loggingClient = new LoggingClient([
@@ -120,7 +127,7 @@ class DeployTest extends TestCase
             $startTime
         );
 
-        echo "Retrieving logs [$filter]..." . PHP_EOL;
+        echo "\nRetrieving logs [$filter]...\n";
 
         // Check for new logs for the function.
         $attempt = 1;
@@ -132,6 +139,7 @@ class DeployTest extends TestCase
                 echo 'Logs not found, attempting retry #' . $attempt++ . PHP_EOL;
                 throw new ExpectationFailedException('Log Entries not available');
             }
+            echo 'Processing logs...' . PHP_EOL;
 
             $process($entries);
         }, $retries = 10);
