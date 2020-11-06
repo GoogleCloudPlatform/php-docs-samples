@@ -50,7 +50,7 @@ class UnitTest extends TestCase
         $notContainsContent
     ): void {
         $request = new ServerRequest($method, '/');
-        $response = $this->runFunction(self::$name, [$request]);
+        $response = $this->runFunction(self::$entryPoint, [$request]);
 
         // Assert status code.
         $this->assertEquals(

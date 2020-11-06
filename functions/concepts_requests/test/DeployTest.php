@@ -40,7 +40,9 @@ class DeployTest extends TestCase
     private static $entryPoint = 'makeRequest';
 
     /**
+     * Deploy the Function.
      *
+     * Overrides CloudFunctionLocalTestTrait::doDeploy().
      */
     private static function doDeploy()
     {

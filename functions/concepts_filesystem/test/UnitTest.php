@@ -43,7 +43,7 @@ class UnitTest extends TestCase
     public function testFunction($file): void
     {
         $request = new ServerRequest('GET', '/');
-        $response = $this->runFunction(self::$name, [$request]);
+        $response = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertContains($file, $response);
     }
 
