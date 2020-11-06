@@ -102,28 +102,32 @@ class DeployTest extends TestCase
             // split between log requests.
             $this->assertContains($expected, $actual);
         });
+
+        unlink($objectUri);
     }
 
     /**
      * Retrieve and process logs for the defined function.
      *
-     * @param CloudFunction @fn function whose logs should be checked.
+     * @param CloudFunction $fn function whose logs should be checked.
      * @param string $startTime RFC3339 timestamp marking start of time range to retrieve.
      * @param callable $process callback function to run on the logs.
      */
     private function processFunctionLogs(CloudFunction $fn, string $startTime, callable $process)
     {
+        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+
         if (empty(self::$loggingClient)) {
             self::$loggingClient = new LoggingClient([
-                'projectId' => self::$projectId
+                'projectId' => $projectId
             ]);
         }
 
         // Define the log search criteria.
-        $logFullName = 'projects/' . self::$projectId . '/logs/cloudfunctions.googleapis.com%2Fcloud-functions';
+        $logFullName = 'projects/' . $projectId . '/logs/cloudfunctions.googleapis.com%2Fcloud-functions';
         $filter = sprintf('logName="%s" resource.labels.function_name="%s" timestamp>="%s"',
             $logFullName,
-            self::$fn->getFunctionName(),
+            $fn->getFunctionName(),
             $startTime
         );
 
@@ -131,7 +135,7 @@ class DeployTest extends TestCase
 
         // Check for new logs for the function.
         $attempt = 1;
-        $this->runEventuallyConsistentTest(function () use ($filter, $process, $attempt) {
+        $this->runEventuallyConsistentTest(function () use ($filter, $process, &$attempt) {
             $entries = self::$loggingClient->entries(['filter' => $filter]);
  
             // If no logs came in try again.
