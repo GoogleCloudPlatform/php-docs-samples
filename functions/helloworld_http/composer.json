@@ -3,6 +3,5 @@
         "google/cloud-functions-framework": "^0.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.4"
     }
 }
