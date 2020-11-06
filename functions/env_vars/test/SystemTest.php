@@ -40,6 +40,7 @@ class SystemTest extends TestCase
      */
     private static function doRun()
     {
+        // Use the first test case as the source of the deployed environment variable.
         $cases = self::cases();
         $case = reset($cases);
         self::$fn->run([$case['varName'] => $case['varValue']]);
