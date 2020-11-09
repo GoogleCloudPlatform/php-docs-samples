@@ -31,7 +31,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'makeRequest';
+    private static $entryPoint = 'makeRequest';
 
     public static function setUpBeforeClass(): void
     {
@@ -44,7 +44,7 @@ class UnitTest extends TestCase
     public function testFunction($statusCode): void
     {
         $request = new ServerRequest('GET', '');
-        $output = $this->runFunction(self::$name, [$request]);
+        $output = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertEquals(
             $statusCode,
             $output->getStatusCode()

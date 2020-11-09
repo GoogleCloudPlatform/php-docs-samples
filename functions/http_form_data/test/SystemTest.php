@@ -32,7 +32,7 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'uploadFile';
+    private static $entryPoint = 'uploadFile';
 
     /**
      * @dataProvider cases

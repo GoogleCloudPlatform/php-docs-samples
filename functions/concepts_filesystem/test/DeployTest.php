@@ -37,7 +37,7 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'listFiles';
+    private static $entryPoint = 'listFiles';
 
     /**
       * @dataProvider cases
