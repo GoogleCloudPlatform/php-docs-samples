@@ -42,7 +42,7 @@ class DeployTest extends TestCase
     /**
      * Deploy the Function.
      *
-     * Overrides CloudFunctionLocalTestTrait::doDeploy().
+     * Overrides CloudFunctionDeploymentTrait::doDeploy().
      */
     private static function doDeploy()
     {
