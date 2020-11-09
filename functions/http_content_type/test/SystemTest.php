@@ -32,7 +32,7 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloContent';
+    private static $entryPoint = 'helloContent';
 
     public function testFunction(): void
     {

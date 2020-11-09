@@ -28,7 +28,7 @@ require_once __DIR__ . '/TestCasesTrait.php';
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'helloGet';
+    private static $entryPoint = 'helloGet';
 
     use TestCasesTrait;
 
@@ -43,7 +43,7 @@ class UnitTest extends TestCase
     public function testFunction($statusCode, $expected): void
     {
         $request = new ServerRequest('GET', '');
-        $output = $this->runFunction(self::$name, [$request]);
+        $output = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertContains($expected, $output);
     }
 

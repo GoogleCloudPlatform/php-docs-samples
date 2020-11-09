@@ -31,7 +31,7 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $entryPoint = 'helloGet';
 
     /**
       * @dataProvider cases

@@ -30,13 +30,11 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'envVar';
+    private static $entryPoint = 'envVar';
 
     public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
-
-        putenv("FOO=bar");
     }
 
     /**
@@ -47,8 +45,9 @@ class UnitTest extends TestCase
         $varName,
         $varValue
     ): void {
+        putenv("$varName=$varValue");
         $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction(self::$name, [$request]);
+        $output = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertContains($varValue, $output);
     }
 
