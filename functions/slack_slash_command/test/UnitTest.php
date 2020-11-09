@@ -30,7 +30,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'receiveRequest';
+    private static $entryPoint = 'receiveRequest';
 
     public static function setUpBeforeClass(): void
     {
@@ -49,7 +49,7 @@ class UnitTest extends TestCase
         $headers
     ): void {
         $request = new ServerRequest($method, '/', $headers, $body);
-        $response = $this->runFunction(self::$name, [$request]);
+        $response = $this->runFunction(self::$entryPoint, [$request]);
 
         $this->assertEquals(
             $statusCode,

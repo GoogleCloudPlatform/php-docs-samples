@@ -28,11 +28,6 @@ use GuzzleHttp\Psr7\Response;
  */
 function isValidSlackWebhook(ServerRequestInterface $request): bool
 {
-    /**
-     * Unlike most other Cloud Functions languages, PHP does not preserve
-     * global values between requests. Since we don't use this value elsewhere
-     * in the sample, it's easiest to declare it within this method itself.
-     */
     $SLACK_SECRET = getenv('SLACK_SECRET');
 
     // Check for headers
@@ -108,11 +103,6 @@ function formatSlackMessage(Google_Service_Kgsearch_SearchResponse $kgResponse, 
  */
 function searchKnowledgeGraph(string $query): Google_Service_Kgsearch_SearchResponse
 {
-    /**
-     * Unlike most other Cloud Functions languages, PHP does not preserve
-     * global values between requests. Since we don't use this value elsewhere
-     * in the sample, it's easiest to declare it within this method itself.
-     */
     $API_KEY = getenv("KG_API_KEY");
 
     $apiClient = new Google\Client();

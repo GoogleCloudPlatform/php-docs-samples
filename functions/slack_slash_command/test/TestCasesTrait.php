@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Functions\SlackSlashCommand\Test;
 
 function _valid_headers($body): array
 {
-
     // Calculate test case signature
     $key = getenv('SLACK_SECRET');
     $plaintext = 'v0:0:' . $body;

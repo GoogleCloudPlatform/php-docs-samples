@@ -25,14 +25,14 @@ use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class SystemTest.
+ * Class IntegrationTest.
  */
-class SystemTest extends TestCase
+class IntegrationTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'receiveRequest';
+    private static $entryPoint = 'receiveRequest';
 
     /**
       * @dataProvider cases
@@ -45,6 +45,9 @@ class SystemTest extends TestCase
         $statusCode,
         $headers
     ): void {
+        $this->requireEnv('SLACK_SECRET');
+        $this->requireEnv('KG_API_KEY');
+
         $response = $this->client->request(
             $method,
             '/',

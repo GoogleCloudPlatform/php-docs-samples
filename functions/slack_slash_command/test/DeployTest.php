@@ -37,7 +37,7 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'receiveRequest';
+    private static $entryPoint = 'receiveRequest';
 
     /**
       * @dataProvider cases
@@ -50,6 +50,9 @@ class DeployTest extends TestCase
         $statusCode,
         $headers
     ): void {
+        $this->requireEnv('SLACK_SECRET');
+        $this->requireEnv('KG_API_KEY');
+
         $response = $this->client->request(
             $method,
             '',
@@ -67,13 +70,12 @@ class DeployTest extends TestCase
         }
     }
 
-    protected static function deployFlags(array $flags = []): array
+    private static function doDeploy()
     {
         // Forward required env variables to Cloud Functions
         $envVars = 'SLACK_SECRET=' . getenv('SLACK_SECRET') . ',';
         $envVars .= 'KG_API_KEY=' . getenv('KG_API_KEY');
 
-        $flags['--update-env-vars'] = '"' . $envVars . '"';
-        return $flags;
+        self::$fn->deploy(['--update-env-vars' => $envVars]);
     }
 }
