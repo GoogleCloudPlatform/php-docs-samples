@@ -34,7 +34,7 @@ function helloLogging(ServerRequestInterface $request): string
       'severity' => 'error'
     ]) . PHP_EOL);
 
-    // These doesn't log anything
+    // These don't log anything
     error_log('error_log does not log in Cloud Functions!');
     var_dump('var_dump does not work in Cloud Functions!');
 
