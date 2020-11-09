@@ -37,7 +37,7 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'httpMethod';
+    private static $entryPoint = 'httpMethod';
 
     /**
       * @dataProvider cases

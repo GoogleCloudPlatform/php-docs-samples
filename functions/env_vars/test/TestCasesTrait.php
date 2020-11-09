@@ -22,6 +22,7 @@ trait TestCasesTrait
 {
     public static function cases(): array
     {
+        // WARNING: DeployTest and SystemTest are only deployed with the first test case.
         return [
             [
                 'statusCode' => 200,

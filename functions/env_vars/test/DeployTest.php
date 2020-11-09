@@ -37,7 +37,20 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'envVar';
+    private static $entryPoint = 'envVar';
+
+    /**
+     * Deploy the Function.
+     *
+     * Overrides CloudFunctionDeploymentTrait::doDeploy().
+     */
+    private static function doDeploy()
+    {
+        // Use the first test case as the source of the deployed environment variable.
+        $cases = self::cases();
+        $env = sprintf("%s=%s", $cases[0]['varName'], $cases[0]['varValue']);
+        self::$fn->deploy(['--update-env-vars' => $env]);
+    }
 
     /**
       * @dataProvider cases

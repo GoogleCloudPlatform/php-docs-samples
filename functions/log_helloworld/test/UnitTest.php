@@ -30,7 +30,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'helloLogging';
+    private static $entryPoint = 'helloLogging';
 
     public static function setUpBeforeClass(): void
     {
@@ -42,7 +42,7 @@ class UnitTest extends TestCase
         foreach (self::cases() as $test) {
             $request = new ServerRequest('GET', '/');
 
-            $this->runFunction(self::$name, [$request]);
+            $this->runFunction(self::$entryPoint, [$request]);
             $output = $this->getActualOutput();
 
             if (isset($test['not_contains'])) {

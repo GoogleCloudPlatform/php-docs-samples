@@ -30,7 +30,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
     
-    private static $name = 'listFiles';
+    private static $entryPoint = 'listFiles';
 
     public static function setUpBeforeClass(): void
     {
@@ -43,7 +43,7 @@ class UnitTest extends TestCase
     public function testFunction($file): void
     {
         $request = new ServerRequest('GET', '/');
-        $response = $this->runFunction(self::$name, [$request]);
+        $response = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertContains($file, $response);
     }
 
