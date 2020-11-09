@@ -28,7 +28,7 @@ trait TestCasesTrait
                 'method' => 'post',
                 'multipart' => [],
                 'expected' => 'no files sent for upload',
-                'code' => '400',
+                'status_code' => '400',
             ],
             // Fails on DeployTest with 400 error. curl returns:
             // curl: (92) HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
@@ -55,7 +55,7 @@ trait TestCasesTrait
                     ]
                 ],
                 'expected' => 'no files sent for upload',
-                'code' => '400',
+                'status_code' => '400',
             ],
         ];
     }
@@ -74,7 +74,7 @@ trait TestCasesTrait
                     ]
                 ],
                 'expected' => 'Saved rename.txt',
-                'code' => '201',
+                'status_code' => '201',
             ],
             [
                 'label' => 'File Upload (inline)',
@@ -87,7 +87,7 @@ trait TestCasesTrait
                     ]
                 ],
                 'expected' => 'Saved inline_file.txt',
-                'code' => '201',
+                'status_code' => '201',
             ],
             [
                 'label' => 'File Upload (multiple)',
@@ -105,7 +105,7 @@ trait TestCasesTrait
                     ]
                 ],
                 'expected' => 'Saved painting.txt, ice.txt',
-                'code' => '201',
+                'status_code' => '201',
             ],
             [
                 // name property is the same for both files, so only the last file is handled.
@@ -124,7 +124,7 @@ trait TestCasesTrait
                     ]
                 ],
                 'expected' => 'Saved ice.txt',
-                'code' => '201',
+                'status_code' => '201',
             ],
         ];
     }

@@ -20,7 +20,6 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
-use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
@@ -33,38 +32,42 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'uploadFile';
+    private static $entryPoint = 'uploadFile';
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            $method = $test['method'];
-            $resp = $this->client->$method('/', [
-                'multipart' => $test['multipart'],
+    /**
+     * @dataProvider cases
+     */
+    public function testFunction(
+        $label,
+        $method,
+        $multipart,
+        $expected,
+        $statusCode
+    ): void {
+        $resp = $this->client->$method('/', [
+                'multipart' => $multipart,
             ]);
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ' code:');
-            $actual = trim((string) $resp->getBody());
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-        }
+        $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
+        $actual = trim((string) $resp->getBody());
+        $this->assertContains($expected, $actual, $label . ':');
     }
 
-    public function testErrorCases(): void
-    {
-        $actual = null;
-        foreach (self::errorCases() as $test) {
-            try {
-                $method = $test['method'];
-                $resp = $this->client->$method('/', [
-                    'multipart' => $test['multipart'],
-                ]);
-                $actual = $resp->getBody()->getContents();
-            } catch (ClientException $e) {
-                // Expected exception, nothing to do here.
-                $actual = $e->getMessage();
-            } finally {
-                $this->assertContains($test['code'], $actual, $test['label'] . ' code:');
-                $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-            }
-        }
+    /**
+     * @dataProvider errorCases
+     */
+    public function testErrorCases(
+        $label,
+        $method,
+        $multipart,
+        $expected,
+        $statusCode
+    ): void {
+        $resp = $this->client->$method('/', [
+            'multipart' => $multipart,
+        ]);
+        $actual = $resp->getBody()->getContents();
+
+        $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
+        $this->assertContains($expected, $actual, $label . ':');
     }
 }
