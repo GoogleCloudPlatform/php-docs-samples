@@ -33,7 +33,7 @@ class IntegrationTest extends TestCase
 
     /** @var string */
     private static $entryPoint = 'helloGCS';
-    
+
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
@@ -71,7 +71,7 @@ class IntegrationTest extends TestCase
         }
 
         // Send an HTTP request using CloudEvent metadata.
-        $resp = $this->client->post('/', [
+        $resp = $this->client->request('POST', '/', [
             'body' => json_encode($data),
             'headers' => $cloudEventHeaders,
         ]);

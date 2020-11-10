@@ -25,6 +25,7 @@ function helloGCS(CloudEvent $cloudevent)
 {
     global $log;
     $data = $cloudevent->getData();
+    var_dump($data); // debugging
     fwrite($log, "Event: " . $cloudevent->getId() . PHP_EOL);
     fwrite($log, "Event Type: " . $cloudevent->getType() . PHP_EOL);
     fwrite($log, "Bucket: " . $data['bucket'] . PHP_EOL);
