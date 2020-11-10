@@ -22,9 +22,9 @@ use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 /**
- * Class SystemTest.
+ * Class IntegrationTest.
  */
-class SystemTest extends TestCase
+class IntegrationTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
 
