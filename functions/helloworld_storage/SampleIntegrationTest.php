@@ -76,7 +76,10 @@ class SampleIntegrationTest extends TestCase
         // Send an HTTP request using CloudEvent metadata.
         $resp = self::$client->post('/', [
             'body' => json_encode($data),
-            'headers' => $cloudEventHeaders,
+            'headers' => $cloudEventHeaders + [
+                // let our function know to parse request body as json
+                'content-type' => 'application/json'
+            ],
         ]);
 
         // The Cloud Function logs all data to stderr.
