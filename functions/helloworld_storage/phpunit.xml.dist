@@ -18,17 +18,10 @@
     <testsuites>
         <testsuite name="Cloud Functions Hello Cloud Storage Test Suite">
             <directory>.</directory>
+            <exclude>vendor</exclude>
         </testsuite>
     </testsuites>
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">.</directory>
-            <exclude>
-              <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
 </phpunit>
