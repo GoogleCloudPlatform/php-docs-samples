@@ -36,7 +36,7 @@ class DeployTest extends TestCase
 
     private static $entryPoint = 'scopeDemo';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
         // Send a request to the function.
         $resp = $this->client->post('', [
