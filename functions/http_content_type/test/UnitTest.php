@@ -31,7 +31,7 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'helloContent';
+    private static $entryPoint = 'helloContent';
 
     public static function setUpBeforeClass()
     {
@@ -42,7 +42,7 @@ class UnitTest extends TestCase
     {
         foreach (self::cases() as $test) {
             $request = new ServerRequest('POST', '/', ['content-type' => $test['content-type']], $test['body']);
-            $actual = $this->runFunction(self::$name, [$request]);
+            $actual = $this->runFunction(self::$entryPoint, [$request]);
             $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
         }
     }

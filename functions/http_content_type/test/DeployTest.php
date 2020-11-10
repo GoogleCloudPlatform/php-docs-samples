@@ -35,7 +35,7 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloContent';
+    private static $entryPoint = 'helloContent';
 
     public function testFunction(): void
     {

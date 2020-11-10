@@ -22,6 +22,8 @@ namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class DeployTest.
  *
@@ -33,10 +35,14 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $entryPoint = 'helloGet';
 
-    public function testFunction(): void
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction($statusCode, $expected): void
     {
         // Send a request to the function.
         $resp = $this->client->get('', [
@@ -45,12 +51,14 @@ class DeployTest extends TestCase
         ]);
 
         // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+        $this->assertEquals(
+            $statusCode,
+            $resp->getStatusCode()
+        );
 
         // Assert function output.
-        $expected = 'Hello, World!';
-        $actual = trim((string) $resp->getBody());
+        $output = trim((string) $resp->getBody());
         // Failures often lead to a large HTML page in the response body.
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $output);
     }
 }
