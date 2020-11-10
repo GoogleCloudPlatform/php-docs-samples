@@ -74,7 +74,7 @@ class Votes
      *
      * @return array
      */
-    public function listVotes() : array
+    public function listVotes(): array
     {
         $sql = "SELECT TOP 5 vote_value, time_cast FROM votes ORDER BY time_cast DESC";
         $statement = $this->connection->prepare($sql);
@@ -88,7 +88,7 @@ class Votes
      * @param string $value
      * @param int
      */
-    public function getCountByValue(string $value) : int
+    public function getCountByValue(string $value): int
     {
         $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE vote_value = ?";
 
@@ -104,12 +104,12 @@ class Votes
      * @param string $value The value to vote for.
      * @return boolean
      */
-    public function insertVote(string $value) : bool
+    public function insertVote(string $value): bool
     {
         $conn = $this->connection;
         $res = false;
 
-        # [START cloud_sql_server_pdo_connection]
+        # [START cloud_sql_sqlserver_pdo_connection]
         // Use prepared statements to guard against SQL injection.
         $sql = "INSERT INTO votes (time_cast, vote_value) VALUES (GETDATE(), :voteValue)";
 
@@ -126,7 +126,7 @@ class Votes
                 $e
             );
         }
-        # [END cloud_sql_server_pdo_connection]
+        # [END cloud_sql_sqlserver_pdo_connection]
 
         return $res;
     }

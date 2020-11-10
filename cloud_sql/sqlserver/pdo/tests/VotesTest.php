@@ -29,7 +29,7 @@ class VotesTest extends TestCase
 {
     private $conn;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
     }

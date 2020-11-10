@@ -21,25 +21,30 @@ namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class SystemTest.
  */
 class SystemTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
+    use TestCasesTrait;
 
-    private static $name = 'helloGet';
+    private static $entryPoint = 'helloGet';
 
-    public function testFunction() : void
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction($statusCode, $expected): void
     {
         // Send a request to the function.
-        $resp = $this->client->get('/');
+        $resp = $this->client->get('');
 
         // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+        $this->assertEquals($statusCode, $resp->getStatusCode());
 
         // Assert function output.
-        $expected = trim('Hello, World!');
         $actual = trim((string) $resp->getBody());
         $this->assertEquals($expected, $actual);
     }

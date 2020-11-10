@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 trait TestCasesTrait
 {
-    public static function cases() : array
+    public static function cases(): array
     {
         return [
             [
@@ -28,35 +28,35 @@ trait TestCasesTrait
                 'query' => [],
                 'body' => [],
                 'expected' => 'Hello, World!',
-                'code' => '200',
+                'statusCode' => '200',
             ],
             [
                 'label' => 'Querystring Sets Name',
                 'query' => ['name' => 'Galaxy'],
                 'body' => [],
                 'expected' => 'Hello, Galaxy!',
-                'code' => '200',
+                'statusCode' => '200',
             ],
             [
                 'label' => 'Body Sets Name',
                 'query' => [],
                 'body' => ['name' => 'Universe'],
                 'expected' => 'Hello, Universe!',
-                'code' => '200',
+                'statusCode' => '200',
             ],
             [
                 'label' => 'Querystring Overrides Body',
                 'query' => ['name' => 'Priority'],
                 'body' => ['name' => 'Overridden'],
                 'expected' => 'Hello, Priority!',
-                'code' => '200',
+                'statusCode' => '200',
             ],
             [
                 'label' => 'HTML Escape',
                 'query' => [],
                 'body' => ['name' => '<script>script</script>'],
                 'expected' => sprintf('Hello, %s!', '&lt;script&gt;script&lt;/script&gt;'),
-                'code' => '200',
+                'statusCode' => '200',
             ],
         ];
     }

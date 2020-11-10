@@ -22,6 +22,8 @@ namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
+require_once __DIR__ . '/TestCasesTrait.php';
+
 /**
  * Class SystemTest.
  */
@@ -30,19 +32,25 @@ class SystemTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $entryPoint = 'helloHttp';
 
-    public function testFunction() : void
-    {
-        foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $resp = $this->client->post('/', [
-                'body' => $body,
-                'query' => $test['query'],
-            ]);
-            $this->assertEquals($test['code'], $resp->getStatusCode(), $test['label'] . ' code:');
-            $actual = trim((string) $resp->getBody());
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-        }
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $label,
+        $query,
+        $body,
+        $expected,
+        $statusCode
+    ): void {
+        $body = json_encode($body);
+        $resp = $this->client->post('/', [
+            'body' => $body,
+            'query' => $query,
+        ]);
+        $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
+        $actual = trim((string) $resp->getBody());
+        $this->assertContains($expected, $actual, $label . ':');
     }
 }

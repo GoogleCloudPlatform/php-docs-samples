@@ -25,7 +25,7 @@ class CloudSqlTest extends TestCase
 {
     use TestTrait;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $connection = $this->requireEnv('CLOUDSQL_CONNECTION_NAME');
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
