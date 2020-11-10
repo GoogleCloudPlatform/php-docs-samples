@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class UnitTest extends TestCase
 {
-    private static $name = 'scopeDemo';
+    private static $entryPoint = 'scopeDemo';
 
     public static function setUpBeforeClass() : void
     {
@@ -35,8 +35,8 @@ class UnitTest extends TestCase
 
     public function testFunction() : void
     {
-        $request = new ServerRequest('GET', '/');
-        $output = $this->runFunction(self::$name, [$request]);
+        $request = new ServerRequest('POST', '/');
+        $output = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertContains('Per instance: 120', $output);
         $this->assertContains('Per function: 15', $output);
     }

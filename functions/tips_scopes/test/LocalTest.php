@@ -28,12 +28,12 @@ class SystemTest extends TestCase
 {
     use CloudFunctionLocalTestTrait;
 
-    private static $name = 'scopeDemo';
+    private static $entryPoint = 'scopeDemo';
 
     public function testFunction() : void
     {
         // Send a request to the function.
-        $resp = $this->client->get('/');
+        $resp = $this->client->post('/');
 
         // Assert status code.
         $this->assertEquals('200', $resp->getStatusCode());
