@@ -34,9 +34,12 @@ function helloLogging(ServerRequestInterface $request): string
       'severity' => 'error'
     ]) . PHP_EOL);
 
-    // These don't log anything
+    // This doesn't log anything
     error_log('error_log does not log in Cloud Functions!');
-    var_dump('var_dump does not work in Cloud Functions!');
+    
+    // For HTTP functions, this is added to the HTTP response
+    // For CloudEvent functions, this does nothing
+    var_dump('var_dump goes to HTTP response for HTTP functions');
 
     // Functions must return a String or PSR-7 Response object
     return '';
