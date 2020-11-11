@@ -50,9 +50,6 @@ class DeployTest extends TestCase
         $statusCode,
         $headers
     ): void {
-        $this->requireEnv('SLACK_SECRET');
-        $this->requireEnv('KG_API_KEY');
-
         $response = $this->client->request(
             $method,
             '',
@@ -70,11 +67,16 @@ class DeployTest extends TestCase
         }
     }
 
+    /**
+     * Deploy the Function.
+     *
+     * Overrides CloudFunctionLocalTestTrait::doDeploy().
+     */
     private static function doDeploy()
     {
-        // Forward required env variables to Cloud Functions
-        $envVars = 'SLACK_SECRET=' . getenv('SLACK_SECRET') . ',';
-        $envVars .= 'KG_API_KEY=' . getenv('KG_API_KEY');
+        // Forward required env variables to Cloud Functions.
+        $envVars = 'SLACK_SECRET=' . self::requireEnv('SLACK_SECRET') . ',';
+        $envVars .= 'KG_API_KEY=' . self::requireEnv('KG_API_KEY');
 
         self::$fn->deploy(['--update-env-vars' => $envVars]);
     }

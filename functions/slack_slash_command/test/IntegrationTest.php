@@ -35,6 +35,19 @@ class IntegrationTest extends TestCase
     private static $entryPoint = 'receiveRequest';
 
     /**
+     * Run the PHP server locally for the defined function.
+     *
+     * Overrides CloudFunctionLocalTestTrait::doRun().
+     */
+    private static function doRun()
+    {
+        self::$fn->run([
+            'SLACK_SECRET' => self::requireEnv('SLACK_SECRET'),
+            'KG_API_KEY' => self::requireEnv('KG_API_KEY'),
+        ]);
+    }
+
+    /**
       * @dataProvider cases
       */
     public function testFunction(
@@ -45,9 +58,6 @@ class IntegrationTest extends TestCase
         $statusCode,
         $headers
     ): void {
-        $this->requireEnv('SLACK_SECRET');
-        $this->requireEnv('KG_API_KEY');
-
         $response = $this->client->request(
             $method,
             '/',
