@@ -107,10 +107,19 @@ class DeloyTest extends TestCase
         ]);
 
         // Run the test.
-        $resp = $client->post('/');
+        $resp = $client->post('/', [
+            'headers' => [
+                'my-header' => 'foo',
+                'Authorization' => 'secret'
+            ],
+            'body' => 'my-body',
+        ]);
         $this->assertEquals('200', $resp->getStatusCode());
         $this->assertContains('HEADERS:', (string) $resp->getBody());
+        $this->assertContains('my-header', (string) $resp->getBody());
+        $this->assertNotContains('Authorization', (string) $resp->getBody());
         $this->assertContains('BODY:', (string) $resp->getBody());
+        $this->assertContains('my-body', (string) $resp->getBody());
     }
 
     public function getBaseUri()

@@ -16,6 +16,7 @@
  */
 
 // [START eventarc_generic_server]
+// PHP does not require web server startup code.
 // [END eventarc_generic_server]
 
 // [START eventarc_generic_handler]

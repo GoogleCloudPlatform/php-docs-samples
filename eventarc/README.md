@@ -30,7 +30,7 @@ This directory contains samples for Eventarc from PHP.
     ```sh
     export SAMPLE='generic'
     cd $SAMPLE
-    docker build --tag $SAMPLE .
+    docker build --tag "eventarc-$SAMPLE" .
     ```
 
 3. [Run containers locally](https://cloud.google.com/run/docs/testing/local)
