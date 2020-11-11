@@ -43,4 +43,7 @@ function invalid_range_query($projectId)
         ->where('state', '>=', 'CA')
         ->where('population', '>', 1000000);
     # [END fs_invalid_range_query]
+
+    // This will throw an exception
+    $invalidRangeQuery->documents();
 }

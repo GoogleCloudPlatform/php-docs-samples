@@ -40,4 +40,5 @@ function collection_ref($projectId)
     # [START fs_collection_ref]
     $collection = $db->collection('users');
     # [END fs_collection_ref]
+    printf('Retrieved collection: %s' . PHP_EOL, $collection->name());
 }
