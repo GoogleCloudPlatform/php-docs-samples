@@ -40,11 +40,14 @@ function scopeDemo(ServerRequestInterface $request): string
     // https://packagist.org/providers/psr/cache-implementation
     $cachePath = sys_get_temp_dir() . '/cached_value.txt';
 
+    $response = '';
     if (file_exists($cachePath)) {
         // Read cached value from file
+        $response .= "Reading cached value." . PHP_EOL;
         $instanceVar = file_get_contents($cachePath);
     } else {
         // Compute cached value + write to file
+        $response .= "Cache empty, computing value." . PHP_EOL;
         $instanceVar = _heavyComputation();
         file_put_contents($cachePath, $instanceVar);
     }
@@ -52,7 +55,7 @@ function scopeDemo(ServerRequestInterface $request): string
     // Lighter computations can re-run on each function invocation.
     $functionVar = _lightComputation();
 
-    $response = 'Per instance: ' . $instanceVar . PHP_EOL;
+    $response .= 'Per instance: ' . $instanceVar . PHP_EOL;
     $response .= 'Per function: ' . $functionVar . PHP_EOL;
 
     return $response;

@@ -30,12 +30,15 @@ class IntegrationTest extends TestCase
 
     private static $entryPoint = 'scopeDemo';
 
-    public function testFunction() : void
+    public function testFunction(): void
     {
-        // Send a request to the function.
-        $resp = $this->client->post('/');
+        // Send two requests to the function.
+        // (This tests cross-request caching behavior.)
+        $firstResp = $this->client->post('/');
+        $secondResp = $this->client->post('/');
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+        // Assert status codes.
+        $this->assertEquals('200', $firstResp->getStatusCode());
+        $this->assertEquals('200', $secondResp->getStatusCode());
     }
 }

@@ -39,17 +39,28 @@ class DeployTest extends TestCase
     public function testFunction(): void
     {
         // Send a request to the function.
-        $resp = $this->client->post('', [
+        $firstResp = $this->client->post('', [
+            // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
+            // 'debug' => true
+        ]);
+        $secondResp = $this->client->post('', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true
         ]);
 
-        // Assert status code.
-        $this->assertEquals('200', $resp->getStatusCode());
+        // Assert status codes.
+        $this->assertEquals('200', $firstResp->getStatusCode());
+        $this->assertEquals('200', $secondResp->getStatusCode());
 
-        // Assert function output.
-        $output = trim((string) $resp->getBody());
-        $this->assertContains('Per instance: 120', $output);
-        $this->assertContains('Per function: 15', $output);
+        $firstOutput = trim((string) $firstResp->getBody());
+        $secondOutput = trim((string) $secondResp->getBody());
+
+        // Assert generic function output.
+        $this->assertContains('Per instance: 120', $firstOutput);
+        $this->assertContains('Per function: 15', $firstOutput);
+
+        // Assert caching behavior.
+        $this->assertContains('Cache empty', $firstOutput);
+        $this->assertContains('Reading cached value', $secondOutput);
     }
 }
