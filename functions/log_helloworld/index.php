@@ -46,8 +46,7 @@ function helloLogging(ServerRequestInterface $request): string
     
     // You can also dump variables using var_export() and forward
     // the resulting string to Cloud Logging via an fwrite() call.
-    $entry = '';
-    var_export('var_export output can be captured.', $entry);
+    $entry = var_export('var_export output can be captured.', true);
     fwrite($log, $entry);
 
     // Functions must return a String or PSR-7 Response object
