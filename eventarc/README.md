@@ -41,7 +41,15 @@ This directory contains samples for Eventarc from PHP.
     PORT=8080 && docker run --rm -p 8080:${PORT} -e PORT=${PORT} $SAMPLE
     ```
 
-    Exit the container: `Ctrl-D`
+    Test the web server with `cURL`:
+
+    ```sh
+    curl -XPOST localhost:8080 -d '{ "test": "foo" }'
+    ```
+
+    Observe the output logs your HTTP request.
+
+    Exit the container with `Ctrl-D`.
 
 ## Deploying
 
