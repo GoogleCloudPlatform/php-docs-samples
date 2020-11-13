@@ -17,7 +17,7 @@
 
 // [START functions_http_unit_test]
 
-namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
+namespace Google\Cloud\Samples\Functions\HelloworldHttp;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ class SampleUnitTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        require_once __DIR__ . '/../index.php';
+        require_once __DIR__ . '/index.php';
     }
 
     public function testFunction(): void
