@@ -18,6 +18,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
+use Google\Auth\CredentialsLoader;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
@@ -64,41 +65,43 @@ class storageTest extends TestCase
 
     public function testManageBucketAcl()
     {
+        $jsonKey = CredentialsLoader::fromEnv();
         $acl = self::$tempBucket->acl();
+        $entity = sprintf('user-%s', $jsonKey['client_email']);
         $bucketUrl = sprintf('gs://%s', self::$tempBucket->name());
 
         $output = $this->runCommand('bucket-acl', [
             'bucket' => self::$tempBucket->name(),
-            '--entity' => 'allAuthenticatedUsers',
+            '--entity' => $entity,
             '--create' => true,
         ]);
 
-        $expected = "Added allAuthenticatedUsers (READER) to $bucketUrl ACL\n";
+        $expected = "Added $entity (READER) to $bucketUrl ACL\n";
         $this->assertEquals($expected, $output);
 
-        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
+        $aclInfo = $acl->get(['entity' => $entity]);
         $this->assertArrayHasKey('role', $aclInfo);
         $this->assertEquals('READER', $aclInfo['role']);
 
         $output = $this->runCommand('bucket-acl', [
             'bucket' => self::$tempBucket->name(),
-            '--entity' => 'allAuthenticatedUsers',
+            '--entity' => $entity,
         ]);
 
-        $expected = "allAuthenticatedUsers: READER\n";
+        $expected = "$entity: READER\n";
         $this->assertEquals($expected, $output);
 
         $output = $this->runCommand('bucket-acl', [
             'bucket' => self::$tempBucket->name(),
-            '--entity' => 'allAuthenticatedUsers',
+            '--entity' => $entity,
             '--delete' => true,
         ]);
 
-        $expected = "Deleted allAuthenticatedUsers from $bucketUrl ACL\n";
+        $expected = "Deleted $entity from $bucketUrl ACL\n";
         $this->assertEquals($expected, $output);
 
         try {
-            $acl->get(['entity' => 'allAuthenticatedUsers']);
+            $acl->get(['entity' => $entity]);
             $this->fail();
         } catch (NotFoundException $e) {
             $this->assertTrue(true);

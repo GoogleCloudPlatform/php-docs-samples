@@ -23,11 +23,12 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID\n", __FILE__);
+if (count($argv) < 3 || count($argv) > 4) {
+    return printf("Usage: php %s PROJECT_ID DATASET_ID [TABLE_ID]\n", __FILE__);
 }
 
 list($_, $projectId, $datasetId) = $argv;
+$tableId = isset($argv[3]) ? $argv[3] : 'us_states';
 # [START bigquery_load_table_gcs_orc]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
@@ -35,13 +36,14 @@ use Google\Cloud\Core\ExponentialBackoff;
 /** Uncomment and populate these variables in your code */
 // $projectId  = 'The Google project ID';
 // $datasetId  = 'The BigQuery dataset ID';
+// $tableId    = 'us_states';
 
 // instantiate the bigquery table service
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
 $dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table('us_states');
+$table = $dataset->table($tableId);
 
 // create the import job
 $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.orc';
