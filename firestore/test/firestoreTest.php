@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Firestore\Tests;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\Core\Exception\BadRequestException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -246,7 +247,11 @@ class firestoreTest extends TestCase
      */
     public function testInvalidRangeQuery()
     {
-        $output = $this->runFirestoreCommand('invalid-range-query');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage(
+            'Cannot have inequality filters on multiple properties'
+        );
+        $this->runFirestoreCommand('invalid-range-query');
     }
 
     /**
@@ -426,27 +431,35 @@ class firestoreTest extends TestCase
      */
     public function testInvalidRangeOrderByQuery()
     {
-        $output = $this->runFirestoreCommand('invalid-range-order-by-query');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage(
+            'inequality filter property and first sort order must be the same'
+        );
+        $this->runFirestoreCommand('invalid-range-order-by-query');
     }
 
     public function testDocumentRef()
     {
         $output = $this->runFirestoreCommand('document-ref');
+        $this->assertContains('Retrieved document: ', $output);
     }
 
     public function testCollectionRef()
     {
         $output = $this->runFirestoreCommand('collection-ref');
+        $this->assertContains('Retrieved collection: ', $output);
     }
 
     public function testDocumentPathRef()
     {
         $output = $this->runFirestoreCommand('document-path-ref');
+        $this->assertContains('Retrieved document from path: ', $output);
     }
 
     public function testSubcollectionRef()
     {
         $output = $this->runFirestoreCommand('subcollection-ref');
+        $this->assertContains('Retrieved document from subcollection: ', $output);
     }
 
     /**
@@ -568,6 +581,7 @@ class firestoreTest extends TestCase
     public function testMultipleCursorConditions()
     {
         $output = $this->runFirestoreCommand('multiple-cursor-conditions');
+        $this->assertContains('Document TOK returned by start at ', $output);
     }
 
     private static function runFirestoreCommand($commandName)
