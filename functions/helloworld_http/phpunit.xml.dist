@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="Cloud Functions Hello World HTTP Test Suite">
             <directory>.</directory>
+            <exclude>vendor</exclude>
         </testsuite>
     </testsuites>
     <logging>
