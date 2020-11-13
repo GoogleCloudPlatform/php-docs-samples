@@ -19,11 +19,9 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-$log = fopen('php://stderr', 'wb');
-
 function helloGCS(CloudEvent $cloudevent)
 {
-    global $log;
+    $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     $data = $cloudevent->getData();
     fwrite($log, "Event: " . $cloudevent->getId() . PHP_EOL);
     fwrite($log, "Event Type: " . $cloudevent->getType() . PHP_EOL);

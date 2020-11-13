@@ -19,7 +19,7 @@ declare(strict_types=1);
 
 // [START functions_storage_integration_test]
 
-namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
+namespace Google\Cloud\Samples\Functions\HelloworldStorage;
 
 use Google\CloudFunctions\CloudEvent;
 use GuzzleHttp\Client;
@@ -77,7 +77,7 @@ class SampleIntegrationTest extends TestCase
         $resp = self::$client->post('/', [
             'body' => json_encode($data),
             'headers' => $cloudEventHeaders + [
-                // let our function know to parse request body as json
+                // Instruct the function framework to parse the body as JSON.
                 'content-type' => 'application/json'
             ],
         ]);

@@ -74,7 +74,7 @@ class IntegrationTest extends TestCase
         $resp = $this->client->request('POST', '/', [
             'body' => json_encode($data),
             'headers' => $cloudEventHeaders + [
-                // let our function know to parse request body as json
+                // Instruct the function framework to parse the body as JSON.
                 'content-type' => 'application/json'
             ],
         ]);

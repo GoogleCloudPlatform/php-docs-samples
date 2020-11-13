@@ -45,19 +45,19 @@ class SampleUnitTest extends TestCase
     {
         return [
             [
-                'cloudevent' => [
+                'cloudevent' => CloudEvent::fromArray([
                     'id' => uniqid(),
                     'source' => 'storage.googleapis.com',
                     'specversion' => '1.0',
                     'type' => 'google.cloud.storage.object.v1.finalized',
-                ],
-                'data' => [
-                    'bucket' => 'some-bucket',
-                    'metageneration' => '1',
-                    'name' => 'folder/friendly.txt',
-                    'timeCreated' => '2020-04-23T07:38:57.230Z',
-                    'updated' => '2020-04-23T07:38:57.230Z',
-                ],
+                    'data' => [
+                        'bucket' => 'some-bucket',
+                        'metageneration' => '1',
+                        'name' => 'folder/friendly.txt',
+                        'timeCreated' => '2020-04-23T07:38:57.230Z',
+                        'updated' => '2020-04-23T07:38:57.230Z',
+                    ],
+                ]),
                 'statusCode' => '200',
             ],
         ];
@@ -66,21 +66,20 @@ class SampleUnitTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testFunction(array $cloudevent, array $data, string $statusCode): void
+    public function testFunction(CloudEvent $cloudevent, string $statusCode): void
     {
-        // Prepare CloudEvent parameter.
-        $cloudevent['data'] = $data;
-        $cloudevent = CloudEvent::fromArray($cloudevent);
-
-        // Swap Cloud Function logging from stderr to a memory stream to capture output.
-        global $log;
-        $log = fopen('php://memory', 'wb');
+        // Capture function output by overriding the function's logging behavior.
+        // The 'LOGGER_OUTPUT' environment variable must be used in your function:
+        //
+        // $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
+        // fwrite($log, 'Log Entry');
+        putenv('LOGGER_OUTPUT=php://output');
         helloGCS($cloudevent);
-        rewind($log);
-        $actual = stream_get_contents($log);
+        // Provided by PHPUnit\Framework\TestCase.
+        $actual = $this->getActualOutput();
         
         // Test output includes the properties provided in the CloudEvent.
-        foreach ($data as $property => $value) {
+        foreach ($cloudevent->getData() as $property => $value) {
             $this->assertContains($value, $actual);
         }
         $this->assertContains($cloudevent->getId(), $actual);
