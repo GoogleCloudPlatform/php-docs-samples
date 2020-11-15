@@ -164,14 +164,13 @@ class DeployTest extends TestCase
      * Update a value in Firebase Realtime Database (RTDB).
      *
      * @param string $path Path of the RTDB attribute to set.
-     * @param string $value The value to set the specified attribute to.
      * @param string $data Data to upload as an object..
      *
      * @throws \RuntimeException
      */
     private function updateRTDB(string $path, array $data): void
     {
-        if (empty(self::$storageClient)) {
+        if (empty(self::$database)) {
             $factory = new Factory();
             self::$database = $factory->createDatabase();
         }
