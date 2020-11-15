@@ -1,0 +1,15 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^0.7.1",
+        "kreait/firebase-php": "^5.11"
+    },
+    "scripts": {
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseRTDB php -S localhost:${PORT:-8080} vendor/bin/router.php"
+        ]
+    },
+    "require-dev": {
+        "google/cloud-logging": "^1.21"
+    }
+}
