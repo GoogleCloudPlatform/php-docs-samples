@@ -27,7 +27,6 @@ function firebaseFirestore(CloudEvent $cloudevent)
     fwrite($log, "Event Type: " . $cloudevent->getType() . PHP_EOL);
 
     $data = $cloudevent->getData();
-    fwrite($log, 'TEST: ' . var_export($data, true) . PHP_EOL);
 
     $resource = $data['resource'];
     fwrite($log, 'Function triggered by event on: ' . $resource . PHP_EOL);
