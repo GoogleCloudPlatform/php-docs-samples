@@ -16,21 +16,25 @@
  */
 
 // [START eventarc_generic_server]
-// PHP does not require web server startup code.
+$log = fopen('php://stderr', 'wb');
 // [END eventarc_generic_server]
 
 // [START eventarc_generic_handler]
 echo "Event received!\n";
+fwrite($log, "Event received!\n");
 
 echo "\nHEADERS:\n";
+fwrite($log, "\nHEADERS:\n");
 $headers = getallheaders();
 unset($headers['Authorization']); // do not log authorization header
 foreach ($headers as $name => $value) {
     echo "$name: $value\n";
+    fwrite($log, "$name: $value\n");
 }
 
 echo "\nBODY:\n";
+fwrite($log, "\nBODY:\n");
 $body = file_get_contents('php://input');
-echo $body;
-echo "\n";
+echo $body . "\n";
+fwrite($log, $body . "\n");
 // [END eventarc_generic_handler]
