@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\EventArc\Generic\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class DeployTest.
+ * Class LocalTest.
  */
 class LocalTest extends TestCase
 {
