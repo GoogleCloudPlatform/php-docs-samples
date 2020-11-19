@@ -176,5 +176,4 @@ To clean up, delete the resources created above:
     ```
 
 [enable_apis_url]: https://console.cloud.google.com/flows/enableapi?apiid=run.googleapis.com,logging.googleapis.com,cloudbuild.googleapis.com,pubsub.googleapis.com,eventarc.googleapis.com
-[generic]: .
 [run_button_generic]: https://deploy.cloud.run/?dir=eventarc/generic

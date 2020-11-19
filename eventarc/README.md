@@ -8,4 +8,4 @@ This directory contains samples for using Eventarc with PHP.
 
 |                 Sample                  |        Description       |
 | --------------------------------------- | ------------------------ |
-|[Generic][generic]  | Quickstart |
+|[Generic](generic)  | Quickstart |
