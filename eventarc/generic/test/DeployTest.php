@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Run\Helloworld;
+namespace Google\Cloud\Samples\EventArc\Generic\Test;
 
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Cloud\TestUtils\DeploymentTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\GcloudWrapper\CloudRun;
 use Google\Cloud\TestUtils\TestTrait;
 use GuzzleHttp\Client;
@@ -29,10 +28,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class DeployTest.
  */
-class DeloyTest extends TestCase
+class DeployTest extends TestCase
 {
     use DeploymentTrait;
-    use EventuallyConsistentTestTrait;
     use TestTrait;
 
     /** @var \Google\Cloud\TestUtils\GcloudWrapper\CloudRun */
@@ -48,10 +46,12 @@ class DeloyTest extends TestCase
      */
     public static function setUpDeploymentVars()
     {
-        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-        $versionId = self::requireEnv('GOOGLE_VERSION_ID');
-        self::$service = new CloudRun($projectId, ['service' => $versionId]);
-        self::$image = sprintf('gcr.io/%s/%s:latest', $projectId, $versionId);
+        if (is_null(self::$service) || is_null(self::$image)) {
+            $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+            $versionId = self::requireEnv('GOOGLE_VERSION_ID');
+            self::$service = new CloudRun($projectId, ['service' => $versionId]);
+            self::$image = sprintf('gcr.io/%s/%s:latest', $projectId, $versionId);
+        }
     }
 
     private static function beforeDeploy()

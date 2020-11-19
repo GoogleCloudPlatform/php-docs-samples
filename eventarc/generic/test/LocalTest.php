@@ -15,26 +15,30 @@
  * limitations under the License.
  */
 
-// [START eventarc_generic_server]
-// [END eventarc_generic_server]
+namespace Google\Cloud\Samples\EventArc\Generic\Test;
 
-// [START eventarc_generic_handler]
-$msg = "Event received!\n";
+use PHPUnit\Framework\TestCase;
 
-$msg .= "\nHEADERS:\n";
-$headers = getallheaders();
-unset($headers['Authorization']); // do not log authorization header
-foreach ($headers as $name => $value) {
-    $msg .= "$name: $value\n";
+/**
+ * Class LocalTest.
+ */
+class LocalTest extends TestCase
+{
+    public function testIndex()
+    {
+        ob_start();
+        require_once(__DIR__ . '/../index.php');
+        $output = ob_get_clean();
+        $expected = <<<EOF
+Event received!
+
+HEADERS:
+
+BODY:
+
+
+EOF;
+
+        $this->assertEquals($expected, $output);
+    }
 }
-
-$msg .= "\nBODY:\n";
-$body = file_get_contents('php://input');
-$msg .= $body . "\n";
-
-// Write to stderr for logging
-$log = fopen('php://stderr', 'wb');
-fwrite($log, $msg);
-// Echo to return in request body
-echo $msg;
-// [END eventarc_generic_handler]

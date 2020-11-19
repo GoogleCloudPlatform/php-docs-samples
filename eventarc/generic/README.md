@@ -2,13 +2,11 @@
 
 # Eventarc – Generic – PHP Sample
 
-This directory contains a sample for receiving a generic event using Cloud Run and Eventarc with PHP. For testing purposes, we use Cloud Pub/Sub as an event source for our sample.
+[<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic]
 
-## Sample
-
-|                 Sample                  |        Description       |     Deploy    |
-| --------------------------------------- | ------------------------ | ------------- |
-|[Generic][generic]  | Quickstart | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic] |
+This directory contains a sample for receiving a generic event using Cloud Run
+and Eventarc with PHP. For testing purposes, we use Cloud Pub/Sub as an event
+source for our sample.
 
 ## Setup
 
@@ -20,7 +18,8 @@ This directory contains a sample for receiving a generic event using Cloud Run a
     gcloud components install beta
     ```
 
-1. Set the following gcloud configurations, where `PROJECT_ID` is your Google Cloud project ID:
+1. Set the following gcloud configurations, where `PROJECT_ID` is your Google
+   Cloud project ID:
 
     ```sh
     gcloud config set project PROJECT_ID
@@ -45,8 +44,7 @@ This directory contains a sample for receiving a generic event using Cloud Run a
 1. [Build the container locally](https://cloud.google.com/run/docs/building/containers#building_locally_and_pushing_using_docker):
 
     ```sh
-    export SAMPLE='generic'
-    docker build --tag "eventarc-$SAMPLE" .
+    docker build --tag eventarc-generic .
     ```
 
 1. [Run containers locally](https://cloud.google.com/run/docs/testing/local)
@@ -54,7 +52,7 @@ This directory contains a sample for receiving a generic event using Cloud Run a
     With the built container:
 
     ```sh
-    PORT=8080 && docker run --rm -p 8080:${PORT} -e PORT=${PORT} $SAMPLE
+    PORT=8080 && docker run --rm -p 8080:${PORT} -e PORT=${PORT} eventarc-generic
     ```
 
     Test the web server with `cURL`:
@@ -64,7 +62,7 @@ This directory contains a sample for receiving a generic event using Cloud Run a
     ```
 
     Observe the output logs your HTTP request:
-    
+
     ```
     Event received!
 
@@ -178,5 +176,4 @@ To clean up, delete the resources created above:
     ```
 
 [enable_apis_url]: https://console.cloud.google.com/flows/enableapi?apiid=run.googleapis.com,logging.googleapis.com,cloudbuild.googleapis.com,pubsub.googleapis.com,eventarc.googleapis.com
-[generic]: .
 [run_button_generic]: https://deploy.cloud.run/?dir=eventarc/generic
