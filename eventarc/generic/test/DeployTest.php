@@ -52,7 +52,6 @@ class DeployTest extends TestCase
             self::$service = new CloudRun($projectId, ['service' => $versionId]);
             self::$image = sprintf('gcr.io/%s/%s:latest', $projectId, $versionId);
         }
-
     }
 
     private static function beforeDeploy()
