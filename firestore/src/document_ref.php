@@ -40,4 +40,5 @@ function document_ref($projectId)
     # [START fs_document_ref]
     $document = $db->collection('users')->document('lovelace');
     # [END fs_document_ref]
+    printf('Retrieved document: %s' . PHP_EOL, $document->name());
 }

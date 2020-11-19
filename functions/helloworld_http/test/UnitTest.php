@@ -29,22 +29,28 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $name = 'helloHttp';
+    private static $entryPoint = 'helloHttp';
 
     public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
     }
 
-    public function testFunction(): void
-    {
-        foreach (self::cases() as $test) {
-            $body = json_encode($test['body']);
-            $request = (new ServerRequest('POST', '/', [], $body))
-              ->withQueryParams($test['query']);
-            $actual = $this->runFunction(self::$name, [$request]);
-            $this->assertContains($test['expected'], $actual, $test['label'] . ':');
-        }
+    /**
+      * @dataProvider cases
+      */
+    public function testFunction(
+        $label,
+        $query,
+        $body,
+        $expected,
+        $statusCode
+    ): void {
+        $body = json_encode($body);
+        $request = (new ServerRequest('POST', '/', [], $body))
+          ->withQueryParams($query);
+        $actual = $this->runFunction(self::$entryPoint, [$request]);
+        $this->assertContains($expected, $actual, $label . ':');
     }
 
     private static function runFunction($functionName, array $params = []): string

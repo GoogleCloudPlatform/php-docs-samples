@@ -33,7 +33,6 @@ class FunctionsTest extends TestCase
 
     private static $datasetId;
     private static $dataset;
-    private static $tempTables = [];
 
     public static function setUpBeforeClass()
     {
@@ -173,17 +172,18 @@ class FunctionsTest extends TestCase
      */
     public function testImportFromStorage($snippet, $runTruncateSnippet = false)
     {
+        $tableId = sprintf('%s_%s', $snippet, rand());
+
         // run the import
         $output = $this->runSnippet($snippet, [
             self::$datasetId,
+            $tableId,
         ]);
 
         $this->assertContains('Data imported successfully', $output);
-        $tableId = 'us_states';
 
         // verify table contents
         $table = self::$dataset->table($tableId);
-        self::$tempTables[] = $table;
         $this->verifyTable($table, 'Washington', 50);
 
         if ($runTruncateSnippet) {
@@ -338,15 +338,6 @@ class FunctionsTest extends TestCase
             $this->assertEquals($numRows, $expectedRowCount);
         };
         $this->runEventuallyConsistentTest($testFunction);
-    }
-
-    public function tearDown()
-    {
-        if (self::$tempTables) {
-            while ($tempTable = array_pop(self::$tempTables)) {
-                $tempTable->delete();
-            }
-        }
     }
 
     public static function tearDownAfterClass()

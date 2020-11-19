@@ -50,15 +50,15 @@ $container['db'] = function () {
         $dsn = sprintf('sqlsrv:server=%s;Database=%s', $host, $db_name);
 
         // Connect to the database.
-        # [START cloud_sql_server_pdo_timeout]
+        # [START cloud_sql_sqlserver_pdo_timeout]
         // Here we set the connection timeout to five seconds and ask PDO to
         // throw an exception if any errors occur.
         $conn = new PDO($dsn, $username, $password, [
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
-        # [END cloud_sql_server_pdo_timeout]
-        # [END cloud_sql_server_pdo_create_tcp]
+        # [END cloud_sql_sqlserver_pdo_timeout]
+        # [END cloud_sql_sqlserver_pdo_create_tcp]
     } catch (TypeError $e) {
         throw new RuntimeException(
             sprintf(

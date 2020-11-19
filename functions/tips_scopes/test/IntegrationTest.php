@@ -14,34 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+declare(strict_types=1);
 
-// [START functions_http_unit_test]
+namespace Google\Cloud\Samples\Functions\HelloworldGet\Test;
 
-namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
-
-use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 /**
- * Class SampleUnitTest.
- *
- * Unit test for helloHttp.
+ * Class IntegrationTest.
  */
-class SampleUnitTest extends TestCase
+class IntegrationTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        require_once __DIR__ . '/../index.php';
-    }
+    use CloudFunctionLocalTestTrait;
+
+    private static $entryPoint = 'scopeDemo';
 
     public function testFunction(): void
     {
-        $name = uniqid();
-        $request = new ServerRequest('POST', '/', [], json_encode(['name' => $name]));
-        $expected = sprintf('Hello, %s!', $name);
-        $actual = helloHttp($request);
-        $this->assertContains($expected, $actual);
+        // Send two requests to the function.
+        // (This tests cross-request caching behavior.)
+        $firstResp = $this->client->post('/');
+        $secondResp = $this->client->post('/');
+
+        // Assert status codes.
+        $this->assertEquals('200', $firstResp->getStatusCode());
+        $this->assertEquals('200', $secondResp->getStatusCode());
     }
 }
-
-// [END functions_http_unit_test]

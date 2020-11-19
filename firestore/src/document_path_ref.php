@@ -40,4 +40,5 @@ function document_path_ref($projectId)
     # [START fs_document_path_ref]
     $document = $db->document('users/lovelace');
     # [END fs_document_path_ref]
+    printf('Retrieved document from path: %s' . PHP_EOL, $document->name());
 }

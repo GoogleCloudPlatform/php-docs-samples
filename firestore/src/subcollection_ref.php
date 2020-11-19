@@ -44,4 +44,5 @@ function subcollection_ref($projectId)
         ->collection('messages')
         ->document('message1');
     # [END fs_subcollection_ref]
+    printf('Retrieved document from subcollection: %s' . PHP_EOL, $document->name());
 }

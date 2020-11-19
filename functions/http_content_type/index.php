@@ -30,8 +30,9 @@ function helloContent(ServerRequestInterface $request): string
               $json = json_decode($body, true);
               if (json_last_error() != JSON_ERROR_NONE) {
                   throw new RuntimeException(sprintf(
-                    'Could not parse body: %s', json_last_error_msg()
-                ));
+                      'Could not parse body: %s',
+                      json_last_error_msg()
+                  ));
               }
               $name = $json['name'] ?? $name;
           }
