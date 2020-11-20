@@ -79,11 +79,11 @@ source for our sample.
 
 ## Run the sample on Cloud Run
 
-1. [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic]
+### Deploy to Cloud Run
 
-    *This will take a few minutes to build and deploy.*
+[<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic]
 
-    The command line will display the service URL when deployment is complete.
+*This will take a few minutes to build and deploy.*
 
 ### Create an Eventarc Trigger
 
