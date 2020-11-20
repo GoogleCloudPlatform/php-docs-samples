@@ -2,8 +2,6 @@
 
 # Eventarc – Generic – PHP Sample
 
-[<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic]
-
 This directory contains a sample for receiving a generic event using Cloud Run
 and Eventarc with PHP. For testing purposes, we use Cloud Pub/Sub as an event
 source for our sample.
@@ -80,6 +78,10 @@ source for our sample.
     Exit the container with `Ctrl-D`.
 
 ## Run the sample on Cloud Run
+
+1. [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic]
+
+    *This will take a few minutes to build and deploy.*
 
 1. [Build the container using Cloud Build](https://cloud.google.com/run/docs/building/containers#builder)
 
