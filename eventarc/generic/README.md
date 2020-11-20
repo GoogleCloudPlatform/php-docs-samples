@@ -83,20 +83,6 @@ source for our sample.
 
     *This will take a few minutes to build and deploy.*
 
-1. [Build the container using Cloud Build](https://cloud.google.com/run/docs/building/containers#builder)
-
-    ```sh
-    gcloud builds submit --tag gcr.io/$(gcloud config get-value project)/eventarc-generic-php
-    ```
-
-1. [Deploy the container](https://cloud.google.com/run/docs/deploying#service)
-
-    ```sh
-    gcloud run deploy eventarc-generic-php \
-      --image gcr.io/$(gcloud config get-value project)/eventarc-generic-php \
-      --allow-unauthenticated
-    ```
-
     The command line will display the service URL when deployment is complete.
 
 ### Create an Eventarc Trigger
