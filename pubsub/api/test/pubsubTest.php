@@ -23,9 +23,9 @@ use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for IamCommand.
+ * Unit Tests for general pubsub samples.
  */
-class pubsubTest extends TestCase
+class PubSubTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;
