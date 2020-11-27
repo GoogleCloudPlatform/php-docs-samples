@@ -23,9 +23,9 @@ use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for UniformBucketLevelAccessCommand.
+ * Unit Tests for IamConfiguration.
  */
-class UniformBucketLevelAccessCommandTest extends TestCase
+class IamConfigurationTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;
@@ -41,7 +41,7 @@ class UniformBucketLevelAccessCommandTest extends TestCase
         $this->storage = new StorageClient();
 
         // Append random because tests for multiple PHP versions were running at the same time.
-        $bucketName = 'php-ubla-' . time() . '-' . rand(1000, 9999);
+        $bucketName = 'php-iamconfiguration-' . time() . '-' . rand(1000, 9999);
         $this->bucket = $this->storage->createBucket($bucketName);
     }
 
@@ -103,5 +103,59 @@ EOF;
         $bucketInformation = $this->bucket->info();
         $ubla = $bucketInformation['iamConfiguration']['uniformBucketLevelAccess'];
         $this->assertFalse($ubla['enabled']);
+    }
+
+    public function testEnablePublicAccessPrevention()
+    {
+        $output = $this->runCommand('public-access-prevention', [
+            'bucket' => $this->bucket->name(),
+            '--enable' => true,
+        ]);
+        $outputString = <<<EOF
+Public Access Prevention has been set to enforced for {$this->bucket->name()}
+
+EOF;
+        $this->assertEquals($outputString, $output);
+        $this->bucket->reload();
+        $bucketInformation = $this->bucket->info();
+        $pap = $bucketInformation['iamConfiguration']['publicAccessPrevention'];
+        $this->assertEquals('enforced', $pap);
+    }
+
+    /** @depends testEnablePublicAccessPrevention */
+    public function testDisablePublicAccessPrevention()
+    {
+        $output = $this->runCommand('public-access-prevention', [
+            'bucket' => $this->bucket->name(),
+            '--disable' => true,
+        ]);
+
+        $outputString = <<<EOF
+Public Access Prevention has been set to unspecified for {$this->bucket->name()}
+
+EOF;
+        $this->assertEquals($outputString, $output);
+        $this->bucket->reload();
+        $bucketInformation = $this->bucket->info();
+        $pap = $bucketInformation['iamConfiguration']['publicAccessPrevention'];
+        $this->assertEquals('unspecified', $pap);
+    }
+
+    /** @depends testDisablePublicAccessPrevention */
+    public function testGetPublicAccessPrevention()
+    {
+        $output = $this->runCommand('public-access-prevention', [
+            'bucket' => $this->bucket->name(),
+        ]);
+
+        $outputString = <<<EOF
+Uniform bucket-level access is unspecified for {$this->bucket->name()}
+
+EOF;
+        $this->assertEquals($outputString, $output);
+        $this->bucket->reload();
+        $bucketInformation = $this->bucket->info();
+        $pap = $bucketInformation['iamConfiguration']['publicAccessPrevention'];
+        $this->assertEquals('unspecified', $pap);
     }
 }

@@ -490,6 +490,31 @@ EOF
         }
     });
 
+    $application->add(new Command('public-access-prevention'))
+    ->setDescription('Manages public access prevention for a bucket.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command enables or disables public access prevention for a bucket.
+
+If no options are given, the current value will be returned.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable public access prevention on a Cloud Storage bucket')
+    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable public access prevention on a Cloud Storage bucket')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        if ($input->getOption('enable')) {
+            set_public_access_prevention_enforced($bucketName);
+        } elseif ($input->getOption('disable')) {
+            set_public_access_prevention_unspecified($bucketName);
+        } else {
+            get_bucket_public_access_prevention($bucketName);
+        }
+    });
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
