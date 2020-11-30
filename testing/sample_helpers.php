@@ -1,5 +1,9 @@
 <?php
 
+namespace Google\Cloud\Samples;
+
+use ReflectionFunction;
+
 function execute_sample(string $file, string $namespace)
 {
     global $argv;
@@ -24,7 +28,7 @@ function execute_sample(string $file, string $namespace)
         count($argv) < $functionReflection->getNumberOfRequiredParameters()
         || count($argv) > $functionReflection->getNumberOfParameters()
     ) {
-        print_usage(basename($file), $functionReflection);
+        print(get_usage(basename($file), $functionReflection));
         return;
     }
 
@@ -43,7 +47,7 @@ function execute_sample(string $file, string $namespace)
     call_user_func_array($functionName, $argv);
 }
 
-function print_usage(string $file, ReflectionFunction $functionReflection)
+function get_usage(string $file, ReflectionFunction $functionReflection)
 {
     // Print basic usage
     $paramNames = [];
