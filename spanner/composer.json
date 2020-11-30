@@ -5,7 +5,6 @@
     },
     "autoload": {
         "files": [
-            "src/add_column.php",
             "src/insert_data.php",
             "src/read_data.php",
             "src/read_write_transaction.php",
