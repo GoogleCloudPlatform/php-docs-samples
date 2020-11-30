@@ -20,7 +20,10 @@ function execute_sample(string $file, string $namespace)
 
     // Verify the user has supplied the correct number of arguments
     $functionReflection = new ReflectionFunction($functionName);
-    if (count($argv) != $functionReflection->getNumberOfRequiredParameters()) {
+    if (
+        count($argv) < $functionReflection->getNumberOfRequiredParameters()
+        || count($argv) > $functionReflection->getNumberOfParameters()
+    ) {
         print_usage(basename($file), $functionReflection);
         return;
     }
