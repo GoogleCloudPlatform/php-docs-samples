@@ -20,7 +20,7 @@ function execute_sample(string $file, string $namespace)
     }
 
     // Determine the name of the function to execute
-    $functionName = ($namespace ?: '') . '\\' . basename($file, '.php');
+    $functionName = sprintf('%s\\%s', $namespace, basename($file, '.php'));
 
     // Verify the user has supplied the correct number of arguments
     $functionReflection = new ReflectionFunction($functionName);
@@ -58,7 +58,7 @@ function get_usage(string $file, ReflectionFunction $functionReflection)
         }
         $paramNames[] = $name;
     }
-    printf('Usage: %s %s' . PHP_EOL, $file, implode(' ', $paramNames));
+    $usage = sprintf('Usage: %s %s' . PHP_EOL, $file, implode(' ', $paramNames));
 
     // Print @param docs if they exist
     preg_match_all(
@@ -67,8 +67,10 @@ function get_usage(string $file, ReflectionFunction $functionReflection)
         $matches
     );
     if (isset($matches[0])) {
-        print(PHP_EOL . "\t");
-        print(implode(PHP_EOL . "\t", $matches[0]) . PHP_EOL);
-        print(PHP_EOL);
+        $usage .= PHP_EOL . "\t";
+        $usage .= implode(PHP_EOL . "\t", $matches[0]) . PHP_EOL;
+        $usage .= PHP_EOL;
     }
+
+    return $usage;
 }
