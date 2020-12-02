@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
 
 class speechTest extends TestCase
 {
-    use TestTrait;
+    // use TestTrait;
 
     protected static $bucketName;
 
@@ -70,7 +70,7 @@ class speechTest extends TestCase
         if ($requireGrpc && !extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs'])) {
+        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs', 'profanity_filter_gcs'])) {
             $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         }
         $output = $this->runSnippet($command, [$audioFile]);
@@ -92,6 +92,7 @@ class speechTest extends TestCase
             ['transcribe_async', __DIR__ . '/data/audio32KHz.raw'],
             ['transcribe_async_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
             ['transcribe_async_words', __DIR__ . '/data/audio32KHz.raw'],
+            ['profanity_filter_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
             ['streaming_recognize', __DIR__ . '/data/audio32KHz.raw', true],
         ];
     }
