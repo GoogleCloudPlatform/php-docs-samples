@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START pubsub_dead_letter_remove]
+# [START pubsub_dead_letter_update_subscription]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -55,4 +55,4 @@ function dead_letter_update_subscription($projectId, $topicName, $subscriptionNa
         $deadLetterTopic->name()
     );
 }
-# [END pubsub_dead_letter_remove]
+# [END pubsub_dead_letter_update_subscription]
