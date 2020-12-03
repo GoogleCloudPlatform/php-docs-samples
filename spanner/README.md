@@ -76,78 +76,15 @@ to prevent incuring any additional charges.
 
 ## Samples
 
-To run the Spanner Samples:
+To run the Spanner Samples, run any of the files in `src/` on the CLI:
 
-    $ php spanner.php
+```
+$ php src/create_instance.php
 
-    Cloud Spanner
+Usage: create_instance.php $instanceId
 
-    Usage:
-      command [options] [arguments]
-
-    Options:
-      -h, --help            Display this help message
-      -q, --quiet           Do not output any message
-      -V, --version         Display this application version
-          --ansi            Force ANSI output
-          --no-ansi         Disable ANSI output
-      -n, --no-interaction  Do not ask any interactive question
-      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-
-    Available commands:
-      add-column                           Adds a new column to the Albums table in the example database.
-      add-timestamp-column                 Adds a commit timestamp column to a table.
-      batch-query-data                     Batch queries sample data from the database using SQL.
-      create-database                      Creates a database and tables for sample data.
-      create-instance                      Creates an instance.
-      create-index                         Adds a simple index to the example database.
-      create-storing-index                 Adds an storing index to the example database.
-      create-table-timestamp               Creates a table with a commit timestamp column.
-      create-table-with-datatypes          Creates a table with supported datatypes.
-      delete-data                          Deletes sample data from the given database.
-      delete-data-with-dml                 Remove sample data from the given database with a DML statement.
-      deleted-data-with-partitioned-dml    Deletes sample data in the database by partition with a DML statement.
-      help                                 Displays help for a command
-      insert-data                          Inserts sample data into the given database.
-      insert-data-timestamp                Inserts data into a table with a commit timestamp column.
-      insert-data-with-datatypes           Inserts data with supported datatypes.
-      insert-data-with-dml                 Inserts sample data into the given database with a DML statement.
-      insert-struct-data                   Inserts sample data that can be used to test STRUCT parameters in queries.
-      list                                 Lists commands
-      query-data                           Queries sample data from the database using SQL.
-      query-data-timestamp                 Queries sample data from a database with a commit timestamp column.
-      query-data-with-array-parameter      Queries sample data using SQL with an ARRAY parameter.
-      query-data-with-array-of-struct      Queries sample data from the database with an array of struct.
-      query-data-with-bool-parameter       Queries sample data using SQL with a BOOL parameter.
-      query-data-with-bytes-parameter      Queries sample data using SQL with a BYTES parameter.
-      query-data-with-date-parameter       Queries sample data using SQL with a DATE parameter.
-      query-data-with-float-parameter      Queries sample data using SQL with a FLOAT64 parameter.
-      query-data-with-index                Queries sample data from the database using SQL and an index.
-      query-data-with-int-parameter        Queries sample data using SQL with a INT64 parameter.
-      query-data-with-nested-struct-field  Queries sample data from the database with a nested struct field value.
-      query-data-with-new-column           Queries sample data from the database using SQL.
-      query-data-with-parameter            Query DML inserted sample data using SQL with a parameter.
-      query-data-with-string-parameter     Queries sample data using SQL with a STRING parameter.
-      query-data-with-struct               Queries sample data from the database with a struct.
-      query-data-with-struct-field         Queries sample data from the database with a struct field value.
-      query-data-with-timestamp-parameter  Queries sample data using SQL with a TIMESTAMP parameter.
-      read-data                            Reads sample data from the database.
-      read-data-with-index                 Reads sample data from the database using an index.
-      read-data-with-storing-index         Reads sample data from the database using an index with a storing clause.
-      read-only-transaction                Reads data inside of a read-only transaction.
-      read-stale-data                      Reads sample data from the database, with a maximum staleness of 3 seconds.
-      read-write-transaction               Performs a read-write transaction to update two sample records in the database.
-      update-data                          Updates sample data in the database.
-      update-data-timestamp                Updates sample data in a table with a commit timestamp column.
-      update-data-with-batch-dml           Updates sample data in the given database using Batch DML.
-      update-data-with-dml                 Updates sample data into the given database with a DML statement.
-      update-data-with-dml-structs         Updates data using DML statement with structs.
-      update-data-with-dml-timestamp       Update sample data from the given database with a DML statement and timestamp.
-      update-data-with-partitioned-dml     Updates sample data in the database by partition with a DML statement.
-      write-data-with-dml                  Writes sample data into the given database with a DML statement.
-      write-data-with-dml-transaction      Performs a read-write transaction to update two sample records in the database.
-      write-read-with-dml                  Writes then reads data inside a Transaction with a DML statement.
-
+  @param string $instanceId The Spanner instance ID.
+```
 
 ## Troubleshooting
 

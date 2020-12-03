@@ -41,14 +41,17 @@ function add_timestamp_column($instanceId, $databaseId)
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    
+
     $operation = $database->updateDdl(
         "ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)"
     );
-    
+
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf('Added LastUpdateTime as a commit timestamp column in Albums table' . PHP_EOL);
 }
 // [END spanner_add_timestamp_column]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

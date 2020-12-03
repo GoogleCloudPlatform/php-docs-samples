@@ -4,10 +4,8 @@ namespace Google\Cloud\Samples;
 
 use ReflectionFunction;
 
-function execute_sample(string $file, string $namespace)
+function execute_sample(string $file, string $namespace, ?array $argv)
 {
-    global $argv;
-
     // Return if sample file is not being executed via CLI
     if (is_null($argv)) {
         return;
@@ -33,7 +31,7 @@ function execute_sample(string $file, string $namespace)
     }
 
     // Require composer autoload for the user
-    $autoloadDir = dirname(dirname($file));
+    $autoloadDir = dirname(dirname($functionReflection->getFileName()));
     if (!file_exists($autoloadFile = $autoloadDir . '/vendor/autoload.php')) {
         printf(
             'You must run "composer install" in the sample root (%s/)' . PHP_EOL,
@@ -54,7 +52,8 @@ function get_usage(string $file, ReflectionFunction $functionReflection)
     foreach ($functionReflection->getParameters() as $param) {
         $name = '$' . $param->getName();
         if ($param->isOptional()) {
-            $name = "[$name]";
+            $default = var_export($param->getDefaultValue(), true);
+            $name = "[$name=$default]";
         }
         $paramNames[] = $name;
     }

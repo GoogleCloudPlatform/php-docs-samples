@@ -59,3 +59,6 @@ function update_data($instanceId, $databaseId)
     print('Updated data.' . PHP_EOL);
 }
 // [END spanner_update_data]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

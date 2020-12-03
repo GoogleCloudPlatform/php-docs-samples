@@ -60,3 +60,6 @@ function update_data_with_dml($instanceId, $databaseId)
     });
 }
 // [END spanner_dml_standard_update]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
