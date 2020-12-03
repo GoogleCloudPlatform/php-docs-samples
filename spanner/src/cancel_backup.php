@@ -30,13 +30,13 @@ use Google\Cloud\Spanner\SpannerClient;
  * Cancel a backup operation.
  * Example:
  * ```
- * cancel_backup_operation($instanceId, $databaseId);
+ * cancel_backup($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function cancel_backup_operation($instanceId, $databaseId)
+function cancel_backup($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
