@@ -82,3 +82,6 @@ function query_data_with_nested_struct_field($instanceId, $databaseId)
     }
 }
 // [END spanner_field_access_on_nested_struct_parameters]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

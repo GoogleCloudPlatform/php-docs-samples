@@ -57,3 +57,6 @@ function create_client_with_query_options($instanceId, $databaseId)
     }
 }
 // [END spanner_create_client_with_query_options]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

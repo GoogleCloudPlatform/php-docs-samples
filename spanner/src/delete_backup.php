@@ -45,3 +45,6 @@ function delete_backup($instanceId, $backupId)
     print("Backup $backupName deleted" . PHP_EOL);
 }
 // [END spanner_delete_backup]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

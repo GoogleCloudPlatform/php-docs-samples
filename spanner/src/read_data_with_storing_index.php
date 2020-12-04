@@ -69,3 +69,6 @@ function read_data_with_storing_index($instanceId, $databaseId)
     }
 }
 // [END spanner_read_data_with_storing_index]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

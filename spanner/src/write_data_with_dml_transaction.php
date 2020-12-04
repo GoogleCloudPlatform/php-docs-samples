@@ -104,3 +104,6 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
     });
 }
 // [END spanner_dml_getting_started_update]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
