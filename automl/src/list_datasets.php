@@ -62,7 +62,7 @@ try {
             // [END automl_language_text_classification_list_datasets]
             // [END automl_translate_list_datasets]
             // [END automl_vision_classification_list_datasets]
-            // [END automl_vision_object_detection_list_dataset]
+            // [END automl_vision_object_detection_list_datasets]
             printf('Text extraction dataset metadata: %s' . PHP_EOL, $dataset->getTextExtractionDatasetMetadata());
             // [END automl_language_entity_extraction_list_datasets]
 
