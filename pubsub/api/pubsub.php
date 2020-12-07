@@ -159,7 +159,7 @@ EOF
     <info>php %command.full_name% pull --project my-project
         --topic my-topic --subscription my-subscription</info>
 
-    EOF
+EOF
         )
         ->addArgument('action', InputArgument::REQUIRED, 'The action to take')
         ->addOption('project', null, InputOption::VALUE_REQUIRED, 'Your Google Cloud project ID.')

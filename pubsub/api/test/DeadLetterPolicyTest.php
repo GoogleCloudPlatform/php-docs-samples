@@ -62,10 +62,10 @@ class DeadLetterPolicyTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-         self::$topic->delete();
-         self::$subscription->delete();
-         self::$deadLetterTopic->delete();
-         self::$deadLetterTopic2->delete();
+        self::$topic->delete();
+        self::$subscription->delete();
+        self::$deadLetterTopic->delete();
+        self::$deadLetterTopic2->delete();
     }
 
     public function testCreateDeadLetterSubscription()
