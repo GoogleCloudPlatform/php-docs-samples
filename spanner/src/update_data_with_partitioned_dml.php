@@ -56,3 +56,6 @@ function update_data_with_partitioned_dml($instanceId, $databaseId)
     printf('Updated %d row(s).' . PHP_EOL, $rowCount);
 }
 // [END spanner_dml_partitioned_update]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

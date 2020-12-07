@@ -59,3 +59,6 @@ function create_instance($instanceId)
     printf('Created instance %s' . PHP_EOL, $instanceId);
 }
 // [END spanner_create_instance]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

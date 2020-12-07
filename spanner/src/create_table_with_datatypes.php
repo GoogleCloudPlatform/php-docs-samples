@@ -41,7 +41,7 @@ function create_table_with_datatypes($instanceId, $databaseId)
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    
+
     $operation = $database->updateDdl(
         "CREATE TABLE Venues (
             VenueId		           INT64 NOT NULL,
@@ -55,7 +55,7 @@ function create_table_with_datatypes($instanceId, $databaseId)
             LastUpdateTime TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
     	) PRIMARY KEY (VenueId)"
     );
-    
+
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
@@ -63,3 +63,6 @@ function create_table_with_datatypes($instanceId, $databaseId)
         $databaseId, $instanceId);
 }
 // [END spanner_create_table_with_datatypes]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

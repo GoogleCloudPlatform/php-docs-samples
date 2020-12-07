@@ -52,3 +52,6 @@ function add_column($instanceId, $databaseId)
     printf('Added the MarketingBudget column.' . PHP_EOL);
 }
 // [END spanner_add_column]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

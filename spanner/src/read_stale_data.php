@@ -58,3 +58,6 @@ function read_stale_data($instanceId, $databaseId)
     }
 }
 // [END spanner_read_stale_data]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
