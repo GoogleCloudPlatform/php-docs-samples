@@ -25,6 +25,7 @@ list($_, $projectId, $location, $displayName, $sourceLanguage, $targetLanguage) 
 // [START automl_translate_create_dataset]
 use Google\Cloud\AutoMl\V1\AutoMlClient;
 use Google\Cloud\AutoMl\V1\Dataset;
+use Google\Cloud\AutoMl\V1\TranslationDatasetMetadata;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = '[Google Cloud Project ID]';
@@ -42,12 +43,12 @@ try {
         $location
     );
 
-    $metadata = (new TextExtractionDatasetMetadata())
+    $metadata = (new TranslationDatasetMetadata())
         ->setSourceLanguageCode($sourceLanguage)
         ->setTargetLanguageCode($targetLanguage);
     $dataset = (new Dataset())
         ->setDisplayName($displayName)
-        ->setTextExtractionDatasetMetadata($metadata);
+        ->setTranslationDatasetMetadata($metadata);
 
     // create dataset with the above location and metadata
     $operationResponse = $client->createDataset($formattedParent, $dataset);
