@@ -72,3 +72,6 @@ function read_only_transaction($instanceId, $databaseId)
     }
 }
 // [END spanner_read_only_transaction]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

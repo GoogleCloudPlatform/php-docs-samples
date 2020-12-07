@@ -45,8 +45,12 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $startTitle The start of the title index.
  * @param string $endTitle   The end of the title index.
  */
-function query_data_with_index($instanceId, $databaseId, $startTitle, $endTitle)
-{
+function query_data_with_index(
+    $instanceId,
+    $databaseId,
+    $startTitle = 'Aardvark',
+    $endTitle = 'Goo'
+) {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
@@ -69,3 +73,6 @@ function query_data_with_index($instanceId, $databaseId, $startTitle, $endTitle)
     }
 }
 // [END spanner_query_data_with_index]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

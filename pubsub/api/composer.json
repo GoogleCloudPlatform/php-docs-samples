@@ -1,13 +1,17 @@
 {
     "require": {
         "php": ">=5.4",
-        "google/cloud-pubsub": "^1.27",
+        "google/cloud-pubsub": "^1.29",
         "symfony/console": " ^3.0"
     },
     "autoload": {
         "files": [
             "src/create_subscription.php",
             "src/create_topic.php",
+            "src/dead_letter_create_subscription.php",
+            "src/dead_letter_delivery_attempt.php",
+            "src/dead_letter_remove.php",
+            "src/dead_letter_update_subscription.php",
             "src/create_push_subscription.php",
             "src/delete_subscription.php",
             "src/delete_topic.php",

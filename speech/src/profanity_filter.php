@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START profanity_filter]
+
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/../vendor/autoload.php';
 

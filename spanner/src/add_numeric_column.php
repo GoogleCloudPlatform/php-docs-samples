@@ -41,14 +41,17 @@ function add_numeric_column($instanceId, $databaseId)
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    
+
     $operation = $database->updateDdl(
         "ALTER TABLE Venues ADD COLUMN Revenue NUMERIC"
     );
-    
+
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf('Added Revenue as a NUMERIC column in Venues table' . PHP_EOL);
 }
 // [END spanner_add_numeric_column]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
