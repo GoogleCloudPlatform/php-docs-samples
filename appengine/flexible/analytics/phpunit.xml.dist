@@ -19,7 +19,7 @@
         <env name="GA_TRACKING_ID" value="UA-78971600-1"/>
     </php>
     <testsuites>
-        <testsuite>
+        <testsuite name="App Engine Flex Memcache tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -29,6 +29,9 @@
     <filter>
         <whitelist>
             <file>app.php</file>
+            <exclude>
+                <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

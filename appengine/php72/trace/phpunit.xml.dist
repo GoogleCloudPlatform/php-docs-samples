@@ -18,6 +18,9 @@
     <testsuites>
         <testsuite name="AppEngine for PHP 7.2 Stackdriver Trace tests">
             <directory>test</directory>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </testsuite>
     </testsuites>
     <logging>

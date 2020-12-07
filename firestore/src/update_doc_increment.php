@@ -43,7 +43,7 @@ function update_doc_increment($projectId)
 
     // Atomically increment the population of the city by 50.
     $cityRef->update([
-        ['path' => 'regions', 'value' => FieldValue::incremet(50)]
+        ['path' => 'regions', 'value' => FieldValue::increment(50)]
     ]);
     # [END fs_update_doc_increment]
     printf('Updated the population of the DC document in the cities collection.' . PHP_EOL);

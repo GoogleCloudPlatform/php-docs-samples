@@ -51,7 +51,7 @@ $fileBytes = (new ByteContentItem())
     ->setData(file_get_contents($filepath));
 
 // Construct request
-$parent = $dlp->projectName($projectId);
+$parent = "projects/$projectId/locations/global";
 $item = (new ContentItem())
     ->setByteItem($fileBytes);
 $inspectConfig = (new InspectConfig())
@@ -65,7 +65,8 @@ $inspectConfig = (new InspectConfig())
     ->setIncludeQuote(true);
 
 // Run request
-$response = $dlp->inspectContent($parent, [
+$response = $dlp->inspectContent([
+    'parent' => $parent,
     'inspectConfig' => $inspectConfig,
     'item' => $item
 ]);

@@ -86,9 +86,8 @@ $inspectTemplate = (new InspectTemplate())
     ->setDescription($description);
 
 // Run request
-$parent = $dlp->projectName($callingProjectId);
-$template = $dlp->createInspectTemplate($parent, [
-    'inspectTemplate' => $inspectTemplate,
+$parent = "projects/$callingProjectId/locations/global";
+$template = $dlp->createInspectTemplate($parent, $inspectTemplate, [
     'templateId' => $templateId
 ]);
 

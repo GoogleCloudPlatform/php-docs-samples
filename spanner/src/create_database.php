@@ -67,3 +67,6 @@ function create_database($instanceId, $databaseId)
         $databaseId, $instanceId);
 }
 // [END spanner_create_database]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

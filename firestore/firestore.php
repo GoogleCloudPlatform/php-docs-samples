@@ -939,6 +939,142 @@ EOF
     })
 );
 
+//Create distributed counter
+$application->add((new Command('initialize-distributed-counter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Creates a subcollection from the specified multiple shards.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates a distributed counter as a sub collection in Google Cloud Firestore, consisting of several empty shards.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        initialize_distributed_counter($projectId);
+    })
+);
+
+//Increment (distributed counter)
+$application->add((new Command('update-distributed-counter'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Increments a randomly picked shard of a distributed counter.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command increments the randomly selected shard of a distributed counter using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        update_distributed_counter($projectId);
+    })
+);
+
+//get value (distributed counter)
+$application->add((new Command('get-distributed-counter-value'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Returns the total count across all the shards of a distributed counter.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command returns the total count across all the shards of a distributed counter, using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        get_distributed_counter_value($projectId);
+    })
+);
+
+// Array Membership Any command
+$application->add((new Command('array-membership-any'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Create queries using an array-contains-any where clause.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates queries using an array-contains-any where clause using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        array_membership_any($projectId);
+    })
+);
+
+// Where In Query command
+$application->add((new Command('in-query'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Create queries using an IN where clause.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates queries using an IN where clause using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        in_query($projectId);
+    })
+);
+
+// Where In Array Query command
+$application->add((new Command('in-array-query'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Create queries using an IN where clause containing array items.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates queries using an IN where clause with array items using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        in_array_query($projectId);
+    })
+);
+
+// Collection group query setup
+$application->add((new Command('collection-group-query-setup'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('Create example collection group for documents.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command creates example collection group for documents using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        collection_group_query_setup($projectId);
+    })
+);
+
+// Collection group query
+$application->add((new Command('collection-group-query'))
+    ->setDefinition($inputDefinition)
+    ->setDescription('List documents with matching collection group')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command lists documents with collection group having matching elements using the Google Cloud Firestore API.
+
+    <info>php %command.full_name%</info>
+
+EOF
+    )
+    ->setCode(function ($input, $output) {
+        $projectId = $input->getArgument('project');
+        collection_group_query($projectId);
+    })
+);
+
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;

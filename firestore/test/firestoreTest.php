@@ -17,8 +17,10 @@
 
 namespace Google\Cloud\Samples\Firestore\Tests;
 
+use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
+use Google\Cloud\Core\Exception\BadRequestException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,6 +40,11 @@ class firestoreTest extends TestCase
             self::markTestSkipped('Must enable grpc extension.');
         }
         self::$firestoreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::runFirestoreCommand('delete-test-collections');
     }
 
     public function testInitialize()
@@ -173,6 +180,40 @@ class firestoreTest extends TestCase
         $this->assertContains('Document SF returned by query regions array-contains west_coast', $output);
     }
 
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testArrayMembershipAny()
+    {
+        $output = $this->runFirestoreCommand('array-membership-any');
+        $this->assertContains('Document DC returned by query regions array-contains-any [west_coast, east_coast]', $output);
+        $this->assertContains('Document LA returned by query regions array-contains-any [west_coast, east_coast]', $output);
+        $this->assertContains('Document SF returned by query regions array-contains-any [west_coast, east_coast]', $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testInQuery()
+    {
+        $output = $this->runFirestoreCommand('in-query');
+        $this->assertContains('Document DC returned by query country in [USA, Japan]', $output);
+        $this->assertContains('Document LA returned by query country in [USA, Japan]', $output);
+        $this->assertContains('Document SF returned by query country in [USA, Japan]', $output);
+        $this->assertContains('Document TOK returned by query country in [USA, Japan]', $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testInArrayQuery()
+    {
+        $output = $this->runFirestoreCommand('in-array-query');
+        $this->assertContains('Document DC returned by query regions in [[west_coast], [east_coast]]', $output);
+        $this->assertNotContains('Document SF', $output);
+    }
+
     /**
      * @depends testQueryCreateExamples
      */
@@ -206,11 +247,46 @@ class firestoreTest extends TestCase
      */
     public function testInvalidRangeQuery()
     {
-        $output = $this->runFirestoreCommand('invalid-range-query');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage(
+            'Cannot have inequality filters on multiple properties'
+        );
+        $this->runFirestoreCommand('invalid-range-query');
     }
 
     /**
      * @depends testQueryCreateExamples
+     */
+    public function testCollectionGroupQuerySetup()
+    {
+        $output = $this->runFirestoreCommand('collection-group-query-setup');
+        $this->assertContains('Added example landmarks collections to the cities collection.', $output);
+    }
+
+    /**
+     * @depends testCollectionGroupQuerySetup
+     */
+    public function testCollectionGroupQuery()
+    {
+        $output = $this->runFirestoreCommand('collection-group-query');
+        $this->assertContains('Beijing Ancient Observatory', $output);
+        $this->assertContains('National Air and Space Museum', $output);
+        $this->assertContains('The Getty', $output);
+        $this->assertContains('Legion of Honor', $output);
+        $this->assertContains('National Museum of Nature and Science', $output);
+        $this->assertNotContains('Golden Gate Bridge', $output);
+        $this->assertNotContains('Griffith Park', $output);
+        $this->assertNotContains('Lincoln Memorial', $output);
+        $this->assertNotContains('Ueno Park', $output);
+        $this->assertNotContains('Jingshan Park', $output);
+    }
+
+    /**
+     * @depends testArrayMembership
+     * @depends testArrayMembershipAny
+     * @depends testInQuery
+     * @depends testInArrayQuery
+     * @depends testCollectionGroupQuery
      */
     public function testDeleteDocument()
     {
@@ -219,7 +295,7 @@ class firestoreTest extends TestCase
     }
 
     /**
-     * @depends testQueryCreateExamples
+     * @depends testDeleteDocument
      */
     public function testDeleteField()
     {
@@ -228,7 +304,7 @@ class firestoreTest extends TestCase
     }
 
     /**
-     * @depends testQueryCreateExamples
+     * @depends testDeleteField
      */
     public function testDeleteCollection()
     {
@@ -239,6 +315,9 @@ class firestoreTest extends TestCase
         $this->assertContains('Deleting document SF', $output);
     }
 
+    /**
+     * @depends testDeleteField
+     */
     public function testRetrieveCreateExamples()
     {
         $output = $this->runFirestoreCommand('retrieve-create-examples');
@@ -352,27 +431,35 @@ class firestoreTest extends TestCase
      */
     public function testInvalidRangeOrderByQuery()
     {
-        $output = $this->runFirestoreCommand('invalid-range-order-by-query');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage(
+            'inequality filter property and first sort order must be the same'
+        );
+        $this->runFirestoreCommand('invalid-range-order-by-query');
     }
 
     public function testDocumentRef()
     {
         $output = $this->runFirestoreCommand('document-ref');
+        $this->assertContains('Retrieved document: ', $output);
     }
 
     public function testCollectionRef()
     {
         $output = $this->runFirestoreCommand('collection-ref');
+        $this->assertContains('Retrieved collection: ', $output);
     }
 
     public function testDocumentPathRef()
     {
         $output = $this->runFirestoreCommand('document-path-ref');
+        $this->assertContains('Retrieved document from path: ', $output);
     }
 
     public function testSubcollectionRef()
     {
         $output = $this->runFirestoreCommand('subcollection-ref');
+        $this->assertContains('Retrieved document from subcollection: ', $output);
     }
 
     /**
@@ -494,17 +581,47 @@ class firestoreTest extends TestCase
     public function testMultipleCursorConditions()
     {
         $output = $this->runFirestoreCommand('multiple-cursor-conditions');
+        $this->assertContains('Document TOK returned by start at ', $output);
     }
 
-    public function testDeleteTestCollections()
+    private static function runFirestoreCommand($commandName)
     {
-        $output = $this->runFirestoreCommand('delete-test-collections');
-    }
-
-    private function runFirestoreCommand($commandName)
-    {
-        return $this->runCommand($commandName, [
+        return self::runCommand($commandName, [
             'project' => self::$firestoreProjectId
         ]);
+    }
+
+    public function testDistributedCounter()
+    {
+        $this->runFirestoreCommand('initialize-distributed-counter');
+        $outputZero = $this->runFirestoreCommand('get-distributed-counter-value');
+        $this->assertContains('0', $outputZero);
+
+        //check count of shards
+        $db = new FirestoreClient([
+            'projectId' => self::$firestoreProjectId,
+        ]);
+        $ref = $db->collection('Shards_collection')->document('Distributed_counters');
+        $collect = $ref->collection('SHARDS');
+        $docCollection = $collect->documents();
+
+        $docIdList = [];
+        foreach ($docCollection as $docSnap) {
+            $docIdList[] = $docSnap->id();
+        }
+        $this->assertEquals(10, count($docIdList));
+
+        //call thrice and check the value
+        $this->runFirestoreCommand('update-distributed-counter');
+        $this->runFirestoreCommand('update-distributed-counter');
+        $this->runFirestoreCommand('update-distributed-counter');
+
+        $output = $this->runFirestoreCommand('get-distributed-counter-value');
+        $this->assertContains('3', $output);
+
+        //remove temporary data
+        foreach ($docIdList as $docId) {
+            $collect->document($docId)->delete();
+        }
     }
 }

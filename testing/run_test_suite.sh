@@ -25,7 +25,26 @@ FLAKES=(
     datastore/api
     jobs
     asset
-    dlp
+    appengine/flexible/logging
+)
+
+# Directories we do not want to run tests in, even if they exist
+SKIP_TESTS=(
+    appengine/php55/taskqueue
+    appengine/php55/wordpress
+    appengine/php55/grpc
+    appengine/php55/sendgrid
+    appengine/php55/mail
+    appengine/php55/phpmyadmin
+    appengine/php55/mailjet
+    appengine/php55/storage
+    appengine/php55/memcache
+    appengine/php55/http
+    appengine/php55/users
+    appengine/php55/cloudsql
+    appengine/php55/mailgun
+    appengine/php55/modules
+    appengine/php55/twilio
 )
 
 # tests to run with grpc.so disabled
@@ -60,6 +79,7 @@ ALT_PROJECT_TESTS=(
     monitoring
     pubsub/api
     storage
+    spanner
     video
     vision
 )
@@ -93,28 +113,30 @@ if [ "${TEST_DIRECTORIES}" = "" ]; then
   TEST_DIRECTORIES="*"
 fi
 
-if ! type phpunit > /dev/null; then
-  echo "run \"bash testing/composer.sh\" to install testing dependencies"
+TESTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TESTCMD="$TESTDIR/vendor/bin/phpunit"
+
+if ! type $TESTCMD > /dev/null; then
+  echo "run \"composer install -d testing/\" to install testing dependencies"
   exit 1
 fi
 
 run_tests()
 {
-    CMD="phpunit -v"
-    if [[ "${ALT_PROJECT_TESTS[@]}" =~ "${DIR}" ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
+    if [[ " ${ALT_PROJECT_TESTS[@]} " =~ " ${DIR} " ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then
         echo "Using alternate project $GOOGLE_ALT_PROJECT_ID"
         GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_ALT_APPLICATION_CREDENTIALS \
             GCLOUD_PROJECT=$GOOGLE_ALT_PROJECT_ID \
             GOOGLE_PROJECT_ID=$GOOGLE_ALT_PROJECT_ID \
             GOOGLE_STORAGE_BUCKET=$GOOGLE_ALT_STORAGE_BUCKET \
-            $CMD
+            $TESTCMD -v
     else
-        $CMD
+        $TESTCMD -v
     fi
     if [ $? == 0 ]; then
         echo "$1: ok" >> "${SUCCEEDED_FILE}"
     else
-        if [[ "${FLAKES[@]}" =~ "${DIR}" ]]; then
+        if [[ " ${FLAKES[@]} " =~ " ${DIR} " ]]; then
             echo "$1: failed" >> "${FAILED_FLAKY_FILE}"
         else
             echo "$1: failed" >> "${FAILED_FILE}"
@@ -132,7 +154,11 @@ do
             continue
         fi
     fi
-    if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! "${REST_TESTS[@]}" =~ "${DIR}" ]]; then
+    if [[ " ${SKIP_TESTS[@]} " =~ " ${DIR} " ]]; then
+        echo "Skipping tests in $DIR (explicitly flagged to be skipped)"
+        continue
+    fi
+    if [ "${RUN_REST_TESTS_ONLY}" = "true" ] && [[ ! " ${REST_TESTS[@]} " =~ " ${DIR} " ]]; then
         echo "Skipping tests in $DIR (no REST tests)"
         continue
     fi

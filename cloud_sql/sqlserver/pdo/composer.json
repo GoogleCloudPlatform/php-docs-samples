@@ -1,0 +1,25 @@
+{
+    "name": "google/cloud-sql-sqlserver-example",
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\CloudSQL\\SQLServer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\CloudSQL\\SQLServer\\Tests\\": "src"
+        }
+    },
+    "require": {
+        "php": ">= 7.2",
+        "ext-pdo_sqlsrv": "*",
+        "slim/slim": "^4.5",
+        "slim/twig-view": "^3.1",
+        "pimple/pimple": "^3.3",
+        "guzzlehttp/psr7": "^1.6",
+        "http-interop/http-factory-guzzle": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    }
+}

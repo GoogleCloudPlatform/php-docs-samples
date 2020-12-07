@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,66 +26,6 @@ use PHPUnit\Framework\TestCase;
 class dlpTest extends TestCase
 {
     use TestTrait;
-    use ExponentialBackoffTrait;
-
-    private static $dataset = 'integration_tests_dlp';
-    private static $table = 'harmful';
-
-    public function setUp()
-    {
-        $this->useResourceExhaustedBackoff(5);
-    }
-
-    public function testInspectDatastore()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $kind = 'Person';
-        $namespace = 'DLP';
-
-        $output = $this->runSnippet('inspect_datastore', [
-            self::$projectId,
-            self::$projectId,
-            $topicId,
-            $subId,
-            $kind,
-            $namespace
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-    }
-
-    public function testInspectBigquery()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-
-        $output = $this->runSnippet('inspect_bigquery', [
-            self::$projectId,
-            self::$projectId,
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-    }
-
-    public function testInspectGCS()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-        $objectName = 'dlp/harmful.csv';
-
-        $output = $this->runSnippet('inspect_gcs', [
-            self::$projectId,
-            $topicId,
-            $subId,
-            $bucketName,
-            $objectName,
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-    }
 
     public function testInspectImageFile()
     {
@@ -242,7 +181,7 @@ class dlpTest extends TestCase
             $scanPeriod,
             $autoPopulateTimespan,
         ]);
-        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', self::$projectId, $triggerId);
+        $fullTriggerId = sprintf('projects/%s/locations/global/jobTriggers/%s', self::$projectId, $triggerId);
         $this->assertContains('Successfully created trigger ' . $fullTriggerId, $output);
 
         $output = $this->runSnippet('list_triggers', [self::$projectId]);
@@ -263,7 +202,7 @@ class dlpTest extends TestCase
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
-        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', self::$projectId, $templateId);
+        $fullTemplateId = sprintf('projects/%s/locations/global/inspectTemplates/%s', self::$projectId, $templateId);
 
         $output  = $this->runSnippet('create_inspect_template', [
             self::$projectId,
@@ -283,112 +222,6 @@ class dlpTest extends TestCase
             $templateId
         ]);
         $this->assertContains('Successfully deleted template ' . $fullTemplateId, $output);
-    }
-
-    public function testNumericalStats()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $columnName = 'Age';
-
-        $output = $this->runSnippet('numerical_stats', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $columnName,
-        ]);
-
-        $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
-        $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
-    }
-
-    public function testCategoricalStats()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $columnName = 'Gender';
-
-        $output = $this->runSnippet('categorical_stats', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $columnName,
-        ]);
-
-        $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
-        $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
-        $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
-    }
-
-    public function testKAnonymity()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $quasiIds = 'Age,Gender';
-
-        $output = $this->runSnippet('k_anonymity', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $quasiIds,
-        ]);
-        $this->assertContains('{"stringValue":"Female"}', $output);
-        $this->assertRegExp('/Class size: \d/', $output);
-    }
-
-    public function testLDiversity()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $sensitiveAttribute = 'Name';
-        $quasiIds = 'Age,Gender';
-
-        $output = $this->runSnippet('l_diversity', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $sensitiveAttribute,
-            $quasiIds,
-        ]);
-        $this->assertContains('{"stringValue":"Female"}', $output);
-        $this->assertRegExp('/Class size: \d/', $output);
-        $this->assertContains('{"stringValue":"James"}', $output);
-    }
-
-    public function testKMap()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $regionCode = 'US';
-        $quasiIds = 'Age,Gender';
-        $infoTypes = 'AGE,GENDER';
-
-        $output = $this->runSnippet('k_map', [
-            self::$projectId,
-            self::$projectId,
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $regionCode,
-            $quasiIds,
-            $infoTypes,
-        ]);
-        $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
-        $this->assertRegExp('/Size: \d/', $output);
-        $this->assertContains('{"stringValue":"Female"}', $output);
     }
 
     public function testJobs()

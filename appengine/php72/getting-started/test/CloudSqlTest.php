@@ -25,13 +25,13 @@ class CloudSqlTest extends TestCase
 {
     use TestTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $connection = $this->requireEnv('CLOUDSQL_CONNECTION_NAME');
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
         $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
         $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-        $socket = "/cloudsql/${connection}";
+        $socket = "/tmp/cloudsql/${connection}";
 
         if (!file_exists($socket)) {
             $this->markTestSkipped(

@@ -21,13 +21,14 @@ require 'vendor/autoload.php';
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 /**
  * Unit Tests for iot commands.
  */
 class iotTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait;
+    use TestTrait, ExecuteCommandTrait, RetryTrait;
 
     private static $commandFile = __DIR__ . '/../iot.php';
     private static $testId;
@@ -290,7 +291,10 @@ class iotTest extends TestCase
         $this->assertContains($gatewayId, $output);
     }
 
-    /** @depends testCreateGateway */
+    /**
+     * @depends testCreateGateway
+     * @retryAttempts 3
+     */
     public function testBindUnbindDevice()
     {
         $deviceId = 'test-device-to-bind' . self::$testId;

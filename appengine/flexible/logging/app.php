@@ -39,6 +39,7 @@ $app->get('/', function () use ($app) {
     $logger = $logging->logger('logging-sample');
     $logs = $logger->entries([
         'pageSize' => 10,
+        'resultLimit' => 10,
         'orderBy' => 'timestamp desc'
     ]);
     return $app['twig']->render('index.html.twig', ['logs' => $logs]);

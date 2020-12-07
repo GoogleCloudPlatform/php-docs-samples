@@ -41,7 +41,7 @@ function create_table_with_timestamp_column($instanceId, $databaseId)
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    
+
     $operation = $database->updateDdl(
         "CREATE TABLE Performances (
     		SingerId	INT64 NOT NULL,
@@ -52,7 +52,7 @@ function create_table_with_timestamp_column($instanceId, $databaseId)
     	) PRIMARY KEY (SingerId, VenueId, EventDate),
     	INTERLEAVE IN PARENT Singers on DELETE CASCADE"
     );
-    
+
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
@@ -60,3 +60,6 @@ function create_table_with_timestamp_column($instanceId, $databaseId)
         $databaseId, $instanceId);
 }
 // [END spanner_create_table_with_timestamp_column]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START download_file_requester_pays]
+# [START storage_download_file_requester_pays]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -48,4 +48,4 @@ function download_file_requester_pays($projectId, $bucketName, $objectName, $des
     printf('Downloaded gs://%s/%s to %s using requester-pays requests.' . PHP_EOL,
         $bucketName, $objectName, basename($destination));
 }
-# [END download_file_requester_pays]
+# [END storage_download_file_requester_pays]

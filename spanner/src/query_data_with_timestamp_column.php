@@ -72,3 +72,6 @@ function query_data_with_timestamp_column($instanceId, $databaseId)
     }
 }
 // [END spanner_query_data_with_timestamp_column]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

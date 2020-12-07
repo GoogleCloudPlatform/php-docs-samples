@@ -40,9 +40,9 @@ $app->get('/', function () use ($app) {
     return $welcome;
 });
 
-$app->post('/echo', function () use ($app) {
+$app->post('/echo', function (Request $request) use ($app) {
     // Simple echo service.
-    $message = $app['request']->get('message');
+    $message = $request->get('message');
     return $app->json(['message' => $message]);
 });
 
@@ -57,9 +57,7 @@ $app->get('/auth/info/googleidtoken', function () use ($app) {
     return $app->json($app['auth_info']);
 });
 
-$app['auth_info'] = function () use ($app) {
-    /** @var Symfony\Component\HttpFoundation\Request $request */
-    $request = $app['request'];
+$app['auth_info'] = function (Request $request) use ($app) {
     // Retrieves the authenication information from Google Cloud Endpoints.
     $encoded_info = $request->headers->get('X-Endpoint-API-UserInfo');
 

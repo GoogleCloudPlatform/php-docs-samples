@@ -265,31 +265,60 @@ The <info>%command.name%</info> command manages Storage IAM policies.
 
 <info>php %command.full_name% my-bucket</info>
 
-<info>php %command.full_name% my-bucket --role my-role --add-member user/test@email.com</info>
+<info>php %command.full_name% my-bucket --role my-role --add-member user:test1@email.com --add-member user:test2@email.com</info>
 
-<info>php %command.full_name% my-bucket --role my-role --remove-member user/test@email.com</info>
+<info>php %command.full_name% my-bucket --role my-role --remove-member user:test@email.com</info>
+
+<info>php %command.full_name% my-bucket --role my-role --remove-binding --title cond-title --description cond-description --expression cond-expression</info>
 
 EOF
     )
     ->addArgument('bucket', InputArgument::REQUIRED, 'The bucket that you want to change IAM for. ')
     ->addOption('role', null, InputOption::VALUE_REQUIRED, 'The new role to add to a bucket. ')
-    ->addOption('add-member', null, InputOption::VALUE_REQUIRED, 'The new member to add with the new role to the bucket. ')
+    ->addOption('add-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "The new member(s) to add with the new role to the bucket. ")
     ->addOption('remove-member', null, InputOption::VALUE_REQUIRED, 'The member to remove from a role for a bucket. ')
+    ->addOption('remove-binding', null, InputOption::VALUE_NONE, 'Remove conditional policy')
+    ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Optional. A title for the condition, if --expression is used. ')
+    ->addOption('description', null, InputOption::VALUE_REQUIRED, 'Optional. A description for the condition, if --expression is used. ')
+    ->addOption('expression', null, InputOption::VALUE_REQUIRED, 'Add the role/members pair with an IAM condition expression. ')
     ->setCode(function ($input, $output) {
         $bucketName = $input->getArgument('bucket');
         $role = $input->getOption('role');
-        $addMember = $input->getOption('add-member');
+        $members = $input->getOption('add-member');
         $removeMember = $input->getOption('remove-member');
-        if ($addMember) {
+        $removeBinding = $input->getOption('remove-binding');
+        $expression = $input->getOption('expression');
+        $title = $input->getOption('title');
+        $description = $input->getOption('description');
+        if ($members) {
             if (!$role) {
                 throw new InvalidArgumentException('Must provide role as an option.');
             }
-            add_bucket_iam_member($bucketName, $role, $addMember);
+
+            if ($expression) {
+                add_bucket_conditional_iam_binding($bucketName, $role, $members, $title, $description, $expression);
+            } else {
+                add_bucket_iam_member($bucketName, $role, $members);
+            }
         } elseif ($removeMember) {
             if (!$role) {
                 throw new InvalidArgumentException('Must provide role as an option.');
             }
             remove_bucket_iam_member($bucketName, $role, $removeMember);
+        } elseif ($removeBinding) {
+            if (!$role) {
+                throw new InvalidArgumentException('Must provide role as an option.');
+            }
+            if (!$title) {
+                throw new InvalidArgumentException('Must provide title as an option.');
+            }
+            if (!$description) {
+                throw new InvalidArgumentException('Must provide description as an option.');
+            }
+            if (!$expression) {
+                throw new InvalidArgumentException('Must provide expression as an option.');
+            }
+            remove_bucket_conditional_iam_binding($bucketName, $role, $title, $description, $expression);
         } else {
             view_bucket_iam_members($bucketName);
         }
@@ -587,6 +616,46 @@ EOF
         $bucketName = $input->getArgument('bucket');
         $objectName = $input->getArgument('object');
         upload_object_v4_signed_url($bucketName, $objectName);
+    });
+
+$application->add(new Command('generate-v4-post-policy'))
+    ->setDescription('Generate a v4 post policy form for uploading an object.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command generates a v4 post policy form for uploading an object.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addArgument('object', InputArgument::REQUIRED, 'The Cloud Storage object name')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        $objectName = $input->getArgument('object');
+        generate_v4_post_policy($bucketName, $objectName);
+    });
+
+$application->add(new Command('bucket-lifecycle-management'))
+    ->setDescription('Manages lifecycle rules for a bucket.')
+    ->setHelp(<<<EOF
+The <info>%command.name%</info> command enables or disables lifecycles rules for a bucket.
+
+<info>php %command.full_name% --help</info>
+
+EOF
+    )
+    ->addArgument('bucket', InputArgument::REQUIRED, 'The Cloud Storage bucket name')
+    ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable lifecycle management on a Cloud Storage bucket')
+    ->addOption('disable', null, InputOption::VALUE_NONE, 'Disable lifecycle management on a Cloud Storage bucket')
+    ->setCode(function ($input, $output) {
+        $bucketName = $input->getArgument('bucket');
+        if ($input->getOption('enable')) {
+            enable_bucket_lifecycle_management($bucketName);
+        } elseif ($input->getOption('disable')) {
+            disable_bucket_lifecycle_management($bucketName);
+        } else {
+            throw new \Exception('You must provide --enable or --disable with a bucket name.');
+        }
     });
 
 // for testing

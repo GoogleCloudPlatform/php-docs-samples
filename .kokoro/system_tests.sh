@@ -52,8 +52,6 @@ export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
 # Run code standards check when appropriate
 if [ "${RUN_CS_CHECK}" = "true" ]; then
-  curl -L https://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o php-cs-fixer \
-       && chmod a+x php-cs-fixer
   bash testing/run_cs_check.sh
 fi
 
@@ -64,7 +62,7 @@ if [ "${RUN_REST_TESTS_ONLY}" = "true" ]; then
 fi
 
 # Install global test dependencies
-bash testing/composer.sh
+composer install -d testing/
 
 # Run tests
 bash testing/run_test_suite.sh

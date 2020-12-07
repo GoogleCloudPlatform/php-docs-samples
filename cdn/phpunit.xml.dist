@@ -26,6 +26,9 @@
     <filter>
         <whitelist>
             <file>signUrl.php</file>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

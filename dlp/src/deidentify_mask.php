@@ -82,10 +82,11 @@ $deidentifyConfig = (new DeidentifyConfig())
 $item = (new ContentItem())
     ->setValue($string);
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = "projects/$callingProjectId/locations/global";
 
 // Run request
-$response = $dlp->deidentifyContent($parent, [
+$response = $dlp->deidentifyContent([
+    'parent' => $parent,
     'deidentifyConfig' => $deidentifyConfig,
     'item' => $item
 ]);

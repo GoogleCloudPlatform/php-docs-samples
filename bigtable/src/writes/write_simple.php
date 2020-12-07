@@ -47,12 +47,12 @@ $dataClient = new BigtableClient([
 ]);
 $table = $dataClient->table($instance_id, $table_id);
 
-$timestamp = time() * 1000;
+$timestampMicros = time() * 1000 * 1000;
 $columnFamilyId = 'stats_summary';
 $mutations = (new Mutations())
-    ->upsert($columnFamilyId, "connected_cell", 1, $timestamp)
-    ->upsert($columnFamilyId, "connected_wifi", DataUtil::intToByteString(1), $timestamp)
-    ->upsert($columnFamilyId, "os_build", "PQ2A.190405.003", $timestamp);
+    ->upsert($columnFamilyId, "connected_cell", 1, $timestampMicros)
+    ->upsert($columnFamilyId, "connected_wifi", DataUtil::intToByteString(1), $timestampMicros)
+    ->upsert($columnFamilyId, "os_build", "PQ2A.190405.003", $timestampMicros);
 
 $table->mutateRow("phone#4c410523#20190501", $mutations);
 

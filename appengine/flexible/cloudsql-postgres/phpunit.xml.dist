@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="../../../testing/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite>
+        <testsuite name="App Engine Flex CloudSQl Postgres tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -26,6 +26,9 @@
     <filter>
         <whitelist>
             <file>app.php</file>
+            <exclude>
+                <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

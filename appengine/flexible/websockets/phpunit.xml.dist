@@ -26,6 +26,9 @@
     <filter>
         <whitelist>
             <file>socket_demo.php</file>
+            <exclude>
+                <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

@@ -34,7 +34,6 @@ list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $datasetI
 /**
  * Computes risk metrics of a column of numbers in a Google BigQuery table.
  */
-use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -45,7 +44,6 @@ use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\PrivacyMetric\NumericalStatsConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\V1\PublisherClient;
 
 /** Uncomment and populate these variables in your code */
 // $callingProjectId = 'The project ID to run the API call under';
@@ -63,6 +61,7 @@ $dlp = new DlpServiceClient([
 $pubsub = new PubSubClient([
     'projectId' => $callingProjectId
 ]);
+$topic = $pubsub->topic($topicId);
 
 // Construct risk analysis config
 $columnField = (new FieldId())
@@ -81,9 +80,8 @@ $bigqueryTable = (new BigQueryTable())
     ->setTableId($tableId);
 
 // Construct the action to run when job completes
-$fullTopicId = PublisherClient::topicName($callingProjectId, $topicId);
 $pubSubAction = (new PublishToPubSub())
-    ->setTopic($fullTopicId);
+    ->setTopic($topic->name());
 
 $action = (new Action())
     ->setPubSub($pubSubAction);
@@ -95,19 +93,19 @@ $riskJob = (new RiskAnalysisJobConfig())
     ->setActions([$action]);
 
 // Listen for job notifications via an existing topic/subscription.
-$topic = $pubsub->topic($topicId);
 $subscription = $topic->subscription($subscriptionId);
 
 // Submit request
-$parent = $dlp->projectName($callingProjectId);
+$parent = "projects/$callingProjectId/locations/global";
 $job = $dlp->createDlpJob($parent, [
     'riskJob' => $riskJob
 ]);
 
 // Poll Pub/Sub using exponential backoff until job finishes
-$backoff = new ExponentialBackoff(30);
-$backoff->execute(function () use ($subscription, $dlp, &$job) {
-    printf('Waiting for job to complete' . PHP_EOL);
+// Consider using an asynchronous execution model such as Cloud Functions
+$attempt = 1;
+$startTime = time();
+do {
     foreach ($subscription->pull() as $message) {
         if (isset($message->attributes()['DlpJobName']) &&
             $message->attributes()['DlpJobName'] === $job->getName()) {
@@ -116,11 +114,13 @@ $backoff->execute(function () use ($subscription, $dlp, &$job) {
             do {
                 $job = $dlp->getDlpJob($job->getName());
             } while ($job->getState() == JobState::RUNNING);
-            return true;
+            break 2; // break from parent do while
         }
     }
-    throw new Exception('Job has not yet completed');
-});
+    printf('Waiting for job to complete' . PHP_EOL);
+    // Exponential backoff with max delay of 60 seconds
+    sleep(min(60, pow(2, ++$attempt)));
+} while (time() - $startTime < 600); // 10 minute timeout
 
 // Helper function to convert Protobuf values to strings
 $valueToString = function ($value) {
@@ -156,6 +156,9 @@ switch ($job->getState()) {
         foreach ($errors as $error) {
             var_dump($error->getDetails());
         }
+        break;
+    case JobState::PENDING:
+        printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
         break;
     default:
         print('Unexpected job state. Most likely, the job is either running or has not yet started.');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2020 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Tasks\Tests;
 
+use Google\Auth\CredentialsLoader;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -27,25 +28,53 @@ class TasksTest extends TestCase
 {
     use TestTrait;
 
+    private static $queue;
+    private static $location;
+
+    public static function setUpBeforeClass()
+    {
+        self::$queue = self::requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
+        self::$location = self::requireEnv('CLOUD_TASKS_LOCATION');
+    }
+
     public function testCreateHttpTask()
     {
-        $queue = $this->requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
-        $location = $this->requireEnv('CLOUD_TASKS_LOCATION');
-
         $output = $this->runSnippet('create_http_task', [
-            $location,
-            $queue,
-            'http://example.com/taskhandler',
+            self::$location,
+            self::$queue,
+            'https://example.com/taskhandler',
             'Task Details',
         ]);
-        $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
-            self::$projectId,
-            $location,
-            $queue
-        );
 
+        $taskNamePrefix = $this->getTaskNamePrefix();
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
         $this->assertContains($expectedOutput, $output);
+    }
+
+    public function testCreateHttpTaskWithToken()
+    {
+        $jsonKey = CredentialsLoader::fromEnv();
+        $output = $this->runSnippet('create_http_task_with_token', [
+            self::$location,
+            self::$queue,
+            'https://example.com/taskhandler',
+            $jsonKey['client_email'],
+            'Task Details',
+        ]);
+
+        $taskNamePrefix = $this->getTaskNamePrefix();
+        $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
+        $this->assertContains($expectedOutput, $output);
+    }
+
+    private function getTaskNamePrefix()
+    {
+        $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
+            self::$projectId,
+            self::$location,
+            self::$queue
+        );
+        return $taskNamePrefix;
     }
 
     private function runSnippet($sampleName, $params = [])

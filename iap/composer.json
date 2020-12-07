@@ -1,9 +1,9 @@
 {
     "require": {
         "symfony/console": "^2.8",
-        "google/auth":"^1.2",
-        "guzzlehttp/guzzle": "^6.3",
-        "kelvinmo/simplejwt": "^0.2.4"
+        "google/auth":"^1.8.0",
+        "guzzlehttp/guzzle": "~7.2.0",
+        "kelvinmo/simplejwt": "^0.4.0"
     },
     "autoload": {
         "psr-4": {

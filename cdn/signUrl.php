@@ -26,7 +26,7 @@
 function base64url_decode($input)
 {
     $input .= str_repeat('=', (4 - strlen($input) % 4) % 4);
-    return base64_decode(strtr($input, '-_', '+/'));
+    return base64_decode(strtr($input, '-_', '+/'), true);
 }
 
 /**
@@ -66,7 +66,7 @@ function base64url_encode($input, $padding = true)
 function sign_url($url, $keyName, $base64UrlKey, $expirationTime)
 {
     // Decode the key
-    $decodedKey = base64url_decode($base64UrlKey, true);
+    $decodedKey = base64url_decode($base64UrlKey);
 
     // Determine which separator makes sense given a URL
     $separator = (strpos($url, '?') === false) ? '?' : '&';

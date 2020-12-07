@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-firestore": "^1.4.1",
+        "google/cloud-firestore": "^1.13",
         "symfony/console": "^3.0"
     },
     "autoload": {
@@ -10,8 +10,11 @@
             "src/add_doc_data_types.php",
             "src/add_doc_data_with_auto_id.php",
             "src/array_membership.php",
+            "src/array_membership_any.php",
             "src/batch_write.php",
             "src/chained_query.php",
+            "src/collection_group_query.php",
+            "src/collection_group_query_setup.php",
             "src/collection_ref.php",
             "src/composite_index_chained_query.php",
             "src/create_query_capital.php",
@@ -24,9 +27,13 @@
             "src/end_at_field_query_cursor.php",
             "src/get_all.php",
             "src/get_all_docs.php",
+            "src/get_distributed_counter_value.php",
             "src/get_document.php",
             "src/get_multiple_docs.php",
+            "src/in_array_query.php",
+            "src/in_query.php",
             "src/initialize.php",
+            "src/initialize_distributed_counter.php",
             "src/initialize_project_id.php",
             "src/invalid_range_order_by_query.php",
             "src/invalid_range_query.php",
@@ -49,6 +56,7 @@
             "src/start_at_field_query_cursor.php",
             "src/start_at_snapshot_query_cursor.php",
             "src/subcollection_ref.php",
+            "src/update_distributed_counter.php",
             "src/update_doc.php",
             "src/update_doc_array.php",
             "src/update_nested_fields.php",

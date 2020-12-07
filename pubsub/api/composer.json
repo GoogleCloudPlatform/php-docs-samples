@@ -1,7 +1,7 @@
 {
     "require": {
         "php": ">=5.4",
-        "google/cloud-pubsub": "^1.5",
+        "google/cloud-pubsub": "^1.27",
         "symfony/console": " ^3.0"
     },
     "autoload": {
@@ -11,10 +11,12 @@
             "src/create_push_subscription.php",
             "src/delete_subscription.php",
             "src/delete_topic.php",
+            "src/detach_subscription.php",
             "src/get_subscription_policy.php",
             "src/get_topic_policy.php",
             "src/list_subscriptions.php",
             "src/list_topics.php",
+            "src/publish_message_batch.php",
             "src/publish_message.php",
             "src/pull_messages.php",
             "src/set_subscription_policy.php",

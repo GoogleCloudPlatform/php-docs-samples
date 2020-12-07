@@ -21,13 +21,17 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 /**
  * Unit Tests for vision commands.
+ *
+ * @retryAttempts 2
  */
 class visionTest extends TestCase
 {
     use TestTrait;
+    use RetryTrait;
     use ExecuteCommandTrait;
 
     private static $commandFile = __DIR__ . '/../vision.php';
@@ -120,7 +124,10 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Champ de Mars', $output);
+        $this->assertRegexp(
+            '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
+            $output
+        );
     }
 
     public function testLandmarkCommandGcs()
@@ -129,7 +136,10 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
         $output = $this->runCommand('landmark', ['path' => $path]);
-        $this->assertContains('Champ de Mars', $output);
+        $this->assertRegexp(
+            '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
+            $output
+        );
     }
 
     public function testLandmarkCommandWithImageLackingLandmarks()

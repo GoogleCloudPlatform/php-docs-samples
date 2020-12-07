@@ -101,7 +101,7 @@ $column = 'greeting';
 foreach ($greetings as $i => $value) {
     $row_key = sprintf('greeting%s', $i);
     $rowMutation = new Mutations();
-    $rowMutation->upsert($columnFamilyId, $column, $value, time() * 1000);
+    $rowMutation->upsert($columnFamilyId, $column, $value, time() * 1000 * 1000);
     $entries[$row_key] = $rowMutation;
 }
 $table->mutateRows($entries);

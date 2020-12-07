@@ -16,63 +16,32 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bigable\Tests;
+namespace Google\Cloud\Samples\Bigtable\Tests;
 
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use PHPUnit\Framework\TestCase;
-
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Table;
-use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 
 final class WriteTest extends TestCase
 {
-    use TestTrait;
-    use ExponentialBackoffTrait;
+    use BigtableTestTrait;
 
     const INSTANCE_ID_PREFIX = 'phpunit-test-';
     const TABLE_ID_PREFIX = 'mobile-time-series-';
-    private static $bigtableInstanceAdminClient;
-    private static $bigtableTableAdminClient;
-    private static $instanceId;
-    private static $tableId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        self::checkProjectEnvVarBeforeClass();
-
-        self::$bigtableInstanceAdminClient = new BigtableInstanceAdminClient();
-        self::$bigtableTableAdminClient = new BigtableTableAdminClient();
-        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
-        self::runSnippet('create_dev_instance', [
-            self::$projectId,
-            self::$instanceId,
-            self::$instanceId,
-        ]);
-
-        self::$tableId = uniqid(self::TABLE_ID_PREFIX);
-
-        $formattedParent = self::$bigtableTableAdminClient
-            ->instanceName(self::$projectId, self::$instanceId);
-        $table = (new Table())->setColumnFamilies(["stats_summary" => new ColumnFamily()]);
-        self::$bigtableTableAdminClient->createtable(
-            $formattedParent,
-            self::$tableId,
-            $table
-        );
+        self::setUpBigtableVars();
+        self::$instanceId = self::createDevInstance(self::INSTANCE_ID_PREFIX);
+        self::$tableId = self::createTable(self::TABLE_ID_PREFIX);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
-        $instanceName = self::$bigtableInstanceAdminClient->instanceName(self::$projectId, self::$instanceId);
-        self::$bigtableInstanceAdminClient->deleteInstance($instanceName);
+        self::deleteBigtableInstance();
     }
 
     public function testWriteSimple()

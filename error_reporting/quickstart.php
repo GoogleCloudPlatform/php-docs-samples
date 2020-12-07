@@ -21,7 +21,7 @@ $logging = new LoggingClient([
 ]);
 // Set the projectId, service, and version via the SimpleMetadataProvider
 $metadata = new SimpleMetadataProvider([], $projectId, $service, $version);
-// Create a PSR-4 compliant logger
+// Create a PSR-3 compliant logger
 $psrLogger = $logging->psrLogger('error-log', [
     'metadataProvider' => $metadata,
 ]);

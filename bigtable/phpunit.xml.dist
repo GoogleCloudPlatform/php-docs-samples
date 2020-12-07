@@ -15,13 +15,11 @@
   limitations under the License.
 -->
 <phpunit backupGlobals="false"
-         strict="true"
          backupStaticAttributes="false"
          bootstrap="../testing/bootstrap.php"
          colors="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
          timeoutForSmallTests="10"
          timeoutForMediumTests="30"
          timeoutForLargeTests="120">
@@ -36,6 +34,9 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory>./src</directory>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
