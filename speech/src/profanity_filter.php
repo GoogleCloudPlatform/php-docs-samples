@@ -16,25 +16,38 @@
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/../vendor/autoload.php';
 
+if (count($argv) != 2) {
+    return print("Usage: php profanity_filter.php AUDIO_FILE\n");
+}
+list($_, $audioFile) = $argv;
+
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
+/** Uncomment and populate these variables in your code */
+// $audioFile = 'path to an audio file';
 
-/** The Cloud Storage object to transcribe */
-$uri = 'gs://cloud-samples-tests/speech/brooklyn.flac';
+// change these variables if necessary
+$encoding = AudioEncoding::LINEAR16;
+$sampleRateHertz = 16000;
+$languageCode = 'en-US';
+$profanityFilter = true;
+
+// get contents of a file into a string
+$content = file_get_contents($audioFile);
 
 // set string as audio content
 $audio = (new RecognitionAudio())
-    ->setUri($uri);
+    ->setContent($content);
 
 // set config
 $config = (new RecognitionConfig())
-    ->setEncoding(AudioEncoding::FLAC)
-    ->setSampleRateHertz(16000)
-    ->setLanguageCode('en-US')
-    ->setProfanityFilter(TRUE);
+    ->setEncoding($encoding)
+    ->setSampleRateHertz($sampleRateHertz)
+    ->setLanguageCode($languageCode)
+    ->setProfanityFilter($profanityFilter);
 
 // create the speech client
 $client = new SpeechClient();
