@@ -52,3 +52,6 @@ function create_index($instanceId, $databaseId)
     printf('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
 }
 // [END spanner_create_index]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

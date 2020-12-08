@@ -138,6 +138,108 @@ EOF
         }
     });
 
+    $application->add(new Command('dead-letter'))
+        ->setDescription('Manage Dead Letter Policies for Pub\Sub')
+        ->setHelp(<<<EOF
+    The <info>%command.name%</info> command manages Pub\Sub dead letter policies.
+
+    <info>php %command.full_name% create --project my-project
+        --topic my-topic
+        --subscription my-subscription
+        --dead-letter-topic my-dead-letter-topic</info>
+
+    <info>php %command.full_name% update --project my-project
+        --topic my-topic
+        --subscription my-subscription
+        --dead-letter-topic my-dead-letter-topic</info>
+
+    <info>php %command.full_name% remove --project my-project
+        --topic my-topic</info>
+
+    <info>php %command.full_name% pull --project my-project
+        --topic my-topic --subscription my-subscription</info>
+
+EOF
+        )
+        ->addArgument('action', InputArgument::REQUIRED, 'The action to take')
+        ->addOption('project', null, InputOption::VALUE_REQUIRED, 'Your Google Cloud project ID.')
+        ->addOption('topic', null, InputOption::VALUE_REQUIRED, 'The topic name.')
+        ->addOption('subscription', null, InputOption::VALUE_OPTIONAL, 'The subscription name.')
+        ->addOption('dead-letter-topic', null, InputOption::VALUE_OPTIONAL, 'The dead letter topic name.')
+        ->addOption('message', null, InputOption::VALUE_OPTIONAL, 'The value of a pubsub message.')
+        ->setCode(function ($input, $output) {
+            $action = $input->getArgument('action');
+            $projectId = $input->getOption('project');
+            $topicName = $input->getOption('topic');
+            $subscriptionName = $input->getOption('subscription');
+            $deadLetterTopic = $input->getOption('dead-letter-topic');
+            $message = $input->getOption('message');
+
+            switch ($action) {
+                case 'create':
+                    if (!$subscriptionName || !$deadLetterTopic) {
+                        throw new \RuntimeException(
+                            'Subscription Name and Dead Letter Topic are required to create a subscription.'
+                        );
+                    }
+
+                    dead_letter_create_subscription(
+                        $projectId,
+                        $topicName,
+                        $subscriptionName,
+                        $deadLetterTopic
+                    );
+                break;
+
+                case 'update':
+                    if (!$subscriptionName || !$deadLetterTopic) {
+                        throw new \RuntimeException(
+                            'Subscription Name and Dead Letter Topic are required to update a subscription.'
+                        );
+                    }
+
+                    dead_letter_update_subscription(
+                        $projectId,
+                        $topicName,
+                        $subscriptionName,
+                        $deadLetterTopic
+                    );
+                break;
+
+                case 'remove':
+                    if (!$subscriptionName) {
+                        throw new \RuntimeException(
+                            'Subscription Name is required to remove a dead letter policy.'
+                        );
+                    }
+
+                    dead_letter_remove(
+                        $projectId,
+                        $topicName,
+                        $subscriptionName
+                    );
+                break;
+
+                case 'pull':
+                    if (!$subscriptionName || !$message) {
+                        throw new \RuntimeException(
+                            'Subscription Name and message is required to pull messages.'
+                        );
+                    }
+
+                    dead_letter_delivery_attempt(
+                        $projectId,
+                        $topicName,
+                        $subscriptionName,
+                        $message
+                    );
+                break;
+
+                default:
+                    throw new \RuntimeException(sprintf('%s is not a valid action', $action));
+            }
+        });
+
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $application;
 }

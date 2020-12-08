@@ -54,14 +54,20 @@ class speechTest extends TestCase
             [$path, 'video']
         );
         // $this->assertContains('the weather outside is sunny',$output);
-        $this->assertContains('how old is the Brooklyn Bridge', $output);
+        $this->assertStringContainsStringIgnoringCase(
+            'how old is the Brooklyn Bridge',
+            $output
+        );
     }
 
     public function testTranscribePunctuation()
     {
         $path = __DIR__ . '/data/audio32KHz.raw';
         $output = $this->runSnippet('transcribe_auto_punctuation', [$path]);
-        $this->assertContains('How old is the Brooklyn Bridge', $output);
+        $this->assertStringContainsStringIgnoringCase(
+            'How old is the Brooklyn Bridge',
+            $output
+        );
     }
 
     /** @dataProvider provideTranscribe */
@@ -70,7 +76,7 @@ class speechTest extends TestCase
         if ($requireGrpc && !extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs'])) {
+        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs', 'profanity_filter_gcs'])) {
             $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         }
         $output = $this->runSnippet($command, [$audioFile]);
@@ -92,6 +98,8 @@ class speechTest extends TestCase
             ['transcribe_async', __DIR__ . '/data/audio32KHz.raw'],
             ['transcribe_async_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
             ['transcribe_async_words', __DIR__ . '/data/audio32KHz.raw'],
+            ['profanity_filter_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['profanity_filter', __DIR__ . '/data/audio32KHz.raw'],
             ['streaming_recognize', __DIR__ . '/data/audio32KHz.raw', true],
         ];
     }

@@ -48,7 +48,7 @@ function query_data_with_array_parameter($instanceId, $databaseId)
         new Date(new \DateTime('2020-10-01')),
         new Date(new \DateTime('2020-11-01'))
     ];
-   
+
     $results = $database->execute(
         'SELECT VenueId, VenueName, AvailableDate FROM Venues v, ' .
         'UNNEST(v.AvailableDates) as AvailableDate ' .
@@ -66,3 +66,6 @@ function query_data_with_array_parameter($instanceId, $databaseId)
     }
 }
 // [END spanner_query_with_array_parameter]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

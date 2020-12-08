@@ -22,7 +22,6 @@ use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -33,12 +32,11 @@ use PHPUnit\Framework\TestCase;
  */
 class spannerBackupTest extends TestCase
 {
-    use RetryTrait, TestTrait, EventuallyConsistentTestTrait;
-    use ExecuteCommandTrait {
-        ExecuteCommandTrait::runCommand as traitRunCommand;
+    use TestTrait {
+        TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    private static $commandFile = __DIR__ . '/../spanner.php';
+    use RetryTrait, EventuallyConsistentTestTrait;
 
     /** @var string instanceId */
     protected static $instanceId;
@@ -77,18 +75,17 @@ class spannerBackupTest extends TestCase
 
     public function testCancelBackup()
     {
-        $output = $this->runCommand('cancel-backup', [
-            'database_id' => self::$databaseId,
+        $output = $this->runFunctionSnippet('cancel_backup', [
+            self::$databaseId
         ]);
         $this->assertContains('Cancel backup operation complete', $output);
     }
 
     public function testCreateBackup()
     {
-        $output = $this->traitRunCommand('create-backup', [
-            'instance_id' => self::$instanceId,
-            'database_id' => self::$databaseId,
-            'backup_id' => self::$backupId,
+        $output = $this->runFunctionSnippet('create_backup', [
+            self::$databaseId,
+            self::$backupId,
         ]);
         $this->assertContains(self::$backupId, $output);
     }
@@ -110,7 +107,7 @@ class spannerBackupTest extends TestCase
         }
         $backup = self::$instance->backup(self::$backupId . '-pro');
         $lro = $backup->create($databaseId2, new \DateTime('+7 hours'));
-        $output = $this->runCommand('list-backup-operations', [
+        $output = $this->runFunctionSnippet('list_backup_operations', [
             'database_id' => self::$databaseId,
         ]);
         $lro->pollUntilComplete();
@@ -124,7 +121,7 @@ class spannerBackupTest extends TestCase
      */
     public function testListBackups()
     {
-        $output = $this->runCommand('list-backups');
+        $output = $this->runFunctionSnippet('list_backups');
         $this->assertContains(self::$backupId, $output);
     }
 
@@ -133,9 +130,7 @@ class spannerBackupTest extends TestCase
      */
     public function testUpdateBackup()
     {
-        $output = $this->runCommand('update-backup', [
-            'backup_id' => self::$backupId,
-        ]);
+        $output = $this->runFunctionSnippet('update_backup', [self::$backupId]);
         $this->assertContains(self::$backupId, $output);
     }
 
@@ -144,9 +139,9 @@ class spannerBackupTest extends TestCase
      */
     public function testRestoreBackup()
     {
-        $output = $this->runCommand('restore-backup', [
-            'database_id' => self::$restoredDatabaseId,
-            'backup_id' => self::$backupId,
+        $output = $this->runFunctionSnippet('restore_backup', [
+            self::$restoredDatabaseId,
+            self::$backupId,
         ]);
         $this->assertContains(self::$backupId, $output);
         $this->assertContains(self::$databaseId, $output);
@@ -158,7 +153,7 @@ class spannerBackupTest extends TestCase
      */
     public function testListDatabaseOperations()
     {
-        $output = $this->runCommand('list-database-operations');
+        $output = $this->runFunctionSnippet('list_database_operations');
         $this->assertContains(self::$restoredDatabaseId, $output);
     }
 
@@ -168,7 +163,7 @@ class spannerBackupTest extends TestCase
     public function testDeleteBackup()
     {
         self::waitForOperations();
-        $output = $this->runCommand('delete-backup', [
+        $output = $this->runFunctionSnippet('delete_backup', [
             'backup_id' => self::$backupId,
         ]);
         $this->assertContains(self::$backupId, $output);
@@ -200,11 +195,12 @@ class spannerBackupTest extends TestCase
         }
     }
 
-    private function runCommand($commandName, $params = [])
+    private function runFunctionSnippet($sampleName, $params = [])
     {
-        return $this->traitRunCommand($commandName, $params + [
-            'instance_id' => self::$instanceId,
-        ]);
+        return $this->traitRunFunctionSnippet(
+            $sampleName,
+            array_merge([self::$instanceId], $params)
+        );
     }
 
     public static function tearDownAfterClass()
