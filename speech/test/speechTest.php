@@ -76,7 +76,7 @@ class speechTest extends TestCase
         if ($requireGrpc && !extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs', 'profanity_filter_gcs', 'profanity_filter'])) {
+        if (!self::$bucketName && in_array($command, ['transcribe_gcs', 'transcribe_async_gcs', 'profanity_filter_gcs'])) {
             $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         }
         $output = $this->runSnippet($command, [$audioFile]);
