@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use PHPUnit\Framework\TestCase;
+use Google\CloudFunctions\CloudEvent;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 /**
@@ -41,17 +42,17 @@ class IntegrationTest extends TestCase
     {
         return [
             [
-                'cloudevent' => [
+                'cloudevent' => CloudEvent::fromArray([
                     'id' => uniqid(),
                     'source' => 'firebase.googleapis.com',
                     'specversion' => '1.0',
                     'type' => 'google.cloud.firestore.document.v1.created',
-                ],
-                'data' => [
-                    'resource' => 'projects/_/instances/my-instance/refs/messages',
-                    'oldValue' => array('old' => 'value'),
-                    'value' => array('new' => 'value'),
-                ],
+                    'data' => [
+                        'resource' => 'projects/_/instances/my-instance/refs/messages',
+                        'oldValue' => array('old' => 'value'),
+                        'value' => array('new' => 'value'),
+                    ],
+                ]),
                 'statusCode' => '200',
             ],
         ];
@@ -60,22 +61,12 @@ class IntegrationTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testFirebaseFirestore(array $cloudevent, array $data, string $statusCode): void
-    {
-        // Prepare the HTTP headers for a CloudEvent.
-        $cloudEventHeaders = [];
-        foreach ($cloudevent as $key => $value) {
-            $cloudEventHeaders['ce-' . $key] = $value;
-        }
-
-        // Send an HTTP request using CloudEvent metadata.
-        $resp = $this->client->request('POST', '/', [
-            'body' => json_encode($data),
-            'headers' => $cloudEventHeaders + [
-                // Instruct the function framework to parse the body as JSON.
-                'content-type' => 'application/json'
-            ],
-        ]);
+    public function testFirebaseFirestore(
+        CloudEvent $cloudevent,
+        string $statusCode
+    ): void {
+        // Send an HTTP request using CloudEvent.
+        $resp = $this->request($cloudevent);
 
         // The Cloud Function logs all data to stderr.
         $actual = self::$localhost->getIncrementalErrorOutput();
@@ -84,11 +75,11 @@ class IntegrationTest extends TestCase
         $this->assertEquals($statusCode, $resp->getStatusCode());
 
         // Verify the data properties are logged by the function.
-        foreach ($data as $property => $value) {
+        foreach ($cloudevent->getData() as $property => $value) {
             if (is_string($value)) {
                 $this->assertContains($value, $actual);
             }
         }
-        $this->assertContains($cloudevent['id'], $actual);
+        $this->assertContains($cloudevent->getId(), $actual);
     }
 }
