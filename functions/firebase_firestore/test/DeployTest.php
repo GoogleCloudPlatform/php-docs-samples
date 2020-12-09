@@ -65,7 +65,7 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        $project = self::requireEnv('GOOGLE_PROJECT_ID');
+        $project = self::requireEnv('FIRESTORE_PROJECT_ID');
 
         $resource =
             'projects/' . $project . '/databases/(default)/documents/' . self::$collectionName . '/' . self::$documentName;
