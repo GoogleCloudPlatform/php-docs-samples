@@ -17,7 +17,7 @@
 <phpunit bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
         <testsuite name="Cloud Functions Firebase Firestore Test Suite">
-            <directory>.</directory>
+            <directory>test</directory>
             <exclude>vendor</exclude>
         </testsuite>
     </testsuites>

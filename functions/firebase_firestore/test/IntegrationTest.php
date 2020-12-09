@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
+namespace Google\Cloud\Samples\Functions\FirebaseFirestore\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\CloudFunctions\CloudEvent;

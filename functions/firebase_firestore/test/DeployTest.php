@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
+namespace Google\Cloud\Samples\Functions\FirebaseFirestore\Test;
 
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
@@ -65,7 +65,10 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        $project = self::requireEnv('FIRESTORE_PROJECT_ID');
+        $project = self::requireOneOfEnv([
+            'FIRESTORE_PROJECT_ID',
+            'GOOGLE_PROJECT_ID'
+        ]);
 
         $resource =
             'projects/' . $project . '/databases/(default)/documents/' . self::$collectionName . '/' . self::$documentName;
