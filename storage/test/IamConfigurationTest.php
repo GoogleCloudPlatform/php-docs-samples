@@ -122,7 +122,7 @@ EOF;
         $this->assertEquals('enforced', $pap);
     }
 
-    /** @depends testEnablePublicAccessPrevention */
+    /** @depends testSetPublicAccessPreventionToEnforced */
     public function testSetPublicAccessPreventionToUnspecified()
     {
         $output = $this->runCommand('public-access-prevention', [
@@ -141,7 +141,7 @@ EOF;
         $this->assertEquals('unspecified', $pap);
     }
 
-    /** @depends testDisablePublicAccessPrevention */
+    /** @depends testSetPublicAccessPreventionToUnspecified */
     public function testGetPublicAccessPrevention()
     {
         $output = $this->runCommand('public-access-prevention', [
