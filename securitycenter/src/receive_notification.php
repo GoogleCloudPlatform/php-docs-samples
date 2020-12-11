@@ -22,6 +22,7 @@ if (count($argv) < 2) {
 }
 list($_, $projectId, $subscriptionId) = $argv;
 
+// [START securitycenter_receive_notifications]
 // [START scc_receive_notifications]
 use Google\Cloud\PubSub\PubSubClient;
 
@@ -41,3 +42,4 @@ foreach ($subscription->pull() as $message) {
 }
 
 // [END scc_receive_notifications]
+// [END securitycenter_receive_notifications]
