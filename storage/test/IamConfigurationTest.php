@@ -105,11 +105,11 @@ EOF;
         $this->assertFalse($ubla['enabled']);
     }
 
-    public function testEnablePublicAccessPrevention()
+    public function testSetPublicAccessPreventionToEnforced()
     {
         $output = $this->runCommand('public-access-prevention', [
             'bucket' => $this->bucket->name(),
-            '--enable' => true,
+            'value' => 'enforced',
         ]);
         $outputString = <<<EOF
 Public Access Prevention has been set to enforced for {$this->bucket->name()}
@@ -123,11 +123,11 @@ EOF;
     }
 
     /** @depends testEnablePublicAccessPrevention */
-    public function testDisablePublicAccessPrevention()
+    public function testSetPublicAccessPreventionToUnspecified()
     {
         $output = $this->runCommand('public-access-prevention', [
             'bucket' => $this->bucket->name(),
-            '--disable' => true,
+            'value' => 'unspecified',
         ]);
 
         $outputString = <<<EOF

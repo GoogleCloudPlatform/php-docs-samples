@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Get the Public Access Prevention setting for a bucket
+ * Set the bucket Public Access Prevention to unspecified.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
