@@ -26,19 +26,16 @@ use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 # The name of the audio file to transcribe
-$audioFile = __DIR__ . '/test/data/audio32KHz.raw';
-
-# get contents of a file into a string
-$content = file_get_contents($audioFile);
+$gcsURI = "gs://cloud-samples-data/speech/brooklyn_bridge.raw";
 
 # set string as audio content
 $audio = (new RecognitionAudio())
-    ->setContent($content);
+    ->setUri($gcsURI);
 
 # The audio file's encoding, sample rate and language
 $config = new RecognitionConfig([
     'encoding' => AudioEncoding::LINEAR16,
-    'sample_rate_hertz' => 32000,
+    'sample_rate_hertz' => 16000,
     'language_code' => 'en-US'
 ]);
 
