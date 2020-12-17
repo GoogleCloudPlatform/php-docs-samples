@@ -99,6 +99,7 @@ class speechTest extends TestCase
             ['transcribe_async_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
             ['transcribe_async_words', __DIR__ . '/data/audio32KHz.raw'],
             ['profanity_filter_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['multi_region_gcs', __DIR__ . self::$bucketName . '/speech/audio32KHz.raw'],
             ['profanity_filter', __DIR__ . '/data/audio32KHz.raw'],
             ['streaming_recognize', __DIR__ . '/data/audio32KHz.raw', true],
         ];
