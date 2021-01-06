@@ -8,4 +8,5 @@ This directory contains samples for using Eventarc with PHP.
 
 |                 Sample                  |        Description       |
 | --------------------------------------- | ------------------------ |
-|[Generic](generic)  | Quickstart |
+|[Generic](generic) | Accept any event via Eventarc |
+|[Pub/Sub](pubsub) | Accept Pub/Sub events via Eventarc |
