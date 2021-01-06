@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 
+use Google\Cloud\Samples\CloudSQL\MySQL\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
 use PDO;
 use PDOException;
@@ -146,5 +147,25 @@ class VotesTest extends TestCase
 
         $votes = new Votes($this->conn->reveal());
         $votes->insertVote($val);
+    }
+
+    public function testUnixConnection()
+    {
+        $conn_config = [
+            PDO::ATTR_TIMEOUT => 5,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
+        $votes = new Votes(DBInitializer::init_unix_database_connection($conn_config));
+        $this->assertIsArray($votes->listVotes());
+    }
+
+    public function testTcpConnection()
+    {
+        $conn_config = [
+            PDO::ATTR_TIMEOUT => 5,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
+        $votes = new Votes(DBInitializer::init_tcp_database_connection($conn_config));
+        $this->assertIsArray($votes->listVotes());
     }
 }
