@@ -133,17 +133,17 @@ and Eventarc with PHP.
 
 ### View an Event in Logs
 
-1. To view the event, go to the Cloud Run (fully managed) service logs:
+To view the event, go to the Cloud Run (fully managed) service logs:
 
-    1. Go to the [Google Cloud Console](https://console.cloud.google.com/run).
+  1. Go to the [Google Cloud Console](https://console.cloud.google.com/run).
 
-    1. Click the `eventarc-pubsub-php` service.
+  1. Click the `eventarc-pubsub-php` service.
 
-    1. Select the **Logs** tab.
+  1. Select the **Logs** tab.
 
-        > Logs might take a few moments to appear. If you don't see them immediately, check again after a few moments.
+      > Logs might take a few moments to appear. If you don't see them immediately, check again after a few moments.
 
-    1. Look for the log message similar to "Hello, PHP! ID: 1895383507176010" followed by other log entries. This log entry indicates a request was sent by Eventarc to your Cloud Run service.
+  1. Look for the log message similar to "Hello, PHP! ID: 1895383507176010" followed by other log entries. This log entry indicates a request was sent by Eventarc to your Cloud Run service.
 
 ### Cleaning Up
 
