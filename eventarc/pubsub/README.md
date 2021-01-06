@@ -2,7 +2,7 @@
 
 # Eventarc – Pub/Sub – PHP Sample
 
-[<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_generic]
+[<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_pubsub]
 
 This directory contains a sample for receiving a Pub/Sub event using Cloud Run
 and Eventarc with PHP.
@@ -90,7 +90,6 @@ and Eventarc with PHP.
     ```sh
     gcloud run deploy eventarc-pubsub-php \
       --image gcr.io/$(gcloud config get-value project)/eventarc-pubsub-php \
-      --region us-central1 \
       --allow-unauthenticated
     ```
 
@@ -130,7 +129,7 @@ and Eventarc with PHP.
     gcloud pubsub topics publish $RUN_TOPIC --message="PHP"
     ```
 
-    The event is sent to the Cloud Run (fully managed) service, which logs the generic HTTP request.
+    The event is sent to the Cloud Run (fully managed) service, which logs the Pub/Sub HTTP request.
 
 ### View an Event in Logs
 
@@ -169,4 +168,4 @@ To clean up, delete the resources created above:
     ```
 
 [enable_apis_url]: https://console.cloud.google.com/flows/enableapi?apiid=run.googleapis.com,logging.googleapis.com,cloudbuild.googleapis.com,pubsub.googleapis.com,eventarc.googleapis.com
-[run_button_generic]: https://deploy.cloud.run/?dir=eventarc/generic
+[run_button_pubsub]: https://deploy.cloud.run/?dir=eventarc/pubsub

@@ -13,7 +13,7 @@
 -->
 <phpunit bootstrap="../../testing/vendor/autoload.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="Eventarc generic tests">
+        <testsuite name="Eventarc Pub/Sub tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>

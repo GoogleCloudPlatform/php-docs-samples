@@ -92,7 +92,6 @@ source for our sample.
     ```sh
     gcloud run deploy eventarc-generic-php \
       --image gcr.io/$(gcloud config get-value project)/eventarc-generic-php \
-      --region us-central1 \
       --allow-unauthenticated
     ```
 

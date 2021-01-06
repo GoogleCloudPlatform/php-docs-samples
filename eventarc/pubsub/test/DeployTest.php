@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\EventArc\Generic\Test;
+namespace Google\Cloud\Samples\EventArc\PubSub\Test;
 
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Cloud\TestUtils\DeploymentTrait;
