@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ $config = new RecognitionConfig([
 ]);
 
 # Specify a new endpoint.
-$options = array("apiEndpoint" => "eu-speech.googleapis.com");
+$options = ['apiEndpoint' => 'eu-speech.googleapis.com'];
 
 # Instantiates a client
 $client = new SpeechClient($options);
@@ -57,5 +57,4 @@ foreach ($response->getResults() as $result) {
 }
 
 $client->close();
-
 # [END speech_transcribe_with_multi_region_gcs]
