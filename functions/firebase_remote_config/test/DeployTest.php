@@ -19,13 +19,13 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\FirebaseRemoteConfig\Test;
 
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\RemoteConfig\Parameter;
-use Kreait\Firebase\RemoteConfig\Template;
+use Google\Auth\ApplicationDefaultCredentials;
+use Google\Auth\CredentialsLoader;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 
@@ -51,8 +51,8 @@ class DeployTest extends TestCase
     /** @var LoggingClient */
     private static $loggingClient;
 
-    /** @var RemoteConfig */
-    private static $config;
+    /** @var \GuzzleHttp\Client */
+    private static $apiHttpClient;
 
     /**
      * Deploy the Cloud Function, called from DeploymentTrait::deployApp().
@@ -183,15 +183,27 @@ class DeployTest extends TestCase
         string $key,
         string $value
     ): void {
-        if (empty(self::$config)) {
-            $factory = new Factory();
-            self::$config = $factory->createRemoteConfig();
+        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+
+        if (empty(self::$apiHttpClient)) {
+            $credentials = ApplicationDefaultCredentials::getCredentials('https://www.googleapis.com/auth/cloud-platform');
+            self::$apiHttpClient = CredentialsLoader::makeHttpClient($credentials, [
+                'base_uri' => 'https://firebaseremoteconfig.googleapis.com/v1/projects/' . $projectId . '/remoteConfig'
+            ]);
         }
 
-        $param = Parameter::named($key)
-            ->withDefaultValue($value);
-        $template = Template::new()
-            ->withParameter($param);
-        self::$config->publish($template);
+        $json = [
+            'parameters' => [
+                $key => [
+                    'defaultValue' => [
+                        'value' => $value
+                    ]
+                ]
+            ]
+        ];
+        $response = self::$apiHttpClient->put('', [
+            'headers' => ['If-Match' => '*'],
+            'json' => $json
+        ]);
     }
 }

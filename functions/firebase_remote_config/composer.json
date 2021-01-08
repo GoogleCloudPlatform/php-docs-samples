@@ -2,7 +2,7 @@
     "require": {
         "google/cloud-functions-framework": "^0.7.1",
         "google/cloud-firestore": "^1.18",
-        "kreait/firebase-php": "^5.14"
+        "google/auth": "^1.14"
     },
     "scripts": {
         "start": [
