@@ -33,6 +33,12 @@ class VotesTest extends TestCase
     public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
+
+        putenv('DB_HOST=localhost');
+        putenv('DB_PASS=' . getenv('MYSQL_PASSWORD'));
+        putenv('DB_NAME=' . getenv('MYSQL_DATABASE'));
+        putenv('DB_USER=' . getenv('MYSQL_USER'));
+        putenv('CLOUDSQL_CONNECTION_NAME=' . getenv('CLOUDSQL_CONNECTION_NAME_MYSQL'));
     }
 
     public function testCreateTableIfNotExistsTableExists()

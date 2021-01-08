@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\CloudSQL\SQLServer\Tests;
 
+use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
 use PDO;
 use PDOException;
@@ -32,6 +33,10 @@ class VotesTest extends TestCase
     public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
+        putenv('DB_HOST=localhost');
+        putenv('DB_PASS=' . getenv('SQLSERVER_PASSWORD'));
+        putenv('DB_NAME=' . getenv('SQLSERVER_DATABASE'));
+        putenv('DB_USER=' . getenv('SQLSERVER_USER'));
     }
 
     public function testCreateTableIfNotExistsTableExists()
@@ -152,5 +157,15 @@ class VotesTest extends TestCase
 
         $votes = new Votes($this->conn->reveal());
         $votes->insertVote($val);
+    }
+
+    public function testTcpConnection()
+    {
+        $conn_config = [
+            PDO::ATTR_TIMEOUT => 5,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
+        $votes = new Votes(DBInitializer::init_tcp_database_connection($conn_config));
+        $this->assertIsArray($votes->listVotes());
     }
 }

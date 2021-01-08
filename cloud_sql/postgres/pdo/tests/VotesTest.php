@@ -33,6 +33,12 @@ class VotesTest extends TestCase
     public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
+
+        putenv('DB_HOST=localhost');
+        putenv('DB_PASS=' . getenv('POSTGRES_PASSWORD'));
+        putenv('DB_NAME=' . getenv('POSTGRES_DATABASE'));
+        putenv('DB_USER=' . getenv('POSTGRES_USER'));
+        putenv('CLOUDSQL_CONNECTION_NAME=' . getenv('CLOUDSQL_CONNECTION_NAME_POSTGRES'));
     }
 
     public function testCreateTableIfNotExistsTableExists()
@@ -155,6 +161,7 @@ class VotesTest extends TestCase
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
+
         $votes = new Votes(DBInitializer::init_unix_database_connection($conn_config));
         $this->assertIsArray($votes->listVotes());
     }
@@ -169,23 +176,3 @@ class VotesTest extends TestCase
         $this->assertIsArray($votes->listVotes());
     }
 }
-
-// class ConnectionsTest extends TestCase
-// {
-//     private $votes;
-
-//     public function setUp(): void
-//     {
-//         $conn_config = [
-//             PDO::ATTR_TIMEOUT => 5,
-//             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-//         ];
-//         $votes = new Votes(init_unix_database_connection($conn_config));
-//     }
-
-//     public function testConnection()
-//     {
-//         // $stmt = $this->connection->prepare('SELECT 1 FROM votes');
-//         $votes->listVotes();
-//     }
-// }

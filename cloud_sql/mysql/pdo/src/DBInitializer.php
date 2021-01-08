@@ -36,8 +36,21 @@ class DBInitializer {
         $db_name = getenv('DB_NAME');
         $host = getenv('DB_HOST');
 
+        if ($host === false) {
+            throw new RuntimeException('Must supply $DB_HOST environment variable');
+        }
+        if ($password === false) {
+            throw new RuntimeException('Must supply $DB_PASS environment variables');
+        }
+        if ($db_name === false) {
+            throw new RuntimeException('Must supply $DB_NAME environment variables');
+        }
+        if ($username === false) {
+            throw new RuntimeException('Must supply $DB_USER environment variables');
+        }
+
         try {
-            # [START cloud_sql_postgres_pdo_create_tcp]
+            # [START cloud_sql_mysql_pdo_create_tcp]
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
             // $db_name = 'your_db_name';
@@ -45,10 +58,13 @@ class DBInitializer {
 
             // Connect using TCP
             $dsn = sprintf('mysql:dbname=%s;host=%s', $db_name, $host);
+            fwrite(STDOUT, $dsn);
+            fwrite(STDOUT, $username);
+            fwrite(STDOUT, $password);
 
             // Connect to the database
             $conn = new PDO($dsn, $username, $password, $conn_config);
-            # [END cloud_sql_postgres_pdo_create_tcp]
+            # [END cloud_sql_mysql_pdo_create_tcp]
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(
@@ -68,7 +84,7 @@ class DBInitializer {
                     'your username and password are correct, that the Cloud SQL ' .
                     'proxy is running, and that the database exists and is ready ' .
                     'for use. For more assistance, refer to %s. The PDO error was %s',
-                    'https://cloud.google.com/sql/docs/postgres/connect-external-app',
+                    'https://cloud.google.com/sql/docs/mysql/connect-external-app',
                     $e->getMessage()
                 ),
                 $e->getCode(),
@@ -87,11 +103,24 @@ class DBInitializer {
         $username = getenv('DB_USER');
         $password = getenv('DB_PASS');
         $db_name = getenv('DB_NAME');
-        $cloud_sql_connection_name = getenv('CLOUD_SQL_CONNECTION_NAME');
+        $cloud_sql_connection_name = getenv('CLOUDSQL_CONNECTION_NAME');
         $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
 
+        if ($password === false) {
+            throw new RuntimeException('Must supply $DB_PASS environment variables');
+        }
+        if ($db_name === false) {
+            throw new RuntimeException('Must supply $DB_NAME environment variables');
+        }
+        if ($username === false) {
+            throw new RuntimeException('Must supply $DB_USER environment variables');
+        }
+        if ($cloud_sql === false) {
+            throw new RuntimeException('Must supply $CLOUDSQL_CONNECTION_NAME environment variable');
+        }
+
         try {
-            # [START cloud_sql_postgres_pdo_create_socket]
+            # [START cloud_sql_mysql_pdo_create_socket]
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
             // $db_name = 'your_db_name';
@@ -108,7 +137,7 @@ class DBInitializer {
 
             // Connect to the database.
             $conn = new PDO($dsn, $username, $password, $conn_config);
-            # [END cloud_sql_postgres_pdo_create_socket]
+            # [END cloud_sql_mysql_pdo_create_socket]
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(
@@ -128,7 +157,7 @@ class DBInitializer {
                     'your username and password are correct, that the Cloud SQL ' .
                     'proxy is running, and that the database exists and is ready ' .
                     'for use. For more assistance, refer to %s. The PDO error was %s',
-                    'https://cloud.google.com/sql/docs/postgres/connect-external-app',
+                    'https://cloud.google.com/sql/docs/mysql/connect-external-app',
                     $e->getMessage()
                 ),
                 $e->getCode(),

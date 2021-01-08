@@ -36,6 +36,19 @@ class DBInitializer {
         $db_name = getenv('DB_NAME');
         $host = getenv('DB_HOST');
 
+        if ($host === false) {
+            throw new RuntimeException('Must supply $DB_HOST environment variable');
+        }
+        if ($password === false) {
+            throw new RuntimeException('Must supply $DB_PASS environment variables');
+        }
+        if ($db_name === false) {
+            throw new RuntimeException('Must supply $DB_NAME environment variables');
+        }
+        if ($username === false) {
+            throw new RuntimeException('Must supply $DB_USER environment variables');
+        }
+
         try {
             # [START cloud_sql_postgres_pdo_create_tcp]
             // $username = 'your_db_user';
@@ -87,8 +100,21 @@ class DBInitializer {
         $username = getenv('DB_USER');
         $password = getenv('DB_PASS');
         $db_name = getenv('DB_NAME');
-        $cloud_sql_connection_name = getenv('CLOUD_SQL_CONNECTION_NAME');
+        $cloud_sql_connection_name = getenv('CLOUDSQL_CONNECTION_NAME');
         $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+
+        if ($password === false) {
+            throw new RuntimeException('Must supply $DB_PASS environment variables');
+        }
+        if ($db_name === false) {
+            throw new RuntimeException('Must supply $DB_NAME environment variables');
+        }
+        if ($username === false) {
+            throw new RuntimeException('Must supply $DB_USER environment variables');
+        }
+        if ($cloud_sql_connection_name === false) {
+            throw new RuntimeException('Must supply $CLOUDSQL_CONNECTION_NAME environment variable');
+        }
 
         try {
             # [START cloud_sql_postgres_pdo_create_socket]
