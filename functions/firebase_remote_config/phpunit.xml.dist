@@ -18,7 +18,6 @@
     <testsuites>
         <testsuite name="Cloud Functions Firebase Remote Config Test Suite">
             <directory>test</directory>
-            <exclude>vendor</exclude>
         </testsuite>
     </testsuites>
     <logging>
