@@ -78,6 +78,8 @@ class IntegrationTest extends TestCase
         foreach ($cloudevent->getData() as $property => $value) {
             if (is_string($value)) {
                 $this->assertContains($value, $actual);
+            } else {
+                $this->assertEquals($value, 2);
             }
         }
     }
