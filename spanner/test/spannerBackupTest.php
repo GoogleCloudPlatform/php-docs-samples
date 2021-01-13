@@ -95,10 +95,6 @@ class spannerBackupTest extends TestCase
      */
     public function testListBackupOperations()
     {
-        $this->markTestSkipped(
-            "See: https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1186"
-        );
-
         $databaseId2 = self::$databaseId . '-2';
         $database2 = self::$instance->database($databaseId2);
         // DB may already exist if the test timed out and retried
