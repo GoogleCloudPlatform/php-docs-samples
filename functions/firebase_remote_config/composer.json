@@ -1,8 +1,6 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7.1",
-        "google/cloud-firestore": "^1.18",
-        "google/auth": "^1.14"
+        "google/cloud-functions-framework": "^0.7.1"
     },
     "scripts": {
         "start": [
@@ -11,6 +9,7 @@
         ]
     },
     "require-dev": {
+        "google/auth": "^1.14",
         "google/cloud-logging": "^1.21"
     }
 }
