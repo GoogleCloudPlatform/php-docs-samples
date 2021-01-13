@@ -22,7 +22,7 @@ if (count($argv) < 1) {
 }
 list($_, $organizationId) = $argv;
 
-// [START securitycenter_list_notification_configs] 
+// [START securitycenter_list_notification_configs]
 // [START scc_list_notification_configs]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
