@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-# [START speech_quickstart]
+# [START speech_transcribe_with_multi_region_gcs]
 # Includes the autoloader for libraries installed with composer
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 # Imports the Google Cloud client library
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -39,8 +39,11 @@ $config = new RecognitionConfig([
     'language_code' => 'en-US'
 ]);
 
+# Specify a new endpoint.
+$options = ['apiEndpoint' => 'eu-speech.googleapis.com'];
+
 # Instantiates a client
-$client = new SpeechClient();
+$client = new SpeechClient($options);
 
 # Detects speech in the audio file
 $response = $client->recognize($config, $audio);
@@ -54,5 +57,4 @@ foreach ($response->getResults() as $result) {
 }
 
 $client->close();
-
-# [END speech_quickstart]
+# [END speech_transcribe_with_multi_region_gcs]
