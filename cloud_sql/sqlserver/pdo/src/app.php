@@ -39,12 +39,37 @@ $container['db'] = function () {
     # [START cloud_sql_sqlserver_pdo_timeout]
     // Here we set the connection timeout to five seconds and ask PDO to
     // throw an exception if any errors occur.
-    $conn = new PDO($dsn, $username, $password, [
+    $connConfig = [
         PDO::ATTR_TIMEOUT => 5,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    ];
     # [END cloud_sql_sqlserver_pdo_timeout]
-    return DBInitializer::init_tcp_database_connection($conn_config);
+
+    $username = getenv('DB_USER');
+    $password = getenv('DB_PASS');
+    $dbName = getenv('DB_NAME');
+    $dbHost = getenv('DB_HOST');
+
+    if (empty($username = getenv('DB_USER'))) {
+        throw new RuntimeException('Must supply $DB_USER environment variables');
+    }
+    if (empty($password = getenv('DB_PASS'))) {
+        throw new RuntimeException('Must supply $DB_PASS environment variables');
+    }
+    if (empty($dbName = getenv('DB_NAME'))) {
+        throw new RuntimeException('Must supply $DB_NAME environment variables');
+    }
+    if (empty($dbHost = getenv('DB_HOST'))) {
+        throw new RuntimeException('Must supply $DB_HOST environment variables');
+    }
+
+    return DBInitializer::initTcpDatabaseConnection(
+        $username,
+        $password,
+        $dbName,
+        $dbHost,
+        $connConfig
+    );
 };
 
 // Configure the templating engine.

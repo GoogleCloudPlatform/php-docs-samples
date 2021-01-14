@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 
 use Google\Cloud\Samples\CloudSQL\MySQL\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
+use Google\Cloud\TestUtils\TestTrait;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -28,17 +29,12 @@ use RuntimeException;
 
 class VotesTest extends TestCase
 {
+    use TestTrait;
     private $conn;
 
     public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
-
-        putenv('DB_HOST=localhost');
-        putenv('DB_PASS=' . getenv('MYSQL_PASSWORD'));
-        putenv('DB_NAME=' . getenv('MYSQL_DATABASE'));
-        putenv('DB_USER=' . getenv('MYSQL_USER'));
-        putenv('CLOUDSQL_CONNECTION_NAME=' . getenv('CLOUDSQL_CONNECTION_NAME_MYSQL'));
     }
 
     public function testCreateTableIfNotExistsTableExists()
@@ -161,7 +157,22 @@ class VotesTest extends TestCase
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
-        $votes = new Votes(DBInitializer::init_unix_database_connection($conn_config));
+
+
+        $dbPass = $this->requireEnv('MYSQL_PASSWORD');
+        $dbName = $this->requireEnv('MYSQL_DATABASE');
+        $dbUser = $this->requireEnv('MYSQL_USER');
+        $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
+        $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+
+        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
+            $dbUser,
+            $dbPass,
+            $dbName,
+            $connectionName,
+            $socketDir,
+            $conn_config,
+        ));
         $this->assertIsArray($votes->listVotes());
     }
 
@@ -171,7 +182,19 @@ class VotesTest extends TestCase
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
-        $votes = new Votes(DBInitializer::init_tcp_database_connection($conn_config));
+
+        $dbHost = $this->requireEnv('MYSQL_HOST');
+        $dbPass = $this->requireEnv('MYSQL_PASSWORD');
+        $dbName = $this->requireEnv('MYSQL_DATABASE');
+        $dbUser = $this->requireEnv('MYSQL_USER');
+
+        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
+            $dbUser,
+            $dbPass,
+            $dbName,
+            $dbHost,
+            $conn_config
+        ));
         $this->assertIsArray($votes->listVotes());
     }
 }

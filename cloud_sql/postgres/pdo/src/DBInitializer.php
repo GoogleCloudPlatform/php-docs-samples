@@ -27,46 +27,38 @@ use PDOStatement;
 class DBInitializer {
 
     /**
-     *  @param $conn_config array driver-specific options for PDO
+     *  @param $username string username of the database user
+     *  @param $password string password of the database user
+     *  @param $dbName string name of the target database
+     *  @param $dbHost string IP address or domain of the target database
+     *  @param $connConfig array driver-specific options for PDO
      */
-    static function init_tcp_database_connection(array $conn_config): PDO
+    static function initTcpDatabaseConnection(
+        string $username,
+        string $password,
+        string $dbName,
+        string $dbHost,
+        array $connConfig
+    ): PDO
     {
-        $username = getenv('DB_USER');
-        $password = getenv('DB_PASS');
-        $db_name = getenv('DB_NAME');
-        $host = getenv('DB_HOST');
-
-        if ($host === false) {
-            throw new RuntimeException('Must supply $DB_HOST environment variable');
-        }
-        if ($password === false) {
-            throw new RuntimeException('Must supply $DB_PASS environment variables');
-        }
-        if ($db_name === false) {
-            throw new RuntimeException('Must supply $DB_NAME environment variables');
-        }
-        if ($username === false) {
-            throw new RuntimeException('Must supply $DB_USER environment variables');
-        }
-
         try {
             # [START cloud_sql_postgres_pdo_create_tcp]
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
-            // $db_name = 'your_db_name';
-            // $host = "127.0.0.1";
+            // $dbName = 'your_db_name';
+            // $dbHost = "127.0.0.1";
 
             // Connect using TCP
-            $dsn = sprintf('pgsql:dbname=%s;host=%s', $db_name, $host);
+            $dsn = sprintf('pgsql:dbname=%s;host=%s', $dbName, $dbHost);
 
             // Connect to the database
-            $conn = new PDO($dsn, $username, $password, $conn_config);
+            $conn = new PDO($dsn, $username, $password, $connConfig);
             # [END cloud_sql_postgres_pdo_create_tcp]
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(
                     'Invalid or missing configuration! Make sure you have set ' .
-                    '$username, $password, $db_name, and $host (for TCP mode) ' .
+                    '$username, $password, $dbName, and $host (for TCP mode) ' .
                     'or $cloud_sql_connection_name (for UNIX socket mode). ' .
                     'The PHP error was %s',
                     $e->getMessage()
@@ -93,54 +85,47 @@ class DBInitializer {
     }
 
     /**
-     *  @param $conn_config array driver-specific options for PDO
+     *  @param $username string username of the database user
+     *  @param $password string password of the database user
+     *  @param $dbName string name of the target database
+     *  @param $connectionName string Cloud SQL instance name
+     *  @param $socketDir string Full path to unix socket
+     *  @param $connConfig array driver-specific options for PDO
      */
-    static function init_unix_database_connection(array $conn_config)
+    static function initUnixDatabaseConnection(
+        string $username,
+        string $password,
+        string $dbName,
+        string $connectionName,
+        string $socketDir,
+        array $connConfig
+    ): PDO
     {
-        $username = getenv('DB_USER');
-        $password = getenv('DB_PASS');
-        $db_name = getenv('DB_NAME');
-        $cloud_sql_connection_name = getenv('CLOUDSQL_CONNECTION_NAME');
-        $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
-
-        if ($password === false) {
-            throw new RuntimeException('Must supply $DB_PASS environment variables');
-        }
-        if ($db_name === false) {
-            throw new RuntimeException('Must supply $DB_NAME environment variables');
-        }
-        if ($username === false) {
-            throw new RuntimeException('Must supply $DB_USER environment variables');
-        }
-        if ($cloud_sql_connection_name === false) {
-            throw new RuntimeException('Must supply $CLOUDSQL_CONNECTION_NAME environment variable');
-        }
-
         try {
             # [START cloud_sql_postgres_pdo_create_socket]
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
-            // $db_name = 'your_db_name';
-            // $cloud_sql_connection_name = getenv("CLOUD_SQL_CONNECTION_NAME");
-            // $socket_dir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+            // $dbName = 'your_db_name';
+            // $connectionName = getenv("CLOUD_SQL_CONNECTION_NAME");
+            // $socketDir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
 
             // Connect using UNIX sockets
             $dsn = sprintf(
                 'pgsql:dbname=%s;host=%s/%s',
-                $db_name,
-                $socket_dir,
-                $cloud_sql_connection_name
+                $dbName,
+                $socketDir,
+                $connectionName
             );
 
             // Connect to the database.
-            $conn = new PDO($dsn, $username, $password, $conn_config);
+            $conn = new PDO($dsn, $username, $password, $connConfig);
             # [END cloud_sql_postgres_pdo_create_socket]
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(
                     'Invalid or missing configuration! Make sure you have set ' .
-                    '$username, $password, $db_name, and $host (for TCP mode) ' .
-                    'or $cloud_sql_connection_name (for UNIX socket mode). ' .
+                    '$username, $password, $dbName, and $host (for TCP mode) ' .
+                    'or $connectionName (for UNIX socket mode). ' .
                     'The PHP error was %s',
                     $e->getMessage()
                 ),

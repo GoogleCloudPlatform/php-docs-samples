@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\CloudSQL\Postgres\Tests;
 
 use Google\Cloud\Samples\CloudSQL\Postgres\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
+use Google\Cloud\TestUtils\TestTrait;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -28,17 +29,12 @@ use RuntimeException;
 
 class VotesTest extends TestCase
 {
+    use TestTrait;
     private $conn;
 
     public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
-
-        putenv('DB_HOST=localhost');
-        putenv('DB_PASS=' . getenv('POSTGRES_PASSWORD'));
-        putenv('DB_NAME=' . getenv('POSTGRES_DATABASE'));
-        putenv('DB_USER=' . getenv('POSTGRES_USER'));
-        putenv('CLOUDSQL_CONNECTION_NAME=' . getenv('CLOUDSQL_CONNECTION_NAME_POSTGRES'));
     }
 
     public function testCreateTableIfNotExistsTableExists()
@@ -157,22 +153,47 @@ class VotesTest extends TestCase
 
     public function testUnixConnection()
     {
-        $conn_config = [
+        $connConfig = [
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
 
-        $votes = new Votes(DBInitializer::init_unix_database_connection($conn_config));
+        $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
+        $dbName = $this->requireEnv('POSTGRES_DATABASE');
+        $dbUser = $this->requireEnv('POSTGRES_USER');
+        $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
+        $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+
+        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
+            $dbUser,
+            $dbPass,
+            $dbName,
+            $connectionName,
+            $socketDir,
+            $connConfig,
+        ));
         $this->assertIsArray($votes->listVotes());
     }
 
     public function testTcpConnection()
     {
-        $conn_config = [
+        $connConfig = [
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
-        $votes = new Votes(DBInitializer::init_tcp_database_connection($conn_config));
+
+        $dbHost = $this->requireEnv('POSTGRES_HOST');
+        $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
+        $dbName = $this->requireEnv('POSTGRES_DATABASE');
+        $dbUser = $this->requireEnv('POSTGRES_USER');
+
+        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
+            $dbUser,
+            $dbPass,
+            $dbName,
+            $dbHost,
+            $connConfig
+        ));
         $this->assertIsArray($votes->listVotes());
     }
 }

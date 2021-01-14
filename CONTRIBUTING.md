@@ -52,13 +52,6 @@ cd $SAMPLES_DIRECTORY
 composer install
 ```
 
-If you add new files or change import paths, you may also need to run the
-following to refresh the cached class map:
-
-```
-composer dump-autoload -o
-```
-
 ### Environment variables
 
 Set up [application default credentials](https://cloud.google.com/docs/authentication/getting-started)

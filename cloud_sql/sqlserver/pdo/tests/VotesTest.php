@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\CloudSQL\SQLServer\Tests;
 
 use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
+use Google\Cloud\TestUtils\TestTrait;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -28,15 +29,12 @@ use RuntimeException;
 
 class VotesTest extends TestCase
 {
+    use TestTrait;
     private $conn;
 
     public function setUp(): void
     {
         $this->conn = $this->prophesize(PDO::class);
-        putenv('DB_HOST=localhost');
-        putenv('DB_PASS=' . getenv('SQLSERVER_PASSWORD'));
-        putenv('DB_NAME=' . getenv('SQLSERVER_DATABASE'));
-        putenv('DB_USER=' . getenv('SQLSERVER_USER'));
     }
 
     public function testCreateTableIfNotExistsTableExists()
@@ -165,7 +163,19 @@ class VotesTest extends TestCase
             PDO::ATTR_TIMEOUT => 5,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
-        $votes = new Votes(DBInitializer::init_tcp_database_connection($conn_config));
+
+        $dbHost = $this->requireEnv('MYSQL_HOST');
+        $dbPass = $this->requireEnv('MYSQL_PASSWORD');
+        $dbName = $this->requireEnv('MYSQL_DATABASE');
+        $dbUser = $this->requireEnv('MYSQL_USER');
+
+        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
+            $dbUser,
+            $dbPass,
+            $dbName,
+            $dbHost,
+            $conn_config
+        ));
         $this->assertIsArray($votes->listVotes());
     }
 }

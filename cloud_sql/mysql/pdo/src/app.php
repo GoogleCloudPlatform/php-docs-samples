@@ -39,16 +39,45 @@ $container['db'] = function () {
     # [START cloud_sql_mysql_pdo_timeout]
     // Here we set the connection timeout to five seconds and ask PDO to
     // throw an exception if any errors occur.
-    $conn_config = [
+    $connConfig = [
         PDO::ATTR_TIMEOUT => 5,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ];
     # [END cloud_sql_mysql_pdo_timeout]
 
-    if (empty(getenv('DB_HOST'))) {
-        return DBInitializer::init_unix_database_connection($conn_config);
+    $username = getenv('DB_USER');
+    $password = getenv('DB_PASS');
+    $dbName = getenv('DB_NAME');
+
+    if (empty($username = getenv('DB_USER'))) {
+        throw new RuntimeException('Must supply $DB_USER environment variables');
+    }
+    if (empty($password = getenv('DB_PASS'))) {
+        throw new RuntimeException('Must supply $DB_PASS environment variables');
+    }
+    if (empty($dbName = getenv('DB_NAME'))) {
+        throw new RuntimeException('Must supply $DB_NAME environment variables');
+    }
+
+    if ($dbHost = getenv('DB_HOST')) {
+        return DBInitializer::initTcpDatabaseConnection(
+            $username,
+            $password,
+            $dbName,
+            $dbHost,
+            $connConfig
+        );
     } else {
-        return DBInitializer::init_tcp_database_connection($conn_config);
+        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+        $socketDir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+        return DBInitializer::initUnixDatabaseConnection(
+            $username,
+            $password,
+            $dbName,
+            $connectionName,
+            $socketDir,
+            $connConfig
+        );
     }
 };
 
