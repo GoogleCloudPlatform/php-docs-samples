@@ -19,10 +19,10 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres;
 
-use RuntimeException;
 use PDO;
 use PDOException;
 use PDOStatement;
+use RuntimeException;
 
 class DBInitializer {
 
