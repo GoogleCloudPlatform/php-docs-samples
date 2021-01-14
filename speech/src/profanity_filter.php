@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START profanity_filter]
+# [START speech_profanity_filter]
 
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/../vendor/autoload.php';
@@ -64,4 +64,4 @@ foreach ($response->getResults() as $result) {
 
 $client->close();
 
-# [END profanity_filter]
+# [END speech_profanity_filter]
