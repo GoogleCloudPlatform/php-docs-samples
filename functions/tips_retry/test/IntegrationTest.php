@@ -101,9 +101,13 @@ class IntegrationTest extends TestCase
         $actual = self::$localhost->getIncrementalErrorOutput();
 
         // Confirm the status code.
-        $this->assertEquals($statusCode, $resp->getStatusCode());
+        $this->assertEquals(
+            $statusCode,
+            $resp->getStatusCode(),
+            $label . ' status code'
+        );
 
         // Verify the function's behavior is correct.
-        $this->assertContains($expected, $actual);
+        $this->assertContains($expected, $actual, $label . ' contains');
     }
 }
