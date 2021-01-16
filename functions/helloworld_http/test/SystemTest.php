@@ -17,6 +17,7 @@
 
 declare(strict_types=1);
 
+// [START functions_http_integration_test]
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use PHPUnit\Framework\TestCase;
@@ -54,3 +55,4 @@ class SystemTest extends TestCase
         $this->assertContains($expected, $actual, $label . ':');
     }
 }
+// [END functions_http_integration_test]
