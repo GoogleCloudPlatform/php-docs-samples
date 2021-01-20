@@ -15,18 +15,29 @@
  * limitations under the License.
  */
 
-// [START functions_tips_retry]
+// [START functions_tips_infinite_retries]
+
+/**
+ * This function shows an example method for avoiding infinite retries in
+ * Google Cloud Functions. By default, functions configured to automatically
+ * retry execution on failure will be retried indefinitely - causing an
+ * infinite loop. To avoid this, we stop retrying executions (by not throwing
+ * exceptions) for any events that are older than a predefined threshold.
+ */
 
 use Google\CloudFunctions\CloudEvent;
 
-function limitRetries(CloudEvent $event): string
+function avoidInfiniteRetries(CloudEvent $event): string
 {
+    $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
+
     $eventId = $event->getId();
 
+    // The maximum age of events to process.
     $maxAge = 60 * 3; // 3 minutes, in seconds
-    $eventAge = time() - strtotime($event->getTime());
 
-    $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
+    // The age of the event being processed.
+    $eventAge = time() - strtotime($event->getTime());
 
     // Ignore events that are too old
     if ($eventAge > $maxAge) {
@@ -37,7 +48,7 @@ function limitRetries(CloudEvent $event): string
     // Do what the function is supposed to do
     fwrite($log, 'Processing event: ' . $eventId . ' with age ' . $eventAge . PHP_EOL);
 
-    // Retry failed function executions
+    // infinite_retries failed function executions
     $failed = true;
     if ($failed) {
         throw new Exception('Event ' . $eventId . ' failed; retrying...');

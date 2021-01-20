@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="Cloud Functions Tips Limit Retries Test Suite">
+        <testsuite name="Cloud Functions Tips Avoid Infinite Retries Test Suite">
             <directory>test</directory>
         </testsuite>
     </testsuites>

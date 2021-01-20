@@ -32,7 +32,7 @@ class IntegrationTest extends TestCase
     use CloudFunctionLocalTestTrait;
 
     /** @var string */
-    private static $entryPoint = 'limitRetries';
+    private static $entryPoint = 'avoidInfiniteRetries';
 
     /** @var string */
     private static $functionSignatureType = 'cloudevent';

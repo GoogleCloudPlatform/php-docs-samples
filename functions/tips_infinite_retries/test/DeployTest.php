@@ -40,7 +40,7 @@ class DeployTest extends TestCase
     use CloudFunctionDeploymentTrait;
     use EventuallyConsistentTestTrait;
 
-    private static $entryPoint = 'limitRetries';
+    private static $entryPoint = 'avoidInfiniteRetries';
 
     /* var string */
     private static $projectId;
@@ -59,7 +59,7 @@ class DeployTest extends TestCase
 
         // Give event and log systems a head start.
         // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(5);
+        sleep(60);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs(self::$fn, $fiveMinAgo, function (\Iterator $logs) {
