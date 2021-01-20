@@ -59,7 +59,7 @@ class DeployTest extends TestCase
 
         // Give event and log systems a head start.
         // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(5);
+        sleep(60);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs(self::$fn, $fiveMinAgo, function (\Iterator $logs) {
@@ -79,12 +79,10 @@ class DeployTest extends TestCase
     private function publishMessage(): void
     {
         // Construct Pub/Sub message
-        $message = json_encode(['retry' => true]);
+        $message = json_encode(['some_parameter' => true]);
 
         // Publish a message to the function.
-        $pubsub = new PubSubClient([
-            'projectId' => self::$projectId,
-        ]);
+        $pubsub = new PubSubClient();
         $topic = $pubsub->topic(self::$topicName);
         $topic->publish(['data' => $message]);
     }
@@ -142,6 +140,12 @@ class DeployTest extends TestCase
     {
         self::$projectId = self::requireEnv('GOOGLE_CLOUD_PROJECT');
         self::$topicName = self::requireEnv('FUNCTIONS_TOPIC');
+
+        /**
+         * The --retry flag tells Cloud Functions to automatically retry
+         * failed function invocations. This is necessary because we're
+         * the parent sample exists to demonstrate automatic retries.
+         */
         return self::$fn->deploy(['--retry' => ''], '--trigger-topic=' . self::$topicName);
     }
 }

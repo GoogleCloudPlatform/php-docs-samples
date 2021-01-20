@@ -25,7 +25,7 @@ use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 /**
  * Class IntegrationTest.
  *
- * Integration Test for helloGCS.
+ * Integration Test for tipsRetry.
  */
 class IntegrationTest extends TestCase
 {
@@ -54,7 +54,7 @@ class IntegrationTest extends TestCase
                     'type' => 'google.cloud.pubsub.topic.v1.messagePublished',
                 ],
                 'data' => [
-                    'data' => self::makeData(['retry' => true]),
+                    'data' => self::makeData(['some_parameter' => true]),
                 ],
                 'statusCode' => '500',
                 'expected' => 'Retrying...',
@@ -68,7 +68,7 @@ class IntegrationTest extends TestCase
                     'type' => 'google.cloud.pubsub.topic.v1.messagePublished',
                 ],
                 'data' => [
-                    'data' => self::makeData(['retry' => false]),
+                    'data' => self::makeData(['some_parameter' => false]),
                 ],
                 'statusCode' => '200',
                 'expected' => 'Not retrying',

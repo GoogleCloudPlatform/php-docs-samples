@@ -24,13 +24,22 @@ function tipsRetry(CloudEvent $event): string
     $data = $event->getData()['data'];
     $data = json_decode(base64_decode($data), true);
 
-    $tryAgain = $data['retry'];
+    // Determine whether to retry the invocation based on a parameter
+    $tryAgain = $data['some_parameter'];
 
     if ($tryAgain) {
-        // Retry execution
+        /**
+         * Functions with automatic retries enabled should throw exceptions to
+         * indicate temporary failures that a retry might fix. In this case,
+         * a thrown exception will cause the original function invocation to be
+         * re-sent.
+         */
         throw new Exception('Retrying...');
     } else {
-        // Don't retry execution
+        /**
+         * If a function with retries enabled encounters a non-retriable
+         * failure, it should return *without* throwing an exception.
+         */
         $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
         fwrite($log, "Not retrying" . PHP_EOL);
 
