@@ -56,4 +56,4 @@ function avoidInfiniteRetries(CloudEvent $event): string
 
     return '';
 }
-// [END functions_tips_retry]
+// [END functions_tips_infinite_retries]
