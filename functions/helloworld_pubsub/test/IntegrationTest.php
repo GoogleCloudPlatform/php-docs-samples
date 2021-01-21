@@ -52,7 +52,7 @@ class IntegrationTest extends TestCase
                 'expected' => 'Hello, World!',
                 'label' => 'Should print a default value'
             ],
-                        [
+            [
                 'cloudevent' => [
                     'id' => uniqid(),
                     'source' => 'pubsub.googleapis.com',

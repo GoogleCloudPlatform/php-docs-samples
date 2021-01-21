@@ -25,7 +25,7 @@ function helloworldPubsub(CloudEvent $event): string
     
     $data = $event->getData();
     if (isset($data['data'])) {
-        $name = base64_decode($data['data']);
+        $name = htmlspecialchars(base64_decode($data['data']));
     } else {
         $name = 'World';
     }
