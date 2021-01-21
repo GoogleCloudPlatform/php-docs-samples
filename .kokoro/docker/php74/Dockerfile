@@ -109,6 +109,11 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         --path-update false \
         --command-completion false
 
+# Install Cloud SQL proxy
+RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy \
+    && chmod +x cloud_sql_proxy \
+    && mv cloud_sql_proxy /usr/local/bin
+
 # Make composer and gcloud bins available via the PATH variable
 ENV PATH="$PATH:/root/.composer/vendor/bin:/root/google-cloud-sdk/bin"
 

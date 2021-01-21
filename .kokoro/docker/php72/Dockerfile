@@ -1,4 +1,4 @@
-FROM gcr.io/google_appengine/PHP_VERSION
+FROM gcr.io/google_appengine/php72
 
 RUN apt-get update && apt-get install -y \
     python-ipaddr \
@@ -9,11 +9,11 @@ RUN apt-get update && apt-get install -y \
 
 # install / enable PHP extensions
 RUN pecl install grpc \
-    && echo "extension=grpc.so" >> /opt/PHP_VERSION/lib/conf.d/ext-grpc.ini \
-    && echo "extension=bcmath.so" >> /opt/PHP_VERSION/lib/conf.d/ext-bcmath.ini
+    && echo "extension=grpc.so" >> /opt/php72/lib/conf.d/ext-grpc.ini \
+    && echo "extension=bcmath.so" >> /opt/php72/lib/conf.d/ext-bcmath.ini
 
 # Install phpunit globally
-RUN composer global require phpunit/phpunit:^5.0
+RUN composer global require phpunit/phpunit:^7.0
 
 # Install Google Cloud SDK
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
@@ -23,6 +23,11 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         --usage-reporting false \
         --path-update false \
         --command-completion false
+
+# Install Cloud SQL proxy
+RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy \
+    && chmod +x cloud_sql_proxy \
+    && mv cloud_sql_proxy /usr/local/bin
 
 # Make composer and gcloud bins available via the PATH variable
 ENV PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
