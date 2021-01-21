@@ -36,7 +36,6 @@ ENV PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
 RUN gcloud config set app/promote_by_default false && \
     gcloud config set disable_prompts true && \
     gcloud -q components install app-engine-python && \
-    gcloud -q components install app-engine-php && \
     gcloud -q components update
 
 ENTRYPOINT /bin/bash
