@@ -156,26 +156,4 @@ class VotesTest extends TestCase
         $votes = new Votes($this->conn->reveal());
         $votes->insertVote($val);
     }
-
-    public function testTcpConnection()
-    {
-        $conn_config = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbHost = $this->requireEnv('MYSQL_HOST');
-        $dbPass = $this->requireEnv('MYSQL_PASSWORD');
-        $dbName = $this->requireEnv('MYSQL_DATABASE');
-        $dbUser = $this->requireEnv('MYSQL_USER');
-
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $dbHost,
-            $conn_config
-        ));
-        $this->assertIsArray($votes->listVotes());
-    }
 }

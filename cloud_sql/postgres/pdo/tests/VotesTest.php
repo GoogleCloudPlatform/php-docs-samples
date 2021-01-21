@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres\Tests;
 
-use Google\Cloud\Samples\CloudSQL\Postgres\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use PDO;
@@ -149,51 +148,5 @@ class VotesTest extends TestCase
 
         $votes = new Votes($this->conn->reveal());
         $votes->insertVote($val);
-    }
-
-    public function testUnixConnection()
-    {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
-        $dbName = $this->requireEnv('POSTGRES_DATABASE');
-        $dbUser = $this->requireEnv('POSTGRES_USER');
-        $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
-        $socketDir = $this->requireEnv('DB_SOCKET_DIR');
-
-        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $connectionName,
-            $socketDir,
-            $connConfig,
-        ));
-        $this->assertIsArray($votes->listVotes());
-    }
-
-    public function testTcpConnection()
-    {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbHost = $this->requireEnv('POSTGRES_HOST');
-        $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
-        $dbName = $this->requireEnv('POSTGRES_DATABASE');
-        $dbUser = $this->requireEnv('POSTGRES_USER');
-
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $dbHost,
-            $connConfig
-        ));
-        $this->assertIsArray($votes->listVotes());
     }
 }
