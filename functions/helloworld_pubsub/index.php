@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,23 @@
  * limitations under the License.
  */
 
-// Install composer dependencies with "composer install"
-// @see http://getcomposer.org for more information.
-require __DIR__ . '/vendor/autoload.php';
+// [START functions_helloworld_pubsub]
 
-$app = require __DIR__ . '/app.php';
+use Google\CloudFunctions\CloudEvent;
 
-// Run the app!
-// use "gcloud app deploy"
-$app['debug'] = true;
-$app->run();
+function helloworldPubsub(CloudEvent $event): string
+{
+    $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
+    
+    $data = $event->getData();
+    if (isset($data['data'])) {
+        $name = htmlspecialchars(base64_decode($data['data']));
+    } else {
+        $name = 'World';
+    }
+
+    $result = 'Hello, ' . $name . '!';
+    fwrite($log, $result . PHP_EOL);
+    return $result;
+}
+// [END functions_helloworld_pubsub]
