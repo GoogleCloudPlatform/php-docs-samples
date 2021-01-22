@@ -59,7 +59,7 @@ class DeployTest extends TestCase
 
         // Give event and log systems a head start.
         // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(60);
+        sleep(30);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs(self::$fn, $fiveMinAgo, function (\Iterator $logs) {
@@ -118,7 +118,7 @@ class DeployTest extends TestCase
             $startTime
         );
 
-        echo "\nRetrieving logs [$filter]...\n";
+        echo "\nRetrieving logs [$filter]... (this may take a minute or two)\n";
 
         // Check for new logs for the function.
         $attempt = 1;
