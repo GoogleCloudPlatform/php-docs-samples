@@ -41,12 +41,12 @@ function avoidInfiniteRetries(CloudEvent $event): string
 
     // Ignore events that are too old
     if ($eventAge > $maxAge) {
-        fwrite($log, 'Dropping event ' . $eventId . ' with age ' . $eventAge . PHP_EOL);
+        fwrite($log, 'Dropping event ' . $eventId . ' with age ' . $eventAge . ' seconds' . PHP_EOL);
         return '';
     }
 
     // Do what the function is supposed to do
-    fwrite($log, 'Processing event: ' . $eventId . ' with age ' . $eventAge . PHP_EOL);
+    fwrite($log, 'Processing event: ' . $eventId . ' with age ' . $eventAge . ' seconds' . PHP_EOL);
 
     // infinite_retries failed function executions
     $failed = true;
