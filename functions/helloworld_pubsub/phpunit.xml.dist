@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016 Google Inc.
+  Copyright 2021 Google LLC
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../../testing/bootstrap.php">
+<phpunit bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="PHP sendgrid test">
+        <testsuite name="Cloud Functions Helloworld Pub/Sub Test Suite">
             <directory>test</directory>
         </testsuite>
     </testsuites>
@@ -25,9 +25,9 @@
     </logging>
     <filter>
         <whitelist>
-            <file>app.php</file>
+            <directory suffix=".php">.</directory>
             <exclude>
-                <directory>./vendor</directory>
+              <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
