@@ -30,21 +30,6 @@ FLAKES=(
 
 # Directories we do not want to run tests in, even if they exist
 SKIP_TESTS=(
-    appengine/php55/taskqueue
-    appengine/php55/wordpress
-    appengine/php55/grpc
-    appengine/php55/sendgrid
-    appengine/php55/mail
-    appengine/php55/phpmyadmin
-    appengine/php55/mailjet
-    appengine/php55/storage
-    appengine/php55/memcache
-    appengine/php55/http
-    appengine/php55/users
-    appengine/php55/cloudsql
-    appengine/php55/mailgun
-    appengine/php55/modules
-    appengine/php55/twilio
 )
 
 # tests to run with grpc.so disabled
