@@ -26,7 +26,7 @@ $query = isset($argv[2]) ? $argv[2] : '';
 $pageSize = isset($argv[3]) ? (int) $argv[3] : 0;
 $pageToken = isset($argv[4]) ? $argv[4] : '';
 
-// [START asset_search_all_iam_policies]
+// [START asset_quickstart_search_all_iam_policies]
 use Google\Cloud\Asset\V1\AssetServiceClient;
 
 /** Uncomment and populate these variables in your code */
@@ -49,4 +49,4 @@ $response = $asset->searchAllIamPolicies($scope, [
 foreach ($response->getPage() as $policy) {
     print($policy->getResource() . PHP_EOL);
 }
-// [END asset_search_all_iam_policies]
+// [END asset_quickstart_search_all_iam_policies]

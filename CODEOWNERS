@@ -13,4 +13,5 @@
 /cloud_sql/               @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/php-admins
 /datastore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
 /firestore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
+/iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
 /storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
