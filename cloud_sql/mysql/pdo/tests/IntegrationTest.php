@@ -23,16 +23,14 @@ use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-
 
 class IntegrationTest extends TestCase
 {
     use TestTrait;
     private static $process;
 
-    static public function setUpBeforeClass(): void
+    public static function setUpBeforeClass(): void
     {
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
@@ -43,7 +41,7 @@ class IntegrationTest extends TestCase
         });
     }
 
-    static public function tearDownAfterClass(): void
+    public static function tearDownAfterClass(): void
     {
         self::$process->stop();
     }

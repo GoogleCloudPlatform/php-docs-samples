@@ -21,10 +21,10 @@ namespace Google\Cloud\Samples\CloudSQL\Postgres;
 
 use PDO;
 use PDOException;
-use PDOStatement;
 use RuntimeException;
 
-class DBInitializer {
+class DBInitializer
+{
 
     /**
      *  @param $username string username of the database user
@@ -33,14 +33,13 @@ class DBInitializer {
      *  @param $dbHost string IP address or domain of the target database
      *  @param $connConfig array driver-specific options for PDO
      */
-    static function initTcpDatabaseConnection(
+    public static function initTcpDatabaseConnection(
         string $username,
         string $password,
         string $dbName,
         string $dbHost,
         array $connConfig
-    ): PDO
-    {
+    ): PDO {
         try {
             # [START cloud_sql_postgres_pdo_create_tcp]
             // $username = 'your_db_user';
@@ -92,15 +91,14 @@ class DBInitializer {
      *  @param $socketDir string Full path to unix socket
      *  @param $connConfig array driver-specific options for PDO
      */
-    static function initUnixDatabaseConnection(
+    public static function initUnixDatabaseConnection(
         string $username,
         string $password,
         string $dbName,
         string $connectionName,
         string $socketDir,
         array $connConfig
-    ): PDO
-    {
+    ): PDO {
         try {
             # [START cloud_sql_postgres_pdo_create_socket]
             // $username = 'your_db_user';

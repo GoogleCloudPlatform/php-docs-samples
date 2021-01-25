@@ -21,10 +21,10 @@ namespace Google\Cloud\Samples\CloudSQL\SQLServer;
 
 use PDO;
 use PDOException;
-use PDOStatement;
 use RuntimeException;
 
-class DBInitializer {
+class DBInitializer
+{
 
     /**
      *  @param $username string username of the database user
@@ -33,14 +33,13 @@ class DBInitializer {
      *  @param $dbHost string IP address or domain of the target database
      *  @param $connConfig array driver-specific options for PDO
      */
-    static function initTcpDatabaseConnection(
+    public static function initTcpDatabaseConnection(
         string $username,
         string $password,
         string $dbName,
         string $dbHost,
         array $connConfig
-    ): PDO
-    {
+    ): PDO {
         try {
             # [START cloud_sql_mysql_pdo_create_tcp]
             // $username = 'your_db_user';

@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\CloudSQL\SQLServer\Tests;
 
-use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use PDO;
