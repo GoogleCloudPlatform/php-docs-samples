@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
-use Google\Cloud\TestUtils\TestTrait;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -28,7 +27,6 @@ use RuntimeException;
 
 class VotesTest extends TestCase
 {
-    use TestTrait;
     private $conn;
 
     public function setUp(): void

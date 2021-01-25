@@ -8,12 +8,12 @@ have to jump a couple of legal hurdles.
 Please fill out either the individual or corporate Contributor License Agreement
 (CLA).
 
-- If you are an individual writing original source code and you're sure you
-  own the intellectual property, then you'll need to sign an
-  [individual CLA](https://developers.google.com/open-source/cla/individual).
-- If you work for a company that wants to allow you to contribute your work,
-  then you'll need to sign a
-  [corporate CLA](https://developers.google.com/open-source/cla/corporate).
+  * If you are an individual writing original source code and you're sure you
+    own the intellectual property, then you'll need to sign an
+    [individual CLA](https://developers.google.com/open-source/cla/individual).
+  * If you work for a company that wants to allow you to contribute your work,
+    then you'll need to sign a
+    [corporate CLA](https://developers.google.com/open-source/cla/corporate).
 
 Follow either of the two links above to access the appropriate CLA and
 instructions for how to sign and return it. Once we receive it, we'll be able to
@@ -53,14 +53,12 @@ composer install
 ```
 
 ### Environment variables
-
 Set up [application default credentials](https://cloud.google.com/docs/authentication/getting-started)
 by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path to a service
 account key JSON file.
 
 Then set any environment variables needed by the test. Check the
 `$SAMPLES_DIRECTORY/test` directory to see what specific variables are needed.
-
 ```
 export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
 export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
@@ -74,7 +72,6 @@ view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more informati
 
 Once the dependencies are installed and the environment variables set, you can run the
 tests in a samples directory.
-
 ```
 cd $SAMPLES_DIRECTORY
 # Execute the "phpunit" installed for the shared dependencies
@@ -95,7 +92,7 @@ Install that by running
 composer global require friendsofphp/php-cs-fixer
 ```
 
-Then to fix your directory or file run
+Then to fix your directory or file run 
 
 ```
 php-cs-fixer fix .
