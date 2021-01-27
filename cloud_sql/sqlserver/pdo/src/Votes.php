@@ -61,7 +61,7 @@ class Votes
             $sql = "CREATE TABLE votes (
                 vote_id INT NOT NULL IDENTITY,
                 time_cast DATETIME NOT NULL,
-                vote_value VARCHAR(6) NOT NULL,
+                candidate VARCHAR(6) NOT NULL,
                 PRIMARY KEY (vote_id)
             );";
 
@@ -76,7 +76,7 @@ class Votes
      */
     public function listVotes(): array
     {
-        $sql = "SELECT TOP 5 vote_value, time_cast FROM votes ORDER BY time_cast DESC";
+        $sql = "SELECT TOP 5 candidate, time_cast FROM votes ORDER BY time_cast DESC";
         $statement = $this->connection->prepare($sql);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ class Votes
      */
     public function getCountByValue(string $value): int
     {
-        $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE vote_value = ?";
+        $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE candidate = ?";
 
         $statement = $this->connection->prepare($sql);
         $statement->execute([$value]);
@@ -111,7 +111,7 @@ class Votes
 
         # [START cloud_sql_sqlserver_pdo_connection]
         // Use prepared statements to guard against SQL injection.
-        $sql = "INSERT INTO votes (time_cast, vote_value) VALUES (GETDATE(), :voteValue)";
+        $sql = "INSERT INTO votes (time_cast, candidate) VALUES (GETDATE(), :voteValue)";
 
         try {
             $statement = $conn->prepare($sql);
