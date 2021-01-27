@@ -41,7 +41,7 @@ class DBInitializer
         array $connConfig
     ): PDO {
         try {
-            # [START cloud_sql_mysql_pdo_create_tcp]
+            # [START cloud_sql_sqlserver_pdo_create_tcp]
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
             // $dbName = 'your_db_name';
@@ -52,7 +52,7 @@ class DBInitializer
 
             // Connect to the database
             $conn = new PDO($dsn, $username, $password, $connConfig);
-            # [END cloud_sql_mysql_pdo_create_tcp]
+            # [END cloud_sql_sqlserver_pdo_create_tcp]
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(
@@ -72,7 +72,7 @@ class DBInitializer
                     'your username and password are correct, that the Cloud SQL ' .
                     'proxy is running, and that the database exists and is ready ' .
                     'for use. For more assistance, refer to %s. The PDO error was %s',
-                    'https://cloud.google.com/sql/docs/mysql/connect-external-app',
+                    'https://cloud.google.com/sql/docs/sqlserver/connect-external-app',
                     $e->getMessage()
                 ),
                 $e->getCode(),
