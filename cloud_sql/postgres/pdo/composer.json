@@ -5,11 +5,6 @@
             "Google\\Cloud\\Samples\\CloudSQL\\Postgres\\": "src"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\CloudSQL\\Postgres\\Tests\\": "src"
-        }
-    },
     "require": {
         "php": ">= 7.2",
         "slim/slim": "^4.5",
