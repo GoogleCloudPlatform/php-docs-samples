@@ -17,6 +17,7 @@
 
 declare(strict_types=1);
 
+use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
 use Pimple\Container;
 use Pimple\Psr11\Container as Psr11Container;
@@ -35,57 +36,40 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
+    # [START cloud_sql_sqlserver_pdo_timeout]
+    // Here we set the connection timeout to five seconds and ask PDO to
+    // throw an exception if any errors occur.
+    $connConfig = [
+        PDO::ATTR_TIMEOUT => 5,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ];
+    # [END cloud_sql_sqlserver_pdo_timeout]
+
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
-    $db_name = getenv('DB_NAME');
-    $host = getenv('DB_HOST');
+    $dbName = getenv('DB_NAME');
+    $dbHost = getenv('DB_HOST');
 
-    try {
-        # [START cloud_sql_sqlserver_pdo_create_tcp]
-        // $username = 'your_db_user';
-        // $password = 'yoursupersecretpassword';
-        // $db_name = 'your_db_name';
-        // $host = "127.0.0.1";
-
-        $dsn = sprintf('sqlsrv:server=%s;Database=%s', $host, $db_name);
-
-        // Connect to the database.
-        # [START cloud_sql_sqlserver_pdo_timeout]
-        // Here we set the connection timeout to five seconds and ask PDO to
-        // throw an exception if any errors occur.
-        $conn = new PDO($dsn, $username, $password, [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
-        # [END cloud_sql_sqlserver_pdo_timeout]
-        # [END cloud_sql_sqlserver_pdo_create_tcp]
-    } catch (TypeError $e) {
-        throw new RuntimeException(
-            sprintf(
-                'Invalid or missing configuration! Make sure you have set ' .
-                '$username, $password, $db_name, and $host. ' .
-                'The PHP error was %s',
-                $e->getMessage()
-            ),
-            $e->getCode(),
-            $e
-        );
-    } catch (PDOException $e) {
-        throw new RuntimeException(
-            sprintf(
-                'Could not connect to the Cloud SQL Database. Check that ' .
-                'your username and password are correct, that the Cloud SQL ' .
-                'proxy is running, and that the database exists and is ready ' .
-                'for use. For more assistance, refer to %s. The PDO error was %s',
-                'https://cloud.google.com/sql/docs/mysql/connect-external-app',
-                $e->getMessage()
-            ),
-            (int) $e->getCode(),
-            $e
-        );
+    if (empty($username = getenv('DB_USER'))) {
+        throw new RuntimeException('Must supply $DB_USER environment variables');
+    }
+    if (empty($password = getenv('DB_PASS'))) {
+        throw new RuntimeException('Must supply $DB_PASS environment variables');
+    }
+    if (empty($dbName = getenv('DB_NAME'))) {
+        throw new RuntimeException('Must supply $DB_NAME environment variables');
+    }
+    if (empty($dbHost = getenv('DB_HOST'))) {
+        throw new RuntimeException('Must supply $DB_HOST environment variables');
     }
 
-    return $conn;
+    return DBInitializer::initTcpDatabaseConnection(
+        $username,
+        $password,
+        $dbName,
+        $dbHost,
+        $connConfig
+    );
 };
 
 // Configure the templating engine.

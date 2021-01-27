@@ -43,14 +43,14 @@ limitations under the License.
     </div>
     <div class="row center">
         <div class="col s6 m5 offset-m1">
-            <div class="card-panel {{ tabCount > spaceCount ?: 'green lighten-3' }}">
+            <div class="card-panel {{ tabCount > spaceCount ? 'green lighten-3' : '' }}">
                 <i class="material-icons large">keyboard_tab</i>
                 <h3>{{ tabCount }} votes</h3>
                 <button id="voteTabs" class="btn green">Vote for TABS</button>
             </div>
         </div>
         <div class="col s6 m5">
-            <div class="card-panel {{ tabCount < spaceCount ?: 'blue lighten-3' }}">
+            <div class="card-panel {{ tabCount < spaceCount ? 'blue lighten-3' : '' }}">
                 <i class="material-icons large">space_bar</i>
                 <h3>{{ spaceCount }} votes</h3>
                 <button id="voteSpaces" class="btn blue">Vote for SPACES</button>
@@ -62,13 +62,13 @@ limitations under the License.
         {% if votes %}
             {% for vote in votes %}
                 <li class="collection-item avatar">
-                    {% if vote.vote_value == "TABS" %}
+                    {% if vote.candidate == "TABS" %}
                         <i class="material-icons circle green">keyboard_tab</i>
-                    {% elseif vote.vote_value == "SPACES" %}
+                    {% elseif vote.candidate == "SPACES" %}
                         <i class="material-icons circle blue">space_bar</i>
                     {% endif %}
                     <span class="title">
-                        A vote for <b>{{ vote.vote_value }}</b>
+                        A vote for <b>{{ vote.candidate }}</b>
                     </span>
                 <p>was cast at {{ vote.time_cast }}</p>
             </li>
