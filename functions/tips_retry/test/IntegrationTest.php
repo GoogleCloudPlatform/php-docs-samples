@@ -21,6 +21,7 @@ namespace Google\Cloud\Samples\Functions\TipsRetry\Test;
 
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
+use Google\CloudFunctions\CloudEvent;
 
 /**
  * Class IntegrationTest.
@@ -40,7 +41,7 @@ class IntegrationTest extends TestCase
 
     private static function makeData($jsonArray)
     {
-        return base64_encode(json_encode($jsonArray));
+        return ['data' => base64_encode(json_encode($jsonArray))];
     }
 
     public function dataProvider()
@@ -52,12 +53,10 @@ class IntegrationTest extends TestCase
                     'source' => 'pubsub.googleapis.com',
                     'specversion' => '1.0',
                     'type' => 'google.cloud.pubsub.topic.v1.messagePublished',
-                ],
-                'data' => [
                     'data' => self::makeData(['some_parameter' => true]),
                 ],
                 'statusCode' => '500',
-                'expected' => 'Retrying...',
+                'expected' => 'retrying...',
                 'label' => 'Should throw an exception to trigger a retry'
             ],
             [
@@ -66,8 +65,6 @@ class IntegrationTest extends TestCase
                     'source' => 'pubsub.googleapis.com',
                     'specversion' => '1.0',
                     'type' => 'google.cloud.pubsub.topic.v1.messagePublished',
-                ],
-                'data' => [
                     'data' => self::makeData(['some_parameter' => false]),
                 ],
                 'statusCode' => '200',
@@ -80,22 +77,10 @@ class IntegrationTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testTipsRetry(array $cloudevent, array $data, string $statusCode, string $expected, string $label): void
+    public function testTipsRetry(array $cloudevent, string $statusCode, string $expected, string $label): void
     {
-        // Prepare the HTTP headers for a CloudEvent.
-        $cloudEventHeaders = [];
-        foreach ($cloudevent as $key => $value) {
-            $cloudEventHeaders['ce-' . $key] = $value;
-        }
-
         // Send an HTTP request using CloudEvent metadata.
-        $resp = $this->client->request('POST', '/', [
-            'body' => json_encode($data),
-            'headers' => $cloudEventHeaders + [
-                // Instruct the function framework to parse the body as JSON.
-                'content-type' => 'application/json'
-            ],
-        ]);
+        $resp = $this->request(CloudEvent::fromArray($cloudevent));
 
         // The Cloud Function logs all data to stderr.
         $actual = self::$localhost->getIncrementalErrorOutput();

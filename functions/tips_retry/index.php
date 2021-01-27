@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ function tipsRetry(CloudEvent $event): string
     if ($tryAgain) {
         /**
          * Functions with automatic retries enabled should throw exceptions to
-         * indicate temporary failures that a retry might fix. In this case,
-         * a thrown exception will cause the original function invocation to be
-         * re-sent.
+         * indicate intermittent failures that a retry might fix. In this
+         * case, a thrown exception will cause the original function
+         * invocation to be re-sent.
          */
-        throw new Exception('Retrying...');
+        throw new Exception('Intermittent failure occurred; retrying...');
     } else {
         /**
          * If a function with retries enabled encounters a non-retriable
