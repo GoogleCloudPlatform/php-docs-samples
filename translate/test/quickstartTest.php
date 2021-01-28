@@ -45,6 +45,6 @@ class quickstartTest extends TestCase
         $this->assertArrayHasKey('text', $translation);
         $this->assertEquals('en', $translation['source']);
         $this->assertEquals('Hello, world!', $translation['input']);
-        $this->assertContains('мир', $translation['text']);
+        $this->assertStringContainsString('мир', $translation['text']);
     }
 }

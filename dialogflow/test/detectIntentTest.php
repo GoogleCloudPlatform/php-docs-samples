@@ -40,7 +40,7 @@ class detectIntentTest extends TestCase
             'texts' => self::$texts
         ]);
 
-        $this->assertContains('date', $output);
+        $this->assertStringContainsString('date', $output);
     }
 
     public function testDetectAudio()
@@ -49,7 +49,7 @@ class detectIntentTest extends TestCase
             'path' => self::$audioFilePath
         ]);
 
-        $this->assertContains('would you like to reserve a room', $output);
+        $this->assertStringContainsString('would you like to reserve a room', $output);
     }
 
     public function testDetectStream()
@@ -61,6 +61,6 @@ class detectIntentTest extends TestCase
             'path' => self::$audioFilePath
         ]);
 
-        $this->assertContains('would you like to reserve a room', $output);
+        $this->assertStringContainsString('would you like to reserve a room', $output);
     }
 }

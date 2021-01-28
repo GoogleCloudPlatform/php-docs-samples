@@ -56,7 +56,7 @@ class LocalTest extends TestCase
 
         $this->loop->run();
         $resolvedMsg = Block\await($basePromise, $this->loop);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "Message received: Hello World!",
             strval($resolvedMsg)
         );

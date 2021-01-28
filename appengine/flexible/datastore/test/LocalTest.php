@@ -43,6 +43,6 @@ class LocalTest extends WebTestCase
         $client->request('GET', '/');
         $this->assertTrue($client->getResponse()->isOk());
         $text = $client->getResponse()->getContent();
-        $this->assertContains("Last 10 visits:", $text);
+        $this->assertStringContainsString("Last 10 visits:", $text);
     }
 }

@@ -59,6 +59,6 @@ class DeployTest extends TestCase
             $label . ':'
         );
         // Failures often lead to a large HTML page in the response body.
-        $this->assertContains($expected, $actual, $label . ':');
+        $this->assertStringContainsString($expected, $actual, $label . ':');
     }
 }

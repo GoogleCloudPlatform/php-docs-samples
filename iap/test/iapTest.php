@@ -39,7 +39,7 @@ class iapTest extends TestCase
         ]);
 
         // Verify an ID token was returned
-        $this->assertContains('Printing out response body:', $output);
+        $this->assertStringContainsString('Printing out response body:', $output);
         list($_, $iapJwt) = explode(':', $output);
 
         // Now validate the JWT using the validation command
@@ -48,9 +48,9 @@ class iapTest extends TestCase
             'projectNumber' => $this->requireEnv('IAP_PROJECT_NUMBER'),
             'projectId' => $this->requireEnv('IAP_PROJECT_ID'),
         ]);
-        $this->assertContains('Printing user identity information from ID token payload:', $output);
-        $this->assertContains('sub: accounts.google.com', $output);
-        $this->assertContains('email:', $output);
+        $this->assertStringContainsString('Printing user identity information from ID token payload:', $output);
+        $this->assertStringContainsString('sub: accounts.google.com', $output);
+        $this->assertStringContainsString('email:', $output);
     }
 
     public function testInvalidJwt()

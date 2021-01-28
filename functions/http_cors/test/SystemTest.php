@@ -53,7 +53,7 @@ class SystemTest extends TestCase
         // Assert headers.
         $header_names = array_keys($resp->getHeaders());
         if ($containsHeader) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $containsHeader,
                 $header_names
             );
@@ -68,7 +68,7 @@ class SystemTest extends TestCase
         // Assert function output.
         $content = trim((string) $resp->getBody());
         if ($containsContent) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $containsContent,
                 $content
             );

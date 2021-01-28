@@ -48,7 +48,7 @@ class TasksTest extends TestCase
 
         $taskNamePrefix = $this->getTaskNamePrefix();
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     public function testCreateHttpTaskWithToken()
@@ -64,7 +64,7 @@ class TasksTest extends TestCase
 
         $taskNamePrefix = $this->getTaskNamePrefix();
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     private function getTaskNamePrefix()

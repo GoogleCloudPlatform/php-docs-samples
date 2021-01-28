@@ -40,7 +40,7 @@ class SampleUnitTest extends TestCase
         $request = new ServerRequest('POST', '/', [], json_encode(['name' => $name]));
         $expected = sprintf('Hello, %s!', $name);
         $actual = helloHttp($request);
-        $this->assertContains($expected, $actual);
+        $this->assertStringContainsString($expected, $actual);
     }
 }
 

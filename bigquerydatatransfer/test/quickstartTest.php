@@ -43,6 +43,6 @@ class quickstartTest extends TestCase
         $result = ob_get_clean();
 
         // Make sure it looks correct
-        $this->assertContains('ID: youtube_channel', $result);
+        $this->assertStringContainsString('ID: youtube_channel', $result);
     }
 }

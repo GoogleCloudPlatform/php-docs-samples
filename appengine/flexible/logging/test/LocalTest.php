@@ -43,7 +43,7 @@ class LocalTest extends WebTestCase
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $text = $response->getContent();
-        $this->assertContains("Logs:", $text);
+        $this->assertStringContainsString("Logs:", $text);
     }
 
     public function testAsyncLog()

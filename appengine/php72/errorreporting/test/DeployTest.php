@@ -39,7 +39,7 @@ class DeployTest extends TestCase
         // Access the modules app top page.
         $response = $this->client->get('');
         $this->assertEquals('200', $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Click an error type',
             $response->getBody()->getContents()
         );
@@ -53,7 +53,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals('200', $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Throwing a PHP Exception.',
             $response->getBody()->getContents()
         );
@@ -69,7 +69,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals('200', $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Triggering a PHP Error.',
             $response->getBody()->getContents()
         );
@@ -85,7 +85,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals('200', $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Triggering a PHP Fatal Error by including a file with a syntax error.',
             $response->getBody()->getContents()
         );
@@ -119,7 +119,7 @@ class DeployTest extends TestCase
                 }
             }
 
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $message,
                 implode("\n", $messages)
             );

@@ -82,8 +82,8 @@ class productSearchTest extends TestCase
             'file-path' => __DIR__ . '/data/shoes_1.jpg',
             'filter' => ''
         ]);
-        $this->assertContains(self::$indexedProductId1, $output);
-        $this->assertContains(self::$indexedProductId2, $output);
+        $this->assertStringContainsString(self::$indexedProductId1, $output);
+        $this->assertStringContainsString(self::$indexedProductId2, $output);
     }
 
     /** @depends testIndexedProductSetExists */
@@ -95,8 +95,8 @@ class productSearchTest extends TestCase
             'gcs-uri' => self::$shoesOneUri,
             'filter' => ''
         ]);
-        $this->assertContains(self::$indexedProductId1, $output);
-        $this->assertContains(self::$indexedProductId2, $output);
+        $this->assertStringContainsString(self::$indexedProductId1, $output);
+        $this->assertStringContainsString(self::$indexedProductId2, $output);
     }
 
     /** @depends testIndexedProductSetExists */
@@ -108,7 +108,7 @@ class productSearchTest extends TestCase
             'file-path' => __DIR__ . '/data/shoes_1.jpg',
             'filter' => 'style=womens'
         ]);
-        $this->assertContains(self::$indexedProductId1, $output);
+        $this->assertStringContainsString(self::$indexedProductId1, $output);
         $this->assertNotContains(self::$indexedProductId2, $output);
     }
 
@@ -121,7 +121,7 @@ class productSearchTest extends TestCase
             'gcs-uri' => self::$shoesOneUri,
             'filter' => 'style=womens'
         ]);
-        $this->assertContains(self::$indexedProductId1, $output);
+        $this->assertStringContainsString(self::$indexedProductId1, $output);
         $this->assertNotContains(self::$importProductId2, $output);
     }
 
@@ -135,27 +135,27 @@ class productSearchTest extends TestCase
 
         # verify
         $output = $this->runCommand('product-set-list', []);
-        $this->assertContains(self::$importProductSetId, $output);
+        $this->assertStringContainsString(self::$importProductSetId, $output);
 
         $output = $this->runCommand('product-list', []);
-        $this->assertContains(self::$importProductId1, $output);
-        $this->assertContains(self::$importProductId2, $output);
+        $this->assertStringContainsString(self::$importProductId1, $output);
+        $this->assertStringContainsString(self::$importProductId2, $output);
 
         $output = $this->runCommand('product-set-list-products', [
             'product-set-id' => self::$importProductSetId
         ]);
-        $this->assertContains(self::$importProductId1, $output);
-        $this->assertContains(self::$importProductId2, $output);
+        $this->assertStringContainsString(self::$importProductId1, $output);
+        $this->assertStringContainsString(self::$importProductId2, $output);
 
         $output = $this->runCommand('product-image-list', [
             'product-id' => self::$importProductId1
         ]);
-        $this->assertContains(self::$shoesOneUri, $output);
+        $this->assertStringContainsString(self::$shoesOneUri, $output);
 
         $output = $this->runCommand('product-image-list', [
             'product-id' => self::$importProductId2
         ]);
-        $this->assertContains(self::$shoesTwoUri, $output);
+        $this->assertStringContainsString(self::$shoesTwoUri, $output);
     }
 
     public function testCreateProductSet()
@@ -165,7 +165,7 @@ class productSearchTest extends TestCase
             'product-set-display-name' => 'fake_product_set_display_name_for_testing',
         ]);
         $output = $this->runCommand('product-set-list', []);
-        $this->assertContains(self::$productSetId, $output);
+        $this->assertStringContainsString(self::$productSetId, $output);
     }
 
     /** @depends testCreateProductSet */
@@ -182,7 +182,7 @@ class productSearchTest extends TestCase
             'product-category' => 'apparel'
         ]);
         $output = $this->runCommand('product-list', []);
-        $this->assertContains(self::$productId, $output);
+        $this->assertStringContainsString(self::$productId, $output);
     }
 
     /** @depends testCreateProduct */
@@ -203,8 +203,8 @@ class productSearchTest extends TestCase
             'key' => $key,
             'value' => $value
         ]);
-        $this->assertContains($key, $output);
-        $this->assertContains($value, $output);
+        $this->assertStringContainsString($key, $output);
+        $this->assertStringContainsString($value, $output);
     }
 
     /** @depends testUpdateProduct */
@@ -217,7 +217,7 @@ class productSearchTest extends TestCase
         $output = $this->runCommand('product-set-list-products', [
             'product-set-id' => self::$productSetId
         ]);
-        $this->assertContains(self::$productId, $output);
+        $this->assertStringContainsString(self::$productId, $output);
     }
 
     /** @depends testAddProductToProductSet */
@@ -244,7 +244,7 @@ class productSearchTest extends TestCase
         $output = $this->runCommand('product-image-list', [
             'product-id' => self::$productId
         ]);
-        $this->assertContains(self::$referenceImageId, $output);
+        $this->assertStringContainsString(self::$referenceImageId, $output);
 
         # tear down
         $this->runCommand('product-delete', [

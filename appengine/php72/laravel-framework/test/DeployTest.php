@@ -42,6 +42,6 @@ class DeployTest extends TestCase
         // Access the blog top page
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
-        $this->assertContains('Laravel', $resp->getBody()->getContents());
+        $this->assertStringContainsString('Laravel', $resp->getBody()->getContents());
     }
 }

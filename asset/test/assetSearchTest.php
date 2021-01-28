@@ -57,7 +57,7 @@ class assetSearchTest extends TestCase
                 $scope,
                 $query
             ]);
-            $this->assertContains(self::$datasetId, $output);
+            $this->assertStringContainsString(self::$datasetId, $output);
         }, 10, true);
     }
 
@@ -70,6 +70,6 @@ class assetSearchTest extends TestCase
             $scope,
             $query
         ]);
-        $this->assertContains(self::$projectId, $output);
+        $this->assertStringContainsString(self::$projectId, $output);
     }
 }

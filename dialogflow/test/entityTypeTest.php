@@ -40,7 +40,7 @@ class entityTypeTest extends TestCase
         ]);
         $output = $this->runCommand('entity-type-list');
 
-        $this->assertContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringContainsString(self::$entityTypeDisplayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);

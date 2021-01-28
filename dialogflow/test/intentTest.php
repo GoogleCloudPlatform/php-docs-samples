@@ -44,7 +44,7 @@ class intentTest extends TestCase
         ]);
         $output = $this->runCommand('intent-list');
 
-        $this->assertContains(self::$displayName, $output);
+        $this->assertStringContainsString(self::$displayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);

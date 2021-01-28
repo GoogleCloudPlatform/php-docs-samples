@@ -56,11 +56,11 @@ class BucketLifecycleManagementTest extends TestCase
             '--enable' => true,
         ]);
         $match = "Lifecycle management is enabled for bucket $bucketName and the rules are:";
-        $this->assertContains($match, $output);
+        $this->assertStringContainsString($match, $output);
         $this->bucket->reload();
         $lifecycle = $this->bucket->currentLifecycle()->toArray();
         $rules = $lifecycle['rule'];
-        $this->assertContains([
+        $this->assertStringContainsString([
             'action' => [
                 'type' => 'Delete'
             ],

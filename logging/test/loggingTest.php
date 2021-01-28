@@ -69,7 +69,7 @@ class loggingTest extends TestCase
         $output = $this->runCommand('list-sinks', [
             'project' => self::$projectId,
         ]);
-        $this->assertContains('name:' . self::$sinkName, $output);
+        $this->assertStringContainsString('name:' . self::$sinkName, $output);
     }
 
     /**
@@ -155,7 +155,7 @@ class loggingTest extends TestCase
                 'project' => self::$projectId,
                 '--logger' => $loggerName,
             ]);
-            $this->assertContains($message, $output);
+            $this->assertStringContainsString($message, $output);
         }, $retries = 10);
     }
 

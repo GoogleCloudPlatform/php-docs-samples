@@ -115,6 +115,6 @@ EOF;
         $json = json_decode((string) $response->getBody(), true);
         $this->assertArrayHasKey('message', $json);
         $expectedString = 'unregistered callers';
-        $this->assertContains($expectedString, $json['message']);
+        $this->assertStringContainsString($expectedString, $json['message']);
     }
 }

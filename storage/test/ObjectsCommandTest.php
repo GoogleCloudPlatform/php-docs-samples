@@ -48,7 +48,7 @@ class ObjectsCommandTest extends TestCase
             'bucket' => self::$bucketName,
         ]);
 
-        $this->assertContains('Object:', $output);
+        $this->assertStringContainsString('Object:', $output);
     }
 
     public function testListObjectsWithPrefix()
@@ -60,7 +60,7 @@ class ObjectsCommandTest extends TestCase
             '--prefix' => $objectName,
         ]);
 
-        $this->assertContains('Object:', $output);
+        $this->assertStringContainsString('Object:', $output);
     }
 
     public function testManageObject()

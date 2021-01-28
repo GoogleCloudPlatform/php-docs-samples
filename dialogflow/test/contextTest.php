@@ -44,7 +44,7 @@ class contextTest extends TestCase
             '--session-id' => self::$sessionId,
         ]);
 
-        $this->assertContains(self::$contextId, $output);
+        $this->assertStringContainsString(self::$contextId, $output);
     }
 
     /** @depends testCreateContext */

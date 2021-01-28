@@ -72,7 +72,7 @@ class assetTest extends TestCase
                 'assetNames' => [$assetName],
             ]);
 
-            $this->assertContains($assetName, $output);
+            $this->assertStringContainsString($assetName, $output);
         }, 10, true);
     }
 }

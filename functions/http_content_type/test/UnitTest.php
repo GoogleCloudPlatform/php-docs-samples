@@ -43,7 +43,7 @@ class UnitTest extends TestCase
         foreach (self::cases() as $test) {
             $request = new ServerRequest('POST', '/', ['content-type' => $test['content-type']], $test['body']);
             $actual = $this->runFunction(self::$entryPoint, [$request]);
-            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
+            $this->assertStringContainsString($test['expected'], $actual, $test['content-type'] . ':');
         }
     }
 

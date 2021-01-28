@@ -46,6 +46,6 @@ class quickstartTest extends TestCase
         // Invoke quickstart.php
         $output = $this->runSnippet(self::$tempFile);
 
-        $this->assertContains('Hello World', $output);
+        $this->assertStringContainsString('Hello World', $output);
     }
 }

@@ -63,7 +63,7 @@ class DeployTest extends TestCase
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
-            $this->assertContains($expected, $output, $label . ': contains');
+            $this->assertStringContainsString($expected, $output, $label . ': contains');
         }
     }
 

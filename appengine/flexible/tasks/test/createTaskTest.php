@@ -51,6 +51,6 @@ class tasksTest extends TestCase
             self::$queue
         );
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 }

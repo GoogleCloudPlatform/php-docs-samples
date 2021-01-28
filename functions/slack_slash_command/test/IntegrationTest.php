@@ -71,7 +71,7 @@ class IntegrationTest extends TestCase
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
-            $this->assertContains($expected, $output);
+            $this->assertStringContainsString($expected, $output);
         }
     }
 }

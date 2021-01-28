@@ -52,7 +52,7 @@ class ObjectAclCommandTest extends TestCase
             'object' => $objectName,
         ]);
 
-        $this->assertContains(': OWNER', $output);
+        $this->assertStringContainsString(': OWNER', $output);
     }
 
     public function testManageObjectAcl()

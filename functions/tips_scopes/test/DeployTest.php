@@ -56,11 +56,11 @@ class DeployTest extends TestCase
         $secondOutput = trim((string) $secondResp->getBody());
 
         // Assert generic function output.
-        $this->assertContains('Per instance: 120', $firstOutput);
-        $this->assertContains('Per function: 15', $firstOutput);
+        $this->assertStringContainsString('Per instance: 120', $firstOutput);
+        $this->assertStringContainsString('Per function: 15', $firstOutput);
 
         // Assert caching behavior.
-        $this->assertContains('Cache empty', $firstOutput);
-        $this->assertContains('Reading cached value', $secondOutput);
+        $this->assertStringContainsString('Cache empty', $firstOutput);
+        $this->assertStringContainsString('Reading cached value', $secondOutput);
     }
 }

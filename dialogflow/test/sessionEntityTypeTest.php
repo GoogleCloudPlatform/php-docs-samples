@@ -49,7 +49,7 @@ class sessionEntityTypeTest extends TestCase
             '--session-id' => self::$sessionId
         ]);
 
-        $this->assertContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringContainsString(self::$entityTypeDisplayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);

@@ -53,6 +53,6 @@ class quickstartTest extends TestCase
             self::$projectId,
             self::$secretId,
         ]);
-        $this->assertContains('Plaintext: hello world', $output);
+        $this->assertStringContainsString('Plaintext: hello world', $output);
     }
 }

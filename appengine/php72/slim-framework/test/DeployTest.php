@@ -28,7 +28,7 @@ class DeployTest extends TestCase
         $resp = $this->client->get('/?name=Slim');
 
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertContains('Hello, Slim!', (string) $resp->getBody());
+        $this->assertStringContainsString('Hello, Slim!', (string) $resp->getBody());
     }
 
     public function test404()
