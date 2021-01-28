@@ -47,7 +47,7 @@ class quickstartTest extends TestCase
         $this->assertContains($topicName, $this->topic->name());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->topic) {
             $this->topic->delete();

@@ -29,7 +29,7 @@ class DeployTest extends TestCase
     use AppEngineDeploymentTrait;
     use EventuallyConsistentTestTrait;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->projectId = getenv('GOOGLE_PROJECT_ID');
     }

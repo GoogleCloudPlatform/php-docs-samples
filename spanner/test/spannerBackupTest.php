@@ -53,7 +53,7 @@ class spannerBackupTest extends TestCase
     /** @var $instance Instance */
     protected static $instance;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
 
@@ -199,7 +199,7 @@ class spannerBackupTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (self::$instance->exists()) {
             self::waitForOperations();

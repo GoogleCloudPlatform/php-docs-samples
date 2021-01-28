@@ -36,7 +36,7 @@ class HmacCommandTest extends TestCase
     protected $hmacServiceAccount;
     protected $accessId;
 
-    public function setUp()
+    public function setUp(): void
     {
         $application = require __DIR__ . '/../storage.php';
         $this->commandTesterList = new CommandTester($application->get('hmac-sa-list'));
@@ -54,7 +54,7 @@ class HmacCommandTest extends TestCase
         });
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Delete all HMAC keys.
         $this->deleteAllHmacKeys($this->hmacServiceAccount);

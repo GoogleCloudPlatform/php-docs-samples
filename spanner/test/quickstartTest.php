@@ -26,7 +26,7 @@ class quickstartTest extends TestCase
 
     protected static $tempFile;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requireGrpc();
         $instanceId = $this->requireEnv('GOOGLE_SPANNER_INSTANCE_ID');

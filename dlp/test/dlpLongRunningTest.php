@@ -33,7 +33,7 @@ class dlpLongRunningTest extends TestCase
     private static $topic;
     private static $subscription;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $uniqueName = sprintf('dlp-%s', microtime(true));
         $pubsub = new PubSubClient();
@@ -43,7 +43,7 @@ class dlpLongRunningTest extends TestCase
         self::$subscription->create();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$topic->delete();
         self::$subscription->delete();

@@ -24,7 +24,7 @@ class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
             self::markTestSkipped(

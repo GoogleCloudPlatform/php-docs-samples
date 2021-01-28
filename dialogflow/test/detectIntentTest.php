@@ -29,7 +29,7 @@ class detectIntentTest extends TestCase
     private static $audioFilePath;
     private static $texts = ['hello', 'book a meeting room', 'mountain view'];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$audioFilePath = realpath(__DIR__ . '/../resources/book_a_room.wav');
     }

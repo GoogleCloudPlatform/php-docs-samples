@@ -48,7 +48,7 @@ class spannerTest extends TestCase
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
 
@@ -682,7 +682,7 @@ class spannerTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (self::$instance->exists()) {// Clean up database
             $database = self::$instance->database(self::$databaseId);

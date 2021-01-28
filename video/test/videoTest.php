@@ -29,7 +29,7 @@ class videoTest extends TestCase
     use TestTrait;
     use ExponentialBackoffTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff();
     }

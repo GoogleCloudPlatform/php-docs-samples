@@ -31,12 +31,10 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $response->getStatusCode());
     }
 
-    /**
-     * @expectedException GuzzleHttp\Exception\ClientException
-     * @expectedExceptionMessage 404 Not Found
-     */
     public function testHomepagePhpIs404()
     {
+        $this->expectException('GuzzleHttp\Exception\ClientException');
+        $this->expectExceptionMessage('404 Not Found');
         // ensure homepage.php is a 404.
         $response = $this->client->get('/homepage.php');
         $this->assertEquals('404', $response->getStatusCode());

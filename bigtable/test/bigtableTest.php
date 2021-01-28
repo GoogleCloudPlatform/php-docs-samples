@@ -16,12 +16,12 @@ final class BigtableTest extends TestCase
 
     private static $clusterId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::setUpBigtableVars();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff();
     }

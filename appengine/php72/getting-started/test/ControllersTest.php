@@ -32,7 +32,7 @@ class ControllersTest extends TestCase
 
     private $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         $app = require __DIR__ . '/../src/app.php';
         require __DIR__ . '/../src/controllers.php';

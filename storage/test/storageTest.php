@@ -39,7 +39,7 @@ class storageTest extends TestCase
     private static $storage;
     private static $tempBucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
         self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
@@ -49,7 +49,7 @@ class storageTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$tempBucket->delete();
     }

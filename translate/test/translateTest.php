@@ -31,7 +31,7 @@ class translateTest extends TestCase
 
     private static $bucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
         self::$bucket = (new StorageClient())->createBucket(
@@ -39,7 +39,7 @@ class translateTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         foreach (self::$bucket->objects() as $object) {
             $object->delete();
@@ -58,11 +58,10 @@ class translateTest extends TestCase
         $this->assertContains('Translation:', $output);
     }
 
-    /**
-     * @expectedException Google\Cloud\Core\Exception\BadRequestException
-     */
     public function testTranslateBadLanguage()
     {
+        $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
+
         $this->runSnippet('translate', ['Hello.', 'jp']);
     }
 

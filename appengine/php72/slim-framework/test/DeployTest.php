@@ -31,12 +31,10 @@ class DeployTest extends TestCase
         $this->assertContains('Hello, Slim!', (string) $resp->getBody());
     }
 
-    /**
-     * @expectedException GuzzleHttp\Exception\ClientException
-     * @expectedExceptionMessage 404 Not Found
-     */
     public function test404()
     {
+        $this->expectException('GuzzleHttp\Exception\ClientException');
+        $this->expectExceptionMessage('404 Not Found');
         $resp = $this->client->get('/does-not-exist');
     }
 }

@@ -34,7 +34,7 @@ class FunctionsTest extends TestCase
     private static $datasetId;
     private static $dataset;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         $client = new BigQueryClient([
@@ -340,7 +340,7 @@ class FunctionsTest extends TestCase
         $this->runEventuallyConsistentTest($testFunction);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$dataset->delete(['deleteContents' => true]);
     }

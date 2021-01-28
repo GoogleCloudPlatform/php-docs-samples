@@ -36,12 +36,12 @@ class iotTest extends TestCase
     private static $devices = [];
     private static $gateways = [];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$testId = time() . '-' . rand();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         foreach (self::$devices as $deviceId) {
             printf('Cleaning up Device %s' . PHP_EOL, $deviceId);

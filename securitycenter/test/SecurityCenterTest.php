@@ -26,7 +26,7 @@ class securityCenterTest extends TestCase
     private static $testNotificationGet;
     private static $testNotificationUpdate;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$testNotificationCreate = self::randomNotificationId();
         self::$testNotificationGet = self::randomNotificationId();

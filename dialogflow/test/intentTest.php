@@ -30,7 +30,7 @@ class intentTest extends TestCase
     private static $messageTexts = ['fake_message_for_testing_1', 'fake_message_for_testing_2'];
     private static $trainingPhraseParts = ['fake_phrase_1', 'fake_phrase_2'];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$displayName = sprintf('fake_display_%s_%s', rand(100, 999), time());
     }

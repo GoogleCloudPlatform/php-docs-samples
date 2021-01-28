@@ -27,7 +27,7 @@ class DeployTest extends TestCase
     use AppEngineDeploymentTrait;
     use EventuallyConsistentTestTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
             $this->markTestSkipped('No secret available');

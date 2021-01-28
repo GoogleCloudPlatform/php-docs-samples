@@ -28,7 +28,7 @@ class LocalTest extends TestCase
 {
     protected $loop;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->loop = EventLoop\Factory::create();
 

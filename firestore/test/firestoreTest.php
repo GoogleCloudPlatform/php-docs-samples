@@ -34,7 +34,7 @@ class firestoreTest extends TestCase
     private static $commandFile = __DIR__ . '/../firestore.php';
     private static $firestoreProjectId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
@@ -42,7 +42,7 @@ class firestoreTest extends TestCase
         self::$firestoreProjectId = self::requireEnv('FIRESTORE_PROJECT_ID');
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::runFirestoreCommand('delete-test-collections');
     }

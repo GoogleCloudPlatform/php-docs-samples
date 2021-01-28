@@ -32,7 +32,7 @@ class servicedirectoryTest extends TestCase
 
     private static $locationId = 'us-east1';
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         // Delete any namespaces created during the tests.
         $client = new RegistrationServiceClient();

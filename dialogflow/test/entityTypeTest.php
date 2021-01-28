@@ -28,7 +28,7 @@ class entityTypeTest extends TestCase
 
     private static $entityTypeDisplayName;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$entityTypeDisplayName = sprintf('fake_display_%s_%s', rand(100, 999), time());
     }

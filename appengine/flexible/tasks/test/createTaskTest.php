@@ -32,7 +32,7 @@ class tasksTest extends TestCase
     protected static $queue;
     protected static $location;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$queue = self::requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
         self::$location = self::requireEnv('CLOUD_TASKS_LOCATION');

@@ -45,7 +45,7 @@ class secretmanagerTest extends TestCase
 
     private static $iamUser = 'user:sethvargo@google.com';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$client = new SecretManagerServiceClient();
 
@@ -61,7 +61,7 @@ class secretmanagerTest extends TestCase
         self::disableSecretVersion(self::$testSecretVersionToEnable);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteSecret(self::$testSecret->getName());
         self::deleteSecret(self::$testSecretToDelete->getName());

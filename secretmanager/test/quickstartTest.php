@@ -28,12 +28,12 @@ class quickstartTest extends TestCase
 
     private static $secretId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$secretId = uniqid('php-quickstart-');
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $client = new SecretManagerServiceClient();
         $name = $client->secretName(self::$projectId, self::$secretId);

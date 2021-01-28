@@ -28,7 +28,7 @@ class EndpointsCommandTest extends TestCase
     private $apiKey;
     private $message;
 
-    public function setUp()
+    public function setUp(): void
     {
         $host = $this->requireEnv('GOOGLE_ENDPOINTS_HOST');
         $api_key = $this->requireEnv('GOOGLE_ENDPOINTS_APIKEY');

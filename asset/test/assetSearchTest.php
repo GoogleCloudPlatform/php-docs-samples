@@ -33,7 +33,7 @@ class assetSearchTest extends TestCase
     private static $datasetId;
     private static $dataset;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $client = new BigQueryClient([
             'projectId' => self::$projectId,
@@ -42,7 +42,7 @@ class assetSearchTest extends TestCase
         self::$dataset = $client->createDataset(self::$datasetId);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$dataset->delete();
     }

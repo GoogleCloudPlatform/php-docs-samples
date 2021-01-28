@@ -318,7 +318,7 @@ class productSearchTest extends TestCase
         print($output);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         print('Cleaning up products and product sets' . PHP_EOL);
         self::runCommand('product-delete', [

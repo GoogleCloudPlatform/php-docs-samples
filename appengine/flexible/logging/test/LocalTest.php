@@ -20,7 +20,7 @@ use Silex\WebTestCase;
 
 class LocalTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');

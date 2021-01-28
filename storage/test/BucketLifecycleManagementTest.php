@@ -33,7 +33,7 @@ class BucketLifecycleManagementTest extends TestCase
     private static $commandFile = __DIR__ . '/../storage.php';
     protected $bucket;
 
-    public function setUp()
+    public function setUp(): void
     {
         $storage = new StorageClient();
         $bucketName = sprintf('php-olm-%s-%s', time(), rand(1000, 9999));
@@ -43,7 +43,7 @@ class BucketLifecycleManagementTest extends TestCase
         });
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->bucket->delete();
     }

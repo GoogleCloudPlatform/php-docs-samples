@@ -36,12 +36,12 @@ class loggingTest extends TestCase
     protected static $sinkName;
     protected static $loggerName = 'my_test_logger';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$sinkName = sprintf("sink-%s", uniqid());
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff(5);
         $this->catchAllExceptions = true;

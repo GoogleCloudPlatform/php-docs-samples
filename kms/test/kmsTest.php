@@ -46,7 +46,7 @@ class kmsTest extends TestCase
     private static $hsmKeyId;
     private static $symmetricKeyId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$locationId = 'us-east1';
 
@@ -69,7 +69,7 @@ class kmsTest extends TestCase
         self::createSymmetricKey(self::$symmetricKeyId);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $client = new KeyManagementServiceClient();
 

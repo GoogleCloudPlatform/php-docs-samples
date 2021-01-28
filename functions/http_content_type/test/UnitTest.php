@@ -33,7 +33,7 @@ class UnitTest extends TestCase
 
     private static $entryPoint = 'helloContent';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
     }

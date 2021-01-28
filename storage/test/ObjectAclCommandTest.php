@@ -34,7 +34,7 @@ class ObjectAclCommandTest extends TestCase
     private static $bucketName;
     private static $commandFile = __DIR__ . '/../storage.php';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
         self::$bucketName = sprintf(
