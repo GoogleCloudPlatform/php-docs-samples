@@ -115,8 +115,8 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertArrayContainsString('Listing Instances:', $array);
-        $this->assertArrayContainsString(self::$instanceId, $array);
+        $this->assertContains('Listing Instances:', $array);
+        $this->assertContains(self::$instanceId, $array);
     }
 
     /**
@@ -134,8 +134,8 @@ final class BigtableTest extends TestCase
         ]);
         $array = explode(PHP_EOL, $content);
 
-        $this->assertArrayContainsString('Listing Tables:', $array);
-        $this->assertArrayContainsString('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/tables/' . $tableId, $array);
+        $this->assertContains('Listing Tables:', $array);
+        $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/tables/' . $tableId, $array);
     }
 
     /**
@@ -161,9 +161,9 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertArrayContainsString(sprintf('Column Family: %s', 'cf3'), $array);
-        $this->assertArrayContainsString('GC Rule:', $array);
-        $this->assertArrayContainsString('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000s"}]}}}', $array);
+        $this->assertContains(sprintf('Column Family: %s', 'cf3'), $array);
+        $this->assertContains('GC Rule:', $array);
+        $this->assertContains('{"gcRule":{"union":{"rules":[{"maxNumVersions":2},{"maxAge":"432000s"}]}}}', $array);
     }
 
     /**
@@ -178,8 +178,8 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertArrayContainsString('Listing Clusters:', $array);
-        $this->assertArrayContainsString('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+        $this->assertContains('Listing Clusters:', $array);
+        $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
     }
 
     /**
@@ -410,16 +410,16 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertArrayContainsString(sprintf('Creating a Table: %s', $tableId), $array);
-        $this->assertArrayContainsString(sprintf('Created table %s', $tableId), $array);
-        $this->assertArrayContainsString('Writing some greetings to the table.', $array);
-        $this->assertArrayContainsString('Getting a single greeting by row key.', $array);
-        $this->assertArrayContainsString('Hello World!', $array);
-        $this->assertArrayContainsString('Scanning for all greetings:', $array);
-        $this->assertArrayContainsString('Hello World!', $array);
-        $this->assertArrayContainsString('Hello Cloud Bigtable!', $array);
-        $this->assertArrayContainsString('Hello PHP!', $array);
-        $this->assertArrayContainsString(sprintf('Deleted %s table.', $tableId), $array);
+        $this->assertContains(sprintf('Creating a Table: %s', $tableId), $array);
+        $this->assertContains(sprintf('Created table %s', $tableId), $array);
+        $this->assertContains('Writing some greetings to the table.', $array);
+        $this->assertContains('Getting a single greeting by row key.', $array);
+        $this->assertContains('Hello World!', $array);
+        $this->assertContains('Scanning for all greetings:', $array);
+        $this->assertContains('Hello World!', $array);
+        $this->assertContains('Hello Cloud Bigtable!', $array);
+        $this->assertContains('Hello PHP!', $array);
+        $this->assertContains(sprintf('Deleted %s table.', $tableId), $array);
     }
 
     /**

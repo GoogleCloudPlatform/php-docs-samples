@@ -358,7 +358,7 @@ class kmsTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Destroyed key version', $output);
-        $this->assertArrayContainsString($version->getState(), array(
+        $this->assertContains($version->getState(), array(
             CryptoKeyVersionState::DESTROYED,
             CryptoKeyVersionState::DESTROY_SCHEDULED,
         ));
@@ -501,7 +501,7 @@ class kmsTest extends TestCase
             }
         }
         $this->assertNotNull($binding);
-        $this->assertArrayContainsString('group:test@google.com', $binding->getMembers());
+        $this->assertContains('group:test@google.com', $binding->getMembers());
     }
 
     public function testIamGetPolicy()
@@ -548,8 +548,8 @@ class kmsTest extends TestCase
             }
         }
         $this->assertNotNull($binding);
-        $this->assertArrayContainsString('group:tester@google.com', $binding->getMembers());
-        $this->assertArrayNotContainsString('group:test@google.com', $binding->getMembers());
+        $this->assertContains('group:tester@google.com', $binding->getMembers());
+        $this->assertNotContains('group:test@google.com', $binding->getMembers());
     }
 
     public function testQuickstart()

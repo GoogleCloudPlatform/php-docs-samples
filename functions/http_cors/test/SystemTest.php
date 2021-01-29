@@ -53,13 +53,13 @@ class SystemTest extends TestCase
         // Assert headers.
         $header_names = array_keys($resp->getHeaders());
         if ($containsHeader) {
-            $this->assertArrayContainsString(
+            $this->assertContains(
                 $containsHeader,
                 $header_names
             );
         }
         if ($notContainsHeader) {
-            $this->assertArrayNotContainsString(
+            $this->assertNotContains(
                 $notContainsHeader,
                 $header_names
             );
