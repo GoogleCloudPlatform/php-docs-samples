@@ -676,9 +676,10 @@ class spannerTest extends TestCase
 
     private function runFunctionSnippet($sampleName, $params = [])
     {
+        $params ?: [self::$instanceId, self::$databaseId];
         return $this->traitRunFunctionSnippet(
             $sampleName,
-            $params ?: [self::$instanceId, self::$databaseId]
+            array_values($params)
         );
     }
 

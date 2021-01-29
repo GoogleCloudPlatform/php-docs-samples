@@ -39,6 +39,7 @@ SKIP_TESTS=(
     appengine/flexible/storage
     appengine/flexible/memcache
     appengine/flexible/logging
+    endpoints/getting-started
     pubsub/app
 )
 
