@@ -68,7 +68,7 @@ class entityTest extends TestCase
             'entity-type-id' => self::$entityTypeId,
         ]);
 
-        $this->assertNotContains(self::$entityValue1, $output);
-        $this->assertNotContains(self::$entityValue2, $output);
+        $this->assertStringNotContainsString(self::$entityValue1, $output);
+        $this->assertStringNotContainsString(self::$entityValue2, $output);
     }
 }

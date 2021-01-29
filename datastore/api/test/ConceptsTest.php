@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use Iterator;
-use Google;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\Query\Query;

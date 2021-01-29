@@ -117,7 +117,7 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $resp->getStatusCode());
         $this->assertStringContainsString('HEADERS:', (string) $resp->getBody());
         $this->assertStringContainsString('my-header', (string) $resp->getBody());
-        $this->assertNotContains('Authorization', (string) $resp->getBody());
+        $this->assertStringNotContainsString('Authorization', (string) $resp->getBody());
         $this->assertStringContainsString('BODY:', (string) $resp->getBody());
         $this->assertStringContainsString('my-body', (string) $resp->getBody());
     }

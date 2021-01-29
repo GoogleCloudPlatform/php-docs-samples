@@ -60,6 +60,6 @@ class intentTest extends TestCase
         ]);
         $output = $this->runCommand('intent-list');
 
-        $this->assertNotContains(self::$displayName, $output);
+        $this->assertStringNotContainsString(self::$displayName, $output);
     }
 }

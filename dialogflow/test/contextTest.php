@@ -58,6 +58,6 @@ class contextTest extends TestCase
             '--session-id' => self::$sessionId,
         ]);
 
-        $this->assertNotContains(self::$contextId, $output);
+        $this->assertStringNotContainsString(self::$contextId, $output);
     }
 }

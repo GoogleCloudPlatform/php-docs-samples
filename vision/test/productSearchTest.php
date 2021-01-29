@@ -109,7 +109,7 @@ class productSearchTest extends TestCase
             'filter' => 'style=womens'
         ]);
         $this->assertStringContainsString(self::$indexedProductId1, $output);
-        $this->assertNotContains(self::$indexedProductId2, $output);
+        $this->assertStringNotContainsString(self::$indexedProductId2, $output);
     }
 
     /** @depends testIndexedProductSetExists */
@@ -122,7 +122,7 @@ class productSearchTest extends TestCase
             'filter' => 'style=womens'
         ]);
         $this->assertStringContainsString(self::$indexedProductId1, $output);
-        $this->assertNotContains(self::$importProductId2, $output);
+        $this->assertStringNotContainsString(self::$importProductId2, $output);
     }
 
     public function testImportProductSets()
@@ -131,7 +131,7 @@ class productSearchTest extends TestCase
         $output = $this->runCommand('product-set-import', [
             'gcs-uri' => self::$importProductSetUri
         ]);
-        $this->assertNotContains('Error: ', $output);
+        $this->assertStringNotContainsString('Error: ', $output);
 
         # verify
         $output = $this->runCommand('product-set-list', []);
@@ -173,7 +173,7 @@ class productSearchTest extends TestCase
     {
         # check
         $output = $this->runCommand('product-list', []);
-        $this->assertNotContains(self::$productId, $output);
+        $this->assertStringNotContainsString(self::$productId, $output);
 
         # test
         $this->runCommand('product-create', [
@@ -194,8 +194,8 @@ class productSearchTest extends TestCase
         $output = $this->runCommand('product-get', [
             'product-id' => self::$productId
         ]);
-        $this->assertNotContains($key, $output);
-        $this->assertNotContains($value, $output);
+        $this->assertStringNotContainsString($key, $output);
+        $this->assertStringNotContainsString($value, $output);
 
         # test
         $output = $this->runCommand('product-update', [
@@ -230,7 +230,7 @@ class productSearchTest extends TestCase
         $output = $this->runCommand('product-set-list-products', [
             'product-set-id' => self::$productSetId
         ]);
-        $this->assertNotContains(self::$productId, $output);
+        $this->assertStringNotContainsString(self::$productId, $output);
     }
 
     /** @depends testCreateProduct */
@@ -262,7 +262,7 @@ class productSearchTest extends TestCase
         $output = $this->runCommand('product-image-list', [
             'product-id' => self::$productId
         ]);
-        $this->assertNotContains(self::$referenceImageId, $output);
+        $this->assertStringNotContainsString(self::$referenceImageId, $output);
     }
 
     /** @depends testCreateProduct */
@@ -272,7 +272,7 @@ class productSearchTest extends TestCase
             'product-id' => self::$productId
         ]);
         $output = $this->runCommand('product-list', []);
-        $this->assertNotContains(self::$productId, $output);
+        $this->assertStringNotContainsString(self::$productId, $output);
     }
 
     /** @depends testCreateProduct */
@@ -284,7 +284,7 @@ class productSearchTest extends TestCase
         ]);
         $output = $this->runCommand('product-list', []);
         # check
-        $this->assertNotContains(self::$productId, $output);
+        $this->assertStringNotContainsString(self::$productId, $output);
     }
 
     /** @depends testAddProductToProductSet */
@@ -295,7 +295,7 @@ class productSearchTest extends TestCase
             'force' => true
         ]);
         $output = $this->runCommand('product-list', []);
-        $this->assertNotContains(self::$productId, $output);
+        $this->assertStringNotContainsString(self::$productId, $output);
     }
 
     /** @depends testCreateProductSet */
@@ -305,7 +305,7 @@ class productSearchTest extends TestCase
             'product-set-id' => self::$productSetId
         ]);
         $output = $this->runCommand('product-set-list', []);
-        $this->assertNotContains(self::$productSetId, $output);
+        $this->assertStringNotContainsString(self::$productSetId, $output);
     }
 
     private function importIndexedProductSet()

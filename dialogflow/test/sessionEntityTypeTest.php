@@ -71,6 +71,6 @@ class sessionEntityTypeTest extends TestCase
             'entity-type-id' => $entityTypeId
         ]);
 
-        $this->assertNotContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringNotContainsString(self::$entityTypeDisplayName, $output);
     }
 }

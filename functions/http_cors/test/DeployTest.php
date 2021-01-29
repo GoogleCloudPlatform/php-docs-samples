@@ -71,7 +71,7 @@ class DeployTest extends TestCase
             );
         }
         if ($notContainsHeader) {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $notContainsHeader,
                 $header_names
             );
@@ -86,7 +86,7 @@ class DeployTest extends TestCase
             );
         }
         if ($notContainsContent) {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $notContainsContent,
                 $content
             );

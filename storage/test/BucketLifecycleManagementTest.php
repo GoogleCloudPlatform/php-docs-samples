@@ -60,7 +60,7 @@ class BucketLifecycleManagementTest extends TestCase
         $this->bucket->reload();
         $lifecycle = $this->bucket->currentLifecycle()->toArray();
         $rules = $lifecycle['rule'];
-        $this->assertStringContainsString([
+        $this->assertContains([
             'action' => [
                 'type' => 'Delete'
             ],

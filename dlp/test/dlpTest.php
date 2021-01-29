@@ -71,7 +71,7 @@ class dlpTest extends TestCase
             ['supported_by=RISK_ANALYSIS']
         );
         $this->assertStringContainsString('AGE', $output);
-        $this->assertNotContains('AMERICAN_BANKERS_CUSIP_ID', $output);
+        $this->assertStringNotContainsString('AMERICAN_BANKERS_CUSIP_ID', $output);
     }
 
     public function testRedactImage()

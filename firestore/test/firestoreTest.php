@@ -211,7 +211,7 @@ class firestoreTest extends TestCase
     {
         $output = $this->runFirestoreCommand('in-array-query');
         $this->assertStringContainsString('Document DC returned by query regions in [[west_coast], [east_coast]]', $output);
-        $this->assertNotContains('Document SF', $output);
+        $this->assertStringNotContainsString('Document SF', $output);
     }
 
     /**
@@ -274,11 +274,11 @@ class firestoreTest extends TestCase
         $this->assertStringContainsString('The Getty', $output);
         $this->assertStringContainsString('Legion of Honor', $output);
         $this->assertStringContainsString('National Museum of Nature and Science', $output);
-        $this->assertNotContains('Golden Gate Bridge', $output);
-        $this->assertNotContains('Griffith Park', $output);
-        $this->assertNotContains('Lincoln Memorial', $output);
-        $this->assertNotContains('Ueno Park', $output);
-        $this->assertNotContains('Jingshan Park', $output);
+        $this->assertStringNotContainsString('Golden Gate Bridge', $output);
+        $this->assertStringNotContainsString('Griffith Park', $output);
+        $this->assertStringNotContainsString('Lincoln Memorial', $output);
+        $this->assertStringNotContainsString('Ueno Park', $output);
+        $this->assertStringNotContainsString('Jingshan Park', $output);
     }
 
     /**

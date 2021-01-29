@@ -264,7 +264,7 @@ EOF;
         ]);
 
         $this->assertStringContainsString(sprintf('%s: %s', $label1, $value3), $output);
-        $this->assertNotContains($value1, $output);
+        $this->assertStringNotContainsString($value1, $output);
 
         $output = $this->runCommand('bucket-labels', [
             'bucket' => self::$bucketName,
@@ -294,8 +294,8 @@ EOF;
             'bucket' => self::$bucketName
         ]);
 
-        $this->assertNotContains($label1, $output);
-        $this->assertNotContains($label2, $output);
+        $this->assertStringNotContainsString($label1, $output);
+        $this->assertStringNotContainsString($label2, $output);
     }
 
     public function testGenerateEncryptionKey()

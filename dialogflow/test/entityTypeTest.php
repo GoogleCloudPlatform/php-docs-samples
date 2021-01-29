@@ -56,6 +56,6 @@ class entityTypeTest extends TestCase
         ]);
         $output = $this->runCommand('entity-type-list');
 
-        $this->assertNotContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringNotContainsString(self::$entityTypeDisplayName, $output);
     }
 }
