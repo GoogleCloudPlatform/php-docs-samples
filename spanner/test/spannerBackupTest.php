@@ -195,7 +195,7 @@ class spannerBackupTest extends TestCase
     {
         return $this->traitRunFunctionSnippet(
             $sampleName,
-            array_merge([self::$instanceId], $params)
+            array_merge([self::$instanceId], array_values($params))
         );
     }
 

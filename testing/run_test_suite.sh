@@ -25,11 +25,21 @@ FLAKES=(
     datastore/api
     jobs
     asset
-    appengine/flexible/logging
 )
 
 # Directories we do not want to run tests in, even if they exist
 SKIP_TESTS=(
+    # Silex tests which aren't compatible with phpunit 8
+    # TODO: Move these tests off Silex
+    appengine/flexible/helloworld
+    appengine/flexible/analytics
+    appengine/flexible/twilio
+    appengine/flexible/datastore
+    appengine/flexible/tasks
+    appengine/flexible/storage
+    appengine/flexible/memcache
+    appengine/flexible/logging
+    pubsub/app
 )
 
 # tests to run with grpc.so disabled

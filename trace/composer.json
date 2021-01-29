@@ -1,5 +1,6 @@
 {
     "require": {
-        "opencensus/opencensus-exporter-stackdriver": "^0.1.0"
+        "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
+        "opencensus/opencensus": "dev-master as v0.6.0"
     }
 }

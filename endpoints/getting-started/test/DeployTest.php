@@ -32,7 +32,7 @@ class DeployTest extends TestCase
             );
         }
         if (!getenv('GOOGLE_ENDPOINTS_APIKEY')) {
-            return self::markTestSkipped('Set the GOOGLE_ENDPOINTS_APIKEY environment variable');
+            self::markTestSkipped('Set the GOOGLE_ENDPOINTS_APIKEY environment variable');
         }
     }
 

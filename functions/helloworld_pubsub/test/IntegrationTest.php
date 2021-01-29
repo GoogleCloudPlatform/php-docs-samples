@@ -72,7 +72,7 @@ class IntegrationTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testHelloworldPubsub(array $cloudevent, array $data, string $statusCode, string $expected, string $label): void
+    public function testHelloworldPubsub(array $cloudevent, array $data, int $statusCode, string $expected, string $label): void
     {
         // Prepare the HTTP headers for a CloudEvent.
         $cloudEventHeaders = [];
