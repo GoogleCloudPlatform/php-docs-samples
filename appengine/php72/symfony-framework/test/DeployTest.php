@@ -53,7 +53,7 @@ class DeployTest extends TestCase
         // Access the symfony default page
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Welcome to the <strong>Symfony Demo</strong> application',
             $resp->getBody()->getContents()
         );

@@ -43,7 +43,7 @@ class speechTest extends TestCase
     {
         $path = __DIR__ . '/data/commercial_mono.wav';
         $output = $this->runSnippet('transcribe_enhanced_model', [$path]);
-        $this->assertContains('Chrome', $output);
+        $this->assertStringContainsString('Chrome', $output);
     }
 
     public function testTranscribeModel()
@@ -53,7 +53,7 @@ class speechTest extends TestCase
             'transcribe_model_selection',
             [$path, 'video']
         );
-        // $this->assertContains('the weather outside is sunny',$output);
+        // $this->assertStringContainsString('the weather outside is sunny',$output);
         $this->assertStringContainsStringIgnoringCase(
             'how old is the Brooklyn Bridge',
             $output
@@ -81,7 +81,7 @@ class speechTest extends TestCase
         }
         $output = $this->runSnippet($command, [$audioFile]);
 
-        $this->assertContains('how old is the Brooklyn Bridge', $output);
+        $this->assertStringContainsString('how old is the Brooklyn Bridge', $output);
 
         // Check for the word time offsets
         if (in_array($command, ['transcribe_async-words'])) {

@@ -42,7 +42,7 @@ class PubSubTest extends TestCase
             'project' => self::$projectId,
         ]);
 
-        $this->assertContains('etag', $output);
+        $this->assertStringContainsString('etag', $output);
     }
 
     public function testTopicPolicy()
@@ -54,7 +54,7 @@ class PubSubTest extends TestCase
             'project' => self::$projectId,
         ]);
 
-        $this->assertContains('etag', $output);
+        $this->assertStringContainsString('etag', $output);
     }
 
     public function testCreateSubscriptionPolicy()
@@ -68,7 +68,10 @@ class PubSubTest extends TestCase
             'project' => self::$projectId,
         ]);
 
-        $this->assertContains(sprintf('User %s added to policy for %s', $userEmail, $subscription), $output);
+        $this->assertStringContainsString(
+            sprintf('User %s added to policy for %s', $userEmail, $subscription),
+            $output
+        );
     }
 
     public function testCreateTopicPolicy()
@@ -82,7 +85,10 @@ class PubSubTest extends TestCase
             'project' => self::$projectId,
         ]);
 
-        $this->assertContains(sprintf('User %s added to policy for %s', $userEmail, $topic), $output);
+        $this->assertStringContainsString(
+            sprintf('User %s added to policy for %s', $userEmail, $topic),
+            $output
+        );
     }
 
     public function testTestSubscriptionPolicy()
@@ -95,7 +101,10 @@ class PubSubTest extends TestCase
             'project' => self::$projectId,
         ]);
 
-        $this->assertContains('Permission: pubsub.subscriptions.consume', $output);
+        $this->assertStringContainsString(
+            'Permission: pubsub.subscriptions.consume',
+            $output
+        );
     }
 
     public function testTestTopicPolicy()
@@ -108,7 +117,10 @@ class PubSubTest extends TestCase
             'project' => self::$projectId,
         ]);
 
-        $this->assertContains('Permission: pubsub.topics.attachSubscription', $output);
+        $this->assertStringContainsString(
+            'Permission: pubsub.topics.attachSubscription',
+            $output
+        );
     }
 
     public function testListTopics()
@@ -121,12 +133,13 @@ class PubSubTest extends TestCase
         $this->assertRegExp(sprintf('/%s/', $topic), $output);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Must provide "--create", "--delete" or "message" with topic name
-     */
     public function testGetTopicThrowsException()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(
+            'Must provide "--create", "--delete" or "message" with topic name'
+        );
+
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
 
         $output = $this->runCommand('topic', [
@@ -312,7 +325,7 @@ class PubSubTest extends TestCase
                 'subscription' => $subscription,
                 'project' => self::$projectId,
             ]);
-            $this->assertContains($messageData, $output);
+            $this->assertStringContainsString($messageData, $output);
         });
 
         shell_exec('kill -9 ' . $pid);

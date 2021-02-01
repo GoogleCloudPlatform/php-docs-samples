@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use Iterator;
-use Google;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\Query\Query;
@@ -52,14 +51,14 @@ class ConceptsTest extends TestCase
     /* @var $datastore DatastoreClient */
     protected static $datastore;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
             filesize($path) > 0;
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->eventuallyConsistentRetryCount =
                 getenv('DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT') ?: 3;
@@ -837,11 +836,10 @@ class ConceptsTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Google\Cloud\Core\Exception\BadRequestException
-     */
     public function testInequalityInvalid()
     {
+        $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
+
         $query = inequality_invalid(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(Iterator::class, $result);
@@ -888,11 +886,10 @@ class ConceptsTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Google\Cloud\Core\Exception\BadRequestException
-     */
     public function testInequalitySortInvalidNotSame()
     {
+        $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
+
         $query = inequality_sort_invalid_not_same(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(Iterator::class, $result);
@@ -907,11 +904,10 @@ class ConceptsTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Google\Cloud\Core\Exception\BadRequestException
-     */
     public function testInequalitySortInvalidNotFirst()
     {
+        $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
+
         $query = inequality_sort_invalid_not_first(self::$datastore);
         $result = self::$datastore->runQuery($query);
         $this->assertInstanceOf(Iterator::class, $result);
@@ -1138,7 +1134,7 @@ class ConceptsTest extends TestCase
         });
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (! empty(self::$keys)) {
             self::$datastore->deleteBatch(self::$keys);

@@ -47,6 +47,6 @@ class DeployTest extends TestCase
         $output = trim((string) $resp->getBody());
 
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertContains('PHP Quality Assurance Team', $output);
+        $this->assertStringContainsString('PHP Quality Assurance Team', $output);
     }
 }

@@ -26,7 +26,7 @@ class HistogramSampleTest extends TestCase
     use TestTrait;
     private $commandTester;
 
-    public function setUp()
+    public function setUp(): void
     {
         $application = require __DIR__ . '/../jobs.php';
         $this->commandTester = new CommandTester($application->get('histogram'));

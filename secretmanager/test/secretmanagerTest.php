@@ -45,7 +45,7 @@ class secretmanagerTest extends TestCase
 
     private static $iamUser = 'user:sethvargo@google.com';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$client = new SecretManagerServiceClient();
 
@@ -61,7 +61,7 @@ class secretmanagerTest extends TestCase
         self::disableSecretVersion(self::$testSecretVersionToEnable);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteSecret(self::$testSecret->getName());
         self::deleteSecret(self::$testSecretToDelete->getName());
@@ -121,7 +121,7 @@ class secretmanagerTest extends TestCase
             $name['secret_version'],
         ]);
 
-        $this->assertContains('my super secret data', $output);
+        $this->assertStringContainsString('my super secret data', $output);
     }
 
     public function testAddSecretVersion()
@@ -133,7 +133,7 @@ class secretmanagerTest extends TestCase
             $name['secret'],
         ]);
 
-        $this->assertContains('Added secret version', $output);
+        $this->assertStringContainsString('Added secret version', $output);
     }
 
     public function testCreateSecret()
@@ -145,7 +145,7 @@ class secretmanagerTest extends TestCase
             $name['secret'],
         ]);
 
-        $this->assertContains('Created secret', $output);
+        $this->assertStringContainsString('Created secret', $output);
     }
 
     public function testDeleteSecret()
@@ -157,7 +157,7 @@ class secretmanagerTest extends TestCase
             $name['secret'],
         ]);
 
-        $this->assertContains('Deleted secret', $output);
+        $this->assertStringContainsString('Deleted secret', $output);
     }
 
     public function testDestroySecretVersion()
@@ -170,7 +170,7 @@ class secretmanagerTest extends TestCase
             $name['secret_version'],
         ]);
 
-        $this->assertContains('Destroyed secret version', $output);
+        $this->assertStringContainsString('Destroyed secret version', $output);
     }
 
     public function testDisableSecretVersion()
@@ -183,7 +183,7 @@ class secretmanagerTest extends TestCase
             $name['secret_version'],
         ]);
 
-        $this->assertContains('Disabled secret version', $output);
+        $this->assertStringContainsString('Disabled secret version', $output);
     }
 
     public function testEnableSecretVersion()
@@ -196,7 +196,7 @@ class secretmanagerTest extends TestCase
             $name['secret_version'],
         ]);
 
-        $this->assertContains('Enabled secret version', $output);
+        $this->assertStringContainsString('Enabled secret version', $output);
     }
 
     public function testGetSecretVersion()
@@ -209,8 +209,8 @@ class secretmanagerTest extends TestCase
             $name['secret_version'],
         ]);
 
-        $this->assertContains('Got secret version', $output);
-        $this->assertContains('state ENABLED', $output);
+        $this->assertStringContainsString('Got secret version', $output);
+        $this->assertStringContainsString('state ENABLED', $output);
     }
 
     public function testGetSecret()
@@ -222,8 +222,8 @@ class secretmanagerTest extends TestCase
             $name['secret'],
         ]);
 
-        $this->assertContains('secret', $output);
-        $this->assertContains('replication policy AUTOMATIC', $output);
+        $this->assertStringContainsString('secret', $output);
+        $this->assertStringContainsString('replication policy AUTOMATIC', $output);
     }
 
     public function testIamGrantAccess()
@@ -236,7 +236,7 @@ class secretmanagerTest extends TestCase
             self::$iamUser,
         ]);
 
-        $this->assertContains('Updated IAM policy', $output);
+        $this->assertStringContainsString('Updated IAM policy', $output);
     }
 
     public function testIamRevokeAccess()
@@ -249,7 +249,7 @@ class secretmanagerTest extends TestCase
             self::$iamUser,
         ]);
 
-        $this->assertContains('Updated IAM policy', $output);
+        $this->assertStringContainsString('Updated IAM policy', $output);
     }
 
     public function testListSecretVersions()
@@ -261,7 +261,7 @@ class secretmanagerTest extends TestCase
             $name['secret'],
         ]);
 
-        $this->assertContains('secret version', $output);
+        $this->assertStringContainsString('secret version', $output);
     }
 
     public function testListSecrets()
@@ -272,8 +272,8 @@ class secretmanagerTest extends TestCase
             $name['project'],
         ]);
 
-        $this->assertContains('secret', $output);
-        $this->assertContains($name['secret'], $output);
+        $this->assertStringContainsString('secret', $output);
+        $this->assertStringContainsString($name['secret'], $output);
     }
 
     public function testUpdateSecret()
@@ -285,6 +285,6 @@ class secretmanagerTest extends TestCase
             $name['secret'],
         ]);
 
-        $this->assertContains('Updated secret', $output);
+        $this->assertStringContainsString('Updated secret', $output);
     }
 }

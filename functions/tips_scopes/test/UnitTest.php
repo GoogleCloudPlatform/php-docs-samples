@@ -37,8 +37,8 @@ class UnitTest extends TestCase
     {
         $request = new ServerRequest('POST', '/');
         $output = $this->runFunction(self::$entryPoint, [$request]);
-        $this->assertContains('Per instance: 120', $output);
-        $this->assertContains('Per function: 15', $output);
+        $this->assertStringContainsString('Per instance: 120', $output);
+        $this->assertStringContainsString('Per function: 15', $output);
     }
 
     private static function runFunction($functionName, array $params = []): string

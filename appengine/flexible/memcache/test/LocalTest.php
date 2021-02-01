@@ -21,7 +21,7 @@ use GeckoPackages\MemcacheMock\MemcachedMock;
 
 class LocalTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->client = $this->createClient();
