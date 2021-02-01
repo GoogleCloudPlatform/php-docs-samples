@@ -41,6 +41,10 @@ SKIP_TESTS=(
     appengine/flexible/logging
     endpoints/getting-started
     pubsub/app
+    # PubSub batch is currently broken on PHP 8.0
+    # @see https://github.com/googleapis/google-cloud-php/issues/3749
+    # @TODO remove this once the above issue is fixed
+    pubsub/api
 )
 
 # tests to run with grpc.so disabled
