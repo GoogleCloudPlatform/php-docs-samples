@@ -55,7 +55,7 @@ class iapTest extends TestCase
 
     public function testInvalidJwt()
     {
-        validate_jwt('fake_jwt', 'fake_expected_audience');
+        validate_jwt('fake_j.w.t', 'fake_expected_audience');
         $this->expectOutputRegex('/Failed to validate JWT:/');
     }
 }
