@@ -18,25 +18,21 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/storage/README.md
  */
 
 namespace Google\Cloud\Samples\AppEngine\Storage;
 
-# [START gae_storage_write_public]
+# [START upload_file]
 /**
- * Create a file with a public URL.
- * @see https://cloud.google.com/appengine/docs/php/googlestorage/public_access#serving_files_directly_from_google_cloud_storage
+ * Handle an uploaded file.
+ * @see https://cloud.google.com/appengine/docs/php/googlestorage/user_upload#implementing_file_uploads
  */
-function write_public($bucketName, $objectName, $contents)
+function upload_file($bucketName)
 {
-    $options = [
-        'gs' => ['predefinedAcl' => 'publicRead']
-    ];
-    $context = stream_context_create($options);
-    $fileName = "gs://${bucketName}/${objectName}";
-    file_put_contents($fileName, $contents, 0, $context);
-
-    return sprintf('http://storage.googleapis.com/%s/%s', $bucketName, $objectName);
+    $fileName = $_FILES['uploaded_files']['name'];
+    $tempName = $_FILES['uploaded_files']['tmp_name'];
+    move_uploaded_file($tempName, "gs://${bucketName}/${fileName}.txt");
+    sprintf('Your file "%s" has been uploaded.', $fileName);
 }
-# [END gae_storage_write_public]
+# [END upload_file]

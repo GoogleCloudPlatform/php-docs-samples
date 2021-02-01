@@ -18,21 +18,20 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/storage/README.md
  */
 
 namespace Google\Cloud\Samples\AppEngine\Storage;
 
-# [START upload_file]
+# [START gae_storage_write_stream]
 /**
- * Handle an uploaded file.
- * @see https://cloud.google.com/appengine/docs/php/googlestorage/user_upload#implementing_file_uploads
+ * Write to a Storage bucket using a stream.
+ * @see https://cloud.google.com/appengine/docs/php/googlestorage/#streamed_file_write
  */
-function upload_file($bucketName)
+function write_stream($bucketName, $objectName, $contents)
 {
-    $fileName = $_FILES['uploaded_files']['name'];
-    $tempName = $_FILES['uploaded_files']['tmp_name'];
-    move_uploaded_file($tempName, "gs://${bucketName}/${fileName}.txt");
-    sprintf('Your file "%s" has been uploaded.', $fileName);
+    $fp = fopen("gs://${bucketName}/${objectName}", 'w');
+    fwrite($fp, $contents);
+    fclose($fp);
 }
-# [END upload_file]
+# [END gae_storage_write_stream]

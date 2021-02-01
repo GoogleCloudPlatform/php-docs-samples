@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/tasks/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/tasks/README.md
  */
 
 // Include Google Cloud dependendencies using Composer

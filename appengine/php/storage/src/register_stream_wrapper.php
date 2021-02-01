@@ -18,25 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/storage/README.md
  */
 
 namespace Google\Cloud\Samples\AppEngine\Storage;
 
-# [START gae_storage_write_options]
-/**
- * Write to a Storage bucket with file context.
- * @see https://cloud.google.com/appengine/docs/php/googlestorage/#simple_file_write
- */
-function write_options($bucketName, $objectName, $contents)
+# [START gae_storage_register_stream_wrapper]
+use Google\Cloud\Storage\StorageClient;
+
+function register_stream_wrapper($projectId)
 {
-    $options = ['gs' => ['Content-Type' => 'text/plain']];
-    $context = stream_context_create($options);
-    file_put_contents(
-        "gs://${bucketName}/${objectName}",
-        $contents,
-        0,
-        $context
-    );
+    $client = new StorageClient(['projectId' => $projectId]);
+    $client->registerStreamWrapper();
 }
-# [END gae_storage_write_options]
+# [END gae_storage_register_stream_wrapper]

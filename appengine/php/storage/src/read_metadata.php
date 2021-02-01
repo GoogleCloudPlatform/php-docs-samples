@@ -18,17 +18,21 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/storage/README.md
  */
 
 namespace Google\Cloud\Samples\AppEngine\Storage;
 
-# [START gae_storage_register_stream_wrapper]
+# [START gae_storage_read_metadata]
 use Google\Cloud\Storage\StorageClient;
 
-function register_stream_wrapper($projectId)
+function read_metadata($projectId, $bucketName, $objectName)
 {
-    $client = new StorageClient(['projectId' => $projectId]);
-    $client->registerStreamWrapper();
+    $storage = new StorageClient([
+        'projectId' => $projectId
+    ]);
+    $object = $storage->bucket($bucketName)->object($objectName);
+
+    return $object->info()['metadata'];
 }
-# [END gae_storage_register_stream_wrapper]
+# [END gae_storage_read_metadata]

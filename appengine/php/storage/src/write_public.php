@@ -18,30 +18,25 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php72/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/storage/README.md
  */
 
 namespace Google\Cloud\Samples\AppEngine\Storage;
 
-# [START gae_storage_write_metadata]
+# [START gae_storage_write_public]
 /**
- * Write to a Storage bucket with custom metadata.
- * @see https://cloud.google.com/appengine/docs/php/googlestorage/advanced#reading_and_writing_custom_metadata
+ * Create a file with a public URL.
+ * @see https://cloud.google.com/appengine/docs/php/googlestorage/public_access#serving_files_directly_from_google_cloud_storage
  */
-function write_metadata($bucketName, $objectName, $contents, array $metadata)
+function write_public($bucketName, $objectName, $contents)
 {
     $options = [
-        'metadata' => [
-            'contentType' => 'text/plain',
-            'metadata' => $metadata,
-        ]
+        'gs' => ['predefinedAcl' => 'publicRead']
     ];
-    $context = stream_context_create(['gs' => $options]);
-    file_put_contents(
-        "gs://${bucketName}/${objectName}",
-        $contents,
-        0,
-        $context
-    );
+    $context = stream_context_create($options);
+    $fileName = "gs://${bucketName}/${objectName}";
+    file_put_contents($fileName, $contents, 0, $context);
+
+    return sprintf('http://storage.googleapis.com/%s/%s', $bucketName, $objectName);
 }
-# [END gae_storage_write_metadata]
+# [END gae_storage_write_public]
