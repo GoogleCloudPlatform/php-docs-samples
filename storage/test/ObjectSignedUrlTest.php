@@ -57,7 +57,7 @@ class ObjectSignedUrlTest extends TestCase
             'object' => self::$objectName,
         ]);
 
-        $this->assertContains("The signed url for " . self::$objectName . " is", $output);
+        $this->assertStringContainsString("The signed url for " . self::$objectName . " is", $output);
     }
 
     public function testGetV4SignedUrl()
@@ -67,7 +67,7 @@ class ObjectSignedUrlTest extends TestCase
             'object' => self::$objectName,
         ]);
 
-        $this->assertContains('Generated GET signed URL:', $output);
+        $this->assertStringContainsString('Generated GET signed URL:', $output);
     }
 
     public function testGetV4UploadSignedUrl()
@@ -79,7 +79,7 @@ class ObjectSignedUrlTest extends TestCase
             'object' => $uploadObjectName,
         ]);
 
-        $this->assertContains('Generated PUT signed URL:', $output);
+        $this->assertStringContainsString('Generated PUT signed URL:', $output);
 
         // Extract the signed URL from command output.
         preg_match_all('/URL:\n([^\s]+)/', $output, $matches);

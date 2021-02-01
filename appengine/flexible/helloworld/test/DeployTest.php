@@ -32,7 +32,7 @@ class BookshelfTest extends TestCase
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(),
             'index status code');
-        $this->assertContains('Hello World', (string) $resp->getBody(),
+        $this->assertStringContainsString('Hello World', (string) $resp->getBody(),
             'index content');
     }
 }

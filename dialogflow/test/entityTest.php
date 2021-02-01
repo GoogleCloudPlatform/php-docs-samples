@@ -46,10 +46,10 @@ class entityTest extends TestCase
             'entity-type-id' => self::$entityTypeId,
         ]);
 
-        $this->assertContains(self::$entityValue1, $output);
-        $this->assertContains(self::$entityValue2, $output);
+        $this->assertStringContainsString(self::$entityValue1, $output);
+        $this->assertStringContainsString(self::$entityValue2, $output);
         foreach (self::$synonyms as $synonym) {
-            $this->assertContains($synonym, $output);
+            $this->assertStringContainsString($synonym, $output);
         }
     }
 
@@ -68,7 +68,7 @@ class entityTest extends TestCase
             'entity-type-id' => self::$entityTypeId,
         ]);
 
-        $this->assertNotContains(self::$entityValue1, $output);
-        $this->assertNotContains(self::$entityValue2, $output);
+        $this->assertStringNotContainsString(self::$entityValue1, $output);
+        $this->assertStringNotContainsString(self::$entityValue2, $output);
     }
 }

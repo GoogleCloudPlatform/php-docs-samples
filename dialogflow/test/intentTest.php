@@ -30,7 +30,7 @@ class intentTest extends TestCase
     private static $messageTexts = ['fake_message_for_testing_1', 'fake_message_for_testing_2'];
     private static $trainingPhraseParts = ['fake_phrase_1', 'fake_phrase_2'];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$displayName = sprintf('fake_display_%s_%s', rand(100, 999), time());
     }
@@ -44,7 +44,7 @@ class intentTest extends TestCase
         ]);
         $output = $this->runCommand('intent-list');
 
-        $this->assertContains(self::$displayName, $output);
+        $this->assertStringContainsString(self::$displayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
@@ -60,6 +60,6 @@ class intentTest extends TestCase
         ]);
         $output = $this->runCommand('intent-list');
 
-        $this->assertNotContains(self::$displayName, $output);
+        $this->assertStringNotContainsString(self::$displayName, $output);
     }
 }

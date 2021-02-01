@@ -18,7 +18,7 @@ use Silex\WebTestCase;
 
 class LocalTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->client = $this->createClient();
@@ -44,7 +44,7 @@ class LocalTest extends WebTestCase
         $crawler = $client->request('GET', '/');
         $response = $client->getResponse();
         $this->assertTrue($client->getResponse()->isOk());
-        $this->assertContains('Hello World', $response->getContent());
+        $this->assertStringContainsString('Hello World', $response->getContent());
     }
 
     public function testLogPayload()
@@ -53,6 +53,6 @@ class LocalTest extends WebTestCase
         $crawler = $client->request('POST', '/example_task_handler', [], [], [], 'google');
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains(sprintf('Received task with payload: google'), $response->getContent());
+        $this->assertStringContainsString(sprintf('Received task with payload: google'), $response->getContent());
     }
 }

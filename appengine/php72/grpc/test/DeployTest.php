@@ -34,7 +34,7 @@ class DeployTest extends TestCase
         }
         $this->assertEquals('200', $resp->getStatusCode(),
                             'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Spanner',
             $resp->getBody()->getContents());
     }
@@ -76,7 +76,7 @@ class DeployTest extends TestCase
         }
         $this->assertEquals('200', $resp->getStatusCode(),
                             'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Hello World',
             $resp->getBody()->getContents());
     }
@@ -91,7 +91,7 @@ class DeployTest extends TestCase
         }
         $this->assertEquals('200', $resp->getStatusCode(),
                             'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Successfully submitted a time series',
             $resp->getBody()->getContents());
     }
@@ -106,7 +106,7 @@ class DeployTest extends TestCase
         }
         $this->assertEquals('200', $resp->getStatusCode(),
                             'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Transcription: how old is the Brooklyn Bridge',
             $resp->getBody()->getContents());
     }

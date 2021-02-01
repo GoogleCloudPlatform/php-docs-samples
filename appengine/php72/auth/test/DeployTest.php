@@ -38,7 +38,7 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $resp->getStatusCode(),
                             'top page status code');
         $contents = $resp->getBody()->getContents();
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('Bucket: %s', $projectId),
             $contents);
         $this->assertGreaterThanOrEqual(

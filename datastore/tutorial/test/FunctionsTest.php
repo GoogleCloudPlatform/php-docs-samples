@@ -39,7 +39,7 @@ class FunctionsTest extends TestCase
 
     protected static $taskDesc;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         self::$hasCredentials = $path && file_exists($path) &&
@@ -109,7 +109,7 @@ class FunctionsTest extends TestCase
         }, self::$retryCount);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (!empty(self::$keys)) {
             self::$datastore->deleteBatch(self::$keys);

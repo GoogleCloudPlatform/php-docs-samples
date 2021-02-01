@@ -32,8 +32,8 @@ class DeployTest extends TestCase
             $resp->getStatusCode(),
             'Top page status code should be 200'
         );
-        $this->assertContains('All metadata keys:', (string) $resp->getBody());
-        $this->assertContains(
+        $this->assertStringContainsString('All metadata keys:', (string) $resp->getBody());
+        $this->assertStringContainsString(
             urlencode('instance/service-accounts/default/aliases'),
             (string) $resp->getBody()
         );
@@ -55,7 +55,7 @@ class DeployTest extends TestCase
             $resp->getStatusCode(),
             'Top page status code should be 200'
         );
-        $this->assertContains("Metadata for <code>$path</code>", $body);
-        $this->assertContains($projectId, $body);
+        $this->assertStringContainsString("Metadata for <code>$path</code>", $body);
+        $this->assertStringContainsString($projectId, $body);
     }
 }

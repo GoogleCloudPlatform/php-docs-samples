@@ -31,7 +31,7 @@ class TasksTest extends TestCase
     private static $queue;
     private static $location;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$queue = self::requireEnv('CLOUD_TASKS_APPENGINE_QUEUE');
         self::$location = self::requireEnv('CLOUD_TASKS_LOCATION');
@@ -48,7 +48,7 @@ class TasksTest extends TestCase
 
         $taskNamePrefix = $this->getTaskNamePrefix();
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     public function testCreateHttpTaskWithToken()
@@ -64,7 +64,7 @@ class TasksTest extends TestCase
 
         $taskNamePrefix = $this->getTaskNamePrefix();
         $expectedOutput = sprintf('Created task %s', $taskNamePrefix);
-        $this->assertContains($expectedOutput, $output);
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     private function getTaskNamePrefix()

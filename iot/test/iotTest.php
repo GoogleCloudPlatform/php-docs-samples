@@ -36,12 +36,12 @@ class iotTest extends TestCase
     private static $devices = [];
     private static $gateways = [];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$testId = time() . '-' . rand();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         foreach (self::$devices as $deviceId) {
             printf('Cleaning up Device %s' . PHP_EOL, $deviceId);
@@ -76,14 +76,14 @@ class iotTest extends TestCase
             'pubsub-topic' => $topic,
         ]);
         self::$registryId = $registryId;
-        $this->assertContains('Id: ' . $registryId, $output);
+        $this->assertStringContainsString('Id: ' . $registryId, $output);
     }
 
     /** @depends testCreateRegistry */
     public function testListRegistries()
     {
         $output = $this->runCommand('list-registries');
-        $this->assertContains(self::$registryId, $output);
+        $this->assertStringContainsString(self::$registryId, $output);
     }
 
     /** @depends testCreateRegistry */
@@ -92,7 +92,7 @@ class iotTest extends TestCase
         $output = $this->runCommand('get-registry', [
             'registry' => self::$registryId,
         ]);
-        $this->assertContains(self::$registryId, $output);
+        $this->assertStringContainsString(self::$registryId, $output);
     }
 
     /** @depends testCreateRegistry */
@@ -104,12 +104,12 @@ class iotTest extends TestCase
             'role' => 'roles/viewer',
             'member' => 'user:' . $email
         ]);
-        $this->assertContains($email, $output);
+        $this->assertStringContainsString($email, $output);
 
         $output = $this->runCommand('get-iam-policy', [
             'registry' => self::$registryId,
         ]);
-        $this->assertContains($email, $output);
+        $this->assertStringContainsString($email, $output);
     }
 
     /** @depends testCreateRegistry */
@@ -123,7 +123,7 @@ class iotTest extends TestCase
             'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
         ]);
         self::$devices[] = $deviceId;
-        $this->assertContains($deviceId, $output);
+        $this->assertStringContainsString($deviceId, $output);
     }
 
     /** @depends testCreateRsaDevice */
@@ -146,7 +146,7 @@ class iotTest extends TestCase
             'registry' => self::$registryId,
             'device' => self::$devices[0],
         ]);
-        $this->assertContains('Data: ' . $data, $output);
+        $this->assertStringContainsString('Data: ' . $data, $output);
     }
 
     /** @depends testCreateRsaDevice */
@@ -155,7 +155,7 @@ class iotTest extends TestCase
         $output = $this->runCommand('list-devices', [
             'registry' => self::$registryId,
         ]);
-        $this->assertContains(self::$devices[0], $output);
+        $this->assertStringContainsString(self::$devices[0], $output);
     }
 
     /** @depends testCreateRsaDevice */
@@ -165,7 +165,7 @@ class iotTest extends TestCase
             'registry' => self::$registryId,
             'device' => self::$devices[0],
         ]);
-        $this->assertContains(self::$devices[0], $output);
+        $this->assertStringContainsString(self::$devices[0], $output);
     }
 
     /** @depends testCreateRsaDevice */
@@ -177,8 +177,8 @@ class iotTest extends TestCase
             'device' => self::$devices[0],
             'config' => $config,
         ]);
-        $this->assertContains('Version: 2', $output);
-        $this->assertContains('Data: ' . $config, $output);
+        $this->assertStringContainsString('Version: 2', $output);
+        $this->assertStringContainsString('Data: ' . $config, $output);
     }
 
     /** @depends testCreateRsaDevice */
@@ -191,7 +191,7 @@ class iotTest extends TestCase
             'command-data' => $command,
         ]);
         print($output);
-        $this->assertContains('Sending command to', $output);
+        $this->assertStringContainsString('Sending command to', $output);
     }
 
     /** @depends testSetDeviceConfig */
@@ -201,7 +201,7 @@ class iotTest extends TestCase
             'registry' => self::$registryId,
             'device' => self::$devices[0],
         ]);
-        $this->assertContains('Version: 2', $output);
+        $this->assertStringContainsString('Version: 2', $output);
     }
 
     /** @depends testCreateRegistry */
@@ -215,7 +215,7 @@ class iotTest extends TestCase
             'public-key-file' => __DIR__ . '/data/ec_public.pem',
         ]);
         self::$devices[] = $deviceId;
-        $this->assertContains($deviceId, $output);
+        $this->assertStringContainsString($deviceId, $output);
     }
 
     /** @depends testCreateRegistry */
@@ -228,7 +228,7 @@ class iotTest extends TestCase
             'device' => $deviceId,
         ]);
         self::$devices[] = $deviceId;
-        $this->assertContains($deviceId, $output);
+        $this->assertStringContainsString($deviceId, $output);
     }
 
     /** @depends testCreateUnauthDevice */
@@ -248,7 +248,7 @@ class iotTest extends TestCase
             'public-key-file' => __DIR__ . '/data/ec_public.pem',
         ]);
 
-        $this->assertContains('Updated device', $output);
+        $this->assertStringContainsString('Updated device', $output);
     }
 
     /** @depends testCreateRegistry */
@@ -268,7 +268,7 @@ class iotTest extends TestCase
             'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
         ]);
 
-        $this->assertContains('Updated device', $output);
+        $this->assertStringContainsString('Updated device', $output);
     }
 
     /** @depends testCreateRegistry */
@@ -283,12 +283,12 @@ class iotTest extends TestCase
             'algorithm' => 'RS256',
         ]);
         self::$gateways[] = $gatewayId;
-        $this->assertContains('Gateway: ', $output);
+        $this->assertStringContainsString('Gateway: ', $output);
 
         $output = $this->runCommand('list-gateways', [
             'registry' => self::$registryId
         ]);
-        $this->assertContains($gatewayId, $output);
+        $this->assertStringContainsString($gatewayId, $output);
     }
 
     /**
@@ -319,14 +319,14 @@ class iotTest extends TestCase
             'gateway' => $gatewayId,
             'device' => $deviceId,
         ]);
-        $this->assertContains('Device bound', $output);
+        $this->assertStringContainsString('Device bound', $output);
 
         $output = $this->runCommand('unbind-device-from-gateway', [
             'registry' => self::$registryId,
             'gateway' => $gatewayId,
             'device' => $deviceId,
         ]);
-        $this->assertContains('Device unbound', $output);
+        $this->assertStringContainsString('Device unbound', $output);
     }
 
     /** @depends testBindUnbindDevice */
@@ -359,7 +359,7 @@ class iotTest extends TestCase
             'registry' => self::$registryId,
             'gateway' => $gatewayId,
         ]);
-        $this->assertContains($deviceId, $output);
+        $this->assertStringContainsString($deviceId, $output);
 
         $this->runCommand('unbind-device-from-gateway', [
             'registry' => self::$registryId,

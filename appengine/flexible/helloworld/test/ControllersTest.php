@@ -40,7 +40,7 @@ class ControllersTest extends WebTestCase
         $crawlerexport = $client->request('GET', '/');
         $resp = $client->getResponse();
         $this->assertTrue($resp->isOk());
-        $this->assertContains('Hello World', $resp->getContent());
+        $this->assertStringContainsString('Hello World', $resp->getContent());
     }
 
     public function testGoodbye()
@@ -49,6 +49,6 @@ class ControllersTest extends WebTestCase
         $crawlerexport = $client->request('GET', '/goodbye');
         $resp = $client->getResponse();
         $this->assertTrue($resp->isOk());
-        $this->assertContains('Goodbye World', $resp->getContent());
+        $this->assertStringContainsString('Goodbye World', $resp->getContent());
     }
 }

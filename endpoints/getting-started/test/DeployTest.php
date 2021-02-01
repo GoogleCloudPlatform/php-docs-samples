@@ -24,7 +24,7 @@ class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (getenv('RUN_DEPLOYMENT_TESTS') !== 'true') {
             self::markTestSkipped(
@@ -32,7 +32,7 @@ class DeployTest extends TestCase
             );
         }
         if (!getenv('GOOGLE_ENDPOINTS_APIKEY')) {
-            return self::markTestSkipped('Set the GOOGLE_ENDPOINTS_APIKEY environment variable');
+            self::markTestSkipped('Set the GOOGLE_ENDPOINTS_APIKEY environment variable');
         }
     }
 
@@ -115,6 +115,6 @@ EOF;
         $json = json_decode((string) $response->getBody(), true);
         $this->assertArrayHasKey('message', $json);
         $expectedString = 'unregistered callers';
-        $this->assertContains($expectedString, $json['message']);
+        $this->assertStringContainsString($expectedString, $json['message']);
     }
 }

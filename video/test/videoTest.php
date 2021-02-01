@@ -29,7 +29,7 @@ class videoTest extends TestCase
     use TestTrait;
     use ExponentialBackoffTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff();
     }
@@ -40,13 +40,13 @@ class videoTest extends TestCase
             'analyze_labels_gcs',
             [$this->gcsUri(), 10]
         );
-        $this->assertContains('cat', $output);
-        $this->assertContains('Video label description', $output);
-        $this->assertContains('Shot label description', $output);
-        $this->assertContains('Category', $output);
-        $this->assertContains('Segment', $output);
-        $this->assertContains('Shot', $output);
-        $this->assertContains('Confidence', $output);
+        $this->assertStringContainsString('cat', $output);
+        $this->assertStringContainsString('Video label description', $output);
+        $this->assertStringContainsString('Shot label description', $output);
+        $this->assertStringContainsString('Category', $output);
+        $this->assertStringContainsString('Segment', $output);
+        $this->assertStringContainsString('Shot', $output);
+        $this->assertStringContainsString('Confidence', $output);
     }
 
     public function testAnalyzeLabelsFile()
@@ -55,13 +55,13 @@ class videoTest extends TestCase
             'analyze_labels_file',
             [__DIR__ . '/data/cat_shortened.mp4', 10]
         );
-        $this->assertContains('cat', $output);
-        $this->assertContains('Video label description:', $output);
-        $this->assertContains('Shot label description:', $output);
-        $this->assertContains('Category:', $output);
-        $this->assertContains('Segment:', $output);
-        $this->assertContains('Shot:', $output);
-        $this->assertContains('Confidence:', $output);
+        $this->assertStringContainsString('cat', $output);
+        $this->assertStringContainsString('Video label description:', $output);
+        $this->assertStringContainsString('Shot label description:', $output);
+        $this->assertStringContainsString('Category:', $output);
+        $this->assertStringContainsString('Segment:', $output);
+        $this->assertStringContainsString('Shot:', $output);
+        $this->assertStringContainsString('Confidence:', $output);
     }
 
     public function testAnalyzeExplicitContent()
@@ -70,7 +70,7 @@ class videoTest extends TestCase
             'analyze_explicit_content',
             [$this->gcsUri(), 10]
         );
-        $this->assertContains('pornography:', $output);
+        $this->assertStringContainsString('pornography:', $output);
     }
 
     public function testAnalyzeShots()
@@ -79,8 +79,8 @@ class videoTest extends TestCase
             'analyze_shots',
             [$this->gcsUri(), 10]
         );
-        $this->assertContains('Shot:', $output);
-        $this->assertContains(' to ', $output);
+        $this->assertStringContainsString('Shot:', $output);
+        $this->assertStringContainsString(' to ', $output);
     }
 
     public function testTranscription()
@@ -89,9 +89,9 @@ class videoTest extends TestCase
             'analyze_transcription',
             [$this->gcsUriTwo(), 10]
         );
-        $this->assertContains('Transcript:', $output);
-        $this->assertContains('Paris', $output);
-        $this->assertContains('France', $output);
+        $this->assertStringContainsString('Transcript:', $output);
+        $this->assertStringContainsString('Paris', $output);
+        $this->assertStringContainsString('France', $output);
     }
 
     public function testAnalyzeTextDetection()
@@ -100,10 +100,10 @@ class videoTest extends TestCase
             'analyze_text_detection',
             [$this->gcsUriTwo(), 10]
         );
-        $this->assertContains('GOOGLE', $output);
-        $this->assertContains('Video text description:', $output);
-        $this->assertContains('Segment:', $output);
-        $this->assertContains('Confidence:', $output);
+        $this->assertStringContainsString('GOOGLE', $output);
+        $this->assertStringContainsString('Video text description:', $output);
+        $this->assertStringContainsString('Segment:', $output);
+        $this->assertStringContainsString('Confidence:', $output);
     }
 
     public function testAnalyzeTextDetectionFile()
@@ -112,10 +112,10 @@ class videoTest extends TestCase
             'analyze_text_detection_file',
             [__DIR__ . '/data/googlework_short.mp4', 10]
         );
-        $this->assertContains('GOOGLE', $output);
-        $this->assertContains('Video text description:', $output);
-        $this->assertContains('Segment:', $output);
-        $this->assertContains('Confidence:', $output);
+        $this->assertStringContainsString('GOOGLE', $output);
+        $this->assertStringContainsString('Video text description:', $output);
+        $this->assertStringContainsString('Segment:', $output);
+        $this->assertStringContainsString('Confidence:', $output);
     }
 
     public function testObjectTracking()
@@ -124,8 +124,8 @@ class videoTest extends TestCase
             'analyze_object_tracking',
             [$this->gcsUriTwo(), 10]
         );
-        $this->assertContains('/m/01g317', $output);
-        $this->assertContains('person', $output);
+        $this->assertStringContainsString('/m/01g317', $output);
+        $this->assertStringContainsString('person', $output);
     }
 
     public function testObjectTrackingFile()
@@ -134,8 +134,8 @@ class videoTest extends TestCase
             'analyze_object_tracking_file',
             [__DIR__ . '/data/googlework_short.mp4', 10]
         );
-        $this->assertContains('/m/01g317', $output);
-        $this->assertContains('person', $output);
+        $this->assertStringContainsString('/m/01g317', $output);
+        $this->assertStringContainsString('person', $output);
     }
 
     private function gcsUri()

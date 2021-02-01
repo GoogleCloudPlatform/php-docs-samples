@@ -32,7 +32,7 @@ class ControllersTest extends TestCase
 
     private $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         $app = require __DIR__ . '/../src/app.php';
         require __DIR__ . '/../src/controllers.php';
@@ -156,9 +156,9 @@ class ControllersTest extends TestCase
 
     //     // Make sure the page contents match what we just submitted.
     //     $title = $crawler->filter('.book-title')->text();
-    //     $this->assertContains('Where the Red Fern Grows', $title);
+    //     $this->assertStringContainsString('Where the Red Fern Grows', $title);
     //     $author = $crawler->filter('.book-author')->text();
-    //     $this->assertContains('Will Rawls', $author);
+    //     $this->assertStringContainsString('Will Rawls', $author);
     //     $viewBookUrl = $client->getRequest()->getUri();
 
     //     // Click the edit button.
@@ -177,9 +177,9 @@ class ControllersTest extends TestCase
 
     //     // Make sure the page contents match what we just submitted.
     //     $title = $crawler->filter('.book-title')->text();
-    //     $this->assertContains('Where the Red Fern Grows', $title);
+    //     $this->assertStringContainsString('Where the Red Fern Grows', $title);
     //     $author = $crawler->filter('.book-author')->text();
-    //     $this->assertContains('Wilson Rawls', $author);
+    //     $this->assertStringContainsString('Wilson Rawls', $author);
 
     //     // Click the delete button.
     //     $deleteButton = $crawler->selectButton('submit');

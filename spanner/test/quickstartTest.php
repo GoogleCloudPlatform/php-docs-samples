@@ -26,7 +26,7 @@ class quickstartTest extends TestCase
 
     protected static $tempFile;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requireGrpc();
         $instanceId = $this->requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
@@ -46,6 +46,6 @@ class quickstartTest extends TestCase
         // Invoke quickstart.php
         $output = $this->runSnippet(self::$tempFile);
 
-        $this->assertContains('Hello World', $output);
+        $this->assertStringContainsString('Hello World', $output);
     }
 }
