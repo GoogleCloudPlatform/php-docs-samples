@@ -50,7 +50,7 @@ class alertsTest extends TestCase
             'filter' => sprintf('name = "%s"', $policyName),
             'enable' => true,
         ]);
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('Policy %s is already enabled', $policyName),
             $output
         );
@@ -60,7 +60,7 @@ class alertsTest extends TestCase
             'enable' => false,
         ]);
 
-        $this->assertContains(sprintf('Disabled %s', $policyName), $output);
+        $this->assertStringContainsString(sprintf('Disabled %s', $policyName), $output);
     }
 
     /** @depends testCreatePolicy */
@@ -97,7 +97,7 @@ class alertsTest extends TestCase
             'policy_id' => self::$policyId,
             'channel_id' => [$channelId1, $channelId2]
         ]);
-        $this->assertContains(sprintf('Updated %s', $policyName), $output);
+        $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
         // verify the new channels have been added to the policy
         $policy = $alertClient->getAlertPolicy($policyName);
@@ -116,7 +116,7 @@ class alertsTest extends TestCase
             'policy_id' => self::$policyId,
             'channel_id' => self::$channelId,
         ]);
-        $this->assertContains(sprintf('Updated %s', $policyName), $output);
+        $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
         // verify the new channel replaces the previous channels added to the policy
         $policy = $alertClient->getAlertPolicy($policyName);
@@ -137,7 +137,7 @@ class alertsTest extends TestCase
     {
         // backup
         $output = $this->runAlertCommand('list-policies');
-        $this->assertContains(self::$policyId, $output);
+        $this->assertStringContainsString(self::$policyId, $output);
     }
 
     /** @depends testCreateChannel */
@@ -145,7 +145,7 @@ class alertsTest extends TestCase
     {
         // backup
         $output = $this->runAlertCommand('list-channels');
-        $this->assertContains(self::$channelId, $output);
+        $this->assertStringContainsString(self::$channelId, $output);
     }
 
     /** @depends testCreateChannel */
@@ -153,7 +153,7 @@ class alertsTest extends TestCase
     {
         // backup
         $output = $this->runAlertCommand('backup-policies');
-        $this->assertContains('Backed up alert policies', $output);
+        $this->assertStringContainsString('Backed up alert policies', $output);
 
         $backupJson = file_get_contents(__DIR__ . '/../backup.json');
         $backup = json_decode($backupJson, true);
@@ -161,12 +161,12 @@ class alertsTest extends TestCase
         $this->assertArrayHasKey('channels', $backup);
         $this->assertGreaterThan(0, count($backup['policies']));
         $this->assertGreaterThan(0, count($backup['channels']));
-        $this->assertContains(self::$policyId, $backupJson);
-        $this->assertContains(self::$channelId, $backupJson);
+        $this->assertStringContainsString(self::$policyId, $backupJson);
+        $this->assertStringContainsString(self::$channelId, $backupJson);
 
         // restore
         $output = $this->runAlertCommand('restore-policies');
-        $this->assertContains('Restored alert policies', $output);
+        $this->assertStringContainsString('Restored alert policies', $output);
     }
 
     /** @depends testCreatePolicy */
@@ -181,8 +181,8 @@ class alertsTest extends TestCase
         $output = $this->runAlertCommand('delete-channel', [
             'channel_id' => self::$channelId,
         ]);
-        $this->assertContains('Deleted notification channel', $output);
-        $this->assertContains(self::$channelId, $output);
+        $this->assertStringContainsString('Deleted notification channel', $output);
+        $this->assertStringContainsString(self::$channelId, $output);
     }
 
     public function runAlertCommand($command, $args = [])

@@ -115,7 +115,7 @@ class DeployTest extends TestCase
             'top page status code'
         );
         $content = $resp->getBody()->getContents();
-        $this->assertContains('Website feedback', $content);
-        $this->assertContains('Drupal', $content);
+        $this->assertStringContainsString('Website feedback', $content);
+        $this->assertStringContainsString('Drupal', $content);
     }
 }

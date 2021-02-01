@@ -26,7 +26,7 @@ class securityCenterTest extends TestCase
     private static $testNotificationGet;
     private static $testNotificationUpdate;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$testNotificationCreate = self::randomNotificationId();
         self::$testNotificationGet = self::randomNotificationId();
@@ -40,7 +40,7 @@ class securityCenterTest extends TestCase
             $configId,
         ]);
 
-        $this->assertContains('Notification config was deleted', $deleteOutput);
+        $this->assertStringContainsString('Notification config was deleted', $deleteOutput);
     }
 
     public function testCreateNotification()
@@ -52,7 +52,7 @@ class securityCenterTest extends TestCase
             self::getTopicName()
         ]);
 
-        $this->assertContains('Notification config was created', $createOutput);
+        $this->assertStringContainsString('Notification config was created', $createOutput);
 
         self::deleteConfig(self::$testNotificationCreate);
     }
@@ -66,14 +66,14 @@ class securityCenterTest extends TestCase
             self::getTopicName()
         ]);
 
-        $this->assertContains('Notification config was created', $createOutput);
+        $this->assertStringContainsString('Notification config was created', $createOutput);
 
         $getOutput = $this->runSnippet('get_notification', [
             self::getOrganizationId(),
             self::$testNotificationGet
         ]);
 
-        $this->assertContains('Notification config was retrieved', $getOutput);
+        $this->assertStringContainsString('Notification config was retrieved', $getOutput);
 
         self::deleteConfig(self::$testNotificationGet);
     }
@@ -87,7 +87,7 @@ class securityCenterTest extends TestCase
             self::getTopicName()
         ]);
 
-        $this->assertContains('Notification config was created', $createOutput);
+        $this->assertStringContainsString('Notification config was created', $createOutput);
 
         $getOutput = $this->runSnippet('update_notification', [
             self::getOrganizationId(),
@@ -96,7 +96,7 @@ class securityCenterTest extends TestCase
             self::getTopicName()
         ]);
 
-        $this->assertContains('Notification config was updated', $getOutput);
+        $this->assertStringContainsString('Notification config was updated', $getOutput);
 
         self::deleteConfig(self::$testNotificationUpdate);
     }
@@ -107,7 +107,7 @@ class securityCenterTest extends TestCase
             self::getOrganizationId(),
         ]);
 
-        $this->assertContains('Notification configs were listed', $listOutput);
+        $this->assertStringContainsString('Notification configs were listed', $listOutput);
     }
 
     private static function getOrganizationId()

@@ -36,12 +36,12 @@ class loggingTest extends TestCase
     protected static $sinkName;
     protected static $loggerName = 'my_test_logger';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$sinkName = sprintf("sink-%s", uniqid());
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useResourceExhaustedBackoff(5);
         $this->catchAllExceptions = true;
@@ -69,7 +69,7 @@ class loggingTest extends TestCase
         $output = $this->runCommand('list-sinks', [
             'project' => self::$projectId,
         ]);
-        $this->assertContains('name:' . self::$sinkName, $output);
+        $this->assertStringContainsString('name:' . self::$sinkName, $output);
     }
 
     /**
@@ -155,7 +155,7 @@ class loggingTest extends TestCase
                 'project' => self::$projectId,
                 '--logger' => $loggerName,
             ]);
-            $this->assertContains($message, $output);
+            $this->assertStringContainsString($message, $output);
         }, $retries = 10);
     }
 

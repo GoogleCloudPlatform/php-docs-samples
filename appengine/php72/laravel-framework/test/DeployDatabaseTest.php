@@ -72,6 +72,6 @@ class DeployDatabaseTest extends TestCase
             'top page status code'
         );
         $content = $resp->getBody()->getContents();
-        $this->assertContains('Laravel', $content);
+        $this->assertStringContainsString('Laravel', $content);
     }
 }

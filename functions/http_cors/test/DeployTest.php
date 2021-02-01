@@ -61,17 +61,17 @@ class DeployTest extends TestCase
             $response->getStatusCode(),
             $statusCode
         );
-        
+
         // Assert headers.
         $header_names = array_keys($response->getHeaders());
         if ($containsHeader) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $containsHeader,
                 $header_names
             );
         }
         if ($notContainsHeader) {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $notContainsHeader,
                 $header_names
             );
@@ -80,13 +80,13 @@ class DeployTest extends TestCase
         // Assert content.
         $content = (string) $response->getBody();
         if ($containsContent) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $containsContent,
                 $content
             );
         }
         if ($notContainsContent) {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $notContainsContent,
                 $content
             );

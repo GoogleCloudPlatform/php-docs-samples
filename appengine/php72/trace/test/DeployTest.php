@@ -33,7 +33,7 @@ class DeployTest extends TestCase
         // Access the top page.
         $resp = $this->client->get('');
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertContains('Slow function called', (string) $resp->getBody());
+        $this->assertStringContainsString('Slow function called', (string) $resp->getBody());
 
         // create a client to get the traces
         $middleware = ApplicationDefaultCredentials::getMiddleware([

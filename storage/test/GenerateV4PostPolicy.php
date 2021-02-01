@@ -52,14 +52,14 @@ class GenerateV4PostPolicy extends TestCase
             'object' => $objectName,
         ]);
 
-        $this->assertContains("<form action='https://storage.googleapis.com/$bucketName/", $output);
-        $this->assertContains("<input name='key' value='$objectName'", $output);
-        $this->assertContains("<input name='x-goog-signature'", $output);
-        $this->assertContains("<input name='x-goog-date'", $output);
-        $this->assertContains("<input name='x-goog-credential'", $output);
-        $this->assertContains("<input name='x-goog-algorithm' value='GOOG4-RSA-SHA256'", $output);
-        $this->assertContains("<input name='policy'", $output);
-        $this->assertContains("<input name='x-goog-meta-test' value='data'", $output);
-        $this->assertContains("<input type='file' name='file'/>", $output);
+        $this->assertStringContainsString("<form action='https://storage.googleapis.com/$bucketName/", $output);
+        $this->assertStringContainsString("<input name='key' value='$objectName'", $output);
+        $this->assertStringContainsString("<input name='x-goog-signature'", $output);
+        $this->assertStringContainsString("<input name='x-goog-date'", $output);
+        $this->assertStringContainsString("<input name='x-goog-credential'", $output);
+        $this->assertStringContainsString("<input name='x-goog-algorithm' value='GOOG4-RSA-SHA256'", $output);
+        $this->assertStringContainsString("<input name='policy'", $output);
+        $this->assertStringContainsString("<input name='x-goog-meta-test' value='data'", $output);
+        $this->assertStringContainsString("<input type='file' name='file'/>", $output);
     }
 }

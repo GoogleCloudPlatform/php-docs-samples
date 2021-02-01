@@ -45,7 +45,7 @@ class SystemTest extends TestCase
 
             $this->assertEquals($test['code'], $resp->getStatusCode(), $test['content-type'] . ':');
             // Failures often lead to a large HTML page in the response body.
-            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
+            $this->assertStringContainsString($test['expected'], $actual, $test['content-type'] . ':');
         }
     }
 }

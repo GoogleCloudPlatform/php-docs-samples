@@ -77,7 +77,7 @@ class IntegrationTest extends TestCase
         // Verify the data properties are logged by the function.
         foreach ($cloudevent->getData() as $property => $value) {
             if (is_string($value)) {
-                $this->assertContains($value, $actual);
+                $this->assertStringContainsString($value, $actual);
             } else {
                 $this->assertEquals($value, 2);
             }

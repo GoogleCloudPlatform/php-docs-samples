@@ -56,7 +56,7 @@ class DeployTest extends TestCase
         // Access the blog top page
         $resp = $this->client->get('');
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'It looks like your WordPress installation is running on App '
             . 'Engine for PHP 7.2!',
             $resp->getBody()->getContents()

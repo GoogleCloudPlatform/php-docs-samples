@@ -34,7 +34,7 @@ class CommandSystemTest extends TestCase
     /* @var DatastoreClient $datastore */
     private $datastore;
 
-    public function setUp()
+    public function setUp(): void
     {
         $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
         if (!($path && file_exists($path) && filesize($path) > 0)) {
@@ -54,7 +54,7 @@ class CommandSystemTest extends TestCase
         $this->keys = array();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (!empty($this->keys)) {
             $this->datastore->deleteBatch($this->keys);

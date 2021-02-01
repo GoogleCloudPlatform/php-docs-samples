@@ -56,7 +56,7 @@ class DeployTest extends TestCase
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(),
             'index status code');
-        $this->assertContains('Book', (string) $resp->getBody(),
+        $this->assertStringContainsString('Book', (string) $resp->getBody(),
             'index content');
     }
 }

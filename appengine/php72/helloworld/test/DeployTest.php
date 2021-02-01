@@ -32,6 +32,6 @@ class DeployTest extends TestCase
             $resp->getStatusCode(),
             'Top page status code should be 200'
         );
-        $this->assertContains('hello world!', (string) $resp->getBody());
+        $this->assertStringContainsString('hello world!', (string) $resp->getBody());
     }
 }

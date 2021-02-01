@@ -45,7 +45,7 @@ class wordpressTest extends TestCase
 
         // check naively that variables were added
         $wpConfig = file_get_contents($dir . '/wordpress/wp-config.php');
-        $this->assertContains($projectId, $wpConfig);
-        $this->assertContains($dbPassword, $wpConfig);
+        $this->assertStringContainsString($projectId, $wpConfig);
+        $this->assertStringContainsString($dbPassword, $wpConfig);
     }
 }
