@@ -52,7 +52,7 @@ final class WriteTest extends TestCase
             self::$tableId
         ]);
 
-        $this->assertContains('Successfully wrote row.', $output);
+        $this->assertStringContainsString('Successfully wrote row.', $output);
     }
 
     public function testWriteConditional()
@@ -63,7 +63,7 @@ final class WriteTest extends TestCase
             self::$tableId
         ]);
 
-        $this->assertContains('Successfully updated row\'s os_name', $output);
+        $this->assertStringContainsString('Successfully updated row\'s os_name', $output);
     }
 
     public function testWriteIncrement()
@@ -74,7 +74,7 @@ final class WriteTest extends TestCase
             self::$tableId
         ]);
 
-        $this->assertContains('Successfully updated row.', $output);
+        $this->assertStringContainsString('Successfully updated row.', $output);
     }
 
     public function testWriteBatch()
@@ -87,6 +87,6 @@ final class WriteTest extends TestCase
             self::$tableId
         ]);
 
-        $this->assertContains('Successfully wrote 2 rows.', $output);
+        $this->assertStringContainsString('Successfully wrote 2 rows.', $output);
     }
 }

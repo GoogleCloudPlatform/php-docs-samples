@@ -71,7 +71,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($content, (string) $response->getBody());
+        $this->assertStringContainsString($content, (string) $response->getBody());
     }
 
     public function testWriteOptions()
@@ -82,7 +82,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($content, (string) $response->getBody());
+        $this->assertStringContainsString($content, (string) $response->getBody());
     }
 
     public function testWriteStream()
@@ -93,7 +93,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($content, (string) $response->getBody());
+        $this->assertStringContainsString($content, (string) $response->getBody());
     }
 
     public function testWriteCaching()
@@ -104,7 +104,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($content, (string) $response->getBody());
+        $this->assertStringContainsString($content, (string) $response->getBody());
     }
 
     public function testWriteMetadata()
@@ -116,9 +116,9 @@ class DeployTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $body = (string) $response->getBody();
-        $this->assertContains($content, $content);
-        $this->assertContains('foo: bar', $body);
-        $this->assertContains('baz: qux', $body);
+        $this->assertStringContainsString($content, $content);
+        $this->assertStringContainsString('foo: bar', $body);
+        $this->assertStringContainsString('baz: qux', $body);
     }
 
     public function testWriteDefault()
@@ -129,7 +129,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($content, (string) $response->getBody());
+        $this->assertStringContainsString($content, (string) $response->getBody());
     }
 
     public function testWriteDefaultStream()
@@ -140,7 +140,7 @@ class DeployTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($content, (string) $response->getBody());
+        $this->assertStringContainsString($content, (string) $response->getBody());
     }
 
     public function testWritePublic()
@@ -148,6 +148,6 @@ class DeployTest extends TestCase
         $response = $this->client->request('GET', '/write/public');
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('new file written at ', (string) $response->getBody());
+        $this->assertStringContainsString('new file written at ', (string) $response->getBody());
     }
 }

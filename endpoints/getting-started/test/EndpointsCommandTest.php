@@ -28,7 +28,7 @@ class EndpointsCommandTest extends TestCase
     private $apiKey;
     private $message;
 
-    public function setUp()
+    public function setUp(): void
     {
         $host = $this->requireEnv('GOOGLE_ENDPOINTS_HOST');
         $api_key = $this->requireEnv('GOOGLE_ENDPOINTS_APIKEY');
@@ -56,7 +56,7 @@ EOF;
 
         $this->assertEquals(0, $result);
         $jsonFlags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-        $this->assertContains(json_encode($message, $jsonFlags), $tester->getDisplay());
+        $this->assertStringContainsString(json_encode($message, $jsonFlags), $tester->getDisplay());
     }
 
     public function testEndpointsCommandWithApplicationCredentials()
@@ -76,7 +76,7 @@ EOF;
         $this->assertEquals(0, $result);
 
         $credentials = json_decode(file_get_contents($creds), true);
-        $this->assertContains('123456', $tester->getDisplay());
+        $this->assertStringContainsString('123456', $tester->getDisplay());
     }
 
     public function testEndpointsCommandWithClientSecrets()
@@ -96,7 +96,7 @@ EOF;
         $this->assertEquals(0, $result);
 
         $credentials = json_decode(file_get_contents($creds), true);
-        $this->assertContains('id', $tester->getDisplay());
-        $this->assertContains('email', $tester->getDisplay());
+        $this->assertStringContainsString('id', $tester->getDisplay());
+        $this->assertStringContainsString('email', $tester->getDisplay());
     }
 }

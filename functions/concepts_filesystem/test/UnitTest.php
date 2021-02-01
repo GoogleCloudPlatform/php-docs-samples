@@ -29,7 +29,7 @@ require_once __DIR__ . '/TestCasesTrait.php';
 class UnitTest extends TestCase
 {
     use TestCasesTrait;
-    
+
     private static $entryPoint = 'listFiles';
 
     public static function setUpBeforeClass(): void
@@ -44,7 +44,7 @@ class UnitTest extends TestCase
     {
         $request = new ServerRequest('GET', '/');
         $response = $this->runFunction(self::$entryPoint, [$request]);
-        $this->assertContains($file, $response);
+        $this->assertStringContainsString($file, $response);
     }
 
     private static function runFunction($functionName, array $params = []): string

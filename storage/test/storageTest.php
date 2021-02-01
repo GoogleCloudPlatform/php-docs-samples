@@ -39,7 +39,7 @@ class storageTest extends TestCase
     private static $storage;
     private static $tempBucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
         self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
@@ -49,7 +49,7 @@ class storageTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$tempBucket->delete();
     }
@@ -112,7 +112,7 @@ class storageTest extends TestCase
     {
         $output = $this->runCommand('buckets');
 
-        $this->assertContains("Bucket:", $output);
+        $this->assertStringContainsString("Bucket:", $output);
     }
 
     public function testCreateGetDeleteBuckets()
@@ -135,7 +135,7 @@ class storageTest extends TestCase
           '--metadata' => true,
         ]);
 
-        $this->assertContains("Bucket Metadata:", $output);
+        $this->assertStringContainsString("Bucket Metadata:", $output);
 
         $output = $this->runCommand('buckets', [
             'bucket' => $bucketName,
@@ -144,7 +144,7 @@ class storageTest extends TestCase
 
         $this->assertFalse($bucket->exists());
 
-        $this->assertContains("Bucket deleted: $bucketName", $output);
+        $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
     }
 
     public function testBucketDefaultAcl()
@@ -153,7 +153,7 @@ class storageTest extends TestCase
             'bucket' => self::$tempBucket->name(),
         ]);
 
-        $this->assertContains(": OWNER", $output);
+        $this->assertStringContainsString(": OWNER", $output);
     }
 
     public function testManageBucketDefaultAcl()
@@ -224,7 +224,7 @@ EOF;
             'bucket' => self::$bucketName
         ]);
 
-        $this->assertContains(sprintf('%s: value1', $label1), $output);
+        $this->assertStringContainsString(sprintf('%s: value1', $label1), $output);
 
         $output = $this->runCommand('bucket-labels', [
             'bucket' => self::$bucketName,
@@ -243,8 +243,8 @@ EOF;
             'bucket' => self::$bucketName
         ]);
 
-        $this->assertContains(sprintf('%s: %s', $label1, $value1), $output);
-        $this->assertContains(sprintf('%s: %s', $label2, $value2), $output);
+        $this->assertStringContainsString(sprintf('%s: %s', $label1, $value1), $output);
+        $this->assertStringContainsString(sprintf('%s: %s', $label2, $value2), $output);
 
         $output = $this->runCommand('bucket-labels', [
             'bucket' => self::$bucketName,
@@ -263,8 +263,8 @@ EOF;
             'bucket' => self::$bucketName
         ]);
 
-        $this->assertContains(sprintf('%s: %s', $label1, $value3), $output);
-        $this->assertNotContains($value1, $output);
+        $this->assertStringContainsString(sprintf('%s: %s', $label1, $value3), $output);
+        $this->assertStringNotContainsString($value1, $output);
 
         $output = $this->runCommand('bucket-labels', [
             'bucket' => self::$bucketName,
@@ -294,8 +294,8 @@ EOF;
             'bucket' => self::$bucketName
         ]);
 
-        $this->assertNotContains($label1, $output);
-        $this->assertNotContains($label2, $output);
+        $this->assertStringNotContainsString($label1, $output);
+        $this->assertStringNotContainsString($label2, $output);
     }
 
     public function testGenerateEncryptionKey()
@@ -304,7 +304,7 @@ EOF;
             '--generate-key' => true
         ]);
 
-        $this->assertContains("Your encryption key:", $output);
+        $this->assertStringContainsString("Your encryption key:", $output);
     }
 
     public function testEncryptedFile()
@@ -407,7 +407,7 @@ EOF;
             // Expected exception
         }
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'The provided encryption key is incorrect',
             $e->getMessage()
         );

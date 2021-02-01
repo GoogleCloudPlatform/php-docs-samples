@@ -59,6 +59,6 @@ class DeployTest extends TestCase
         // Assert function output.
         $output = trim((string) $resp->getBody());
         // Failures often lead to a large HTML page in the response body.
-        $this->assertContains($content, $output);
+        $this->assertStringContainsString($content, $output);
     }
 }

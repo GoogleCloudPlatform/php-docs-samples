@@ -33,7 +33,7 @@ class dlpLongRunningTest extends TestCase
     private static $topic;
     private static $subscription;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $uniqueName = sprintf('dlp-%s', microtime(true));
         $pubsub = new PubSubClient();
@@ -43,7 +43,7 @@ class dlpLongRunningTest extends TestCase
         self::$subscription->create();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$topic->delete();
         self::$subscription->delete();
@@ -62,7 +62,7 @@ class dlpLongRunningTest extends TestCase
             $kind,
             $namespace
         ]);
-        $this->assertContains('PERSON_NAME', $output);
+        $this->assertStringContainsString('PERSON_NAME', $output);
     }
 
     public function testInspectBigquery()
@@ -75,7 +75,7 @@ class dlpLongRunningTest extends TestCase
             self::$dataset,
             self::$table,
         ]);
-        $this->assertContains('PERSON_NAME', $output);
+        $this->assertStringContainsString('PERSON_NAME', $output);
     }
 
     public function testInspectGCS()
@@ -90,7 +90,7 @@ class dlpLongRunningTest extends TestCase
             $bucketName,
             $objectName,
         ]);
-        $this->assertContains('PERSON_NAME', $output);
+        $this->assertStringContainsString('PERSON_NAME', $output);
     }
 
     public function testNumericalStats()
@@ -143,7 +143,7 @@ class dlpLongRunningTest extends TestCase
             self::$table,
             $quasiIds,
         ]);
-        $this->assertContains('{"stringValue":"Female"}', $output);
+        $this->assertStringContainsString('{"stringValue":"Female"}', $output);
         $this->assertRegExp('/Class size: \d/', $output);
     }
 
@@ -162,9 +162,9 @@ class dlpLongRunningTest extends TestCase
             $sensitiveAttribute,
             $quasiIds,
         ]);
-        $this->assertContains('{"stringValue":"Female"}', $output);
+        $this->assertStringContainsString('{"stringValue":"Female"}', $output);
         $this->assertRegExp('/Class size: \d/', $output);
-        $this->assertContains('{"stringValue":"James"}', $output);
+        $this->assertStringContainsString('{"stringValue":"James"}', $output);
     }
 
     public function testKMap()
@@ -186,6 +186,6 @@ class dlpLongRunningTest extends TestCase
         ]);
         $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
         $this->assertRegExp('/Size: \d/', $output);
-        $this->assertContains('{"stringValue":"Female"}', $output);
+        $this->assertStringContainsString('{"stringValue":"Female"}', $output);
     }
 }

@@ -52,6 +52,6 @@ class SystemTest extends TestCase
 
         // Assert function output.
         $output = trim((string) $resp->getBody());
-        $this->assertContains($content, $output);
+        $this->assertStringContainsString($content, $output);
     }
 }

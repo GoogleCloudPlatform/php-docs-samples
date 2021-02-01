@@ -37,14 +37,14 @@ class assetTest extends TestCase
     private static $bucketName;
     private static $bucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
         self::$bucketName = sprintf('assets-bucket-%s-%s', time(), rand());
         self::$bucket = self::$storage->createBucket(self::$bucketName);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$bucket->delete();
     }
@@ -72,7 +72,7 @@ class assetTest extends TestCase
                 'assetNames' => [$assetName],
             ]);
 
-            $this->assertContains($assetName, $output);
+            $this->assertStringContainsString($assetName, $output);
         }, 10, true);
     }
 }

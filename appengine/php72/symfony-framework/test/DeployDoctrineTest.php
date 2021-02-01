@@ -53,7 +53,7 @@ class DeployDoctrineTest extends TestCase
         // Access the blog top page
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Welcome to the <strong>Symfony Demo</strong> application',
             $resp->getBody()->getContents()
         );
@@ -64,7 +64,7 @@ class DeployDoctrineTest extends TestCase
         // Access the blog top page
         $resp = $this->client->get('/en/blog/');
         $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'No posts found',
             $resp->getBody()->getContents()
         );

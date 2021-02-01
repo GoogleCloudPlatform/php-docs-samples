@@ -32,7 +32,7 @@ class authTest extends TestCase
     private static $bucketName;
     private static $serviceAccountPath;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
         self::$serviceAccountPath = self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
@@ -43,7 +43,7 @@ class authTest extends TestCase
         $output = $this->runCommand('auth-cloud-implicit', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertContains(self::$bucketName, $output);
+        $this->assertStringContainsString(self::$bucketName, $output);
     }
 
     public function testAuthCloudExplicitCommand()
@@ -52,7 +52,7 @@ class authTest extends TestCase
             'projectId' => self::$projectId,
             'serviceAccountPath' => self::$serviceAccountPath,
         ]);
-        $this->assertContains(self::$bucketName, $output);
+        $this->assertStringContainsString(self::$bucketName, $output);
     }
 
     public function testAuthApiImplicitCommand()
@@ -60,7 +60,7 @@ class authTest extends TestCase
         $output = $this->runCommand('auth-api-implicit', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertContains(self::$bucketName, $output);
+        $this->assertStringContainsString(self::$bucketName, $output);
     }
 
     public function testAuthApiExplicitCommand()
@@ -69,7 +69,7 @@ class authTest extends TestCase
             'projectId' => self::$projectId,
             'serviceAccountPath' => self::$serviceAccountPath,
         ]);
-        $this->assertContains(self::$bucketName, $output);
+        $this->assertStringContainsString(self::$bucketName, $output);
     }
 
     public function testAuthHttpImplicitCommand()
@@ -77,7 +77,7 @@ class authTest extends TestCase
         $output = $this->runCommand('auth-http-implicit', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertContains(self::$bucketName, $output);
+        $this->assertStringContainsString(self::$bucketName, $output);
     }
 
     public function testAuthHttpExplicitCommand()
@@ -86,6 +86,6 @@ class authTest extends TestCase
             'projectId' => self::$projectId,
             'serviceAccountPath' => self::$serviceAccountPath
         ]);
-        $this->assertContains(self::$bucketName, $output);
+        $this->assertStringContainsString(self::$bucketName, $output);
     }
 }

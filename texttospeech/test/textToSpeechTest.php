@@ -29,8 +29,8 @@ class textToSpeechTest extends TestCase
     public function testListVoices()
     {
         $output = $this->runSnippet('list_voices');
-        $this->assertContains('en-US', $output);
-        $this->assertContains('FEMALE', $output);
+        $this->assertStringContainsString('en-US', $output);
+        $this->assertStringContainsString('FEMALE', $output);
     }
 
     public function testSynthesizeSsml()
@@ -39,7 +39,7 @@ class textToSpeechTest extends TestCase
             'synthesize_ssml',
             ['<speak>Hello there.</speak>']
         );
-        $this->assertContains('Audio content written to', $output);
+        $this->assertStringContainsString('Audio content written to', $output);
         $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
@@ -48,7 +48,7 @@ class textToSpeechTest extends TestCase
     {
         $output = $this->runSnippet('synthesize_text', ['hello there']);
 
-        $this->assertContains('Audio content written to', $output);
+        $this->assertStringContainsString('Audio content written to', $output);
         $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
@@ -59,7 +59,7 @@ class textToSpeechTest extends TestCase
             'synthesize_text_effects_profile',
             ['hello there', 'telephony-class-application']
         );
-        $this->assertContains('Audio content written to', $output);
+        $this->assertStringContainsString('Audio content written to', $output);
         $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
@@ -69,7 +69,7 @@ class textToSpeechTest extends TestCase
         $path = __DIR__ . '/../resources/hello.ssml';
         $output = $this->runSnippet('synthesize_ssml_file', [$path]);
 
-        $this->assertContains('Audio content written to', $output);
+        $this->assertStringContainsString('Audio content written to', $output);
         $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
@@ -79,7 +79,7 @@ class textToSpeechTest extends TestCase
         $path = __DIR__ . '/../resources/hello.txt';
         $output = $this->runSnippet('synthesize_text_file', [$path]);
 
-        $this->assertContains('Audio content written to', $output);
+        $this->assertStringContainsString('Audio content written to', $output);
         $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }
@@ -91,7 +91,7 @@ class textToSpeechTest extends TestCase
             'synthesize_text_effects_profile_file',
             [$path, 'telephony-class-application']
         );
-        $this->assertContains('Audio content written to', $output);
+        $this->assertStringContainsString('Audio content written to', $output);
         $this->assertGreaterThan(0, filesize('output.mp3'));
         unlink('output.mp3');
     }

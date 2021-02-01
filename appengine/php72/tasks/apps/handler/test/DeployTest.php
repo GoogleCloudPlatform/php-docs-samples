@@ -33,7 +33,7 @@ class DeployTest extends TestCase
         // Access the modules app top page.
         $response = $this->client->get('');
         $this->assertEquals('200', $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Hello, World!',
             $response->getBody()->getContents()
         );

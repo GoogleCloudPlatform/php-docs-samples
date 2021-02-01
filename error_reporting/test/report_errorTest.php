@@ -33,7 +33,7 @@ class report_errorTest extends TestCase
             $message,
             'unittests@google.com',
         ]);
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Reported an exception to Stackdriver' . PHP_EOL,
             $output
         );

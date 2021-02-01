@@ -33,7 +33,7 @@ class BucketLifecycleManagementTest extends TestCase
     private static $commandFile = __DIR__ . '/../storage.php';
     protected $bucket;
 
-    public function setUp()
+    public function setUp(): void
     {
         $storage = new StorageClient();
         $bucketName = sprintf('php-olm-%s-%s', time(), rand(1000, 9999));
@@ -43,7 +43,7 @@ class BucketLifecycleManagementTest extends TestCase
         });
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->bucket->delete();
     }
@@ -56,7 +56,7 @@ class BucketLifecycleManagementTest extends TestCase
             '--enable' => true,
         ]);
         $match = "Lifecycle management is enabled for bucket $bucketName and the rules are:";
-        $this->assertContains($match, $output);
+        $this->assertStringContainsString($match, $output);
         $this->bucket->reload();
         $lifecycle = $this->bucket->currentLifecycle()->toArray();
         $rules = $lifecycle['rule'];
