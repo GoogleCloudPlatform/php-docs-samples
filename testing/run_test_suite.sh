@@ -175,12 +175,6 @@ do
         # If the PHP required version is too low, skip the test
         if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
             echo "Skipping tests in $DIR (incompatible PHP version)"
-        elif [ "$DIR" = "iap" ]; then
-            echo "Ignoring platform reqs for IAP tests on PHP 8.0 (for now)"
-            # Ignore platform reqs for IAP because kelvinmo/simplejwt is not
-            # configured for PHP 8.0 compatibility.
-            # @TODO: Remove this once IAP is fixed for PHP 8.0
-            composer -q install --ignore-platform-reqs
         else
             # Run composer without "-q"
             composer install
