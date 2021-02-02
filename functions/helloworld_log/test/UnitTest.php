@@ -46,7 +46,7 @@ class UnitTest extends TestCase
             $output = $this->getActualOutput();
 
             if (isset($test['not_contains'])) {
-                $this->assertNotContains($test['not_contains'], $output);
+                $this->assertStringNotContainsString($test['not_contains'], $output);
             }
         }
     }

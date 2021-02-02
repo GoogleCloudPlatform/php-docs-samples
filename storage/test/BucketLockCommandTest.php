@@ -34,7 +34,7 @@ class BucketLockCommandTest extends TestCase
     protected $bucket;
     protected $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Sleep to avoid the rate limit for creating/deleting.
         sleep(5 + rand(2, 4));
@@ -46,7 +46,7 @@ class BucketLockCommandTest extends TestCase
         $this->bucket = $this->storage->createBucket($bucketName);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->object && $this->object->delete();
         $this->bucket->delete();

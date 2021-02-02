@@ -46,8 +46,8 @@ class monitoringTest extends TestCase
         $output = $this->runCommand('create-metric', [
             'project_id' => self::$projectId,
         ]);
-        $this->assertContains('Created a metric', $output);
-        $this->assertContains(self::$metricId, $output);
+        $this->assertStringContainsString('Created a metric', $output);
+        $this->assertStringContainsString(self::$metricId, $output);
 
         // ensure the metric gets created
         $this->runEventuallyConsistentTest(function () {
@@ -55,7 +55,7 @@ class monitoringTest extends TestCase
                 'project_id' => self::$projectId,
                 'metric_id' => self::$metricId,
             ]);
-            $this->assertContains(self::$metricId, $output);
+            $this->assertStringContainsString(self::$metricId, $output);
         }, self::RETRY_COUNT, true);
     }
 
@@ -64,7 +64,7 @@ class monitoringTest extends TestCase
         $output = $this->runCommand('create-uptime-check', [
             'project_id' => self::$projectId,
         ]);
-        $this->assertContains('Created an uptime check', $output);
+        $this->assertStringContainsString('Created an uptime check', $output);
 
         $matched = preg_match('/Created an uptime check: (.*)/', $output, $matches);
         $this->assertTrue((bool) $matched);
@@ -80,7 +80,7 @@ class monitoringTest extends TestCase
                 'project_id' => self::$projectId,
                 'config_name' => self::$uptimeConfigName,
             ]);
-            $this->assertContains($escapedName, $output);
+            $this->assertStringContainsString($escapedName, $output);
         }, self::RETRY_COUNT, true);
     }
 
@@ -91,7 +91,7 @@ class monitoringTest extends TestCase
             $output = $this->runCommand('list-uptime-checks', [
                 'project_id' => self::$projectId,
             ]);
-            $this->assertContains(self::$uptimeConfigName, $output);
+            $this->assertStringContainsString(self::$uptimeConfigName, $output);
         });
     }
 
@@ -102,8 +102,8 @@ class monitoringTest extends TestCase
             'project_id' => self::$projectId,
             'config_name' => self::$uptimeConfigName,
         ]);
-        $this->assertContains('Deleted an uptime check', $output);
-        $this->assertContains(self::$uptimeConfigName, $output);
+        $this->assertStringContainsString('Deleted an uptime check', $output);
+        $this->assertStringContainsString(self::$uptimeConfigName, $output);
     }
 
     public function testListUptimeCheckIPs()
@@ -112,7 +112,7 @@ class monitoringTest extends TestCase
             $output = $this->runCommand('list-uptime-check-ips', [
                 'project_id' => self::$projectId,
             ]);
-            $this->assertContains('ip address: ', $output);
+            $this->assertStringContainsString('ip address: ', $output);
         });
     }
 
@@ -124,7 +124,7 @@ class monitoringTest extends TestCase
                 'project_id' => self::$projectId,
                 'metric_id' => self::$metricId,
             ]);
-            $this->assertContains(self::$metricId, $output);
+            $this->assertStringContainsString(self::$metricId, $output);
         }, self::RETRY_COUNT, true);
     }
 
@@ -135,7 +135,7 @@ class monitoringTest extends TestCase
             $output = $this->runCommand('list-descriptors', [
                 'project_id' => self::$projectId,
             ]);
-            $this->assertContains(self::$metricId, $output);
+            $this->assertStringContainsString(self::$metricId, $output);
         });
     }
 
@@ -147,8 +147,8 @@ class monitoringTest extends TestCase
                 'project_id' => self::$projectId,
                 'metric_id' => self::$metricId,
             ]);
-            $this->assertContains('Deleted a metric', $output);
-            $this->assertContains(self::$metricId, $output);
+            $this->assertStringContainsString('Deleted a metric', $output);
+            $this->assertStringContainsString(self::$metricId, $output);
         }, self::RETRY_COUNT, true);
     }
 
@@ -158,7 +158,7 @@ class monitoringTest extends TestCase
             'project_id' => self::$projectId,
             'resource_type' => 'gcs_bucket',
         ]);
-        $this->assertContains('A Google Cloud Storage (GCS) bucket.', $output);
+        $this->assertStringContainsString('A Google Cloud Storage (GCS) bucket.', $output);
     }
 
     public function testListResources()
@@ -166,7 +166,7 @@ class monitoringTest extends TestCase
         $output = $this->runCommand('list-resources', [
             'project_id' => self::$projectId,
         ]);
-        $this->assertContains('gcs_bucket', $output);
+        $this->assertStringContainsString('gcs_bucket', $output);
     }
 
     public function testWriteTimeseries()
@@ -176,7 +176,7 @@ class monitoringTest extends TestCase
             $output = $this->runCommand('write-timeseries', [
                 'project_id' => self::$projectId,
             ]);
-            $this->assertContains('Done writing time series data', $output);
+            $this->assertStringContainsString('Done writing time series data', $output);
         }, self::RETRY_COUNT, true);
     }
 
@@ -187,7 +187,7 @@ class monitoringTest extends TestCase
             'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
-        $this->assertContains('Now', $output);
+        $this->assertStringContainsString('Now', $output);
     }
 
     /** @depends testWriteTimeseries */
@@ -197,7 +197,7 @@ class monitoringTest extends TestCase
             'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
-        $this->assertContains('Found data points', $output);
+        $this->assertStringContainsString('Found data points', $output);
         $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
     }
 
@@ -208,7 +208,7 @@ class monitoringTest extends TestCase
             'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
-        $this->assertContains('Last 10 minutes', $output);
+        $this->assertStringContainsString('Last 10 minutes', $output);
     }
 
     /** @depends testWriteTimeseries */
@@ -218,7 +218,7 @@ class monitoringTest extends TestCase
             'project_id' => self::$projectId,
             '--minutes-ago' => self::$minutesAgo
         ]);
-        $this->assertContains('CPU utilization:', $output);
+        $this->assertStringContainsString('CPU utilization:', $output);
         $this->assertGreaterThanOrEqual(2, substr_count($output, "\n"));
     }
 }

@@ -70,7 +70,7 @@ trait VerifyReportedErrorTrait
                 }
             }
 
-            $this->assertContains($message, implode("\n", $messages));
+            $this->assertStringContainsString($message, implode("\n", $messages));
         };
 
         $backoff->execute($testFunc);

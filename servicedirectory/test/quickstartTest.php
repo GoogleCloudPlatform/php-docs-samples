@@ -26,6 +26,6 @@ class quickstartTest extends TestCase
     {
         $locationId = 'us-east1';
         $output = $this->runSnippet('quickstart', [self::$projectId, $locationId]);
-        $this->assertContains('Namespaces: ', $output);
+        $this->assertStringContainsString('Namespaces: ', $output);
     }
 }

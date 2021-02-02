@@ -77,13 +77,13 @@ class SampleUnitTest extends TestCase
         helloGCS($cloudevent);
         // Provided by PHPUnit\Framework\TestCase.
         $actual = $this->getActualOutput();
-        
+
         // Test output includes the properties provided in the CloudEvent.
         foreach ($cloudevent->getData() as $property => $value) {
-            $this->assertContains($value, $actual);
+            $this->assertStringContainsString($value, $actual);
         }
-        $this->assertContains($cloudevent->getId(), $actual);
-        $this->assertContains($cloudevent->getType(), $actual);
+        $this->assertStringContainsString($cloudevent->getId(), $actual);
+        $this->assertStringContainsString($cloudevent->getType(), $actual);
     }
 }
 

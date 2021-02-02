@@ -37,7 +37,7 @@ class IamCommandTest extends TestCase
     private static $role = 'roles/storage.objectViewer';
     private static $commandFile = __DIR__ . '/../storage.php';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
         self::$user = self::requireEnv('GOOGLE_IAM_USER');

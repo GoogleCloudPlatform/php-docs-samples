@@ -27,7 +27,7 @@ class DeployTest extends TestCase
     use AppEngineDeploymentTrait;
     use EventuallyConsistentTestTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!getenv('TRAVIS_SECURE_ENV_VARS')) {
             $this->markTestSkipped('No secret available');
@@ -41,7 +41,7 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $resp->getStatusCode(),
             'top page status code');
 
-        $this->assertContains("Logs:", (string) $resp->getBody());
+        $this->assertStringContainsString("Logs:", (string) $resp->getBody());
     }
     public function testAsyncLog()
     {

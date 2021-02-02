@@ -38,6 +38,6 @@ class quickstartTest extends TestCase
         // Invoke quickstart.php
         $output = $this->runSnippet($file);
 
-        $this->assertContains('Successfully submitted a time series', $output);
+        $this->assertStringContainsString('Successfully submitted a time series', $output);
     }
 }

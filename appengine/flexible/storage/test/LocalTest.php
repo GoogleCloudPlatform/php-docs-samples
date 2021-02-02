@@ -18,7 +18,7 @@ use Silex\WebTestCase;
 
 class LocalTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');
@@ -73,6 +73,6 @@ class LocalTest extends WebTestCase
         $crawler = $client->followRedirect();
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($time, $response->getContent());
+        $this->assertStringContainsString($time, $response->getContent());
     }
 }
