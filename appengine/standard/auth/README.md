@@ -16,7 +16,7 @@ will work for any Google Cloud API.
 1.  **Clone the repo** and cd into this directory
     ```
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/appengine/php/auth
+    $ cd php-docs-samples/appengine/standard/auth
     ```
 1.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install --no-dev` (if composer is installed locally)

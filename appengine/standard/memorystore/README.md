@@ -35,7 +35,7 @@ Memorystore instance, but you will need to create a firewall rule for this,
 which may be a safety concern.
 
 ```sh
-cd php-docs-samples/appengine/php/memorystore
+cd php-docs-samples/appengine/standard/memorystore
 
 # set local connection parameters
 export REDIS_HOST=127.0.0.1

@@ -18,7 +18,7 @@ Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP
 
     ```sh
     $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/appengine/php/tasks
+    $ cd php-docs-samples/appengine/standard/tasks
     ```
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`

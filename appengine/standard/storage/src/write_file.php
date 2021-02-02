@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/php/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/standard/storage/README.md
  */
 
 namespace Google\Cloud\Samples\AppEngine\Storage;
