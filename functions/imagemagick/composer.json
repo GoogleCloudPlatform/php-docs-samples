@@ -1,0 +1,11 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^0.7",
+        "google/cloud-storage": "^1.23",
+        "google/cloud-vision": "^1.2",
+        "ext-imagick": "^3.4"
+    },
+    "require-dev": {
+        "google/cloud-logging": "^1.21"
+    }
+}
