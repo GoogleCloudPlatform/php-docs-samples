@@ -1,0 +1,7 @@
+{
+    "require": {
+        "google/analytics-data": "^0.1.0",
+        "google/auth": "^1.14",
+        "ext-bcmath":  "*"
+    }
+}
