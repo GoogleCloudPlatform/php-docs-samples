@@ -22,6 +22,7 @@ if (count($argv) < 4) {
 }
 list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv;
 
+// [START securitycenter_create_notification_config]
 // [START scc_create_notification_config]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig;
@@ -51,3 +52,4 @@ $response = $securityCenterClient->createNotificationConfig(
 printf('Notification config was created: %s' . PHP_EOL, $response->getName());
 
 // [END scc_create_notification_config]
+// [END securitycenter_create_notification_config]
