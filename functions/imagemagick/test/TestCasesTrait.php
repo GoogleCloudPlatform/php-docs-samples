@@ -28,7 +28,7 @@ trait TestCasesTrait
     public static function getDataForFile($fileName): array
     {
         return [
-            'bucket' => self::requireEnv('FUNCTIONS_BUCKET'),
+            'bucket' => self::requireEnv('GOOGLE_STORAGE_BUCKET'),
             'metageneration' => '1',
             'name' => $fileName,
             'timeCreated' => '2020-04-23T07:38:57.230Z',
@@ -76,7 +76,7 @@ trait TestCasesTrait
 
     public static function integrationCases(): array
     {
-        $bucketName = self::requireEnv('FUNCTIONS_BUCKET');
+        $bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
 
         return [
             [

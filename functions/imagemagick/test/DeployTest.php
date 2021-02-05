@@ -156,7 +156,7 @@ class DeployTest extends TestCase
     {
         // Initialize variables
         if (empty(self::$monitoredBucket)) {
-            self::$monitoredBucket = self::requireEnv('FUNCTIONS_BUCKET');
+            self::$monitoredBucket = self::requireEnv('GOOGLE_STORAGE_BUCKET');
         }
         if (empty(self::$blurredBucket)) {
             self::$blurredBucket = self::requireEnv('BLURRED_BUCKET_NAME');
@@ -167,7 +167,7 @@ class DeployTest extends TestCase
         }
 
         // Forward required env variables to Cloud Functions.
-        $envVars = 'FUNCTIONS_BUCKET=' . self::$monitoredBucket . ',';
+        $envVars = 'GOOGLE_STORAGE_BUCKET=' . self::$monitoredBucket . ',';
         $envVars .= 'BLURRED_BUCKET_NAME=' . self::$blurredBucket;
 
         self::$fn->deploy(
