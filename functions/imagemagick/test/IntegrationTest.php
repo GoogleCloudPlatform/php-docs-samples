@@ -60,6 +60,6 @@ class IntegrationTest extends TestCase
         $actual = self::$localhost->getIncrementalErrorOutput();
 
         // Verify appropriate values are logged by the function.
-        $this->assertContains($expected, $actual, $label . ':');
+        $this->assertStringContainsString($expected, $actual, $label . ':');
     }
 }
