@@ -19,9 +19,12 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\ImageMagick\Test;
 
 use Google\CloudFunctions\CloudEvent;
+use Google\Cloud\TestUtils\TestTrait;
 
 trait TestCasesTrait
 {
+    use TestTrait;
+
     public static function getDataForFile($fileName): array
     {
         return [
