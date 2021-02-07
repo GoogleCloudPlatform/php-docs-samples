@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for IamConfiguration.
+ * @group storage-iamconfiguration
  */
 class IamConfigurationTest extends TestCase
 {
@@ -112,7 +113,7 @@ EOF;
             'value' => 'enforced',
         ]);
         $outputString = <<<EOF
-Public Access Prevention has been set to enforced for {$this->bucket->name()}
+Public Access Prevention has been set to enforced for {$this->bucket->name()}.
 
 EOF;
         $this->assertEquals($outputString, $output);
@@ -131,7 +132,7 @@ EOF;
         ]);
 
         $outputString = <<<EOF
-Public Access Prevention has been set to unspecified for {$this->bucket->name()}
+Public Access Prevention has been set to unspecified for {$this->bucket->name()}.
 
 EOF;
         $this->assertEquals($outputString, $output);
@@ -149,7 +150,7 @@ EOF;
         ]);
 
         $outputString = <<<EOF
-Uniform bucket-level access is unspecified for {$this->bucket->name()}
+The bucket public access prevention is unspecified for {$this->bucket->name()}.
 
 EOF;
         $this->assertEquals($outputString, $output);

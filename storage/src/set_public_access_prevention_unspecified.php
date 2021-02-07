@@ -43,7 +43,7 @@ function set_public_access_prevention_unspecified($bucketName)
     ]);
 
     printf(
-        'Public Access Prevention has been set to unspecified for %s' . PHP_EOL,
+        'Public Access Prevention has been set to unspecified for %s.' . PHP_EOL,
         $bucketName
     );
 }
