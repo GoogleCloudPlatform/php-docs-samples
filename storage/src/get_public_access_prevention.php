@@ -37,10 +37,13 @@ function get_bucket_public_access_prevention($bucketName)
     $bucket = $storage->bucket($bucketName);
 
     $iamConfiguration = $bucket->info()['iamConfiguration'];
+    $publicAccessPrevention = isset($iamConfiguration['publicAccessPrevention'])
+        ? $iamConfiguration['publicAccessPrevention']
+        : false;
 
     printf(
         'The bucket public access prevention is %s for %s.' . PHP_EOL,
-        $iamConfiguration['publicAccessPrevention'],
+        $publicAccessPrevention,
         $bucketName
     );
 }
