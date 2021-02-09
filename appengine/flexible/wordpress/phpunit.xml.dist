@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="App Engine Flexible WordPress test">
             <directory>test</directory>
+            <exclude suffix="DeployTest.php">test</exclude>
         </testsuite>
     </testsuites>
     <php>

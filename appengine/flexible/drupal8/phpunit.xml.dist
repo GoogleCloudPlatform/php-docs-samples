@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="Drupal deployment test">
             <directory>test</directory>
+            <exclude suffix="DeployTest.php">test</exclude>
         </testsuite>
     </testsuites>
     <filter>
