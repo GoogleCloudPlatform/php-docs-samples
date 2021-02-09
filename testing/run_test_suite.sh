@@ -167,11 +167,6 @@ do
         echo "Skipping tests in $DIR (Deployment tests only)"
         continue
     fi
-    if [ "$RUN_APPENGINE_FLEX_TESTS" != "true" ] &&
-       [[ -n $(grep -ri 'env:.+flex' app.*ml $DIR ) ]]; then
-        echo "Skipping tests in $DIR (no App Engine Flex tests)"
-        continue
-    fi
     pushd ${DIR}
     mkdir -p build/logs
     # Temporarily allowing error
