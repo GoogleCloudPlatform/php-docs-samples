@@ -18,7 +18,7 @@
     <testsuites>
         <testsuite name="App Engine Flex Datastore tests">
             <directory>test</directory>
-            <exclude suffix="DeployTest.php">test</exclude>
+            <exclude>test/DeployTest.php</exclude>
         </testsuite>
     </testsuites>
     <logging>
