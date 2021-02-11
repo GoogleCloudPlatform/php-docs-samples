@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-# [START logging_quickstart]
+# [START logging_quickstart_test]
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
@@ -41,5 +41,5 @@ $entry = $logger->entry($text);
 $logger->write($entry);
 
 echo 'Logged ' . $text;
-# [END logging_quickstart]
+# [END logging_quickstart_test]
 return $entry;
