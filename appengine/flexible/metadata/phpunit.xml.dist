@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="AppEngine Flex metadata test">
             <directory>test</directory>
+            <exclude>test/DeployTest.php</exclude>
         </testsuite>
     </testsuites>
     <logging>

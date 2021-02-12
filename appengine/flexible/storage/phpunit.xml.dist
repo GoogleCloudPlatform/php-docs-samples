@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="AppEngine Flex storage test">
             <directory>test</directory>
+            <exclude>test/DeployTest.php</exclude>
         </testsuite>
     </testsuites>
     <logging>
