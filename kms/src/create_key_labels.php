@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-// [START kms_create_key_labels]
+// [START kms_create_key_labels_test]
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
@@ -52,7 +52,7 @@ function create_key_labels_sample(
     printf('Created labeled key: %s' . PHP_EOL, $createdKey->getName());
     return $createdKey;
 }
-// [END kms_create_key_labels]
+// [END kms_create_key_labels_test]
 
 if (isset($argv)) {
     if (count($argv) === 0) {
