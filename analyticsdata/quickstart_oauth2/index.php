@@ -50,7 +50,8 @@ $oauth = new OAuth2([
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     // This is the final step of the OAuth2 authorization process, where an
     // OAuth2 access token is available and can be used to set up a client.
-    $oauth->updateToken(['refresh_token' => $_SESSION['access_token']]);
+    $oauth->setAccessToken($_SESSION['access_token']);
+    $oauth->setRefreshToken($_SESSION['refresh_token']);
 
     // Make an API call.
     $client = new AlphaAnalyticsDataClient(['credentials' => $oauth]);
@@ -97,6 +98,9 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 
     // Persist the acquired access token in a session.
     $_SESSION['access_token'] = $oauth->getAccessToken();
+
+    // Persist the acquired refresh token in a session.
+    $_SESSION['refresh_token'] = $oauth->getRefreshToken();
 
     // Refresh the current page.
     $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/';

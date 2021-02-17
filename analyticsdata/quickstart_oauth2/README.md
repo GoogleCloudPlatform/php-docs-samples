@@ -14,7 +14,7 @@ Choose "Web application" when asked for an application type.
 https://support.google.com/cloud/answer/6158849
 
 2. When configuring the web application credentials, add
-"http://localhost:3000" to "Authorized redirect URIs".
+"http://localhost:3000/" to "Authorized redirect URIs".
 
 3. Download a credentials file using "Download JSON" button in the credentials
 configuration dialog and save it as `oauth2.keys.json` in the same
@@ -38,4 +38,4 @@ php -S localhost:3000 -t .
 ```
 7. In a browser, open the following url to start the sample:
 
-https://localhost:3000/
+http://localhost:3000/
