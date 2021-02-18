@@ -2,8 +2,14 @@
     "require": {
         "google/cloud-functions-framework": "^0.7.1"
     },
+    "scripts": {
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=helloworldPubsub php -S localhost:${PORT:-8080} vendor/bin/router.php"
+        ]
+    },
     "require-dev": {
         "google/cloud-pubsub": "^1.29",
         "google/cloud-logging": "^1.21"
-    }
+    },
 }
