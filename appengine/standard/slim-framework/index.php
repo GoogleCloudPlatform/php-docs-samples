@@ -22,13 +22,20 @@
  */
 require 'vendor/autoload.php';
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
+
 # [START gae_slim_front_controller]
-$app = new Slim\App();
-$app->get('/', function ($request, $response) {
+$app = AppFactory::create();
+$app->addRoutingMiddleware();
+
+$app->get('/', function (Request $request, Response $response) {
     // Use the Null Coalesce Operator in PHP7
     // http://php.net/manual/en/language.operators.comparison.php#language.operators.comparison.coalesce
     $name = $request->getQueryParams()['name'] ?? 'World';
-    return $response->getBody()->write("Hello, $name!");
+    $response->getBody()->write("Hello, $name!");
+    return $response;
 });
 $app->run();
 # [END gae_slim_front_controller]
