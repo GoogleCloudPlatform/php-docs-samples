@@ -62,7 +62,7 @@ function get_commit_stats($instanceId, $databaseId)
 
     print('Updated data with ' . $commitStats['mutationCount'] . ' mutations.' . PHP_EOL);
 }
-// [END spanner_create_database]
+// [END spanner_get_commit_stats]
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
