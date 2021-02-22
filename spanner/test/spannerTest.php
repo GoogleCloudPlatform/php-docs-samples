@@ -517,7 +517,7 @@ class spannerTest extends TestCase
     public function testGetCommitStats()
     {
         $output = $this->runFunctionSnippet('get_commit_stats');
-        $this->assertStringContainsString('Updated data with 6 mutations.', $output);
+        $this->assertStringContainsString('Updated data with 10 mutations.', $output);
     }
 
 
