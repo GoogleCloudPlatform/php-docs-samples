@@ -51,8 +51,8 @@ function get_commit_stats($instanceId, $databaseId)
                 'MarketingBudget' => 200000,
             ],
             [
-                'SingerId' => 3,
-                'AlbumId' => 3,
+                'SingerId' => 2,
+                'AlbumId' => 2,
                 'MarketingBudget' => 400000,
             ]
         ]);
