@@ -19,13 +19,11 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
 
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Database;
-
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 
@@ -170,11 +168,15 @@ class DeployTest extends TestCase
      */
     private function updateRTDB(string $path, array $data): void
     {
-        if (empty(self::$database)) {
-            $factory = new Factory();
-            self::$database = $factory->createDatabase();
-        }
+        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
 
-        self::$database->getReference($path)->set($data);
+        $client = new Client([
+            "base_uri" => "https://" . $projectId . ".firebaseio.com/"
+        ]);
+
+        $url = '/' . $path . '.json';
+        $url_response = $client->put($url, [
+            "json" => $data
+        ]);
     }
 }

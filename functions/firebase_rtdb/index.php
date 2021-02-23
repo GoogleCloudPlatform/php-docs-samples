@@ -28,13 +28,6 @@ function firebaseRTDB(CloudEvent $cloudevent)
     $data = $cloudevent->getData();
     $resource = $data['resource'];
 
-    if (isset($data['params'])) {
-        fwrite($log, 'Path parameters:');
-        foreach ($data['params'] as $param => $value) {
-            fwrite($log, '  ' . $param . ': ' . $value . PHP_EOL);
-        }
-    }
-
     fwrite($log, 'Function triggered by change to: ' . $resource . PHP_EOL);
 
     $isAdmin =
