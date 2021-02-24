@@ -60,7 +60,7 @@ function create_backup($instanceId, $databaseId, $backupId)
         print('Backup is ready!' . PHP_EOL);
         $info = $backup->info();
         printf(
-            'Backup %s of size %d bytes was created at %s for version of database as %s' . PHP_EOL,
+            'Backup %s of size %d bytes was created at %s for version of database at %s' . PHP_EOL,
             basename($info['name']), $info['sizeBytes'], $info['createTime'], $info['versionTime']);
     } else {
         print('Backup is not ready!' . PHP_EOL);
