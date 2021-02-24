@@ -46,7 +46,9 @@ function create_backup($instanceId, $databaseId, $backupId)
 
     $expireTime = new \DateTime('+14 days');
     $backup = $instance->backup($backupId);
-    $operation = $backup->create($database->name(), $expireTime);
+    $operation = $backup->create($database->name(), $expireTime, [
+        'versionTime' => $database->info()['earliestVersionTime']
+    ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
@@ -57,7 +59,9 @@ function create_backup($instanceId, $databaseId, $backupId)
     if ($ready) {
         print('Backup is ready!' . PHP_EOL);
         $info = $backup->info();
-        printf('Backup %s of size %d bytes was created at %s' . PHP_EOL, basename($info['name']), $info['sizeBytes'], $info['createTime']);
+        printf(
+            'Backup %s of size %d bytes was created at %s for version of database as %s' . PHP_EOL,
+            basename($info['name']), $info['sizeBytes'], $info['createTime'], $info['versionTime']);
     } else {
         print('Backup is not ready!' . PHP_EOL);
     }
