@@ -74,7 +74,6 @@ class spannerBackupTest extends TestCase
         self::$backupId = 'backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-res';
         self::$instance = $spanner->instance(self::$instanceId);
-        self::$instance->database(self::$databaseId)->create();
     }
 
     public function testCancelBackup()
