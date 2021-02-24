@@ -76,14 +76,6 @@ class spannerBackupTest extends TestCase
         self::$instance = $spanner->instance(self::$instanceId);
     }
 
-    public function testCancelBackup()
-    {
-        $output = $this->runFunctionSnippet('cancel_backup', [
-            self::$databaseId
-        ]);
-        $this->assertStringContainsString('Cancel backup operation complete', $output);
-    }
-
     public function testCreateDatabaseWithVersionRetentionPeriod()
     {
         $output = $this->runFunctionSnippet('create_database_with_version_retention_period', [
@@ -92,6 +84,17 @@ class spannerBackupTest extends TestCase
         ]);
         $this->assertStringContainsString(self::$databaseId, $output);
         $this->assertStringContainsString(self::$retentionPeriod, $output);
+    }
+
+    /**
+     * @depends testCreateDatabaseWithVersionRetentionPeriod
+     */
+    public function testCancelBackup()
+    {
+        $output = $this->runFunctionSnippet('cancel_backup', [
+            self::$databaseId
+        ]);
+        $this->assertStringContainsString('Cancel backup operation complete', $output);
     }
 
     /**
