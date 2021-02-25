@@ -512,6 +512,16 @@ class spannerTest extends TestCase
     }
 
     /**
+     * @depends testAddColumn
+     */
+    public function testGetCommitStats()
+    {
+        $output = $this->runFunctionSnippet('get_commit_stats');
+        $this->assertStringContainsString('Updated data with 10 mutations.', $output);
+    }
+
+
+    /**
      * @depends testCreateDatabase
      */
     public function testCreateTableDatatypes()
