@@ -30,7 +30,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * Creates a database with data retention for Point In Time Restore.
  * Example:
  * ```
- * create_database_with_version_retention_period($instanceId, $databaseId);
+ * create_database_with_version_retention_period($instanceId, $databaseId, $retentionPeriod);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
