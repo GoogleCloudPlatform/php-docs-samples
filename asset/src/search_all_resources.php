@@ -28,7 +28,7 @@ $pageSize = isset($argv[4]) ? (int) $argv[4] : 0;
 $pageToken = isset($argv[5]) ? $argv[5] : '';
 $orderBy = isset($argv[6]) ? $argv[6] : '';
 
-// [START asset_search_all_resources]
+// [START asset_quickstart_search_all_resources]
 use Google\Cloud\Asset\V1\AssetServiceClient;
 
 /** Uncomment and populate these variables in your code */
@@ -55,4 +55,4 @@ $response = $asset->searchAllResources($scope, [
 foreach ($response->getPage() as $resource) {
     print($resource->getName() . PHP_EOL);
 }
-// [END asset_search_all_resources]
+// [END asset_quickstart_search_all_resources]

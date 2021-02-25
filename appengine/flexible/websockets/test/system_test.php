@@ -28,7 +28,7 @@ class LocalTest extends TestCase
 {
     protected $loop;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->loop = EventLoop\Factory::create();
 
@@ -56,7 +56,7 @@ class LocalTest extends TestCase
 
         $this->loop->run();
         $resolvedMsg = Block\await($basePromise, $this->loop);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "Message received: Hello World!",
             strval($resolvedMsg)
         );

@@ -31,7 +31,7 @@ class translateTest extends TestCase
 
     private static $bucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
         self::$bucket = (new StorageClient())->createBucket(
@@ -39,7 +39,7 @@ class translateTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         foreach (self::$bucket->objects() as $object) {
             $object->delete();
@@ -54,50 +54,49 @@ class translateTest extends TestCase
             'translate',
             ['Hello.', 'ja']
         );
-        $this->assertContains('Source language: en', $output);
-        $this->assertContains('Translation:', $output);
+        $this->assertStringContainsString('Source language: en', $output);
+        $this->assertStringContainsString('Translation:', $output);
     }
 
-    /**
-     * @expectedException Google\Cloud\Core\Exception\BadRequestException
-     */
     public function testTranslateBadLanguage()
     {
+        $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
+
         $this->runSnippet('translate', ['Hello.', 'jp']);
     }
 
     public function testTranslateWithModel()
     {
         $output = $this->runSnippet('translate_with_model', ['Hello.', 'ja']);
-        $this->assertContains('Source language: en', $output);
-        $this->assertContains('Translation:', $output);
-        $this->assertContains('Model: nmt', $output);
+        $this->assertStringContainsString('Source language: en', $output);
+        $this->assertStringContainsString('Translation:', $output);
+        $this->assertStringContainsString('Model: nmt', $output);
     }
 
     public function testDetectLanguage()
     {
         $output = $this->runSnippet('detect_language', ['Hello.']);
-        $this->assertContains('Language code: en', $output);
-        $this->assertContains('Confidence:', $output);
+        $this->assertStringContainsString('Language code: en', $output);
+        $this->assertStringContainsString('Confidence:', $output);
     }
 
     public function testListCodes()
     {
         $output = $this->runSnippet('list_codes');
-        $this->assertContains("\nen\n", $output);
-        $this->assertContains("\nja\n", $output);
+        $this->assertStringContainsString("\nen\n", $output);
+        $this->assertStringContainsString("\nja\n", $output);
     }
 
     public function testListLanguagesInEnglish()
     {
         $output = $this->runSnippet('list_languages', ['en']);
-        $this->assertContains('ja: Japanese', $output);
+        $this->assertStringContainsString('ja: Japanese', $output);
     }
 
     public function testListLanguagesInJapanese()
     {
         $output = $this->runSnippet('list_languages', ['ja']);
-        $this->assertContains('en: 英語', $output);
+        $this->assertStringContainsString('en: 英語', $output);
     }
 
     public function testV3TranslateText()
@@ -145,8 +144,8 @@ class translateTest extends TestCase
                 'us-central1'
             ]
         );
-        $this->assertContains('欺く', $output);
-        $this->assertContains('やる', $output);
+        $this->assertStringContainsString('欺く', $output);
+        $this->assertStringContainsString('やる', $output);
         $this->runSnippet(
             'v3_delete_glossary',
             [
@@ -207,7 +206,7 @@ class translateTest extends TestCase
                 'us-central1'
             ]
         );
-        $this->assertContains('やる', $output);
+        $this->assertStringContainsString('やる', $output);
     }
 
     public function testV3CreateListGetDeleteGlossary()
@@ -221,9 +220,9 @@ class translateTest extends TestCase
                 'gs://cloud-samples-data/translation/glossary_ja.csv'
             ]
         );
-        $this->assertContains('Created', $output);
-        $this->assertContains($glossaryId, $output);
-        $this->assertContains(
+        $this->assertStringContainsString('Created', $output);
+        $this->assertStringContainsString($glossaryId, $output);
+        $this->assertStringContainsString(
             'gs://cloud-samples-data/translation/glossary_ja.csv',
             $output
         );
@@ -231,8 +230,8 @@ class translateTest extends TestCase
             'v3_list_glossary',
             [self::$projectId]
         );
-        $this->assertContains($glossaryId, $output);
-        $this->assertContains(
+        $this->assertStringContainsString($glossaryId, $output);
+        $this->assertStringContainsString(
             'gs://cloud-samples-data/translation/glossary_ja.csv',
             $output
         );
@@ -243,8 +242,8 @@ class translateTest extends TestCase
                 $glossaryId
             ]
         );
-        $this->assertContains($glossaryId, $output);
-        $this->assertContains(
+        $this->assertStringContainsString($glossaryId, $output);
+        $this->assertStringContainsString(
             'gs://cloud-samples-data/translation/glossary_ja.csv',
             $output
         );
@@ -255,7 +254,7 @@ class translateTest extends TestCase
                 $glossaryId
             ]
         );
-        $this->assertContains('Deleted', $output);
+        $this->assertStringContainsString('Deleted', $output);
     }
 
     public function testV3ListLanguagesWithTarget()
@@ -267,8 +266,8 @@ class translateTest extends TestCase
                 self::$projectId
             ]
         );
-        $this->assertContains('Language Code: sq', $output);
-        $this->assertContains('Display Name: albanska', $output);
+        $this->assertStringContainsString('Language Code: sq', $output);
+        $this->assertStringContainsString('Display Name: albanska', $output);
     }
 
     public function testV3ListLanguages()
@@ -277,7 +276,7 @@ class translateTest extends TestCase
             'v3_get_supported_languages',
             [self::$projectId]
         );
-        $this->assertContains('zh-CN', $output);
+        $this->assertStringContainsString('zh-CN', $output);
     }
 
     public function testV3DetectLanguage()
@@ -289,7 +288,7 @@ class translateTest extends TestCase
                 self::$projectId
             ]
         );
-        $this->assertContains('is', $output);
+        $this->assertStringContainsString('is', $output);
     }
 
     public function testV3BatchTranslateText()
@@ -310,7 +309,7 @@ class translateTest extends TestCase
                 'es'
             ]
         );
-        $this->assertContains('Total Characters: 13', $output);
+        $this->assertStringContainsString('Total Characters: 13', $output);
     }
 
     public function testV3BatchTranslateTextWithGlossaryAndModel()
@@ -349,7 +348,7 @@ class translateTest extends TestCase
                 $glossaryId
             ]
         );
-        $this->assertContains('Total Characters: 25', $output);
+        $this->assertStringContainsString('Total Characters: 25', $output);
     }
 
     public function testV3BatchTranslateTextWithGlossary()
@@ -387,7 +386,7 @@ class translateTest extends TestCase
                 $glossaryId
             ]
         );
-        $this->assertContains('Total Characters: 9', $output);
+        $this->assertStringContainsString('Total Characters: 9', $output);
     }
 
     public function testV3BatchTranslateTextWithModel()
@@ -409,6 +408,6 @@ class translateTest extends TestCase
                 'TRL3089491334608715776'
             ]
         );
-        $this->assertContains('Total Characters: 15', $output);
+        $this->assertStringContainsString('Total Characters: 15', $output);
     }
 }

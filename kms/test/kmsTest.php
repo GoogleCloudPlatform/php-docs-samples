@@ -46,7 +46,7 @@ class kmsTest extends TestCase
     private static $hsmKeyId;
     private static $symmetricKeyId;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$locationId = 'us-east1';
 
@@ -69,7 +69,7 @@ class kmsTest extends TestCase
         self::createSymmetricKey(self::$symmetricKeyId);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $client = new KeyManagementServiceClient();
 
@@ -222,7 +222,7 @@ class kmsTest extends TestCase
             self::randomId()
         ]);
 
-        $this->assertContains('Created asymmetric decryption key', $output);
+        $this->assertStringContainsString('Created asymmetric decryption key', $output);
         $this->assertEquals(CryptoKeyPurpose::ASYMMETRIC_DECRYPT, $key->getPurpose());
         $this->assertEquals(CryptoKeyVersionAlgorithm::RSA_DECRYPT_OAEP_2048_SHA256, $key->getVersionTemplate()->getAlgorithm());
     }
@@ -236,7 +236,7 @@ class kmsTest extends TestCase
             self::randomId()
         ]);
 
-        $this->assertContains('Created asymmetric signing key', $output);
+        $this->assertStringContainsString('Created asymmetric signing key', $output);
         $this->assertEquals(CryptoKeyPurpose::ASYMMETRIC_SIGN, $key->getPurpose());
         $this->assertEquals(CryptoKeyVersionAlgorithm::RSA_SIGN_PKCS1_2048_SHA256, $key->getVersionTemplate()->getAlgorithm());
     }
@@ -250,7 +250,7 @@ class kmsTest extends TestCase
           self::randomId()
         ]);
 
-        $this->assertContains('Created hsm key', $output);
+        $this->assertStringContainsString('Created hsm key', $output);
         $this->assertEquals(ProtectionLevel::HSM, $key->getVersionTemplate()->getProtectionLevel());
     }
 
@@ -263,7 +263,7 @@ class kmsTest extends TestCase
           self::randomId()
         ]);
 
-        $this->assertContains('Created labeled key', $output);
+        $this->assertStringContainsString('Created labeled key', $output);
         $this->assertEquals('alpha', $key->getLabels()['team']);
         $this->assertEquals('cc1234', $key->getLabels()['cost_center']);
     }
@@ -276,8 +276,8 @@ class kmsTest extends TestCase
           self::randomId()
         ]);
 
-        $this->assertContains('Created key ring', $output);
-        $this->assertContains(self::$locationId, $keyRing->getName());
+        $this->assertStringContainsString('Created key ring', $output);
+        $this->assertStringContainsString(self::$locationId, $keyRing->getName());
     }
 
     public function testCreateKeyRotationSchedule()
@@ -289,7 +289,7 @@ class kmsTest extends TestCase
           self::randomId()
         ]);
 
-        $this->assertContains('Created key with rotation', $output);
+        $this->assertStringContainsString('Created key with rotation', $output);
         $this->assertEquals(2592000, $key->getRotationPeriod()->getSeconds());
     }
 
@@ -302,7 +302,7 @@ class kmsTest extends TestCase
             self::randomId()
         ]);
 
-        $this->assertContains('Created symmetric key', $output);
+        $this->assertStringContainsString('Created symmetric key', $output);
         $this->assertEquals(CryptoKeyPurpose::ENCRYPT_DECRYPT, $key->getPurpose());
         $this->assertEquals(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION, $key->getVersionTemplate()->getAlgorithm());
     }
@@ -316,8 +316,8 @@ class kmsTest extends TestCase
             self::$symmetricKeyId
         ]);
 
-        $this->assertContains('Created key version', $output);
-        $this->assertContains(self::$symmetricKeyId, $version->getName());
+        $this->assertStringContainsString('Created key version', $output);
+        $this->assertStringContainsString(self::$symmetricKeyId, $version->getName());
     }
 
     public function testDecryptAsymmetric()
@@ -343,7 +343,7 @@ class kmsTest extends TestCase
             $ciphertext
         ]);
 
-        $this->assertContains('Plaintext', $output);
+        $this->assertStringContainsString('Plaintext', $output);
         $this->assertEquals($plaintext, $response->getPlaintext());
     }
 
@@ -357,7 +357,7 @@ class kmsTest extends TestCase
             '1'
         ]);
 
-        $this->assertContains('Destroyed key version', $output);
+        $this->assertStringContainsString('Destroyed key version', $output);
         $this->assertContains($version->getState(), array(
             CryptoKeyVersionState::DESTROYED,
             CryptoKeyVersionState::DESTROY_SCHEDULED,
@@ -371,7 +371,7 @@ class kmsTest extends TestCase
             '1'
         ]);
 
-        $this->assertContains('Restored key version', $output);
+        $this->assertStringContainsString('Restored key version', $output);
         $this->assertEquals(CryptoKeyVersionState::DISABLED, $version->getState());
     }
 
@@ -385,7 +385,7 @@ class kmsTest extends TestCase
             '1'
         ]);
 
-        $this->assertContains('Disabled key version', $output);
+        $this->assertStringContainsString('Disabled key version', $output);
         $this->assertEquals(CryptoKeyVersionState::DISABLED, $version->getState());
 
         list($version, $output) = $this->runSample('enable_key_version', [
@@ -396,7 +396,7 @@ class kmsTest extends TestCase
             '1'
         ]);
 
-        $this->assertContains('Enabled key version', $output);
+        $this->assertStringContainsString('Enabled key version', $output);
         $this->assertEquals(CryptoKeyVersionState::ENABLED, $version->getState());
     }
 
@@ -430,7 +430,7 @@ class kmsTest extends TestCase
             $plaintext
         ]);
 
-        $this->assertContains('Ciphertext', $output);
+        $this->assertStringContainsString('Ciphertext', $output);
 
         $client = new KeyManagementServiceClient();
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, self::$symmetricKeyId);
@@ -447,7 +447,7 @@ class kmsTest extends TestCase
             self::$symmetricKeyId
         ]);
 
-        $this->assertContains('foo = bar', $output);
+        $this->assertStringContainsString('foo = bar', $output);
         $this->assertEquals('bar', $key->getLabels()['foo']);
         $this->assertEquals('zap', $key->getLabels()['zip']);
     }
@@ -462,7 +462,7 @@ class kmsTest extends TestCase
             '1'
         ]);
 
-        $this->assertContains('Got key attestation', $output);
+        $this->assertStringContainsString('Got key attestation', $output);
         $this->assertNotNull($attestation->getContent());
     }
 
@@ -476,7 +476,7 @@ class kmsTest extends TestCase
             '1'
         ]);
 
-        $this->assertContains('Public key', $output);
+        $this->assertStringContainsString('Public key', $output);
         $this->assertNotNull($key);
         $this->assertNotNull($key->getPem());
     }
@@ -491,7 +491,7 @@ class kmsTest extends TestCase
             'group:test@google.com'
         ]);
 
-        $this->assertContains('Added group:test@google.com', $output);
+        $this->assertStringContainsString('Added group:test@google.com', $output);
 
         $binding = null;
         foreach ($policy->getBindings() as $b) {
@@ -513,7 +513,7 @@ class kmsTest extends TestCase
             self::$symmetricKeyId
         ]);
 
-        $this->assertContains('IAM policy for', $output);
+        $this->assertStringContainsString('IAM policy for', $output);
         $this->assertNotNull($policy);
     }
 
@@ -538,7 +538,7 @@ class kmsTest extends TestCase
             'group:test@google.com'
         ]);
 
-        $this->assertContains('Removed group:test@google.com', $output);
+        $this->assertStringContainsString('Removed group:test@google.com', $output);
 
         $binding = null;
         foreach ($policy->getBindings() as $b) {
@@ -559,7 +559,7 @@ class kmsTest extends TestCase
             self::$locationId
         ]);
 
-        $this->assertContains('Key rings in', $output);
+        $this->assertStringContainsString('Key rings in', $output);
         $this->assertNotEmpty($keyRings);
     }
 
@@ -576,7 +576,7 @@ class kmsTest extends TestCase
             $message
         ]);
 
-        $this->assertContains('Signature', $output);
+        $this->assertStringContainsString('Signature', $output);
         $this->assertNotEmpty($signResponse->getSignature());
 
         $client = new KeyManagementServiceClient();
@@ -595,7 +595,7 @@ class kmsTest extends TestCase
           self::$symmetricKeyId
         ]);
 
-        $this->assertContains('Updated key', $output);
+        $this->assertStringContainsString('Updated key', $output);
         $this->assertEquals(2592000, $key->getRotationPeriod()->getSeconds());
     }
 
@@ -608,7 +608,7 @@ class kmsTest extends TestCase
           self::$symmetricKeyId
         ]);
 
-        $this->assertContains('Updated key', $output);
+        $this->assertStringContainsString('Updated key', $output);
         $this->assertEmpty($key->getLabels());
     }
 
@@ -621,7 +621,7 @@ class kmsTest extends TestCase
           self::$symmetricKeyId
         ]);
 
-        $this->assertContains('Updated key', $output);
+        $this->assertStringContainsString('Updated key', $output);
         $this->assertEmpty($key->getRotationPeriod());
         $this->assertEmpty($key->getNextRotationTime());
     }
@@ -636,9 +636,9 @@ class kmsTest extends TestCase
           '1'
         ]);
 
-        $this->assertContains('Updated primary', $output);
+        $this->assertStringContainsString('Updated primary', $output);
         $this->assertNotNull($key->getPrimary());
-        $this->assertContains('1', $key->getPrimary()->getName());
+        $this->assertStringContainsString('1', $key->getPrimary()->getName());
     }
 
     public function testUpdateKeyUpdateLabels()
@@ -650,7 +650,7 @@ class kmsTest extends TestCase
           self::$symmetricKeyId
         ]);
 
-        $this->assertContains('Updated key', $output);
+        $this->assertStringContainsString('Updated key', $output);
         $this->assertNotNull($key->getLabels());
         $this->assertEquals('new_value', $key->getLabels()['new_label']);
     }
@@ -677,7 +677,7 @@ class kmsTest extends TestCase
           $signResponse->getSignature(),
         ]);
 
-        $this->assertContains('Signature verified', $output);
+        $this->assertStringContainsString('Signature verified', $output);
         $this->assertTrue($verified);
     }
 

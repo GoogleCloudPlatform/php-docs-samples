@@ -49,7 +49,7 @@ class SystemTest extends TestCase
             ]);
         $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
         $actual = trim((string) $resp->getBody());
-        $this->assertContains($expected, $actual, $label . ':');
+        $this->assertStringContainsString($expected, $actual, $label . ':');
     }
 
     /**
@@ -68,6 +68,6 @@ class SystemTest extends TestCase
         $actual = $resp->getBody()->getContents();
 
         $this->assertEquals($statusCode, $resp->getStatusCode(), $label . ' code:');
-        $this->assertContains($expected, $actual, $label . ':');
+        $this->assertStringContainsString($expected, $actual, $label . ':');
     }
 }

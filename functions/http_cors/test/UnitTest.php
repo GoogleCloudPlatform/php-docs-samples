@@ -57,7 +57,7 @@ class UnitTest extends TestCase
             $response->getStatusCode(),
             $statusCode
         );
-        
+
         // Assert headers.
         $header_names = array_keys($response->getHeaders());
         if ($containsHeader) {
@@ -76,13 +76,13 @@ class UnitTest extends TestCase
         // Assert content.
         $content = (string) $response->getBody();
         if ($containsContent) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $containsContent,
                 $content
             );
         }
         if ($notContainsContent) {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $notContainsContent,
                 $content
             );

@@ -52,7 +52,7 @@ class LocalTest extends WebTestCase
         $crawler = $client->request('POST', '/call/receive');
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<Say>Hello from Twilio!</Say>',
             $response->getContent()
         );
@@ -68,8 +68,8 @@ class LocalTest extends WebTestCase
         $crawler = $client->request('POST', '/sms/receive', $params);
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains($params['From'], $response->getContent());
-        $this->assertContains($params['Body'], $response->getContent());
+        $this->assertStringContainsString($params['From'], $response->getContent());
+        $this->assertStringContainsString($params['Body'], $response->getContent());
     }
 
     public function testSendSms()
@@ -81,6 +81,6 @@ class LocalTest extends WebTestCase
         $crawler = $client->request('POST', '/sms/send', $params);
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('Hello from Twilio!', $response->getContent());
+        $this->assertStringContainsString('Hello from Twilio!', $response->getContent());
     }
 }

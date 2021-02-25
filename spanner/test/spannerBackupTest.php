@@ -53,7 +53,7 @@ class spannerBackupTest extends TestCase
     /** @var $instance Instance */
     protected static $instance;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
 
@@ -78,7 +78,7 @@ class spannerBackupTest extends TestCase
         $output = $this->runFunctionSnippet('cancel_backup', [
             self::$databaseId
         ]);
-        $this->assertContains('Cancel backup operation complete', $output);
+        $this->assertStringContainsString('Cancel backup operation complete', $output);
     }
 
     public function testCreateBackup()
@@ -87,7 +87,7 @@ class spannerBackupTest extends TestCase
             self::$databaseId,
             self::$backupId,
         ]);
-        $this->assertContains(self::$backupId, $output);
+        $this->assertStringContainsString(self::$backupId, $output);
     }
 
     /**
@@ -95,10 +95,6 @@ class spannerBackupTest extends TestCase
      */
     public function testListBackupOperations()
     {
-        $this->markTestSkipped(
-            "See: https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1186"
-        );
-
         $databaseId2 = self::$databaseId . '-2';
         $database2 = self::$instance->database($databaseId2);
         // DB may already exist if the test timed out and retried
@@ -112,8 +108,8 @@ class spannerBackupTest extends TestCase
         ]);
         $lro->pollUntilComplete();
 
-        $this->assertContains(basename($backup->name()), $output);
-        $this->assertContains($databaseId2, $output);
+        $this->assertStringContainsString(basename($backup->name()), $output);
+        $this->assertStringContainsString($databaseId2, $output);
     }
 
     /**
@@ -122,7 +118,7 @@ class spannerBackupTest extends TestCase
     public function testListBackups()
     {
         $output = $this->runFunctionSnippet('list_backups');
-        $this->assertContains(self::$backupId, $output);
+        $this->assertStringContainsString(self::$backupId, $output);
     }
 
     /**
@@ -131,7 +127,7 @@ class spannerBackupTest extends TestCase
     public function testUpdateBackup()
     {
         $output = $this->runFunctionSnippet('update_backup', [self::$backupId]);
-        $this->assertContains(self::$backupId, $output);
+        $this->assertStringContainsString(self::$backupId, $output);
     }
 
     /**
@@ -143,8 +139,8 @@ class spannerBackupTest extends TestCase
             self::$restoredDatabaseId,
             self::$backupId,
         ]);
-        $this->assertContains(self::$backupId, $output);
-        $this->assertContains(self::$databaseId, $output);
+        $this->assertStringContainsString(self::$backupId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
     }
 
 
@@ -154,7 +150,7 @@ class spannerBackupTest extends TestCase
     public function testListDatabaseOperations()
     {
         $output = $this->runFunctionSnippet('list_database_operations');
-        $this->assertContains(self::$restoredDatabaseId, $output);
+        $this->assertStringContainsString(self::$restoredDatabaseId, $output);
     }
 
     /**
@@ -166,7 +162,7 @@ class spannerBackupTest extends TestCase
         $output = $this->runFunctionSnippet('delete_backup', [
             'backup_id' => self::$backupId,
         ]);
-        $this->assertContains(self::$backupId, $output);
+        $this->assertStringContainsString(self::$backupId, $output);
     }
 
     private static function waitForOperations()
@@ -199,11 +195,11 @@ class spannerBackupTest extends TestCase
     {
         return $this->traitRunFunctionSnippet(
             $sampleName,
-            array_merge([self::$instanceId], $params)
+            array_merge([self::$instanceId], array_values($params))
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (self::$instance->exists()) {
             self::waitForOperations();

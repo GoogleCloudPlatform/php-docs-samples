@@ -33,7 +33,7 @@ class UnitTest extends TestCase
 
     private static $entryPoint = 'helloContent';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';
     }
@@ -43,7 +43,7 @@ class UnitTest extends TestCase
         foreach (self::cases() as $test) {
             $request = new ServerRequest('POST', '/', ['content-type' => $test['content-type']], $test['body']);
             $actual = $this->runFunction(self::$entryPoint, [$request]);
-            $this->assertContains($test['expected'], $actual, $test['content-type'] . ':');
+            $this->assertStringContainsString($test['expected'], $actual, $test['content-type'] . ':');
         }
     }
 

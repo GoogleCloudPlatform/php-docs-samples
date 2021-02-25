@@ -29,7 +29,7 @@ class contextTest extends TestCase
     private static $contextId;
     private static $sessionId = 'fake_session_for_testing';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$contextId = sprintf('fake_context_%s_%s', rand(100, 999), time());
     }
@@ -44,7 +44,7 @@ class contextTest extends TestCase
             '--session-id' => self::$sessionId,
         ]);
 
-        $this->assertContains(self::$contextId, $output);
+        $this->assertStringContainsString(self::$contextId, $output);
     }
 
     /** @depends testCreateContext */
@@ -58,6 +58,6 @@ class contextTest extends TestCase
             '--session-id' => self::$sessionId,
         ]);
 
-        $this->assertNotContains(self::$contextId, $output);
+        $this->assertStringNotContainsString(self::$contextId, $output);
     }
 }
