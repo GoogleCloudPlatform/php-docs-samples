@@ -45,9 +45,10 @@ function create_backup($instanceId, $databaseId, $backupId)
     $database = $instance->database($databaseId);
 
     $expireTime = new \DateTime('+14 days');
+    $versionTime = new \DateTime($database->info()['earliestVersionTime']);
     $backup = $instance->backup($backupId);
     $operation = $backup->create($database->name(), $expireTime, [
-        'versionTime' => $database->info()['earliestVersionTime']
+        'versionTime' => $versionTime
     ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
