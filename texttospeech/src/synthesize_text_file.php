@@ -38,7 +38,7 @@ use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 /** Uncomment and populate these variables in your code */
-// $path = 'textFile the text file to be synthesized. (e.g., hello.txt)';
+// $path = 'The text file to be synthesized. (e.g., hello.txt)';
 
 // create client object
 $client = new TextToSpeechClient();
