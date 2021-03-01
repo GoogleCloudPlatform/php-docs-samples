@@ -44,7 +44,7 @@ function create_backup($instanceId, $databaseId, $backupId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $results = $database->execute("SELECT CURRENT_TIMESTAMP() as Timestamp");
+    $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
     $row = $results->rows()->current();
 
     $expireTime = new \DateTime('+14 days');
