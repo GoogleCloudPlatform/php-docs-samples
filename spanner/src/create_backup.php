@@ -44,8 +44,11 @@ function create_backup($instanceId, $databaseId, $backupId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
+    $results = $database->execute("SELECT CURRENT_TIMESTAMP() as Timestamp");
+    $row = $results->rows()->current();
+
     $expireTime = new \DateTime('+14 days');
-    $versionTime = new \DateTime($database->info()['earliestVersionTime']);
+    $versionTime = new \DateTime($row['Timestamp']);
     $backup = $instance->backup($backupId);
     $operation = $backup->create($database->name(), $expireTime, [
         'versionTime' => $versionTime
