@@ -52,7 +52,7 @@ class UnitTest extends TestCase
             $statusCode,
             $output->getStatusCode()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             $content,
             (string) $output->getBody()
         );

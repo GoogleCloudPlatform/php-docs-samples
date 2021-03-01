@@ -34,7 +34,7 @@ class ObjectAclCommandTest extends TestCase
     private static $bucketName;
     private static $commandFile = __DIR__ . '/../storage.php';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
         self::$bucketName = sprintf(
@@ -52,7 +52,7 @@ class ObjectAclCommandTest extends TestCase
             'object' => $objectName,
         ]);
 
-        $this->assertContains(': OWNER', $output);
+        $this->assertStringContainsString(': OWNER', $output);
     }
 
     public function testManageObjectAcl()

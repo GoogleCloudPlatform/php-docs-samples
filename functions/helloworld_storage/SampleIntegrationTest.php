@@ -90,10 +90,10 @@ class SampleIntegrationTest extends TestCase
 
         // Verify the CloudEvent and data properties are logged by the function.
         foreach ($data as $property => $value) {
-            $this->assertContains($value, $actual);
+            $this->assertStringContainsString($value, $actual);
         }
-        $this->assertContains($cloudevent['id'], $actual);
-        $this->assertContains($cloudevent['type'], $actual);
+        $this->assertStringContainsString($cloudevent['id'], $actual);
+        $this->assertStringContainsString($cloudevent['type'], $actual);
     }
 
     /**

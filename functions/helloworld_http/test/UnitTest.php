@@ -50,7 +50,7 @@ class UnitTest extends TestCase
         $request = (new ServerRequest('POST', '/', [], $body))
           ->withQueryParams($query);
         $actual = $this->runFunction(self::$entryPoint, [$request]);
-        $this->assertContains($expected, $actual, $label . ':');
+        $this->assertStringContainsString($expected, $actual, $label . ':');
     }
 
     private static function runFunction($functionName, array $params = []): string

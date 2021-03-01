@@ -46,7 +46,7 @@ class DeployTest extends TestCase
         $response = $this->client->request('POST', '/call/receive');
         $this->assertEquals(200, $response->getStatusCode());
         $body = $response->getBody()->getContents();
-        $this->assertContains('<Say>Hello from Twilio!</Say>', $body);
+        $this->assertStringContainsString('<Say>Hello from Twilio!</Say>', $body);
     }
 
     public function testReceiveSms()
@@ -60,8 +60,8 @@ class DeployTest extends TestCase
         ]);
         $this->assertEquals(200, $response->getStatusCode());
         $body = $response->getBody()->getContents();
-        $this->assertContains($params['From'], $body);
-        $this->assertContains($params['Body'], $body);
+        $this->assertStringContainsString($params['From'], $body);
+        $this->assertStringContainsString($params['Body'], $body);
     }
 
     public function testSendSms()

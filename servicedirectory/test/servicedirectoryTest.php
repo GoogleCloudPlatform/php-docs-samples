@@ -32,7 +32,7 @@ class servicedirectoryTest extends TestCase
 
     private static $locationId = 'us-east1';
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         // Delete any namespaces created during the tests.
         $client = new RegistrationServiceClient();
@@ -52,14 +52,14 @@ class servicedirectoryTest extends TestCase
             self::$locationId,
             $namespaceId
         ]);
-        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
+        $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
 
         $output = $this->runSnippet('delete_namespace', [
             self::$projectId,
             self::$locationId,
             $namespaceId
         ]);
-        $this->assertContains('Deleted Namespace: ' . $namespaceName, $output);
+        $this->assertStringContainsString('Deleted Namespace: ' . $namespaceName, $output);
     }
 
     public function testServices()
@@ -75,14 +75,14 @@ class servicedirectoryTest extends TestCase
             self::$locationId,
             $namespaceId
         ]);
-        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
+        $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
         $output = $this->runSnippet('create_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
             $serviceId
         ]);
-        $this->assertContains('Created Service: ' . $serviceName, $output);
+        $this->assertStringContainsString('Created Service: ' . $serviceName, $output);
 
         $output = $this->runSnippet('delete_service', [
             self::$projectId,
@@ -90,7 +90,7 @@ class servicedirectoryTest extends TestCase
             $namespaceId,
             $serviceId
         ]);
-        $this->assertContains('Deleted Service: ' . $serviceName, $output);
+        $this->assertStringContainsString('Deleted Service: ' . $serviceName, $output);
     }
 
     public function testEndpoints()
@@ -110,14 +110,14 @@ class servicedirectoryTest extends TestCase
             self::$locationId,
             $namespaceId
         ]);
-        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
+        $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
         $output = $this->runSnippet('create_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
             $serviceId
         ]);
-        $this->assertContains('Created Service: ' . $serviceName, $output);
+        $this->assertStringContainsString('Created Service: ' . $serviceName, $output);
 
         $output = $this->runSnippet('create_endpoint', [
             self::$projectId,
@@ -128,9 +128,9 @@ class servicedirectoryTest extends TestCase
             $ip,
             $port
         ]);
-        $this->assertContains('Created Endpoint: ' . $endpointName, $output);
-        $this->assertContains('IP: ' . $ip, $output);
-        $this->assertContains('Port: ' . $port, $output);
+        $this->assertStringContainsString('Created Endpoint: ' . $endpointName, $output);
+        $this->assertStringContainsString('IP: ' . $ip, $output);
+        $this->assertStringContainsString('Port: ' . $port, $output);
 
         $output = $this->runSnippet('delete_endpoint', [
             self::$projectId,
@@ -139,7 +139,7 @@ class servicedirectoryTest extends TestCase
             $serviceId,
             $endpointId
         ]);
-        $this->assertContains('Deleted Endpoint: ' . $endpointName, $output);
+        $this->assertStringContainsString('Deleted Endpoint: ' . $endpointName, $output);
     }
 
     public function testResolveService()
@@ -159,14 +159,14 @@ class servicedirectoryTest extends TestCase
             self::$locationId,
             $namespaceId
         ]);
-        $this->assertContains('Created Namespace: ' . $namespaceName, $output);
+        $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
         $output = $this->runSnippet('create_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
             $serviceId
         ]);
-        $this->assertContains('Created Service: ' . $serviceName, $output);
+        $this->assertStringContainsString('Created Service: ' . $serviceName, $output);
         $output = $this->runSnippet('create_endpoint', [
             self::$projectId,
             self::$locationId,
@@ -176,7 +176,7 @@ class servicedirectoryTest extends TestCase
             $ip,
             $port
         ]);
-        $this->assertContains('Created Endpoint: ' . $endpointName, $output);
+        $this->assertStringContainsString('Created Endpoint: ' . $endpointName, $output);
 
         $output = $this->runSnippet('resolve_service', [
             self::$projectId,
@@ -184,9 +184,9 @@ class servicedirectoryTest extends TestCase
             $namespaceId,
             $serviceId
         ]);
-        $this->assertContains('Resolved Service: ' . $serviceName, $output);
-        $this->assertContains('Name: ' . $endpointName, $output);
-        $this->assertContains('IP: ' . $ip, $output);
-        $this->assertContains('Port: ' . $port, $output);
+        $this->assertStringContainsString('Resolved Service: ' . $serviceName, $output);
+        $this->assertStringContainsString('Name: ' . $endpointName, $output);
+        $this->assertStringContainsString('IP: ' . $ip, $output);
+        $this->assertStringContainsString('Port: ' . $port, $output);
     }
 }

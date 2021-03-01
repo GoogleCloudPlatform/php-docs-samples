@@ -43,7 +43,7 @@ class DeployTest extends TestCase
 
     /** @var string */
     private static $entryPoint = 'firebaseRemoteConfig';
-    
+
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
@@ -122,7 +122,7 @@ class DeployTest extends TestCase
 
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
-            $this->assertContains($expected, $actual, $label);
+            $this->assertStringContainsString($expected, $actual, $label);
         });
     }
 
@@ -158,7 +158,7 @@ class DeployTest extends TestCase
         $attempt = 1;
         $this->runEventuallyConsistentTest(function () use ($filter, $process, &$attempt) {
             $entries = self::$loggingClient->entries(['filter' => $filter]);
- 
+
             // If no logs came in try again.
             if (empty($entries->current())) {
                 echo 'Logs not found, attempting retry #' . $attempt++ . PHP_EOL;

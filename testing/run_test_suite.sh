@@ -25,26 +25,26 @@ FLAKES=(
     datastore/api
     jobs
     asset
-    appengine/flexible/logging
 )
 
 # Directories we do not want to run tests in, even if they exist
 SKIP_TESTS=(
-    appengine/php55/taskqueue
-    appengine/php55/wordpress
-    appengine/php55/grpc
-    appengine/php55/sendgrid
-    appengine/php55/mail
-    appengine/php55/phpmyadmin
-    appengine/php55/mailjet
-    appengine/php55/storage
-    appengine/php55/memcache
-    appengine/php55/http
-    appengine/php55/users
-    appengine/php55/cloudsql
-    appengine/php55/mailgun
-    appengine/php55/modules
-    appengine/php55/twilio
+    # Silex tests which aren't compatible with phpunit 8
+    # TODO: Move these tests off Silex
+    appengine/flexible/helloworld
+    appengine/flexible/analytics
+    appengine/flexible/twilio
+    appengine/flexible/datastore
+    appengine/flexible/tasks
+    appengine/flexible/storage
+    appengine/flexible/memcache
+    appengine/flexible/logging
+    endpoints/getting-started
+    pubsub/app
+    # PubSub batch is currently broken on PHP 8.0
+    # @see https://github.com/googleapis/google-cloud-php/issues/3749
+    # @TODO remove this once the above issue is fixed
+    pubsub/api
 )
 
 # tests to run with grpc.so disabled

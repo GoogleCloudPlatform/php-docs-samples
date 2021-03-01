@@ -48,7 +48,7 @@ class quickstartTest extends TestCase
         $output = ob_get_clean();
 
         // Make sure it worked
-        $this->assertContains('Throwing a test exception', $output);
+        $this->assertStringContainsString('Throwing a test exception', $output);
         $this->verifyReportedError(self::$projectId, 'quickstart.php test exception');
     }
 }

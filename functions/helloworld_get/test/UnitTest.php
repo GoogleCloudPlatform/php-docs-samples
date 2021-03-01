@@ -44,7 +44,7 @@ class UnitTest extends TestCase
     {
         $request = new ServerRequest('GET', '');
         $output = $this->runFunction(self::$entryPoint, [$request]);
-        $this->assertContains($expected, $output);
+        $this->assertStringContainsString($expected, $output);
     }
 
     private static function runFunction($functionName, array $params = []): string

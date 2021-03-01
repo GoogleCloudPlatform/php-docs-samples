@@ -46,7 +46,7 @@ class DeadLetterPolicyTest extends TestCase
     private static $deadLetterTopic;
     private static $deadLetterTopic2;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$topicName = 'php-dlq-topic-' . time() . '-' . rand(1000, 9999);
         self::$subscriptionName = 'php-dlq-sub-' . time() . '-' . rand(1000, 9999);
@@ -60,7 +60,7 @@ class DeadLetterPolicyTest extends TestCase
         self::$subscription = self::$client->subscription(self::$subscriptionName);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$topic->delete();
         self::$subscription->delete();

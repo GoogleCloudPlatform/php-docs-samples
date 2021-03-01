@@ -1,0 +1,9 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^0.7.1"
+    },
+    "require-dev": {
+        "google/cloud-pubsub": "^1.29",
+        "google/cloud-logging": "^1.21"
+    }
+}

@@ -48,7 +48,7 @@ class UnitTest extends TestCase
         putenv("$varName=$varValue");
         $request = new ServerRequest('GET', '/');
         $output = $this->runFunction(self::$entryPoint, [$request]);
-        $this->assertContains($varValue, $output);
+        $this->assertStringContainsString($varValue, $output);
     }
 
     private static function runFunction($functionName, array $params = []): string

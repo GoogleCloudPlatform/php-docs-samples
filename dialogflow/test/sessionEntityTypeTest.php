@@ -30,7 +30,7 @@ class sessionEntityTypeTest extends TestCase
     private static $sessionId = 'fake_session_for_testing';
     private static $entityValues = ['fake_entity_value_1', 'fake_entity_value_2'];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$entityTypeDisplayName = sprintf('fake_display_%s_%s', rand(100, 999), time());
     }
@@ -49,7 +49,7 @@ class sessionEntityTypeTest extends TestCase
             '--session-id' => self::$sessionId
         ]);
 
-        $this->assertContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringContainsString(self::$entityTypeDisplayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
@@ -71,6 +71,6 @@ class sessionEntityTypeTest extends TestCase
             'entity-type-id' => $entityTypeId
         ]);
 
-        $this->assertNotContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringNotContainsString(self::$entityTypeDisplayName, $output);
     }
 }

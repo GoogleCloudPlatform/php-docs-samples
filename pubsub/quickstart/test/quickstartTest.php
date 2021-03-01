@@ -44,10 +44,10 @@ class quickstartTest extends TestCase
 
         // Make sure it looks correct
         $this->assertInstanceOf('Google\Cloud\PubSub\Topic', $this->topic);
-        $this->assertContains($topicName, $this->topic->name());
+        $this->assertStringContainsString($topicName, $this->topic->name());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->topic) {
             $this->topic->delete();
