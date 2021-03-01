@@ -48,7 +48,7 @@ function create_backup($instanceId, $databaseId, $backupId)
     $row = $results->rows()->current();
 
     $expireTime = new \DateTime('+14 days');
-    $versionTime = $row['Timestamp'];
+    $versionTime = new \DateTime($row['Timestamp']);
     $backup = $instance->backup($backupId);
     $operation = $backup->create($database->name(), $expireTime, [
         'versionTime' => $versionTime
