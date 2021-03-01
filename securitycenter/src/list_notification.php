@@ -23,7 +23,6 @@ if (count($argv) < 1) {
 list($_, $organizationId) = $argv;
 
 // [START securitycenter_list_notification_configs]
-// [START scc_list_notification_configs]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
 /** Uncomment and populate these variables in your code */
@@ -38,5 +37,4 @@ foreach ($securityCenterClient->listNotificationConfigs($organizationName) as $e
 
 print('Notification configs were listed' . PHP_EOL);
 
-// [END scc_list_notification_configs]
 // [END securitycenter_list_notification_configs]
