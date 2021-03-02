@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,42 +23,46 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_restore_backup]
+// [START spanner_get_commit_stats]
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Transaction;
 
 /**
- * Restore a database from a backup.
+ * Creates a database and tables for sample data.
  * Example:
  * ```
- * restore_backup($instanceId, $databaseId, $backupId);
+ * create_database($instanceId, $databaseId);
  * ```
+ *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $backupId The Spanner backup ID.
  */
-function restore_backup($instanceId, $databaseId, $backupId)
+function get_commit_stats($instanceId, $databaseId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $backup = $instance->backup($backupId);
 
-    $operation = $database->restore($backup->name());
-    // Wait for restore operation to complete.
-    $operation->pollUntilComplete();
+    $commitStats = $database->runTransaction(function (Transaction $t) use ($spanner) {
+        $t->updateBatch('Albums', [
+            [
+                'SingerId' => 1,
+                'AlbumId' => 1,
+                'MarketingBudget' => 200000,
+            ],
+            [
+                'SingerId' => 2,
+                'AlbumId' => 2,
+                'MarketingBudget' => 400000,
+            ]
+        ]);
+        $t->commit(['returnCommitStats' => true]);
+        return $t->getCommitStats();
+    });
 
-    // Newly created database has restore information.
-    $database->reload();
-    $restoreInfo = $database->info()['restoreInfo'];
-    $sourceDatabase = $restoreInfo['backupInfo']['sourceDatabase'];
-    $sourceBackup = $restoreInfo['backupInfo']['backup'];
-    $versionTime = $restoreInfo['backupInfo']['versionTime'];
-
-    printf(
-        "Database %s restored from backup %s with version time %s" . PHP_EOL,
-        $sourceDatabase, $sourceBackup, $versionTime);
+    print('Updated data with ' . $commitStats['mutationCount'] . ' mutations.' . PHP_EOL);
 }
-// [END spanner_restore_backup]
+// [END spanner_get_commit_stats]
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
