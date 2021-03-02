@@ -31,14 +31,15 @@ use Google\Cloud\Spanner\SpannerClient;
  * Create a backup.
  * Example:
  * ```
- * create_backup($instanceId, $databaseId, $backupId);
+ * create_backup($instanceId, $databaseId, $backupId, $versionTime);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
+ * @param string $versionTime The version of the database to backup.
  */
-function create_backup($instanceId, $databaseId, $backupId)
+function create_backup($instanceId, $databaseId, $backupId, $versionTime)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -46,7 +47,9 @@ function create_backup($instanceId, $databaseId, $backupId)
 
     $expireTime = new \DateTime('+14 days');
     $backup = $instance->backup($backupId);
-    $operation = $backup->create($database->name(), $expireTime);
+    $operation = $backup->create($database->name(), $expireTime, [
+        'versionTime' => new \DateTime($versionTime)
+    ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
@@ -57,7 +60,9 @@ function create_backup($instanceId, $databaseId, $backupId)
     if ($ready) {
         print('Backup is ready!' . PHP_EOL);
         $info = $backup->info();
-        printf('Backup %s of size %d bytes was created at %s' . PHP_EOL, basename($info['name']), $info['sizeBytes'], $info['createTime']);
+        printf(
+            'Backup %s of size %d bytes was created at %s for version of database at %s' . PHP_EOL,
+            basename($info['name']), $info['sizeBytes'], $info['createTime'], $info['versionTime']);
     } else {
         print('Backup is not ready!' . PHP_EOL);
     }
