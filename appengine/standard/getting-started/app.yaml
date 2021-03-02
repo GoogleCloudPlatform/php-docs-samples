@@ -1,8 +1,7 @@
 # See https://cloud.google.com/appengine/docs/standard/php/config/appref for a
 # complete list of `app.yaml` directives.
 
-# Use the PHP 7.3 runtime (BETA) by replacing "php72" below with "php73"
-runtime: php72
+runtime: php74
 
 env_variables:
     GOOGLE_STORAGE_BUCKET: ""
