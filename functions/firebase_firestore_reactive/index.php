@@ -27,9 +27,7 @@ function firebaseReactive(CloudEvent $cloudevent)
 
     $resource = $data['value']['name'];
 
-    $db = new FirestoreClient([
-        'projectId' => getenv('GOOGLE_PROJECT_ID'),
-    ]);
+    $db = new FirestoreClient();
 
     $docPath = explode('/documents/', $resource)[1];
 
