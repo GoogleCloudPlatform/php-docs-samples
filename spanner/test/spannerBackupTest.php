@@ -56,9 +56,6 @@ class spannerBackupTest extends TestCase
     /** @var $instance Instance */
     protected static $instance;
 
-    /** @var string $versionTime */
-    protected static $versionTime;
-
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
@@ -77,11 +74,6 @@ class spannerBackupTest extends TestCase
         self::$backupId = 'backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-res';
         self::$instance = $spanner->instance(self::$instanceId);
-
-        $database = self::$instance->database($databaseId);
-        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
-        $row = $results->rows()->current();
-        self::$versionTime = $row['Timestamp'];
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -110,10 +102,15 @@ class spannerBackupTest extends TestCase
      */
     public function testCreateBackup()
     {
+        $database = self::$instance->database(self::$databaseId);
+        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
+        $row = $results->rows()->current();
+        $versionTime = $row['Timestamp'];
+
         $output = $this->runFunctionSnippet('create_backup', [
             self::$databaseId,
             self::$backupId,
-            self::$versionTime,
+            $versionTime,
         ]);
         $this->assertStringContainsString(self::$backupId, $output);
     }
