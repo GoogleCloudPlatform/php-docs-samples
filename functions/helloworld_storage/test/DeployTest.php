@@ -22,7 +22,6 @@ namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
 use PHPUnit\Framework\TestCase;
 
 /**

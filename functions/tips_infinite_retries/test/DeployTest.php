@@ -21,10 +21,8 @@ namespace Google\Cloud\Samples\Functions\TipsInfiniteRetries\Test;
 
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
 use Google\Cloud\PubSub\PubSubClient;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class DeployTest.

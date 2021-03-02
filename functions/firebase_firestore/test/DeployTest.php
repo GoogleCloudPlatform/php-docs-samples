@@ -22,9 +22,7 @@ namespace Google\Cloud\Samples\Functions\FirebaseFirestore\Test;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class DeployTest.

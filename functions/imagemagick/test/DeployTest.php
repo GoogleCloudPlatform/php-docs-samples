@@ -22,8 +22,6 @@ namespace Google\Cloud\Samples\Functions\ImageMagick\Test;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
