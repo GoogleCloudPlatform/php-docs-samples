@@ -31,24 +31,24 @@ use Google\Cloud\Spanner\SpannerClient;
  * Create a backup.
  * Example:
  * ```
- * create_backup($instanceId, $databaseId, $backupId);
+ * create_backup($instanceId, $databaseId, $backupId, $versionTime);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
+ * @param string $versionTime The version of the database to backup.
  */
-function create_backup($instanceId, $databaseId, $backupId)
+function create_backup($instanceId, $databaseId, $backupId, $versionTime)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $expireTime = new \DateTime('+14 days');
-    $versionTime = new \DateTime($database->info()['earliestVersionTime']);
     $backup = $instance->backup($backupId);
     $operation = $backup->create($database->name(), $expireTime, [
-        'versionTime' => $versionTime
+        'versionTime' => new \DateTime($versionTime)
     ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);

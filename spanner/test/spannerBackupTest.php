@@ -102,9 +102,15 @@ class spannerBackupTest extends TestCase
      */
     public function testCreateBackup()
     {
+        $database = self::$instance->database(self::$databaseId);
+        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
+        $row = $results->rows()->current();
+        $versionTime = $row['Timestamp'];
+
         $output = $this->runFunctionSnippet('create_backup', [
             self::$databaseId,
             self::$backupId,
+            $versionTime,
         ]);
         $this->assertStringContainsString(self::$backupId, $output);
     }
