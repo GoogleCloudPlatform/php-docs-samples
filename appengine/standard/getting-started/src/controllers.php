@@ -69,7 +69,7 @@ $app->post('/books/add', function (Request $request, Response $response) use ($c
         ->withStatus(302);
 });
 
-$app->get('/books/{id}', function (Request $request, Response $response, $args) {
+$app->get('/books/{id}', function (Request $request, Response $response, $args) use ($container) {
     $book = $container->get('cloudsql')->read($args['id']);
     if (!$book) {
         return $response->withStatus(404);
@@ -77,7 +77,7 @@ $app->get('/books/{id}', function (Request $request, Response $response, $args) 
     return $container->get('view')->render($response, 'view.html.twig', ['book' => $book]);
 });
 
-$app->get('/books/{id}/edit', function (Request $request, Response $response, $args) {
+$app->get('/books/{id}/edit', function (Request $request, Response $response, $args) use ($container) {
     $book = $container->get('cloudsql')->read($args['id']);
     if (!$book) {
         return $response->withStatus(404);
@@ -89,7 +89,7 @@ $app->get('/books/{id}/edit', function (Request $request, Response $response, $a
     ]);
 });
 
-$app->post('/books/{id}/edit', function (Request $request, Response $response, $args) {
+$app->post('/books/{id}/edit', function (Request $request, Response $response, $args) use ($container) {
     if (!$container->get('cloudsql')->read($args['id'])) {
         return $response->withStatus(404);
     }
@@ -124,7 +124,7 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
     return $response;
 });
 
-$app->post('/books/{id}/delete', function (Request $request, Response $response, $args) {
+$app->post('/books/{id}/delete', function (Request $request, Response $response, $args) use ($container) {
     $book = $container->get('cloudsql')->read($args['id']);
     if ($book) {
         $container->get('cloudsql')->delete($args['id']);
