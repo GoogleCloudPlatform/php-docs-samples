@@ -16,36 +16,40 @@
  */
 namespace Google\Cloud\Test;
 
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Slim\Psr7\Factory\RequestFactory;
+use Slim\Psr7\Factory\StreamFactory;
+use Slim\Psr7\Factory\UriFactory;
+use Slim\Psr7\Request;
 use GeckoPackages\MemcacheMock\MemcachedMock;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
+    private static $app;
 
-    public function createApplication()
+    public static function setUpBeforeClass(): void
     {
         $app = require __DIR__ . '/../app.php';
-        $app['memcached'] = new MemcachedMock;
-        $app['memcached']->addServer("localhost", 11211);
-        return $app;
+        $container = $app->getContainer();
+        $memcached = new MemcachedMock;
+        $memcached->addServer("localhost", 11211);
+        $container->set('memcached', $memcached);
+        self::$app = $app;
     }
 
     public function testIndex()
     {
         // Access the modules app top page.
-        $client = $this->client;
-        $client->request('GET', '/');
-        $this->assertTrue($client->getResponse()->isOk());
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = self::$app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
 
         // Make sure it handles a POST request too, which will increment the
         // counter.
-        $this->client->request('POST', '/');
-        $this->assertTrue($this->client->getResponse()->isOk());
+        $response = $this->createRequest('POST', '/');
+        $response = self::$app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetAndPut()
@@ -54,10 +58,21 @@ class LocalTest extends WebTestCase
         $key = rand(0, 1000);
 
         // Test the /memcached REST API.
-        $this->put("/memcached/test$key", "sour");
-        $this->assertEquals("sour", $this->get("/memcached/test$key"));
-        $this->put("/memcached/test$key", "sweet");
-        $this->assertEquals("sweet", $this->get("/memcached/test$key"));
+        $request = $this->createRequest('PUT', "/memcached/test$key", "sour");
+        $response = self::$app->handle($request);
+        $this->assertEquals(200, (string) $response->getStatusCode());
+        $request = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
+        $response = self::$app->handle($request);
+        $this->assertEquals("sour", (string) $response->getBody());
+
+
+        $request = $this->createRequest('PUT', "/memcached/test$key", "sweet");
+        $response = self::$app->handle($request);
+        $this->assertEquals(200, (string) $response->getStatusCode());
+        $request = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
+        $response = self::$app->handle($request);
+        $this->assertEquals("sweet", (string) $response->getBody());
+
     }
 
     /**
@@ -65,20 +80,15 @@ class LocalTest extends WebTestCase
      * @param $path string
      * @param $body string
      */
-    private function put($path, $body)
+    private function createRequest($method, $path, $body = '')
     {
-        $this->client->request('PUT', $path, array(), array(), array(), $body);
-        return $this->client->getResponse()->getContent();
-    }
-
-    /**
-     * HTTP GETs the url path.
-     * @param $path string
-     * @return string The HTTP Response.
-     */
-    private function get($path)
-    {
-        $this->client->request('GET', $path);
-        return $this->client->getResponse()->getContent();
+        return new Request(
+            'PUT',
+            (new UriFactory)->createUri($path),
+            new \Slim\Psr7\Headers(),
+            [],
+            [],
+            (new StreamFactory)->createStream($body)
+        );
     }
 }

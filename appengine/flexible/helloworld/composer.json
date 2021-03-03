@@ -1,9 +1,6 @@
 {
   "require": {
-    "silex/silex": "^2.3"
-  },
-  "require-dev": {
-    "symfony/browser-kit": "^4.4",
-    "symfony/http-kernel": "^4.4"
+    "slim/slim": "^4.0",
+    "slim/psr7": "^1.3"
   }
 }

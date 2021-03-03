@@ -24,9 +24,9 @@ use OpenCensus\Trace\Tracer;
 
 # [END trace_setup_php_use_statement]
 
-$projectId = getenv('GOOGLE_PROJECT_ID');
+$projectId = getenv('GCLOUD_PROJECT');
 if ($projectId === false) {
-    die('Set GOOGLE_PROJECT_ID envvar');
+    die('Set GCLOUD_PROJECT envvar');
 }
 
 # [START trace_setup_php_exporter_setup]

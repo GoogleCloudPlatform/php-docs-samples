@@ -62,7 +62,8 @@ $inspectConfig = (new InspectConfig())
 $content = (new ContentItem())
     ->setValue($stringToInspect);
 
-$parent = $dlp->projectName(getEnv('GOOGLE_PROJECT_ID'));
+$projectId = getenv('GOOGLE_CLOUD_PROJECT');
+$parent = $dlp->projectName($projectId);
 
 // Run request
 $response = $dlp->inspectContent([

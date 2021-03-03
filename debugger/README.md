@@ -2,7 +2,7 @@
 
 ## Description
 
-This simple [Silex][silex] application demonstrates how to
+This simple [Slim][slim] application demonstrates how to
 install and run the [Stackdriver Debugger Agent][debugger] for PHP.
 
 [debugger]: https://cloud.google.com/debugger/docs/setup/php
@@ -47,7 +47,7 @@ for more information.
 
 * See [LICENSE][license]
 
-[silex]: https://silex.symfony.com/
+[slim]: https://www.slimframework.com/
 [pecl]: https://pecl.php.net/
 [debug-console]: https://console.cloud.google.com/debug
 [select-source-code]: https://cloud.google.com/debugger/docs/source-options]
