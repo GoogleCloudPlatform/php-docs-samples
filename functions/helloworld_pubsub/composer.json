@@ -11,5 +11,5 @@
     "require-dev": {
         "google/cloud-pubsub": "^1.29",
         "google/cloud-logging": "^1.21"
-    },
+    }
 }
