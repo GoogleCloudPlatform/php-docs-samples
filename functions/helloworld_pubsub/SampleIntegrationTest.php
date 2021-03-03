@@ -60,40 +60,6 @@ class SampleIntegrationTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProvider
-     */
-    public function testHelloPubsub(
-        CloudEvent $cloudevent,
-        array $data,
-        string $statusCode,
-        string $expected
-    ): void {
-        // Send an HTTP request using CloudEvent metadata.
-        $resp = self::$client->post('/', [
-            'body' => json_encode($data),
-            'headers' => [
-                // Instruct the function framework to parse the body as JSON.
-                'content-type' => 'application/json',
-
-                // Prepare the HTTP headers for a CloudEvent.
-                'ce-id' => $cloudevent->getId(),
-                'ce-source' => $cloudevent->getSource(),
-                'ce-specversion' => $cloudevent->getSpecVersion(),
-                'ce-type' => $cloudevent->getType()
-            ],
-        ]);
-
-        // The Cloud Function logs all data to stderr.
-        $actual = self::$process->getIncrementalErrorOutput();
-
-        // Confirm the status code.
-        $this->assertEquals($statusCode, $resp->getStatusCode());
-
-        // Verify the function's results are correctly logged.
-        $this->assertStringContainsString($expected, $actual);
-    }
-
-    /**
      * Start a local PHP server running the Functions Framework.
      *
      * @beforeClass
@@ -130,6 +96,40 @@ class SampleIntegrationTest extends TestCase
             throw new RuntimeException('Function Framework PHP process not running by end of test');
         }
         self::$process->stop(3, SIGTERM);
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testHelloPubsub(
+        CloudEvent $cloudevent,
+        array $data,
+        string $statusCode,
+        string $expected
+    ): void {
+        // Send an HTTP request using CloudEvent metadata.
+        $resp = self::$client->post('/', [
+            'body' => json_encode($data),
+            'headers' => [
+                // Instruct the function framework to parse the body as JSON.
+                'content-type' => 'application/json',
+
+                // Prepare the HTTP headers for a CloudEvent.
+                'ce-id' => $cloudevent->getId(),
+                'ce-source' => $cloudevent->getSource(),
+                'ce-specversion' => $cloudevent->getSpecVersion(),
+                'ce-type' => $cloudevent->getType()
+            ],
+        ]);
+
+        // The Cloud Function logs all data to stderr.
+        $actual = self::$process->getIncrementalErrorOutput();
+
+        // Confirm the status code.
+        $this->assertEquals($statusCode, $resp->getStatusCode());
+
+        // Verify the function's results are correctly logged.
+        $this->assertStringContainsString($expected, $actual);
     }
 }
 
