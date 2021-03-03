@@ -17,7 +17,6 @@
 namespace Google\Cloud\Test;
 
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\TestTrait;
 use Slim\Psr7\Factory\RequestFactory;
 use GeckoPackages\MemcacheMock\MemcachedMock;
 
@@ -75,6 +74,5 @@ class LocalTest extends TestCase
         $request4 = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
         $response4 = self::$app->handle($request4);
         $this->assertEquals("sweet", (string) $response4->getBody());
-
     }
 }

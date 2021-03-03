@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\TestTrait;
 use Slim\Psr7\Factory\RequestFactory;
 
 class LocalTest extends TestCase

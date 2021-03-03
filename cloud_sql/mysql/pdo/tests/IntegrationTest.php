@@ -53,7 +53,6 @@ class IntegrationTest extends TestCase
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
 
-
         $dbPass = $this->requireEnv('MYSQL_PASSWORD');
         $dbName = $this->requireEnv('MYSQL_DATABASE');
         $dbUser = $this->requireEnv('MYSQL_USER');
@@ -66,7 +65,7 @@ class IntegrationTest extends TestCase
             $dbName,
             $connectionName,
             $socketDir,
-            $conn_config,
+            $conn_config
         ));
         $this->assertIsArray($votes->listVotes());
     }

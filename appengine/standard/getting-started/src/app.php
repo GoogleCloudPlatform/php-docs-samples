@@ -29,7 +29,7 @@ use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 
 AppFactory::setContainer($container = new Container());
-$container->set('view', function() {
+$container->set('view', function () {
     return Twig::create(__DIR__);
 });
 

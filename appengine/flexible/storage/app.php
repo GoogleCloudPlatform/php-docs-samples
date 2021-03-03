@@ -46,7 +46,8 @@ $app->get('/', function (Request $request, Response $response) use ($container) 
         <textarea name="content"></textarea><br />
         <input type="submit" />
     </form>
-EOF);
+EOF
+);
     if ($content) {
         $response->getBody()->write(
             "<p><strong>Your content:</strong><p><p>$escapedContent</p>"

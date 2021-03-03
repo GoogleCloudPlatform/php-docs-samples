@@ -24,11 +24,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
-use Slim\Views\TwigMiddleware;
 
 // Create Container
 AppFactory::setContainer($container = new Container());
-$container->set('view', function() {
+$container->set('view', function () {
     return Twig::create(__DIR__);
 });
 
