@@ -45,7 +45,7 @@ function get_external_ip_using_curl()
 $app = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 
-$app->get('/', function (Request $request, Respones $response) {
+$app->get('/', function (Request $request, Response $response) {
     if (!$externalIp = get_external_ip_using_google_cloud()) {
         return 'Unable to reach Metadata server - are you running locally?';
     }
@@ -53,7 +53,7 @@ $app->get('/', function (Request $request, Respones $response) {
     return $response;
 });
 
-$app->get('/curl', function (Request $request, Respones $response) {
+$app->get('/curl', function (Request $request, Response $response) {
     if (!$externalIp = get_external_ip_using_curl()) {
         return 'Unable to reach Metadata server - are you running locally?';
     }

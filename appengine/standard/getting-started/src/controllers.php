@@ -19,7 +19,7 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 /*
- * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
+ * Adds all the controllers to Slim PHP $app.
  */
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;

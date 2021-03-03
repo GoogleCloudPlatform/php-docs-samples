@@ -19,9 +19,6 @@ namespace Google\Cloud\Test;
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
 use Slim\Psr7\Factory\RequestFactory;
-use Slim\Psr7\Factory\StreamFactory;
-use Slim\Psr7\Factory\UriFactory;
-use Slim\Psr7\Request;
 use GeckoPackages\MemcacheMock\MemcachedMock;
 
 class LocalTest extends TestCase
@@ -41,14 +38,14 @@ class LocalTest extends TestCase
     public function testIndex()
     {
         // Access the modules app top page.
-        $request = (new RequestFactory)->createRequest('GET', '/');
-        $response = self::$app->handle($request);
+        $request1 = (new RequestFactory)->createRequest('GET', '/');
+        $response = self::$app->handle($request1);
         $this->assertEquals(200, $response->getStatusCode());
 
         // Make sure it handles a POST request too, which will increment the
         // counter.
-        $response = $this->createRequest('POST', '/');
-        $response = self::$app->handle($request);
+        $request2 = (new RequestFactory)->createRequest('POST', '/');
+        $response = self::$app->handle($request2);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -58,37 +55,26 @@ class LocalTest extends TestCase
         $key = rand(0, 1000);
 
         // Test the /memcached REST API.
-        $request = $this->createRequest('PUT', "/memcached/test$key", "sour");
-        $response = self::$app->handle($request);
-        $this->assertEquals(200, (string) $response->getStatusCode());
-        $request = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
-        $response = self::$app->handle($request);
-        $this->assertEquals("sour", (string) $response->getBody());
+        $request1 = (new RequestFactory)->createRequest('PUT', "/memcached/test$key");
+        $request1->getBody()->write('sour');
+        $response1 = self::$app->handle($request1);
+        $this->assertEquals(200, (string) $response1->getStatusCode());
 
+        // Check that the key was written as expected
+        $request2 = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
+        $response2 = self::$app->handle($request2);
+        $this->assertEquals("sour", (string) $response2->getBody());
 
-        $request = $this->createRequest('PUT', "/memcached/test$key", "sweet");
-        $response = self::$app->handle($request);
-        $this->assertEquals(200, (string) $response->getStatusCode());
-        $request = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
-        $response = self::$app->handle($request);
-        $this->assertEquals("sweet", (string) $response->getBody());
+        // Test the /memcached REST API with a new value.
+        $request3 = (new RequestFactory)->createRequest('PUT', "/memcached/test$key");
+        $request3->getBody()->write('sweet');
+        $response3 = self::$app->handle($request3);
+        $this->assertEquals(200, (string) $response3->getStatusCode());
 
-    }
+        // Check that the key was written as expected
+        $request4 = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
+        $response4 = self::$app->handle($request4);
+        $this->assertEquals("sweet", (string) $response4->getBody());
 
-    /**
-     * HTTP PUTs the body to the url path.
-     * @param $path string
-     * @param $body string
-     */
-    private function createRequest($method, $path, $body = '')
-    {
-        return new Request(
-            'PUT',
-            (new UriFactory)->createUri($path),
-            new \Slim\Psr7\Headers(),
-            [],
-            [],
-            (new StreamFactory)->createStream($body)
-        );
     }
 }

@@ -17,8 +17,7 @@
  */
 
 /**
- * Create a new Silex Application with Twig.  Configure it for debugging.
- * Follows Silex Skeleton pattern.
+ * Create a new Slim PHP Application with Twig.  Configure it for debugging.
  */
 use DI\Container;
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;

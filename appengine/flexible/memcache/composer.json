@@ -6,8 +6,6 @@
         "php-di/slim-bridge": "^3.1"
     },
     "require-dev": {
-        "gecko-packages/gecko-memcache-mock": "^2.0",
-        "paragonie/random_compat": "^2.0",
-        "monolog/monolog": "^1.19"
+        "gecko-packages/gecko-memcache-mock": "^2.0"
     }
 }

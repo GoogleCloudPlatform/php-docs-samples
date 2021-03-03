@@ -85,9 +85,10 @@ $app->post('/reset', function (Request $request, Response $response) use ($conta
 });
 
 $app->post('/', function (Request $request, Response $response) use ($container) {
-    parse_str((string) $request->getBody(), $result);
+    parse_str((string) $request->getBody(), $postData);
+    $who = $postData['who'] ?? '';
     $memcached = $container->get('memcached');
-    $memcached->set('who', $result['who']);
+    $memcached->set('who', $who);
     $count = $memcached->increment('count');
     if (false === $count) {
         // Potential race condition.  Use binary protocol to avoid.
@@ -95,7 +96,7 @@ $app->post('/', function (Request $request, Response $response) use ($container)
         $count = 0;
     }
     return $container->get('view')->render($response, 'memcache.html.twig', [
-        'who' => $result['who'],
+        'who' => $who,
         'count' => $count,
         'host' => $request->getUri()->getHost(),
     ]);

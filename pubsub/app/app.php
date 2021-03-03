@@ -27,29 +27,26 @@ use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
 // Create Container
-// AppFactory::setContainer($container = new Container());
-// $container->set('view', function() {
-    // return Twig::create(__DIR__);
-// });
+AppFactory::setContainer($container = new Container());
+$container->set('view', function() {
+    return Twig::create(__DIR__);
+});
 
 // Create App
 $app = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 
-$container = $app->getContainer();
-$app->add(TwigMiddleware::createFromContainer($app));
-
-$app->get('/', function (Request $request, Response $response, $args) {
-    return $this->get('view')->render($response, 'pubsub.html.twig', [
-        'project_id' => $this->get('project_id'),
+$app->get('/', function (Request $request, Response $response, $args) use ($container) {
+    return $container->get('view')->render($response, 'pubsub.html.twig', [
+        'project_id' => $container->get('project_id'),
     ]);
 });
 
-$app->get('/fetch_messages', function (Request $request, Response $response, $args) {
+$app->get('/fetch_messages', function (Request $request, Response $response, $args) use ($container) {
     // get PUSH pubsub messages
-    $projectId = $this->get('project_id');
-    $subscriptionName = $this->get('subscription');
-    $datastore = $this->get('datastore');
+    $projectId = $container->get('project_id');
+    $subscriptionName = $container->get('subscription');
+    $datastore = $container->get('datastore');
     $query = $datastore->query()->kind('PubSubPushMessage');
     $messages = [];
     $pushKeys = [];
@@ -81,7 +78,7 @@ $app->get('/fetch_messages', function (Request $request, Response $response, $ar
     return $response;
 });
 
-$app->post('/receive_message', function (Request $request, Response $response, $args) {
+$app->post('/receive_message', function (Request $request, Response $response, $args) use ($container) {
     // pull the message from the post body
     $json = json_decode($request->getContent(), true);
     if (
@@ -91,7 +88,7 @@ $app->post('/receive_message', function (Request $request, Response $response, $
         return new Response('', 400);
     }
     // store the push message in datastore
-    $datastore = $this->get('datastore');
+    $datastore = $container->get('datastore');
     $message = $datastore->entity('PubSubPushMessage', [
         'message' => $message
     ]);
@@ -99,9 +96,9 @@ $app->post('/receive_message', function (Request $request, Response $response, $
     return $response;
 });
 
-$app->post('/send_message', function (Request $request, Response $response, $args) {
-    $projectId = $this->get('project_id');
-    $topicName = $this->get('topic');
+$app->post('/send_message', function (Request $request, Response $response, $args) use ($container) {
+    $projectId = $container->get('project_id');
+    $topicName = $container->get('topic');
     # [START gae_flex_pubsub_push]
     if ($message = (string) $request->getBody()) {
         // Publish the pubsub message to the topic

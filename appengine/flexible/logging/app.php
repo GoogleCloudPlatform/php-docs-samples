@@ -52,7 +52,7 @@ $app->get('/', function (Request $request, Response $response) use ($projectId, 
 });
 
 $app->post('/log', function (Request $request, Response $response) use ($projectId) {
-    parse_str((string) $request->getBody(), $result);
+    parse_str((string) $request->getBody(), $postData);
     # [START gae_flex_configure_logging]
     # [START creating_psr3_logger]
     $logging = new LoggingClient([
@@ -60,7 +60,7 @@ $app->post('/log', function (Request $request, Response $response) use ($project
     ]);
     $logger = $logging->psrLogger('app');
     # [END creating_psr3_logger]
-    $logger->notice($result['text']);
+    $logger->notice($postData['text'] ?? '');
     # [END gae_flex_configure_logging]
     return $response
         ->withHeader('Location', '/')
