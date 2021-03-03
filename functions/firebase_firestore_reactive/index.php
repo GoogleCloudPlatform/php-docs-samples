@@ -42,7 +42,7 @@ function firebaseReactive(CloudEvent $cloudevent)
         $affectedDoc->set(['original' => $newValue]);
     } else {
         // Value is already upper-case
-        // Don't perform a(nother) write to avoid infinite loops
+        // Don't perform another write (it might cause an infinite loop)
         fwrite($log, 'Value is already upper-case.' . PHP_EOL);
     }
 }
