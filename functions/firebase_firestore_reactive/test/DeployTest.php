@@ -23,9 +23,7 @@ use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class DeployTest.
@@ -122,8 +120,6 @@ class DeployTest extends TestCase
 
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
-            var_dump($expected);
-            var_dump($actual);
             $this->assertStringContainsString($expected, $actual);
         });
     }

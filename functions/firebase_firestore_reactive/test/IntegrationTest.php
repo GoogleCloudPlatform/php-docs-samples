@@ -60,8 +60,7 @@ class IntegrationTest extends TestCase
                             'name' => '/documents/some_collection/blah',
                         ],
                     ],
-                ]),
-                'statusCode' => '200',
+                ])
             ],
         ];
     }
@@ -70,17 +69,13 @@ class IntegrationTest extends TestCase
      * @dataProvider dataProvider
      */
     public function testFirebaseFirestore(
-        CloudEvent $cloudevent,
-        string $statusCode
+        CloudEvent $cloudevent
     ): void {
         // Send an HTTP request using CloudEvent.
         $resp = $this->request($cloudevent);
 
         // The Cloud Function logs all data to stderr.
         $actual = self::$localhost->getIncrementalErrorOutput();
-
-        // Confirm the status code.
-        //$this->assertEquals($statusCode, $resp->getStatusCode());
 
         // Verify the data value is logged by the function.
         $expected = strtoupper(self::$value);
