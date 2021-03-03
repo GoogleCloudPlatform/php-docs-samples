@@ -54,7 +54,6 @@ class SampleUnitTest extends TestCase
                         'data' => base64_encode('John')
                     ],
                 ]),
-                'statusCode' => '200',
                 'expected' => 'Hello, John!'
             ],
         ];
@@ -65,7 +64,6 @@ class SampleUnitTest extends TestCase
      */
     public function testFunction(
         CloudEvent $cloudevent,
-        string $statusCode,
         string $expected
     ): void {
         // Capture function output by overriding the function's logging behavior.

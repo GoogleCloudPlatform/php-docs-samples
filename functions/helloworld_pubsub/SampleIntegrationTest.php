@@ -53,7 +53,6 @@ class SampleIntegrationTest extends TestCase
                 'data' => [
                     'data' => base64_encode('John')
                 ],
-                'statusCode' => '200',
                 'expected' => 'Hello, John!'
             ],
         ];
@@ -104,7 +103,6 @@ class SampleIntegrationTest extends TestCase
     public function testHelloPubsub(
         CloudEvent $cloudevent,
         array $data,
-        string $statusCode,
         string $expected
     ): void {
         // Send an HTTP request using CloudEvent metadata.
@@ -124,9 +122,6 @@ class SampleIntegrationTest extends TestCase
 
         // The Cloud Function logs all data to stderr.
         $actual = self::$process->getIncrementalErrorOutput();
-
-        // Confirm the status code.
-        $this->assertEquals($statusCode, $resp->getStatusCode());
 
         // Verify the function's results are correctly logged.
         $this->assertStringContainsString($expected, $actual);
