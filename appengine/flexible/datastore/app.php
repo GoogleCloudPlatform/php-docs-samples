@@ -36,10 +36,12 @@ $app->get('/', function (Request $request, Response $response) {
         $response->getBody()->write('Set the GCLOUD_PROJECT environment variable to run locally');
         return $response;
     }
-    /** @var \Google_Service_Datastore $datastore */
+
+    # [START gae_flex_datastore_client]
     $datastore = new DatastoreClient([
         'projectId' => $projectId
     ]);
+    # [END gae_flex_datastore_client]
 
     // determine the user's IP
     $user_ip = get_user_ip($request);
