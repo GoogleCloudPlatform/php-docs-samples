@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Test;
 
 use PHPUnit\Framework\TestCase;
 use Slim\Psr7\Factory\RequestFactory;
-use Memcached;
 use Prophecy\Argument;
 
 class LocalTest extends TestCase
@@ -84,5 +82,14 @@ class LocalTest extends TestCase
         $request4 = (new RequestFactory)->createRequest('GET', "/memcached/testkey2");
         $response4 = $app->handle($request4);
         $this->assertEquals("sweet", (string) $response4->getBody());
+    }
+}
+
+if (!class_exists('Memcached')) {
+    interface Memcached
+    {
+        public function get($key);
+        public function set($key, $value, $timestamp = 0);
+        public function increment();
     }
 }
