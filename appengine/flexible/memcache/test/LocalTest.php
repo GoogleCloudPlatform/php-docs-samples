@@ -18,61 +18,71 @@ namespace Google\Cloud\Test;
 
 use PHPUnit\Framework\TestCase;
 use Slim\Psr7\Factory\RequestFactory;
-use GeckoPackages\MemcacheMock\MemcachedMock;
+use Memcached;
+use Prophecy\Argument;
 
 class LocalTest extends TestCase
 {
-    private static $app;
-
-    public static function setUpBeforeClass(): void
-    {
-        $app = require __DIR__ . '/../app.php';
-        $container = $app->getContainer();
-        $memcached = new MemcachedMock;
-        $memcached->addServer("localhost", 11211);
-        $container->set('memcached', $memcached);
-        self::$app = $app;
-    }
-
     public function testIndex()
     {
+        $app = require __DIR__ . '/../app.php';
+
+        $memcached = $this->prophesize(Memcached::class);
+        $container = $app->getContainer();
+        $container->set('memcached', $memcached->reveal());
+
         // Access the modules app top page.
         $request1 = (new RequestFactory)->createRequest('GET', '/');
-        $response = self::$app->handle($request1);
+        $response = $app->handle($request1);
         $this->assertEquals(200, $response->getStatusCode());
 
         // Make sure it handles a POST request too, which will increment the
         // counter.
         $request2 = (new RequestFactory)->createRequest('POST', '/');
-        $response = self::$app->handle($request2);
+        $response = $app->handle($request2);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetAndPut()
     {
+        $app = require __DIR__ . '/../app.php';
+
+        $memcached = $this->prophesize(Memcached::class);
+        $memcached->set('testkey1', 'sour', Argument::type('int'))
+            ->willReturn(true);
+        $memcached->get('testkey1')
+            ->willReturn('sour');
+
+        $memcached->set('testkey2', 'sweet', Argument::type('int'))
+            ->willReturn(true);
+        $memcached->get('testkey2')
+            ->willReturn('sweet');
+
+        $container = $app->getContainer();
+        $container->set('memcached', $memcached->reveal());
+
         // Use a random key to avoid colliding with simultaneous tests.
-        $key = rand(0, 1000);
 
         // Test the /memcached REST API.
-        $request1 = (new RequestFactory)->createRequest('PUT', "/memcached/test$key");
+        $request1 = (new RequestFactory)->createRequest('PUT', "/memcached/testkey1");
         $request1->getBody()->write('sour');
-        $response1 = self::$app->handle($request1);
+        $response1 = $app->handle($request1);
         $this->assertEquals(200, (string) $response1->getStatusCode());
 
         // Check that the key was written as expected
-        $request2 = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
-        $response2 = self::$app->handle($request2);
+        $request2 = (new RequestFactory)->createRequest('GET', "/memcached/testkey1");
+        $response2 = $app->handle($request2);
         $this->assertEquals("sour", (string) $response2->getBody());
 
         // Test the /memcached REST API with a new value.
-        $request3 = (new RequestFactory)->createRequest('PUT', "/memcached/test$key");
+        $request3 = (new RequestFactory)->createRequest('PUT', "/memcached/testkey2");
         $request3->getBody()->write('sweet');
-        $response3 = self::$app->handle($request3);
+        $response3 = $app->handle($request3);
         $this->assertEquals(200, (string) $response3->getStatusCode());
 
         // Check that the key was written as expected
-        $request4 = (new RequestFactory)->createRequest('GET', "/memcached/test$key");
-        $response4 = self::$app->handle($request4);
+        $request4 = (new RequestFactory)->createRequest('GET', "/memcached/testkey2");
+        $response4 = $app->handle($request4);
         $this->assertEquals("sweet", (string) $response4->getBody());
     }
 }
