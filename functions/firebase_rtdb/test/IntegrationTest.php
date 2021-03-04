@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\HelloworldHttp\Test;
 
 use PHPUnit\Framework\TestCase;
+use Google\CloudFunctions\CloudEvent;
 use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 
 /**
@@ -68,14 +69,17 @@ class IntegrationTest extends TestCase
             $cloudEventHeaders['ce-' . $key] = $value;
         }
 
+
+
         // Send an HTTP request using CloudEvent metadata.
-        $resp = $this->client->request('POST', '/', [
+        $params = [
             'body' => json_encode($data),
             'headers' => $cloudEventHeaders + [
                 // Instruct the function framework to parse the body as JSON.
                 'content-type' => 'application/json'
             ],
-        ]);
+        ];
+        $resp = $this->request(CloudEvent::fromArray($cloudevent), $params);
 
         // The Cloud Function logs all data to stderr.
         $actual = self::$localhost->getIncrementalErrorOutput();
@@ -86,9 +90,9 @@ class IntegrationTest extends TestCase
         // Verify the data properties are logged by the function.
         foreach ($data as $property => $value) {
             if (is_string($value)) {
-                $this->assertContains($value, $actual);
+                $this->assertStringContainsString($value, $actual);
             }
         }
-        $this->assertContains($cloudevent['id'], $actual);
+        $this->assertStringContainsString($cloudevent['id'], $actual);
     }
 }
