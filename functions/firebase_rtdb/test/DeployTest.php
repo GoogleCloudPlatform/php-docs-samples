@@ -60,9 +60,12 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
+        // self::projectId is undefined
+        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+
         $resource = sprintf(
             'projects/_/instances/%s/refs/%s',
-            self::$projectId,
+            $projectId,
             self::$rtdbPath
         );
         $event = 'providers/google.firebase.database/eventTypes/ref.write';
@@ -124,7 +127,7 @@ class DeployTest extends TestCase
     private function updateRTDB(string $path, array $data): void
     {
         $client = new Client([
-            'base_uri' => sprintf('https://%s.firebaseio.com/', self::$projectId)
+            'base_uri' => sprintf('https://%s.firebaseio.com', self::$projectId)
         ]);
 
         $url = '/' . $path . '.json';
