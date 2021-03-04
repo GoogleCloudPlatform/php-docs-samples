@@ -22,10 +22,8 @@ namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class DeployTest.
@@ -62,10 +60,11 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        $project = self::requireEnv('GOOGLE_PROJECT_ID');
-
-        $resource =
-            'projects/_/instances/' . $project . '/refs/' . self::$rtdbPath;
+        $resource = sprintf(
+            'projects/_/instances/%s/refs/%s',
+            self::$projectId,
+            self::$rtdbPath
+        );
         $event = 'providers/google.firebase.database/eventTypes/ref.write';
 
         return self::$fn->deploy([
@@ -76,7 +75,7 @@ class DeployTest extends TestCase
 
     public function dataProvider()
     {
-        $data = array('taco' => (string) uniqid());
+        $data = ['taco' => (string) uniqid()];
         return [
             [
                 'data' => $data,
@@ -124,15 +123,13 @@ class DeployTest extends TestCase
      */
     private function updateRTDB(string $path, array $data): void
     {
-        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-
         $client = new Client([
-            "base_uri" => "https://" . $projectId . ".firebaseio.com/"
+            'base_uri' => sprintf('https://%s.firebaseio.com/', self::$projectId)
         ]);
 
         $url = '/' . $path . '.json';
         $url_response = $client->put($url, [
-            "json" => $data
+            'json' => $data
         ]);
     }
 }

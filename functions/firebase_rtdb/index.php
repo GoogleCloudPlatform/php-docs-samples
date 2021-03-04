@@ -26,16 +26,13 @@ function firebaseRTDB(CloudEvent $cloudevent)
     fwrite($log, "Event: " . $cloudevent->getId() . PHP_EOL);
 
     $data = $cloudevent->getData();
-    $resource = $data['resource'];
+    $resource = $data['resource'] ?? '<null>';
 
     fwrite($log, 'Function triggered by change to: ' . $resource . PHP_EOL);
 
-    $isAdmin =
-        isset($data['auth']) &&
-        isset($data['auth']['admin']) &&
-        $data['auth']['admin'] == true;
+    $isAdmin = isset($data['auth']['admin']) && $data['auth']['admin'] == true;
 
     fwrite($log, 'Admin?: ' . $isAdmin . PHP_EOL);
-    fwrite($log, 'Delta: ' . json_encode($data['delta']) . PHP_EOL);
+    fwrite($log, 'Delta: ' . json_encode($data['delta'] ?? '') . PHP_EOL);
 }
 // [END functions_firebase_rtdb]

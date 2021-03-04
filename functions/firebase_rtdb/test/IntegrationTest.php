@@ -50,7 +50,7 @@ class IntegrationTest extends TestCase
                 ],
                 'data' => [
                     'resource' => 'projects/_/instances/my-instance/refs/messages',
-                    'data' => array('new' => 'value'),
+                    'data' => ['new' => 'value'],
                     'delta' => null,
                 ],
                 'statusCode' => '200',
@@ -68,8 +68,6 @@ class IntegrationTest extends TestCase
         foreach ($cloudevent as $key => $value) {
             $cloudEventHeaders['ce-' . $key] = $value;
         }
-
-
 
         // Send an HTTP request using CloudEvent metadata.
         $params = [
