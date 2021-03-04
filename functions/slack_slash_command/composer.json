@@ -4,7 +4,11 @@
         "google/apiclient": "^2.8"
     },
     "scripts": {
-        "post-update-cmd": "Google\\Task\\Composer::cleanup"
+        "post-update-cmd": "Google\\Task\\Composer::cleanup",
+        "start": [
+           "Composer\\Config::disableProcessTimeout",
+           "FUNCTION_TARGET=receiveRequest php -S localhost:${PORT:-8080} vendor/bin/router.php"
+        ]
     },
     "extra": {
         "google/apiclient-services": [
