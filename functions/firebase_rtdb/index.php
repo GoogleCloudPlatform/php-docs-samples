@@ -32,7 +32,7 @@ function firebaseRTDB(CloudEvent $cloudevent)
 
     $isAdmin = isset($data['auth']['admin']) && $data['auth']['admin'] == true;
 
-    fwrite($log, 'Admin?: ' . $isAdmin . PHP_EOL);
+    fwrite($log, 'Admin?: ' . var_export($isAdmin, true) . PHP_EOL);
     fwrite($log, 'Delta: ' . json_encode($data['delta'] ?? '') . PHP_EOL);
 }
 // [END functions_firebase_rtdb]
