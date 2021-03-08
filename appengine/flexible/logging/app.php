@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
+# [START creating_psr3_logger_import]
 use Google\Cloud\Logging\LoggingClient;
+# [END creating_psr3_logger_import]
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
