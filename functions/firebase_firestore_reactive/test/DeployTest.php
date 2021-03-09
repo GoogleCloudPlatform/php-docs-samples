@@ -17,11 +17,12 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\FirebaseFirestore\Test;
+namespace Google\Cloud\Samples\Functions\FirebaseReactive\Test;
 
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,15 +36,16 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use EventuallyConsistentTestTrait;
 
     /** @var string */
-    private static $entryPoint = 'firebaseFirestore';
+    private static $entryPoint = 'firebaseReactive';
 
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
     /** @var string */
-    private static $collectionName = 'foods';
+    private static $collectionName = 'messages';
 
     /** @var string */
     private static $documentName = 'taco';
@@ -61,13 +63,14 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        $project = self::requireOneOfEnv([
-            'FIRESTORE_PROJECT_ID',
-            'GOOGLE_PROJECT_ID'
-        ]);
+        $project = self::requireEnv('GOOGLE_PROJECT_ID');
 
-        $resource =
-            'projects/' . $project . '/databases/(default)/documents/' . self::$collectionName . '/' . self::$documentName;
+        $resource = sprintf(
+            'projects/%s/databases/(default)/documents/%s/%s',
+            $project,
+            self::$collectionName,
+            self::$documentName
+        );
         $event = 'providers/cloud.firestore/eventTypes/document.write';
 
         return self::$fn->deploy([
@@ -79,10 +82,11 @@ class DeployTest extends TestCase
     public function dataProvider()
     {
         $data = uniqid();
+        $expected = 'Replacing value: ' . $data . ' --> ' . strtoupper($data);
         return [
             [
-                'data' => ['flavor' => $data],
-                'expected' => $data
+                'data' => ['original' => $data],
+                'expected' => $expected
             ],
         ];
     }
@@ -90,7 +94,7 @@ class DeployTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testFirebaseFirestore(array $data, string $expected): void
+    public function testFirebaseReactive(array $data, string $expected): void
     {
         // Trigger storage upload.
         $objectUri = $this->updateFirestore(
@@ -101,7 +105,7 @@ class DeployTest extends TestCase
 
         // Give event and log systems a head start.
         // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(5);
+        sleep(30);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected) {
@@ -134,7 +138,7 @@ class DeployTest extends TestCase
         string $collection,
         array $data
     ): void {
-        if (empty(self::$firestore)) {
+        if (empty(self::$firestoreClient)) {
             self::$firestoreClient = new FirestoreClient();
         }
 

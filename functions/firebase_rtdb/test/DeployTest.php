@@ -17,11 +17,12 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\FirebaseFirestore\Test;
+namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
 
-use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,24 +36,22 @@ use PHPUnit\Framework\TestCase;
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
+    use EventuallyConsistentTestTrait;
 
     /** @var string */
-    private static $entryPoint = 'firebaseFirestore';
-
+    private static $entryPoint = 'firebaseRTDB';
+    
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
     /** @var string */
-    private static $collectionName = 'foods';
-
-    /** @var string */
-    private static $documentName = 'taco';
+    private static $rtdbPath = 'foods';
 
     /** @var LoggingClient */
     private static $loggingClient;
 
-    /** @var FirestoreClient */
-    private static $firestoreClient;
+    /** @var Database */
+    private static $database;
 
     /**
      * Deploy the Cloud Function, called from DeploymentTrait::deployApp().
@@ -61,14 +60,15 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        $project = self::requireOneOfEnv([
-            'FIRESTORE_PROJECT_ID',
-            'GOOGLE_PROJECT_ID'
-        ]);
+        // self::projectId is undefined
+        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
 
-        $resource =
-            'projects/' . $project . '/databases/(default)/documents/' . self::$collectionName . '/' . self::$documentName;
-        $event = 'providers/cloud.firestore/eventTypes/document.write';
+        $resource = sprintf(
+            'projects/_/instances/%s/refs/%s',
+            $projectId,
+            self::$rtdbPath
+        );
+        $event = 'providers/google.firebase.database/eventTypes/ref.write';
 
         return self::$fn->deploy([
             '--trigger-resource' => $resource,
@@ -78,11 +78,11 @@ class DeployTest extends TestCase
 
     public function dataProvider()
     {
-        $data = uniqid();
+        $data = ['taco' => (string) uniqid()];
         return [
             [
-                'data' => ['flavor' => $data],
-                'expected' => $data
+                'data' => $data,
+                'expected' => json_encode($data)
             ],
         ];
     }
@@ -90,14 +90,10 @@ class DeployTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testFirebaseFirestore(array $data, string $expected): void
+    public function testFirebaseRTDB(array $data, string $expected): void
     {
         // Trigger storage upload.
-        $objectUri = $this->updateFirestore(
-            self::$collectionName,
-            self::$documentName,
-            $data
-        );
+        $objectUri = $this->updateRTDB(self::$rtdbPath, $data);
 
         // Give event and log systems a head start.
         // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
@@ -123,24 +119,20 @@ class DeployTest extends TestCase
     /**
      * Update a value in Firebase Realtime Database (RTDB).
      *
-     * @param string $document The Firestore document to modify.
-     * @param string $collection The Firestore collection to modify.
-     * @param string $data The key-value pair to set the specified collection to.
+     * @param string $path Path of the RTDB attribute to set.
+     * @param string $data Data to upload as an object..
      *
      * @throws \RuntimeException
      */
-    private function updateFirestore(
-        string $document,
-        string $collection,
-        array $data
-    ): void {
-        if (empty(self::$firestore)) {
-            self::$firestoreClient = new FirestoreClient();
-        }
+    private function updateRTDB(string $path, array $data): void
+    {
+        $client = new Client([
+            'base_uri' => sprintf('https://%s.firebaseio.com', self::$projectId)
+        ]);
 
-        self::$firestoreClient
-            ->collection(self::$collectionName)
-            ->document(self::$documentName)
-            ->set($data);
+        $url = '/' . $path . '.json';
+        $url_response = $client->put($url, [
+            'json' => $data
+        ]);
     }
 }

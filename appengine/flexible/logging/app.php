@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
+# [START creating_psr3_logger_import]
 use Google\Cloud\Logging\LoggingClient;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+# [END creating_psr3_logger_import]
 
 // Create App
 $app = AppFactory::create();
