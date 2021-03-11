@@ -26,6 +26,7 @@ function _lightComputation(): int
 }
 
 // [START functions_tips_scopes]
+// [START functions_tips_lazy_globals]
 
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,6 +42,11 @@ function scopeDemo(ServerRequestInterface $request): string
     $cachePath = sys_get_temp_dir() . '/cached_value.txt';
 
     $response = '';
+    
+    // Because the PHP runtime does NOT cache global variables between
+    // invocations, there is no benefit to "greedily" initializing them
+    // in global scope. Thus, we ALWAYS initialize them "lazily" within
+    // the function itself
     if (file_exists($cachePath)) {
         // Read cached value from file
         $response .= "Reading cached value." . PHP_EOL;
@@ -61,4 +67,5 @@ function scopeDemo(ServerRequestInterface $request): string
     return $response;
 }
 
+// [END functions_tips_lazy_globals]
 // [END functions_tips_scopes]
