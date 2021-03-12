@@ -23,7 +23,7 @@ function helloContent(ServerRequestInterface $request): string
 {
     $name = 'World';
     $body = $request->getBody()->getContents();
-    switch ($request->getHeader('content-type')[0]) {
+    switch ($request->getHeaderLine('content-type')) {
         // '{"name":"John"}'
         case 'application/json':
           if (!empty($body)) {
