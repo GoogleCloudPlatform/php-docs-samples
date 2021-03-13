@@ -8,6 +8,6 @@ $composerClassmap = __DIR__ . '/vendor/composer/autoload_classmap.php';
 
 $classesToPreload = require $composerClassmap;
 
-foreach ($classesToPreload as $class) {
-    require_once $class;
+foreach ($classesToPreload as $class => $file) {
+    require_once $file;
 }
