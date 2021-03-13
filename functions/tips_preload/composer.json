@@ -1,0 +1,10 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^0.7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Functions\\TipsPreload\\": ""
+        }
+    }
+}
