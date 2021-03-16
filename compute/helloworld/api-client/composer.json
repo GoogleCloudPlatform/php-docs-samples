@@ -1,0 +1,13 @@
+{
+    "require": {
+        "google/apiclient": "^2.9"
+    },
+    "scripts": {
+        "post-update-cmd": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Compute"
+        ]
+    }
+}
