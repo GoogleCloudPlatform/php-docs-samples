@@ -25,10 +25,6 @@ use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\NetworksClient;
 use Google\Cloud\Compute\V1\DisksClient;
 use Google\Cloud\Compute\V1\GlobalOperationsClient;
-use Google\Cloud\Compute\V1\NetworkInterface;
-use Google\Cloud\Compute\V1\Disk;
-use Google\Cloud\Compute\V1\Instance;
-use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Protobuf\Internal\Message;
 
 /**
