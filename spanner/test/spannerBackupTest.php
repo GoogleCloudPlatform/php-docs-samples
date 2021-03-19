@@ -47,6 +47,9 @@ class spannerBackupTest extends TestCase
     /** @var string databaseId */
     protected static $databaseId;
 
+    /** @var string retentionPeriod */
+    protected static $retentionPeriod;
+
     /** @var string restoredDatabaseId */
     protected static $restoredDatabaseId;
 
@@ -66,13 +69,26 @@ class spannerBackupTest extends TestCase
             'projectId' => self::$projectId,
         ]);
 
+        self::$retentionPeriod = '7d';
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-res';
         self::$instance = $spanner->instance(self::$instanceId);
-        self::$instance->database(self::$databaseId)->create();
     }
 
+    public function testCreateDatabaseWithVersionRetentionPeriod()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_version_retention_period', [
+            self::$databaseId,
+            self::$retentionPeriod,
+        ]);
+        $this->assertStringContainsString(self::$databaseId, $output);
+        $this->assertStringContainsString(self::$retentionPeriod, $output);
+    }
+
+    /**
+     * @depends testCreateDatabaseWithVersionRetentionPeriod
+     */
     public function testCancelBackup()
     {
         $output = $this->runFunctionSnippet('cancel_backup', [
@@ -81,11 +97,20 @@ class spannerBackupTest extends TestCase
         $this->assertStringContainsString('Cancel backup operation complete', $output);
     }
 
+    /**
+     * @depends testCreateDatabaseWithVersionRetentionPeriod
+     */
     public function testCreateBackup()
     {
+        $database = self::$instance->database(self::$databaseId);
+        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
+        $row = $results->rows()->current();
+        $versionTime = $row['Timestamp'];
+
         $output = $this->runFunctionSnippet('create_backup', [
             self::$databaseId,
             self::$backupId,
+            $versionTime,
         ]);
         $this->assertStringContainsString(self::$backupId, $output);
     }

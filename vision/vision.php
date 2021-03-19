@@ -193,29 +193,6 @@ EOF
     })
 );
 
-// detect crop hints command
-$application->add((new Command('crop-hints'))
-    ->setDefinition($inputDefinition)
-    ->setDescription('Detect crop hints in an image using '
-                . 'Google Cloud Vision API')
-    ->setHelp(<<<EOF
-The <info>%command.name%</info> command prints crop hints for an image using
-the Google Cloud Vision API.
-
-    <info>php %command.full_name% path/to/image.png</info>
-
-EOF
-    )
-    ->setCode(function ($input, $output) {
-        $path = $input->getArgument('path');
-        if (preg_match('/^gs:\/\/([a-z0-9\._\-]+)\/(\S+)$/', $path)) {
-            detect_crop_hints_gcs($path);
-        } else {
-            detect_crop_hints($path);
-        }
-    })
-);
-
 // detect document text command
 $application->add((new Command('document-text'))
     ->setDefinition($inputDefinition)

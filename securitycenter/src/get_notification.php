@@ -23,7 +23,6 @@ if (count($argv) < 2) {
 list($_, $organizationId, $notificationConfigId) = $argv;
 
 // [START securitycenter_get_notification_config]
-// [START scc_get_notification_config]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
 /** Uncomment and populate these variables in your code */
@@ -39,5 +38,4 @@ $notificationConfigName = $securityCenterClient::notificationConfigName(
 $response = $securityCenterClient->getNotificationConfig($notificationConfigName);
 printf('Notification config was retrieved: %s' . PHP_EOL, $response->getName());
 
-// [END scc_get_notification_config]
 // [END securitycenter_get_notification_config]

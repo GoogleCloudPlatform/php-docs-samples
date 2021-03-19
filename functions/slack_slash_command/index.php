@@ -31,13 +31,10 @@ function isValidSlackWebhook(ServerRequestInterface $request): bool
     $SLACK_SECRET = getenv('SLACK_SECRET');
 
     // Check for headers
-    $timestamp = $request->getHeader('X-Slack-Request-Timestamp');
-    $signature = $request->getHeader('X-Slack-Signature');
+    $timestamp = $request->getHeaderLine('X-Slack-Request-Timestamp');
+    $signature = $request->getHeaderLine('X-Slack-Signature');
     if (!$timestamp || !$signature) {
         return false;
-    } else {
-        $timestamp = $timestamp[0];
-        $signature = $signature[0];
     }
 
     // Compute signature

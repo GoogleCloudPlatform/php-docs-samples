@@ -245,29 +245,6 @@ class visionTest extends TestCase
     }
 
     # tests for Vision 1.1 features
-    public function testCropHintsCommand()
-    {
-        $path = __DIR__ . '/data/wakeupcat.jpg';
-        $output = $this->runCommand('crop-hints', ['path' => $path]);
-        $this->assertStringContainsString('Crop hints:', $output);
-        $this->assertStringContainsString('(210,0)', $output);
-        $this->assertStringContainsString('(476,0)', $output);
-        $this->assertStringContainsString('(476,475)', $output);
-        $this->assertStringContainsString('(210,475)', $output);
-    }
-
-    public function testCropHintsCommandGcs()
-    {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-
-        $path = 'gs://' . $bucketName . '/vision/wakeupcat.jpg';
-        $output = $this->runCommand('crop-hints', ['path' => $path]);
-        $this->assertStringContainsString('Crop hints:', $output);
-        $this->assertStringContainsString('(210,0)', $output);
-        $this->assertStringContainsString('(476,0)', $output);
-        $this->assertStringContainsString('(476,475)', $output);
-        $this->assertStringContainsString('(210,475)', $output);
-    }
 
     public function testDocumentTextCommand()
     {

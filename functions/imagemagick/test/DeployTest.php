@@ -22,9 +22,6 @@ namespace Google\Cloud\Samples\Functions\ImageMagick\Test;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\TestUtils\GcloudWrapper\CloudFunction;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
@@ -40,7 +37,6 @@ require_once __DIR__ . '/TestCasesTrait.php';
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
-    use EventuallyConsistentTestTrait;
     use TestCasesTrait;
 
     /** @var string */
@@ -89,7 +85,7 @@ class DeployTest extends TestCase
         sleep(5);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
-        $this->processFunctionLogs(self::$fn, $fiveMinAgo, function (\Iterator $logs) use ($expected, $label) {
+        $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected, $label) {
             // Concatenate all relevant log messages.
             $actual = '';
             foreach ($logs as $log) {
@@ -101,50 +97,6 @@ class DeployTest extends TestCase
             // split between log requests.
             $this->assertStringContainsString($expected, $actual, $label . ':');
         });
-    }
-
-    /**
-     * Retrieve and process logs for the defined function.
-     *
-     * @param CloudFunction $fn function whose logs should be checked.
-     * @param string $startTime RFC3339 timestamp marking start of time range to retrieve.
-     * @param callable $process callback function to run on the logs.
-     */
-    private function processFunctionLogs(CloudFunction $fn, string $startTime, callable $process)
-    {
-        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-
-        if (empty(self::$loggingClient)) {
-            self::$loggingClient = new LoggingClient([
-                'projectId' => $projectId
-            ]);
-        }
-
-        // Define the log search criteria.
-        $logFullName = 'projects/' . $projectId . '/logs/cloudfunctions.googleapis.com%2Fcloud-functions';
-        $filter = sprintf(
-            'logName="%s" resource.labels.function_name="%s" timestamp>="%s"',
-            $logFullName,
-            $fn->getFunctionName(),
-            $startTime
-        );
-
-        echo "\nRetrieving logs [$filter]...\n";
-
-        // Check for new logs for the function.
-        $attempt = 1;
-        $this->runEventuallyConsistentTest(function () use ($filter, $process, &$attempt) {
-            $entries = self::$loggingClient->entries(['filter' => $filter]);
-
-            // If no logs came in try again.
-            if (empty($entries->current())) {
-                echo 'Logs not found, attempting retry #' . $attempt++ . PHP_EOL;
-                throw new ExpectationFailedException('Log Entries not available');
-            }
-            echo 'Processing logs...' . PHP_EOL;
-
-            $process($entries);
-        }, $retries = 10);
     }
 
     /**

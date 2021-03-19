@@ -52,8 +52,11 @@ function restore_backup($instanceId, $databaseId, $backupId)
     $restoreInfo = $database->info()['restoreInfo'];
     $sourceDatabase = $restoreInfo['backupInfo']['sourceDatabase'];
     $sourceBackup = $restoreInfo['backupInfo']['backup'];
+    $versionTime = $restoreInfo['backupInfo']['versionTime'];
 
-    print("Database $sourceDatabase restored from backup $sourceBackup." . PHP_EOL);
+    printf(
+        "Database %s restored from backup %s with version time %s" . PHP_EOL,
+        $sourceDatabase, $sourceBackup, $versionTime);
 }
 // [END spanner_restore_backup]
 
