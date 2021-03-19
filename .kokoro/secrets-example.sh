@@ -140,3 +140,6 @@ export SYMFONY_DB_PASSWORD=$CLOUDSQL_PASSWORD
 
 # Functions
 export BLURRED_BUCKET_NAME=$GCLOUD_PROJECT-functions
+
+# Google Analytics APIs
+export GA_TEST_PROPERTY_ID=
