@@ -1,36 +1,36 @@
 <?php
-// Copyright 2021 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright 2021 Google LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-$property_id = 'YOUR-GA4-PROPERTY-ID';
 // [START analytics_data_quickstart_oauth2]
-
 require 'vendor/autoload.php';
 
-use Google\Analytics\Data\V1alpha\AlphaAnalyticsDataClient;
-use Google\Analytics\Data\V1alpha\DateRange;
-use Google\Analytics\Data\V1alpha\Dimension;
-use Google\Analytics\Data\V1alpha\Entity;
-use Google\Analytics\Data\V1alpha\Metric;
+use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\DateRange;
+use Google\Analytics\Data\V1beta\Dimension;
+use Google\Analytics\Data\V1beta\Entity;
+use Google\Analytics\Data\V1beta\Metric;
 use Google\ApiCore\ApiException;
 use Google\Auth\OAuth2;
 
 /**
- * TODO(developer): Uncomment this variable and replace with your GA4
+ * TODO(developer): Replace this variable with your Google Analytics 4
  *   property ID before running the sample.
  */
-// $property_id = 'YOUR-GA4-PROPERTY-ID';
+$property_id = 'YOUR-GA4-PROPERTY-ID';
 
 // Start a session to persist credentials.
 session_start();
@@ -47,19 +47,18 @@ $oauth = new OAuth2([
     'redirectUri' => 'http://' . $_SERVER['HTTP_HOST'] . '/',
 ]);
 
-if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
+if (isset($_SESSION['access_token']) && $_SESSION['access_token']
+    && isset($_SESSION['refresh_token']) && $_SESSION['refresh_token']) {
     // This is the final step of the OAuth2 authorization process, where an
     // OAuth2 access token is available and can be used to set up a client.
     $oauth->setAccessToken($_SESSION['access_token']);
     $oauth->setRefreshToken($_SESSION['refresh_token']);
 
-    // Make an API call.
-    $client = new AlphaAnalyticsDataClient(['credentials' => $oauth]);
     try {
+        // Make an API call.
+        $client = new BetaAnalyticsDataClient(['credentials' => $oauth]);
         $response = $client->runReport([
-            'entity' => new Entity([
-                'property_id' => $property_id
-            ]),
+            'property' => 'properties/' . $property_id,
             'dateRanges' => [
                 new DateRange([
                     'start_date' => '2020-03-31',
@@ -89,7 +88,6 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
         // Print an error message.
         print $e->getMessage();
     }
-
 } elseif (isset($_GET['code']) && $_GET['code']) {
     // If an OAuth2 authorization code is present in the URL, exchange it for
     // an access token.
@@ -110,5 +108,4 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $auth_url = $oauth->buildFullAuthorizationUri();
     header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
 }
-
 // [END analytics_data_quickstart_oauth2]

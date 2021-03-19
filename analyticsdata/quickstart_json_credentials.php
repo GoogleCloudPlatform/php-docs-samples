@@ -17,15 +17,16 @@
 
 /* Google Analytics Data API sample quickstart application.
 
-This application demonstrates the usage of the Analytics Data API using
-service account credentials.
+ This application demonstrates the usage of the Analytics Data API using
+ service account credentials from a JSON file downloaded from
+ the Google Cloud Console.
 
 Before you start the application, please review the comments starting with
 "TODO(developer)" and update the code to use the correct values.
 
 Usage:
   composer update
-  php quickstart.php
+  php quickstart_json_credentials.php
  */
 
 // [START analytics_data_quickstart]
@@ -43,10 +44,18 @@ use Google\Analytics\Data\V1beta\Metric;
  */
 $property_id = 'YOUR-GA4-PROPERTY-ID';
 
+
 // [START google_analytics_data_initialize]
-// Using a default constructor instructs the client to use the credentials
-// specified in GOOGLE_APPLICATION_CREDENTIALS environment variable.
-$client = new BetaAnalyticsDataClient();
+/* TODO(developer): Replace this variable with a valid path to the
+ *  credentials.json file for your service account downloaded from the
+ *  Cloud Console.
+*/
+$credentials_json_path = '/path/to/credentials.json';
+
+// Explicitly use service account credentials by specifying
+// the private key file.
+$client = new BetaAnalyticsDataClient(['credentials' =>
+    $credentials_json_path]);
 // [END google_analytics_data_initialize]
 
 // [START google_analytics_data_run_report]
@@ -81,4 +90,5 @@ foreach ($response->getRows() as $row) {
         . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
 // [END google_analytics_data_run_report_response]
 }
+
 // [END analytics_data_quickstart]

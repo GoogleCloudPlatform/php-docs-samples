@@ -25,17 +25,18 @@ value of the GA4 property id you want to access.
 
 5. Install the PHP bcmath extension (due to https://github.com/protocolbuffers/protobuf/issues/4465):
 
-```
-sudo -s apt-get install php-bcmath
-```
+    ```
+    sudo -s apt-get install php-bcmath
+    ```
 
 6. Run the following commands from the current directory in order to install
 dependencies and run the sample app:
 
-```
-composer install
-php -S localhost:3000 -t .
-```
+    ```
+    composer update
+    php -S localhost:3000 -t .
+    ```
+
 7. In a browser, open the following url to start the sample:
 
 http://localhost:3000/
