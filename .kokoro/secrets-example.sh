@@ -6,9 +6,9 @@
 #
 # Run the following gcloud command to decrypt secrets.sh.enc as follows:
 #
-# gcloud kms decrypt --location=global --keyring=ci --key=ci \
-#   --ciphertext-file=.kokoro/secrets.sh.enc \
-#   --plaintext-file=.kokoro/secrets.sh
+ gcloud kms decrypt --location=global --keyring=ci --key=ci \
+   --ciphertext-file=.kokoro/secrets.sh.enc \
+   --plaintext-file=.kokoro/secrets.sh
 #
 # Then run `source .kokoro/secrets.sh`
 #
@@ -140,3 +140,6 @@ export SYMFONY_DB_PASSWORD=$CLOUDSQL_PASSWORD
 
 # Functions
 export BLURRED_BUCKET_NAME=$GCLOUD_PROJECT-functions
+
+# Google Analytics APIs
+export GA_TEST_PROPERTY_ID=
