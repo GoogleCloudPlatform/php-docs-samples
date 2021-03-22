@@ -23,34 +23,31 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-// [START compute_delete_instance]
+// [START compute_list_instances]
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
  * Creates an instance.
  * Example:
  * ```
- * delete_instance($projectId, $zone, $instanceName);
+ * list_instances($projectId, $zone);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $zone The zone to create the instance in (e.g. "us-central1-a")
- * @param string $instanceName The unique name for the Compute instance to delete.
  */
-function delete_instance(
-    string $projectId,
-    string $zone,
-    string $instanceName
-) {
+function list_instances(string $projectId, string $zone)
+{
     // Insert the new Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->delete($instanceName, $projectId, $zone);
+    $instancesList = $instancesClient->list_($projectId, $zone);
 
-    /** TODO: wait until operation completes */
-
-    printf('Deleted instance %s' . PHP_EOL, $instanceName);
+    printf('Instances for %s (%s)' . PHP_EOL, $projectId, $zone);
+    foreach ($instancesList as $instance) {
+        printf(' - %s' . PHP_EOL, $instance->getName());
+    }
 }
-// [END compute_delete_instance]
+// [END compute_list_instances]
 
-require_once __DIR__ . '/../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

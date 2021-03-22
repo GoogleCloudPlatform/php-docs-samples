@@ -1,5 +1,8 @@
 # Google Compute Engine PHP Sample Application
 
+**NOTE: This sample is outdated. It is recommended you use the [ALPHA Compute
+Client](../../cloud-client/helloworld) instead**
+
 ## Description
 This is a simple web-based example of calling the Google Compute Engine API
 in PHP.

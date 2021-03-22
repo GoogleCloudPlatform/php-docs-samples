@@ -1,4 +1,4 @@
-# Google Compute Engine PHP Sample Application
+# Google Compute Engine PHP Samples
 
 ## Description
 This is a simple web-based example of calling the Google Compute Engine API
