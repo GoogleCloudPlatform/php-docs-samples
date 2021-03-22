@@ -1,15 +1,16 @@
-Google Cloud Compute PHP Samples
-================================
+Google Cloud Compute PHP Instances Samples
+==========================================
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=compute/cloud-client
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=compute/cloud-client/instances
 
 This directory contains samples for calling [Google Cloud Compute][compute]
-from PHP.
+from PHP. Specifically, they show how to manage your Compute Engine [instances][instances].
 
 [compute]: https://cloud.google.com/compute/docs/apis
+[instances]: https://cloud.google.com/compute/docs/instances/stop-start-instance
 
 ## Setup
 

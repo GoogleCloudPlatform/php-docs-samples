@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-// [START compute_delete_instance]
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
@@ -50,7 +49,6 @@ function delete_instance(
 
     printf('Deleted instance %s' . PHP_EOL, $instanceName);
 }
-// [END compute_delete_instance]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

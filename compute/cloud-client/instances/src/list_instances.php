@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-// [START compute_list_instances]
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
@@ -47,7 +46,6 @@ function list_instances(string $projectId, string $zone)
         printf(' - %s' . PHP_EOL, $instance->getName());
     }
 }
-// [END compute_list_instances]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

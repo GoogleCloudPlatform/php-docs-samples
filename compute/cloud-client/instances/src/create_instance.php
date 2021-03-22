@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-// [START compute_create_instance]
 use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
@@ -81,7 +80,6 @@ function create_instance(
 
     printf('Created instance %s' . PHP_EOL, $instanceName);
 }
-// [END compute_create_instance]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
