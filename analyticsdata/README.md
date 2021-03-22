@@ -30,7 +30,7 @@ from PHP.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  **Uncomment `$property_id` variable** if present in the snippet and specify
+5.  **Replace `$property_id` variable** if present in the snippet and specify
     the value of the GA4 property id you want to access.
 6.  **Run** with the command `php SNIPPET_NAME.php`. For example:
 ```sh

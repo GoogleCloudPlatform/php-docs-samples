@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// [START analytics_data_quickstart_oauth2]
+// [START analyticsdata_quickstart_oauth2]
 require 'vendor/autoload.php';
 
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
@@ -108,4 +108,4 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']
     $auth_url = $oauth->buildFullAuthorizationUri();
     header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
 }
-// [END analytics_data_quickstart_oauth2]
+// [END analyticsdata_quickstart_oauth2]
