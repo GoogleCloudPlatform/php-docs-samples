@@ -24,8 +24,6 @@
 namespace Google\Cloud\Samples\Compute;
 
 // [START compute_create_instance]
-use Google\ApiCore\LongRunning\OperationsClient;
-use Google\ApiCore\OperationResponse;
 use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
