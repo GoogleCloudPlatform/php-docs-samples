@@ -43,13 +43,13 @@ use Google\Analytics\Data\V1beta\Metric;
  */
 $property_id = 'YOUR-GA4-PROPERTY-ID';
 
-// [START google_analytics_data_initialize]
+// [START analyticsdata_initialize]
 // Using a default constructor instructs the client to use the credentials
 // specified in GOOGLE_APPLICATION_CREDENTIALS environment variable.
 $client = new BetaAnalyticsDataClient();
-// [END google_analytics_data_initialize]
+// [END analyticsdata_initialize]
 
-// [START google_analytics_data_run_report]
+// [START analyticsdata_run_report]
 // Make an API call.
 $response = $client->runReport([
     'property' => 'properties/' . $property_id,
@@ -70,15 +70,15 @@ $response = $client->runReport([
         ])
     ]
 ]);
-// [END google_analytics_data_run_report]
+// [END analyticsdata_run_report]
 
-// [START google_analytics_data_run_report_response]
+// [START analyticsdata_run_report_response]
 // Print results of an API call.
 print 'Report result: ' . PHP_EOL;
 
 foreach ($response->getRows() as $row) {
     print $row->getDimensionValues()[0]->getValue()
         . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
-// [END google_analytics_data_run_report_response]
+// [END analyticsdata_run_report_response]
 }
 // [END analytics_data_quickstart]
