@@ -62,12 +62,14 @@ $response = $client->runReport([
     'dimensions' => [new Dimension(
         [
             'name' => 'city',
-        ]),
+        ]
+    ),
     ],
     'metrics' => [new Metric(
         [
             'name' => 'activeUsers',
-        ])
+        ]
+    )
     ]
 ]);
 // [END analyticsdata_run_report]
@@ -79,6 +81,6 @@ print 'Report result: ' . PHP_EOL;
 foreach ($response->getRows() as $row) {
     print $row->getDimensionValues()[0]->getValue()
         . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
-// [END analyticsdata_run_report_response]
+    // [END analyticsdata_run_report_response]
 }
 // [END analytics_data_quickstart]

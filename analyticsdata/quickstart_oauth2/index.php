@@ -68,12 +68,14 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']
             'dimensions' => [new Dimension(
                 [
                     'name' => 'city',
-                ]),
+                ]
+            ),
             ],
             'metrics' => [new Metric(
                 [
                     'name' => 'activeUsers',
-                ])
+                ]
+            )
             ]
         ]);
 
