@@ -20,8 +20,8 @@ https://support.google.com/cloud/answer/6158849
 configuration dialog and save it as `oauth2.keys.json` in the same
 directory with this sample app.
 
-4. Uncomment `$property_id` variable below and specify the
-value of the GA4 property id you want to access.
+4. Replace `$property_id` variable with the value of the Google Analytics 4
+property id you want to access.
 
 5. Install the PHP bcmath extension (due to https://github.com/protocolbuffers/protobuf/issues/4465):
 
