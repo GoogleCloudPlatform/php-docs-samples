@@ -41,6 +41,18 @@ function execute_sample(string $file, string $namespace, ?array $argv)
     }
     require_once $autoloadFile;
 
+    // If any parameters are typehinted as "array", explode user input on ","
+    $parameterReflections = $functionReflection->getParameters();
+    foreach ($argv as $i => $val) {
+        $parameterReflection = $parameterReflections[$i];
+        if (
+            $parameterReflection->hasType()
+            && 'array' === $parameterReflection->getType()->getName()
+        ) {
+            $argv[$i] = explode(',', $argv[$i]);
+        }
+    }
+
     // Run the function
     call_user_func_array($functionName, $argv);
 }

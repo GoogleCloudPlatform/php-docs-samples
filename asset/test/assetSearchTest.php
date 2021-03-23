@@ -53,12 +53,12 @@ class assetSearchTest extends TestCase
         $query = 'name:' . self::$datasetId;
 
         $this->runEventuallyConsistentTest(function () use ($scope, $query) {
-            $output = $this->runSnippet('search_all_resources', [
+            $output = $this->runFunctionSnippet('search_all_resources', [
                 $scope,
                 $query
             ]);
             $this->assertStringContainsString(self::$datasetId, $output);
-        }, 10, true);
+        }, 3, true);
     }
 
     public function testSearchAllIamPolicies()
@@ -66,7 +66,7 @@ class assetSearchTest extends TestCase
         $scope = 'projects/' . self::$projectId;
         $query = 'policy:roles/owner';
 
-        $output = $this->runSnippet('search_all_iam_policies', [
+        $output = $this->runFunctionSnippet('search_all_iam_policies', [
             $scope,
             $query
         ]);
