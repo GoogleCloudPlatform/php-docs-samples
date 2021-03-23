@@ -21,7 +21,6 @@ require 'vendor/autoload.php';
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
-use Google\Analytics\Data\V1beta\Entity;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\ApiCore\ApiException;
 use Google\Auth\OAuth2;
@@ -68,12 +67,14 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']
             'dimensions' => [new Dimension(
                 [
                     'name' => 'city',
-                ]),
+                ]
+            ),
             ],
             'metrics' => [new Metric(
                 [
                     'name' => 'activeUsers',
-                ])
+                ]
+            )
             ]
         ]);
 
