@@ -19,19 +19,18 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function helloworldPubsub(CloudEvent $event): string
+function helloworldPubsub(CloudEvent $event): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-    
-    $data = $event->getData();
-    if (isset($data['data'])) {
-        $name = htmlspecialchars(base64_decode($data['data']));
+
+    $cloudEventData = $event->getData();
+    if (isset($cloudEventData['data'])) {
+        $name = htmlspecialchars(base64_decode($cloudEventData['data']));
     } else {
         $name = 'World';
     }
 
     $result = 'Hello, ' . $name . '!';
     fwrite($log, $result . PHP_EOL);
-    return $result;
 }
 // [END functions_helloworld_pubsub]
