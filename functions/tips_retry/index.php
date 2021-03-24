@@ -19,7 +19,7 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function tipsRetry(CloudEvent $event): string
+function tipsRetry(CloudEvent $event): void
 {
     $data = $event->getData()['data'];
     $data = json_decode(base64_decode($data), true);
@@ -35,15 +35,13 @@ function tipsRetry(CloudEvent $event): string
          * invocation to be re-sent.
          */
         throw new Exception('Intermittent failure occurred; retrying...');
-    } else {
-        /**
-         * If a function with retries enabled encounters a non-retriable
-         * failure, it should return *without* throwing an exception.
-         */
-        $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-        fwrite($log, "Not retrying" . PHP_EOL);
-
-        return "";
     }
+
+    /**
+     * If a function with retries enabled encounters a non-retriable
+     * failure, it should return *without* throwing an exception.
+     */
+    $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
+    fwrite($log, "Not retrying" . PHP_EOL);
 }
 // [END functions_tips_retry]
