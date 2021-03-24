@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function firebaseAnalytics(CloudEvent $cloudevent)
+function firebaseAnalytics(CloudEvent $cloudevent): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     
@@ -29,7 +29,6 @@ function firebaseAnalytics(CloudEvent $cloudevent)
 
     $analyticsEvent = $data['eventDim'][0];
     $unixTime = $analyticsEvent['timestampMicros'] / 1000;
-    ;
 
     fwrite($log, 'Name: ' . $analyticsEvent['name'] . PHP_EOL);
     fwrite($log, 'Timestamp: ' . gmdate("Y-m-d\TH:i:s\Z", $unixTime) . PHP_EOL);
