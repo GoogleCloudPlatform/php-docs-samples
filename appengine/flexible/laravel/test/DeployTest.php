@@ -93,7 +93,7 @@ class DeployTest extends TestCase
         $contents = file_get_contents($targetDir . '/composer.json');
         $json = json_decode($contents, true);
         $json['scripts']['post-install-cmd'] = [
-            'php artisan cache:clear',
+            'php artisan optimize',
         ];
         $newContents = json_encode($json, JSON_PRETTY_PRINT);
         file_put_contents($targetDir . '/composer.json', $newContents);
