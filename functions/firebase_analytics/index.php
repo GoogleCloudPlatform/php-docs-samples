@@ -41,12 +41,5 @@ function firebaseAnalytics(CloudEvent $cloudevent): void
     ));
 
     fwrite($log, 'Device Model: %s' . $userObj['deviceInfo']['deviceModel'] . PHP_EOL);
-
-    // Only print out update-related data if it is actually available
-    if (isset($data['updateType'])) {
-        fwrite($log, 'Update type: ' . $data['updateType'] . PHP_EOL);
-        fwrite($log, 'Origin: ' . $data['updateOrigin'] . PHP_EOL);
-        fwrite($log, 'Version: ' . $data['versionNumber'] . PHP_EOL);
-    }
 }
 // [END functions_firebase_analytics]
