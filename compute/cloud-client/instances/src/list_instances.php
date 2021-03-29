@@ -33,7 +33,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to create the instance in (e.g. "us-central1-a")
+ * @param string $zone The zone to list the instance in (e.g. "us-central1-a")
  */
 function list_instances(string $projectId, string $zone)
 {
