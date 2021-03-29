@@ -41,7 +41,7 @@ function delete_instance(
     string $zone,
     string $instanceName
 ) {
-    // Insert the new Compute Engine instance using the InstancesClient
+    // Delete the Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
