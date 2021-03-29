@@ -61,10 +61,7 @@ class IntegrationTest extends TestCase
                             'deviceInfo' => [
                                 'deviceModel' => 'Google Pixel XL'
                             ]
-                        ],
-                        'updateType' => '🤔🤔🤔🤔',
-                        'updateOrigin' => '🤔🤔🤔🤔',
-                        'versionNumber' => 2
+                        ]
                     ],
                 ]),
                 'statusCode' => '200',
