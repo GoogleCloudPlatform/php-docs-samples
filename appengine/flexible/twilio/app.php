@@ -23,6 +23,8 @@ use Twilio\TwiML\MessagingResponse;
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 $twilioAccountSid = getenv('TWILIO_ACCOUNT_SID');

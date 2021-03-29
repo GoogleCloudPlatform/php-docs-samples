@@ -24,6 +24,8 @@ use RKA\Middleware\IpAddress;
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 // Create Twig

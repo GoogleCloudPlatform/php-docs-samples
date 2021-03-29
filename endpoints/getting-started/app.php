@@ -28,6 +28,8 @@ use Slim\Factory\AppFactory;
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response) {

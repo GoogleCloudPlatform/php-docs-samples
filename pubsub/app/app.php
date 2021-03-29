@@ -33,6 +33,8 @@ $container->set('view', function () {
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) use ($container) {

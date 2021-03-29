@@ -29,11 +29,15 @@ use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 
 AppFactory::setContainer($container = new Container());
+
+// Enable twig rendering
 $container->set('view', function () {
     return Twig::create(__DIR__ . '/../templates');
 });
 
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 // Cloud Storage bucket

@@ -43,6 +43,8 @@ function get_external_ip_using_curl()
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response) {

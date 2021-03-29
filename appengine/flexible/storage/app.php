@@ -25,6 +25,8 @@ use Slim\Factory\AppFactory;
 // Create App
 AppFactory::setContainer($container = new Container());
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 $container = $app->getContainer();

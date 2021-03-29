@@ -24,6 +24,8 @@ use Slim\Views\TwigMiddleware;
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 // Create Twig

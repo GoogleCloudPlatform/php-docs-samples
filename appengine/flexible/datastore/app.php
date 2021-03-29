@@ -23,6 +23,8 @@ use Slim\Factory\AppFactory;
 
 // Create App
 $app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
 // Add IP address middleware
