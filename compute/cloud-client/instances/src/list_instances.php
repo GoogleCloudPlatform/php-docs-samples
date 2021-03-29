@@ -37,7 +37,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  */
 function list_instances(string $projectId, string $zone)
 {
-    // Insert the new Compute Engine instance using the InstancesClient
+    // List the new Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
     $instancesList = $instancesClient->list_($projectId, $zone);
 
