@@ -20,9 +20,11 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\Logging\LoggingClient;
-
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use TestTrait;
