@@ -43,7 +43,7 @@ function execute_sample(string $file, string $namespace, ?array $argv)
 
     // If any parameters are typehinted as "array", explode user input on ","
     $parameterReflections = $functionReflection->getParameters();
-    foreach ($argv as $i => $val) {
+    foreach (array_values($argv) as $i => $val) {
         $parameterReflection = $parameterReflections[$i];
         if (
             $parameterReflection->hasType()
