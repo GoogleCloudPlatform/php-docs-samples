@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class DeployTest.
+ * @group deploy
  */
 class DeloyTest extends TestCase
 {

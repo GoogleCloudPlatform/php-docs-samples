@@ -22,6 +22,9 @@ use GuzzleHttp\Exception\ClientException;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use TestTrait;
