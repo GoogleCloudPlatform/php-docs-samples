@@ -178,7 +178,7 @@ class kmsTest extends TestCase
         while ($version->getState() != CryptoKeyVersionState::ENABLED) {
             if ($attempts > 10) {
                 $msg = sprintf('key version %s was not ready after 10 attempts', $versionName);
-                throw new Exception($msg);
+                throw new \Exception($msg);
             }
             usleep(500);
             $version = $client->getCryptoKeyVersion($versionName);
