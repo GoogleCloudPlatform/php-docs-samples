@@ -72,8 +72,13 @@ class spannerBackupTest extends TestCase
         self::$retentionPeriod = '7d';
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
+        self::$encryptedBackupId = 'encrypt-backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-res';
+        self::$encryptedRestoredDatabaseId = self::$databaseId . '-encrypt-res';
         self::$instance = $spanner->instance(self::$instanceId);
+
+        self::$kmsKeyName =
+            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -84,6 +89,18 @@ class spannerBackupTest extends TestCase
         ]);
         $this->assertStringContainsString(self::$databaseId, $output);
         $this->assertStringContainsString(self::$retentionPeriod, $output);
+    }
+
+    public function testCreateBackupWithEncryptionKey()
+    {
+        $database = self::$instance->database(self::$databaseId);
+
+        $output = $this->runFunctionSnippet('create_backup_with_encryption_key', [
+            self::$databaseId,
+            self::$encryptedBackupId,
+            self::$kmsKeyName,
+        ]);
+        $this->assertStringContainsString(self::$backupId, $output);
     }
 
     /**
@@ -163,6 +180,20 @@ class spannerBackupTest extends TestCase
         $output = $this->runFunctionSnippet('restore_backup', [
             self::$restoredDatabaseId,
             self::$backupId,
+        ]);
+        $this->assertStringContainsString(self::$backupId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
+    }
+
+    /**
+     * @depends testCreateBackupWithEncryption
+     */
+    public function testRestoreBackupWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('restore_backup_with_encryption_key', [
+            self::$encryptedRestoredDatabaseId,
+            self::$encryptedBackupId,
+            self::$kmsKeyName,
         ]);
         $this->assertStringContainsString(self::$backupId, $output);
         $this->assertStringContainsString(self::$databaseId, $output);

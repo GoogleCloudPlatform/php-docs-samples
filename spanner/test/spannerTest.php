@@ -39,6 +39,9 @@ class spannerTest extends TestCase
     /** @var string databaseId */
     protected static $databaseId;
 
+    /** @var string encryptedDatabaseId */
+    protected static $encryptedDatabaseId;
+
     /** @var string backupId */
     protected static $backupId;
 
@@ -62,6 +65,7 @@ class spannerTest extends TestCase
 
         self::$instanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
+        self::$databaseId = 'encrypt-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
     }
@@ -83,6 +87,16 @@ class spannerTest extends TestCase
         $output = $this->runFunctionSnippet('create_database');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database test-', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
+    public function testCreateDatabaseWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_encryption_key');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database encrypt-test-', $output);
     }
 
     /**
