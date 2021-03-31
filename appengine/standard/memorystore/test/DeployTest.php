@@ -27,6 +27,9 @@ class DeployTest extends TestCase
     use TestTrait;
     use AppEngineDeploymentTrait;
 
+    /**
+     * @group deploy
+     */
     public function testIndex()
     {
         $resp = $this->client->request('GET', '/');

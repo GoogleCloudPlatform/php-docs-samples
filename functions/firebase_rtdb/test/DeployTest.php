@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
@@ -40,7 +41,7 @@ class DeployTest extends TestCase
 
     /** @var string */
     private static $entryPoint = 'firebaseRTDB';
-    
+
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 

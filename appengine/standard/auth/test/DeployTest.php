@@ -19,6 +19,9 @@ namespace Google\Cloud\Test\Auth;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;

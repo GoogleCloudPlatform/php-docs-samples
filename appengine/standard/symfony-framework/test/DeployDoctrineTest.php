@@ -21,6 +21,9 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/DeploySymfonyTrait.php';
 
+/**
+ * @group deploy
+ */
 class DeployDoctrineTest extends TestCase
 {
     use DeploySymfonyTrait;
