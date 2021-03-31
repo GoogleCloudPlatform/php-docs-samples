@@ -44,6 +44,9 @@ class spannerBackupTest extends TestCase
     /** @var string backupId */
     protected static $backupId;
 
+    /** @var string encryptedBackupId */
+    protected static $encryptedBackupId;
+
     /** @var string databaseId */
     protected static $databaseId;
 
@@ -53,8 +56,14 @@ class spannerBackupTest extends TestCase
     /** @var string restoredDatabaseId */
     protected static $restoredDatabaseId;
 
+    /** @var string encryptedRestoredDatabaseId */
+    protected static $encryptedRestoredDatabaseId;
+
     /** @var $instance Instance */
     protected static $instance;
+
+    /** @var string kmsKeyName */
+    protected static $kmsKeyName;
 
     public static function setUpBeforeClass(): void
     {

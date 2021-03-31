@@ -48,6 +48,9 @@ class spannerTest extends TestCase
     /** @var $instance Instance */
     protected static $instance;
 
+    /** @var string kmsKeyName */
+    protected static $kmsKeyName;
+
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
 
