@@ -72,9 +72,9 @@ class spannerBackupTest extends TestCase
         self::$retentionPeriod = '7d';
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
-        self::$encryptedBackupId = 'encrypt-backup-' . self::$databaseId;
+        self::$encryptedBackupId = 'en-backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-res';
-        self::$encryptedRestoredDatabaseId = self::$databaseId . '-encrypt-res';
+        self::$encryptedRestoredDatabaseId = self::$databaseId . '-en-res';
         self::$instance = $spanner->instance(self::$instanceId);
 
         self::$kmsKeyName =

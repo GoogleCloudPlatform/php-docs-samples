@@ -65,7 +65,7 @@ class spannerTest extends TestCase
 
         self::$instanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
-        self::$databaseId = 'encrypt-test-' . time() . rand();
+        self::$databaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
     }
