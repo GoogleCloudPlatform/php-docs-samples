@@ -71,4 +71,4 @@ if [[ -z "${SUB_DIRECTORY}" ]]; then
 fi
 
 # Run tests
-bash MAIN_DIR/testing/run_test_suite.sh
+bash $MAIN_DIR/testing/run_test_suite.sh
