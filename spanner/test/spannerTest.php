@@ -65,9 +65,11 @@ class spannerTest extends TestCase
 
         self::$instanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
-        self::$databaseId = 'en-test-' . time() . rand();
+        self::$encryptedDatabaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
+        self::$kmsKeyName =
+            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
     }
 
     public function testCreateInstance()
@@ -94,9 +96,13 @@ class spannerTest extends TestCase
      */
     public function testCreateDatabaseWithEncryptionKey()
     {
-        $output = $this->runFunctionSnippet('create_database_with_encryption_key');
+        $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
+            self::$instanceId,
+            self::$encryptedDatabaseId,
+            self::$kmsKeyName,
+        ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
-        $this->assertStringContainsString('Created database encrypt-test-', $output);
+        $this->assertStringContainsString('Created database en-test-', $output);
     }
 
     /**
