@@ -64,5 +64,11 @@ fi
 # Install global test dependencies
 composer install -d testing/
 
+# cd into specific subdirectory (if appropriate)
+MAIN_DIR=$(pwd)
+if [[ -z "${SUB_DIRECTORY}" ]]; then
+  cd $SUB_DIRECTORY
+fi
+
 # Run tests
-bash testing/run_test_suite.sh
+bash MAIN_DIR/testing/run_test_suite.sh
