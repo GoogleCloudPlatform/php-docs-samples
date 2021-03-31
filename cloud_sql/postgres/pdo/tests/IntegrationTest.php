@@ -65,7 +65,7 @@ class IntegrationTest extends TestCase
             $dbName,
             $connectionName,
             $socketDir,
-            $connConfig,
+            $connConfig
         ));
         $this->assertIsArray($votes->listVotes());
     }

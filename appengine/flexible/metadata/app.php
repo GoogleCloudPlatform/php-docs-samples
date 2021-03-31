@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use Silex\Application;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
 
 # [START gae_flex_metadata]
 function get_external_ip_using_google_cloud()
@@ -39,21 +41,26 @@ function get_external_ip_using_curl()
 }
 # [END gae_flex_metadata]
 
-// create the Silex application
-$app = new Application();
+// Create App
+$app = AppFactory::create();
 
-$app->get('/', function () use ($app) {
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+$app->get('/', function (Request $request, Response $response) {
     if (!$externalIp = get_external_ip_using_google_cloud()) {
         return 'Unable to reach Metadata server - are you running locally?';
     }
-    return sprintf('External IP: %s', $externalIp);
+    $response->getBody()->write(sprintf('External IP: %s', $externalIp));
+    return $response;
 });
 
-$app->get('/curl', function () use ($app) {
+$app->get('/curl', function (Request $request, Response $response) {
     if (!$externalIp = get_external_ip_using_curl()) {
         return 'Unable to reach Metadata server - are you running locally?';
     }
-    return sprintf('External IP: %s', $externalIp);
+    $response->getBody()->write(sprintf('External IP: %s', $externalIp));
+    return $response;
 });
 
 return $app;

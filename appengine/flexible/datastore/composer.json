@@ -1,6 +1,8 @@
 {
     "require": {
-        "silex/silex": "^2.3",
-        "google/cloud-datastore": "^1.0"
+        "google/cloud-datastore": "^1.0",
+        "slim/slim": "^4.0",
+        "slim/psr7": "^1.3",
+        "akrabat/ip-address-middleware": "^2.0"
     }
 }

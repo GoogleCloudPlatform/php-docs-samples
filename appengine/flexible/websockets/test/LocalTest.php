@@ -16,29 +16,33 @@
  */
 namespace Google\Cloud\Test;
 
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use \Ratchet\Client;
-use \React\Promise\Promise;
-use \React\EventLoop;
-use \Clue\React\Block;
-
-require __DIR__ . '/../vendor/autoload.php';
+use Ratchet\Client\Connector;
+use React\Promise\Promise;
+use React\EventLoop\Factory;
+use Clue\React\Block;
 
 class LocalTest extends TestCase
 {
+    use TestTrait;
+
     protected $loop;
 
     protected function setUp(): void
     {
-        $this->loop = EventLoop\Factory::create();
+        $this->loop = Factory::create();
 
         parent::setUp();
     }
 
     public function testIndex()
     {
-        $connector = new Client\Connector($this->loop);
-        $basePromise = $connector('ws://' . getenv('GCLOUD_PROJECT') . '.appspot.com/ws')
+        $connector = new Connector($this->loop);
+        // The version of the deployed app
+        $version = $this->requireEnv('GOOGLE_VERSION_ID');
+        $url = sprintf('ws://%s-dot-%s.appspot.com/ws', $version, self::$projectId);
+        $basePromise = $connector($url)
             ->then(function ($conn) {
                 $endPromise = new Promise(function ($resolve) use ($conn) {
                     $conn->on('message', function ($msg) use ($resolve, $conn) {

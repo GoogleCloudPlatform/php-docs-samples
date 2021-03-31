@@ -1,6 +1,7 @@
 {
     "require": {
-        "silex/silex": "^2.3",
+        "slim/slim": "^4.0",
+        "slim/psr7": "^1.3",
         "google/cloud-core": "^1.5"
     }
 }

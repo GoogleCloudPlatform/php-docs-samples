@@ -11,8 +11,5 @@
       "phpunit/phpunit"
     ]
   }],
-  "ignorePaths": [
-    "appengine/flexible"
-  ],
   "prConcurrentLimit": 5
 }

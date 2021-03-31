@@ -17,28 +17,31 @@
  */
 
 /**
- * Create a new Silex Application with Twig.  Configure it for debugging.
- * Follows Silex Skeleton pattern.
+ * Create a new Slim PHP Application with Twig.  Configure it for debugging.
  */
+use DI\Container;
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
 // [START gae_php_app_storage_client_import]
 use Google\Cloud\Storage\StorageClient;
 
 // [END gae_php_app_storage_client_import]
+use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
 
-$app = Slim\Factory\AppFactory::create();
+AppFactory::setContainer($container = new Container());
+
+// Enable twig rendering
+$container->set('view', function () {
+    return Twig::create(__DIR__ . '/../templates');
+});
+
+$app = AppFactory::create();
+
+// Display errors
 $app->addErrorMiddleware(true, true, true);
 
-// Get container
-$container = $app->getContainer();
-
-// Register Twig
-$container['view'] = function ($container) {
-    return new Slim\Views\Twig(__DIR__ . '/../templates');
-};
-
 // Cloud Storage bucket
-$container['bucket'] = function ($container) {
+$container->set('bucket', function ($container) {
     $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
     // [START gae_php_app_storage_client_setup]
     // Your Google Cloud Storage bucket name and Project ID can be configured
@@ -51,10 +54,10 @@ $container['bucket'] = function ($container) {
     $bucket = $storage->bucket($bucketName);
     // [END gae_php_app_storage_client_setup]
     return $bucket;
-};
+});
 
 // Get the Cloud SQL MySQL connection object
-$container['cloudsql'] = function ($container) {
+$container->set('cloudsql', function ($container) {
     // Data Model
     $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
     $dbConn = getenv('CLOUDSQL_CONNECTION_NAME');
@@ -71,6 +74,6 @@ $container['cloudsql'] = function ($container) {
     // [END gae_php_app_cloudsql_client_setup]
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return new CloudSqlDataModel($pdo);
-};
+});
 
 return $app;
