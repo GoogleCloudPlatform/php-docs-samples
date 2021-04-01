@@ -43,13 +43,13 @@ class DeployTest extends TestCase
 
         $this->verifyLog('This will show up as log level INFO', 'info', 3);
 
-        // These need fewer retries than the above call,
-        // they should succeed if the above call has too.
+        // These should succeed if the above call has too.
+        // Thus, they need fewer retries!
         $this->verifyLog('This will show up as log level WARNING', 'warning');
         $this->verifyLog('This will show up as log level ERROR', 'error');
     }
 
-    private function verifyLog($message, $level, $retryCount = 1)
+    private function verifyLog($message, $level, $retryCount = 2)
     {
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $filter = sprintf(
