@@ -23,6 +23,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 use GuzzleHttp\Client;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;

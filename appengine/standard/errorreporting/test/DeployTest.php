@@ -21,9 +21,11 @@ use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange_Period;
-
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;

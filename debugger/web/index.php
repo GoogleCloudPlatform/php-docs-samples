@@ -21,19 +21,30 @@ use Google\Cloud\Debugger\Agent;
 
 $agent = new Agent(['sourceRoot' => realpath('../')]);
 # [END debugger_agent]
-$app = new Silex\Application();
 
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__ . '/../views',
-));
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 
-$app->get('/', function () {
-    return 'Silex version ' . Silex\Application::VERSION;
+// Create App
+$app = AppFactory::create();
+
+// Create Twig
+$twig = Twig::create(__DIR__ . '/../views');
+
+// Add Twig-View Middleware
+$app->add(TwigMiddleware::create($app, $twig));
+
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write('Slim version: ' . Slim\App::VERSION);
+    return $response;
 });
 
-$app->get('/hello/{name}', function ($name) use ($app) {
-    return $app['twig']->render('hello.html.twig', [
-        'name' => $name
+$app->get('/hello/{name}', function (Request $request, Response $response, $args) use ($twig) {
+    return $twig->render($response, 'hello.html.twig', [
+        'name' => $args['name']
     ]);
 });
 

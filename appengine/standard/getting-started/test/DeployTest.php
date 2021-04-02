@@ -24,6 +24,7 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class DeployTest
+ * @group deploy
  */
 class DeployTest extends TestCase
 {

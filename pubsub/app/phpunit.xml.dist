@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="PHP pubsub test">
             <directory>test</directory>
+            <exclude>test/DeployAppEngineFlexTest.php</exclude>
         </testsuite>
     </testsuites>
     <logging>

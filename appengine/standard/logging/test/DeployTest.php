@@ -20,9 +20,11 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\Logging\LoggingClient;
-
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use TestTrait;
@@ -39,17 +41,22 @@ class DeployTest extends TestCase
             $response->getBody()->getContents()
         );
 
-        $this->verifyLog('This will show up as log level INFO', 'info');
+        $this->verifyLog('This will show up as log level INFO', 'info', 3);
+
+        // These should succeed if the above call has too.
+        // Thus, they need fewer retries!
         $this->verifyLog('This will show up as log level WARNING', 'warning');
         $this->verifyLog('This will show up as log level ERROR', 'error');
     }
 
-    private function verifyLog($message, $level, $retryCount = 5)
+    private function verifyLog($message, $level, $retryCount = 2)
     {
+        $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $filter = sprintf(
-            'resource.type = "gae_app" AND severity = "%s" AND logName = "%s"',
+            'resource.type="gae_app" severity="%s" logName="%s" timestamp>="%s"',
             strtoupper($level),
-            sprintf('projects/%s/logs/app', self::$projectId)
+            sprintf('projects/%s/logs/app', self::$projectId),
+            $fiveMinAgo
         );
         $logOptions = [
             'pageSize' => 20,

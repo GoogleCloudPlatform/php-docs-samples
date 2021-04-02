@@ -19,14 +19,24 @@
 // [START appengine_flex_helloworld_index_php]
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$app = new Silex\Application();
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
 
-$app->get('/', function () {
-    return 'Hello World';
+// Create App
+$app = AppFactory::create();
+
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write('Hello World');
+    return $response;
 });
 
-$app->get('/goodbye', function () {
-    return 'Goodbye World';
+$app->get('/goodbye', function (Request $request, Response $response) {
+    $response->getBody()->write('Goodbye World');
+    return $response;
 });
 
 // @codeCoverageIgnoreStart

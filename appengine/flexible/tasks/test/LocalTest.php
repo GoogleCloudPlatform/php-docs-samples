@@ -14,45 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
-
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../index.php';
-
-        // set some parameters for testing
-        $app['session.test'] = true;
-        $app['debug'] = true;
-
-        // prevent HTML error exceptions
-        unset($app['exception_handler']);
-
-        return $app;
-    }
-
     public function testHome()
     {
-        $client = $this->createClient();
-        $crawler = $client->request('GET', '/');
-        $response = $client->getResponse();
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertStringContainsString('Hello World', $response->getContent());
+        $app = require __DIR__ . '/../index.php';
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = $app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString('Hello World', $response->getBody());
     }
 
     public function testLogPayload()
     {
-        $client = $this->createClient();
-        $crawler = $client->request('POST', '/example_task_handler', [], [], [], 'google');
-        $response = $client->getResponse();
+        $app = require __DIR__ . '/../index.php';
+        $request = (new RequestFactory)->createRequest('POST', '/example_task_handler');
+        $request->getBody()->write('google');
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString(sprintf('Received task with payload: google'), $response->getContent());
+        $this->assertStringContainsString(sprintf('Received task with payload: google'), $response->getBody());
     }
 }

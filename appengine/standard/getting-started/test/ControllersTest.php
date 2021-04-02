@@ -39,16 +39,15 @@ class ControllersTest extends TestCase
 
         // Mock CloudSql dependency
         $container = $app->getContainer();
-        $container['cloudsql'] = $this->createMock(CloudSqlDataModel::class);
+        $container->set('cloud_sql',  $this->createMock(CloudSqlDataModel::class));
 
         $this->app = $app;
     }
 
     public function testRoot()
     {
-        $action = $this->getAction('home');
-        $request = (new RequestFactory)->createRequest('get', '/');
-        $response = $action($request, new Response());
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = $this->app->handle($request);
 
         $this->assertEquals(302, $response->getStatusCode());
     }
@@ -200,12 +199,4 @@ class ControllersTest extends TestCase
     //     $client->submit($submitButton->form());
     //     $this->assertEquals(404, $client->getResponse()->getStatusCode());
     // }
-
-    private function getAction($name)
-    {
-        $route = $this->app->getRouteCollector()
-            ->getNamedRoute($name);
-
-        return $route->getCallable();
-    }
 }

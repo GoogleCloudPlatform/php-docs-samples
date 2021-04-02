@@ -23,6 +23,9 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/DeployLaravelTrait.php';
 
+/**
+ * @group deploy
+ */
 class DeployDatabaseTest extends TestCase
 {
     use TestTrait;
