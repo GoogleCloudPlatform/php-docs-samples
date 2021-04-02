@@ -66,7 +66,7 @@ composer install -d testing/
 
 # cd into specific subdirectory (if appropriate)
 MAIN_DIR=$(pwd)
-if [[ -z "${SUB_DIRECTORY}" ]]; then
+if [ ! -z "${SUB_DIRECTORY}" ]; then
   cd $SUB_DIRECTORY
 fi
 
