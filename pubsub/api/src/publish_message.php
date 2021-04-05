@@ -45,3 +45,6 @@ function publish_message($projectId, $topicName, $message)
 }
 # [END pubsub_publish]
 # [END pubsub_quickstart_publisher]
+
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

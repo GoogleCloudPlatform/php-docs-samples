@@ -58,3 +58,6 @@ function dead_letter_delivery_attempt($projectId, $topicName, $subscriptionName,
     print('Done' . PHP_EOL);
 }
 # [END pubsub_dead_letter_delivery_attempt]
+
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -42,3 +42,6 @@ function get_subscription_policy($projectId, $subscriptionName)
     print_r($policy);
 }
 # [END pubsub_get_subscription_policy]
+
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

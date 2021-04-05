@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\PubSub\Tests;
+namespace Google\Cloud\Samples\PubSub;
 
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -29,10 +28,7 @@ use PHPUnit\Framework\TestCase;
 class DeadLetterPolicyTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
-
-    private static $commandFile = __DIR__ . '/../pubsub.php';
 
     private static $client;
 
@@ -68,14 +64,13 @@ class DeadLetterPolicyTest extends TestCase
         self::$deadLetterTopic2->delete();
     }
 
-    public function testCreateDeadLetterSubscription()
+    public function testDeadLetterCreateSubscription()
     {
-        $output = $this->runCommand('dead-letter', [
-            'action' => 'create',
-            '--project' => self::$projectId,
-            '--topic' => self::$topicName,
-            '--subscription' => self::$subscriptionName,
-            '--dead-letter-topic' => self::$deadLetterTopicName,
+        $output = $this->runFunctionSnippet('dead_letter_create_subscription', [
+            'projectId' => self::$projectId,
+            'topicName' => self::$topicName,
+            'subscriptionName' => self::$subscriptionName,
+            'deadLetterTopicName' => self::$deadLetterTopicName,
         ]);
 
         $this->assertEquals(
@@ -89,16 +84,15 @@ class DeadLetterPolicyTest extends TestCase
     }
 
     /**
-     * @depends testCreateDeadLetterSubscription
+     * @depends testDeadLetterCreateSubscription
      */
-    public function testUpdateDeadLetterSubscription()
+    public function testDeadLetterUpdateSubscription()
     {
-        $output = $this->runCommand('dead-letter', [
-            'action' => 'update',
-            '--project' => self::$projectId,
-            '--topic' => self::$topicName,
-            '--subscription' => self::$subscriptionName,
-            '--dead-letter-topic' => self::$deadLetterTopic2Name,
+        $output = $this->runFunctionSnippet('dead_letter_update_subscription', [
+            'projectId' => self::$projectId,
+            'topicName' => self::$topicName,
+            'subscriptionName' => self::$subscriptionName,
+            'deadLetterTopicName' => self::$deadLetterTopic2Name,
         ]);
 
         $this->assertEquals(
@@ -112,18 +106,17 @@ class DeadLetterPolicyTest extends TestCase
     }
 
     /**
-     * @depends testUpdateDeadLetterSubscription
+     * @depends testDeadLetterUpdateSubscription
      */
-    public function testDeadLetterDeliveryAttempts()
+    public function testDeadLetterDeliveryAttempt()
     {
         $message = 'hello world';
 
-        $output = $this->runCommand('dead-letter', [
-            'action' => 'pull',
-            '--project' => self::$projectId,
-            '--topic' => self::$topicName,
-            '--subscription' => self::$subscriptionName,
-            '--message' => $message
+        $output = $this->runFunctionSnippet('dead_letter_delivery_attempt', [
+            'projectId' => self::$projectId,
+            'topicName' => self::$topicName,
+            'subscriptionName' => self::$subscriptionName,
+            'message' => $message
         ]);
 
         $this->assertEquals(
@@ -136,15 +129,14 @@ class DeadLetterPolicyTest extends TestCase
     }
 
     /**
-     * @depends testDeadLetterDeliveryAttempts
+     * @depends testDeadLetterDeliveryAttempt
      */
     public function testDeadLetterRemove()
     {
-        $output = $this->runCommand('dead-letter', [
-            'action' => 'remove',
-            '--project' => self::$projectId,
-            '--topic' => self::$topicName,
-            '--subscription' => self::$subscriptionName,
+        $output = $this->runFunctionSnippet('dead_letter_remove', [
+            'projectId' => self::$projectId,
+            'topicName' => self::$topicName,
+            'subscriptionName' => self::$subscriptionName,
         ]);
 
         $this->assertEquals(

@@ -43,3 +43,6 @@ function detach_subscription($projectId, $subscriptionName)
     printf('Subscription detached: %s' . PHP_EOL, $subscription->name());
 }
 # [END pubsub_detach_subscription]
+
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
