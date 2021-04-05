@@ -50,11 +50,6 @@ mkdir -p build/logs
 
 export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
-# Run code standards check when appropriate
-if [ "${RUN_CS_CHECK}" = "true" ]; then
-  bash testing/run_cs_check.sh
-fi
-
 # If we are running REST tests, disable gRPC
 if [ "${RUN_REST_TESTS_ONLY}" = "true" ]; then
   GRPC_INI=$(php -i | grep grpc.ini | sed 's/^Additional .ini files parsed => //g' | sed 's/,*$//g' )
