@@ -15,3 +15,6 @@
 /firestore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
 /iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
 /storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
+
+# Functions samples owned by the Firebase team
+/functions/firebase_analytics   @schandel @samtstern
