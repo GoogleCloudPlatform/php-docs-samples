@@ -95,7 +95,7 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        self::$projectId = self::requireEnv('GOOGLE_CLOUD_PROJECT');
+        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         self::$topicName = self::requireEnv('FUNCTIONS_TOPIC');
         return self::$fn->deploy(['--retry' => ''], '--trigger-topic=' . self::$topicName);
     }
