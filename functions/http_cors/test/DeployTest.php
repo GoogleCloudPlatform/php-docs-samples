@@ -66,13 +66,13 @@ class DeployTest extends TestCase
         // Assert headers.
         $header_names = array_keys($response->getHeaders());
         if ($containsHeader) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $containsHeader,
                 $header_names
             );
         }
         if ($notContainsHeader) {
-            $this->assertStringNotContainsString(
+            $this->assertContains(
                 $notContainsHeader,
                 $header_names
             );
