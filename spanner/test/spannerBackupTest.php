@@ -195,7 +195,7 @@ class spannerBackupTest extends TestCase
     }
 
     /**
-     * @depends testCreateBackupWithEncryption
+     * @depends testCreateBackupWithEncryptionKey
      */
     public function testRestoreBackupWithEncryptionKey()
     {
