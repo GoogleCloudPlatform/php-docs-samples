@@ -44,15 +44,16 @@ class DeloyTest extends TestCase
 
     /**
      * Deploy the application.
-     *
-     * @beforeClass
      */
     public static function setUpDeploymentVars()
     {
-        $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
+        if (empty(self::$projectId)) {
+            self::checkProjectEnvVars();
+        }
+
         $versionId = getenv('GOOGLE_VERSION_ID') ?: sprintf('helloworld-%s', time());
-        self::$service = new CloudRun($projectId, ['service' => $versionId]);
-        self::$image = sprintf('gcr.io/%s/%s:latest', $projectId, $versionId);
+        self::$service = new CloudRun(self::$projectId, ['service' => $versionId]);
+        self::$image = sprintf('gcr.io/%s/%s:latest', self::$projectId, $versionId);
     }
 
     private static function beforeDeploy()
