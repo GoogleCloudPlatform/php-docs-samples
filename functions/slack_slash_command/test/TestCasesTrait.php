@@ -22,15 +22,13 @@ function _valid_headers($body): array
 {
     // Calculate test case signature
     $key = getenv('SLACK_SECRET');
-    $plaintext = 'v0:0:' . $body;
-    //var_dump($plaintext);
+    $plaintext = 'v0:1:' . $body;
     $hash = 'v0=' . hash_hmac('sha256', $plaintext, $key);
-    //var_dump($hash);
 
     // Return new test case
     return [
         'plaintext' => $plaintext,
-        'X-Slack-Request-Timestamp' => '0',
+        'X-Slack-Request-Timestamp' => '1',
         'X-Slack-Signature' => $hash,
     ];
 }
@@ -71,7 +69,7 @@ trait TestCasesTrait
                 'expected' => null,
                 'statusCode' => '403',
                 'headers' => [
-                    'X-Slack-Request-Timestamp' => '0',
+                    'X-Slack-Request-Timestamp' => '1',
                     'X-Slack-Signature' =>
                     'bad_signature'
                 ],
