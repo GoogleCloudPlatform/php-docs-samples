@@ -72,7 +72,7 @@ class DeployTest extends TestCase
             );
         }
         if ($notContainsHeader) {
-            $this->assertContains(
+            $this->assertNotContains(
                 $notContainsHeader,
                 $header_names
             );
