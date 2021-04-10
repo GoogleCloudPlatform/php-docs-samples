@@ -85,7 +85,6 @@ class DeployTest extends TestCase
                 $actual .= $info['textPayload'];
             }
 
-            $expected = 'Hello, ' . $name . '!';
             $this->assertStringContainsString($expected, $actual, $label);
         });
     }
