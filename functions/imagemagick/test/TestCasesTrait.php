@@ -25,6 +25,12 @@ trait TestCasesTrait
 {
     use TestTrait;
 
+    /** @var string */
+    private static $entryPoint = 'blurOffensiveImages';
+
+    /** @var string */
+    private static $functionSignatureType = 'cloudevent';
+
     public static function getDataForFile($fileName): array
     {
         return [
