@@ -20,7 +20,6 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\ImageMagick\Test;
 
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
