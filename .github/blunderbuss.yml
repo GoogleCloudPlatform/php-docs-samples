@@ -1,0 +1,11 @@
+assign_issues_by:
+- labels:
+  - 'api: cloudiot'
+  to:
+  - laszlokorossy
+
+assign_prs_by:
+- labels:
+  - 'api: cloudiot'
+  to:
+  - laszlokorossy
