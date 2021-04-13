@@ -72,10 +72,6 @@ class DeployTest extends TestCase
         // Send Pub/Sub message.
         $this->publishMessage($name);
 
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(60);
-
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($name, $expected, $label) {
             // Concatenate all relevant log messages.
