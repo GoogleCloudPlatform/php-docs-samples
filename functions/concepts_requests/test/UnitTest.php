@@ -31,8 +31,6 @@ class UnitTest extends TestCase
 {
     use TestCasesTrait;
 
-    private static $entryPoint = 'makeRequest';
-
     public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/../index.php';

@@ -20,6 +20,8 @@ namespace Google\Cloud\Samples\Functions\ConceptsRequests\Test;
 
 trait TestCasesTrait
 {
+    private static $entryPoint = 'makeRequest';
+
     public static function cases(): array
     {
         return [
