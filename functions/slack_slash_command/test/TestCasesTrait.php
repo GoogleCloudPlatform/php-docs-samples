@@ -18,7 +18,6 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\SlackSlashCommand\Test;
 
-use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 
 trait TestCasesTrait
