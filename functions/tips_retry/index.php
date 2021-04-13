@@ -21,11 +21,13 @@ use Google\CloudFunctions\CloudEvent;
 
 function tipsRetry(CloudEvent $event): void
 {
-    $data = $event->getData()['data'];
-    $data = json_decode(base64_decode($data), true);
+    $cloudEventData = $event->getData();
+    $pubSubData = $cloudEventData['message']['data'];
+
+    $config = json_decode(base64_decode($pubSubData), true);
 
     // Determine whether to retry the invocation based on a parameter
-    $tryAgain = $data['some_parameter'];
+    $tryAgain = $config['some_parameter'];
 
     if ($tryAgain) {
         /**
