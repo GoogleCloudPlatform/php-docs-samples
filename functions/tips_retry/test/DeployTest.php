@@ -64,8 +64,6 @@ class DeployTest extends TestCase
 
     private function publishMessage(): void
     {
-        self::$topicName = self::requireEnv('FUNCTIONS_TOPIC');
-
         // Construct Pub/Sub message
         $message = json_encode(['some_parameter' => true]);
 
