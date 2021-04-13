@@ -24,10 +24,10 @@ function tipsRetry(CloudEvent $event): void
     $cloudEventData = $event->getData();
     $pubSubData = $cloudEventData['message']['data'];
 
-    $config = json_decode(base64_decode($pubSubData), true);
+    $json = json_decode(base64_decode($pubSubData), true);
 
     // Determine whether to retry the invocation based on a parameter
-    $tryAgain = $config['some_parameter'];
+    $tryAgain = $json['some_parameter'];
 
     if ($tryAgain) {
         /**
