@@ -9,6 +9,12 @@
 # explicitly taken by someone else.
 *                         @GoogleCloudPlatform/php-admins
 
+# Serverless samples
+appengine/standard        @engelke @GoogleCloudPlatform/cdpe-serverless
+functions                 @ace-n @grant @GoogleCloudPlatform/cdpe-serverless
+run                       @grayside @GoogleCloudPlatform/cdpe-cbr-containers
+
+
 /bigtable/                @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/php-admins
 /cloud_sql/               @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/php-admins
 /datastore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
