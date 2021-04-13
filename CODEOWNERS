@@ -10,17 +10,19 @@
 *                         @GoogleCloudPlatform/php-admins
 
 # Serverless samples
-appengine/standard        @engelke @GoogleCloudPlatform/cdpe-serverless
-functions                 @ace-n @grant @GoogleCloudPlatform/cdpe-serverless
-run                       @grayside @GoogleCloudPlatform/cdpe-cbr-containers
+/appengine/standard        @engelke @GoogleCloudPlatform/cdpe-serverless
+/functions                 @ace-n @grant @GoogleCloudPlatform/cdpe-serverless
+/run                       @grayside @GoogleCloudPlatform/cdpe-cbr-containers
 
+# Functions samples owned by the Firebase team
+/functions/firebase_analytics   @schandel @samtstern
 
+# Client library samples
 /bigtable/                @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/php-admins
 /cloud_sql/               @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/php-admins
 /datastore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
 /firestore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
 /iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
-/storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
 
-# Functions samples owned by the Firebase team
-/functions/firebase_analytics   @schandel @samtstern
+# Storage samples
+/storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
