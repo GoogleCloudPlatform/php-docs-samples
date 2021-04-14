@@ -82,7 +82,7 @@ class DeployTest extends TestCase
             }
 
             $this->assertStringContainsString($expected, $actual, $label);
-        });
+        }, 5);
     }
 
     private function publishMessage(string $name): void
