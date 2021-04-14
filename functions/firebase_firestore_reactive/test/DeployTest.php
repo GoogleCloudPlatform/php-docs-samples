@@ -58,6 +58,19 @@ class DeployTest extends TestCase
     private static $firestoreClient;
 
     /**
+     * Override the default project ID set by CloudFunctionDeploymentTrait.
+     */
+    private static function checkProjectEnvVars()
+    {
+        if (empty(self::$projectId)) {
+            self::$projectId = self::requireOneOfEnv([
+                'FIRESTORE_PROJECT_ID',
+                'GOOGLE_PROJECT_ID'
+            ]);
+        }
+    }
+
+    /**
      * Deploy the Cloud Function, called from DeploymentTrait::deployApp().
      *
      * Overrides CloudFunctionDeploymentTrait::doDeploy().
