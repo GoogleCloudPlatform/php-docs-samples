@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
+namespace Google\Cloud\Samples\Functions\FirebaseRTDB\Test;
 
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
