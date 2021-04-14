@@ -34,7 +34,7 @@ function avoidInfiniteRetries(CloudEvent $event): void
     $eventId = $event->getId();
 
     // The maximum age of events to process.
-    $maxAge = 60 * 3; // 3 minutes, in seconds
+    $maxAge = 60; // 1 minute, in seconds
 
     // The age of the event being processed.
     $eventAge = time() - strtotime($event->getTime());
