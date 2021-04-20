@@ -32,7 +32,8 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  * @param string $projectId The Google Cloud project ID.
  * @param string $indexId The resource ID of the index to get
  */
-function index_get($projectId, $indexId) {
+function index_get($projectId, $indexId)
+{
     $admin = new DatastoreAdminClient();
 
     $index = $admin->getIndex([
@@ -40,7 +41,7 @@ function index_get($projectId, $indexId) {
         'indexId' => $indexId,
     ]);
 
-    printf("Index ID: %s\n", $index->getIndexId());
+    printf('Index ID: %s' . PHP_EOL, $index->getIndexId());
 }
 // [END datastore_admin_index_get]
 require_once __DIR__ . '/../../testing/sample_helpers.php';

@@ -34,17 +34,24 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  *     files. Currently only Cloud Storage is supported. Values should be of
  *     form `gs://bucket-name/folder-name`.
  */
-function entities_export($projectId, $outputUrlPrefix) {
+function entities_export($projectId, $outputUrlPrefix)
+{
     $admin = new DatastoreAdminClient();
 
     $operation = $admin->exportEntities($projectId, $outputUrlPrefix);
 
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        printf("The export operation succeeded. File location is %s", $operation->getResult()->getOutputUrl());
+        printf(
+            'The export operation succeeded. File location is %s' . PHP_EOL,
+            $operation->getResult()->getOutputUrl()
+        );
     } else {
         $error = $operation->getError();
-        printf("The export operation failed with message %s", $error->getMessage());
+        printf(
+            'The export operation failed with message %s' . PHP_EOL,
+            $error->getMessage()
+        );
     }
 }
 // [END datastore_admin_entities_export]

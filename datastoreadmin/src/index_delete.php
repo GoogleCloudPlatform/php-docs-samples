@@ -32,7 +32,8 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  * @param string $projectId The Google Cloud project ID.
  * @param string $indexId The ID of the index to delete.
  */
-function index_delete($projectId, $indexId) {
+function index_delete($projectId, $indexId)
+{
     $admin = new DatastoreAdminClient();
 
     $operation = $admin->deleteIndex([
@@ -41,11 +42,14 @@ function index_delete($projectId, $indexId) {
     ]);
 
     $operation->pollUntilComplete();
-    if ($operation->operationSucceeded()) {
-        print("The delete index operation succeeded.");
+    if (!$operation->operationFailed()) {
+        print('The delete index operation succeeded' . PHP_EOL);
     } else {
         $error = $operation->getError();
-        printf("The delete index operation failed with message %s", $error->getMessage());
+        printf(
+            'The delete index operation failed with message %s' . PHP_EOL,
+            $error->getMessage()
+        );
     }
 }
 // [END datastore_admin_index_delete]

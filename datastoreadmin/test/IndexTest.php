@@ -22,14 +22,7 @@ use PHPUnit\Framework\TestCase;
 
 class IndexTest extends TestCase
 {
-    use TestTrait {
-        TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::checkProjectEnvVars();
-    }
+    use TestTrait;
 
     public function testIndexLifecycle()
     {
@@ -39,7 +32,7 @@ class IndexTest extends TestCase
             'kind' => $kind,
         ]);
 
-        $res = preg_match('/^The create index operation succeeded\. Index ID: (\S{0,})$/', $output, $matches);
+        $res = preg_match('/^The create index operation succeeded\. Index ID: (\S{0,})\n$/', $output, $matches);
         $this->assertEquals(
             1,
             $res,
@@ -66,13 +59,13 @@ class IndexTest extends TestCase
             'projectId' => self::$projectId,
         ]);
 
-        $this->assertStringContainsString(sprintf("Index ID: %s\n", $indexId), $output);
+        $this->assertStringContainsString(sprintf('Index ID: %s' . PHP_EOL, $indexId), $output);
 
         $output = $this->runFunctionSnippet('index_delete', [
             'projectId' => self::$projectId,
             'indexId' => $indexId,
         ]);
 
-        $this->assertEquals("The delete index operation succeeded.", $output);
+        $this->assertEquals('The delete index operation succeeded.'. PHP_EOL, $output);
     }
 }

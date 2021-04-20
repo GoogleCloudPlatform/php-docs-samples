@@ -22,9 +22,6 @@ require __DIR__ . '/vendor/autoload.php';
 # Imports the Datastore Admin client library
 use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
 
-# Your Google Cloud Platform project ID
-$projectId = 'YOUR_PROJECT_ID';
-
 # Instantiates a client
 $admin = new DatastoreAdminClient();
 

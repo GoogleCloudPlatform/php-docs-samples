@@ -34,17 +34,21 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  *     location. Currently only Cloud Storage is supported. Values should be of
  *     form `gs://bucket-name/folder-name`.
  */
-function entities_import($projectId, $inputUri) {
+function entities_import($projectId, $inputUri)
+{
     $admin = new DatastoreAdminClient();
 
     $operation = $admin->importEntities($projectId, $inputUri);
 
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        print("The import operation succeeded");
+        print('The import operation succeeded' . PHP_EOL);
     } else {
         $error = $operation->getError();
-        printf("The import operation failed with message %s", $error->getMessage());
+        printf(
+            'The import operation failed with message %s' . PHP_EOL,
+            $error->getMessage()
+        );
     }
 }
 // [END datastore_admin_entities_import]

@@ -32,7 +32,8 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  * @param string $projectId The Google Cloud project ID.
  * @param string $filter [optional] A filtering string.
  */
-function index_list($projectId, $filter = "") {
+function index_list($projectId, $filter = "")
+{
     $admin = new DatastoreAdminClient();
 
     $indexes = $admin->listIndexes([
@@ -41,7 +42,7 @@ function index_list($projectId, $filter = "") {
     ]);
 
     foreach ($indexes as $index) {
-        printf("Index ID: %s\n", $index->getIndexId());
+        printf('Index ID: %s' . PHP_EOL, $index->getIndexId());
     }
 }
 // [END datastore_admin_index_list]

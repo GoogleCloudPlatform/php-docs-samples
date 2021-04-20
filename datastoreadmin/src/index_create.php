@@ -34,7 +34,8 @@ use Google\Cloud\Datastore\Admin\V1\Index\AncestorMode;
  * @param string $projectId The Google Cloud project ID.
  * @param string $kind The entity kind to which this index applies.
  */
-function index_create($projectId, $kind) {
+function index_create($projectId, $kind)
+{
     $admin = new DatastoreAdminClient();
 
     $operation = $admin->createIndex([
@@ -47,10 +48,16 @@ function index_create($projectId, $kind) {
 
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        printf("The create index operation succeeded. Index ID: %s", $operation->getResult()->getIndexId());
+        printf(
+            'The create index operation succeeded. Index ID: %s' . PHP_EOL,
+            $operation->getResult()->getIndexId()
+        );
     } else {
         $error = $operation->getError();
-        printf("The create index operation failed with message %s", $error->getMessage());
+        printf(
+            'The create index operation failed with message %s' . PHP_EOL,
+            $error->getMessage()
+        );
     }
 }
 // [END datastore_admin_index_create]

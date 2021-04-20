@@ -22,14 +22,7 @@ use PHPUnit\Framework\TestCase;
 
 class EntitiesTest extends TestCase
 {
-    use TestTrait {
-        TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::checkProjectEnvVars();
-    }
+    use TestTrait;
 
     public function testEntitiesLifecycle()
     {
@@ -41,13 +34,13 @@ class EntitiesTest extends TestCase
             'outputUrlPrefix' => $uri,
         ]);
 
-        $res = preg_match('/^The export operation succeeded\. File location is (gs:\/\/\S{0,})$/', $output, $matches);
+        $res = preg_match('/^The export operation succeeded\. File location is (gs:\/\/\S{0,})\n$/', $output, $matches);
         $this->assertEquals(
             1,
             $res,
             sprintf(
                 "output message did not match expected.\nexpected: `%s`.\ngot: `%s`",
-                "The export operation succeeded. File location is <uri>",
+                "The export operation succeeded. File location is <uri>\n",
                 $output
             )
         );
@@ -59,6 +52,6 @@ class EntitiesTest extends TestCase
             'inputUri' => $outputUri,
         ]);
 
-        $this->assertEquals("The import operation succeeded", $output);
+        $this->assertEquals('The import operation succeeded' . PHP_EOL, $output);
     }
 }
