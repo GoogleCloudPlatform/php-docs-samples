@@ -46,10 +46,6 @@ class DeployTest extends TestCase
         // Send Pub/Sub message.
         $this->publishMessage();
 
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(10);
-
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) {
             // Concatenate all relevant log messages.
@@ -63,7 +59,7 @@ class DeployTest extends TestCase
             $retryText = 'Intermittent failure occurred; retrying...';
             $retryCount = substr_count($actual, $retryText);
             $this->assertGreaterThan(1, $retryCount);
-        });
+        }, 3, 10);
     }
 
     private function publishMessage(): void

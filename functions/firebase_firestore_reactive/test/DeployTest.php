@@ -117,10 +117,6 @@ class DeployTest extends TestCase
             $data
         );
 
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(30);
-
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected) {
             // Concatenate all relevant log messages.
@@ -135,7 +131,7 @@ class DeployTest extends TestCase
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
             $this->assertStringContainsString($expected, $actual);
-        });
+        }, 3, 30);
     }
 
     /**
