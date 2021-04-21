@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\SlackSlashCommand\Test;
 
-use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class DeployTest.
- *
- * This test is not run by the CI system.
- *
- * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
- * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
- * @group deploy
+ * Unit tests for the Cloud Function.
  */
-class DeployTest extends TestCase
+class UnitTest extends TestCase
 {
-    use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
+    public static function setUpBeforeClass(): void
+    {
+        require_once __DIR__ . '/../index.php';
+    }
+
     /**
-     * @dataProvider cases
-     */
+      * @dataProvider cases
+      */
     public function testFunction(
         $label,
         $body,
@@ -49,37 +47,22 @@ class DeployTest extends TestCase
         $statusCode,
         $headers
     ): void {
-        $response = $this->client->request(
-            $method,
-            '',
-            ['headers' => $headers, 'body' => $body]
-        );
+        $request = new ServerRequest($method, '/', $headers, $body);
+        $response = $this->runFunction(self::$entryPoint, [$request]);
         $this->assertEquals(
             $statusCode,
             $response->getStatusCode(),
-            $label . ': status code'
+            $label . ": status code"
         );
 
         if ($expected !== null) {
             $output = (string) $response->getBody();
-            $this->assertStringContainsString($expected, $output, $label . ': contains');
+            $this->assertStringContainsString($expected, $output);
         }
     }
 
-    /**
-     * Deploy the Function.
-     *
-     * Overrides CloudFunctionLocalTestTrait::doDeploy().
-     */
-    private static function doDeploy()
+    private static function runFunction($functionName, array $params = []): Response
     {
-        // Forward required env variables to Cloud Functions.
-        $envVars = sprintf(
-            'SLACK_SECRET=%s,KG_API_KEY=%s',
-            self::$slackSecret,
-            self::$kgApiKey
-        );
-
-        self::$fn->deploy(['--update-env-vars' => $envVars]);
+        return call_user_func_array($functionName, $params);
     }
 }
