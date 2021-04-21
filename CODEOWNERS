@@ -22,11 +22,11 @@
 
 
 # Brent is taking ownership of these samples as they are not supported by the ML team
-/dlp/                     @betterbrent  
-/dialogflow/              @betterbrent
-/language/                @betterbrent
-/speech/                  @betterbrent
-/translate/               @betterbrent
-/texttospeech/            @betterbrent
-/vision/                  @betterbrent
-/video/                   @betterbrent
+/dlp/                     @bshaffer  
+/dialogflow/              @bshaffer
+/language/                @bshaffer
+/speech/                  @bshaffer
+/translate/               @bshaffer
+/texttospeech/            @bshaffer
+/vision/                  @bshaffer
+/video/                   @bshaffer
