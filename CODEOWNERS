@@ -10,9 +10,9 @@
 *                         @GoogleCloudPlatform/php-admins
 
 # Serverless samples
-/appengine/standard        @engelke @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
-/functions                 @ace-n @grant @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
-/run                       @grayside @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
+/appengine/standard       @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
+/functions                @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
+/run                      @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
 
 # Functions samples owned by the Firebase team
 /functions/firebase_analytics   @schandel @samtstern @GoogleCloudPlatform/php-admins
