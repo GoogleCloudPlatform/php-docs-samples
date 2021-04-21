@@ -37,8 +37,8 @@ function get_all_docs($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_all_docs]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_data_get_all_documents]
+    $citiesRef = $db->collection('samples/php/cities');
     $documents = $citiesRef->documents();
     foreach ($documents as $document) {
         if ($document->exists()) {
@@ -46,8 +46,11 @@ function get_all_docs($projectId)
             print_r($document->data());
             printf(PHP_EOL);
         } else {
-            printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
+            printf('Document %s does not exist!' . PHP_EOL, $document->id());
         }
     }
-    # [END fs_get_all_docs]
+    # [END firestore_data_get_all_documents]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

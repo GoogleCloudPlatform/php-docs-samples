@@ -37,27 +37,30 @@ function batch_write($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_batch_write]
+    # [START firestore_data_batch_writes]
     $batch = $db->batch();
 
     # Set the data for NYC
-    $nycRef = $db->collection('cities')->document('NYC');
+    $nycRef = $db->collection('samples/php/cities')->document('NYC');
     $batch->set($nycRef, [
         'name' => 'New York City'
     ]);
 
     # Update the population for SF
-    $sfRef = $db->collection('cities')->document('SF');
+    $sfRef = $db->collection('samples/php/cities')->document('SF');
     $batch->update($sfRef, [
         ['path' => 'population', 'value' => 1000000]
     ]);
 
     # Delete LA
-    $laRef = $db->collection('cities')->document('LA');
+    $laRef = $db->collection('samples/php/cities')->document('LA');
     $batch->delete($laRef);
 
     # Commit the batch
     $batch->commit();
-    # [END fs_batch_write]
+    # [END firestore_data_batch_writes]
     printf('Batch write successfully completed.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

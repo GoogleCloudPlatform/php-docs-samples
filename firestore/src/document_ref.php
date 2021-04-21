@@ -37,8 +37,11 @@ function document_ref($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_document_ref]
-    $document = $db->collection('users')->document('lovelace');
-    # [END fs_document_ref]
+    # [START firestore_data_reference_document]
+    $document = $db->collection('samples/php/users')->document('lovelace');
+    # [END firestore_data_reference_document]
     printf('Retrieved document: %s' . PHP_EOL, $document->name());
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,11 +37,14 @@ function set_document_merge($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_set_document_merge]
-    $cityRef = $db->collection('cities')->document('BJ');
+    # [START firestore_data_set_doc_upsert]
+    $cityRef = $db->collection('samples/php/cities')->document('BJ');
     $cityRef->set([
         'capital' => true
     ], ['merge' => true]);
-    # [END fs_set_document_merge]
+    # [END firestore_data_set_doc_upsert]
     printf('Set document data by merging it into the existing BJ document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,11 +37,14 @@ function list_subcollections($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_collections]
-    $cityRef = $db->collection('cities')->document('SF');
+    # [START firestore_data_get_sub_collections]
+    $cityRef = $db->collection('samples/php/cities')->document('SF');
     $collections = $cityRef->collections();
     foreach ($collections as $collection) {
         printf('Found subcollection with id: %s' . PHP_EOL, $collection->id());
     }
-    # [END fs_get_collections]
+    # [END firestore_data_get_sub_collections]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

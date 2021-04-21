@@ -37,13 +37,16 @@ function chained_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_chained_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_filter_compound_multi_eq]
     $chainedQuery = $citiesRef
         ->where('state', '=', 'CA')
         ->where('name', '=', 'San Francisco');
-    # [END fs_chained_query]
+    # [END firestore_query_filter_compound_multi_eq]
     foreach ($chainedQuery->documents() as $document) {
         printf('Document %s returned by query state=CA and name=San Francisco' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

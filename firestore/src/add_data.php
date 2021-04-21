@@ -27,9 +27,12 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Add data to a document.
+ *
  * ```
  * add_data('your-project-id');
  * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
 function add_data($projectId)
 {
@@ -37,17 +40,17 @@ function add_data($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_add_data_1]
-    $docRef = $db->collection('users')->document('lovelace');
+    # [START firestore_setup_dataset_pt1]
+    $docRef = $db->collection('samples/php/users')->document('lovelace');
     $docRef->set([
         'first' => 'Ada',
         'last' => 'Lovelace',
         'born' => 1815
     ]);
     printf('Added data to the lovelace document in the users collection.' . PHP_EOL);
-    # [END fs_add_data_1]
-    # [START fs_add_data_2]
-    $docRef = $db->collection('users')->document('aturing');
+    # [END firestore_setup_dataset_pt1]
+    # [START firestore_setup_dataset_pt2]
+    $docRef = $db->collection('samples/php/users')->document('aturing');
     $docRef->set([
         'first' => 'Alan',
         'middle' => 'Mathison',
@@ -55,5 +58,8 @@ function add_data($projectId)
         'born' => 1912
     ]);
     printf('Added data to the aturing document in the users collection.' . PHP_EOL);
-    # [END fs_add_data_2]
+    # [END firestore_setup_dataset_pt2]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -38,13 +38,16 @@ function composite_index_chained_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_composite_index_chained_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_filter_compound_multi_eq_lt]
     $chainedQuery = $citiesRef
         ->where('state', '=', 'CA')
         ->where('population', '<', 1000000);
-    # [END fs_composite_index_chained_query]
+    # [END firestore_query_filter_compound_multi_eq_lt]
     foreach ($chainedQuery->documents() as $document) {
         printf('Document %s returned by query state=CA and population<1000000' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

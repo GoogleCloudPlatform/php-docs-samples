@@ -38,11 +38,14 @@ function delete_field($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_delete_field]
-    $cityRef = $db->collection('cities')->document('BJ');
+    # [START firestore_data_delete_field]
+    $cityRef = $db->collection('samples/php/cities')->document('BJ');
     $cityRef->update([
         ['path' => 'capital', 'value' => FieldValue::deleteField()]
     ]);
-    # [END fs_delete_field]
+    # [END firestore_data_delete_field]
     printf('Deleted the capital field from the BJ document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

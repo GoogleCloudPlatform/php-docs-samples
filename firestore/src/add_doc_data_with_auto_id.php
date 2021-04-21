@@ -37,12 +37,15 @@ function add_doc_data_with_auto_id($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_add_doc_data_with_auto_id]
+    # [START firestore_data_set_id_random_collection]
     $data = [
         'name' => 'Tokyo',
         'country' => 'Japan'
     ];
-    $addedDocRef = $db->collection('cities')->add($data);
+    $addedDocRef = $db->collection('samples/php/cities')->add($data);
     printf('Added document with ID: %s' . PHP_EOL, $addedDocRef->id());
-    # [END fs_add_doc_data_with_auto_id]
+    # [END firestore_data_set_id_random_collection]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -38,8 +38,8 @@ function run_simple_transaction($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_run_simple_transaction]
-    $cityRef = $db->collection('cities')->document('SF');
+    # [START firestore_transaction_document_update]
+    $cityRef = $db->collection('samples/php/cities')->document('SF');
     $db->runTransaction(function (Transaction $transaction) use ($cityRef) {
         $snapshot = $transaction->snapshot($cityRef);
         $newPopulation = $snapshot['population'] + 1;
@@ -47,6 +47,9 @@ function run_simple_transaction($projectId)
             ['path' => 'population', 'value' => $newPopulation]
         ]);
     });
-    # [END fs_run_simple_transaction]
+    # [END firestore_transaction_document_update]
     printf('Ran a simple transaction to update the population field in the SF document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

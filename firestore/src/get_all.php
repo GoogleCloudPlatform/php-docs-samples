@@ -37,8 +37,8 @@ function get_all($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_all]
-    $usersRef = $db->collection('users');
+    # [START firestore_setup_dataset_read]
+    $usersRef = $db->collection('samples/php/users');
     $snapshot = $usersRef->documents();
     foreach ($snapshot as $user) {
         printf('User: %s' . PHP_EOL, $user->id());
@@ -51,5 +51,8 @@ function get_all($projectId)
         printf(PHP_EOL);
     }
     printf('Retrieved and printed out all documents from the users collection.' . PHP_EOL);
-    # [END fs_get_all]
+    # [END firestore_setup_dataset_read]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

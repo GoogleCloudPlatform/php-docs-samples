@@ -37,8 +37,11 @@ function document_path_ref($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_document_path_ref]
+    # [START firestore_data_reference_document_path]
     $document = $db->document('users/lovelace');
-    # [END fs_document_path_ref]
+    # [END firestore_data_reference_document_path]
     printf('Retrieved document from path: %s' . PHP_EOL, $document->name());
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,8 +37,8 @@ function paginated_query_cursor($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_paginated_query_cursor]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_query_cursor_pagination]
+    $citiesRef = $db->collection('samples/php/cities');
     $firstQuery = $citiesRef->orderBy('population')->limit(3);
 
     # Get the last document from the results
@@ -52,8 +52,11 @@ function paginated_query_cursor($projectId)
     # Note: this will not have the desired effect if multiple cities have the exact same population value
     $nextQuery = $citiesRef->orderBy('population')->startAfter([$lastPopulation]);
     $snapshot = $nextQuery->documents();
-    # [END fs_paginated_query_cursor]
+    # [END firestore_query_cursor_pagination]
     foreach ($snapshot as $document) {
         printf('Document %s returned by paginated query cursor.' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

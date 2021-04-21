@@ -37,13 +37,16 @@ function invalid_range_order_by_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_invalid_range_order_by_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_order_field_invalid]
     $invalidRangeQuery = $citiesRef
         ->where('population', '>', 2500000)
         ->orderBy('country');
-    # [END fs_invalid_range_order_by_query]
+    # [END firestore_query_order_field_invalid]
 
     // This will throw an exception
     $invalidRangeQuery->documents();
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

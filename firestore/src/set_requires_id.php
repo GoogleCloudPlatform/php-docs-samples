@@ -41,8 +41,11 @@ function set_requires_id($projectId)
         'name' => 'Phuket',
         'country' => 'Thailand'
     ];
-    # [START fs_set_requires_id]
-    $db->collection('cities')->document('new-city-id')->set($data);
-    # [END fs_set_requires_id]
+    # [START firestore_data_set_id_specified]
+    $db->collection('samples/php/cities')->document('new-city-id')->set($data);
+    # [END firestore_data_set_id_specified]
     printf('Added document with ID: new-city-id' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,8 +37,8 @@ function get_document($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_document]
-    $docRef = $db->collection('cities')->document('SF');
+    # [START firestore_data_get_as_map]
+    $docRef = $db->collection('samples/php/cities')->document('SF');
     $snapshot = $docRef->snapshot();
 
     if ($snapshot->exists()) {
@@ -47,5 +47,8 @@ function get_document($projectId)
     } else {
         printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
     }
-    # [END fs_get_document]
+    # [END firestore_data_get_as_map]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

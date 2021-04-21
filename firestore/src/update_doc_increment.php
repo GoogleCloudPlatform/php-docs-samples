@@ -38,13 +38,16 @@ function update_doc_increment($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_update_doc_increment]
-    $cityRef = $db->collection('cities')->document('DC');
+    # [START firestore_data_set_numeric_increment]
+    $cityRef = $db->collection('samples/php/cities')->document('DC');
 
     // Atomically increment the population of the city by 50.
     $cityRef->update([
         ['path' => 'regions', 'value' => FieldValue::increment(50)]
     ]);
-    # [END fs_update_doc_increment]
+    # [END firestore_data_set_numeric_increment]
     printf('Updated the population of the DC document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

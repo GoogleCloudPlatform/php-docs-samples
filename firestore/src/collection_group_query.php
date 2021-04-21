@@ -38,10 +38,13 @@ function collection_group_query(string $projectId): void
         'projectId' => $projectId,
     ]);
 
-    # [START fs_collection_group_query]
+    # [START firestore_query_collection_group_filter_eq]
     $museums = $db->collectionGroup('landmarks')->where('type', '==', 'museum');
     foreach ($museums->documents() as $document) {
         printf('%s => %s' . PHP_EOL, $document->id(), $document->data()['name']);
     }
-    # [END fs_collection_group_query]
+    # [END firestore_query_collection_group_filter_eq]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

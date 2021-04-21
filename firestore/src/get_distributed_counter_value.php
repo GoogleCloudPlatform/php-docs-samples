@@ -37,13 +37,15 @@ function get_distributed_counter_value($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $ref = $db->collection('Shards_collection')->document('Distributed_counters');
-    # [START fs_get_distributed_counter_value]
+    # [START firestore_solution_sharded_counter_get]
     $result = 0;
-    $docCollection = $ref->collection('SHARDS')->documents();
+    $docCollection = $db->collection('samples/php/distributedCounters')->documents();
     foreach ($docCollection as $doc) {
         $result += $doc->data()['Cnt'];
     }
-    # [END fs_get_distributed_counter_value]
+    # [END firestore_solution_sharded_counter_get]
     printf('The current value of the distributed counter: %d' . PHP_EOL, $result);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

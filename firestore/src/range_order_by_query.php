@@ -37,14 +37,17 @@ function range_order_by_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_range_order_by_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_order_with_filter]
     $query = $citiesRef
         ->where('population', '>', 2500000)
         ->orderBy('population');
-    # [END fs_range_order_by_query]
+    # [END firestore_query_order_with_filter]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by range with order by query' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

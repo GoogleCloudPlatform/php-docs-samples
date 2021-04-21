@@ -37,8 +37,8 @@ function get_multiple_docs($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_multiple_docs]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_data_query]
+    $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('capital', '=', true);
     $documents = $query->documents();
     foreach ($documents as $document) {
@@ -47,8 +47,11 @@ function get_multiple_docs($projectId)
             print_r($document->data());
             printf(PHP_EOL);
         } else {
-            printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
+            printf('Document %s does not exist!' . PHP_EOL, $document->id());
         }
     }
-    # [END fs_get_multiple_docs]
+    # [END firestore_data_query]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

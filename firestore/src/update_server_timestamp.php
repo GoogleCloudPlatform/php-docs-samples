@@ -38,15 +38,18 @@ function update_server_timestamp($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $docRef = $db->collection('objects')->document('some-id');
+    $docRef = $db->collection('samples/php/objects')->document('some-id');
     $docRef->set([
         'timestamp' => 'N/A'
     ]);
-    # [START fs_update_server_timestamp]
-    $docRef = $db->collection('objects')->document('some-id');
+    # [START firestore_data_set_server_timestamp]
+    $docRef = $db->collection('samples/php/objects')->document('some-id');
     $docRef->update([
         ['path' => 'timestamp', 'value' => FieldValue::serverTimestamp()]
     ]);
-    # [END fs_update_server_timestamp]
+    # [END firestore_data_set_server_timestamp]
     printf('Updated the timestamp field of the some-id document in the objects collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

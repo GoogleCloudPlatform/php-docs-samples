@@ -38,8 +38,8 @@ function collection_group_query_setup(string $projectId): void
         'projectId' => $projectId,
     ]);
 
-    # [START fs_collection_group_query_data_setup]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_query_collection_group_dataset]
+    $citiesRef = $db->collection('samples/php/cities');
     $citiesRef->document('SF')->collection('landmarks')->newDocument()->set([
         'name' => 'Golden Gate Bridge',
         'type' => 'bridge'
@@ -81,5 +81,8 @@ function collection_group_query_setup(string $projectId): void
         'type' => 'museum'
     ]);
     print('Added example landmarks collections to the cities collection.' . PHP_EOL);
-    # [END fs_collection_group_query_data_setup]
+    # [END firestore_query_collection_group_dataset]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,12 +37,15 @@ function order_by_state_and_population_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_order_by_state_and_population_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_order_multi]
     $query = $citiesRef->orderBy('state')->orderBy('population', 'DESC');
-    # [END fs_order_by_state_and_population_query]
+    # [END firestore_query_order_multi]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by order by state and descending population query' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,8 +37,8 @@ function query_create_examples($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_query_create_examples]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_query_filter_dataset]
+    $citiesRef = $db->collection('samples/php/cities');
     $citiesRef->document('SF')->set([
         'name' => 'San Francisco',
         'state' => 'CA',
@@ -80,5 +80,8 @@ function query_create_examples($projectId)
         'regions' => ['jingjinji', 'hebei']
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
-    # [END fs_query_create_examples]
+    # [END firestore_query_filter_dataset]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

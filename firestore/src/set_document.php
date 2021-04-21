@@ -37,13 +37,16 @@ function set_document($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_set_document]
+    # [START firestore_data_set_from_map]
     $data = [
         'name' => 'Los Angeles',
         'state' => 'CA',
         'country' => 'USA'
     ];
-    $db->collection('cities')->document('LA')->set($data);
-    # [END fs_set_document]
+    $db->collection('samples/php/cities')->document('LA')->set($data);
+    # [END firestore_data_set_from_map]
     printf('Set data for the LA document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

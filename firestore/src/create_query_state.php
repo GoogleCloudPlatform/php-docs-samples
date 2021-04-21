@@ -37,12 +37,15 @@ function create_query_state($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_create_query_state]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_query_filter_eq_string]
+    $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('state', '=', 'CA');
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by query state=CA' . PHP_EOL, $document->id());
     }
-    # [END fs_create_query_state]
+    # [END firestore_query_filter_eq_string]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

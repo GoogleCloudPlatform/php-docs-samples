@@ -37,11 +37,14 @@ function in_query(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_query_filter_in]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_filter_in]
     $rangeQuery = $citiesRef->where('country', 'in', ['USA', 'Japan']);
-    # [END fs_query_filter_in]
+    # [END firestore_query_filter_in]
     foreach ($rangeQuery->documents() as $document) {
         printf('Document %s returned by query country in [USA, Japan]' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

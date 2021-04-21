@@ -37,13 +37,16 @@ function invalid_range_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_invalid_range_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_filter_range_invalid]
     $invalidRangeQuery = $citiesRef
         ->where('state', '>=', 'CA')
         ->where('population', '>', 1000000);
-    # [END fs_invalid_range_query]
+    # [END firestore_query_filter_range_invalid]
 
     // This will throw an exception
     $invalidRangeQuery->documents();
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

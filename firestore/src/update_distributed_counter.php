@@ -38,18 +38,21 @@ function update_distributed_counter($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $ref = $db->collection('Shards_collection')->document('Distributed_counters');
-    # [START fs_update_distributed_counter]
-    $colRef = $ref->collection('SHARDS');
+
+    # [START firestore_solution_sharded_counter_increment]
+    $ref = $db->collection('samples/php/distributedCounters');
     $numShards = 0;
-    $docCollection = $colRef->documents();
+    $docCollection = $ref->documents();
     foreach ($docCollection as $doc) {
         $numShards++;
     }
     $shardIdx = random_int(0, $numShards-1);
-    $doc = $colRef->document($shardIdx);
+    $doc = $ref->document($shardIdx);
     $doc->update([
         ['path' => 'Cnt', 'value' => FieldValue::increment(1)]
     ]);
-    # [END fs_update_distributed_counter]
+    # [END firestore_solution_sharded_counter_increment]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,11 +37,14 @@ function array_membership($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_array_membership]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_filter_array_contains]
     $containsQuery = $citiesRef->where('regions', 'array-contains', 'west_coast');
-    # [END fs_array_membership]
+    # [END firestore_query_filter_array_contains]
     foreach ($containsQuery->documents() as $document) {
         printf('Document %s returned by query regions array-contains west_coast' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

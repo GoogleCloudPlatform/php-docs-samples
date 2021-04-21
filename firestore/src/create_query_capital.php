@@ -37,12 +37,15 @@ function create_query_capital($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_create_query_capital]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_query_filter_eq_boolean]
+    $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('capital', '=', true);
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by query capital=true' . PHP_EOL, $document->id());
     }
-    # [END fs_create_query_capital]
+    # [END firestore_query_filter_eq_boolean]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

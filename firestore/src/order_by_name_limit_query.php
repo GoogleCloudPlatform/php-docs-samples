@@ -37,12 +37,15 @@ function order_by_name_limit_query($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_order_by_name_limit_query]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_order_limit]
     $query = $citiesRef->orderBy('name')->limit(3);
-    # [END fs_order_by_name_limit_query]
+    # [END firestore_query_order_limit]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by order by name with limit query' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

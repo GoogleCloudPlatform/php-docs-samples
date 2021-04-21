@@ -30,7 +30,7 @@ namespace Google\Cloud\Samples\Firestore;
  * ```
  */
 
-# [START fs_delete_collection]
+# [START firestore_data_delete_collection]
 function delete_collection($collectionReference, $batchSize)
 {
     $documents = $collectionReference->limit($batchSize)->documents();
@@ -42,4 +42,7 @@ function delete_collection($collectionReference, $batchSize)
         $documents = $collectionReference->limit($batchSize)->documents();
     }
 }
-# [END fs_delete_collection]
+# [END firestore_data_delete_collection]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

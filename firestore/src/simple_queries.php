@@ -37,12 +37,12 @@ function simple_queries($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_simple_queries]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_filter_single_examples]
     $stateQuery = $citiesRef->where('state', '=', 'CA');
     $populationQuery = $citiesRef->where('population', '>', 1000000);
     $nameQuery = $citiesRef->where('name', '>=', 'San Francisco');
-    # [END fs_simple_queries]
+    # [END firestore_query_filter_single_examples]
     foreach ($stateQuery->documents() as $document) {
         printf('Document %s returned by query state=CA' . PHP_EOL, $document->id());
     }
@@ -53,3 +53,6 @@ function simple_queries($projectId)
         printf('Document %s returned by query name>=San Francisco' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

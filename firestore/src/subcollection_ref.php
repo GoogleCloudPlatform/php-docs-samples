@@ -37,12 +37,15 @@ function subcollection_ref($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_subcollection_ref]
+    # [START firestore_data_reference_subcollection]
     $document = $db
         ->collection('rooms')
         ->document('roomA')
         ->collection('messages')
         ->document('message1');
-    # [END fs_subcollection_ref]
+    # [END firestore_data_reference_subcollection]
     printf('Retrieved document from subcollection: %s' . PHP_EOL, $document->name());
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

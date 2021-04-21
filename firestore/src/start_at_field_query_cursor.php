@@ -37,14 +37,17 @@ function start_at_field_query_cursor($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('cities');
-    # [START fs_start_at_field_query_cursor]
+    $citiesRef = $db->collection('samples/php/cities');
+    # [START firestore_query_cursor_start_at_field_value_single]
     $query = $citiesRef
         ->orderBy('population')
         ->startAt([1000000]);
-    # [END fs_start_at_field_query_cursor]
+    # [END firestore_query_cursor_start_at_field_value_single]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by start at population 1000000 field query cursor.' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

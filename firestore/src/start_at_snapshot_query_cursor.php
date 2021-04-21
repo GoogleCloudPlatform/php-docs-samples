@@ -37,17 +37,20 @@ function start_at_snapshot_query_cursor($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_start_at_snapshot_query_cursor]
-    $citiesRef = $db->collection('cities');
+    # [START firestore_query_cursor_start_at_document]
+    $citiesRef = $db->collection('samples/php/cities');
     $docRef = $citiesRef->document('SF');
     $snapshot = $docRef->snapshot();
 
     $query = $citiesRef
         ->orderBy('population')
         ->startAt($snapshot);
-    # [END fs_start_at_snapshot_query_cursor]
+    # [END firestore_query_cursor_start_at_document]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by start at SF snapshot query cursor.' . PHP_EOL, $document->id());
     }
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

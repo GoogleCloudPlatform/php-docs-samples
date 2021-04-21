@@ -40,8 +40,8 @@ function add_doc_data_types($projectId)
         'projectId' => $projectId,
     ]);
     // Set the reference document
-    $db->collection('data')->document('two')->set(['foo' => 'bar']);
-    # [START fs_add_doc_data_types]
+    $db->collection('samples/php/data')->document('two')->set(['foo' => 'bar']);
+    # [START firestore_data_set_from_map_nested]
     $data = [
         'stringExample' => 'Hello World',
         'booleanExample' => true,
@@ -50,9 +50,12 @@ function add_doc_data_types($projectId)
         'arrayExample' => array(5, true, 'hello'),
         'nullExample' => null,
         'objectExample' => ['a' => 5, 'b' => true],
-        'documentReferenceExample' => $db->collection('data')->document('two'),
+        'documentReferenceExample' => $db->collection('samples/php/data')->document('two'),
     ];
-    $db->collection('data')->document('one')->set($data);
+    $db->collection('samples/php/data')->document('one')->set($data);
     printf('Set multiple data-type data for the one document in the data collection.' . PHP_EOL);
-    # [END fs_add_doc_data_types]
+    # [END firestore_data_set_from_map_nested]
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

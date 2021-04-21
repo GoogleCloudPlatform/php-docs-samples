@@ -37,11 +37,14 @@ function update_doc($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_update_doc]
-    $cityRef = $db->collection('cities')->document('DC');
+    # [START firestore_data_set_field]
+    $cityRef = $db->collection('samples/php/cities')->document('DC');
     $cityRef->update([
         ['path' => 'capital', 'value' => true]
     ]);
-    # [END fs_update_doc]
+    # [END firestore_data_set_field]
     printf('Updated the capital field of the DC document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -38,8 +38,8 @@ function update_doc_array($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_update_doc_array]
-    $cityRef = $db->collection('cities')->document('DC');
+    # [START firestore_data_set_array_operations]
+    $cityRef = $db->collection('samples/php/cities')->document('DC');
 
     // Atomically add a new region to the "regions" array field.
     $cityRef->update([
@@ -50,6 +50,9 @@ function update_doc_array($projectId)
     $cityRef->update([
         ['path' => 'regions', 'value' => FieldValue::arrayRemove(['east_coast'])]
     ]);
-    # [END fs_update_doc_array]
+    # [END firestore_data_set_array_operations]
     printf('Updated the regions field of the DC document in the cities collection.' . PHP_EOL);
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

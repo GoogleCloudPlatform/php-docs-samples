@@ -37,8 +37,11 @@ function collection_ref($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_collection_ref]
-    $collection = $db->collection('users');
-    # [END fs_collection_ref]
+    # [START firestore_data_reference_collection]
+    $collection = $db->collection('samples/php/users');
+    # [END firestore_data_reference_collection]
     printf('Retrieved collection: %s' . PHP_EOL, $collection->name());
 }
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
