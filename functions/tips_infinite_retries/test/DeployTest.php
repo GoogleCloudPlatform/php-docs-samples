@@ -67,7 +67,7 @@ class DeployTest extends TestCase
             $this->assertGreaterThan(1, $retryCount);
 
             // Check that the function has stopped retrying
-            $this->assertContains('Dropping event', $actual);
+            $this->assertStringContainsString('Dropping event', $actual);
         }, 3, 30);
     }
 
