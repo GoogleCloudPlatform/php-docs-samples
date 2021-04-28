@@ -71,16 +71,14 @@ class DeployTest extends TestCase
             $logOptions,
             $message
         ) {
+            // Concatenate all relevant log messages.
             $logs = $logging->entries($logOptions);
-            $matched = false;
+            $actual = '';
             foreach ($logs as $log) {
-                if ($log->info()['jsonPayload']['message'] == $message) {
-                    $matched = true;
-                    break;
-                }
+                $actual .= $log->info()['jsonPayload']['message'];
             }
 
-            $this->assertTrue($matched);
+            $this->assertStringContainsString($message, $actual);
         }, $retryCount, true);
     }
 }
