@@ -1,6 +1,7 @@
 {
     "require": {
-        "google/cloud-storage": "^1.5"
+        "google/cloud-storage": "^1.5",
+        "symfony/yaml": "^5.2"
     },
     "autoload": {
         "files": [
