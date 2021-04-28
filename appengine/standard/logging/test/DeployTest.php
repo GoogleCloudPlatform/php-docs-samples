@@ -49,7 +49,7 @@ class DeployTest extends TestCase
         $this->verifyLog('This will show up as log level ERROR', 'error');
     }
 
-    private function verifyLog($message, $level, $retryCount = 2)
+    private function verifyLog($message, $level, $retryCount = 3)
     {
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $filter = sprintf(
