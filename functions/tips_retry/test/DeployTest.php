@@ -59,7 +59,7 @@ class DeployTest extends TestCase
             $retryText = 'Intermittent failure occurred; retrying...';
             $retryCount = substr_count($actual, $retryText);
             $this->assertGreaterThan(1, $retryCount);
-        }, 3, 10);
+        }, 4, 30);
     }
 
     private function publishMessage(): void
