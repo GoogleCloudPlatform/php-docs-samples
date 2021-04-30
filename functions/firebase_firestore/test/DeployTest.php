@@ -76,7 +76,7 @@ class DeployTest extends TestCase
     private static function doDeploy()
     {
         $resource = sprintf(
-            'projects/%s/databases/(default)/documents/%s/%s/',
+            'projects/%s/databases/(default)/documents/%s/%s',
             self::$projectId,
             self::$collectionName,
             self::$documentName
