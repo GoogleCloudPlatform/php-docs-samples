@@ -77,11 +77,9 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        $project = self::requireEnv('GOOGLE_PROJECT_ID');
-
         $resource = sprintf(
             'projects/%s/databases/(default)/documents/%s/%s',
-            $project,
+            self::$projectId,
             self::$collectionName,
             self::$documentName
         );
