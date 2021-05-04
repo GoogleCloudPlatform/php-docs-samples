@@ -66,6 +66,6 @@ class IndexTest extends TestCase
             'indexId' => $indexId,
         ]);
 
-        $this->assertEquals('The delete index operation succeeded.'. PHP_EOL, $output);
+        $this->assertEquals('The delete index operation succeeded.' . PHP_EOL, $output);
     }
 }
