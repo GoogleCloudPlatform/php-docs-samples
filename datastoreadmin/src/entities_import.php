@@ -45,14 +45,10 @@ function entities_import($projectId, $inputUri)
         'pollDelayMultiplier' => 1,
     ]);
 
-    if ($operation->operationSucceeded()) {
+    if (!$operation->operationFailed()) {
         print('The import operation succeeded' . PHP_EOL);
     } else {
-        $error = $operation->getError();
-        printf(
-            'The import operation failed with message %s' . PHP_EOL,
-            $error->getMessage()
-        );
+        print('The import operation failed.');
     }
 }
 // [END datastore_admin_entities_import]

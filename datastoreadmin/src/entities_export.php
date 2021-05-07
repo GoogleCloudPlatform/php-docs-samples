@@ -41,17 +41,13 @@ function entities_export($projectId, $outputUrlPrefix)
     $operation = $admin->exportEntities($projectId, $outputUrlPrefix);
 
     $operation->pollUntilComplete();
-    if ($operation->operationSucceeded()) {
+    if (!$operation->operationFailed()) {
         printf(
             'The export operation succeeded. File location is %s' . PHP_EOL,
             $operation->getResult()->getOutputUrl()
         );
     } else {
-        $error = $operation->getError();
-        printf(
-            'The export operation failed with message %s' . PHP_EOL,
-            $error->getMessage()
-        );
+        print('The export operation failed.');
     }
 }
 // [END datastore_admin_entities_export]

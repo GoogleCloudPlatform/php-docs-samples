@@ -53,11 +53,7 @@ function index_create($projectId, $kind)
             $operation->getResult()->getIndexId()
         );
     } else {
-        $error = $operation->getError();
-        printf(
-            'The create index operation failed with message %s' . PHP_EOL,
-            $error->getMessage()
-        );
+        print('The create index operation failed.');
     }
 }
 // [END datastore_admin_index_create]

@@ -45,11 +45,7 @@ function index_delete($projectId, $indexId)
     if (!$operation->operationFailed()) {
         print('The delete index operation succeeded' . PHP_EOL);
     } else {
-        $error = $operation->getError();
-        printf(
-            'The delete index operation failed with message %s' . PHP_EOL,
-            $error->getMessage()
-        );
+        print('The delete index operation failed.');
     }
 }
 // [END datastore_admin_index_delete]
