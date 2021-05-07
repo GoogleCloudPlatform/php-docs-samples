@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,23 +26,23 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Create a query with IN clause with array item.
+ * Query using the Not Equal operator.
  * ```
- * in_array_query('your-project-id');
+ * query_filter_not_eq('your-project-id');
  * ```
  */
-function in_array_query(string $projectId): void
+function query_filter_not_eq($projectId)
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START firestore_query_filter_in_with_array]
-    $rangeQuery = $citiesRef->where('regions', 'in', [['west_coast'], ['east_coast']]);
-    # [END firestore_query_filter_in_with_array]
-    foreach ($rangeQuery->documents() as $document) {
-        printf('Document %s returned by query regions in [[west_coast], [east_coast]]' . PHP_EOL, $document->id());
+    # [START firestore_query_filter_not_eq]
+    $stateQuery = $citiesRef->where('capital', '!=', false);
+    # [END firestore_query_filter_not_eq]
+    foreach ($stateQuery->documents() as $document) {
+        printf('Document %s returned by query state!=false' . PHP_EOL, $document->id());
     }
 }
 
