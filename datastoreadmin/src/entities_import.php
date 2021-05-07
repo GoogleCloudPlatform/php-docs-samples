@@ -40,7 +40,11 @@ function entities_import($projectId, $inputUri)
 
     $operation = $admin->importEntities($projectId, $inputUri);
 
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete([
+        'initialPollDelayMillis' => 60000,
+        'pollDelayMultiplier' => 1,
+    ]);
+
     if ($operation->operationSucceeded()) {
         print('The import operation succeeded' . PHP_EOL);
     } else {

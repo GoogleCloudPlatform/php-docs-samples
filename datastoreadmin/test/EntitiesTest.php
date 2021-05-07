@@ -24,12 +24,17 @@ class EntitiesTest extends TestCase
 {
     use TestTrait;
 
+    public static function setUpBeforeClass(): void
+    {
+        self::requireEnv('GOOGLE_STORAGE_BUCKET');
+    }
+
     public function testEntitiesLifecycle()
     {
         // TODO: get bucket for testing
         $uri = uniqid(sprintf(
-            "gs://%s.appspot.com/datastoreadmin-export-",
-            self::$projectId
+            "gs://%s/datastoreadmin-export-",
+            getenv("GOOGLE_STORAGE_BUCKET")
         ));
 
         $output = $this->runFunctionSnippet('entities_export', [
