@@ -27,7 +27,10 @@ class EntitiesTest extends TestCase
     public function testEntitiesLifecycle()
     {
         // TODO: get bucket for testing
-        $uri = uniqid("gs://cloud-php-testdata/datastore-export-");
+        $uri = uniqid(sprintf(
+            "gs://%s.appspot.com/datastoreadmin-export-",
+            self::$projectId
+        ));
 
         $output = $this->runFunctionSnippet('entities_export', [
             'projectId' => self::$projectId,
