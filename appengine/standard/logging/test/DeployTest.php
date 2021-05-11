@@ -41,7 +41,7 @@ class DeployTest extends TestCase
             $response->getBody()->getContents()
         );
 
-        $this->verifyLog('This will show up as log level INFO', 'info', 3);
+        $this->verifyLog('This will show up as log level INFO', 'info', 5);
 
         // These should succeed if the above call has too.
         // Thus, they need fewer retries!
@@ -59,8 +59,8 @@ class DeployTest extends TestCase
             $fiveMinAgo
         );
         $logOptions = [
-            'pageSize' => 20,
-            'resultLimit' => 20,
+            'pageSize' => 50,
+            'resultLimit' => 50,
             'filter' => $filter,
         ];
         $logging = new LoggingClient();
