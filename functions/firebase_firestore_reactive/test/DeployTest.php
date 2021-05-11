@@ -147,7 +147,9 @@ class DeployTest extends TestCase
         array $data
     ): void {
         if (empty(self::$firestoreClient)) {
-            self::$firestoreClient = new FirestoreClient();
+            self::$firestoreClient = new FirestoreClient(
+                ['projectId' => self::$projectId]
+            );
         }
 
         self::$firestoreClient
