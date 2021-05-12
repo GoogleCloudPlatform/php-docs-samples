@@ -23,17 +23,20 @@
 
 namespace Google\Cloud\Samples\Compute;
 
+# [START compute_instances_list]
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
- * Creates an instance.
+ * List instances for particular $projectId and $zone
  * Example:
  * ```
  * list_instances($projectId, $zone);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to list the instance in (e.g. "us-central1-a")
+ * @param string $zone The zone to list the instance in (e.g. "us-central1-a").
+ *
+ * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function list_instances(string $projectId, string $zone)
 {
@@ -46,6 +49,7 @@ function list_instances(string $projectId, string $zone)
         printf(' - %s' . PHP_EOL, $instance->getName());
     }
 }
+# [END compute_instances_list]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
