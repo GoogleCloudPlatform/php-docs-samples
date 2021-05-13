@@ -26,6 +26,9 @@ namespace Google\Cloud\Samples\Compute;
 # [START compute_instances_delete]
 use Google\Cloud\Compute\V1\InstancesClient;
 
+// Function in a separate file for usage within create and delete operations
+require_once "wait_for_operation.php";
+
 /**
  * Creates an instance.
  * Example:
@@ -36,19 +39,24 @@ use Google\Cloud\Compute\V1\InstancesClient;
  * @param string $projectId Your Google Cloud project ID.
  * @param string $zone The zone to delete the instance in (e.g. "us-central1-a").
  * @param string $instanceName The unique name for the Compute instance to delete.
+ * @param bool $waitForOperation Should we wait for the operation to finish.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function delete_instance(
     string $projectId,
     string $zone,
-    string $instanceName
+    string $instanceName,
+    bool $waitForOperation = false
 ) {
     // Delete the Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
-    /** TODO: wait until operation completes */
+    // The code below is executed only if we want to wait for the operation to finish
+    if ($waitForOperation) {
+        $operation = wait_for_operation($operation, $projectId, 300000); // 5 min timeout
+    }
 
     printf('Deleted instance %s' . PHP_EOL, $instanceName);
 }

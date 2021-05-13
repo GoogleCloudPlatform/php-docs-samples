@@ -30,6 +30,9 @@ use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Instance;
 use Google\Cloud\Compute\V1\NetworkInterface;
 
+// Function in a separate file for usage within create and delete operations
+require_once "wait_for_operation.php";
+
 /**
  * Creates an instance.
  * Example:
@@ -43,6 +46,7 @@ use Google\Cloud\Compute\V1\NetworkInterface;
  * @param string $machineType Instance machine type.
  * @param string $sourceImage Boot disk image name or family.
  * @param string $networkName The Compute instance ID.
+ * @param bool $waitForOperation Should we wait for the operation to finish.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
@@ -52,7 +56,8 @@ function create_instance(
     string $instanceName,
     string $machineType = 'n1-standard-1',
     string $sourceImage = 'projects/debian-cloud/global/images/family/debian-10',
-    string $networkName = 'global/networks/default'
+    string $networkName = 'global/networks/default',
+    bool $waitForOperation = false
 ) {
     // Set the machine type using the specified zone
     $machineTypeFullName = sprintf('zones/%s/machineTypes/%s', $zone, $machineType);
@@ -79,7 +84,10 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    /** TODO: wait until operation completes */
+    // The code below is executed only if we want to wait for the operation to finish
+    if ($waitForOperation) {
+        $operation = wait_for_operation($operation, $projectId);
+    }
 
     printf('Created instance %s' . PHP_EOL, $instanceName);
 }
