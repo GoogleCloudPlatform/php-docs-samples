@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_instances_check]
+# [START compute_instances_operation_check]
 use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\GlobalOperationsClient;
 use Google\Cloud\Compute\V1\RegionOperationsClient;
@@ -38,7 +38,7 @@ use Google\Cloud\Compute\V1\ZoneOperationsClient;
  *
  * @param Operation $operation Your operation object.
  * @param string $projectId Your Google Cloud project ID.
- * @param int $timeoutMillis Wait timeout in ms (default: 60000 ms = 1 minute)
+ * @param int $timeoutMillis Wait timeout in ms (default: 120000 ms = 2 minutes)
  * @return Operation
  *
  * @throws \Google\ApiCore\ApiException
@@ -46,7 +46,7 @@ use Google\Cloud\Compute\V1\ZoneOperationsClient;
 function wait_for_operation(
     Operation $operation,
     string $projectId,
-    int $timeoutMillis = 60000
+    int $timeoutMillis = 120000
 ) {
     $optionalArgs = array('timeoutMillis' => $timeoutMillis);
 
@@ -82,4 +82,4 @@ function wait_for_operation(
 
     return $operation;
 }
-# [END compute_instances_check]
+# [END compute_instances_operation_check]
