@@ -45,7 +45,7 @@ function entities_export($projectId, $outputUrlPrefix)
         'initialPollDelayMillis' => 5000,
     ]);
 
-    if (!$operation->operationFailed()) {
+    if (!$operation->operationFailed() && $operation->getResult() !== null) {
         printf(
             'The export operation succeeded. File location is %s' . PHP_EOL,
             $operation->getResult()->getOutputUrl()

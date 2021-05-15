@@ -51,7 +51,7 @@ function index_create($projectId, $kind)
         'initialPollDelayMillis' => 5000,
     ]);
 
-    if (!$operation->operationFailed()) {
+    if (!$operation->operationFailed() && $operation->getResult() !== null) {
         printf(
             'The create index operation succeeded. Index ID: %s' . PHP_EOL,
             $operation->getResult()->getIndexId()
