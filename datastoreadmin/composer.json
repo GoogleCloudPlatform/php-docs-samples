@@ -1,5 +1,8 @@
 {
     "require": {
         "google/cloud-datastore-admin": "^0.2"
+    },
+    "require-dev": {
+        "google/cloud-storage": "*"
     }
 }

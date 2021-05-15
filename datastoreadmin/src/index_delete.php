@@ -41,11 +41,19 @@ function index_delete($projectId, $indexId)
         'indexId' => $indexId,
     ]);
 
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete([
+        // delay the start of the polling operation to ensure the operation is ready.
+        'initialPollDelayMillis' => 2000,
+    ]);
+
     if (!$operation->operationFailed()) {
         print('The delete index operation succeeded.' . PHP_EOL);
     } else {
-        print('The delete index operation failed.');
+        $error = 'unknown';
+        if ($operation->getError() !== null) {
+            $error = $operation->getError()->getMessage();
+        }
+        printf('The delete index operation failed with error %s.', $error);
     }
 }
 // [END datastore_admin_index_delete]

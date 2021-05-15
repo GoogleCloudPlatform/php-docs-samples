@@ -40,14 +40,22 @@ function entities_export($projectId, $outputUrlPrefix)
 
     $operation = $admin->exportEntities($projectId, $outputUrlPrefix);
 
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete([
+        // delay the start of the polling operation to ensure the operation is ready.
+        'initialPollDelayMillis' => 5000,
+    ]);
+
     if (!$operation->operationFailed()) {
         printf(
             'The export operation succeeded. File location is %s' . PHP_EOL,
             $operation->getResult()->getOutputUrl()
         );
     } else {
-        print('The export operation failed.');
+        $error = 'unknown';
+        if ($operation->getError() !== null) {
+            $error = $operation->getError()->getMessage();
+        }
+        printf('The export operation failed with error %s', $error);
     }
 }
 // [END datastore_admin_entities_export]

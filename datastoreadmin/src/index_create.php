@@ -46,14 +46,22 @@ function index_create($projectId, $kind)
         ]),
     ]);
 
-    $operation->pollUntilComplete();
-    if ($operation->operationSucceeded()) {
+    $operation->pollUntilComplete([
+        // delay the start of the polling operation to ensure the operation is ready.
+        'initialPollDelayMillis' => 5000,
+    ]);
+
+    if (!$operation->operationFailed()) {
         printf(
             'The create index operation succeeded. Index ID: %s' . PHP_EOL,
             $operation->getResult()->getIndexId()
         );
     } else {
-        print('The create index operation failed.');
+        $error = 'unknown';
+        if ($operation->getError() !== null) {
+            $error = $operation->getError()->getMessage();
+        }
+        printf('The create index operation failed with error %s', $error);
     }
 }
 // [END datastore_admin_index_create]

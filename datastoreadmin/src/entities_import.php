@@ -41,14 +41,18 @@ function entities_import($projectId, $inputUri)
     $operation = $admin->importEntities($projectId, $inputUri);
 
     $operation->pollUntilComplete([
-        'initialPollDelayMillis' => 60000,
-        'pollDelayMultiplier' => 1,
+        // delay the start of the polling operation to ensure the operation is ready.
+        'initialPollDelayMillis' => 5000,
     ]);
 
     if (!$operation->operationFailed()) {
         print('The import operation succeeded' . PHP_EOL);
     } else {
-        print('The import operation failed.');
+        $error = 'unknown';
+        if ($operation->getError() !== null) {
+            $error = $operation->getError()->getMessage();
+        }
+        printf('The import operation failed with error %s', $error);
     }
 }
 // [END datastore_admin_entities_import]

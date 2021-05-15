@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\DatastoreAdmin;
 
+use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -31,10 +32,11 @@ class EntitiesTest extends TestCase
 
     public function testEntitiesLifecycle()
     {
-        // TODO: get bucket for testing
+        $objectName = uniqid("datastoreadmin-export-");
         $uri = uniqid(sprintf(
-            "gs://%s/datastoreadmin-export-",
-            getenv("GOOGLE_STORAGE_BUCKET")
+            "gs://%s/%s",
+            getenv("GOOGLE_STORAGE_BUCKET"),
+            $objectName
         ));
 
         $output = $this->runFunctionSnippet('entities_export', [
@@ -61,5 +63,14 @@ class EntitiesTest extends TestCase
         ]);
 
         $this->assertEquals('The import operation succeeded' . PHP_EOL, $output);
+
+        $storage = new StorageClient([
+            'projectId' => self::$projectId,
+        ]);
+
+        $object = $storage->bucket(getenv("GOOGLE_STORAGE_BUCKET"))->object($objectName);
+        if ($object->exists()) {
+            $object->delete();
+        }
     }
 }
