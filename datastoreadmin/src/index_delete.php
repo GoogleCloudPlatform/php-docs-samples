@@ -43,7 +43,7 @@ function index_delete($projectId, $indexId)
 
     $operation->pollUntilComplete();
     if (!$operation->operationFailed()) {
-        print('The delete index operation succeeded' . PHP_EOL);
+        print('The delete index operation succeeded.' . PHP_EOL);
     } else {
         print('The delete index operation failed.');
     }
