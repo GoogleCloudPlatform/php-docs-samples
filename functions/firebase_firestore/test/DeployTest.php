@@ -126,7 +126,7 @@ class DeployTest extends TestCase
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
             $this->assertStringContainsString($expected, $actual);
-        }, null, 5);
+        }, 5, 30);
     }
 
     /**
