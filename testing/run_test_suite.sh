@@ -36,6 +36,7 @@ REST_TESTS=(
     asset
     bigquerydatatransfer
     bigtable
+    datastoreadmin
     dialogflow
     dlp
     error_reporting
@@ -54,6 +55,7 @@ ALT_PROJECT_TESTS=(
     bigtable
     datastore/api
     datastore/tutorial
+    datastoreadmin
     dialogflow
     dlp
     error_reporting
