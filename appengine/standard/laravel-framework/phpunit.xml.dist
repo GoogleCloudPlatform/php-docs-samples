@@ -17,7 +17,9 @@
 <phpunit bootstrap="../../../testing/bootstrap.php">
     <testsuites>
         <testsuite name="AppEngine for PHP 7.2 Laravel Framework test">
-            <directory>test</directory>
+            <!-- This sample is BROKEN! See issue link below. -->
+            <!-- https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1349 -->
+            <!-- <directory>test</directory> -->
         </testsuite>
     </testsuites>
     <filter>
