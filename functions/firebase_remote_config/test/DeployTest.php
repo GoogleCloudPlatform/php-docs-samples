@@ -24,6 +24,7 @@ use Google\Auth\CredentialsLoader;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Class DeployTest.
@@ -97,10 +98,11 @@ class DeployTest extends TestCase
         string $expected
     ): void {
         // Trigger config update.
-        $objectUri = $this->updateRemoteConfig(
+        $apiResponse = $this->updateRemoteConfig(
             $key,
             $value
         );
+        $this->assertEquals($apiResponse->getStatusCode(), 200);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected, $label) {
@@ -130,7 +132,7 @@ class DeployTest extends TestCase
     private function updateRemoteConfig(
         string $key,
         string $value
-    ): void {
+    ): Response {
         $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
 
         if (empty(self::$apiHttpClient)) {
@@ -149,7 +151,7 @@ class DeployTest extends TestCase
                 ]
             ]
         ];
-        $response = self::$apiHttpClient->put('', [
+        return self::$apiHttpClient->put('', [
             'headers' => ['If-Match' => '*'],
             'json' => $json
         ]);
