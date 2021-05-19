@@ -48,3 +48,5 @@ function create_push_subscription($projectId, $topicName, $subscriptionName, $en
     printf('Subscription created: %s' . PHP_EOL, $subscription->name());
 }
 # [END pubsub_create_push_subscription]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
