@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\PubSub\Tests;
+namespace Google\Cloud\Samples\PubSub;
 
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\PubSub\V1\PublisherClient;
@@ -41,7 +41,6 @@ class SchemaTest extends TestCase
 
     /**
      * @dataProvider definitions
-     * @runInSeparateProcess
      */
     public function testCreateGetListAndDelete($type, $definitionFile)
     {
@@ -91,7 +90,6 @@ class SchemaTest extends TestCase
 
     /**
      * @dataProvider definitions
-     * @runInSeparateProcess
      */
     public function testCreateTopicWithSchemaBinaryEncoding($type, $definitionFile)
     {
@@ -127,7 +125,6 @@ class SchemaTest extends TestCase
 
     /**
      * @dataProvider definitions
-     * @runInSeparateProcess
      */
     public function testCreateTopicWithSchemaJsonEncoding($type, $definitionFile)
     {
@@ -176,7 +173,6 @@ class SchemaTest extends TestCase
 
     /**
      * @dataProvider encodingTypes
-     * @runInSeparateProcess
      */
     public function testPublishAndSubscribeAvro($encoding)
     {
@@ -228,7 +224,6 @@ class SchemaTest extends TestCase
 
     /**
      * @dataProvider encodingTypes
-     * @runInSeparateProcess
      */
     public function testPublishAndSubscribeProtobuf($encoding)
     {
