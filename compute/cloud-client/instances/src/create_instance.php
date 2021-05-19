@@ -77,9 +77,11 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    // Wait until operation completes
-    $operationClient = new ZoneOperationsClient();
-    $operationClient->wait($operation->getName(), $projectId, $zone);
+    if ($operation->getStatus() === 'RUNNING') {
+        // Wait until operation completes
+        $operationClient = new ZoneOperationsClient();
+        $operationClient->wait($operation->getName(), $projectId, $zone);
+    }
 
     printf('Created instance %s' . PHP_EOL, $instanceName);
 }

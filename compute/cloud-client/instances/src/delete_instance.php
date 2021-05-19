@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Compute;
 
 use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\ZoneOperationsClient;
 
 /**
  * Creates an instance.
@@ -45,12 +46,13 @@ function delete_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
-    // Delete operations should be returned with status=DONE
-    if ($operation->getStatus() !== 'DONE') {
-        printf('Operation has status %s' . PHP_EOL, $operation->getStatus());
-    } else {
-        printf('Deleted instance %s' . PHP_EOL, $instanceName);
+    if ($operation->getStatus() === 'RUNNING') {
+        // Wait until operation completes
+        $operationClient = new ZoneOperationsClient();
+        $operationClient->wait($operation->getName(), $projectId, $zone);
     }
+
+    printf('Deleted instance %s' . PHP_EOL, $instanceName);
 }
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
