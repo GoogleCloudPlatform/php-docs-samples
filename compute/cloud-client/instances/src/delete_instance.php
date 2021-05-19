@@ -45,9 +45,12 @@ function delete_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
-    /** TODO: wait until operation completes */
-
-    printf('Deleted instance %s' . PHP_EOL, $instanceName);
+    // Delete operations should be returned with status=DONE
+    if ($operation->getStatus() !== 'DONE') {
+        printf('Operation has status %s' . PHP_EOL, $operation->getStatus());
+    } else {
+        printf('Deleted instance %s' . PHP_EOL, $instanceName);
+    }
 }
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';

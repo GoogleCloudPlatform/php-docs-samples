@@ -28,6 +28,7 @@ use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Instance;
 use Google\Cloud\Compute\V1\NetworkInterface;
+use Google\Cloud\Compute\V1\ZoneOperationsClient;
 
 /**
  * Creates an instance.
@@ -76,7 +77,9 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    /** TODO: wait until operation completes */
+    // Wait until operation completes
+    $operationClient = new ZoneOperationsClient();
+    $operationClient->wait($operation->getName(), $projectId, $zone);
 
     printf('Created instance %s' . PHP_EOL, $instanceName);
 }
