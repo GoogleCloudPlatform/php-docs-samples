@@ -8,11 +8,12 @@ class Schema
 {
     public static $is_initialized = false;
 
-    public static function initOnce() {
+    public static function initOnce()
+    {
         $pool = \Google\Protobuf\Internal\DescriptorPool::getGeneratedPool();
 
         if (static::$is_initialized == true) {
-          return;
+            return;
         }
         $pool->internalAddGeneratedFile(
             '
@@ -21,10 +22,10 @@ m
 
 StateProto
 name (	
-	post_abbr (	bproto3'
-        , true);
+	post_abbr (	bproto3',
+            true
+        );
 
         static::$is_initialized = true;
     }
 }
-
