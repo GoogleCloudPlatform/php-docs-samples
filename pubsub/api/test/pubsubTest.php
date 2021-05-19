@@ -295,8 +295,8 @@ class PubSubTest extends TestCase
 
         $this->runEventuallyConsistentTest(function () use ($subscription, $messageData) {
             $output = $this->runFunctionSnippet('pull_messages', [
-                'projectId' => self::$projectId,
-                'subscription' => $subscription,
+                self::$projectId,
+                $subscription,
             ]);
             $this->assertStringContainsString($messageData, $output);
         });
