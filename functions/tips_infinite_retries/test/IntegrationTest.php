@@ -103,6 +103,10 @@ class IntegrationTest extends TestCase
         );
 
         // Verify the function's behavior is correct.
-        $this->assertContains($expected, $actual, $label . ' contains');
+        $this->assertStringContainsString(
+            $expected,
+            $actual,
+            $label . ' contains'
+        );
     }
 }

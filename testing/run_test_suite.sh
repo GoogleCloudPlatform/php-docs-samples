@@ -105,6 +105,12 @@ if ! type $TESTCMD > /dev/null; then
   exit 1
 fi
 
+if [ "${RUN_DEPLOYMENT_TESTS}" = "true" ]; then
+    TESTCMD="$TESTCMD --group deploy"
+else
+    TESTCMD="$TESTCMD --exclude-group deploy"
+fi
+
 run_tests()
 {
     if [[ " ${ALT_PROJECT_TESTS[@]} " =~ " ${DIR} " ]] && [ ! -z "$GOOGLE_ALT_PROJECT_ID" ]; then

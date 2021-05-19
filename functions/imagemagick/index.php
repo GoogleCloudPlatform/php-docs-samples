@@ -105,7 +105,8 @@ function blurImage(
         fwrite($log, 'Streamed blurred image to: ' . $gcsPath . PHP_EOL);
     } catch (Exception $e) {
         throw new Exception(
-            sprintf('Unable to stream blurred image to %s: %s',
+            sprintf(
+                'Unable to stream blurred image to %s: %s',
                 $gcsPath,
                 $e->getMessage()
             )

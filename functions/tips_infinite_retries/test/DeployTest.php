@@ -53,10 +53,6 @@ class DeployTest extends TestCase
         // Send Pub/Sub message.
         $this->publishMessage();
 
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(30);
-
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) {
             // Concatenate all relevant log messages.
@@ -71,8 +67,8 @@ class DeployTest extends TestCase
             $this->assertGreaterThan(1, $retryCount);
 
             // Check that the function has stopped retrying
-            $this->assertContains('Dropping event', $actual);
-        });
+            $this->assertStringContainsString('Dropping event', $actual);
+        }, 3, 30);
     }
 
     private function publishMessage(): void
@@ -95,7 +91,7 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        self::$projectId = self::requireEnv('GOOGLE_CLOUD_PROJECT');
+        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         self::$topicName = self::requireEnv('FUNCTIONS_TOPIC');
         return self::$fn->deploy(['--retry' => ''], '--trigger-topic=' . self::$topicName);
     }
