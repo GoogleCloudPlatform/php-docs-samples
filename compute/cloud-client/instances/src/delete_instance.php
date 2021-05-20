@@ -60,7 +60,7 @@ function delete_instance(
 
         // Default timeout of 60s is not always enough for operation to finish,
         // to avoid an exception we set timeout to 180000 ms = 180 s = 3 minutes
-        $optionalArgs = array('timeoutMillis' => 180000);
+        $optionalArgs = ['timeoutMillis' => 180000];
         $operationClient->wait($operation->getName(), $projectId, $zone, $optionalArgs);
     }
     # [END compute_instances_operation_check]
