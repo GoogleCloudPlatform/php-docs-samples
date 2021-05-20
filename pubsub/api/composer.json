@@ -2,6 +2,6 @@
     "require": {
         "php": ">=5.4",
         "google/cloud-pubsub": "^1.29",
-        "symfony/console": " ^3.0"
+        "symfony/console": " ^5.0"
     }
 }

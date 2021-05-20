@@ -5,8 +5,8 @@
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
         "monolog/monolog": "^1.19",
-        "symfony/console": " ^2.7",
-        "symfony/process": "^3.0",
+        "symfony/console": " ^5.0",
+        "symfony/process": "^5.0",
         "paragonie/random_compat": " ^9.0"
     }
 }
