@@ -29,6 +29,7 @@ use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Instance;
 use Google\Cloud\Compute\V1\NetworkInterface;
+use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\ZoneOperationsClient;
 
 /**
@@ -80,7 +81,7 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    if ($operation->getStatus() === 'RUNNING') {
+    if ($operation->getStatus() === Operation\Status::RUNNING) {
         // Wait until operation completes
         $operationClient = new ZoneOperationsClient();
         $operationClient->wait($operation->getName(), $projectId, $zone);
