@@ -28,6 +28,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
 # [START compute_instances_operation_check]
 use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\ZoneOperationsClient;
+
 # [END compute_instances_operation_check]
 
 /**
