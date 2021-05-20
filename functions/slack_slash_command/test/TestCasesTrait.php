@@ -70,7 +70,7 @@ trait TestCasesTrait
                 'expected' => null,
                 'statusCode' => '403',
                 'headers' => [
-                    'X-Slack-Request-Timestamp' => '0',
+                    'X-Slack-Request-Timestamp' => '1',
                     'X-Slack-Signature' =>
                     'bad_signature'
                 ],

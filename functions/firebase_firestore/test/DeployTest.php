@@ -56,19 +56,31 @@ class DeployTest extends TestCase
     private static $firestoreClient;
 
     /**
+     * Override the default project ID set by CloudFunctionDeploymentTrait.
+     */
+    private static function checkProjectEnvVars()
+    {
+        if (empty(self::$projectId)) {
+            self::$projectId = self::requireOneOfEnv([
+                'FIRESTORE_PROJECT_ID',
+                'GOOGLE_PROJECT_ID'
+            ]);
+        }
+    }
+
+    /**
      * Deploy the Cloud Function, called from DeploymentTrait::deployApp().
      *
      * Overrides CloudFunctionDeploymentTrait::doDeploy().
      */
     private static function doDeploy()
     {
-        $project = self::requireOneOfEnv([
-            'FIRESTORE_PROJECT_ID',
-            'GOOGLE_PROJECT_ID'
-        ]);
-
-        $resource =
-            'projects/' . $project . '/databases/(default)/documents/' . self::$collectionName . '/' . self::$documentName;
+        $resource = sprintf(
+            'projects/%s/databases/(default)/documents/%s/%s',
+            self::$projectId,
+            self::$collectionName,
+            self::$documentName
+        );
         $event = 'providers/cloud.firestore/eventTypes/document.write';
 
         return self::$fn->deploy([
@@ -100,10 +112,6 @@ class DeployTest extends TestCase
             $data
         );
 
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(5);
-
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected) {
             // Concatenate all relevant log messages.
@@ -118,7 +126,7 @@ class DeployTest extends TestCase
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
             $this->assertStringContainsString($expected, $actual);
-        });
+        }, 5, 30);
     }
 
     /**
@@ -136,7 +144,9 @@ class DeployTest extends TestCase
         array $data
     ): void {
         if (empty(self::$firestore)) {
-            self::$firestoreClient = new FirestoreClient();
+            self::$firestoreClient = new FirestoreClient(
+                ['projectId' => self::$projectId]
+            );
         }
 
         self::$firestoreClient

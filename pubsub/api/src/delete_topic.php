@@ -43,3 +43,5 @@ function delete_topic($projectId, $topicName)
     printf('Topic deleted: %s' . PHP_EOL, $topic->name());
 }
 # [END pubsub_delete_topic]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
