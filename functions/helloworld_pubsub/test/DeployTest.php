@@ -81,9 +81,8 @@ class DeployTest extends TestCase
                 $actual .= $info['textPayload'];
             }
 
-            $expected = 'Hello, ' . $name . '!';
             $this->assertStringContainsString($expected, $actual, $label);
-        });
+        }, 5, 10);
     }
 
     private function publishMessage(string $name): void
@@ -106,7 +105,7 @@ class DeployTest extends TestCase
      */
     private static function doDeploy()
     {
-        self::$projectId = self::requireEnv('GOOGLE_CLOUD_PROJECT');
+        self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         self::$topicName = self::requireEnv('FUNCTIONS_TOPIC');
 
         return self::$fn->deploy([], '--trigger-topic=' . self::$topicName);
