@@ -41,11 +41,11 @@ function list_all_instances(string $projectId)
 {
     // List the new Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
-    $aggList = $instancesClient->aggregatedList($projectId);
+    $allInstances = $instancesClient->aggregatedList($projectId);
 
     printf('All instances for %s' . PHP_EOL, $projectId);
-    foreach ($aggList as $zone => $response) {
-        $instances = $response->getInstances();
+    foreach ($allInstances as $zone => $zoneInstances) {
+        $instances = $zoneInstances->getInstances();
         if (count($instances) > 0) {
             printf('Zone - %s' . PHP_EOL, $zone);
             foreach ($instances as $instance) {
