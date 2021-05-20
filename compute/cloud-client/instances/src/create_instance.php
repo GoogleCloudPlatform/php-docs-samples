@@ -23,6 +23,7 @@
 
 namespace Google\Cloud\Samples\Compute;
 
+# [START compute_instances_create]
 use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
@@ -38,11 +39,13 @@ use Google\Cloud\Compute\V1\ZoneOperationsClient;
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to create the instance in (e.g. "us-central1-a")
+ * @param string $zone The zone to create the instance in (e.g. "us-central1-a").
  * @param string $instanceName The unique name for this Compute instance.
- * @param string $machineType Instance machine type
- * @param string $sourceImage Boot disk image name or family
+ * @param string $machineType Instance machine type.
+ * @param string $sourceImage Boot disk image name or family.
  * @param string $networkName The Compute instance ID.
+ *
+ * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function create_instance(
     string $projectId,
@@ -85,6 +88,7 @@ function create_instance(
 
     printf('Created instance %s' . PHP_EOL, $instanceName);
 }
+# [END compute_instances_create]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
