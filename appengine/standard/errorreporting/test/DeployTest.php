@@ -33,7 +33,7 @@ class DeployTest extends TestCase
 
     public function setUp(): void
     {
-        $this->projectId = getenv('GOOGLE_PROJECT_ID');
+        self::$projectId = getenv('GOOGLE_PROJECT_ID');
     }
 
     public function testIndex()
@@ -98,7 +98,7 @@ class DeployTest extends TestCase
     private function verifyReportedError($message, $retryCount = 5)
     {
         $errorStats = new ErrorStatsServiceClient();
-        $projectName = $errorStats->projectName($this->projectId);
+        $projectName = $errorStats->projectName(self::$projectId);
 
         $timeRange = (new QueryTimeRange())
             ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
@@ -111,7 +111,10 @@ class DeployTest extends TestCase
             $message
         ) {
             $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange);
+            $response = $errorStats->listGroupStats(
+                $projectName,
+                ['timeRange' => $timeRange]
+            );
             foreach ($response->iterateAllElements() as $groupStat) {
                 $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId(), [
                     'timeRange' => $timeRange,

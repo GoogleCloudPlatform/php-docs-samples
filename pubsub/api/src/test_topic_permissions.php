@@ -48,3 +48,5 @@ function test_topic_permissions($projectId, $topicName)
     }
 }
 # [END pubsub_test_topic_permissions]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
