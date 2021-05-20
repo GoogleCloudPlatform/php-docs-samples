@@ -70,3 +70,5 @@ function publish_message_batch($projectId, $topicName, $message)
     print('Messages enqueued for publication.' . PHP_EOL);
 }
 # [END pubsub_publisher_batch_settings]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

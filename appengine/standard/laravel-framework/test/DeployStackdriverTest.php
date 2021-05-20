@@ -66,6 +66,10 @@ class DeployStackdriverTest extends TestCase
 
     public function testLogging()
     {
+        $this->markTestSkipped(
+            'This sample is BROKEN. See https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1349'
+        );
+
         $logging = new LoggingClient([
             'projectId' => self::getProjectId()
         ]);
@@ -98,6 +102,10 @@ class DeployStackdriverTest extends TestCase
 
     public function testErrorReporting()
     {
+        $this->markTestSkipped(
+            'This sample is BROKEN. See https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1349'
+        );
+
         $logging = new LoggingClient([
             'projectId' => self::getProjectId()
         ]);
