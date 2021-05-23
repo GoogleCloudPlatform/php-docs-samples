@@ -54,7 +54,7 @@ class firestoreTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         foreach (self::$firestoreClient->document('samples/php')->collections() as $ref) {
-            self::runFirestoreSnippet('delete_collection', [
+            self::runFirestoreSnippet('data_delete_collection', [
                 'collectionReference' => $ref,
                 'batchSize' => 2,
             ]);
@@ -65,19 +65,19 @@ class firestoreTest extends TestCase
 
     public function testInitialize()
     {
-        $output = $this->runFirestoreSnippet('initialize', []);
+        $output = $this->runFirestoreSnippet('setup_client_create', []);
         $this->assertStringContainsString('Created Cloud Firestore client with default project ID.', $output);
     }
 
     public function testInitializeProjectId()
     {
-        $output = $this->runFirestoreSnippet('initialize_project_id');
+        $output = $this->runFirestoreSnippet('setup_client_create_with_project_id');
         $this->assertStringContainsString('Created Cloud Firestore client with project ID:', $output);
     }
 
     public function testAddData()
     {
-        $output = $this->runFirestoreSnippet('add_data');
+        $output = $this->runFirestoreSnippet('setup_dataset');
         $this->assertStringContainsString('Added data to the lovelace document in the users collection.', $output);
         $this->assertStringContainsString('Added data to the aturing document in the users collection.', $output);
     }
@@ -87,7 +87,7 @@ class firestoreTest extends TestCase
      */
     public function testRetrieveAllDocuments()
     {
-        $output = $this->runFirestoreSnippet('get_all');
+        $output = $this->runFirestoreSnippet('setup_dataset_read');
         $this->assertStringContainsString('User:', $output);
         $this->assertStringContainsString('First: Ada', $output);
         $this->assertStringContainsString('Last: Lovelace', $output);
@@ -104,7 +104,7 @@ class firestoreTest extends TestCase
      */
     public function testSetDocument()
     {
-        $output = $this->runFirestoreSnippet('set_document');
+        $output = $this->runFirestoreSnippet('data_set_from_map');
         $this->assertStringContainsString('Set data for the LA document in the cities collection.', $output);
     }
 
@@ -113,7 +113,7 @@ class firestoreTest extends TestCase
      */
     public function testAddDocDataTypes()
     {
-        $output = $this->runFirestoreSnippet('add_doc_data_types');
+        $output = $this->runFirestoreSnippet('data_set_from_map_nested');
         $this->assertStringContainsString('Set multiple data-type data for the one document in the data collection.', $output);
     }
 
@@ -122,7 +122,7 @@ class firestoreTest extends TestCase
      */
     public function testSetRequiresId()
     {
-        $output = $this->runFirestoreSnippet('set_requires_id');
+        $output = $this->runFirestoreSnippet('data_set_id_specified');
         $this->assertStringContainsString('Added document with ID: new-city-id', $output);
     }
 
@@ -131,7 +131,7 @@ class firestoreTest extends TestCase
      */
     public function testAddDocDataWithAutoId()
     {
-        $output = $this->runFirestoreSnippet('add_doc_data_with_auto_id');
+        $output = $this->runFirestoreSnippet('data_set_id_random_collection');
         $this->assertStringContainsString('Added document with ID:', $output);
     }
 
@@ -140,13 +140,13 @@ class firestoreTest extends TestCase
      */
     public function testAddDocDataAfterAutoId()
     {
-        $output = $this->runFirestoreSnippet('add_doc_data_after_auto_id');
+        $output = $this->runFirestoreSnippet('data_set_id_random_document_ref');
         $this->assertStringContainsString('Added document with ID:', $output);
     }
 
     public function testQueryCreateExamples()
     {
-        $output = $this->runFirestoreSnippet('query_create_examples');
+        $output = $this->runFirestoreSnippet('query_filter_dataset');
         $this->assertStringContainsString('Added example cities data to the cities collection.', $output);
     }
 
@@ -155,7 +155,7 @@ class firestoreTest extends TestCase
      */
     public function testCreateQueryState()
     {
-        $output = $this->runFirestoreSnippet('create_query_state');
+        $output = $this->runFirestoreSnippet('query_filter_eq_string');
         $this->assertStringContainsString('Document SF returned by query state=CA', $output);
         $this->assertStringContainsString('Document LA returned by query state=CA', $output);
     }
@@ -165,7 +165,7 @@ class firestoreTest extends TestCase
      */
     public function testCreateQueryCapital()
     {
-        $output = $this->runFirestoreSnippet('create_query_capital');
+        $output = $this->runFirestoreSnippet('query_filter_eq_boolean');
         $this->assertStringContainsString('Document BJ returned by query capital=true', $output);
         $this->assertStringContainsString('Document DC returned by query capital=true', $output);
         $this->assertStringContainsString('Document TOK returned by query capital=true', $output);
@@ -176,7 +176,7 @@ class firestoreTest extends TestCase
      */
     public function testSimpleQueries()
     {
-        $output = $this->runFirestoreSnippet('simple_queries');
+        $output = $this->runFirestoreSnippet('query_filter_single_examples');
         $this->assertStringContainsString('Document LA returned by query state=CA', $output);
         $this->assertStringContainsString('Document SF returned by query state=CA', $output);
         $this->assertStringContainsString('Document BJ returned by query population>1000000', $output);
@@ -191,7 +191,7 @@ class firestoreTest extends TestCase
      */
     public function testArrayMembership()
     {
-        $output = $this->runFirestoreSnippet('array_membership');
+        $output = $this->runFirestoreSnippet('query_filter_array_contains');
         $this->assertStringContainsString('Document LA returned by query regions array-contains west_coast', $output);
         $this->assertStringContainsString('Document SF returned by query regions array-contains west_coast', $output);
     }
@@ -202,7 +202,7 @@ class firestoreTest extends TestCase
      */
     public function testArrayMembershipAny()
     {
-        $output = $this->runFirestoreSnippet('array_membership_any');
+        $output = $this->runFirestoreSnippet('query_filter_array_contains_any');
         $this->assertStringContainsString('Document DC returned by query regions array-contains-any [west_coast, east_coast]', $output);
         $this->assertStringContainsString('Document LA returned by query regions array-contains-any [west_coast, east_coast]', $output);
         $this->assertStringContainsString('Document SF returned by query regions array-contains-any [west_coast, east_coast]', $output);
@@ -213,7 +213,7 @@ class firestoreTest extends TestCase
      */
     public function testInQuery()
     {
-        $output = $this->runFirestoreSnippet('in_query');
+        $output = $this->runFirestoreSnippet('query_filter_in');
         $this->assertStringContainsString('Document DC returned by query country in [USA, Japan]', $output);
         $this->assertStringContainsString('Document LA returned by query country in [USA, Japan]', $output);
         $this->assertStringContainsString('Document SF returned by query country in [USA, Japan]', $output);
@@ -225,7 +225,7 @@ class firestoreTest extends TestCase
      */
     public function testInArrayQuery()
     {
-        $output = $this->runFirestoreSnippet('in_array_query');
+        $output = $this->runFirestoreSnippet('query_filter_in_with_array');
         $this->assertStringContainsString('Document DC returned by query regions in [[west_coast], [east_coast]]', $output);
         $this->assertStringNotContainsString('Document SF', $output);
     }
@@ -235,7 +235,7 @@ class firestoreTest extends TestCase
      */
     public function testChainedQuery()
     {
-        $output = $this->runFirestoreSnippet('chained_query');
+        $output = $this->runFirestoreSnippet('query_filter_compound_multi_eq');
         $this->assertStringContainsString('Document SF returned by query state=CA and name=San Francisco', $output);
     }
 
@@ -245,7 +245,7 @@ class firestoreTest extends TestCase
     public function testCompositeIndexChainedQuery()
     {
         try {
-            $output = $this->runFirestoreSnippet('composite_index_chained_query');
+            $output = $this->runFirestoreSnippet('query_filter_compound_multi_eq_lt');
             $this->assertStringContainsString('Document SF returned by query state=CA and population<1000000', $output);
         } catch (FailedPreconditionException $e) {
             $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
@@ -257,7 +257,7 @@ class firestoreTest extends TestCase
      */
     public function testRangeQuery()
     {
-        $output = $this->runFirestoreSnippet('range_query');
+        $output = $this->runFirestoreSnippet('query_filter_range_valid');
         $this->assertStringContainsString('Document LA returned by query CA<=state<=IN', $output);
         $this->assertStringContainsString('Document SF returned by query CA<=state<=IN', $output);
     }
@@ -271,7 +271,7 @@ class firestoreTest extends TestCase
         $this->expectExceptionMessage(
             'Cannot have inequality filters on multiple properties'
         );
-        $this->runFirestoreSnippet('invalid_range_query');
+        $this->runFirestoreSnippet('query_filter_range_invalid');
     }
 
     /**
@@ -280,7 +280,7 @@ class firestoreTest extends TestCase
     public function testCollectionGroupQuerySetup()
     {
         try {
-            $output = $this->runFirestoreSnippet('collection_group_query_setup');
+            $output = $this->runFirestoreSnippet('query_collection_group_dataset');
             $this->assertStringContainsString('Added example landmarks collections to the cities collection.', $output);
         } catch (FailedPreconditionException $e) {
             $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
@@ -292,17 +292,8 @@ class firestoreTest extends TestCase
      */
     public function testCollectionGroupQuery()
     {
-        $output = $this->runFirestoreSnippet('collection_group_query');
-        $this->assertStringContainsString('Beijing Ancient Observatory', $output);
-        $this->assertStringContainsString('National Air and Space Museum', $output);
-        $this->assertStringContainsString('The Getty', $output);
-        $this->assertStringContainsString('Legion of Honor', $output);
-        $this->assertStringContainsString('National Museum of Nature and Science', $output);
-        $this->assertStringNotContainsString('Golden Gate Bridge', $output);
-        $this->assertStringNotContainsString('Griffith Park', $output);
-        $this->assertStringNotContainsString('Lincoln Memorial', $output);
-        $this->assertStringNotContainsString('Ueno Park', $output);
-        $this->assertStringNotContainsString('Jingshan Park', $output);
+        $output = $this->runFirestoreSnippet('query_collection_group_dataset');
+        $this->assertStringContainsString('Added example landmarks collections to the cities collection.', $output);
     }
 
     /**
@@ -314,7 +305,7 @@ class firestoreTest extends TestCase
      */
     public function testDeleteDocument()
     {
-        $output = $this->runFirestoreSnippet('delete_doc');
+        $output = $this->runFirestoreSnippet('data_delete_doc');
         $this->assertStringContainsString('Deleted the DC document in the cities collection.', $output);
     }
 
@@ -323,7 +314,7 @@ class firestoreTest extends TestCase
      */
     public function testDeleteField()
     {
-        $output = $this->runFirestoreSnippet('delete_field');
+        $output = $this->runFirestoreSnippet('data_delete_field');
         $this->assertStringContainsString('Deleted the capital field from the BJ document in the cities collection.', $output);
     }
 
@@ -333,7 +324,7 @@ class firestoreTest extends TestCase
     public function testDeleteCollection()
     {
         $col = self::$firestoreClient->collection('samples/php/cities');
-        $output = $this->runFirestoreSnippet('delete_collection', [
+        $output = $this->runFirestoreSnippet('data_delete_collection', [
             'collectionReference' => $col,
             'batchSize' => 2,
         ]);
@@ -349,7 +340,7 @@ class firestoreTest extends TestCase
      */
     public function testRetrieveCreateExamples()
     {
-        $output = $this->runFirestoreSnippet('retrieve_create_examples');
+        $output = $this->runFirestoreSnippet('data_get_dataset');
         $this->assertStringContainsString('Added example cities data to the cities collection.', $output);
     }
 
@@ -358,7 +349,7 @@ class firestoreTest extends TestCase
      */
     public function testGetDocument()
     {
-        $output = $this->runFirestoreSnippet('get_document');
+        $output = $this->runFirestoreSnippet('data_get_as_map');
         $this->assertStringContainsString('Document data:', $output);
         $this->assertStringContainsString('[population] => 860000', $output);
         $this->assertStringContainsString('[state] => CA', $output);
@@ -372,7 +363,7 @@ class firestoreTest extends TestCase
      */
     public function testGetMultipleDocs()
     {
-        $output = $this->runFirestoreSnippet('get_multiple_docs');
+        $output = $this->runFirestoreSnippet('data_query');
         $this->assertStringContainsString('Document data for document DC:', $output);
         $this->assertStringContainsString('Document data for document TOK:', $output);
         $this->assertStringContainsString('[name] => Washington D.C.', $output);
@@ -384,7 +375,7 @@ class firestoreTest extends TestCase
      */
     public function testGetAllDocs()
     {
-        $output = $this->runFirestoreSnippet('get_all_docs');
+        $output = $this->runFirestoreSnippet('data_get_all_documents');
         $this->assertStringContainsString('Document data for document LA:', $output);
         $this->assertStringContainsString('[name] => Los Angeles', $output);
     }
@@ -401,7 +392,7 @@ class firestoreTest extends TestCase
         ];
         $subcollectionRef->document('Marina')->set($data);
 
-        $output = $this->runFirestoreSnippet('list_subcollections');
+        $output = $this->runFirestoreSnippet('data_get_sub_collections');
         $this->assertStringContainsString('Found subcollection with id: neighborhoods', $output);
     }
 
@@ -410,7 +401,7 @@ class firestoreTest extends TestCase
      */
     public function testOrderByNameLimitQuery()
     {
-        $output = $this->runFirestoreSnippet('order_by_name_limit_query');
+        $output = $this->runFirestoreSnippet('query_order_limit');
         $this->assertStringContainsString('Document BJ returned by order by name with limit query', $output);
         $this->assertStringContainsString('Document LA returned by order by name with limit query', $output);
         $this->assertStringContainsString('Document SF returned by order by name with limit query', $output);
@@ -421,7 +412,7 @@ class firestoreTest extends TestCase
      */
     public function testOrderByNameDescLimitQuery()
     {
-        $output = $this->runFirestoreSnippet('order_by_name_desc_limit_query');
+        $output = $this->runFirestoreSnippet('query_order_desc_limit');
         $this->assertStringContainsString('Document DC returned by order by name descending with limit query', $output);
         $this->assertStringContainsString('Document TOK returned by order by name descending with limit query', $output);
         $this->assertStringContainsString('Document SF returned by order by name descending with limit query', $output);
@@ -433,7 +424,7 @@ class firestoreTest extends TestCase
     public function testOrderByStateAndPopulationQuery()
     {
         try {
-            $output = $this->runFirestoreSnippet('order_by_state_and_population_query');
+            $output = $this->runFirestoreSnippet('query_order_multi');
             $this->assertStringContainsString('Document LA returned by order by state and descending population query', $output);
             $this->assertStringContainsString('Document SF returned by order by state and descending population query', $output);
             $this->assertStringContainsString('Document BJ returned by order by state and descending population query', $output);
@@ -449,7 +440,7 @@ class firestoreTest extends TestCase
      */
     public function testWhereOrderByLimitQuery()
     {
-        $output = $this->runFirestoreSnippet('where_order_by_limit_query');
+        $output = $this->runFirestoreSnippet('query_order_limit_field_valid');
         $this->assertStringContainsString('Document LA returned by where order by limit query', $output);
         $this->assertStringContainsString('Document TOK returned by where order by limit query', $output);
     }
@@ -459,7 +450,7 @@ class firestoreTest extends TestCase
      */
     public function testRangeOrderByQuery()
     {
-        $output = $this->runFirestoreSnippet('range_order_by_query');
+        $output = $this->runFirestoreSnippet('query_order_with_filter');
         $this->assertStringContainsString('Document LA returned by range with order by query', $output);
         $this->assertStringContainsString('Document TOK returned by range with order by query', $output);
         $this->assertStringContainsString('Document BJ returned by range with order by query', $output);
@@ -474,30 +465,30 @@ class firestoreTest extends TestCase
         $this->expectExceptionMessage(
             'inequality filter property and first sort order must be the same'
         );
-        $this->runFirestoreSnippet('invalid_range_order_by_query');
+        $this->runFirestoreSnippet('query_order_field_invalid');
     }
 
     public function testDocumentRef()
     {
-        $output = $this->runFirestoreSnippet('document_ref');
+        $output = $this->runFirestoreSnippet('data_reference_document');
         $this->assertStringContainsString('Retrieved document: ', $output);
     }
 
     public function testCollectionRef()
     {
-        $output = $this->runFirestoreSnippet('collection_ref');
+        $output = $this->runFirestoreSnippet('data_reference_collection');
         $this->assertStringContainsString('Retrieved collection: ', $output);
     }
 
     public function testDocumentPathRef()
     {
-        $output = $this->runFirestoreSnippet('document_path_ref');
+        $output = $this->runFirestoreSnippet('data_reference_document_path');
         $this->assertStringContainsString('Retrieved document from path: ', $output);
     }
 
     public function testSubcollectionRef()
     {
-        $output = $this->runFirestoreSnippet('subcollection_ref');
+        $output = $this->runFirestoreSnippet('data_reference_subcollection');
         $this->assertStringContainsString('Retrieved document from subcollection: ', $output);
     }
 
@@ -506,7 +497,7 @@ class firestoreTest extends TestCase
      */
     public function testUpdateDoc()
     {
-        $output = $this->runFirestoreSnippet('update_doc');
+        $output = $this->runFirestoreSnippet('data_set_field');
         $this->assertStringContainsString('Updated the capital field of the DC document in the cities collection.', $output);
     }
 
@@ -515,7 +506,7 @@ class firestoreTest extends TestCase
      */
     public function testUpdateDocArray()
     {
-        $output = $this->runFirestoreSnippet('update_doc_array');
+        $output = $this->runFirestoreSnippet('data_set_array_operations');
         $this->assertStringContainsString('Updated the regions field of the DC document in the cities collection.', $output);
     }
 
@@ -524,7 +515,7 @@ class firestoreTest extends TestCase
      */
     public function testSetDocumentMerge()
     {
-        $output = $this->runFirestoreSnippet('set_document_merge');
+        $output = $this->runFirestoreSnippet('data_set_doc_upsert');
         $this->assertStringContainsString('Set document data by merging it into the existing BJ document in the cities collection.', $output);
     }
 
@@ -533,7 +524,7 @@ class firestoreTest extends TestCase
      */
     public function testUpdateNestedFields()
     {
-        $output = $this->runFirestoreSnippet('update_nested_fields');
+        $output = $this->runFirestoreSnippet('data_set_nested_fields');
         $this->assertStringContainsString('Updated the age and favorite color fields of the frank document in the users collection.', $output);
     }
 
@@ -542,7 +533,7 @@ class firestoreTest extends TestCase
      */
     public function testUpdateServerTimestamp()
     {
-        $output = $this->runFirestoreSnippet('update_server_timestamp');
+        $output = $this->runFirestoreSnippet('data_set_server_timestamp');
         $this->assertStringContainsString('Updated the timestamp field of the some-id document in the objects collection.', $output);
     }
 
@@ -551,7 +542,7 @@ class firestoreTest extends TestCase
      */
     public function testRunSimpleTransaction()
     {
-        $output = $this->runFirestoreSnippet('run_simple_transaction');
+        $output = $this->runFirestoreSnippet('transaction_document_update');
         $this->assertStringContainsString('Ran a simple transaction to update the population field in the SF document in the cities collection.', $output);
     }
 
@@ -560,7 +551,7 @@ class firestoreTest extends TestCase
      */
     public function testReturnInfoTransaction()
     {
-        $output = $this->runFirestoreSnippet('return_info_transaction');
+        $output = $this->runFirestoreSnippet('transaction_document_update_conditional');
         $this->assertStringContainsString('Population updated successfully.', $output);
     }
 
@@ -569,7 +560,7 @@ class firestoreTest extends TestCase
      */
     public function testBatchWrite()
     {
-        $output = $this->runFirestoreSnippet('batch_write');
+        $output = $this->runFirestoreSnippet('data_batch_writes');
         $this->assertStringContainsString('Batch write successfully completed.', $output);
     }
 
@@ -578,7 +569,7 @@ class firestoreTest extends TestCase
      */
     public function testStartAtFieldQueryCursor()
     {
-        $output = $this->runFirestoreSnippet('start_at_field_query_cursor');
+        $output = $this->runFirestoreSnippet('query_cursor_start_at_field_value_single');
         $this->assertStringContainsString('Document SF returned by start at population 1000000 field query cursor.', $output);
         $this->assertStringContainsString('Document TOK returned by start at population 1000000 field query cursor.', $output);
         $this->assertStringContainsString('Document BJ returned by start at population 1000000 field query cursor.', $output);
@@ -589,7 +580,7 @@ class firestoreTest extends TestCase
      */
     public function testEndAtFieldQueryCursor()
     {
-        $output = $this->runFirestoreSnippet('end_at_field_query_cursor');
+        $output = $this->runFirestoreSnippet('query_cursor_end_at_field_value_single');
         $this->assertStringContainsString('Document DC returned by end at population 1000000 field query cursor.', $output);
         $this->assertStringContainsString('Document SF returned by end at population 1000000 field query cursor.', $output);
     }
@@ -599,7 +590,7 @@ class firestoreTest extends TestCase
      */
     public function testStartAtSnapshotQueryCursor()
     {
-        $output = $this->runFirestoreSnippet('start_at_snapshot_query_cursor');
+        $output = $this->runFirestoreSnippet('query_cursor_start_at_document');
         $this->assertStringContainsString('Document SF returned by start at SF snapshot query cursor.', $output);
         $this->assertStringContainsString('Document TOK returned by start at SF snapshot query cursor.', $output);
         $this->assertStringContainsString('Document BJ returned by start at SF snapshot query cursor.', $output);
@@ -610,7 +601,7 @@ class firestoreTest extends TestCase
      */
     public function testPaginatedQueryCursor()
     {
-        $output = $this->runFirestoreSnippet('paginated_query_cursor');
+        $output = $this->runFirestoreSnippet('query_cursor_pagination');
         $this->assertStringContainsString('Document BJ returned by paginated query cursor.', $output);
     }
 
@@ -620,28 +611,17 @@ class firestoreTest extends TestCase
     public function testMultipleCursorConditions()
     {
         try {
-            $output = $this->runFirestoreSnippet('multiple_cursor_conditions');
+            $output = $this->runFirestoreSnippet('query_cursor_start_at_field_value_multi');
             $this->assertStringContainsString('Document TOK returned by start at ', $output);
         } catch (FailedPreconditionException $e) {
             $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
         }
     }
 
-    private static function runFirestoreSnippet($snippetName, array $args = null)
-    {
-        if ($args === null) {
-            $args = [
-                'projectId' => self::$firestoreProjectId
-            ];
-        }
-
-        return self::runFunctionSnippet($snippetName, $args);
-    }
-
     public function testDistributedCounter()
     {
-        $this->runFirestoreSnippet('initialize_distributed_counter');
-        $outputZero = $this->runFirestoreSnippet('get_distributed_counter_value');
+        $this->runFirestoreSnippet('solution_sharded_counter_create');
+        $outputZero = $this->runFirestoreSnippet('solution_sharded_counter_get');
         $this->assertStringContainsString('0', $outputZero);
 
         //check count of shards
@@ -658,16 +638,27 @@ class firestoreTest extends TestCase
         $this->assertEquals(10, count($docIdList));
 
         //call thrice and check the value
-        $this->runFirestoreSnippet('update_distributed_counter');
-        $this->runFirestoreSnippet('update_distributed_counter');
-        $this->runFirestoreSnippet('update_distributed_counter');
+        $this->runFirestoreSnippet('solution_sharded_counter_increment');
+        $this->runFirestoreSnippet('solution_sharded_counter_increment');
+        $this->runFirestoreSnippet('solution_sharded_counter_increment');
 
-        $output = $this->runFirestoreSnippet('get_distributed_counter_value');
+        $output = $this->runFirestoreSnippet('solution_sharded_counter_get');
         $this->assertStringContainsString('3', $output);
 
         //remove temporary data
         foreach ($docIdList as $docId) {
             $collect->document($docId)->delete();
         }
+    }
+
+    private static function runFirestoreSnippet($snippetName, array $args = null)
+    {
+        if ($args === null) {
+            $args = [
+                'projectId' => self::$firestoreProjectId
+            ];
+        }
+
+        return self::runFunctionSnippet($snippetName, $args);
     }
 }
