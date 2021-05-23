@@ -233,6 +233,32 @@ class firestoreTest extends TestCase
     /**
      * @depends testQueryCreateExamples
      */
+    public function testNotEqQuery()
+    {
+        $output = $this->runFirestoreSnippet('query_filter_not_eq');
+        $this->assertStringContainsString("Document BJ returned by query state!=false.", $output);
+        $this->assertStringContainsString("Document TOK returned by query state!=false.", $output);
+        $this->assertStringContainsString("Document DC returned by query state!=false.", $output);
+        $this->assertStringNotContainsString("Document LA returned by query state!=false.", $output);
+        $this->assertStringNotContainsString("Document SF returned by query state!=false.", $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
+    public function testNotInQuery()
+    {
+        $output = $this->runFirestoreSnippet('query_filter_not_in');
+        $this->assertStringContainsString('Document BJ returned by query not_in ["USA","Japan"].', $output);
+        $this->assertStringNotContainsString('Document SF returned by query not_in ["USA","Japan"].', $output);
+        $this->assertStringNotContainsString('Document LA returned by query not_in ["USA","Japan"].', $output);
+        $this->assertStringNotContainsString('Document DC returned by query not_in ["USA","Japan"].', $output);
+        $this->assertStringNotContainsString('Document TOK returned by query not_in ["USA","Japan"].', $output);
+    }
+
+    /**
+     * @depends testQueryCreateExamples
+     */
     public function testChainedQuery()
     {
         $output = $this->runFirestoreSnippet('query_filter_compound_multi_eq');

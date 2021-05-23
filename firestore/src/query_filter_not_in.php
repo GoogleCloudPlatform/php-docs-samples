@@ -26,23 +26,27 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Query using the Not Equal operator.
+ * Query using the Not In operator.
  * ```
- * query_filter_not_eq('your-project-id');
+ * query_filter_not_in('your-project-id');
  * ```
  */
-function query_filter_not_eq($projectId)
+function query_filter_not_in($projectId)
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START firestore_query_filter_not_eq]
-    $stateQuery = $citiesRef->where('capital', '!=', false);
-    # [END firestore_query_filter_not_eq]
+    # [START firestore_query_filter_not_in]
+    $stateQuery = $citiesRef->where(
+        'country',
+        \Google\Cloud\Firestore\V1\StructuredQuery\FieldFilter\Operator::NOT_IN,
+        ["USA", "Japan"]
+    );
+    # [END firestore_query_filter_not_in]
     foreach ($stateQuery->documents() as $document) {
-        printf('Document %s returned by query state!=false.' . PHP_EOL, $document->id());
+        printf('Document %s returned by query not_in ["USA","Japan"].' . PHP_EOL, $document->id());
     }
 }
 
