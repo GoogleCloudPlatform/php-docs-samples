@@ -38,9 +38,11 @@ function order_by_name_desc_limit_query($projectId)
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_order_by_name_desc_limit_query]
     # [START firestore_query_order_desc_limit]
     $query = $citiesRef->orderBy('name', 'DESC')->limit(3);
     # [END firestore_query_order_desc_limit]
+    # [END fs_order_by_name_desc_limit_query]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by order by name descending with limit query' . PHP_EOL, $document->id());

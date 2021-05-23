@@ -39,6 +39,7 @@ function update_distributed_counter($projectId)
         'projectId' => $projectId,
     ]);
 
+    # [START fs_update_distributed_counter]
     # [START firestore_solution_sharded_counter_increment]
     $ref = $db->collection('samples/php/distributedCounters');
     $numShards = 0;
@@ -52,6 +53,7 @@ function update_distributed_counter($projectId)
         ['path' => 'Cnt', 'value' => FieldValue::increment(1)]
     ]);
     # [END firestore_solution_sharded_counter_increment]
+    # [END fs_update_distributed_counter]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

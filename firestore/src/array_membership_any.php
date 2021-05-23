@@ -38,9 +38,11 @@ function array_membership_any(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_query_filter_array_contains_any]
     # [START firestore_query_filter_array_contains_any]
     $containsQuery = $citiesRef->where('regions', 'array-contains-any', ['west_coast', 'east_coast']);
     # [END firestore_query_filter_array_contains_any]
+    # [END fs_query_filter_array_contains_any]
     foreach ($containsQuery->documents() as $document) {
         printf('Document %s returned by query regions array-contains-any [west_coast, east_coast]' . PHP_EOL, $document->id());
     }

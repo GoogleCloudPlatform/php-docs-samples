@@ -37,6 +37,7 @@ function query_create_examples($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_query_create_examples]
     # [START firestore_query_filter_dataset]
     $citiesRef = $db->collection('samples/php/cities');
     $citiesRef->document('SF')->set([
@@ -81,6 +82,7 @@ function query_create_examples($projectId)
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
     # [END firestore_query_filter_dataset]
+    # [END fs_query_create_examples]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

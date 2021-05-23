@@ -38,11 +38,13 @@ function range_query($projectId)
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_range_query]
     # [START firestore_query_filter_range_valid]
     $rangeQuery = $citiesRef
         ->where('state', '>=', 'CA')
         ->where('state', '<=', 'IN');
     # [END firestore_query_filter_range_valid]
+    # [END fs_range_query]
     foreach ($rangeQuery->documents() as $document) {
         printf('Document %s returned by query CA<=state<=IN' . PHP_EOL, $document->id());
     }

@@ -42,12 +42,14 @@ function update_server_timestamp($projectId)
     $docRef->set([
         'timestamp' => 'N/A'
     ]);
+    # [START fs_update_server_timestamp]
     # [START firestore_data_set_server_timestamp]
     $docRef = $db->collection('samples/php/objects')->document('some-id');
     $docRef->update([
         ['path' => 'timestamp', 'value' => FieldValue::serverTimestamp()]
     ]);
     # [END firestore_data_set_server_timestamp]
+    # [END fs_update_server_timestamp]
     printf('Updated the timestamp field of the some-id document in the objects collection.' . PHP_EOL);
 }
 

@@ -37,6 +37,7 @@ function get_all_docs($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_get_all_docs]
     # [START firestore_data_get_all_documents]
     $citiesRef = $db->collection('samples/php/cities');
     $documents = $citiesRef->documents();
@@ -50,6 +51,7 @@ function get_all_docs($projectId)
         }
     }
     # [END firestore_data_get_all_documents]
+    # [END fs_get_all_docs]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

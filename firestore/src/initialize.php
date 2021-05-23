@@ -23,6 +23,7 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
+# [START fs_initialize]
 # [START firestore_setup_client_create]
 use Google\Cloud\Firestore\FirestoreClient;
 
@@ -39,6 +40,7 @@ function initialize()
     printf('Created Cloud Firestore client with default project ID.' . PHP_EOL);
 }
 # [END firestore_setup_client_create]
+# [END fs_initialize]
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

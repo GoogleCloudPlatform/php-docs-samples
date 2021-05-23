@@ -37,6 +37,7 @@ function get_document($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_get_document]
     # [START firestore_data_get_as_map]
     $docRef = $db->collection('samples/php/cities')->document('SF');
     $snapshot = $docRef->snapshot();
@@ -48,6 +49,7 @@ function get_document($projectId)
         printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
     }
     # [END firestore_data_get_as_map]
+    # [END fs_get_document]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

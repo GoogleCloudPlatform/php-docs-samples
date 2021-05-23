@@ -37,6 +37,7 @@ function subcollection_ref($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_subcollection_ref]
     # [START firestore_data_reference_subcollection]
     $document = $db
         ->collection('rooms')
@@ -44,6 +45,7 @@ function subcollection_ref($projectId)
         ->collection('messages')
         ->document('message1');
     # [END firestore_data_reference_subcollection]
+    # [END fs_subcollection_ref]
     printf('Retrieved document from subcollection: %s' . PHP_EOL, $document->name());
 }
 

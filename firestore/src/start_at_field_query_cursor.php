@@ -38,11 +38,13 @@ function start_at_field_query_cursor($projectId)
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_start_at_field_query_cursor]
     # [START firestore_query_cursor_start_at_field_value_single]
     $query = $citiesRef
         ->orderBy('population')
         ->startAt([1000000]);
     # [END firestore_query_cursor_start_at_field_value_single]
+    # [END fs_start_at_field_query_cursor]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by start at population 1000000 field query cursor.' . PHP_EOL, $document->id());

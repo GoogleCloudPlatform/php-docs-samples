@@ -38,6 +38,7 @@ function run_simple_transaction($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_run_simple_transaction]
     # [START firestore_transaction_document_update]
     $cityRef = $db->collection('samples/php/cities')->document('SF');
     $db->runTransaction(function (Transaction $transaction) use ($cityRef) {
@@ -48,6 +49,7 @@ function run_simple_transaction($projectId)
         ]);
     });
     # [END firestore_transaction_document_update]
+    # [END fs_run_simple_transaction]
     printf('Ran a simple transaction to update the population field in the SF document in the cities collection.' . PHP_EOL);
 }
 

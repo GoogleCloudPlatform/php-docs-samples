@@ -37,6 +37,7 @@ function multiple_cursor_conditions($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_multiple_cursor_conditions]
     # [START firestore_query_cursor_start_at_field_value_multi]
     // Will return all Springfields
     $query1 = $db
@@ -52,6 +53,7 @@ function multiple_cursor_conditions($projectId)
         ->orderBy('state')
         ->startAt(['Springfield', 'Missouri']);
     # [END firestore_query_cursor_start_at_field_value_multi]
+    # [END fs_multiple_cursor_conditions]
     $snapshot1 = $query1->documents();
     foreach ($snapshot1 as $document) {
         printf('Document %s returned by start at Springfield query.' . PHP_EOL, $document->id());

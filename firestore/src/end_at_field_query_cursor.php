@@ -38,11 +38,13 @@ function end_at_field_query_cursor($projectId)
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_end_at_field_query_cursor]
     # [START firestore_query_cursor_end_at_field_value_single]
     $query = $citiesRef
         ->orderBy('population')
         ->endAt([1000000]);
     # [END firestore_query_cursor_end_at_field_value_single]
+    # [END fs_end_at_field_query_cursor]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by end at population 1000000 field query cursor.' . PHP_EOL, $document->id());

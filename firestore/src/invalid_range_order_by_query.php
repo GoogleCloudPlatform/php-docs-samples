@@ -38,11 +38,13 @@ function invalid_range_order_by_query($projectId)
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_invalid_range_order_by_query]
     # [START firestore_query_order_field_invalid]
     $invalidRangeQuery = $citiesRef
         ->where('population', '>', 2500000)
         ->orderBy('country');
     # [END firestore_query_order_field_invalid]
+    # [END fs_invalid_range_order_by_query]
 
     // This will throw an exception
     $invalidRangeQuery->documents();

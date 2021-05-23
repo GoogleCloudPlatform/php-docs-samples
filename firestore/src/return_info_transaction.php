@@ -38,6 +38,7 @@ function return_info_transaction($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_return_info_transaction]
     # [START firestore_transaction_document_update_conditional]
     $cityRef = $db->collection('samples/php/cities')->document('SF');
     $transactionResult = $db->runTransaction(function (Transaction $transaction) use ($cityRef) {
@@ -59,6 +60,7 @@ function return_info_transaction($projectId)
         printf('Sorry! Population is too big.' . PHP_EOL);
     }
     # [END firestore_transaction_document_update_conditional]
+    # [END fs_return_info_transaction]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

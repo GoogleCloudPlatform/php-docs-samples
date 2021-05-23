@@ -38,6 +38,7 @@ function collection_group_query_setup(string $projectId): void
         'projectId' => $projectId,
     ]);
 
+    # [START fs_collection_group_query_data_setup]
     # [START firestore_query_collection_group_dataset]
     $citiesRef = $db->collection('samples/php/cities');
     $citiesRef->document('SF')->collection('landmarks')->newDocument()->set([
@@ -82,6 +83,7 @@ function collection_group_query_setup(string $projectId): void
     ]);
     print('Added example landmarks collections to the cities collection.' . PHP_EOL);
     # [END firestore_query_collection_group_dataset]
+    # [END fs_collection_group_query_data_setup]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

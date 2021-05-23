@@ -37,6 +37,7 @@ function initialize_distributed_counter($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_initialize_distributed_counter]
     # [START firestore_solution_sharded_counter_create]
     $numShards = 10;
     $ref = $db->collection('samples/php/distributedCounters');
@@ -45,6 +46,7 @@ function initialize_distributed_counter($projectId)
         $doc->set(['Cnt' => 0]);
     }
     # [END firestore_solution_sharded_counter_create]
+    # [END fs_initialize_distributed_counter]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

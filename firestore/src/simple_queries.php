@@ -38,11 +38,13 @@ function simple_queries($projectId)
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
+    # [START fs_simple_queries]
     # [START firestore_query_filter_single_examples]
     $stateQuery = $citiesRef->where('state', '=', 'CA');
     $populationQuery = $citiesRef->where('population', '>', 1000000);
     $nameQuery = $citiesRef->where('name', '>=', 'San Francisco');
     # [END firestore_query_filter_single_examples]
+    # [END fs_simple_queries]
     foreach ($stateQuery->documents() as $document) {
         printf('Document %s returned by query state=CA' . PHP_EOL, $document->id());
     }

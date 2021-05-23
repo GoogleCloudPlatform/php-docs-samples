@@ -38,6 +38,7 @@ function update_doc_array($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_update_doc_array]
     # [START firestore_data_set_array_operations]
     $cityRef = $db->collection('samples/php/cities')->document('DC');
 
@@ -51,6 +52,7 @@ function update_doc_array($projectId)
         ['path' => 'regions', 'value' => FieldValue::arrayRemove(['east_coast'])]
     ]);
     # [END firestore_data_set_array_operations]
+    # [END fs_update_doc_array]
     printf('Updated the regions field of the DC document in the cities collection.' . PHP_EOL);
 }
 

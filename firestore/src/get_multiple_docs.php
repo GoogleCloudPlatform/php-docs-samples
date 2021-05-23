@@ -37,6 +37,7 @@ function get_multiple_docs($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_get_multiple_docs]
     # [START firestore_data_query]
     $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('capital', '=', true);
@@ -51,6 +52,7 @@ function get_multiple_docs($projectId)
         }
     }
     # [END firestore_data_query]
+    # [END fs_get_multiple_docs]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

@@ -37,12 +37,14 @@ function update_doc($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_update_doc]
     # [START firestore_data_set_field]
     $cityRef = $db->collection('samples/php/cities')->document('DC');
     $cityRef->update([
         ['path' => 'capital', 'value' => true]
     ]);
     # [END firestore_data_set_field]
+    # [END fs_update_doc]
     printf('Updated the capital field of the DC document in the cities collection.' . PHP_EOL);
 }
 

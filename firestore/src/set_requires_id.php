@@ -41,9 +41,11 @@ function set_requires_id($projectId)
         'name' => 'Phuket',
         'country' => 'Thailand'
     ];
+    # [START fs_set_requires_id]
     # [START firestore_data_set_id_specified]
     $db->collection('samples/php/cities')->document('new-city-id')->set($data);
     # [END firestore_data_set_id_specified]
+    # [END fs_set_requires_id]
     printf('Added document with ID: new-city-id' . PHP_EOL);
 }
 

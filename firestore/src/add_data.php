@@ -40,6 +40,7 @@ function add_data($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_add_data_1]
     # [START firestore_setup_dataset_pt1]
     $docRef = $db->collection('samples/php/users')->document('lovelace');
     $docRef->set([
@@ -49,6 +50,8 @@ function add_data($projectId)
     ]);
     printf('Added data to the lovelace document in the users collection.' . PHP_EOL);
     # [END firestore_setup_dataset_pt1]
+    # [END fs_add_data_1]
+    # [START fs_add_data_2]
     # [START firestore_setup_dataset_pt2]
     $docRef = $db->collection('samples/php/users')->document('aturing');
     $docRef->set([
@@ -59,6 +62,7 @@ function add_data($projectId)
     ]);
     printf('Added data to the aturing document in the users collection.' . PHP_EOL);
     # [END firestore_setup_dataset_pt2]
+    # [END fs_add_data_2]
 }
 
 require_once __DIR__ . '/../../testing/sample_helpers.php';

@@ -37,6 +37,7 @@ function update_nested_fields($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_update_nested_fields]
     # [START firestore_data_set_nested_fields]
     // Create an initial document to update
     $frankRef = $db->collection('samples/php/users')->document('frank');
@@ -52,6 +53,7 @@ function update_nested_fields($projectId)
         ['path' => 'favorites.color', 'value' => 'Red']
     ]);
     # [END firestore_data_set_nested_fields]
+    # [END fs_update_nested_fields]
     printf('Updated the age and favorite color fields of the frank document in the users collection.' . PHP_EOL);
 }
 

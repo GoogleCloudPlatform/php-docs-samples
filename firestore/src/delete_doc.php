@@ -37,9 +37,11 @@ function delete_doc($projectId)
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
+    # [START fs_delete_doc]
     # [START firestore_data_delete_doc]
     $db->collection('samples/php/cities')->document('DC')->delete();
     # [END firestore_data_delete_doc]
+    # [END fs_delete_doc]
     printf('Deleted the DC document in the cities collection.' . PHP_EOL);
 }
 
