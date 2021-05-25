@@ -48,7 +48,8 @@ class firestoreTest extends TestCase
 
         try {
             self::$firestoreClient->collection('samples')->document('php')->create();
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
 
     public static function tearDownAfterClass(): void
