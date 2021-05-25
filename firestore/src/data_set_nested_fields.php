@@ -42,7 +42,8 @@ function data_set_nested_fields($projectId)
     // Create an initial document to update
     $frankRef = $db->collection('samples/php/users')->document('frank');
     $frankRef->set([
-        'name' => 'Frank',
+        'first' => 'Frank',
+        'last' => 'Franklin',
         'favorites' => ['food' => 'Pizza', 'color' => 'Blue', 'subject' => 'Recess'],
         'age' => 12
     ]);
