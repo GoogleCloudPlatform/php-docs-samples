@@ -41,14 +41,14 @@ function query_cursor_start_at_field_value_multi($projectId)
     # [START firestore_query_cursor_start_at_field_value_multi]
     // Will return all Springfields
     $query1 = $db
-        ->collection('cities')
+        ->collection('samples/php/cities')
         ->orderBy('name')
         ->orderBy('state')
         ->startAt(['Springfield']);
 
     // Will return "Springfield, Missouri" and "Springfield, Wisconsin"
     $query2 = $db
-        ->collection('cities')
+        ->collection('samples/php/cities')
         ->orderBy('name')
         ->orderBy('state')
         ->startAt(['Springfield', 'Missouri']);

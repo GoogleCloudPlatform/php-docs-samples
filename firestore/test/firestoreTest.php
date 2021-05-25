@@ -54,10 +54,13 @@ class firestoreTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         foreach (self::$firestoreClient->document('samples/php')->collections() as $ref) {
-            self::runFirestoreSnippet('data_delete_collection', [
-                'collectionReference' => $ref,
-                'batchSize' => 2,
-            ]);
+            foreach ($ref->documents() as $doc) {
+                foreach ($doc->reference()->collections() as $c) {
+                    self::runFirestoreSnippet('data_delete_collection', [$c, 1]);
+                }
+            }
+
+            self::runFirestoreSnippet('data_delete_collection', [$ref, 2]);
         }
 
         self::$firestoreClient->collection('samples')->document('php')->delete();
