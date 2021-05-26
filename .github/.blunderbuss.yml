@@ -1,5 +1,5 @@
 assign_issues_by:
- - labels:
+- labels:
   - 'api: bigtable'
   - 'api: datastore'
   - 'api: firestore'
@@ -11,7 +11,7 @@ assign_issues_by:
   - GoogleCloudPlatform/infra-db-dpes
 
 assign_prs_by:
- - labels:
+- labels:
   - 'api: bigtable'
   - 'api: datastore'
   - 'api: firestore'
