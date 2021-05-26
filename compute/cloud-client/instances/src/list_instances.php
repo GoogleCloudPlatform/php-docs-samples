@@ -42,7 +42,7 @@ function list_instances(string $projectId, string $zone)
 {
     // List the new Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
-    $instancesList = $instancesClient->list_($projectId, $zone);
+    $instancesList = $instancesClient->list($projectId, $zone);
 
     printf('Instances for %s (%s)' . PHP_EOL, $projectId, $zone);
     foreach ($instancesList as $instance) {
