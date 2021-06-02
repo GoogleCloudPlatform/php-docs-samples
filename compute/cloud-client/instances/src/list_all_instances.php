@@ -23,33 +23,38 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_instances_list]
+# [START compute_instances_list_all]
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
- * List instances for particular $projectId and $zone
+ * List all instances for particular $projectId
  * Example:
  * ```
- * list_instances($projectId, $zone);
+ * list_all_instances($projectId);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to list the instance in (e.g. "us-central1-a").
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_instances(string $projectId, string $zone)
+function list_all_instances(string $projectId)
 {
     // List the new Compute Engine instance using the InstancesClient
     $instancesClient = new InstancesClient();
-    $instancesList = $instancesClient->list($projectId, $zone);
+    $allInstances = $instancesClient->aggregatedList($projectId);
 
-    printf('Instances for %s (%s)' . PHP_EOL, $projectId, $zone);
-    foreach ($instancesList as $instance) {
-        printf(' - %s' . PHP_EOL, $instance->getName());
+    printf('All instances for %s' . PHP_EOL, $projectId);
+    foreach ($allInstances as $zone => $zoneInstances) {
+        $instances = $zoneInstances->getInstances();
+        if (count($instances) > 0) {
+            printf('Zone - %s' . PHP_EOL, $zone);
+            foreach ($instances as $instance) {
+                printf(' - %s' . PHP_EOL, $instance->getName());
+            }
+        }
     }
 }
-# [END compute_instances_list]
+# [END compute_instances_list_all]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
