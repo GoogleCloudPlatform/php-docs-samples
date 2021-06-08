@@ -69,9 +69,8 @@ class SystemTest extends TestCase
             }
         });
 
-        $extPath = sprintf('%s/my_custom_extension.so', dirname(__DIR__));
         $phpBin = (new PhpExecutableFinder())->find();
-        $phpBin = sprintf('%s -d extension=\'%s\'', $phpBin, $extPath);
+        $phpBin .= ' -d extension=\'./my_custom_extension.so\'';
         return self::$fn->run([], CloudFunction::DEFAULT_PORT, $phpBin);
     }
 }
