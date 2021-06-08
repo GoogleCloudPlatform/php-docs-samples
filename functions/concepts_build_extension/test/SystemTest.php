@@ -63,7 +63,7 @@ class SystemTest extends TestCase
         $process->start();
 
         $backoff = new ExponentialBackoff($retries = 10);
-        $backoff->execute(function() use ($process) {
+        $backoff->execute(function () use ($process) {
             if ($process->isRunning()) {
                 throw new \Exception('waiting for "gcp-build" step to complete');
             }
