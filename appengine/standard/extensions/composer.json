@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "post-autoload-dump": [
+            "cd ext && phpize --clean && phpize && ./configure && make",
+            "cp ext/modules/my_custom_extension.so vendor/"
+        ]
+    }
+}
