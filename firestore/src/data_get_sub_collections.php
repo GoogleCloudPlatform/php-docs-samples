@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * List subcollections of a document.
- * ```
- * data_get_sub_collections('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_get_sub_collections($projectId)
+function data_get_sub_collections(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

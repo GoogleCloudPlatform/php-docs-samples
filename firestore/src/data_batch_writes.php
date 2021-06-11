@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Batch write.
- * ```
- * data_batch_writes('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_batch_writes($projectId)
+function data_batch_writes(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

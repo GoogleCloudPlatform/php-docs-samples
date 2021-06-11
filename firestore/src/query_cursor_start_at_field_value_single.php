@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Define field start point for a query.
- * ```
- * query_cursor_start_at_field_value_single('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_cursor_start_at_field_value_single($projectId)
+function query_cursor_start_at_field_value_single(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

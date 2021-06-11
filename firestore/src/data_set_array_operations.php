@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Update a document array field.
- * ```
- * data_set_array_operations('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_array_operations($projectId)
+function data_set_array_operations(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

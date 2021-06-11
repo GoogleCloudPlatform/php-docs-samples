@@ -20,7 +20,6 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Core\Exception\BadRequestException;
 use Google\Cloud\Core\Exception\FailedPreconditionException;
 use Google\Cloud\Firestore\FirestoreClient;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -30,9 +29,7 @@ use PHPUnit\Framework\TestCase;
 class firestoreTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
-    private static $commandFile = __DIR__ . '/../firestore.php';
     private static $firestoreProjectId;
     private static $firestoreClient;
 
@@ -57,11 +54,19 @@ class firestoreTest extends TestCase
         foreach (self::$firestoreClient->document('samples/php')->collections() as $ref) {
             foreach ($ref->documents() as $doc) {
                 foreach ($doc->reference()->collections() as $c) {
-                    self::runFirestoreSnippet('data_delete_collection', [$c, 1]);
+                    self::runFirestoreSnippet('data_delete_collection', [
+                        self::$firestoreProjectId,
+                        $c->name(),
+                        1,
+                    ]);
                 }
             }
 
-            self::runFirestoreSnippet('data_delete_collection', [$ref, 2]);
+            self::runFirestoreSnippet('data_delete_collection', [
+                self::$firestoreProjectId,
+                $ref->name(),
+                2,
+            ]);
         }
 
         self::$firestoreClient->collection('samples')->document('php')->delete();
@@ -355,7 +360,8 @@ class firestoreTest extends TestCase
     {
         $col = self::$firestoreClient->collection('samples/php/cities');
         $output = $this->runFirestoreSnippet('data_delete_collection', [
-            'collectionReference' => $col,
+            self::$projectId,
+            'collectionReference' => $col->name(),
             'batchSize' => 2,
         ]);
 

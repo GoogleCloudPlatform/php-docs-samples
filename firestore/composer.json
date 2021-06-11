@@ -1,6 +1,5 @@
 {
     "require": {
-        "google/cloud-firestore": "^1.13",
-        "symfony/console": "^3.0"
+        "google/cloud-firestore": "^1.13"
     }
 }

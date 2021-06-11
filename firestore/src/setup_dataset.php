@@ -28,13 +28,9 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Add data to a document.
  *
- * ```
- * setup_dataset('your-project-id');
- * ```
- *
  * @param string $projectId The Google Cloud Project ID
  */
-function setup_dataset($projectId)
+function setup_dataset(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

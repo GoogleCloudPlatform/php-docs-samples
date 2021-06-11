@@ -23,16 +23,25 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
+use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\Firestore\CollectionReference;
+
 /**
  * Delete a collection.
- * ```
- * data_delete_collection($collectionReference, $batchSize);
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
+ * @param string $collectionName
+ * @param int $batchSize
  */
 # [START fs_delete_collection]
 # [START firestore_data_delete_collection]
-function data_delete_collection($collectionReference, $batchSize)
+function data_delete_collection(string $projectId, string $collectionName, int $batchSize)
 {
+    // Create the Cloud Firestore client
+    $db = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
+    $collectionReference = $db->collection($collectionName);
     $documents = $collectionReference->limit($batchSize)->documents();
     while (!$documents->isEmpty()) {
         foreach ($documents as $document) {

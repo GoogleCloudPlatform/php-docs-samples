@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create an example collection of documents.
- * ```
- * data_get_dataset('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_get_dataset($projectId)
+function data_get_dataset(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

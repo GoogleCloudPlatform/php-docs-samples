@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a range with order by query.
- * ```
- * query_order_with_filter('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_order_with_filter($projectId)
+function query_order_with_filter(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
