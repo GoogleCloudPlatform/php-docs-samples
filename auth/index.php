@@ -23,7 +23,7 @@ use Google\Auth\Credentials\GCECredentials;
 // @see http://getcomposer.org for more information.
 require __DIR__ . '/vendor/autoload.php';
 
-$projectId = getenv('GCLOUD_PROJECT')
+$projectId = getenv('GOOGLE_CLOUD_PROJECT')
 
 ?>
 
