@@ -17,7 +17,6 @@
 namespace Google\Cloud\Samples\Iap;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,9 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 class iapTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait;
-
-    private static $commandFile = __DIR__ . '/../iap.php';
+    use TestTrait;
 
     public function testRequestAndValidate()
     {
