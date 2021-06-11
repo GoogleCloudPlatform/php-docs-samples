@@ -17,7 +17,7 @@
  */
 namespace Google\Cloud\Samples\Iot;
 
-# [START iot_list_devices]
+# [START list_devices_for_gateway]
 use Google\Cloud\Iot\V1\DeviceManagerClient;
 use Google\Cloud\Iot\V1\GatewayListOptions;
 
