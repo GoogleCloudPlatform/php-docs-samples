@@ -82,6 +82,18 @@ Instances for YOUR_PROJECT_ID (us-central1-a)
  - my-new-instance-name
 ```
 
+### List all instances
+
+```
+$ php src/list_all_instances.php $YOUR_PROJECT_ID
+All instances for YOUR_PROJECT_ID
+Zone - zones/us-central1-a
+ - my-new-instance-name
+Zone - zones/us-central1-a
+ - my-new-instance-name-2
+ - my-new-instance-name-3
+```
+
 ### Delete an instance
 
 ```
