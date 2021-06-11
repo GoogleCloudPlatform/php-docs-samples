@@ -63,5 +63,6 @@ class CreateTaskCommand extends Command
                 'Created new task with ID %d.', $task->key()->pathEnd()['id']
             )
         );
+        return 0;
     }
 }
