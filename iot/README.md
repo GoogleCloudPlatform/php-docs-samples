@@ -28,44 +28,15 @@ IOT API from PHP. These samples are best seen in the context of the
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php iot.php`. The following commands are available:
+5.  To run the IOT Samples, run any of the files in `src/` on the CLI:
+```
+$ php src/list_registries.php
 
-    ```
-    bind-device-to-gateway      (Beta feature) Bind a device to a gateway.
-    create-es-device            Create a new device with the given id, using ES256 for authentication.
-    create-gateway              (Beta feature) Create a new gateway with the given id.
-    create-registry             Creates a registry and returns the result.
-    create-rsa-device           Create a new device with the given id, using RS256 for authentication.
-    create-unauth-device        Create a new device without authentication.
-    delete-device               Delete the device with the given id.
-    delete-gateway              (Beta feature) Delete the gateway with the given id.
-    delete-registry             Deletes the specified registry.
-    get-device                  Retrieve the device with the given id.
-    get-device-configs          Lists versions of a device config in descending order (newest first).
-    get-device-state            Retrieve a device's state blobs.
-    get-iam-policy              Retrieves IAM permissions for the given registry.
-    get-registry                Retrieves a device registry.
-    help                        Displays help for a command
-    list                        Lists commands
-    list-devices                List all devices in the registry.
-    list-devices-for-gateway    List devices for the given gateway.
-    list-gateways               List gateways for the given registry.
-    list-registries             List all registries in the project.
-    patch-es-device             Patch device with ES256 public key.
-    patch-rsa-device            Patch device with RSA256 certificate.
-    send-command-to-device      Sends a command to a device.
-    set-device-config           Set a device's configuration.
-    set-device-state            Sets the state of a device.
-    set-iam-policy              Sets IAM permissions for the given registry to a single role/member.
-    unbind-device-from-gateway  (Beta feature) Unbind a device from a gateway.
+Usage: list_registries.php $projectId [$location='us-central1']
 
-    Example:
-
-    ```
-    $ php iot.php create-registry my-registry my-pubsub-topic
-    Creating Registry
-    Id: my-registry, Name: projects/my-project/locations/us-central1/registries/my-registry
-    ```
+    @param string $projectId Google Cloud project ID
+    @param string $location (Optional) Google Cloud region
+```
 
 
 6. Run `php iot.php COMMAND --help` to print information about the usage of each command.
