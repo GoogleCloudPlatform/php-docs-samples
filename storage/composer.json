@@ -52,6 +52,7 @@
             "src/set_event_based_hold.php",
             "src/set_retention_policy.php",
             "src/set_temporary_hold.php",
+            "src/upload_object.php",
             "src/view_bucket_iam_members.php"
         ]
     },
