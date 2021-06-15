@@ -29,6 +29,7 @@ namespace Google\Cloud\Samples\Compute;
 # [START compute_usage_report_disable]
 use Google\Cloud\Compute\V1\ProjectsClient;
 use Google\Cloud\Compute\V1\UsageExportLocation;
+
 # [END compute_usage_report_disable]
 # [END compute_usage_report_get]
 # [END compute_usage_report_set]
@@ -61,7 +62,7 @@ function set_usage_export_bucket(
         "report_name_prefix" => $reportPrefixName
     ));
 
-    if(strlen($reportPrefixName) == 0) {
+    if (strlen($reportPrefixName) == 0) {
         // Sending empty value for report_name_prefix, will result with the
         // next usage report generated having the default prefix value "usage_gce".
         // (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket)
@@ -91,7 +92,8 @@ function set_usage_export_bucket(
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function get_usage_export_bucket(string $projectId) {
+function get_usage_export_bucket(string $projectId)
+{
     // Get the setting from server.
     $projectsClient = new ProjectsClient();
     $projectResponse = $projectsClient->get($projectId);
@@ -132,7 +134,8 @@ function get_usage_export_bucket(string $projectId) {
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function disable_usage_export_bucket(string $projectId) {
+function disable_usage_export_bucket(string $projectId)
+{
     // Initialize UsageExportLocation object with empty bucket name to disable usage reports
     $usageExportLocation = new UsageExportLocation(array(
         "bucket_name" => '',
