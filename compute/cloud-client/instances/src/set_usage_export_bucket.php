@@ -24,22 +24,22 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_instances_verify_default_value]
-use Google\Cloud\Compute\V1\InstancesClient;
-use Google\Cloud\Compute\V1\AttachedDisk;
-use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
-use Google\Cloud\Compute\V1\Instance;
-use Google\Cloud\Compute\V1\NetworkInterface;
-use Google\Cloud\Compute\V1\Operation;
+# [START compute_usage_report_set]
+# [START compute_usage_report_get]
+# [START compute_usage_report_disable]
 use Google\Cloud\Compute\V1\ProjectsClient;
 use Google\Cloud\Compute\V1\UsageExportLocation;
-use Google\Cloud\Compute\V1\ZoneOperationsClient;
+# [END compute_usage_report_disable]
+# [END compute_usage_report_get]
+# [END compute_usage_report_set]
 
+# [START compute_usage_report_set]
 /**
  * Set Compute Engine usage export bucket for the Cloud Project.
  * This sample presents how to interpret default value for the name prefix parameter.
  * Example:
  * ```
- * ($projectId, $zone, $instanceName);
+ * set_usage_export_bucket($projectId, $bucketName, $reportPrefixName);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
@@ -61,39 +61,89 @@ function set_usage_export_bucket(
         "report_name_prefix" => $reportPrefixName
     ));
 
+    if(strlen($reportPrefixName) == 0) {
+        // Sending empty value for report_name_prefix, will result with the
+        // next usage report generated having the default prefix value "usage_gce".
+        // (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket)
+        print("Setting report_name_prefix to empty value will cause the ".
+            "report to have the default prefix of `usage_gce`.");
+    }
+
     // Set the usage export location.
     $projectsClient = new ProjectsClient();
     $projectsClient->setUsageExportBucket($projectId, $usageExportLocation);
+}
+# [END compute_usage_report_set]
 
-    // We need to wait before the updated data is available.
-    sleep(5);
-
+# [START compute_usage_report_get]
+/**
+ * Retrieve Compute Engine usage export bucket for the Cloud Project.
+ * Replaces the empty value returned by the API with the default value used
+ * to generate report file names.
+ * Example:
+ * ```
+ * get_usage_export_bucket($projectId);
+ * ```
+ *
+ * @param string $projectId Your Google Cloud project ID.
+ * @return UsageExportLocation|null UsageExportLocation object describing the current usage
+ * export settings for project project_id.
+ *
+ * @throws \Google\ApiCore\ApiException if the remote call fails.
+ */
+function get_usage_export_bucket(string $projectId) {
     // Get the setting from server.
+    $projectsClient = new ProjectsClient();
     $projectResponse = $projectsClient->get($projectId);
 
     // Construct proper values to be displayed taking into account default values behaviour.
     if ($projectResponse->hasUsageExportLocation()) {
         $responseUsageExportLocation = $projectResponse->getUsageExportLocation();
-        $responseBucketName = $responseUsageExportLocation->getBucketName();
-        $responseReportNamePrefix = '';
 
         // We verify that the server explicitly sent the optional field.
         if ($responseUsageExportLocation->hasReportNamePrefix()) {
-            $responseReportNamePrefix = $responseUsageExportLocation->getReportNamePrefix();
-
-            if ($responseReportNamePrefix == '') {
-                // Although the server explicitly sent the empty string value,
-                // the next usage report generated with these settings still has the default
-                // prefix value "usage". (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/get)
-                $responseReportNamePrefix = 'usage';
+            if ($responseUsageExportLocation->getReportNamePrefix() == '') {
+                // Although the server explicitly sent the empty string value, the next usage
+                // report generated with these settings still has the default prefix value "usage_gce".
+                // (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/get)
+                print("Report name prefix not set, replacing with default value of `usage_gce`.");
+                $responseUsageExportLocation->setReportNamePrefix('usage_gce');
             }
         }
 
-        printf('Usage export bucket for project %s set.' . PHP_EOL, $projectId);
-        printf('Bucket: %s, Report name prefix: %s', $responseBucketName, $responseReportNamePrefix);
+        return $responseUsageExportLocation;
+    } else {
+        // The Usage Reports are disabled.
+        return null;
     }
 }
+# [END compute_usage_report_get]
 # [END compute_instances_verify_default_value]
+
+# [START compute_usage_report_disable]
+/**
+ * Disable Compute Engine usage export bucket for the Cloud Project.
+ * Example:
+ * ```
+ * disable_usage_export_bucket($projectId);
+ * ```
+ *
+ * @param string $projectId Your Google Cloud project ID.
+ *
+ * @throws \Google\ApiCore\ApiException if the remote call fails.
+ */
+function disable_usage_export_bucket(string $projectId) {
+    // Initialize UsageExportLocation object with empty bucket name to disable usage reports
+    $usageExportLocation = new UsageExportLocation(array(
+        "bucket_name" => '',
+        "report_name_prefix" => ''
+    ));
+
+    // Disable the usage export location.
+    $projectsClient = new ProjectsClient();
+    $projectsClient->setUsageExportBucket($projectId, $usageExportLocation);
+}
+# [END compute_usage_report_disable]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
