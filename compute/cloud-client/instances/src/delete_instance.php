@@ -55,7 +55,7 @@ function delete_instance(
 
     # [START compute_instances_operation_check]
     if ($operation->getStatus() === Operation\Status::RUNNING) {
-        // Wait until the operation completes.
+        // Wait for the operation to complete.
         $operationClient = new ZoneOperationsClient();
 
         // Default timeout of 60 s is not always enough for operation to finish,
