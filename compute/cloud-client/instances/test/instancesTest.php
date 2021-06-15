@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\Compute;
 
+use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -78,5 +79,77 @@ class instancesTest extends TestCase
             'instanceName' => self::$instanceName,
         ]);
         $this->assertStringContainsString('Deleted instance ' . self::$instanceName, $output);
+    }
+
+    public function testSetUsageExportBucketDefaultPrefix()
+    {
+        // Generate bucket name
+        $bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
+
+        // Setup new bucket for UsageReports
+        $storage = new StorageClient([
+            'projectId' => self::$projectId
+        ]);
+
+        $bucket = $storage->createBucket($bucketName);
+
+        $output = $this->runFunctionSnippet('set_usage_export_bucket', [
+            'projectId' => self::$projectId,
+            'bucketName' => $bucketName
+        ]);
+        $this->assertStringContainsString('default value of `usage_gce`', $output);
+
+        // Wait for the settings to take place
+        sleep(5);
+
+        ob_start();
+        $usageExportLocation = get_usage_export_bucket(self::$projectId);
+        $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
+        $this->assertEquals($usageExportLocation->getBucketName(), $bucketName);
+        $this->assertEquals($usageExportLocation->getReportNamePrefix(), 'usage_gce');
+
+        // Disable usage exports
+        disable_usage_export_bucket(self::$projectId);
+
+        // Remove the bucket
+        $bucket->delete();
+    }
+
+    public function testSetUsageExportBucketCustomPrefix()
+    {
+        // Set custom prefix
+        $customPrefix = "my-custom-prefix";
+
+        // Generate bucket name
+        $bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
+
+        // Setup new bucket for UsageReports
+        $storage = new StorageClient([
+            'projectId' => self::$projectId
+        ]);
+
+        $bucket = $storage->createBucket($bucketName);
+
+        $output = $this->runFunctionSnippet('set_usage_export_bucket', [
+            'projectId' => self::$projectId,
+            'bucketName' => $bucketName,
+            'reportPrefixName' => $customPrefix
+        ]);
+        $this->assertStringNotContainsString('default value of `usage_gce`', $output);
+
+        // Wait for the settings to take place
+        sleep(5);
+
+        ob_start();
+        $usageExportLocation = get_usage_export_bucket(self::$projectId);
+        $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
+        $this->assertEquals($usageExportLocation->getBucketName(), $bucketName);
+        $this->assertEquals($usageExportLocation->getReportNamePrefix(), $customPrefix);
+
+        // Disable usage exports
+        disable_usage_export_bucket(self::$projectId);
+
+        // Remove the bucket
+        $bucket->delete();
     }
 }
