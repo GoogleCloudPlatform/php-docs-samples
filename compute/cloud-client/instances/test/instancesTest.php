@@ -100,7 +100,7 @@ class instancesTest extends TestCase
         $this->assertStringContainsString('default value of `usage_gce`', $output);
 
         // Wait for the settings to take place
-        sleep(5);
+        sleep(20);
 
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
@@ -138,7 +138,7 @@ class instancesTest extends TestCase
         $this->assertStringNotContainsString('default value of `usage_gce`', $output);
 
         // Wait for the settings to take place
-        sleep(5);
+        sleep(20);
 
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);

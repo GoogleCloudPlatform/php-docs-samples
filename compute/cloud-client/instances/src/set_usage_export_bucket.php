@@ -66,7 +66,7 @@ function set_usage_export_bucket(
         // Sending empty value for report_name_prefix, will result with the
         // next usage report generated having the default prefix value "usage_gce".
         // (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket)
-        print("Setting report_name_prefix to empty value will cause the ".
+        print("Setting report_name_prefix to empty value will cause the " .
             "report to have the default value of `usage_gce`.");
     }
 
