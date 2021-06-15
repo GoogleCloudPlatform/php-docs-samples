@@ -28,7 +28,7 @@ IOT API from PHP. These samples are best seen in the context of the
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  To run the IOT Samples, run any of the files in `src/` on the CLI:
+5.  To run the IOT Samples, run any of the files in `src/` on the CLI. Run them without arguments to print usage instructions:
 ```
 $ php src/list_registries.php
 
@@ -37,9 +37,6 @@ Usage: list_registries.php $projectId [$location='us-central1']
     @param string $projectId Google Cloud project ID
     @param string $location (Optional) Google Cloud region
 ```
-
-
-6. Run `php iot.php COMMAND --help` to print information about the usage of each command.
 
 ## Contributing changes
 
