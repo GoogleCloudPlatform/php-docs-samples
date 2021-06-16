@@ -41,7 +41,7 @@ $ php src/validate_jwt.php
 
 Usage: validate_jwt.php $iapJwt $expectedAudience
 
-  @param string $iap_jwt The contents of the X-Goog-IAP-JWT-Assertion header.
+  @param string $iapJwt The contents of the X-Goog-IAP-JWT-Assertion header.
   @param string $expected_audience The expected audience of the JWT with the following formats:
 ```
 
