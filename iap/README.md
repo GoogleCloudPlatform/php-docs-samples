@@ -42,7 +42,7 @@ $ php src/validate_jwt.php
 Usage: validate_jwt.php $iapJwt $expectedAudience
 
   @param string $iapJwt The contents of the X-Goog-IAP-JWT-Assertion header.
-  @param string $expected_audience The expected audience of the JWT with the following formats:
+  @param string $expectedAudience The expected audience of the JWT with the following formats:
 ```
 
 [iap]: http://cloud.google.com/iap
