@@ -133,6 +133,9 @@ class instancesTest extends TestCase
         $bucket->delete();
     }
 
+    /**
+     * @depends testSetUsageExportBucketDefaultPrefix
+     */
     public function testSetUsageExportBucketCustomPrefix()
     {
         // Set custom prefix
