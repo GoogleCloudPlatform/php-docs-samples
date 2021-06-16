@@ -3,7 +3,7 @@
         "drush/drush": "^10.0"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^7.0",
         "monolog/monolog": "^1.19",
         "symfony/console": " ^2.7",
         "symfony/process": "^3.0",
