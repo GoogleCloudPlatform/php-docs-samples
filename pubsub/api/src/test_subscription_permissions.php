@@ -47,3 +47,5 @@ function test_subscription_permissions($projectId, $subscriptionName)
     }
 }
 # [END pubsub_test_subscription_permissions]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

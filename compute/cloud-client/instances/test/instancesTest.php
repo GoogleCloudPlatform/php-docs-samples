@@ -58,6 +58,18 @@ class instancesTest extends TestCase
     /**
      * @depends testCreateInstance
      */
+    public function testListAllInstances()
+    {
+        $output = $this->runFunctionSnippet('list_all_instances', [
+            'projectId' => self::$projectId
+        ]);
+        $this->assertStringContainsString(self::$instanceName, $output);
+        $this->assertStringContainsString(self::DEFAULT_ZONE, $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
     public function testDeleteInstance()
     {
         $output = $this->runFunctionSnippet('delete_instance', [
