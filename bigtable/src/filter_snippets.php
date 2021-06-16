@@ -28,7 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) !== 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID FILTER_TYPE" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id, $filter_type) = $argv;
+list($_, $projectId, $instanceId, $tableId, $filterType) = $argv;
 
 $validFilterTypes = [
     'filter_limit_row_sample',
@@ -50,10 +50,10 @@ $validFilterTypes = [
     'filter_composing_interleave',
     'filter_composing_condition'
 ];
-if (!in_array($filter_type, $validFilterTypes)) {
+if (!in_array($filterType, $validFilterTypes)) {
     throw new Exception(sprintf(
         'Invalid FILTER_TYPE %s, must be one of: %s',
-        $filter_type,
+        $filterType,
         implode(', ', $validFilterTypes)
     ));
 }
@@ -63,15 +63,15 @@ use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'mobile-time-series';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'mobile-time-series';
 
 // Connect to an existing table with an existing instance.
 $dataClient = new BigtableClient([
-    'projectId' => $project_id,
+    'projectId' => $projectId,
 ]);
-$table = $dataClient->table($instance_id, $table_id);
+$table = $dataClient->table($instanceId, $tableId);
 
 // Helper function for printing the row data
 function print_row($key, $row)
@@ -276,4 +276,4 @@ function filter_composing_condition($table)
 
 
 // Call the function for the supplied READ_TYPE
-call_user_func($filter_type, $table);
+call_user_func($filterType, $table);
