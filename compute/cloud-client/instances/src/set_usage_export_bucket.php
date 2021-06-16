@@ -49,6 +49,8 @@ use Google\Cloud\Compute\V1\UsageExportLocation;
  * @param string $reportPrefixName Report Prefix Name which defaults to an empty string to showcase default
  * values behaviour.
  *
+ * @return \Google\Cloud\Compute\V1\Operation
+ *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function set_usage_export_bucket(
@@ -63,16 +65,16 @@ function set_usage_export_bucket(
     ));
 
     if (strlen($reportPrefixName) == 0) {
-        // Sending empty value for report_name_prefix, will result with the
-        // next usage report generated having the default prefix value "usage_gce".
-        // (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket)
+        // Sending empty value for report_name_prefix, will result the next usage report
+        // generated to have the default prefix value "usage_gce".
+        // ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket
         print("Setting report_name_prefix to empty value will cause the " .
             "report to have the default value of `usage_gce`.");
     }
 
     // Set the usage export location.
     $projectsClient = new ProjectsClient();
-    $projectsClient->setUsageExportBucket($projectId, $usageExportLocation);
+    return $projectsClient->setUsageExportBucket($projectId, $usageExportLocation);
 }
 # [END compute_usage_report_set]
 
@@ -107,7 +109,7 @@ function get_usage_export_bucket(string $projectId)
             if ($responseUsageExportLocation->getReportNamePrefix() == '') {
                 // Although the server explicitly sent the empty string value, the next usage
                 // report generated with these settings still has the default prefix value "usage_gce".
-                // (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/get)
+                // ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/get
                 print("Report name prefix not set, replacing with default value of `usage_gce`.");
                 $responseUsageExportLocation->setReportNamePrefix('usage_gce');
             }
@@ -132,19 +134,15 @@ function get_usage_export_bucket(string $projectId)
  *
  * @param string $projectId Your Google Cloud project ID.
  *
+ * @return \Google\Cloud\Compute\V1\Operation
+ *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function disable_usage_export_bucket(string $projectId)
 {
-    // Initialize UsageExportLocation object with empty bucket name to disable usage reports
-    $usageExportLocation = new UsageExportLocation(array(
-        "bucket_name" => '',
-        "report_name_prefix" => ''
-    ));
-
-    // Disable the usage export location.
+    // Disable the usage export location by sending null as usageExportLocationResource.
     $projectsClient = new ProjectsClient();
-    $projectsClient->setUsageExportBucket($projectId, $usageExportLocation);
+    return $projectsClient->setUsageExportBucket($projectId, null);
 }
 # [END compute_usage_report_disable]
 

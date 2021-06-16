@@ -17,6 +17,8 @@
 
 namespace Google\Cloud\Samples\Compute;
 
+use Google\Cloud\Compute\V1\Operation;
+use Google\Cloud\Compute\V1\GlobalOperationsClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
@@ -97,10 +99,16 @@ class instancesTest extends TestCase
             'projectId' => self::$projectId,
             'bucketName' => $bucketName
         ]);
-        $this->assertStringContainsString('default value of `usage_gce`', $output);
+        ob_start();
+        $operation = set_usage_export_bucket(self::$projectId, $bucketName);
+        $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
 
         // Wait for the settings to take place
-        sleep(20);
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
+            // Wait until operation completes
+            $operationClient = new GlobalOperationsClient();
+            $operationClient->wait($operation->getName(), self::$projectId);
+        }
 
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
@@ -109,7 +117,17 @@ class instancesTest extends TestCase
         $this->assertEquals($usageExportLocation->getReportNamePrefix(), 'usage_gce');
 
         // Disable usage exports
-        disable_usage_export_bucket(self::$projectId);
+        $operation = disable_usage_export_bucket(self::$projectId);
+
+        // Wait for the settings to take place
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
+            // Wait until operation completes
+            $operationClient = new GlobalOperationsClient();
+            $operationClient->wait($operation->getName(), self::$projectId);
+        }
+
+        $usageExportLocation = get_usage_export_bucket(self::$projectId);
+        $this->assertNull($usageExportLocation);
 
         // Remove the bucket
         $bucket->delete();
@@ -130,15 +148,16 @@ class instancesTest extends TestCase
 
         $bucket = $storage->createBucket($bucketName);
 
-        $output = $this->runFunctionSnippet('set_usage_export_bucket', [
-            'projectId' => self::$projectId,
-            'bucketName' => $bucketName,
-            'reportPrefixName' => $customPrefix
-        ]);
-        $this->assertStringNotContainsString('default value of `usage_gce`', $output);
+        ob_start();
+        $operation = set_usage_export_bucket(self::$projectId, $bucketName, $customPrefix);
+        $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
 
         // Wait for the settings to take place
-        sleep(20);
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
+            // Wait until operation completes
+            $operationClient = new GlobalOperationsClient();
+            $operationClient->wait($operation->getName(), self::$projectId);
+        }
 
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
@@ -147,7 +166,17 @@ class instancesTest extends TestCase
         $this->assertEquals($usageExportLocation->getReportNamePrefix(), $customPrefix);
 
         // Disable usage exports
-        disable_usage_export_bucket(self::$projectId);
+        $operation = disable_usage_export_bucket(self::$projectId);
+
+        // Wait for the settings to take place
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
+            // Wait until operation completes
+            $operationClient = new GlobalOperationsClient();
+            $operationClient->wait($operation->getName(), self::$projectId);
+        }
+
+        $usageExportLocation = get_usage_export_bucket(self::$projectId);
+        $this->assertNull($usageExportLocation);
 
         // Remove the bucket
         $bucket->delete();
