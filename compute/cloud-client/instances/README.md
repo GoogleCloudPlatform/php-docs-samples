@@ -89,7 +89,7 @@ $ php src/list_all_instances.php $YOUR_PROJECT_ID
 All instances for YOUR_PROJECT_ID
 Zone - zones/us-central1-a
  - my-new-instance-name
-Zone - zones/us-central1-a
+Zone - zones/us-central1-b
  - my-new-instance-name-2
  - my-new-instance-name-3
 ```
