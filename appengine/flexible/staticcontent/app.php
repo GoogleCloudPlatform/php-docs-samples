@@ -15,20 +15,32 @@
  * limitations under the License.
  */
 
-use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
+use RKA\Middleware\IpAddress;
 
-// create the Silex application
-$app = new Application();
-$app->register(new TwigServiceProvider());
-$app['twig.path'] = [ __DIR__ ];
+// Create App
+$app = AppFactory::create();
 
-$app->get('/', function (Application $app, Request $request) {
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+// Create Twig
+$twig = Twig::create(__DIR__);
+$app->add(TwigMiddleware::create($app, $twig));
+
+// Add IP address middleware
+$checkProxyHeaders = true;
+$trustedProxies = ['10.0.0.1', '10.0.0.2'];
+$app->add(new IpAddress($checkProxyHeaders, $trustedProxies));
+
+$app->get('/', function (Request $request, Response $response) use ($twig) {
     /** @var Twig_Environment $twig */
-    $twig = $app['twig'];
-    return $twig->render('index.html.twig',
-        ['ip' => $request->getClientIps()[0]]);
+    return $twig->render($response, 'index.html.twig',
+        ['ip' => $request->getAttribute('ip_address')]);
 });
 
 return $app;

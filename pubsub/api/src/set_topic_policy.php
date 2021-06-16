@@ -51,3 +51,5 @@ function set_topic_policy($projectId, $topicName, $userEmail)
         $topicName);
 }
 # [END pubsub_set_topic_policy]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

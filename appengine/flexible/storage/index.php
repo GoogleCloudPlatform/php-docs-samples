@@ -21,12 +21,14 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = require __DIR__ . '/app.php';
 
-// change this to your bucket name!
-$app['bucket_name'] = getenv('GOOGLE_STORAGE_BUCKET') ?: 'your-bucket-name';
-$app['project_id'] = getenv('GCLOUD_PROJECT');
-$app['object_name'] = 'hello.txt';
+$container = $app->getContainer();
 
-if ($app['bucket_name'] == 'your-bucket-name') {
+// change this to your bucket name!
+$container->set('bucket_name', getenv('GOOGLE_STORAGE_BUCKET') ?: 'your-bucket-name');
+$container->set('project_id', getenv('GCLOUD_PROJECT'));
+$container->set('object_name', 'hello.txt');
+
+if ($container->get('bucket_name') == 'your-bucket-name') {
     die('Replace <code>&lt;your-bucket-name&gt;</code> with the name of your '
         . 'cloud storage bucket in <code>app.yaml</code> or set it as an '
         . 'environment variable for local development.');
@@ -34,5 +36,4 @@ if ($app['bucket_name'] == 'your-bucket-name') {
 
 // Run the app!
 // use "gcloud app deploy" or run locally with dev_appserver.py
-$app['debug'] = true;
 $app->run();

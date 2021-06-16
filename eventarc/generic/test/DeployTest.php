@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class DeployTest.
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
@@ -48,7 +49,7 @@ class DeployTest extends TestCase
     {
         if (is_null(self::$service) || is_null(self::$image)) {
             $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-            $versionId = self::requireEnv('GOOGLE_VERSION_ID');
+            $versionId = getenv('GOOGLE_VERSION_ID') ?: sprintf('eventarc-%s', time());
             self::$service = new CloudRun($projectId, ['service' => $versionId]);
             self::$image = sprintf('gcr.io/%s/%s:latest', $projectId, $versionId);
         }

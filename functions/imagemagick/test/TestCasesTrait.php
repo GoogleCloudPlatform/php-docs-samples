@@ -25,6 +25,12 @@ trait TestCasesTrait
 {
     use TestTrait;
 
+    /** @var string */
+    private static $entryPoint = 'blurOffensiveImages';
+
+    /** @var string */
+    private static $functionSignatureType = 'cloudevent';
+
     public static function getDataForFile($fileName): array
     {
         return [
@@ -90,7 +96,7 @@ trait TestCasesTrait
                 'label' => 'Labels missing images as safe',
                 'filename' => 'does-not-exist.jpg',
                 'expected' => sprintf(
-                    'Could not find gs://%s/does-not-exist.jpg',
+                    'NOT_FOUND: Error opening file: gs://%s/does-not-exist.jpg',
                     $bucketName
                 ),
                 'statusCode' => '200'

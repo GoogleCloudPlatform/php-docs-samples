@@ -22,6 +22,9 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/DeployLaravelTrait.php';
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use DeployLaravelTrait;
@@ -39,6 +42,10 @@ class DeployTest extends TestCase
 
     public function testHomepage()
     {
+        $this->markTestSkipped(
+            'This sample is BROKEN. See https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1349'
+        );
+
         // Access the blog top page
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');

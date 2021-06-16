@@ -1,12 +1,12 @@
 {
     "require": {
-        "drush/drush": "^8.1"
+        "drush/drush": "^10.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
         "monolog/monolog": "^1.19",
         "symfony/console": " ^2.7",
         "symfony/process": "^3.0",
-        "paragonie/random_compat": " ^2.0"
+        "paragonie/random_compat": " ^9.0"
     }
 }

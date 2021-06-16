@@ -31,28 +31,16 @@ require_once __DIR__ . '/TestCasesTrait.php';
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $entryPoint = 'makeRequest';
-
     /**
-     * Deploy the Function.
-     *
-     * Overrides CloudFunctionLocalTestTrait::doDeploy().
+     * @dataProvider cases
      */
-    private static function doDeploy()
-    {
-        $case = reset(self::cases());
-        self::$fn->run([$case['varName'] => $case['varValue']]);
-    }
-
-    /**
-      * @dataProvider cases
-      */
     public function testFunction($statusCode): void
     {
         // Send a request to the function.
