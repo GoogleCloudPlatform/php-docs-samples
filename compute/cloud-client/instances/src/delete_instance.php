@@ -32,15 +32,15 @@ use Google\Cloud\Compute\V1\ZoneOperationsClient;
 # [END compute_instances_operation_check]
 
 /**
- * Creates an instance.
+ * Delete an instance.
  * Example:
  * ```
  * delete_instance($projectId, $zone, $instanceName);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to delete the instance in (e.g. "us-central1-a").
- * @param string $instanceName The unique name for the Compute instance to delete.
+ * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").
+ * @param string $instanceName Unique name for the Compute instance to delete.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
@@ -49,16 +49,16 @@ function delete_instance(
     string $zone,
     string $instanceName
 ) {
-    // Delete the Compute Engine instance using the InstancesClient
+    // Delete the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
     # [START compute_instances_operation_check]
     if ($operation->getStatus() === Operation\Status::RUNNING) {
-        // Wait until operation completes
+        // Wait for the operation to complete.
         $operationClient = new ZoneOperationsClient();
 
-        // Default timeout of 60s is not always enough for operation to finish,
+        // Default timeout of 60 s is not always enough for operation to finish,
         // to avoid an exception we set timeout to 180000 ms = 180 s = 3 minutes
         $optionalArgs = ['timeoutMillis' => 180000];
         $operationClient->wait($operation->getName(), $projectId, $zone, $optionalArgs);
