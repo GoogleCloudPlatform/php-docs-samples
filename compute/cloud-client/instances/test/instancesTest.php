@@ -108,9 +108,6 @@ class instancesTest extends TestCase
             // Wait until operation completes
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
-
-            // Needed for Kokoro to pass tests
-            sleep(2);
         }
 
         ob_start();
@@ -127,9 +124,6 @@ class instancesTest extends TestCase
             // Wait until operation completes
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
-
-            // Needed for Kokoro to pass tests
-            sleep(2);
         }
 
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
@@ -163,9 +157,6 @@ class instancesTest extends TestCase
             // Wait until operation completes
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
-
-            // Needed for Kokoro to pass tests
-            sleep(2);
         }
 
         ob_start();
@@ -182,9 +173,6 @@ class instancesTest extends TestCase
             // Wait until operation completes
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
-
-            // Needed for Kokoro to pass tests
-            sleep(2);
         }
 
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
