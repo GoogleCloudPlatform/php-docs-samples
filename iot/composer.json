@@ -2,36 +2,6 @@
     "name": "google/iot-sample",
     "type": "project",
     "require": {
-        "google/cloud-iot": "^1.0.0",
-        "symfony/console": "^4.0"
-    },
-    "autoload": {
-        "files": [
-            "src/bind_device_to_gateway.php",
-            "src/create_es_device.php",
-            "src/create_gateway.php",
-            "src/create_registry.php",
-            "src/create_rsa_device.php",
-            "src/create_unauth_device.php",
-            "src/delete_device.php",
-            "src/delete_gateway.php",
-            "src/delete_registry.php",
-            "src/get_iam_policy.php",
-            "src/get_device.php",
-            "src/get_device_state.php",
-            "src/get_device_configs.php",
-            "src/get_registry.php",
-            "src/list_devices.php",
-            "src/list_devices_for_gateway.php",
-            "src/list_gateways.php",
-            "src/list_registries.php",
-            "src/patch_es.php",
-            "src/patch_rsa.php",
-            "src/send_command_to_device.php",
-            "src/set_device_config.php",
-            "src/set_device_state.php",
-            "src/set_iam_policy.php",
-            "src/unbind_device_from_gateway.php"
-        ]
+        "google/cloud-iot": "^1.0.0"
     }
 }
