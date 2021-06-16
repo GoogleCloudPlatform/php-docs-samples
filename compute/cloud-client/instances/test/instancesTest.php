@@ -104,12 +104,13 @@ class instancesTest extends TestCase
         $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
 
         // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING ||
-            $operation->getStatus() === Operation\Status::PENDING) {
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
             // Wait until operation completes
-            print("Waiting for operation");
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
+
+            // Needed for Kokoro to pass tests
+            sleep(2);
         }
 
         ob_start();
@@ -122,12 +123,13 @@ class instancesTest extends TestCase
         $operation = disable_usage_export_bucket(self::$projectId);
 
         // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING ||
-            $operation->getStatus() === Operation\Status::PENDING) {
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
             // Wait until operation completes
-            print("Waiting for operation");
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
+
+            // Needed for Kokoro to pass tests
+            sleep(2);
         }
 
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
@@ -157,12 +159,13 @@ class instancesTest extends TestCase
         $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
 
         // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING ||
-            $operation->getStatus() === Operation\Status::PENDING) {
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
             // Wait until operation completes
-            print("Waiting for operation");
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
+
+            // Needed for Kokoro to pass tests
+            sleep(2);
         }
 
         ob_start();
@@ -175,12 +178,13 @@ class instancesTest extends TestCase
         $operation = disable_usage_export_bucket(self::$projectId);
 
         // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING ||
-            $operation->getStatus() === Operation\Status::PENDING) {
+        if ($operation->getStatus() === Operation\Status::RUNNING) {
             // Wait until operation completes
-            print("Waiting for operation");
             $operationClient = new GlobalOperationsClient();
             $operationClient->wait($operation->getName(), self::$projectId);
+
+            // Needed for Kokoro to pass tests
+            sleep(2);
         }
 
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
