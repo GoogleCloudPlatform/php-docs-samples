@@ -40,9 +40,9 @@ $video = new VideoIntelligenceServiceClient();
 $inputContent = file_get_contents($path);
 
 # Execute a request.
-$operation = $video->annotateVideo([
+$features = [Feature::OBJECT_TRACKING];
+$operation = $video->annotateVideo($features, [
     'inputContent' => $inputContent,
-    'features' => [Feature::OBJECT_TRACKING]
 ]);
 
 # Wait for the request to complete.
