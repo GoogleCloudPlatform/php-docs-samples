@@ -226,7 +226,11 @@ class dlpTest extends TestCase
 
     public function testJobs()
     {
-        $filter = 'state=DONE';
+        // Set filter to only go back a day, so that we do not pull every job.
+        $filter = sprintf(
+            'state=DONE AND end_time>"%sT00:00:00+00:00"',
+            date('Y-m-d', strtotime('-1 day'))
+        );
         $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
 
         $output = $this->runSnippet('list_jobs', [

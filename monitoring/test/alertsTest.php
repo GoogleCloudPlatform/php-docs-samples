@@ -47,7 +47,8 @@ class alertsTest extends TestCase
 
     /**
      * @depends testCreatePolicy
-     * @retryAttempts 3
+     * @retryAttempts 2
+     * @retryDelaySeconds 10
      */
     public function testEnablePolicies()
     {

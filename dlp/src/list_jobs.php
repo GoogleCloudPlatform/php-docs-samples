@@ -25,11 +25,12 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) < 2 || count($argv) > 3) {
-    return print("Usage: php list_jobs.php CALLING_PROJECT [FILTER]\n");
+if (count($argv) < 2 || count($argv) > 4) {
+    return print("Usage: php list_jobs.php CALLING_PROJECT [FILTER] [LIMIT]\n");
 }
 list($_, $callingProjectId) = $argv;
 $filter = isset($argv[2]) ? $argv[2] : '';
+$limit = isset($argv[3]) ? $argv[3] : null;
 
 # [START dlp_list_jobs]
 /**
