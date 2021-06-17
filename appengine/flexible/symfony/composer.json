@@ -2,7 +2,7 @@
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
         "monolog/monolog": "^1.19",
-        "symfony/console": " ~2.6.0",
+        "symfony/console": " ~2.8.0",
         "symfony/process": "^3.0",
         "symfony/yaml": "^3.0",
         "google/cloud-logging": "^1.9",
