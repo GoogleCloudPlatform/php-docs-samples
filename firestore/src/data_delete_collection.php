@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Firestore;
 
 use Google\Cloud\Firestore\FirestoreClient;
-use Google\Cloud\Firestore\CollectionReference;
 
 /**
  * Delete a collection.

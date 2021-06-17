@@ -361,8 +361,8 @@ class firestoreTest extends TestCase
         $col = self::$firestoreClient->collection('samples/php/cities');
         $output = $this->runFirestoreSnippet('data_delete_collection', [
             self::$projectId,
-            'collectionReference' => $col->name(),
-            'batchSize' => 2,
+            $col->name(),
+            2,
         ]);
 
         $this->assertStringContainsString('Deleting document BJ', $output);
@@ -691,7 +691,7 @@ class firestoreTest extends TestCase
     {
         if ($args === null) {
             $args = [
-                'projectId' => self::$firestoreProjectId
+                self::$firestoreProjectId
             ];
         }
 
