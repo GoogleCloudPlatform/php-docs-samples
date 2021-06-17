@@ -170,10 +170,11 @@ class alertsTest extends TestCase
         $this->assertStringContainsString(self::$channelId, $output);
     }
 
-    /** @depends testCreateChannel */
-    public function testBackupAndRestore()
+    /**
+     * @depends testCreateChannel
+     */
+    public function testBackupPolicies()
     {
-        // backup
         $output = $this->runAlertCommand('backup-policies');
         $this->assertStringContainsString('Backed up alert policies', $output);
 
@@ -185,8 +186,13 @@ class alertsTest extends TestCase
         $this->assertGreaterThan(0, count($backup['channels']));
         $this->assertStringContainsString(self::$policyId, $backupJson);
         $this->assertStringContainsString(self::$channelId, $backupJson);
+    }
 
-        // restore
+    /**
+     * @depends testBackupPolicies
+     */
+    public function testRestorePolicies()
+    {
         $output = $this->runAlertCommand('restore-policies');
         $this->assertStringContainsString('Restored alert policies', $output);
     }
