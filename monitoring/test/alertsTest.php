@@ -51,7 +51,10 @@ class alertsTest extends TestCase
      */
     public function testEnablePolicies()
     {
-        $policyName = AlertPolicyServiceClient::alertPolicyName(self::$projectId, self::$policyId);
+        $policyName = AlertPolicyServiceClient::alertPolicyName(
+            self::$projectId,
+            self::$policyId
+        );
         $output = $this->runAlertCommand('enable-policies', [
             'filter' => sprintf('name = "%s"', $policyName),
             'enable' => true,
@@ -60,13 +63,25 @@ class alertsTest extends TestCase
             sprintf('Policy %s is already enabled', $policyName),
             $output
         );
+    }
 
+    /**
+     * @depends testEnablePolicies
+     */
+    public function testDisablePolicies()
+    {
+        $policyName = AlertPolicyServiceClient::alertPolicyName(
+            self::$projectId,
+            self::$policyId
+        );
         $output = $this->runAlertCommand('enable-policies', [
             'filter' => sprintf('name = "%s"', $policyName),
             'enable' => false,
         ]);
-
-        $this->assertStringContainsString(sprintf('Disabled %s', $policyName), $output);
+        $this->assertStringContainsString(
+            sprintf('Disabled %s', $policyName),
+            $output
+        );
     }
 
     /** @depends testCreatePolicy */
