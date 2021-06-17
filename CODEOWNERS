@@ -32,4 +32,4 @@
 /video/                   @bshaffer
 
 # Compute samples owned by Remik
-/compute/cloud-client/
+/compute/cloud-client/    @rsamborski
