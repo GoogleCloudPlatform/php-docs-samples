@@ -28,7 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
+list($_, $projectId, $instanceId, $tableId) = $argv;
 
 // [START bigtable_create_family_gc_union]
 
@@ -40,14 +40,14 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Protobuf\Duration;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'The Bigtable table ID';
+// $locationId = 'The Bigtable region ID';
 
 $tableAdminClient = new BigtableTableAdminClient();
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
 
 print('Creating column family cf3 with union GC rule...' . PHP_EOL);
@@ -59,14 +59,14 @@ print('Creating column family cf3 with union GC rule...' . PHP_EOL);
 
 $columnFamily3 = new ColumnFamily();
 
-$rule_union = new GcRuleUnion();
-$rule_union_array = [
+$ruleUnion = new GcRuleUnion();
+$ruleUnionArray = [
     (new GcRule)->setMaxNumVersions(2),
     (new GcRule)->setMaxAge((new Duration())->setSeconds(3600 * 24 * 5))
 ];
-$rule_union->setRules($rule_union_array);
+$ruleUnion->setRules($ruleUnionArray);
 $union = new GcRule();
-$union->setUnion($rule_union);
+$union->setUnion($ruleUnion);
 
 $columnFamily3->setGCRule($union);
 

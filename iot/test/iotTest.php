@@ -18,7 +18,6 @@ namespace Google\Cloud\Samples\Iot;
 
 require 'vendor/autoload.php';
 
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
@@ -28,7 +27,10 @@ use PHPUnitRetry\RetryTrait;
  */
 class iotTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait, RetryTrait;
+    use TestTrait;
+    use RetryTrait;
+
+    const LOCATION = 'us-central1';
 
     private static $commandFile = __DIR__ . '/../iot.php';
     private static $testId;
@@ -45,22 +47,28 @@ class iotTest extends TestCase
     {
         foreach (self::$devices as $deviceId) {
             printf('Cleaning up Device %s' . PHP_EOL, $deviceId);
-            self::runCommand('delete-device', [
-                'registry' => self::$registryId,
-                'device' => $deviceId,
+            self::runFunctionSnippet('delete_device', [
+                self::$registryId,
+                $deviceId,
+                self::$projectId,
+                self::LOCATION,
             ]);
         }
         foreach (self::$gateways as $gatewayId) {
             printf('Cleaning up Gateway %s' . PHP_EOL, $gatewayId);
-            self::runCommand('delete-gateway', [
-                'registry' => self::$registryId,
-                'gateway' => $gatewayId,
+            self::runFunctionSnippet('delete_gateway', [
+                self::$registryId,
+                $gatewayId,
+                self::$projectId,
+                self::LOCATION,
             ]);
         }
         if (self::$registryId) {
             printf('Cleaning up Registry %s' . PHP_EOL, self::$registryId);
-            self::runCommand('delete-registry', [
-                'registry' => self::$registryId
+            self::runFunctionSnippet('delete_registry', [
+                self::$registryId,
+                self::$projectId,
+                self::LOCATION,
             ]);
         }
     }
@@ -71,9 +79,11 @@ class iotTest extends TestCase
 
         $registryId = 'test-registry-' . self::$testId;
 
-        $output = $this->runCommand('create-registry', [
-            'registry' => $registryId,
-            'pubsub-topic' => $topic,
+        $output = $this->runFunctionSnippet('create_registry', [
+            $registryId,
+            $topic,
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$registryId = $registryId;
         $this->assertStringContainsString('Id: ' . $registryId, $output);
@@ -82,15 +92,20 @@ class iotTest extends TestCase
     /** @depends testCreateRegistry */
     public function testListRegistries()
     {
-        $output = $this->runCommand('list-registries');
+        $output = $this->runFunctionSnippet('list_registries', [
+            self::$projectId,
+            self::LOCATION,
+        ]);
         $this->assertStringContainsString(self::$registryId, $output);
     }
 
     /** @depends testCreateRegistry */
     public function testGetRegistry()
     {
-        $output = $this->runCommand('get-registry', [
-            'registry' => self::$registryId,
+        $output = $this->runFunctionSnippet('get_registry', [
+            self::$registryId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString(self::$registryId, $output);
     }
@@ -99,15 +114,19 @@ class iotTest extends TestCase
     public function testIamPolicy()
     {
         $email = 'betterbrent@google.com';
-        $output = $this->runCommand('set-iam-policy', [
-            'registry' => self::$registryId,
-            'role' => 'roles/viewer',
-            'member' => 'user:' . $email
+        $output = $this->runFunctionSnippet('set_iam_policy', [
+            self::$registryId,
+            'roles/viewer',
+            'user:' . $email,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString($email, $output);
 
-        $output = $this->runCommand('get-iam-policy', [
-            'registry' => self::$registryId,
+        $output = $this->runFunctionSnippet('get_iam_policy', [
+            self::$registryId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString($email, $output);
     }
@@ -115,12 +134,14 @@ class iotTest extends TestCase
     /** @depends testCreateRegistry */
     public function testCreateRsaDevice()
     {
-        $deviceId = 'test-rsa-device-' . self::$testId;
+        $deviceId = 'test-rsa_device-' . self::$testId;
 
-        $output = $this->runCommand('create-rsa-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
-            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+        $output = $this->runFunctionSnippet('create_rsa_device', [
+            self::$registryId,
+            $deviceId,
+            __DIR__ . '/data/rsa_cert.pem',
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
         $this->assertStringContainsString($deviceId, $output);
@@ -135,16 +156,20 @@ class iotTest extends TestCase
         file_put_contents($iotCertFile, $iotCert);
 
         $data = '{"data":"example of state data"}';
-        $output = $this->runCommand('set-device-state', [
-            'registry' => self::$registryId,
-            'device' => self::$devices[0],
-            'certificate-file' => $iotCertFile,
-            'state-data' => $data,
+        $output = $this->runFunctionSnippet('set_device_state', [
+            self::$registryId,
+            self::$devices[0],
+            $iotCertFile,
+            $data,
+            self::$projectId,
+            self::LOCATION,
         ]);
 
-        $output = $this->runCommand('get-device-state', [
-            'registry' => self::$registryId,
-            'device' => self::$devices[0],
+        $output = $this->runFunctionSnippet('get_device_state', [
+            self::$registryId,
+            self::$devices[0],
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString('Data: ' . $data, $output);
     }
@@ -152,8 +177,10 @@ class iotTest extends TestCase
     /** @depends testCreateRsaDevice */
     public function testListDevices()
     {
-        $output = $this->runCommand('list-devices', [
-            'registry' => self::$registryId,
+        $output = $this->runFunctionSnippet('list_devices', [
+            self::$registryId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString(self::$devices[0], $output);
     }
@@ -161,9 +188,11 @@ class iotTest extends TestCase
     /** @depends testCreateRsaDevice */
     public function testGetDevice()
     {
-        $output = $this->runCommand('get-device', [
-            'registry' => self::$registryId,
-            'device' => self::$devices[0],
+        $output = $this->runFunctionSnippet('get_device', [
+            self::$registryId,
+            self::$devices[0],
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString(self::$devices[0], $output);
     }
@@ -172,10 +201,13 @@ class iotTest extends TestCase
     public function testSetDeviceConfig()
     {
         $config = '{"data":"example of config data"}';
-        $output = $this->runCommand('set-device-config', [
-            'registry' => self::$registryId,
-            'device' => self::$devices[0],
-            'config' => $config,
+        $output = $this->runFunctionSnippet('set_device_config', [
+            self::$registryId,
+            self::$devices[0],
+            $config,
+            null,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString('Version: 2', $output);
         $this->assertStringContainsString('Data: ' . $config, $output);
@@ -185,10 +217,12 @@ class iotTest extends TestCase
     public function testSendCommandToDevice()
     {
         $command = '{"data":"example of command data"}';
-        $output = $this->runCommand('send-command-to-device', [
-            'registry' => self::$registryId,
-            'device' => self::$devices[0],
-            'command-data' => $command,
+        $output = $this->runFunctionSnippet('send_command_to_device', [
+            self::$registryId,
+            self::$devices[0],
+            $command,
+            self::$projectId,
+            self::LOCATION,
         ]);
         print($output);
         $this->assertStringContainsString('Sending command to', $output);
@@ -197,9 +231,11 @@ class iotTest extends TestCase
     /** @depends testSetDeviceConfig */
     public function testGetDeviceConfigs()
     {
-        $output = $this->runCommand('get-device-configs', [
-            'registry' => self::$registryId,
-            'device' => self::$devices[0],
+        $output = $this->runFunctionSnippet('get_device_configs', [
+            self::$registryId,
+            self::$devices[0],
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString('Version: 2', $output);
     }
@@ -207,12 +243,14 @@ class iotTest extends TestCase
     /** @depends testCreateRegistry */
     public function testCreateEsDevice()
     {
-        $deviceId = 'test-es-device-' . self::$testId;
+        $deviceId = 'test-es_device-' . self::$testId;
 
-        $output = $this->runCommand('create-es-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
-            'public-key-file' => __DIR__ . '/data/ec_public.pem',
+        $output = $this->runFunctionSnippet('create_es_device', [
+            self::$registryId,
+            $deviceId,
+            __DIR__ . '/data/ec_public.pem',
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
         $this->assertStringContainsString($deviceId, $output);
@@ -221,11 +259,13 @@ class iotTest extends TestCase
     /** @depends testCreateRegistry */
     public function testCreateUnauthDevice()
     {
-        $deviceId = 'test-unauth-device-' . self::$testId;
+        $deviceId = 'test-unauth_device-' . self::$testId;
 
-        $output = $this->runCommand('create-unauth-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
+        $output = $this->runFunctionSnippet('create_unauth_device', [
+            self::$registryId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
         $this->assertStringContainsString($deviceId, $output);
@@ -234,18 +274,22 @@ class iotTest extends TestCase
     /** @depends testCreateUnauthDevice */
     public function testPatchEs()
     {
-        $deviceId = 'test-es-device-to-patch' . self::$testId;
+        $deviceId = 'test-es_device_to_patch' . self::$testId;
 
-        $this->runCommand('create-unauth-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
+        $this->runFunctionSnippet('create_unauth_device', [
+            self::$registryId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
 
-        $output = $this->runCommand('patch-es-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
-            'public-key-file' => __DIR__ . '/data/ec_public.pem',
+        $output = $this->runFunctionSnippet('patch_es', [
+            self::$registryId,
+            $deviceId,
+            __DIR__ . '/data/ec_public.pem',
+            self::$projectId,
+            self::LOCATION,
         ]);
 
         $this->assertStringContainsString('Updated device', $output);
@@ -254,18 +298,22 @@ class iotTest extends TestCase
     /** @depends testCreateRegistry */
     public function testPatchRsa()
     {
-        $deviceId = 'test-rsa-device-to-patch' . self::$testId;
+        $deviceId = 'test-rsa_device_to_patch' . self::$testId;
 
-        $this->runCommand('create-unauth-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
+        $this->runFunctionSnippet('create_unauth_device', [
+            self::$registryId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
 
-        $output = $this->runCommand('patch-rsa-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
-            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
+        $output = $this->runFunctionSnippet('patch_rsa', [
+            self::$registryId,
+            $deviceId,
+            __DIR__ . '/data/rsa_cert.pem',
+            self::$projectId,
+            self::LOCATION,
         ]);
 
         $this->assertStringContainsString('Updated device', $output);
@@ -276,17 +324,21 @@ class iotTest extends TestCase
     {
         $gatewayId = 'test-rsa-gateway' . self::$testId;
 
-        $output = $this->runCommand('create-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
-            'algorithm' => 'RS256',
+        $output = $this->runFunctionSnippet('create_gateway', [
+            self::$registryId,
+            $gatewayId,
+            __DIR__ . '/data/rsa_cert.pem',
+            'RS256',
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$gateways[] = $gatewayId;
         $this->assertStringContainsString('Gateway: ', $output);
 
-        $output = $this->runCommand('list-gateways', [
-            'registry' => self::$registryId
+        $output = $this->runFunctionSnippet('list_gateways', [
+            self::$registryId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString($gatewayId, $output);
     }
@@ -297,34 +349,42 @@ class iotTest extends TestCase
      */
     public function testBindUnbindDevice()
     {
-        $deviceId = 'test-device-to-bind' . self::$testId;
+        $deviceId = 'test_device_to_bind' . self::$testId;
         $gatewayId = 'test-bindunbind-gateway' . self::$testId;
 
-        $this->runCommand('create-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
-            'algorithm' => 'RS256',
+        $this->runFunctionSnippet('create_gateway', [
+            self::$registryId,
+            $gatewayId,
+            __DIR__ . '/data/rsa_cert.pem',
+            'RS256',
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$gateways[] = $gatewayId;
 
-        $this->runCommand('create-unauth-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
+        $this->runFunctionSnippet('create_unauth_device', [
+            self::$registryId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
 
-        $output = $this->runCommand('bind-device-to-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'device' => $deviceId,
+        $output = $this->runFunctionSnippet('bind_device_to_gateway', [
+            self::$registryId,
+            $gatewayId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString('Device bound', $output);
 
-        $output = $this->runCommand('unbind-device-from-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'device' => $deviceId,
+        $output = $this->runFunctionSnippet('unbind_device_from_gateway', [
+            self::$registryId,
+            $gatewayId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString('Device unbound', $output);
     }
@@ -335,36 +395,46 @@ class iotTest extends TestCase
         $deviceId = 'php-bind-and-list' . self::$testId;
         $gatewayId = 'php-bal-gateway' . self::$testId;
 
-        $this->runCommand('create-unauth-device', [
-            'registry' => self::$registryId,
-            'device' => $deviceId,
+        $this->runFunctionSnippet('create_unauth_device', [
+            self::$registryId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$devices[] = $deviceId;
 
-        $this->runCommand('create-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'certificate-file' => __DIR__ . '/data/rsa_cert.pem',
-            'algorithm' => 'RS256',
+        $this->runFunctionSnippet('create_gateway', [
+            self::$registryId,
+            $gatewayId,
+            __DIR__ . '/data/rsa_cert.pem',
+            'RS256',
+            self::$projectId,
+            self::LOCATION,
         ]);
         self::$gateways[] = $gatewayId;
 
-        $this->runCommand('bind-device-to-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'device' => $deviceId,
+        $this->runFunctionSnippet('bind_device_to_gateway', [
+            self::$registryId,
+            $gatewayId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
 
-        $output = $this->runCommand('list-devices-for-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
+        $output = $this->runFunctionSnippet('list_devices_for_gateway', [
+            self::$registryId,
+            $gatewayId,
+            self::$projectId,
+            self::LOCATION,
         ]);
         $this->assertStringContainsString($deviceId, $output);
 
-        $this->runCommand('unbind-device-from-gateway', [
-            'registry' => self::$registryId,
-            'gateway' => $gatewayId,
-            'device' => $deviceId,
+        $this->runFunctionSnippet('unbind_device_from_gateway', [
+            self::$registryId,
+            $gatewayId,
+            $deviceId,
+            self::$projectId,
+            self::LOCATION,
         ]);
     }
 }

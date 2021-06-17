@@ -20,6 +20,7 @@ use Google\CloudFunctions\CloudEvent;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\Likelihood;
+use Google\Rpc\Code;
 
 // [END functions_imagemagick_setup]
 
@@ -27,6 +28,7 @@ use Google\Cloud\Vision\V1\Likelihood;
 function blurOffensiveImages(CloudEvent $cloudevent): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
+
     $storage = new StorageClient();
     $data = $cloudevent->getData();
 
@@ -38,19 +40,21 @@ function blurOffensiveImages(CloudEvent $cloudevent): void
     $storage = new StorageClient();
 
     try {
-        $request = $annotator->safeSearchDetection($filePath);
-        $response = $request->getSafeSearchAnnotation();
+        $response = $annotator->safeSearchDetection($filePath);
 
-        // Handle missing files
-        // (This is uncommon, but can happen if race conditions occur)
-        if ($response === null) {
-            fwrite($log, 'Could not find ' . $filePath . PHP_EOL);
+        // Handle error
+        if ($response->hasError()) {
+            $code = Code::name($response->getError()->getCode());
+            $message = $response->getError()->getMessage();
+            fwrite($log, sprintf('%s: %s' . PHP_EOL, $code, $message));
             return;
         }
 
+        $annotation = $response->getSafeSearchAnnotation();
+
         $isInappropriate =
-            $response->getAdult() === Likelihood::VERY_LIKELY ||
-            $response->getViolence() === Likelihood::VERY_LIKELY;
+            $annotation->getAdult() === Likelihood::VERY_LIKELY ||
+            $annotation->getViolence() === Likelihood::VERY_LIKELY;
 
         if ($isInappropriate) {
             fwrite($log, 'Detected ' . $data['name'] . ' as inappropriate.' . PHP_EOL);
@@ -101,7 +105,8 @@ function blurImage(
         fwrite($log, 'Streamed blurred image to: ' . $gcsPath . PHP_EOL);
     } catch (Exception $e) {
         throw new Exception(
-            sprintf('Unable to stream blurred image to %s: %s',
+            sprintf(
+                'Unable to stream blurred image to %s: %s',
                 $gcsPath,
                 $e->getMessage()
             )
