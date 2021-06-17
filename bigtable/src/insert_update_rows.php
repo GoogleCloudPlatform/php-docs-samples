@@ -16,9 +16,9 @@
  */
 require __DIR__ . '/../vendor/autoload.php';
 
-$instance_id = 'quickstart-instance-php'; # instance-id
-$table_id    = 'bigtable-php-table'; # my-table
-$project_id  = getenv('PROJECT_ID');
+$instanceId = 'quickstart-instance-php'; # instance-id
+$tableId    = 'bigtable-php-table'; # my-table
+$projectId  = getenv('PROJECT_ID');
 
 // [START bigtable_insert_update_rows]
 
@@ -30,24 +30,24 @@ use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\Table as TableClass;
 
 $dataClient = new BigtableClient([
-    'projectId' => $project_id,
+    'projectId' => $projectId,
 ]);
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
+$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
 $table = new TableClass();
 
 $tableAdminClient->createtable(
     $instanceName,
-    $table_id,
+    $tableId,
     $table
 );
 
-$table = $dataClient->table($instance_id, $table_id);
+$table = $dataClient->table($instanceId, $tableId);
 
 $columnFamily4 = new ColumnFamily();
 $columnModification = new Modification();

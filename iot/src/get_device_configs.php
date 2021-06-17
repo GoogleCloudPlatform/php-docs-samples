@@ -51,3 +51,6 @@ function get_device_configs(
     }
 }
 # [END iot_get_device_configs]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
