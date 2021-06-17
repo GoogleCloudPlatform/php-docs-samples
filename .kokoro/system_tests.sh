@@ -50,16 +50,19 @@ mkdir -p build/logs
 
 export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
+# Load phpbrew shell
+source $HOME/.phpbrew/bashrc
+
 # decide which php version to use (this is for TESTING ONLY)
-if [ "3" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
+if [ -z "${GOOGLE_ALT_PROJECT_ID}" ]; then
+  # By default use PHP 7.4
+  phpbrew switch "7.4.20"
+elif [ "3" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
   phpbrew switch "7.3.28"
 elif [ "1" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
   phpbrew switch "7.4.20"
 elif [ "2" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
   phpbrew switch "8.0.7"
-else
-  # By default use PHP 7.4
-  phpbrew switch "7.4.20"
 fi
 
 # If we are running REST tests, disable gRPC
