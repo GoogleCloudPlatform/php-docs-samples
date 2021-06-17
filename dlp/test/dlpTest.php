@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 /**
  * Unit Tests for dlp commands.
@@ -26,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 class dlpTest extends TestCase
 {
     use TestTrait;
+    use RetryTrait;
 
     public function testInspectImageFile()
     {
@@ -224,6 +226,9 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted template ' . $fullTemplateId, $output);
     }
 
+    /**
+     * @retryAttempts 3
+     */
     public function testJobs()
     {
         // Set filter to only go back a day, so that we do not pull every job.
