@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 if (count($argv) < 3 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
+list($_, $projectId, $instanceId, $tableId) = $argv;
 
 // [START bigtable_writes_batch]
 
@@ -36,15 +36,15 @@ use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Mutations;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'mobile-time-series';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'mobile-time-series';
 
 // Connect to an existing table with an existing instance.
 $dataClient = new BigtableClient([
-    'projectId' => $project_id,
+    'projectId' => $projectId,
 ]);
-$table = $dataClient->table($instance_id, $table_id);
+$table = $dataClient->table($instanceId, $tableId);
 
 $timestampMicros = time() * 1000 * 1000;
 $columnFamilyId = 'stats_summary';
