@@ -1,6 +1,0 @@
-{
-    "require-dev": {
-        "monolog\/monolog": "^1.19",
-        "google/cloud-logging": "^1.14"
-    }
-}

@@ -45,7 +45,7 @@ $dlp = new DlpServiceClient();
 
 // Run request
 // The Parent project ID is automatically extracted from this parameter
-$triggerName = $dlp->projectJobTriggerName($callingProjectId, $triggerId);
+$triggerName = "projects/$callingProjectId/locations/global/jobTriggers/$triggerId";
 $response = $dlp->deleteJobTrigger($triggerName);
 
 // Print the results

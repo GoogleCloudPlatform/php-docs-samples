@@ -41,9 +41,12 @@ function delete_data_with_dml($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "DELETE Singers WHERE FirstName = 'Alice'");
+            "DELETE FROM Singers WHERE FirstName = 'Alice'");
         $t->commit();
         printf('Deleted %d row(s).' . PHP_EOL, $rowCount);
     });
 }
 // [END spanner_dml_standard_delete]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

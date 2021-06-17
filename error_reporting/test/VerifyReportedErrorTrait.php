@@ -56,7 +56,8 @@ trait VerifyReportedErrorTrait
         // Iterate through all elements
         $testFunc = function () use ($errorStats, $projectName, $timeRange, $message) {
             $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange, [
+            $response = $errorStats->listGroupStats($projectName, [
+                'timeRange' => $timeRange,
                 'pageSize' => 100,
             ]);
             foreach ($response->iterateAllElements() as $groupStat) {
@@ -69,7 +70,7 @@ trait VerifyReportedErrorTrait
                 }
             }
 
-            $this->assertContains($message, implode("\n", $messages));
+            $this->assertStringContainsString($message, implode("\n", $messages));
         };
 
         $backoff->execute($testFunc);

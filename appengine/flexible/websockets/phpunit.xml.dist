@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="default">
             <directory>test</directory>
+            <exclude>test/DeployTest.php</exclude>
         </testsuite>
     </testsuites>
     <logging>

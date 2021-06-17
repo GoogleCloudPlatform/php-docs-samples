@@ -33,9 +33,8 @@ class FunctionsTest extends TestCase
 
     private static $datasetId;
     private static $dataset;
-    private static $tempTables = [];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         $client = new BigQueryClient([
@@ -63,7 +62,7 @@ class FunctionsTest extends TestCase
             self::$datasetId,
             $tableId,
         ]);
-        $this->assertContains('Brent Shaffer', $output);
+        $this->assertStringContainsString('Brent Shaffer', $output);
     }
 
     public function testCopyTable()
@@ -79,7 +78,7 @@ class FunctionsTest extends TestCase
         ]);
 
         $destinationTable = self::$dataset->table($destinationTableId);
-        $this->assertContains('Table copied successfully', $output);
+        $this->assertStringContainsString('Table copied successfully', $output);
         $this->verifyTable($destinationTable, 'Brent Shaffer', 3);
     }
 
@@ -87,11 +86,11 @@ class FunctionsTest extends TestCase
     {
         $tempDatasetId = sprintf('test_dataset_%s', time());
         $output = $this->runSnippet('create_dataset', [$tempDatasetId]);
-        $this->assertContains('Created dataset', $output);
+        $this->assertStringContainsString('Created dataset', $output);
 
         // delete the dataset
         $output = $this->runSnippet('delete_dataset', [$tempDatasetId]);
-        $this->assertContains('Deleted dataset', $output);
+        $this->assertStringContainsString('Deleted dataset', $output);
     }
 
     public function testCreateAndDeleteTable()
@@ -101,14 +100,14 @@ class FunctionsTest extends TestCase
             self::$datasetId,
             $tempTableId
         ]);
-        $this->assertContains('Created table', $output);
+        $this->assertStringContainsString('Created table', $output);
 
         // delete the table
         $output = $this->runSnippet('delete_table', [
             self::$datasetId,
             $tempTableId
         ]);
-        $this->assertContains('Deleted table', $output);
+        $this->assertStringContainsString('Deleted table', $output);
     }
 
     public function testExtractTable()
@@ -129,9 +128,9 @@ class FunctionsTest extends TestCase
         ]);
         $object = $storage->bucket($bucketName)->objects(['prefix' => $tableId])->current();
         $contents = $object->downloadAsString();
-        $this->assertContains('Brent Shaffer', $contents);
-        $this->assertContains('Takashi Matsuo', $contents);
-        $this->assertContains('Jeffrey Rennie', $contents);
+        $this->assertStringContainsString('Brent Shaffer', $contents);
+        $this->assertStringContainsString('Takashi Matsuo', $contents);
+        $this->assertStringContainsString('Jeffrey Rennie', $contents);
         $object->delete();
         $this->assertFalse($object->exists());
     }
@@ -164,7 +163,7 @@ class FunctionsTest extends TestCase
         ]);
 
         $tempTable = self::$dataset->table($tempTableId);
-        $this->assertContains('Data imported successfully', $output);
+        $this->assertStringContainsString('Data imported successfully', $output);
         $this->verifyTable($tempTable, 'Brent Shaffer', 3);
     }
 
@@ -173,17 +172,18 @@ class FunctionsTest extends TestCase
      */
     public function testImportFromStorage($snippet, $runTruncateSnippet = false)
     {
+        $tableId = sprintf('%s_%s', $snippet, rand());
+
         // run the import
         $output = $this->runSnippet($snippet, [
             self::$datasetId,
+            $tableId,
         ]);
 
-        $this->assertContains('Data imported successfully', $output);
-        $tableId = 'us_states';
+        $this->assertStringContainsString('Data imported successfully', $output);
 
         // verify table contents
         $table = self::$dataset->table($tableId);
-        self::$tempTables[] = $table;
         $this->verifyTable($table, 'Washington', 50);
 
         if ($runTruncateSnippet) {
@@ -192,7 +192,7 @@ class FunctionsTest extends TestCase
                 self::$datasetId,
                 $tableId,
             ]);
-            $this->assertContains('Data imported successfully', $output);
+            $this->assertStringContainsString('Data imported successfully', $output);
             $this->verifyTable($table, 'Washington', 50);
         }
     }
@@ -230,21 +230,21 @@ class FunctionsTest extends TestCase
         ]);
 
         $tempTable = self::$dataset->table($tempTableId);
-        $this->assertContains('Data imported successfully', $output);
+        $this->assertStringContainsString('Data imported successfully', $output);
         $this->verifyTable($tempTable, 'Brent Shaffer', 3);
     }
 
     public function testListDatasets()
     {
         $output = $this->runSnippet('list_datasets');
-        $this->assertContains(self::$datasetId, $output);
+        $this->assertStringContainsString(self::$datasetId, $output);
     }
 
     public function testListTables()
     {
         $tempTableId = $this->createTempEmptyTable();
         $output = $this->runSnippet('list_tables', [self::$datasetId]);
-        $this->assertContains($tempTableId, $output);
+        $this->assertStringContainsString($tempTableId, $output);
     }
 
     public function testStreamRow()
@@ -259,7 +259,7 @@ class FunctionsTest extends TestCase
         ]);
 
         $tempTable = self::$dataset->table($tempTableId);
-        $this->assertcontains('Data streamed into BigQuery successfully', $output);
+        $this->assertStringContainsString('Data streamed into BigQuery successfully', $output);
         $this->verifyTable($tempTable, 'Brent Shaffer', 1);
     }
 
@@ -269,9 +269,9 @@ class FunctionsTest extends TestCase
             FROM `publicdata.samples.shakespeare` GROUP BY corpus LIMIT 10';
 
         $output = $this->runSnippet('run_query', [$query]);
-        $this->assertContains('hamlet', $output);
-        $this->assertContains('kinglear', $output);
-        $this->assertContains('Found 10 row(s)', $output);
+        $this->assertStringContainsString('hamlet', $output);
+        $this->assertStringContainsString('kinglear', $output);
+        $this->assertStringContainsString('Found 10 row(s)', $output);
     }
 
     public function testRunQueryAsJob()
@@ -284,7 +284,7 @@ class FunctionsTest extends TestCase
         );
 
         $output = $this->runSnippet('run_query_as_job', [$query]);
-        $this->assertContains('Found 1 row(s)', $output);
+        $this->assertStringContainsString('Found 1 row(s)', $output);
     }
 
     private function runSnippet($sampleName, $params = [])
@@ -340,16 +340,7 @@ class FunctionsTest extends TestCase
         $this->runEventuallyConsistentTest($testFunction);
     }
 
-    public function tearDown()
-    {
-        if (self::$tempTables) {
-            while ($tempTable = array_pop(self::$tempTables)) {
-                $tempTable->delete();
-            }
-        }
-    }
-
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$dataset->delete(['deleteContents' => true]);
     }

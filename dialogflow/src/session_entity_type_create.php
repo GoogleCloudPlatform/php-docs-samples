@@ -18,38 +18,38 @@
 // [START dialogflow_create_session_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\SessionEntityType_EntityOverrideMode;
+use Google\Cloud\Dialogflow\V2\SessionEntityType\EntityOverrideMode;
 use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
 use Google\Cloud\Dialogflow\V2\SessionEntityType;
-use Google\Cloud\Dialogflow\V2\EntityType_Entity;
+use Google\Cloud\Dialogflow\V2\EntityType\Entity;
 
 /**
 * Create a session entity type with the given display name.
 */
 function session_entity_type_create($projectId, $displayName, $values,
-    $sessionId, $overrideMode = SessionEntityType_EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
+    $sessionId, $overrideMode = EntityOverrideMode::ENTITY_OVERRIDE_MODE_OVERRIDE)
 {
     $sessionEntityTypesClient = new SessionEntityTypesClient();
     $parent = $sessionEntityTypesClient->sessionName($projectId, $sessionId);
 
     // prepare name
     $sessionEntityTypeName = $sessionEntityTypesClient
-    ->sessionEntityTypeName($projectId, $sessionId, $displayName);
+        ->sessionEntityTypeName($projectId, $sessionId, $displayName);
 
     // prepare entities
     $entities = [];
     foreach ($values as $value) {
-        $entity = new EntityType_Entity();
-        $entity->setValue($value);
-        $entity->setSynonyms([$value]);
+        $entity = (new Entity())
+            ->setValue($value)
+            ->setSynonyms([$value]);
         $entities[] = $entity;
     }
 
     // prepare session entity type
-    $sessionEntityType = new SessionEntityType();
-    $sessionEntityType->setName($sessionEntityTypeName);
-    $sessionEntityType->setEntityOverrideMode($overrideMode);
-    $sessionEntityType->setEntities($entities);
+    $sessionEntityType = (new SessionEntityType())
+        ->setName($sessionEntityTypeName)
+        ->setEntityOverrideMode($overrideMode)
+        ->setEntities($entities);
 
     // create session entity type
     $response = $sessionEntityTypesClient->createSessionEntityType($parent,

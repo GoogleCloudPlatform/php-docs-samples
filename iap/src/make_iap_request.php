@@ -24,8 +24,7 @@
 namespace Google\Cloud\Samples\Iap;
 
 # Imports Auth libraries and Guzzle HTTP libraries.
-use Google\Auth\OAuth2;
-use Google\Auth\Middleware\ScopedAccessTokenMiddleware;
+use Google\Auth\ApplicationDefaultCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
@@ -37,47 +36,25 @@ use GuzzleHttp\HandlerStack;
  *
  * @return The response body.
  */
-function make_iap_request($url, $clientId, $pathToServiceAccount)
+function make_iap_request($url, $clientId)
 {
-    $serviceAccountKey = json_decode(file_get_contents($pathToServiceAccount), true);
-    $oauth_token_uri = 'https://www.googleapis.com/oauth2/v4/token';
-    $iam_scope = 'https://www.googleapis.com/auth/iam';
-
-    # Create an OAuth object using the service account key
-    $oauth = new OAuth2([
-        'audience' => $oauth_token_uri,
-        'issuer' => $serviceAccountKey['client_email'],
-        'signingAlgorithm' => 'RS256',
-        'signingKey' => $serviceAccountKey['private_key'],
-        'tokenCredentialUri' => $oauth_token_uri,
-    ]);
-    $oauth->setGrantType(OAuth2::JWT_URN);
-    $oauth->setAdditionalClaims(['target_audience' => $clientId]);
-
-    # Obtain an OpenID Connect token, which is a JWT signed by Google.
-    $token = $oauth->fetchAuthToken();
-    $idToken = $oauth->getIdToken();
-
-    # Construct a ScopedAccessTokenMiddleware with the ID token.
-    $middleware = new ScopedAccessTokenMiddleware(
-        function () use ($idToken) {
-            return $idToken;
-        },
-        $iam_scope
-    );
-
+    // create middleware, using the client ID as the target audience for IAP
+    $middleware = ApplicationDefaultCredentials::getIdTokenMiddleware($clientId);
     $stack = HandlerStack::create();
     $stack->push($middleware);
 
-    # Create an HTTP Client using Guzzle and pass in the credentials.
-    $http_client = new Client([
+    // create the HTTP client
+    $client = new Client([
         'handler' => $stack,
-        'base_uri' => $url,
-        'auth' => 'scoped'
+        'auth' => 'google_auth'
     ]);
 
-    # Make an authenticated HTTP Request
-    $response = $http_client->request('GET', '/', []);
-    return $response;
+    // make the request
+    $response = $client->get($url);
+    print('Printing out response body:');
+    print($response->getBody());
 }
 # [END iap_make_request]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

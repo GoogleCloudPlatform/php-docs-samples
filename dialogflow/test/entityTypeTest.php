@@ -28,7 +28,7 @@ class entityTypeTest extends TestCase
 
     private static $entityTypeDisplayName;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$entityTypeDisplayName = sprintf('fake_display_%s_%s', rand(100, 999), time());
     }
@@ -40,7 +40,7 @@ class entityTypeTest extends TestCase
         ]);
         $output = $this->runCommand('entity-type-list');
 
-        $this->assertContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringContainsString(self::$entityTypeDisplayName, $output);
 
         $response = str_replace(array("\r", "\n"), '', $response);
         $response = explode('/', $response);
@@ -56,6 +56,6 @@ class entityTypeTest extends TestCase
         ]);
         $output = $this->runCommand('entity-type-list');
 
-        $this->assertNotContains(self::$entityTypeDisplayName, $output);
+        $this->assertStringNotContainsString(self::$entityTypeDisplayName, $output);
     }
 }

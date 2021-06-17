@@ -1,0 +1,16 @@
+{
+    "name": "google/cloud-sql-postgres-example",
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\CloudSQL\\Postgres\\": "src"
+        }
+    },
+    "require": {
+        "php": ">= 7.2",
+        "slim/slim": "^4.5",
+        "slim/twig-view": "^3.1",
+        "slim/http": "^1.0",
+        "slim/psr7": "^1.0",
+        "pimple/pimple": "^3.3"
+    }
+}

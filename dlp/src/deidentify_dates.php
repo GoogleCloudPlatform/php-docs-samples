@@ -151,10 +151,11 @@ $recordTransformations = (new RecordTransformations())
 $deidentifyConfig = (new DeidentifyConfig())
     ->setRecordTransformations($recordTransformations);
 
-$parent = $dlp->projectName($callingProjectId);
+$parent = "projects/$callingProjectId/locations/global";
 
 // Run request
-$response = $dlp->deidentifyContent($parent, [
+$response = $dlp->deidentifyContent([
+    'parent' => $parent,
     'deidentifyConfig' => $deidentifyConfig,
     'item' => $item
 ]);

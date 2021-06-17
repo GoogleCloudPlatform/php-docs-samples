@@ -57,3 +57,6 @@ function insert_struct_data($instanceId, $databaseId)
     print('Inserted data.' . PHP_EOL);
 }
 // [END spanner_write_data_for_struct_queries]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -28,39 +28,32 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) !== 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID READ_TYPE" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id, $read_type) = $argv;
+list($_, $projectId, $instanceId, $tableId, $readType) = $argv;
 
 $validReadTypes = ['read_row', 'read_rows', 'read_row_range', 'read_row_ranges',
     'read_prefix', 'read_filter', 'read_row_partial'];
-if (!in_array($read_type, $validReadTypes)) {
+if (!in_array($readType, $validReadTypes)) {
     throw new Exception(sprintf(
         'Invalid READ_TYPE %s, must be one of: %s',
-        $read_type,
+        $readType,
         implode(', ', $validReadTypes)
     ));
 }
 
-// [START bigtable_reads_row]
-// [START bigtable_reads_row_partial]
-// [START bigtable_reads_rows]
-// [START bigtable_reads_row_range]
-// [START bigtable_reads_row_ranges]
-// [START bigtable_reads_prefix]
-// [START bigtable_reads_filter]
-
+// [START bigtable_reads_print]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'mobile-time-series';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'mobile-time-series';
 
 // Connect to an existing table with an existing instance.
 $dataClient = new BigtableClient([
-    'projectId' => $project_id,
+    'projectId' => $projectId,
 ]);
-$table = $dataClient->table($instance_id, $table_id);
+$table = $dataClient->table($instanceId, $tableId);
 
 // Helper function for printing the row data
 function print_row($key, $row)
@@ -83,13 +76,8 @@ function print_row($key, $row)
     print(PHP_EOL);
 }
 
-// [END bigtable_reads_row]
-// [END bigtable_reads_row_partial]
-// [END bigtable_reads_rows]
-// [END bigtable_reads_row_range]
-// [END bigtable_reads_row_ranges]
-// [END bigtable_reads_prefix]
-// [END bigtable_reads_filter]
+// Write your code here.
+// [END bigtable_reads_print]
 
 function read_row($table)
 {
@@ -205,4 +193,4 @@ function read_filter($table)
 }
 
 // Call the function for the supplied READ_TYPE
-call_user_func($read_type, $table);
+call_user_func($readType, $table);

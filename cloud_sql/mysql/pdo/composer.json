@@ -1,0 +1,16 @@
+{
+    "name": "google/cloud-sql-mysql-example",
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\CloudSQL\\MySQL\\": "src"
+        }
+    },
+    "require": {
+        "php": ">= 7.2",
+        "slim/slim": "^4.5",
+        "slim/twig-view": "^3.1",
+        "pimple/pimple": "^3.3",
+        "guzzlehttp/psr7": "^1.6",
+        "http-interop/http-factory-guzzle": "^1.0"
+    }
+}

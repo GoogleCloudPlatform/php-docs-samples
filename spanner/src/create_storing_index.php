@@ -64,3 +64,6 @@ function create_storing_index($instanceId, $databaseId)
     printf('Added the AlbumsByAlbumTitle2 index.' . PHP_EOL);
 }
 // [END spanner_create_storing_index]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

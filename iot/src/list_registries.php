@@ -50,3 +50,6 @@ function list_registries(
     }
 }
 # [END iot_list_registries]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

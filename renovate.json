@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "config:base",
+    ":preserveSemverRanges"
+  ],
+  "packageRules": [{
+    "paths": [
+        "testing/composer.json"
+    ],
+    "excludePackageNames": [
+      "phpunit/phpunit"
+    ]
+  }],
+  "branchPrefix": "renovate/{{parentDir}}-",
+  "prConcurrentLimit": 5
+}

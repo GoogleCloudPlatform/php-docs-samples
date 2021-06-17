@@ -65,3 +65,6 @@ function insert_data($instanceId, $databaseId)
     print('Inserted data.' . PHP_EOL);
 }
 // [END spanner_insert_data]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

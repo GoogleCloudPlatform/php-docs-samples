@@ -34,7 +34,7 @@ class UniformBucketLevelAccessCommandTest extends TestCase
     protected $storage;
     protected $bucket;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Sleep to avoid the rate limit for creating/deleting.
         sleep(5 + rand(2, 4));
@@ -45,7 +45,7 @@ class UniformBucketLevelAccessCommandTest extends TestCase
         $this->bucket = $this->storage->createBucket($bucketName);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->bucket->delete();
     }

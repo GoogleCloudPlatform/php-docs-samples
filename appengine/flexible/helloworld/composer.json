@@ -1,10 +1,6 @@
 {
   "require": {
-    "php": "5.6.*|7.0.*|7.1.*|7.2.*",
-    "silex/silex": "^2.3"
-  },
-  "require-dev": {
-    "symfony/browser-kit": "^4.4",
-    "symfony/http-kernel": "^4.4"
+    "slim/slim": "^4.0",
+    "slim/psr7": "^1.3"
   }
 }

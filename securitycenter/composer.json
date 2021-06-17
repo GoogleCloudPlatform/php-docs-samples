@@ -1,0 +1,6 @@
+{
+    "require": {
+        "google/cloud-security-center": "^1.0.0",
+        "google/cloud-pubsub": "^1.23.0"
+    }
+}

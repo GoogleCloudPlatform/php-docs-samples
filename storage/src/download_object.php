@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START download_object]
+# [START storage_download_file]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -44,4 +44,4 @@ function download_object($bucketName, $objectName, $destination)
     printf('Downloaded gs://%s/%s to %s' . PHP_EOL,
         $bucketName, $objectName, basename($destination));
 }
-# [END download_object]
+# [END storage_download_file]

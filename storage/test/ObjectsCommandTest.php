@@ -17,10 +17,9 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage\ObjectsCommand;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,56 +27,46 @@ use PHPUnit\Framework\TestCase;
  */
 class ObjectsCommandTest extends TestCase
 {
-    use TestTrait;
+    use TestTrait, ExecuteCommandTrait;
 
-    protected $commandTester;
-    protected $storage;
+    private static $bucketName;
+    private static $storage;
+    private static $commandFile = __DIR__ . '/../storage.php';
 
-    public function setUp()
+    public static function setUpBeforeClass(): void
     {
-        $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('objects'));
-        $this->storage = new StorageClient();
+        self::$bucketName = sprintf(
+            '%s-legacy',
+            self::requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
+        self::$storage = new StorageClient();
     }
 
     public function testListObjects()
     {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $output = $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+        ]);
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-            ],
-            ['interactive' => false]
-        );
-
-        $this->expectOutputRegex("/Object:/");
+        $this->assertStringContainsString('Object:', $output);
     }
 
     public function testListObjectsWithPrefix()
     {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
-        ob_start();
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                '--prefix' => $objectName,
-            ],
-            ['interactive' => false]
-        );
-        $output = ob_get_clean();
+        $output = $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            '--prefix' => $objectName,
+        ]);
 
-        $this->assertGreaterThan(0, substr_count($output, 'Object: '));
+        $this->assertStringContainsString('Object:', $output);
     }
 
     public function testManageObject()
     {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-
         $objectName = 'test-object-' . time();
-        $bucket = $this->storage->bucket($bucketName);
+        $bucket = self::$storage->bucket(self::$bucketName);
         $object = $bucket->object($objectName);
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         $basename = basename($uploadFrom);
@@ -87,91 +76,69 @@ class ObjectsCommandTest extends TestCase
 
         $this->assertFalse($object->exists());
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--upload-from' => $uploadFrom,
-            ],
-            ['interactive' => false]
-        );
+        $output = $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--upload-from' => $uploadFrom,
+        ]);
 
         $object->reload();
         $this->assertTrue($object->exists());
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--copy-to' => $objectName . '-copy',
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--copy-to' => $objectName . '-copy',
+        ]);
 
         $copyObject = $bucket->object($objectName . '-copy');
         $this->assertTrue($copyObject->exists());
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName . '-copy',
-                '--delete' => true,
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName . '-copy',
+            '--delete' => true,
+        ]);
 
         $this->assertFalse($copyObject->exists());
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--make-public' => true,
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--make-public' => true,
+        ]);
 
         $acl = $object->acl()->get(['entity' => 'allUsers']);
         $this->assertArrayHasKey('role', $acl);
         $this->assertEquals('READER', $acl['role']);
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--download-to' => $downloadTo,
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--download-to' => $downloadTo,
+        ]);
 
         $this->assertTrue(file_exists($downloadTo));
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--move-to' => $objectName . '-moved',
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--move-to' => $objectName . '-moved',
+        ]);
 
         $this->assertFalse($object->exists());
         $movedObject = $bucket->object($objectName . '-moved');
         $this->assertTrue($movedObject->exists());
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName . '-moved',
-                '--delete' => true,
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('objects', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName . '-moved',
+            '--delete' => true,
+        ]);
 
         $this->assertFalse($movedObject->exists());
 
-        // $bucketUrl = sprintf('gs://%s', $bucketName);
-        $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
+        $objectUrl = sprintf('gs://%s/%s', self::$bucketName, $objectName);
         $outputString = <<<EOF
 Uploaded $basename to $objectUrl
 Copied $objectUrl to $objectUrl-copy
@@ -182,6 +149,6 @@ Moved $objectUrl to $objectUrl-moved
 Deleted $objectUrl-moved
 
 EOF;
-        $this->expectOutputString($outputString);
+        $this->assertEquals($output, $outputString);
     }
 }

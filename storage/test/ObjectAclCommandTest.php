@@ -18,10 +18,9 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Core\Exception\NotFoundException;
-use Google\Cloud\Samples\Storage\ObjectAclCommand;
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,75 +28,64 @@ use PHPUnit\Framework\TestCase;
  */
 class ObjectAclCommandTest extends TestCase
 {
-    use TestTrait;
+    use TestTrait, ExecuteCommandTrait;
 
-    protected $commandTester;
-    protected $storage;
+    private static $storage;
+    private static $bucketName;
+    private static $commandFile = __DIR__ . '/../storage.php';
 
-    public function setUp()
+    public static function setUpBeforeClass(): void
     {
-        $application = require __DIR__ . '/../storage.php';
-        $this->commandTester = new CommandTester($application->get('object-acl'));
-        $this->storage = new StorageClient();
+        self::$storage = new StorageClient();
+        self::$bucketName = sprintf(
+            '%s-legacy',
+            self::requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
     }
 
     public function testObjectAcl()
     {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-            ],
-            ['interactive' => false]
-        );
+        $output = $this->runCommand('object-acl', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+        ]);
 
-        $this->expectOutputRegex("/: OWNER/");
+        $this->assertStringContainsString(': OWNER', $output);
     }
 
     public function testManageObjectAcl()
     {
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
-        $bucket = $this->storage->bucket($bucketName);
+        $bucket = self::$storage->bucket(self::$bucketName);
         $object = $bucket->object($objectName);
         $acl = $object->acl();
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--entity' => 'allAuthenticatedUsers',
-                '--create' => true,
-            ],
-            ['interactive' => false]
-        );
+        $output = $this->runCommand('object-acl', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--entity' => 'allAuthenticatedUsers',
+            '--create' => true,
+        ]);
 
         $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
         $this->assertArrayHasKey('role', $aclInfo);
         $this->assertEquals('READER', $aclInfo['role']);
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--entity' => 'allAuthenticatedUsers',
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('object-acl', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--entity' => 'allAuthenticatedUsers',
+        ]);
 
-        $this->commandTester->execute(
-            [
-                'bucket' => $bucketName,
-                'object' => $objectName,
-                '--entity' => 'allAuthenticatedUsers',
-                '--delete' => true,
-            ],
-            ['interactive' => false]
-        );
+        $output .= $this->runCommand('object-acl', [
+            'bucket' => self::$bucketName,
+            'object' => $objectName,
+            '--entity' => 'allAuthenticatedUsers',
+            '--delete' => true,
+        ]);
 
         try {
             $acl->get(['entity' => 'allAuthenticatedUsers']);
@@ -106,13 +94,13 @@ class ObjectAclCommandTest extends TestCase
             $this->assertTrue(true);
         }
 
-        $objectUrl = sprintf('gs://%s/%s', $bucketName, $objectName);
+        $objectUrl = sprintf('gs://%s/%s', self::$bucketName, $objectName);
         $outputString = <<<EOF
 Added allAuthenticatedUsers (READER) to $objectUrl ACL
 allAuthenticatedUsers: READER
 Deleted allAuthenticatedUsers from $objectUrl ACL
 
 EOF;
-        $this->expectOutputString($outputString);
+        $this->assertEquals($output, $outputString);
     }
 }

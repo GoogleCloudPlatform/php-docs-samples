@@ -29,7 +29,7 @@ class DeployTest extends TestCase
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode(),
             'top page status code');
-        $this->assertContains('returned 200', (string) $resp->getBody(),
+        $this->assertStringContainsString('returned 200', (string) $resp->getBody(),
             'top page content');
     }
 }

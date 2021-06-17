@@ -45,6 +45,23 @@ This simple command-line application demonstrates how to invoke
 
 See the [DLP Documentation](https://cloud.google.com/dlp/docs/inspecting-text) for more information.
 
+## Troubleshooting
+
+### bcmath extension missing
+
+If you see an error like this:
+
+```
+PHP Fatal error:  Uncaught Error: Call to undefined function Google\Protobuf\Internal\bccomp() in /usr/local/google/home/crwilson/github/GoogleCloudPlatform/php-docs-samples/dlp/vendor/google/protobuf/src/Google/Protobuf/Internal/Message.php:986
+```
+
+You may need to install the bcmath PHP extension.
+e.g. (may depend on your php version)
+```
+$ sudo apt-get install php7.3-bcmath
+```
+
+
 ## Contributing changes
 
 * See [CONTRIBUTING.md](../CONTRIBUTING.md)

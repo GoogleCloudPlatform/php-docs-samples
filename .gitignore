@@ -10,3 +10,4 @@ credentials.*
 .php_cs.cache
 .vscode/
 .kokoro/secrets.sh
+.phpunit.result.cache

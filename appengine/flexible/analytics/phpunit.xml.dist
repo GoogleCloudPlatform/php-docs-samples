@@ -19,8 +19,9 @@
         <env name="GA_TRACKING_ID" value="UA-78971600-1"/>
     </php>
     <testsuites>
-        <testsuite>
+        <testsuite name="App Engine Flex Memcache tests">
             <directory>test</directory>
+            <exclude>test/DeployTest.php</exclude>
         </testsuite>
     </testsuites>
     <logging>

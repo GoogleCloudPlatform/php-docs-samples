@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START list_objects]
+# [START storage_list_files]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -41,4 +41,4 @@ function list_objects($bucketName)
         printf('Object: %s' . PHP_EOL, $object->name());
     }
 }
-# [END list_objects]
+# [END storage_list_files]

@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START delete_object_acl]
+# [START storage_remove_file_owner]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -45,4 +45,4 @@ function delete_object_acl($bucketName, $objectName, $entity, $options = [])
     $acl->delete($entity, $options);
     printf('Deleted %s from gs://%s/%s ACL' . PHP_EOL, $entity, $bucketName, $objectName);
 }
-# [END delete_object_acl]
+# [END storage_remove_file_owner]

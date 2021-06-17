@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,66 +26,6 @@ use PHPUnit\Framework\TestCase;
 class dlpTest extends TestCase
 {
     use TestTrait;
-    use ExponentialBackoffTrait;
-
-    private static $dataset = 'integration_tests_dlp';
-    private static $table = 'harmful';
-
-    public function setUp()
-    {
-        $this->useResourceExhaustedBackoff(5);
-    }
-
-    public function testInspectDatastore()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $kind = 'Person';
-        $namespace = 'DLP';
-
-        $output = $this->runSnippet('inspect_datastore', [
-            self::$projectId,
-            self::$projectId,
-            $topicId,
-            $subId,
-            $kind,
-            $namespace
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-    }
-
-    public function testInspectBigquery()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-
-        $output = $this->runSnippet('inspect_bigquery', [
-            self::$projectId,
-            self::$projectId,
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-    }
-
-    public function testInspectGCS()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-        $objectName = 'dlp/harmful.csv';
-
-        $output = $this->runSnippet('inspect_gcs', [
-            self::$projectId,
-            $topicId,
-            $subId,
-            $bucketName,
-            $objectName,
-        ]);
-        $this->assertContains('PERSON_NAME', $output);
-    }
 
     public function testInspectImageFile()
     {
@@ -95,7 +34,7 @@ class dlpTest extends TestCase
             __DIR__ . '/data/test.png'
         ]);
 
-        $this->assertContains('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
     }
 
     public function testInspectTextFile()
@@ -105,7 +44,7 @@ class dlpTest extends TestCase
             __DIR__ . '/data/test.txt'
         ]);
 
-        $this->assertContains('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
     }
 
     public function testInspectString()
@@ -115,7 +54,7 @@ class dlpTest extends TestCase
             "My name is Gary Smith and my email is gary@example.com"
         ]);
 
-        $this->assertContains('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
     }
 
     public function testListInfoTypes()
@@ -123,16 +62,16 @@ class dlpTest extends TestCase
         // list all info types
         $output = $this->runSnippet('list_info_types');
 
-        $this->assertContains('US_DEA_NUMBER', $output);
-        $this->assertContains('AMERICAN_BANKERS_CUSIP_ID', $output);
+        $this->assertStringContainsString('US_DEA_NUMBER', $output);
+        $this->assertStringContainsString('AMERICAN_BANKERS_CUSIP_ID', $output);
 
         // list info types with a filter
         $output = $this->runSnippet(
             'list_info_types',
             ['supported_by=RISK_ANALYSIS']
         );
-        $this->assertContains('AGE', $output);
-        $this->assertNotContains('AMERICAN_BANKERS_CUSIP_ID', $output);
+        $this->assertStringContainsString('AGE', $output);
+        $this->assertStringNotContainsString('AMERICAN_BANKERS_CUSIP_ID', $output);
     }
 
     public function testRedactImage()
@@ -159,7 +98,7 @@ class dlpTest extends TestCase
             'My SSN is 372819127.',
             $numberToMask,
         ]);
-        $this->assertContains('My SSN is xxxxx9127', $output);
+        $this->assertStringContainsString('My SSN is xxxxx9127', $output);
     }
 
     public function testDeidentifyDates()
@@ -221,7 +160,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertContains($string, $reidOutput);
+        $this->assertStringContainsString($string, $reidOutput);
     }
 
     public function testTriggers()
@@ -242,20 +181,20 @@ class dlpTest extends TestCase
             $scanPeriod,
             $autoPopulateTimespan,
         ]);
-        $fullTriggerId = sprintf('projects/%s/jobTriggers/%s', self::$projectId, $triggerId);
-        $this->assertContains('Successfully created trigger ' . $fullTriggerId, $output);
+        $fullTriggerId = sprintf('projects/%s/locations/global/jobTriggers/%s', self::$projectId, $triggerId);
+        $this->assertStringContainsString('Successfully created trigger ' . $fullTriggerId, $output);
 
         $output = $this->runSnippet('list_triggers', [self::$projectId]);
-        $this->assertContains('Trigger ' . $fullTriggerId, $output);
-        $this->assertContains('Display Name: ' . $displayName, $output);
-        $this->assertContains('Description: ' . $description, $output);
-        $this->assertContains('Auto-populates timespan config: yes', $output);
+        $this->assertStringContainsString('Trigger ' . $fullTriggerId, $output);
+        $this->assertStringContainsString('Display Name: ' . $displayName, $output);
+        $this->assertStringContainsString('Description: ' . $description, $output);
+        $this->assertStringContainsString('Auto-populates timespan config: yes', $output);
 
         $output = $this->runSnippet('delete_trigger', [
             self::$projectId,
             $triggerId
         ]);
-        $this->assertContains('Successfully deleted trigger ' . $fullTriggerId, $output);
+        $this->assertStringContainsString('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 
     public function testInspectTemplates()
@@ -263,7 +202,7 @@ class dlpTest extends TestCase
         $displayName = uniqid("My inspect template display name ");
         $description = uniqid("My inspect template description ");
         $templateId = uniqid('my-php-test-inspect-template-');
-        $fullTemplateId = sprintf('projects/%s/inspectTemplates/%s', self::$projectId, $templateId);
+        $fullTemplateId = sprintf('projects/%s/locations/global/inspectTemplates/%s', self::$projectId, $templateId);
 
         $output  = $this->runSnippet('create_inspect_template', [
             self::$projectId,
@@ -271,124 +210,18 @@ class dlpTest extends TestCase
             $displayName,
             $description
         ]);
-        $this->assertContains('Successfully created template ' . $fullTemplateId, $output);
+        $this->assertStringContainsString('Successfully created template ' . $fullTemplateId, $output);
 
         $output = $this->runSnippet('list_inspect_templates', [self::$projectId]);
-        $this->assertContains('Template ' . $fullTemplateId, $output);
-        $this->assertContains('Display Name: ' . $displayName, $output);
-        $this->assertContains('Description: ' . $description, $output);
+        $this->assertStringContainsString('Template ' . $fullTemplateId, $output);
+        $this->assertStringContainsString('Display Name: ' . $displayName, $output);
+        $this->assertStringContainsString('Description: ' . $description, $output);
 
         $output = $this->runSnippet('delete_inspect_template', [
             self::$projectId,
             $templateId
         ]);
-        $this->assertContains('Successfully deleted template ' . $fullTemplateId, $output);
-    }
-
-    public function testNumericalStats()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $columnName = 'Age';
-
-        $output = $this->runSnippet('numerical_stats', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $columnName,
-        ]);
-
-        $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
-        $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
-    }
-
-    public function testCategoricalStats()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $columnName = 'Gender';
-
-        $output = $this->runSnippet('categorical_stats', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $columnName,
-        ]);
-
-        $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
-        $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
-        $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
-    }
-
-    public function testKAnonymity()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $quasiIds = 'Age,Gender';
-
-        $output = $this->runSnippet('k_anonymity', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $quasiIds,
-        ]);
-        $this->assertContains('{"stringValue":"Female"}', $output);
-        $this->assertRegExp('/Class size: \d/', $output);
-    }
-
-    public function testLDiversity()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $sensitiveAttribute = 'Name';
-        $quasiIds = 'Age,Gender';
-
-        $output = $this->runSnippet('l_diversity', [
-            self::$projectId, // calling project
-            self::$projectId, // data project
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $sensitiveAttribute,
-            $quasiIds,
-        ]);
-        $this->assertContains('{"stringValue":"Female"}', $output);
-        $this->assertRegExp('/Class size: \d/', $output);
-        $this->assertContains('{"stringValue":"James"}', $output);
-    }
-
-    public function testKMap()
-    {
-        $topicId = $this->requireEnv('DLP_TOPIC');
-        $subId = $this->requireEnv('DLP_SUBSCRIPTION');
-        $regionCode = 'US';
-        $quasiIds = 'Age,Gender';
-        $infoTypes = 'AGE,GENDER';
-
-        $output = $this->runSnippet('k_map', [
-            self::$projectId,
-            self::$projectId,
-            $topicId,
-            $subId,
-            self::$dataset,
-            self::$table,
-            $regionCode,
-            $quasiIds,
-            $infoTypes,
-        ]);
-        $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
-        $this->assertRegExp('/Size: \d/', $output);
-        $this->assertContains('{"stringValue":"Female"}', $output);
+        $this->assertStringContainsString('Successfully deleted template ' . $fullTemplateId, $output);
     }
 
     public function testJobs()
@@ -409,6 +242,6 @@ class dlpTest extends TestCase
             'delete_job',
             [$jobId]
         );
-        $this->assertContains('Successfully deleted job ' . $jobId, $output);
+        $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
 }

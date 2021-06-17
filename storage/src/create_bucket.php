@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START create_bucket]
+# [START storage_create_bucket]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -39,4 +39,4 @@ function create_bucket($bucketName, $options = [])
     $bucket = $storage->createBucket($bucketName, $options);
     printf('Bucket created: %s' . PHP_EOL, $bucket->name());
 }
-# [END create_bucket]
+# [END storage_create_bucket]

@@ -86,6 +86,10 @@ final class FilterTest extends TestCase
         self::deleteBigtableInstance();
     }
 
+    /**
+     * @retryAttempts 3
+     * @retryDelaySeconds 10
+     */
     public function testFilterLimitRowSample()
     {
         $output = self::runSnippet('filter_snippets', [
@@ -95,7 +99,7 @@ final class FilterTest extends TestCase
             "filter_limit_row_sample"
         ]);
         $result = "Reading data for row ";
-        $this->assertContains($result, trim($output));
+        $this->assertStringContainsString($result, trim($output));
     }
 
     public function testFilterLimitRowRegex()

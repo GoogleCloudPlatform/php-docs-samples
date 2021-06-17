@@ -44,7 +44,7 @@ use Google\Cloud\Dlp\V2\Likelihood;
 $dlp = new DlpServiceClient();
 
 // Construct request
-$parent = $dlp->projectName($projectId);
+$parent = "projects/$projectId/locations/global";
 $item = (new ContentItem())
     ->setValue($textToInspect);
 $inspectConfig = (new InspectConfig())
@@ -58,7 +58,8 @@ $inspectConfig = (new InspectConfig())
     ->setIncludeQuote(true);
 
 // Run request
-$response = $dlp->inspectContent($parent, [
+$response = $dlp->inspectContent([
+    'parent' => $parent,
     'inspectConfig' => $inspectConfig,
     'item' => $item
 ]);

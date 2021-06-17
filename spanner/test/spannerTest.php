@@ -17,20 +17,21 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
+use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
 class spannerTest extends TestCase
 {
-    use TestTrait, EventuallyConsistentTestTrait, ExecuteCommandTrait {
-        ExecuteCommandTrait::runCommand as traitRunCommand;
+    use TestTrait {
+        TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    private static $commandFile = __DIR__ . '/../spanner.php';
+    use RetryTrait, EventuallyConsistentTestTrait;
 
     /** @var string instanceId */
     protected static $instanceId;
@@ -38,35 +39,50 @@ class spannerTest extends TestCase
     /** @var string databaseId */
     protected static $databaseId;
 
+    /** @var string backupId */
+    protected static $backupId;
+
     /** @var $instance Instance */
     protected static $instance;
 
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
 
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        $instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
             'projectId' => self::$projectId,
         ]);
 
+        self::$instanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
-        self::$instanceId = $instanceId;
+        self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
     }
 
+    public function testCreateInstance()
+    {
+        $output = $this->runFunctionSnippet('create_instance', [
+            'instance_id' => self::$instanceId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance test-', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
     public function testCreateDatabase()
     {
-        $output = $this->runCommand('create-database');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Created database test-', $output);
+        $output = $this->runFunctionSnippet('create_database');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database test-', $output);
     }
 
     /**
@@ -74,7 +90,7 @@ class spannerTest extends TestCase
      */
     public function testInsertData()
     {
-        $output = $this->runCommand('insert-data');
+        $output = $this->runFunctionSnippet('insert_data');
         $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
 
@@ -83,12 +99,12 @@ class spannerTest extends TestCase
      */
     public function testQueryData()
     {
-        $output = $this->runCommand('query-data');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
+        $output = $this->runFunctionSnippet('query_data');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
@@ -96,15 +112,15 @@ class spannerTest extends TestCase
      */
     public function testBatchQueryData()
     {
-        $output = $this->runCommand('batch-query-data');
-        $this->assertContains('SingerId: 1, FirstName: Marc, LastName: Richards', $output);
-        $this->assertContains('SingerId: 2, FirstName: Catalina, LastName: Smith', $output);
-        $this->assertContains('SingerId: 3, FirstName: Alice, LastName: Trentor', $output);
-        $this->assertContains('SingerId: 4, FirstName: Lea, LastName: Martin', $output);
-        $this->assertContains('SingerId: 5, FirstName: David, LastName: Lomond', $output);
-        $this->assertContains('Total Partitions:', $output);
-        $this->assertContains('Total Records: 5', $output);
-        $this->assertContains('Average Records Per Partition:', $output);
+        $output = $this->runFunctionSnippet('batch_query_data');
+        $this->assertStringContainsString('SingerId: 1, FirstName: Marc, LastName: Richards', $output);
+        $this->assertStringContainsString('SingerId: 2, FirstName: Catalina, LastName: Smith', $output);
+        $this->assertStringContainsString('SingerId: 3, FirstName: Alice, LastName: Trentor', $output);
+        $this->assertStringContainsString('SingerId: 4, FirstName: Lea, LastName: Martin', $output);
+        $this->assertStringContainsString('SingerId: 5, FirstName: David, LastName: Lomond', $output);
+        $this->assertStringContainsString('Total Partitions:', $output);
+        $this->assertStringContainsString('Total Records: 5', $output);
+        $this->assertStringContainsString('Average Records Per Partition:', $output);
     }
 
     /**
@@ -112,22 +128,46 @@ class spannerTest extends TestCase
      */
     public function testReadData()
     {
-        $output = $this->runCommand('read-data');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
+        $output = $this->runFunctionSnippet('read_data');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
      * @depends testInsertData
      */
+    public function testDeleteData()
+    {
+        $output = $this->runFunctionSnippet('delete_data');
+        $this->assertStringContainsString('Deleted data.' . PHP_EOL, $output);
+
+        $spanner = new SpannerClient();
+        $instance = $spanner->instance(spannerTest::$instanceId);
+        $database = $instance->database(spannerTest::$databaseId);
+
+        $results = $database->execute(
+            'SELECT SingerId FROM Albums UNION ALL SELECT SingerId FROM Singers'
+        );
+
+        foreach ($results as $row) {
+            $this->fail("Not all data was deleted.");
+        }
+
+        $output = $this->runFunctionSnippet('insert_data');
+        $this->assertEquals('Inserted data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testDeleteData
+     */
     public function testAddColumn()
     {
-        $output = $this->runCommand('add-column');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Added the MarketingBudget column.', $output);
+        $output = $this->runFunctionSnippet('add_column');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Added the MarketingBudget column.', $output);
     }
 
     /**
@@ -135,7 +175,7 @@ class spannerTest extends TestCase
      */
     public function testUpdateData()
     {
-        $output = $this->runCommand('update-data');
+        $output = $this->runFunctionSnippet('update_data');
         self::$lastUpdateDataTimestamp = time();
         $this->assertEquals('Updated data.' . PHP_EOL, $output);
     }
@@ -145,12 +185,12 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithNewColumn()
     {
-        $output = $this->runCommand('query-data-with-new-column');
-        $this->assertContains('SingerId: 1, AlbumId: 1, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, MarketingBudget:', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget:', $output);
+        $output = $this->runFunctionSnippet('query_data_with_new_column');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, MarketingBudget:', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, MarketingBudget:', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, MarketingBudget:', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, MarketingBudget:', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, MarketingBudget:', $output);
     }
 
     /**
@@ -158,10 +198,10 @@ class spannerTest extends TestCase
      */
     public function testReadWriteTransaction()
     {
-        $this->runCommand('update-data');
-        $output = $this->runCommand('read-write-transaction');
-        $this->assertContains('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
-        $this->assertContains('Transaction complete.', $output);
+        $this->runFunctionSnippet('update_data');
+        $output = $this->runFunctionSnippet('read_write_transaction');
+        $this->assertStringContainsString('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
+        $this->assertStringContainsString('Transaction complete.', $output);
     }
 
     /**
@@ -169,9 +209,9 @@ class spannerTest extends TestCase
      */
     public function testCreateIndex()
     {
-        $output = $this->runCommand('create-index');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Added the AlbumsByAlbumTitle index.', $output);
+        $output = $this->runFunctionSnippet('create_index');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Added the AlbumsByAlbumTitle index.', $output);
     }
 
     /**
@@ -179,9 +219,9 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithIndex()
     {
-        $output = $this->runCommand('query-data-with-index');
-        $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $output = $this->runFunctionSnippet('query_data_with_index');
+        $this->assertStringContainsString('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
     }
 
     /**
@@ -189,13 +229,13 @@ class spannerTest extends TestCase
      */
     public function testReadDataWithIndex()
     {
-        $output = $this->runCommand('read-data-with-index');
+        $output = $this->runFunctionSnippet('read_data_with_index');
 
-        $this->assertContains('AlbumId: 1, AlbumTitle: Total Junk', $output);
-        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Green', $output);
-        $this->assertContains('AlbumId: 3, AlbumTitle: Terrified', $output);
-        $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('AlbumId: 3, AlbumTitle: Terrified', $output);
+        $this->assertStringContainsString('AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
     }
 
     /**
@@ -203,9 +243,9 @@ class spannerTest extends TestCase
      */
     public function testCreateStoringIndex()
     {
-        $output = $this->runCommand('create-storing-index');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Added the AlbumsByAlbumTitle2 index.', $output);
+        $output = $this->runFunctionSnippet('create_storing_index');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Added the AlbumsByAlbumTitle2 index.', $output);
     }
 
     /**
@@ -213,12 +253,12 @@ class spannerTest extends TestCase
      */
     public function testReadDataWithStoringIndex()
     {
-        $output = $this->runCommand('read-data-with-storing-index');
-        $this->assertContains('AlbumId: 2, AlbumTitle: Forever Hold Your Peace, MarketingBudget:', $output);
-        $this->assertContains('AlbumId: 2, AlbumTitle: Go, Go, Go, MarketingBudget:', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Green, MarketingBudget:', $output);
-        $this->assertContains('AlbumId: 3, AlbumTitle: Terrified, MarketingBudget:', $output);
-        $this->assertContains('AlbumId: 1, AlbumTitle: Total Junk, MarketingBudget:', $output);
+        $output = $this->runFunctionSnippet('read_data_with_storing_index');
+        $this->assertStringContainsString('AlbumId: 2, AlbumTitle: Forever Hold Your Peace, MarketingBudget:', $output);
+        $this->assertStringContainsString('AlbumId: 2, AlbumTitle: Go, Go, Go, MarketingBudget:', $output);
+        $this->assertStringContainsString('AlbumId: 1, AlbumTitle: Green, MarketingBudget:', $output);
+        $this->assertStringContainsString('AlbumId: 3, AlbumTitle: Terrified, MarketingBudget:', $output);
+        $this->assertStringContainsString('AlbumId: 1, AlbumTitle: Total Junk, MarketingBudget:', $output);
     }
 
     /**
@@ -226,12 +266,12 @@ class spannerTest extends TestCase
      */
     public function testReadOnlyTransaction()
     {
-        $output = $this->runCommand('read-only-transaction');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
+        $output = $this->runFunctionSnippet('read_only_transaction');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
@@ -245,12 +285,12 @@ class spannerTest extends TestCase
         if ($elapsed < 16) {
             sleep(16 - $elapsed);
         }
-        $output = $this->runCommand('read-stale-data');
-        $this->assertContains('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
+        $output = $this->runFunctionSnippet('read_stale_data');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 
     /**
@@ -258,9 +298,9 @@ class spannerTest extends TestCase
      */
     public function testCreateTableTimestamp()
     {
-        $output = $this->runCommand('create-table-timestamp');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Created Performances table in database test-', $output);
+        $output = $this->runFunctionSnippet('create_table_with_timestamp_column');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created Performances table in database test-', $output);
     }
 
     /**
@@ -268,7 +308,7 @@ class spannerTest extends TestCase
      */
     public function testInsertDataTimestamp()
     {
-        $output = $this->runCommand('insert-data-timestamp');
+        $output = $this->runFunctionSnippet('insert_data_with_timestamp_column');
         $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
 
@@ -277,9 +317,9 @@ class spannerTest extends TestCase
      */
     public function testAddTimestampColumn()
     {
-        $output = $this->runCommand('add-timestamp-column');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Added LastUpdateTime as a commit timestamp column in Albums table', $output);
+        $output = $this->runFunctionSnippet('add_timestamp_column');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Added LastUpdateTime as a commit timestamp column in Albums table', $output);
     }
 
     /**
@@ -287,7 +327,7 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataTimestamp()
     {
-        $output = $this->runCommand('update-data-timestamp');
+        $output = $this->runFunctionSnippet('update_data_with_timestamp_column');
         $this->assertEquals('Updated data.' . PHP_EOL, $output);
     }
 
@@ -296,12 +336,12 @@ class spannerTest extends TestCase
      */
     public function testQueryDataTimestamp()
     {
-        $output = $this->runCommand('query-data-timestamp');
-        $this->assertContains('SingerId: 1, AlbumId: 1, MarketingBudget: 1000000, LastUpdateTime: 20', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 2, MarketingBudget: 750000, LastUpdateTime: 20', $output);
-        $this->assertContains('SingerId: 1, AlbumId: 2, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 1, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
-        $this->assertContains('SingerId: 2, AlbumId: 3, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+        $output = $this->runFunctionSnippet('query_data_with_timestamp_column');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, MarketingBudget: 1000000, LastUpdateTime: 20', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, MarketingBudget: 750000, LastUpdateTime: 20', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
     }
 
     /**
@@ -309,7 +349,7 @@ class spannerTest extends TestCase
      */
     public function testInsertStructData()
     {
-        $output = $this->runCommand('insert-struct-data');
+        $output = $this->runFunctionSnippet('insert_struct_data');
         $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
 
@@ -318,8 +358,8 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithStruct()
     {
-        $output = $this->runCommand('query-data-with-struct');
-        $this->assertContains('SingerId: 6', $output);
+        $output = $this->runFunctionSnippet('query_data_with_struct');
+        $this->assertStringContainsString('SingerId: 6', $output);
     }
 
     /**
@@ -327,10 +367,10 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithArrayOfStruct()
     {
-        $output = $this->runCommand('query-data-with-array-of-struct');
-        $this->assertContains('SingerId: 6', $output);
-        $this->assertContains('SingerId: 7', $output);
-        $this->assertContains('SingerId: 8', $output);
+        $output = $this->runFunctionSnippet('query_data_with_array_of_struct');
+        $this->assertStringContainsString('SingerId: 6', $output);
+        $this->assertStringContainsString('SingerId: 7', $output);
+        $this->assertStringContainsString('SingerId: 8', $output);
     }
 
     /**
@@ -338,8 +378,8 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithStructField()
     {
-        $output = $this->runCommand('query-data-with-struct-field');
-        $this->assertContains('SingerId: 6', $output);
+        $output = $this->runFunctionSnippet('query_data_with_struct_field');
+        $this->assertStringContainsString('SingerId: 6', $output);
     }
 
     /**
@@ -347,9 +387,9 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithNestedStructField()
     {
-        $output = $this->runCommand('query-data-with-nested-struct-field');
-        $this->assertContains('SingerId: 6 SongName: Imagination', $output);
-        $this->assertContains('SingerId: 9 SongName: Imagination', $output);
+        $output = $this->runFunctionSnippet('query_data_with_nested_struct_field');
+        $this->assertStringContainsString('SingerId: 6 SongName: Imagination', $output);
+        $this->assertStringContainsString('SingerId: 9 SongName: Imagination', $output);
     }
 
     /**
@@ -357,8 +397,8 @@ class spannerTest extends TestCase
      */
     public function testInsertDataWithDml()
     {
-        $output = $this->runCommand('insert-data-with-dml');
-        $this->assertContains('Inserted 1 row(s)', $output);
+        $output = $this->runFunctionSnippet('insert_data_with_dml');
+        $this->assertStringContainsString('Inserted 1 row(s)', $output);
     }
 
     /**
@@ -366,9 +406,9 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataWithDml()
     {
-        $output = $this->runCommand('update-data-with-dml');
+        $output = $this->runFunctionSnippet('update_data_with_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Updated 1 row(s)', $output);
+        $this->assertStringContainsString('Updated 1 row(s)', $output);
     }
 
     /**
@@ -376,9 +416,9 @@ class spannerTest extends TestCase
      */
     public function testDeleteDataWithDml()
     {
-        $output = $this->runCommand('delete-data-with-dml');
+        $output = $this->runFunctionSnippet('delete_data_with_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Deleted 1 row(s)', $output);
+        $this->assertStringContainsString('Deleted 1 row(s)', $output);
     }
 
     /**
@@ -386,9 +426,9 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataWithDmlTimestamp()
     {
-        $output = $this->runCommand('update-data-with-dml-timestamp');
+        $output = $this->runFunctionSnippet('update_data_with_dml_timestamp');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Updated 2 row(s)', $output);
+        $this->assertStringContainsString('Updated 2 row(s)', $output);
     }
 
     /**
@@ -396,9 +436,9 @@ class spannerTest extends TestCase
      */
     public function testWriteReadWithDml()
     {
-        $output = $this->runCommand('write-read-with-dml');
+        $output = $this->runFunctionSnippet('write_read_with_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Timothy Campbell', $output);
+        $this->assertStringContainsString('Timothy Campbell', $output);
     }
 
     /**
@@ -406,9 +446,9 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataWithDmlStructs()
     {
-        $output = $this->runCommand('update-data-with-dml-structs');
+        $output = $this->runFunctionSnippet('update_data_with_dml_structs');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Updated 1 row(s)', $output);
+        $this->assertStringContainsString('Updated 1 row(s)', $output);
     }
 
     /**
@@ -416,9 +456,9 @@ class spannerTest extends TestCase
      */
     public function testWriteDataWithDML()
     {
-        $output = $this->runCommand('write-data-with-dml');
+        $output = $this->runFunctionSnippet('write_data_with_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Inserted 4 row(s)', $output);
+        $this->assertStringContainsString('Inserted 4 row(s)', $output);
     }
 
     /**
@@ -426,9 +466,9 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithParameter()
     {
-        $output = $this->runCommand('query-data-with-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('SingerId: 12, FirstName: Melissa, LastName: Garcia', $output);
+        $this->assertStringContainsString('SingerId: 12, FirstName: Melissa, LastName: Garcia', $output);
     }
 
     /**
@@ -436,9 +476,9 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataWithDmlTransaction()
     {
-        $output = $this->runCommand('write-data-with-dml-transaction');
+        $output = $this->runFunctionSnippet('write_data_with_dml_transaction');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Transaction complete', $output);
+        $this->assertStringContainsString('Transaction complete', $output);
     }
 
     /**
@@ -446,9 +486,9 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataWithPartitionedDML()
     {
-        $output = $this->runCommand('update-data-with-partitioned-dml');
+        $output = $this->runFunctionSnippet('update_data_with_partitioned_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Updated 3 row(s)', $output);
+        $this->assertStringContainsString('Updated 3 row(s)', $output);
     }
 
     /**
@@ -456,9 +496,9 @@ class spannerTest extends TestCase
      */
     public function testDeleteDataWithPartitionedDML()
     {
-        $output = $this->runCommand('deleted-data-with-partitioned-dml');
+        $output = $this->runFunctionSnippet('delete_data_with_partitioned_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Deleted 5 row(s)', $output);
+        $this->assertStringContainsString('Deleted 5 row(s)', $output);
     }
 
     /**
@@ -466,19 +506,29 @@ class spannerTest extends TestCase
      */
     public function testUpdateDataWithBatchDML()
     {
-        $output = $this->runCommand('update-data-with-batch-dml');
+        $output = $this->runFunctionSnippet('update_data_with_batch_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('Executed 2 SQL statements using Batch DML', $output);
+        $this->assertStringContainsString('Executed 2 SQL statements using Batch DML', $output);
     }
+
+    /**
+     * @depends testAddColumn
+     */
+    public function testGetCommitStats()
+    {
+        $output = $this->runFunctionSnippet('get_commit_stats');
+        $this->assertStringContainsString('Updated data with 10 mutations.', $output);
+    }
+
 
     /**
      * @depends testCreateDatabase
      */
     public function testCreateTableDatatypes()
     {
-        $output = $this->runCommand('create-table-with-datatypes');
-        $this->assertContains('Waiting for operation to complete...', $output);
-        $this->assertContains('Created Venues table in database test-', $output);
+        $output = $this->runFunctionSnippet('create_table_with_datatypes');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created Venues table in database test-', $output);
     }
 
     /**
@@ -486,7 +536,7 @@ class spannerTest extends TestCase
      */
     public function testInsertDataWithDatatypes()
     {
-        $output = $this->runCommand('insert-data-with-datatypes');
+        $output = $this->runFunctionSnippet('insert_data_with_datatypes');
         $this->assertEquals('Inserted data.' . PHP_EOL, $output);
     }
 
@@ -495,10 +545,10 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithArrayParameter()
     {
-        $output = $this->runCommand('query-data-with-array-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_array_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01', $output);
-        $this->assertContains('VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01', $output);
+        $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01', $output);
+        $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01', $output);
     }
 
     /**
@@ -506,9 +556,9 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithBoolParameter()
     {
-        $output = $this->runCommand('query-data-with-bool-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_bool_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 19, VenueName: Venue 19, OutdoorVenue: True', $output);
+        $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, OutdoorVenue: True', $output);
     }
 
     /**
@@ -516,9 +566,9 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithBytesParameter()
     {
-        $output = $this->runCommand('query-data-with-bytes-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_bytes_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 4, VenueName: Venue 4', $output);
+        $this->assertStringContainsString('VenueId: 4, VenueName: Venue 4', $output);
     }
 
     /**
@@ -526,10 +576,10 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithDateParameter()
     {
-        $output = $this->runCommand('query-data-with-date-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_date_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02', $output);
-        $this->assertContains('VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01', $output);
+        $this->assertStringContainsString('VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02', $output);
+        $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01', $output);
     }
 
     /**
@@ -537,10 +587,10 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithFloatParameter()
     {
-        $output = $this->runCommand('query-data-with-float-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_float_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8', $output);
-        $this->assertContains('VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9', $output);
+        $this->assertStringContainsString('VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8', $output);
+        $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9', $output);
     }
 
     /**
@@ -548,10 +598,10 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithIntParameter()
     {
-        $output = $this->runCommand('query-data-with-int-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_int_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 19, VenueName: Venue 19, Capacity: 6300', $output);
-        $this->assertContains('VenueId: 42, VenueName: Venue 42, Capacity: 3000', $output);
+        $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, Capacity: 6300', $output);
+        $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42, Capacity: 3000', $output);
     }
 
     /**
@@ -559,9 +609,9 @@ class spannerTest extends TestCase
      */
     public function testQueryDataWithStringParameter()
     {
-        $output = $this->runCommand('query-data-with-string-parameter');
+        $output = $this->runFunctionSnippet('query_data_with_string_parameter');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertContains('VenueId: 42, VenueName: Venue 42', $output);
+        $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42', $output);
     }
 
     /**
@@ -570,28 +620,84 @@ class spannerTest extends TestCase
     public function testQueryDataWithTimestampParameter()
     {
         $this->runEventuallyConsistentTest(function () {
-            $output = $this->runCommand('query-data-with-timestamp-parameter');
+            $output = $this->runFunctionSnippet('query_data_with_timestamp_parameter');
             self::$lastUpdateDataTimestamp = time();
-            $this->assertContains('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
-            $this->assertContains('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
-            $this->assertContains('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
         });
     }
 
-    private function runCommand($commandName)
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testQueryDataWithQueryOptions()
     {
-        return $this->traitRunCommand($commandName, [
-            'instance_id' => self::$instanceId,
-            'database_id' => self::$databaseId,
-        ]);
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runFunctionSnippet('query_data_with_query_options');
+            self::$lastUpdateDataTimestamp = time();
+            $this->assertStringContainsString('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+        });
     }
 
-    public static function tearDownAfterClass()
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testAddNumericColumn()
     {
-        if (self::$instance) {
-            // Clean up database
+        $output = $this->runFunctionSnippet('add_numeric_column');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Added Revenue as a NUMERIC column in Venues table', $output);
+    }
+
+    /**
+     * @depends testAddNumericColumn
+     */
+    public function testUpdateDataNumeric()
+    {
+        $output = $this->runFunctionSnippet('update_data_with_numeric_column');
+        $this->assertEquals('Updated data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testUpdateDataTimestamp
+     */
+    public function testQueryDataNumeric()
+    {
+        $output = $this->runFunctionSnippet('query_data_with_numeric_parameter');
+        $this->assertStringContainsString('VenueId: 4, Revenue: 35000', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
+    public function testCreateClientWithQueryOptions()
+    {
+        $this->runEventuallyConsistentTest(function () {
+            $output = $this->runFunctionSnippet('create_client_with_query_options');
+            self::$lastUpdateDataTimestamp = time();
+            $this->assertStringContainsString('VenueId: 4, VenueName: Venue 4, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 19, VenueName: Venue 19, LastUpdateTime:', $output);
+            $this->assertStringContainsString('VenueId: 42, VenueName: Venue 42, LastUpdateTime:', $output);
+        });
+    }
+
+    private function runFunctionSnippet($sampleName, $params = [])
+    {
+        return $this->traitRunFunctionSnippet(
+            $sampleName,
+            array_values($params) ?: [self::$instanceId, self::$databaseId]
+        );
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        if (self::$instance->exists()) {// Clean up database
             $database = self::$instance->database(self::$databaseId);
             $database->drop();
         }
+        self::$instance->delete();
     }
 }

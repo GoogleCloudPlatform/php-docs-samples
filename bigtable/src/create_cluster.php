@@ -28,8 +28,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 3 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $cluster_id) = $argv;
-$location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
+list($_, $projectId, $instanceId, $clusterId) = $argv;
+$locationId = isset($argv[4]) ? $argv[4] : 'us-east1-b';
 
 // [START bigtable_create_cluster]
 
@@ -39,23 +39,23 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $cluster_id = 'The Bigtable cluster ID';
-// $location_id = 'The Bigtable region ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $clusterId = 'The Bigtable cluster ID';
+// $locationId = 'The Bigtable region ID';
 
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
-$clusterName = $instanceAdminClient->clusterName($project_id, $instance_id, $cluster_id);
+$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
+$clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
-printf("Adding Cluster to Instance %s" . PHP_EOL, $instance_id);
+printf("Adding Cluster to Instance %s" . PHP_EOL, $instanceId);
 try {
     $instanceAdminClient->getInstance($instanceName);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Instance %s does not exists." . PHP_EOL, $instance_id);
+        printf("Instance %s does not exists." . PHP_EOL, $instanceId);
         return;
     } else {
         throw $e;
@@ -77,21 +77,21 @@ $cluster->setServeNodes($serve_nodes);
 $cluster->setDefaultStorageType($storage_type);
 $cluster->setLocation(
     $instanceAdminClient->locationName(
-        $project_id,
-        $location_id
+        $projectId,
+        $locationId
     )
 );
 try {
     $instanceAdminClient->getCluster($clusterName);
-    printf("Cluster %s already exists, aborting...", $cluster_id);
+    printf("Cluster %s already exists, aborting...", $clusterId);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        $operationResponse = $instanceAdminClient->createCluster($instanceName, $cluster_id, $cluster);
+        $operationResponse = $instanceAdminClient->createCluster($instanceName, $clusterId, $cluster);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $result = $operationResponse->getResult();
-            printf("Cluster created: %s", $cluster_id);
+            printf("Cluster created: %s", $clusterId);
         } else {
             $error = $operationResponse->getError();
             printf("Cluster not created: %s", $error);

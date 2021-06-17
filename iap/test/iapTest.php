@@ -17,7 +17,6 @@
 namespace Google\Cloud\Samples\Iap;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,37 +24,39 @@ use PHPUnit\Framework\TestCase;
  */
 class iapTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait;
+    use TestTrait;
 
-    private static $commandFile = __DIR__ . '/../iap.php';
-
-    public function testRequest()
+    public function testRequestAndValidate()
     {
-        $output = $this->runCommand('request', [
+        // Make a request to our IAP URL, which returns the IAP's JWT Assertion.
+        $output = $this->runFunctionSnippet('make_iap_request', [
             'url' => $this->requireEnv('IAP_URL'),
-            'clientId' => $this->requireEnv('IAP_CLIENT_ID'),
-            'serviceAccountPath' => $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS'),
+            'clientId' => $this->requireEnv('IAP_CLIENT_ID')
         ]);
-        $this->assertContains('x-goog-authenticated-user-jwt:', $output);
+
+        // Verify an ID token was returned
+        $this->assertStringContainsString('Printing out response body:', $output);
+        list($_, $iapJwt) = explode(':', $output);
+
+        $projectNumber = $this->requireEnv('IAP_PROJECT_NUMBER');
+        $projectId = $this->requireEnv('IAP_PROJECT_ID');
+
+        // Now validate the JWT using the validation command
+        $output = $this->runFunctionSnippet('validate_jwt', [
+            $iapJwt,
+            sprintf('/projects/%s/apps/%s', $projectNumber, $projectId),
+        ]);
+        $this->assertStringContainsString('Printing user identity information from ID token payload:', $output);
+        $this->assertStringContainsString('sub: accounts.google.com', $output);
+        $this->assertStringContainsString('email:', $output);
     }
 
     public function testInvalidJwt()
     {
-        validate_jwt('fake_jwt', 'fake_expected_audience');
-        $this->expectOutputRegex('/Failed to validate JWT:/');
-    }
-
-    public function testValidate()
-    {
-        $output = $this->runCommand('validate', [
-            'url' => $this->requireEnv('IAP_URL'),
-            'clientId' => $this->requireEnv('IAP_CLIENT_ID'),
-            'serviceAccountPath' => $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS'),
-            'projectNumber' => $this->requireEnv('IAP_PROJECT_NUMBER'),
-            'projectId' => $this->requireEnv('IAP_PROJECT_ID'),
+        $output = $this->runFunctionSnippet('validate_jwt', [
+            'fake_j.w.t',
+            'fake_expected_audience'
         ]);
-        $this->assertContains('Printing user identity information from ID token payload:', $output);
-        $this->assertContains('sub: accounts.google.com', $output);
-        $this->assertContains('email:', $output);
+        $this->assertStringContainsString('Failed to validate JWT:', $output);
     }
 }

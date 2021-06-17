@@ -41,7 +41,7 @@ $ composer install
 - Select "Generate new JSON key", then download a new JSON file.
 - Set the following environment variable:
   - `GOOGLE_APPLICATION_CREDENTIALS`: the file path to the downloaded JSON file.
-  - `GOOGLE_PROJECT_ID`: your project ID.
+  - `GCLOUD_PROJECT`: your project ID.
 
 Run the PHP build-in web server with the following command:
 

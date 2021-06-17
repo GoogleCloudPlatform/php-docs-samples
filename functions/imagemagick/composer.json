@@ -1,0 +1,17 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^0.7",
+        "google/cloud-storage": "^1.23",
+        "google/cloud-vision": "^1.2",
+        "ext-imagick": "*"
+    },
+    "scripts": {
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=blurOffensiveImages php -S localhost:${PORT:-8080} vendor/bin/router.php"
+        ]
+    },
+    "require-dev": {
+        "google/cloud-logging": "^1.21"
+    }
+}

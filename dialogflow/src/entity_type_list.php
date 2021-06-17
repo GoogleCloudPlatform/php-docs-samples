@@ -24,7 +24,7 @@ function entity_type_list($projectId)
 {
     // get entity types
     $entityTypesClient = new EntityTypesClient();
-    $parent = $entityTypesClient->projectAgentName($projectId);
+    $parent = $entityTypesClient->agentName($projectId);
     $entityTypes = $entityTypesClient->listEntityTypes($parent);
 
     foreach ($entityTypes->iterateAllElements() as $entityType) {

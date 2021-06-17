@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Asset;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -29,22 +28,20 @@ use PHPUnit\Framework\TestCase;
 class assetTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
 
-    private static $commandFile = __DIR__ . '/../asset.php';
     private static $storage;
     private static $bucketName;
     private static $bucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
         self::$bucketName = sprintf('assets-bucket-%s-%s', time(), rand());
         self::$bucket = self::$storage->createBucket(self::$bucketName);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$bucket->delete();
     }
@@ -53,9 +50,9 @@ class assetTest extends TestCase
     {
         $fileName = 'my-assets.txt';
         $dumpFilePath = 'gs://' . self::$bucketName . '/' . $fileName;
-        $output = $this->runCommand('export', [
-            'project' => self::$projectId,
-            'filePath' => $dumpFilePath,
+        $output = $this->runFunctionSnippet('export_assets', [
+            'projectId' => self::$projectId,
+            'dumpFilePath' => $dumpFilePath,
         ]);
         $assetFile = self::$bucket->object($fileName);
         $this->assertEquals($assetFile->name(), $fileName);
@@ -67,12 +64,12 @@ class assetTest extends TestCase
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
 
         $this->runEventuallyConsistentTest(function () use ($assetName) {
-            $output = $this->runCommand('batch-get-history', [
-                'project' => self::$projectId,
+            $output = $this->runFunctionSnippet('batch_get_assets_history', [
+                'projectId' => self::$projectId,
                 'assetNames' => [$assetName],
             ]);
 
-            $this->assertContains($assetName, $output);
+            $this->assertStringContainsString($assetName, $output);
         }, 10, true);
     }
 }

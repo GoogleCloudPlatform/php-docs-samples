@@ -25,14 +25,14 @@ use Google\Protobuf\FieldMask;
 /**
  * List gateways in the registry.
  *
+ * @param string $registryId IOT Device Registry ID
  * @param string $projectId Google Cloud project ID
  * @param string $location (Optional) Google Cloud region
- * @param string $registryId IOT Device Registry ID
  */
 function list_gateways(
+    $registryId,
     $projectId,
-    $location = 'us-central1',
-    $registryId
+    $location = 'us-central1'
 ) {
     print('Listing gateways' . PHP_EOL);
 
@@ -43,12 +43,12 @@ function list_gateways(
     $registryName = $deviceManager->registryName($projectId, $location, $registryId);
 
     // Pass field mask to retrieve the gateway configuration fields
-    $fieldMask = (new FieldMask())->setPaths(['config', 'gatewayConfig']);
+    $fieldMask = (new FieldMask())->setPaths(['config', 'gateway_config']);
 
     // Call the API
-    $devices = $deviceManager->listDevices($registryName,
-      ['fieldMask' => $fieldMask]
-    );
+    $devices = $deviceManager->listDevices($registryName, [
+        'fieldMask' => $fieldMask
+    ]);
 
     // Print the result
     $foundGateway = false;
@@ -71,3 +71,6 @@ function list_gateways(
     }
 }
 # [END iot_list_gateways]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

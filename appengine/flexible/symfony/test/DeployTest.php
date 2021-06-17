@@ -125,7 +125,7 @@ class DeployTest extends TestCase
             'top page status code'
         );
         $content = $resp->getBody()->getContents();
-        $this->assertContains('Your application is now ready', $content);
+        $this->assertStringContainsString('Your application is now ready', $content);
     }
 
     public function testErrorLog()

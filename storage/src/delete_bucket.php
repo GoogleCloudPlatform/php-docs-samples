@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START delete_bucket]
+# [START storage_delete_bucket]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -40,4 +40,4 @@ function delete_bucket($bucketName)
     $bucket->delete();
     printf('Bucket deleted: %s' . PHP_EOL, $bucket->name());
 }
-# [END delete_bucket]
+# [END storage_delete_bucket]
