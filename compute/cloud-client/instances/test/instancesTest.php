@@ -28,12 +28,30 @@ class instancesTest extends TestCase
     use TestTrait;
 
     private static $instanceName;
+    private static $bucketName;
+    private static $bucket;
 
     private const DEFAULT_ZONE = 'us-central1-a';
 
     public static function setUpBeforeClass(): void
     {
         self::$instanceName = sprintf('test-compute-instance-%s', rand());
+
+        // Generate bucket name
+        self::$bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
+
+        // Setup new bucket for UsageReports
+        $storage = new StorageClient([
+            'projectId' => self::$projectId
+        ]);
+
+        self::$bucket = $storage->createBucket(self::$bucketName);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        // Remove the bucket
+        self::$bucket->delete();
     }
 
     public function testCreateInstance()
@@ -85,22 +103,12 @@ class instancesTest extends TestCase
 
     public function testSetUsageExportBucketDefaultPrefix()
     {
-        // Generate bucket name
-        $bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
-
-        // Setup new bucket for UsageReports
-        $storage = new StorageClient([
-            'projectId' => self::$projectId
-        ]);
-
-        $bucket = $storage->createBucket($bucketName);
-
         $output = $this->runFunctionSnippet('set_usage_export_bucket', [
             'projectId' => self::$projectId,
-            'bucketName' => $bucketName
+            'bucketName' => self::$bucketName
         ]);
         ob_start();
-        $operation = set_usage_export_bucket(self::$projectId, $bucketName);
+        $operation = set_usage_export_bucket(self::$projectId, self::$bucketName);
         $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
 
         // Wait for the settings to take place
@@ -113,7 +121,7 @@ class instancesTest extends TestCase
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
-        $this->assertEquals($usageExportLocation->getBucketName(), $bucketName);
+        $this->assertEquals($usageExportLocation->getBucketName(), self::$bucketName);
         $this->assertEquals($usageExportLocation->getReportNamePrefix(), 'usage_gce');
 
         // Disable usage exports
@@ -128,28 +136,15 @@ class instancesTest extends TestCase
 
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertNull($usageExportLocation);
-
-        // Remove the bucket
-        $bucket->delete();
     }
-    
+
     public function testSetUsageExportBucketCustomPrefix()
     {
         // Set custom prefix
         $customPrefix = "my-custom-prefix";
 
-        // Generate bucket name
-        $bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
-
-        // Setup new bucket for UsageReports
-        $storage = new StorageClient([
-            'projectId' => self::$projectId
-        ]);
-
-        $bucket = $storage->createBucket($bucketName);
-
         ob_start();
-        $operation = set_usage_export_bucket(self::$projectId, $bucketName, $customPrefix);
+        $operation = set_usage_export_bucket(self::$projectId, self::$bucketName, $customPrefix);
         $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
 
         // Wait for the settings to take place
@@ -162,7 +157,7 @@ class instancesTest extends TestCase
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
-        $this->assertEquals($usageExportLocation->getBucketName(), $bucketName);
+        $this->assertEquals($usageExportLocation->getBucketName(), self::$bucketName);
         $this->assertEquals($usageExportLocation->getReportNamePrefix(), $customPrefix);
 
         // Disable usage exports
@@ -177,8 +172,5 @@ class instancesTest extends TestCase
 
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertNull($usageExportLocation);
-
-        // Remove the bucket
-        $bucket->delete();
     }
 }

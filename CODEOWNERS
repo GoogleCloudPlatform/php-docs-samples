@@ -30,3 +30,6 @@
 /texttospeech/            @bshaffer
 /vision/                  @bshaffer
 /video/                   @bshaffer
+
+# Compute samples owned by Remik
+/compute/cloud-client/

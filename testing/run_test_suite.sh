@@ -66,6 +66,7 @@ ALT_PROJECT_TESTS=(
     spanner
     video
     vision
+    compute/cloud-client/instances
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
