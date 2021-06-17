@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
- * List all instances for particular $projectId
+ * List all instances for a particular Cloud project.
  * Example:
  * ```
  * list_all_instances($projectId);
@@ -39,7 +39,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  */
 function list_all_instances(string $projectId)
 {
-    // List the new Compute Engine instance using the InstancesClient
+    // List Compute Engine instances using InstancesClient.
     $instancesClient = new InstancesClient();
     $allInstances = $instancesClient->aggregatedList($projectId);
 

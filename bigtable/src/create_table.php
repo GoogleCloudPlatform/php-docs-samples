@@ -28,7 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
+list($_, $projectId, $instanceId, $tableId) = $argv;
 
 // [START bigtable_create_table]
 
@@ -39,34 +39,34 @@ use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'The Bigtable table ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
+$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
 // Check whether table exists in an instance.
 // Create table if it does not exists.
 $table = new Table();
-printf('Creating a Table : %s' . PHP_EOL, $table_id);
+printf('Creating a Table : %s' . PHP_EOL, $tableId);
 
 try {
     $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-    printf('Table %s already exists' . PHP_EOL, $table_id);
+    printf('Table %s already exists' . PHP_EOL, $tableId);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Creating the %s table' . PHP_EOL, $table_id);
+        printf('Creating the %s table' . PHP_EOL, $tableId);
 
         $tableAdminClient->createtable(
             $instanceName,
-            $table_id,
+            $tableId,
             $table
         );
-        printf('Created table %s' . PHP_EOL, $table_id);
+        printf('Created table %s' . PHP_EOL, $tableId);
     } else {
         throw $e;
     }
