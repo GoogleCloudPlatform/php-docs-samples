@@ -22,11 +22,13 @@ use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 class alertsTest extends TestCase
 {
     use ExecuteCommandTrait;
     use TestTrait;
+    use RetryTrait;
 
     private static $commandFile = __DIR__ . '/../alerts.php';
     private static $policyId;
@@ -43,6 +45,10 @@ class alertsTest extends TestCase
         self::$policyId = $matches[1];
     }
 
+    /**
+     * @depends testCreatePolicy
+     * @retryAttempts 3
+     */
     public function testEnablePolicies()
     {
         $policyName = AlertPolicyServiceClient::alertPolicyName(self::$projectId, self::$policyId);
