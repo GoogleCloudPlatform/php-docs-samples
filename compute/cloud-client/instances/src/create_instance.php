@@ -33,18 +33,18 @@ use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\ZoneOperationsClient;
 
 /**
- * Creates an instance.
+ * Create an instance in the specified project and zone.
  * Example:
  * ```
  * create_instance($projectId, $zone, $instanceName);
  * ```
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to create the instance in (e.g. "us-central1-a").
- * @param string $instanceName The unique name for this Compute instance.
- * @param string $machineType Instance machine type.
+ * @param string $projectId Project ID of the Cloud project to create the instance in.
+ * @param string $zone Zone to create the instance in (like "us-central1-a").
+ * @param string $instanceName Unique name for this Compute Engine instance.
+ * @param string $machineType Machine type of the instance being created.
  * @param string $sourceImage Boot disk image name or family.
- * @param string $networkName The Compute instance ID.
+ * @param string $networkName Network interface to associate with the instance.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
@@ -56,33 +56,33 @@ function create_instance(
     string $sourceImage = 'projects/debian-cloud/global/images/family/debian-10',
     string $networkName = 'global/networks/default'
 ) {
-    // Set the machine type using the specified zone
+    // Set the machine type using the specified zone.
     $machineTypeFullName = sprintf('zones/%s/machineTypes/%s', $zone, $machineType);
 
-    // Set the boot disk
+    // Describe the source image of the boot disk to attach to the instance.
     $diskInitializeParams = (new AttachedDiskInitializeParams())
         ->setSourceImage($sourceImage);
     $disk = (new AttachedDisk())
         ->setBoot(true)
         ->setInitializeParams($diskInitializeParams);
 
-    // Set the network
+    // Use the network interface provided in the $networkName argument.
     $network = (new NetworkInterface())
         ->setName($networkName);
 
-    // Create the Instance message
+    // Create the Instance object.
     $instance = (new Instance())
         ->setName($instanceName)
         ->setDisks([$disk])
         ->setMachineType($machineTypeFullName)
         ->setNetworkInterfaces([$network]);
 
-    // Insert the new Compute Engine instance using the InstancesClient
+    // Insert the new Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
+    // Wait for the create operation to complete.
     if ($operation->getStatus() === Operation\Status::RUNNING) {
-        // Wait until operation completes
         $operationClient = new ZoneOperationsClient();
         $operationClient->wait($operation->getName(), $projectId, $zone);
     }

@@ -28,8 +28,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 3 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $cluster_id) = $argv;
-$location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
+list($_, $projectId, $instanceId, $clusterId) = $argv;
+$locationId = isset($argv[4]) ? $argv[4] : 'us-east1-b';
 
 // [START bigtable_create_dev_instance]
 
@@ -41,54 +41,54 @@ use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $cluster_id = 'The Bigtable cluster ID';
-// $location_id = 'The Bigtable region ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $clusterId = 'The Bigtable cluster ID';
+// $locationId = 'The Bigtable region ID';
 
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 
-$projectName = $instanceAdminClient->projectName($project_id);
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
+$projectName = $instanceAdminClient->projectName($projectId);
+$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
 
 printf("Creating a DEVELOPMENT Instance" . PHP_EOL);
 // Set options to create an Instance
 
-$storage_type = StorageType::HDD;
+$storageType = StorageType::HDD;
 $development = InstanceType::DEVELOPMENT;
 $labels = ['dev-label' => 'dev-label'];
 
 
 # Create instance with given options
 $instance = new Instance();
-$instance->setDisplayName($instance_id);
+$instance->setDisplayName($instanceId);
 $instance->setLabels($labels);
 $instance->setType($development);
 
 // Create cluster with given options
 $cluster = new Cluster();
-$cluster->setDefaultStorageType($storage_type);
+$cluster->setDefaultStorageType($storageType);
 $cluster->setLocation(
     $instanceAdminClient->locationName(
-        $project_id,
-        $location_id
+        $projectId,
+        $locationId
     )
 );
 $clusters = [
-    $cluster_id => $cluster
+    $clusterId => $cluster
 ];
 // Create development instance with given options
 try {
     $instanceAdminClient->getInstance($instanceName);
-    printf("Instance %s already exists." . PHP_EOL, $instance_id);
+    printf("Instance %s already exists." . PHP_EOL, $instanceId);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Creating a development Instance: %s" . PHP_EOL, $instance_id);
+        printf("Creating a development Instance: %s" . PHP_EOL, $instanceId);
         $operationResponse = $instanceAdminClient->createInstance(
             $projectName,
-            $instance_id,
+            $instanceId,
             $instance,
             $clusters
         );
@@ -96,7 +96,7 @@ try {
         if (!$operationResponse->operationSucceeded()) {
             print('Error: ' . $operationResponse->getError()->getMessage());
         } else {
-            printf("Instance %s created.", $instance_id);
+            printf("Instance %s created.", $instanceId);
         }
     } else {
         throw $e;

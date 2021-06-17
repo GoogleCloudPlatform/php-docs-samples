@@ -28,19 +28,19 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) != 3) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id) = $argv;
+list($_, $projectId, $instanceId) = $argv;
 
 // [START bigtable_list_instances]
 
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
 
 $instanceAdminClient = new BigtableInstanceAdminClient();
 
-$projectName = $instanceAdminClient->projectName($project_id);
+$projectName = $instanceAdminClient->projectName($projectId);
 
 printf("Listing Instances:" . PHP_EOL);
 

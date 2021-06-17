@@ -11,5 +11,6 @@
       "phpunit/phpunit"
     ]
   }],
+  "branchPrefix": "renovate/{{parentDir}}-",
   "prConcurrentLimit": 5
 }
