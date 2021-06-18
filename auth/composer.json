@@ -2,24 +2,20 @@
     "require": {
         "google/apiclient": "^2.1",
         "google/cloud-storage": "^1.3",
-        "symfony/console": " ^3.0",
         "google/auth":"^1.0"
     },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Storage"
+        ]
+    },
     "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Auth\\": "src/"
-        },
         "files": [
-            "src/auth_cloud_implicit.php",
-            "src/auth_cloud_explicit.php",
-            "src/auth_cloud_explicit_compute_engine.php",
-            "src/auth_cloud_explicit_app_engine.php",
-            "src/auth_api_implicit.php",
-            "src/auth_api_explicit.php",
-            "src/auth_api_explicit_compute_engine.php",
-            "src/auth_api_explicit_app_engine.php",
-            "src/auth_http_implicit.php",
-            "src/auth_http_explicit.php"
+            "src/auth_cloud_explicit_compute.php",
+            "src/auth_api_explicit_compute.php"
         ]
     }
 }
