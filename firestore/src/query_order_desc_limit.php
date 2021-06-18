@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create an order by name descending with limit query.
- * ```
- * query_order_desc_limit('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_order_desc_limit($projectId)
+function query_order_desc_limit(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

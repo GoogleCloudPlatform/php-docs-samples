@@ -26,32 +26,24 @@ methods will work on any Google Cloud API.
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install --no-dev` (if composer is installed locally) or `composer install --no-dev`
     (if composer is installed globally).
-5.  Run `php auth.php`. The following commands are available and work on command line:
+5.  **Run the samples** to run the auth samples, run any of the files in `src/` on the CLI:
 ```
-  auth-cloud-implicit                      Authenticate to a cloud client library using a service account implicitly.
-  auth-cloud-explicit                      Authenticate to a cloud client library using a service account explicitly.
-  auth-api-implicit                        Authenticate to a cloud API using a service account implicitly.
-  auth-api-explicit                        Authenticate to a cloud API using a service account explicitly.
-  auth-http-implicit                       Authenticate to a cloud API with HTTP using a service account implicitly.
-  auth-http-explicit                       Authenticate to a cloud API with HTTP using a service account explicitly.
-```
-6. The following commands are available but will throw a ServiceException when
-run from command-line. The Compute Engine method only works on Compute Engine,
-App Engine Flexible, Cloud Functions, and Container Engine. The App Engine
-method only works on App Engine Standard.
-```
-  auth-cloud-explicit-compute-engine       Authenticate to a cloud client library using Compute Engine credentials explicitly.
-  auth-cloud-explicit-app-engine           Authenticate to a cloud client library using App Engine Standard credentials explicitly.
-  auth-api-explicit-compute-engine         Authenticate to a cloud API using Compute Engine credentials explicitly.
-  auth-api-explicit-app-engine             Authenticate to a cloud API using App Engine Standard credentials explicitly.
-```
-7. You can test the samples that use Compute Engine / App Engine credentials by
-deploying to either App Engine Flexible (which allows usage of Compute Engine
-credentials since App Engine Flexible apps run on Compute Engine instances) or
-App Engine Standard. Run either `gcloud app deploy app-standard.yaml` or
-`gcloud app deploy app-flex.yaml`.
+$ php src/auth_api_explicit.php
 
-8. Run `php auth.php COMMAND --help` to print information about the usage of each command.
+Usage: auth_api_explicit.php $projectId $serviceAccountPath
+
+    @param string $projectId           The Google project ID.
+    @param string $serviceAccountPath  Path to service account credentials JSON.
+```
+6. The following files are available but cannot be run from the CLI. The Compute
+methods only work on Compute Engine, App Engine, Cloud Functions,
+and Container Engine.
+```
+  src/auth_cloud_explicit_compute.php
+  src/auth_api_explicit_compute.php
+```
+7. You can test the samples that use Compute credentials by deploying to App
+Engine Standard. Run `gcloud app deploy`.
 
 ## Contributing changes
 

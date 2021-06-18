@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create queries using an array-contains where clause.
- * ```
- * query_filter_array_contains('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_array_contains($projectId)
+function query_filter_array_contains(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

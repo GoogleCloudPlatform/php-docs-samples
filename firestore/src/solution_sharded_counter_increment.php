@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Increments a randomly picked shard of distributed counter.
- * ```
- * solution_sharded_counter_increment('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function solution_sharded_counter_increment($projectId)
+function solution_sharded_counter_increment(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

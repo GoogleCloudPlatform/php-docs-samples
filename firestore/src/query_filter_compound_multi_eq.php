@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a query with chained clauses.
- * ```
- * query_filter_compound_multi_eq('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_compound_multi_eq($projectId)
+function query_filter_compound_multi_eq(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

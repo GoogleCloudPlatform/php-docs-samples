@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create an order by state and descending population query.
- * ```
- * query_order_multi('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_order_multi($projectId)
+function query_order_multi(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FieldValue;
 
 /**
  * Update field with server timestamp.
- * ```
- * data_set_server_timestamp('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_server_timestamp($projectId)
+function data_set_server_timestamp(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
