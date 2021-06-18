@@ -24,7 +24,6 @@ FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
     jobs
-    asset
 )
 
 # Directories we do not want to run tests in, even if they exist
