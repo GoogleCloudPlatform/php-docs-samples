@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Get a reference to a subcollection document.
- * ```
- * data_reference_subcollection('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_reference_subcollection($projectId)
+function data_reference_subcollection(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
