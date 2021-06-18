@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Delete a document.
- * ```
- * data_delete_doc('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_delete_doc($projectId)
+function data_delete_doc(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

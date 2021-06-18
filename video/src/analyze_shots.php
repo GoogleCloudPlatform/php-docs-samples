@@ -37,9 +37,9 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
-$operation = $video->annotateVideo([
+$features = [Feature::SHOT_CHANGE_DETECTION];
+$operation = $video->annotateVideo($features, [
     'inputUri' => $uri,
-    'features' => [Feature::SHOT_CHANGE_DETECTION]
 ]);
 
 # Wait for the request to complete.

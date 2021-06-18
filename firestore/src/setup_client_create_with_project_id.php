@@ -29,13 +29,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Initialize Cloud Firestore with a provided project ID.
- * ```
- * setup_client_create_with_project_id('your-project-id');
- * ```
  *
  * @param string $projectId Your Google Cloud Project ID
  */
-function setup_client_create_with_project_id($projectId)
+function setup_client_create_with_project_id(string $projectId): void
 {
     // Create the Cloud Firestore client with a provided project ID.
     $db = new FirestoreClient([

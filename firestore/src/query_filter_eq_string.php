@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a query that gets documents where state=CA.
- * ```
- * query_filter_eq_string('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_eq_string($projectId)
+function query_filter_eq_string(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
