@@ -23,7 +23,6 @@ fi
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
-    jobs
     asset
 )
 
