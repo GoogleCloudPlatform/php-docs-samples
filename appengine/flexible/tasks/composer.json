@@ -1,6 +1,6 @@
 {
     "require": {
-        "symfony/console": "^3.0",
+        "symfony/console": "^5.0",
         "slim/slim": "^4.0",
         "slim/psr7": "^1.3",
         "google/apiclient": "^2.1",
