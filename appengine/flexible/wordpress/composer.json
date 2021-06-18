@@ -3,7 +3,7 @@
         "ext-phar": "*",
         "ext-zip": "*",
         "paragonie/random_compat": "^9.0",
-        "symfony/console": "^3.0",
+        "symfony/console": "^5.0",
         "google/cloud-tools": "^0.12.0"
     },
     "require-dev": {
