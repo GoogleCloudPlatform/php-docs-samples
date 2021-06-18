@@ -26,11 +26,11 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
+$features = [Feature::LABEL_DETECTION];
 $options = [
     'inputUri' => 'gs://cloud-samples-data/video/cat.mp4',
-    'features' => [Feature::LABEL_DETECTION]
 ];
-$operation = $video->annotateVideo($options);
+$operation = $video->annotateVideo($features, $options);
 
 # Wait for the request to complete.
 $operation->pollUntilComplete();
