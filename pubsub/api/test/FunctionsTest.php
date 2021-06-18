@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\PubSub;
+namespace Google\Cloud\Samples\PubSub\Tests;
 
 use Google\Cloud\PubSub\PubSubClient;
 use PHPUnit\Framework\TestCase;
