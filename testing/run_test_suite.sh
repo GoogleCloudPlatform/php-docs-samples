@@ -23,7 +23,6 @@ fi
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
-    jobs
     asset
 )
 
@@ -66,6 +65,7 @@ ALT_PROJECT_TESTS=(
     spanner
     video
     vision
+    compute/cloud-client/instances
 )
 
 TMP_REPORT_DIR=$(mktemp -d)

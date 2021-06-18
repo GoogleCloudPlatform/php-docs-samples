@@ -36,7 +36,6 @@ use Google\Cloud\VideoIntelligence\V1\SpeechTranscriptionConfig;
 // $options = [];
 
 # set configs
-$features = [Feature::SPEECH_TRANSCRIPTION];
 $speechTranscriptionConfig = (new SpeechTranscriptionConfig())
     ->setLanguageCode('en-US')
     ->setEnableAutomaticPunctuation(true);
@@ -47,10 +46,10 @@ $videoContext = (new VideoContext())
 $client = new VideoIntelligenceServiceClient();
 
 # execute a request.
-$operation = $client->annotateVideo([
+$features = [Feature::SPEECH_TRANSCRIPTION];
+$operation = $client->annotateVideo($features, [
     'inputUri' => $uri,
-    'features' => $features,
-    'videoContext' => $videoContext
+    'videoContext' => $videoContext,
 ]);
 
 print('Processing video for speech transcription...' . PHP_EOL);
