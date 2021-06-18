@@ -59,5 +59,7 @@ class MarkTaskDoneCommand extends Command
         $taskId = intval($input->getArgument('taskId'));
         mark_done($datastore, $taskId);
         $output->writeln(sprintf('Task %d updated successfully.', $taskId));
+
+        return 0;
     }
 }
