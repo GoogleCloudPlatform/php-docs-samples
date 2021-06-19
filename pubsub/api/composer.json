@@ -1,14 +1,6 @@
 {
     "require": {
-        "php": ">=5.4",
-        "google/cloud": "dev-pubsub/schema",
-        "symfony/console": " ^3.0",
+        "google/cloud-pubsub": "^1.31",
         "wikimedia/avro": "^1.9"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/jdpedrie/google-cloud-php.git"
-        }
-    ]
+    }
 }

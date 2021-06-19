@@ -50,6 +50,11 @@ function make_iap_request($url, $clientId)
     ]);
 
     // make the request
-    return $client->get($url);
+    $response = $client->get($url);
+    print('Printing out response body:');
+    print($response->getBody());
 }
 # [END iap_make_request]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

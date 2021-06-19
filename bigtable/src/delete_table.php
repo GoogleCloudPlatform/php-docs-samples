@@ -28,7 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
+list($_, $projectId, $instanceId, $tableId) = $argv;
 
 // [START bigtable_delete_table]
 
@@ -36,23 +36,23 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'The Bigtable table ID';
 
 $tableAdminClient = new BigtableTableAdminClient();
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
 // Delete the entire table
 
 try {
-    printf('Attempting to delete table %s.' . PHP_EOL, $table_id);
+    printf('Attempting to delete table %s.' . PHP_EOL, $tableId);
     $tableAdminClient->deleteTable($tableName);
-    printf('Deleted %s table.' . PHP_EOL, $table_id);
+    printf('Deleted %s table.' . PHP_EOL, $tableId);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Table %s does not exists' . PHP_EOL, $table_id);
+        printf('Table %s does not exists' . PHP_EOL, $tableId);
     } else {
         throw $e;
     }
