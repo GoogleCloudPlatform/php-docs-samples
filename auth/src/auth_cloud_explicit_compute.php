@@ -20,14 +20,19 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
  */
 
-# [START auth_cloud_explicit_compute_engine]
+# [START auth_cloud_explicit_compute]
 namespace Google\Cloud\Samples\Auth;
 
 // Imports GCECredentials and the Cloud Storage client library.
 use Google\Auth\Credentials\GCECredentials;
 use Google\Cloud\Storage\StorageClient;
 
-function auth_cloud_explicit_compute_engine($projectId)
+/**
+ * Authenticate to a cloud client library using Compute credentials explicitly.
+ *
+ * @param string $projectId           The Google project ID.
+ */
+function auth_cloud_explicit_compute($projectId)
 {
     $gceCredentials = new GCECredentials();
     $config = [
@@ -41,4 +46,4 @@ function auth_cloud_explicit_compute_engine($projectId)
         printf('Bucket: %s' . PHP_EOL, $bucket->name());
     }
 }
-# [END auth_cloud_explicit_compute_engine]
+# [END auth_cloud_explicit_compute]

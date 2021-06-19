@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\Transaction;
 
 /**
  * Run a simple transaction.
- * ```
- * transaction_document_update('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function transaction_document_update($projectId)
+function transaction_document_update(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

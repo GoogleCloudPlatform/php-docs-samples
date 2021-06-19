@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Auto-generate an ID for a document, then add document data.
- * ```
- * data_set_id_random_document_ref('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_id_random_document_ref($projectId)
+function data_set_id_random_document_ref(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Query using the Not In operator.
- * ```
- * query_filter_not_in('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_not_in($projectId)
+function query_filter_not_in(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

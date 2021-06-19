@@ -20,10 +20,10 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
  */
 
-# [START auth_api_explicit_app_engine]
+# [START auth_api_explicit_compute]
 namespace Google\Cloud\Samples\Auth;
 
-use Google\Auth\Credentials\AppIdentityCredentials;
+use Google\Auth\Credentials\GCECredentials;
 use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
@@ -31,12 +31,15 @@ use GuzzleHttp\HandlerStack;
 use Google_Client;
 use Google_Service_Storage;
 
-function auth_api_explicit_app_engine($projectId)
+/**
+ * Authenticate to a cloud API using Compute credentials explicitly.
+ *
+ * @param string $projectId           The Google project ID.
+ */
+function auth_api_explicit_compute($projectId)
 {
-    # Learn more about scopes at https://cloud.google.com/storage/docs/authentication#oauth-scopes
-    $scope = 'https://www.googleapis.com/auth/devstorage.read_only';
-    $gaeCredentials = new AppIdentityCredentials($scope);
-    $middleware = new AuthTokenMiddleware($gaeCredentials);
+    $gceCredentials = new GCECredentials();
+    $middleware = new AuthTokenMiddleware($gceCredentials);
     $stack = HandlerStack::create();
     $stack->push($middleware);
     $http_client = new Client([
@@ -57,4 +60,4 @@ function auth_api_explicit_app_engine($projectId)
         printf('Bucket: %s' . PHP_EOL, $bucket->getName());
     }
 }
-# [END auth_api_explicit_app_engine]
+# [END auth_api_explicit_compute]

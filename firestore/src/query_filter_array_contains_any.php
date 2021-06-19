@@ -27,9 +27,8 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create queries using an array-contains-any where clause.
- * ```
- * query_filter_array_contains_any('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
 function query_filter_array_contains_any(string $projectId): void
 {

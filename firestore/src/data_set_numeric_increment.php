@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Update a document with an increment operation.
- * ```
- * data_set_numeric_increment('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_numeric_increment($projectId)
+function data_set_numeric_increment(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
