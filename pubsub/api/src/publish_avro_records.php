@@ -26,6 +26,11 @@ namespace Google\Cloud\Samples\PubSub;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\PubSub\V1\Encoding;
 
+use AvroStringIO;
+use AvroSchema;
+use AvroIODatumWriter;
+use AvroDataIOWriter;
+
 /**
  * Publish a message using an AVRO schema.
  *
@@ -73,10 +78,10 @@ function publish_avro_records($projectId, $topicId, $definitionFile)
     $encodedMessageData = '';
     if ($encoding == 'BINARY') {
         // encode as AVRO binary.
-        $io = new \AvroStringIO();
-        $schema = \AvroSchema::parse($definition);
-        $writer = new \AvroIODatumWriter($schema);
-        $dataWriter = new \AvroDataIOWriter($io, $writer, $schema);
+        $io = new AvroStringIO();
+        $schema = AvroSchema::parse($definition);
+        $writer = new AvroIODatumWriter($schema);
+        $dataWriter = new AvroDataIOWriter($io, $writer, $schema);
 
         $dataWriter->append($messageData);
 

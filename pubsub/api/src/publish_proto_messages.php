@@ -29,6 +29,8 @@ require_once __DIR__ . '/data/generated/StateProto.php';
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\PubSub\V1\Encoding;
 
+use Utilities\StateProto;
+
 /**
  * Publish a message using a protocol buffer schema.
  *
@@ -54,7 +56,7 @@ function publish_proto_messages($projectId, $topicId)
         'projectId' => $projectId,
     ]);
 
-    $messageData = new \Utilities\StateProto([
+    $messageData = new StateProto([
         'name' => 'Alaska',
         'post_abbr' => 'AK',
     ]);
