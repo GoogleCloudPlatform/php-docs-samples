@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,38 +20,28 @@
  *
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
  */
-
 namespace Google\Cloud\Samples\PubSub;
 
-# [START pubsub_set_subscription_policy]
+# [START pubsub_get_schema]
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Adds a user to the policy for a Pub/Sub subscription.
+ * Get a schema.
  *
- * @param string $projectId  The Google project ID.
- * @param string $subscriptionName  The Pub/Sub subscription name.
- * @param string $userEmail  The user email to add to the policy.
+ * @param string $projectId
+ * @param string $schemaId
  */
-function set_subscription_policy($projectId, $subscriptionName, $userEmail)
+function get_schema($projectId, $schemaId)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $subscription = $pubsub->subscription($subscriptionName);
-    $policy = $subscription->iam()->policy();
-    $policy['bindings'][] = [
-        'role' => 'roles/pubsub.subscriber',
-        'members' => ['user:' . $userEmail]
-    ];
-    $subscription->iam()->setPolicy($policy);
 
-    printf(
-        'User %s added to policy for %s' . PHP_EOL,
-        $userEmail,
-        $subscriptionName
-    );
+    $schema = $pubsub->schema($schemaId);
+    $schema->info();
+
+    printf('Schema %s retrieved', $schema->name());
 }
-# [END pubsub_set_subscription_policy]
+# [END pubsub_get_schema]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
