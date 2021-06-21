@@ -26,6 +26,11 @@ namespace Google\Cloud\Samples\Auth;
 // Imports the Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
+/**
+ * Authenticate to a cloud client library using a service account implicitly.
+ *
+ * @param string $projectId The Google project ID.
+ */
 function auth_cloud_implicit($projectId)
 {
     $config = [
@@ -42,3 +47,6 @@ function auth_cloud_implicit($projectId)
     }
 }
 # [END auth_cloud_implicit]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

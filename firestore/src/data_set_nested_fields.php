@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Update fields in nested data.
- * ```
- * data_set_nested_fields('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_nested_fields($projectId)
+function data_set_nested_fields(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

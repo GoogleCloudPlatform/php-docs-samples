@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a query that gets documents where capital=true.
- * ```
- * query_filter_eq_boolean('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_eq_boolean($projectId)
+function query_filter_eq_boolean(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

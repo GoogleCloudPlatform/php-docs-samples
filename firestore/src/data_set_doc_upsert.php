@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Set document data by merging it into the existing document.
- * ```
- * data_set_doc_upsert('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_doc_upsert($projectId)
+function data_set_doc_upsert(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
