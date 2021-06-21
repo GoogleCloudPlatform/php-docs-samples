@@ -26,4 +26,4 @@ fi
 PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 DIR="${1:-$PROJECT_ROOT}"
 
-$PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php_cs.dist" --path-mode=intersection $DIR
+$PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php-cs-fixer.dist.php" --path-mode=intersection $DIR
