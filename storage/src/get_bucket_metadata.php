@@ -42,3 +42,6 @@ function get_bucket_metadata($bucketName)
     printf("Bucket Metadata: %s" . PHP_EOL, print_r($info));
 }
 # [END storage_get_bucket_metadata]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
