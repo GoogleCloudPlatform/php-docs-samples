@@ -43,3 +43,6 @@ function get_bucket_default_acl_for_entity($bucketName, $entity)
     printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
 }
 # [END get_bucket_default_acl_for_entity]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

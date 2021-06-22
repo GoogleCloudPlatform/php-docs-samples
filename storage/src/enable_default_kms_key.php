@@ -51,3 +51,6 @@ function enable_default_kms_key($projectId, $bucketName, $kmsKeyName)
         $bucket->info()['encryption']['defaultKmsKeyName']);
 }
 # [END storage_set_bucket_default_kms_key]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
