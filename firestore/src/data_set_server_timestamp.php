@@ -52,5 +52,6 @@ function data_set_server_timestamp(string $projectId): void
     printf('Updated the timestamp field of the some-id document in the objects collection.' . PHP_EOL);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
