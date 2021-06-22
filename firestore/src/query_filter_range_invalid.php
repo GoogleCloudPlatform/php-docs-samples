@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * An example of an invalid range query. @see https://cloud.google.com/firestore/docs/query-data/queries#compound_queries
- * ```
- * query_filter_range_invalid('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_range_invalid($projectId)
+function query_filter_range_invalid(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

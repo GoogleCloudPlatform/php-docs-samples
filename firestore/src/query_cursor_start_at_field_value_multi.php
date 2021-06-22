@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Set multiple cursor conditions
- * ```
- * query_cursor_start_at_field_value_multi('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_cursor_start_at_field_value_multi($projectId)
+function query_cursor_start_at_field_value_multi(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Query using the Not Equal operator.
- * ```
- * query_filter_not_eq('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_not_eq($projectId)
+function query_filter_not_eq(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
