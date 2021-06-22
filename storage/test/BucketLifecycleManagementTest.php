@@ -24,9 +24,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for enable/disable bucket lifecycle management.
- *
- * @group storage
- * @group storage-bucketlifecyclemanagement
  */
 class BucketLifecycleManagementTest extends TestCase
 {

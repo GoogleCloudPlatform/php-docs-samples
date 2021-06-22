@@ -23,9 +23,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for BucketLockCommand.
- *
- * @group storage
- * @group storage-bucketlock
  */
 class BucketLockCommandTest extends TestCase
 {

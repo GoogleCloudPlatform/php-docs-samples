@@ -102,4 +102,24 @@ class ObjectSignedUrlTest extends TestCase
             ->downloadAsString();
         $this->assertEquals('upload content', $content);
     }
+
+    public function testGenerateSignedPostPolicy()
+    {
+        $bucketName = self::$bucketName;
+        $objectName = self::$objectName;
+        $output = self::runFunctionSnippet('generate_signed_post_policy_v4', [
+            $bucketName,
+            $objectName,
+        ]);
+
+        $this->assertStringContainsString("<form action='https://storage.googleapis.com/$bucketName/", $output);
+        $this->assertStringContainsString("<input name='key' value='$objectName'", $output);
+        $this->assertStringContainsString("<input name='x-goog-signature'", $output);
+        $this->assertStringContainsString("<input name='x-goog-date'", $output);
+        $this->assertStringContainsString("<input name='x-goog-credential'", $output);
+        $this->assertStringContainsString("<input name='x-goog-algorithm' value='GOOG4-RSA-SHA256'", $output);
+        $this->assertStringContainsString("<input name='policy'", $output);
+        $this->assertStringContainsString("<input name='x-goog-meta-test' value='data'", $output);
+        $this->assertStringContainsString("<input type='file' name='file'/>", $output);
+    }
 }

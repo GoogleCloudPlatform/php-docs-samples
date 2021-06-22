@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ObjectsTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait;
+    use TestTrait;
 
     private static $bucketName;
     private static $storage;
@@ -150,5 +149,91 @@ Deleted $objectUrl-moved
 
 EOF;
         $this->assertEquals($output, $outputString);
+    }
+
+    function testCompose()
+    {
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $object1Name = uniqid('compose-object1-');
+        $object2Name = uniqid('compose-object2-');
+        $bucket->upload('content', ['name' => $object1Name]);
+        $bucket->upload('content', ['name' => $object2Name]);
+
+        $targetName = uniqid('compose-object-target-');
+        $output = self::runFunctionSnippet('compose_file', [
+            self::$bucketName,
+            $object1Name,
+            $object2Name,
+            $targetName,
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                "New composite object %s was created by combining %s and %s",
+                $targetName,
+                $object1Name,
+                $object2Name
+            ),
+            $output
+        );
+
+        $bucket->object($object1Name)->delete();
+        $bucket->object($object2Name)->delete();
+        $bucket->object($targetName)->delete();
+    }
+
+    public function testChangeStorageClass()
+    {
+        $objectName = uniqid('change-storage-class-');
+
+        $object = self::$storage->bucket(self::$bucketName)->upload('content', [
+            'name' => $objectName,
+        ]);
+
+        $output = self::runFunctionSnippet('change_file_storage_class', [
+            self::$bucketName,
+            $objectName,
+            'NEARLINE',
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'Object %s in bucket %s had its storage class set to %s',
+                $objectName,
+                self::$bucketName,
+                'NEARLINE'
+            ),
+            $output
+        );
+
+        $newObject = self::$storage->bucket(self::$bucketName)->object($objectName);
+        $this->assertEquals('NEARLINE', $newObject->info()['storageClass']);
+        $newObject->delete();
+    }
+
+    public function testSetMetadata()
+    {
+        $objectName = uniqid('set-metadata-');
+
+        $object = self::$storage->bucket(self::$bucketName)->upload('content', [
+            'name' => $objectName,
+        ]);
+
+        $output = self::runFunctionSnippet('set_metadata', [
+            self::$bucketName,
+            $objectName,
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'Updated custom metadata for object %s in bucket %s',
+                $objectName,
+                self::$bucketName
+            ),
+            $output
+        );
+
+        $this->assertEquals('value', $object->reload()['metadata']['keyToAddOrUpdate']);
+        $object->delete();
     }
 }

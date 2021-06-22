@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 class IamTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
     protected static $storage;
     protected static $user;
@@ -261,5 +259,32 @@ Members:
             }
         }
         $this->assertFalse($foundBinding);
+    }
+
+    public function testSetBucketPublicIam()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-public-iam-'));
+
+        $output = self::runFunctionSnippet('set_bucket_public_iam', [
+            $bucket->name(),
+        ]);
+
+        $this->assertEquals(
+            sprintf('Bucket %s is now public', $bucket->name()),
+            $output
+        );
+
+        $policy = $bucket->iam()->policy();
+        $hasBinding = false;
+        foreach ($policy['bindings'] as $binding) {
+            if ($binding['role'] == 'roles/storage.objectViewer' && $binding['members'] = ['allUsers']) {
+                $hasBinding = true;
+                break;
+            }
+        }
+
+        $bucket->delete();
+
+        $this->assertTrue($hasBinding, 'has public viewable iam binding');
     }
 }
