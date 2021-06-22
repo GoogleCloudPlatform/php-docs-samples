@@ -151,7 +151,7 @@ EOF;
         $this->assertEquals($output, $outputString);
     }
 
-    function testCompose()
+    public function testCompose()
     {
         $bucket = self::$storage->bucket(self::$bucketName);
         $object1Name = uniqid('compose-object1-');

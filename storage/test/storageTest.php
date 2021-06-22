@@ -648,7 +648,8 @@ class storageTest extends TestCase
         try {
             $newObj = $bucket->object($newObjectName);
             $newObjContents = $newObj->downloadAsString();
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         foreach ($bucket->objects(['versions' => true]) as $object) {
             $object->delete();
