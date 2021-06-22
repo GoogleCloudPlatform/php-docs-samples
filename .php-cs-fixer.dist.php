@@ -1,6 +1,6 @@
 <?php
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR2' => true,
         'concat_space' => ['spacing' => 'one'],
@@ -10,6 +10,7 @@ return PhpCsFixer\Config::create()
         'method_argument_space' => [
             'keep_multiple_spaces_after_comma' => true
         ],
+        'native_function_invocation' => true,
         'return_type_declaration' => [
             'space_before' => 'none'
         ],
