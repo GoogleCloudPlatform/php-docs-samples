@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a query with range clauses.
- * ```
- * query_filter_range_valid('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_range_valid($projectId)
+function query_filter_range_valid(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

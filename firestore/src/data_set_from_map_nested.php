@@ -29,11 +29,10 @@ use DateTime;
 
 /**
  * Set document data with different data types.
- * ```
- * data_set_from_map_nested('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_from_map_nested($projectId)
+function data_set_from_map_nested(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

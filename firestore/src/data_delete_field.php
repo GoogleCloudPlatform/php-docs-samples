@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FieldValue;
 
 /**
  * Delete a field from a document.
- * ```
- * data_delete_field('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_delete_field($projectId)
+function data_delete_field(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

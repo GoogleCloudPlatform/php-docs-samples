@@ -27,9 +27,8 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Query collection group for documents.
- * ```
- * query_collection_group_filter_eq('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
 function query_collection_group_filter_eq(string $projectId): void
 {

@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Paginate using cursor queries.
- * ```
- * query_cursor_pagination('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_cursor_pagination($projectId)
+function query_cursor_pagination(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
