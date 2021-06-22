@@ -11,5 +11,9 @@
       "phpunit/phpunit"
     ]
   }],
+  "ignorePaths": [
+      "appengine/flexible/"
+  ],
+  "branchPrefix": "renovate/{{parentDir}}-",
   "prConcurrentLimit": 5
 }

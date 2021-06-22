@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Creates the specified multiple shards as a subcollection.
- * ```
- * solution_sharded_counter_create('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function solution_sharded_counter_create($projectId)
+function solution_sharded_counter_create(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

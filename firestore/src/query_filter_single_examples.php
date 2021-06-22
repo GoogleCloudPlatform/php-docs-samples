@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create queries using single where clauses.
- * ```
- * query_filter_single_examples('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_single_examples($projectId)
+function query_filter_single_examples(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

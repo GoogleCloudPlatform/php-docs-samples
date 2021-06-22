@@ -43,9 +43,9 @@ use Google\Cloud\VideoIntelligence\V1\Likelihood;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
-$operation = $video->annotateVideo([
+$features = [Feature::EXPLICIT_CONTENT_DETECTION];
+$operation = $video->annotateVideo($features, [
     'inputUri' => $uri,
-    'features' => [Feature::EXPLICIT_CONTENT_DETECTION]
 ]);
 
 # Wait for the request to complete.

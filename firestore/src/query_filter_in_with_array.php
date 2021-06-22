@@ -27,9 +27,8 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a query with IN clause with array item.
- * ```
- * query_filter_in_with_array('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
 function query_filter_in_with_array(string $projectId): void
 {

@@ -27,20 +27,20 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
- * List instances for particular $projectId and $zone
+ * List all instances for a particular Cloud project and zone.
  * Example:
  * ```
  * list_instances($projectId, $zone);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone The zone to list the instance in (e.g. "us-central1-a").
+ * @param string $zone Zone to list instances for (like "us-central1-a").
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function list_instances(string $projectId, string $zone)
 {
-    // List the new Compute Engine instance using the InstancesClient
+    // List Compute Engine instances using InstancesClient.
     $instancesClient = new InstancesClient();
     $instancesList = $instancesClient->list($projectId, $zone);
 

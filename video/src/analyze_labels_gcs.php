@@ -37,9 +37,9 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
-$operation = $video->annotateVideo([
+$features = [Feature::LABEL_DETECTION];
+$operation = $video->annotateVideo($features, [
     'inputUri' => $uri,
-    'features' => [Feature::LABEL_DETECTION]
 ]);
 
 # Wait for the request to complete.
