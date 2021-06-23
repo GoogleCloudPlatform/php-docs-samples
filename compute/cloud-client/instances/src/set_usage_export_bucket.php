@@ -80,7 +80,7 @@ function set_usage_export_bucket(
 
 # [START compute_usage_report_get]
 /**
- * Retrieve Compute Engine usage export bucket for the Cloud Project.
+ * Retrieve Compute Engine usage export bucket for the Cloud project.
  * Replaces the empty value returned by the API with the default value used
  * to generate report file names.
  * Example:
@@ -96,7 +96,7 @@ function set_usage_export_bucket(
  */
 function get_usage_export_bucket(string $projectId)
 {
-    // Get the usage setting for the project from the server.
+    // Get the usage export location for the project from the server.
     $projectsClient = new ProjectsClient();
     $projectResponse = $projectsClient->get($projectId);
 
