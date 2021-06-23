@@ -45,5 +45,6 @@ function delete_bucket_default_acl($bucketName, $entity, $options = [])
 }
 # [END storage_remove_bucket_default_owner]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
