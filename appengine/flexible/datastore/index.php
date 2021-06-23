@@ -23,6 +23,4 @@ $app = require __DIR__ . '/app.php';
 
 // Run the app!
 // use "gcloud app deploy"
-$app['debug'] = true;
-$app['project_id'] = getenv('GCLOUD_PROJECT');
 $app->run();

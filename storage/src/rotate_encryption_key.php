@@ -54,3 +54,6 @@ function rotate_encryption_key(
         $bucketName, $objectName);
 }
 # [END storage_rotate_encryption_key]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

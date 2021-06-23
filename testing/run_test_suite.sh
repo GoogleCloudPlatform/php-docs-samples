@@ -23,28 +23,10 @@ fi
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
-    jobs
-    asset
 )
 
 # Directories we do not want to run tests in, even if they exist
 SKIP_TESTS=(
-    # Silex tests which aren't compatible with phpunit 8
-    # TODO: Move these tests off Silex
-    appengine/flexible/helloworld
-    appengine/flexible/analytics
-    appengine/flexible/twilio
-    appengine/flexible/datastore
-    appengine/flexible/tasks
-    appengine/flexible/storage
-    appengine/flexible/memcache
-    appengine/flexible/logging
-    endpoints/getting-started
-    pubsub/app
-    # PubSub batch is currently broken on PHP 8.0
-    # @see https://github.com/googleapis/google-cloud-php/issues/3749
-    # @TODO remove this once the above issue is fixed
-    pubsub/api
 )
 
 # tests to run with grpc.so disabled
@@ -82,6 +64,7 @@ ALT_PROJECT_TESTS=(
     spanner
     video
     vision
+    compute/cloud-client/instances
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
@@ -119,6 +102,12 @@ TESTCMD="$TESTDIR/vendor/bin/phpunit"
 if ! type $TESTCMD > /dev/null; then
   echo "run \"composer install -d testing/\" to install testing dependencies"
   exit 1
+fi
+
+if [ "${RUN_DEPLOYMENT_TESTS}" = "true" ]; then
+    TESTCMD="$TESTCMD --group deploy"
+else
+    TESTCMD="$TESTCMD --exclude-group deploy"
 fi
 
 run_tests()

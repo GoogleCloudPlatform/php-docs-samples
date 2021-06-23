@@ -23,5 +23,7 @@ elif [ -f "./php-cs-fixer" ]; then
     PHP_CS_FIXER="./php-cs-fixer"
 fi
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-$PHP_CS_FIXER fix --dry-run --diff --config="$DIR/../.php_cs.dist" --path-mode=intersection .
+PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+DIR="${1:-$PROJECT_ROOT}"
+
+$PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php_cs.dist" --path-mode=intersection $DIR

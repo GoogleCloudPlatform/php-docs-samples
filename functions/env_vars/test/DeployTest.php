@@ -31,6 +31,7 @@ require_once __DIR__ . '/TestCasesTrait.php';
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
@@ -53,8 +54,8 @@ class DeployTest extends TestCase
     }
 
     /**
-      * @dataProvider cases
-      */
+     * @dataProvider cases
+     */
     public function testFunction(
         $statusCode,
         $varName,

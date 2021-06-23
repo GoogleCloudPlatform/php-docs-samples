@@ -21,6 +21,9 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use ExecuteCommandTrait;
@@ -53,6 +56,10 @@ class DeployTest extends TestCase
 
     public function testIndex()
     {
+        $this->markTestSkipped(
+            'This sample is BROKEN. See https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1348'
+        );
+
         // Access the blog top page
         $resp = $this->client->get('');
         $this->assertEquals('200', $resp->getStatusCode());

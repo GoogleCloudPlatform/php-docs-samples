@@ -46,3 +46,6 @@ function add_bucket_default_acl($bucketName, $entity, $role, $options = [])
     printf('Added %s (%s) to gs://%s default ACL' . PHP_EOL, $entity, $role, $bucketName);
 }
 # [END storage_add_bucket_default_owner]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

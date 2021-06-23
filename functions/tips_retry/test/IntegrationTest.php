@@ -39,9 +39,13 @@ class IntegrationTest extends TestCase
     private static $functionSignatureType = 'cloudevent';
 
 
-    private static function makeData($jsonArray)
+    private static function makeData(array $jsonArray)
     {
-        return ['data' => base64_encode(json_encode($jsonArray))];
+        return [
+            'message' => [
+                'data' => base64_encode(json_encode($jsonArray))
+            ]
+        ];
     }
 
     public function dataProvider()
@@ -93,6 +97,6 @@ class IntegrationTest extends TestCase
         );
 
         // Verify the function's behavior is correct.
-        $this->assertContains($expected, $actual, $label . ' contains');
+        $this->assertStringContainsString($expected, $actual, $label . ' contains');
     }
 }

@@ -19,76 +19,78 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 /*
- * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
+ * Adds all the controllers to Slim PHP $app.
  */
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Google\Cloud\Storage\Bucket;
 
-$app->get('/', function (Request $request, Response $response) {
+$container = $app->getContainer();
+
+$app->get('/', function (Request $request, Response $response) use ($container) {
     return $response
         ->withHeader('Location', '/books')
         ->withStatus(302);
 })->setName('home');
 
-$app->get('/books', function (Request $request, Response $response) {
-    $token = (int) $request->getQueryParam('page_token');
-    $bookList = $this->cloudsql->listBooks(10, $token);
+$app->get('/books', function (Request $request, Response $response) use ($container) {
+    $token = (int) $request->getUri()->getQuery('page_token');
+    $bookList = $container->get('cloudsql')->listBooks(10, $token);
 
-    return $this->view->render($response, 'list.html.twig', [
+    return $container->get('view')->render($response, 'list.html.twig', [
         'books' => $bookList['books'],
         'next_page_token' => $bookList['cursor'],
     ]);
 })->setName('books');
 
-$app->get('/books/add', function (Request $request, Response $response) {
-    return $this->view->render($response, 'form.html.twig', [
+$app->get('/books/add', function (Request $request, Response $response) use ($container) {
+    return $container->get('view')->render($response, 'form.html.twig', [
         'action' => 'Add',
         'book' => array(),
     ]);
 });
 
-$app->post('/books/add', function (Request $request, Response $response) {
+$app->post('/books/add', function (Request $request, Response $response) use ($container) {
     $book = $request->getParsedBody();
     $files = $request->getUploadedFiles();
     if ($files['image']->getSize()) {
         // Store the uploaded files in a Cloud Storage object.
         $image = $files['image'];
-        $object = $this->bucket->upload($image->getStream(), [
+        $object = $container->get('bucket')->upload($image->getStream(), [
             'metadata' => ['contentType' => $image->getClientMediaType()],
             'predefinedAcl' => 'publicRead',
         ]);
         $book['image_url'] = $object->info()['mediaLink'];
     }
-    $id = $this->cloudsql->create($book);
+    $id = $container->get('cloudsql')->create($book);
 
     return $response
         ->withHeader('Location', "/books/$id")
         ->withStatus(302);
 });
 
-$app->get('/books/{id}', function (Request $request, Response $response, $args) {
-    $book = $this->cloudsql->read($args['id']);
+$app->get('/books/{id}', function (Request $request, Response $response, $args) use ($container) {
+    $book = $container->get('cloudsql')->read($args['id']);
     if (!$book) {
         return $response->withStatus(404);
     }
-    return $this->view->render($response, 'view.html.twig', ['book' => $book]);
+    return $container->get('view')->render($response, 'view.html.twig', ['book' => $book]);
 });
 
-$app->get('/books/{id}/edit', function (Request $request, Response $response, $args) {
-    $book = $this->cloudsql->read($args['id']);
+$app->get('/books/{id}/edit', function (Request $request, Response $response, $args) use ($container) {
+    $book = $container->get('cloudsql')->read($args['id']);
     if (!$book) {
         return $response->withStatus(404);
     }
 
-    return $this->view->render($response, 'form.html.twig', [
+    return $container->get('view')->render($response, 'form.html.twig', [
         'action' => 'Edit',
         'book' => $book,
     ]);
 });
 
-$app->post('/books/{id}/edit', function (Request $request, Response $response, $args) {
-    if (!$this->cloudsql->read($args['id'])) {
+$app->post('/books/{id}/edit', function (Request $request, Response $response, $args) use ($container) {
+    if (!$container->get('cloudsql')->read($args['id'])) {
         return $response->withStatus(404);
     }
     $book = $request->getParsedBody();
@@ -96,7 +98,7 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
     $files = $request->getUploadedFiles();
     if ($files['image']->getSize()) {
         $image = $files['image'];
-        $bucket = $this->bucket;
+        $bucket = $container->get('bucket');
         $imageStream = $image->getStream();
         $imageContentType = $image->getClientMediaType();
         // [START gae_php_app_upload_image]
@@ -112,22 +114,23 @@ $app->post('/books/{id}/edit', function (Request $request, Response $response, $
         // [END gae_php_app_upload_image]
         $book['image_url'] = $imageUrl;
     }
-    if ($this->cloudsql->update($book)) {
+    if ($container->get('cloudsql')->update($book)) {
         return $response
             ->withHeader('Location', "/books/$args[id]")
             ->withStatus(302);
     }
 
-    return new Response('Could not update book');
+    $response->getBody()->write('Could not update book');
+    return $response;
 });
 
-$app->post('/books/{id}/delete', function (Request $request, Response $response, $args) {
-    $book = $this->cloudsql->read($args['id']);
+$app->post('/books/{id}/delete', function (Request $request, Response $response, $args) use ($container) {
+    $book = $container->get('cloudsql')->read($args['id']);
     if ($book) {
-        $this->cloudsql->delete($args['id']);
+        $container->get('cloudsql')->delete($args['id']);
         if (!empty($book['image_url'])) {
             $objectName = parse_url(basename($book['image_url']), PHP_URL_PATH);
-            $bucket = $this->bucket;
+            $bucket = $container->get('bucket');
             // get bucket name from image
             // [START gae_php_app_delete_image]
             $object = $bucket->object($objectName);

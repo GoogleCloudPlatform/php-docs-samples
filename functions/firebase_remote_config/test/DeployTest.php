@@ -24,6 +24,7 @@ use Google\Auth\CredentialsLoader;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Class DeployTest.
@@ -32,6 +33,7 @@ use PHPUnit\Framework\TestCase;
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
@@ -96,14 +98,11 @@ class DeployTest extends TestCase
         string $expected
     ): void {
         // Trigger config update.
-        $objectUri = $this->updateRemoteConfig(
+        $apiResponse = $this->updateRemoteConfig(
             $key,
             $value
         );
-
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(5);
+        $this->assertEquals($apiResponse->getStatusCode(), 200);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected, $label) {
@@ -119,7 +118,7 @@ class DeployTest extends TestCase
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
             $this->assertStringContainsString($expected, $actual, $label);
-        });
+        }, 10, 60);
     }
 
     /**
@@ -133,7 +132,7 @@ class DeployTest extends TestCase
     private function updateRemoteConfig(
         string $key,
         string $value
-    ): void {
+    ): Response {
         $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
 
         if (empty(self::$apiHttpClient)) {
@@ -152,7 +151,7 @@ class DeployTest extends TestCase
                 ]
             ]
         ];
-        $response = self::$apiHttpClient->put('', [
+        return self::$apiHttpClient->put('', [
             'headers' => ['If-Match' => '*'],
             'json' => $json
         ]);
