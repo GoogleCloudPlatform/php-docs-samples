@@ -41,7 +41,8 @@ function create_client_with_query_options($instanceId, $databaseId)
 {
     $spanner = new SpannerClient([
         'queryOptions' => [
-            'optimizerVersion' => "1"
+            'optimizerVersion' => '1',
+            'optimizerStatisticsPackage' => 'auto_20191128_14_47_22UTC'
         ]
     ]);
     $instance = $spanner->instance($instanceId);
