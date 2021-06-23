@@ -36,17 +36,17 @@ use Google\Cloud\Compute\V1\UsageExportLocation;
 
 # [START compute_usage_report_set]
 /**
- * Set Compute Engine usage export bucket for the Cloud Project.
+ * Set Compute Engine usage export bucket for the Cloud project.
  * This sample presents how to interpret the default value for the report name prefix parameter.
  * Example:
  * ```
- * set_usage_export_bucket($projectId, $bucketName, $reportPrefixName);
+ * set_usage_export_bucket($projectId, $bucketName, $reportNamePrefix);
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $bucketName Google Cloud Storage Bucket used to store Compute Engine usage reports.
+ * @param string $bucketName Google Cloud Storage bucket used to store Compute Engine usage reports.
  * An existing Google Cloud Storage bucket is required.
- * @param string $reportPrefixName Prefix of the usage report name which defaults to an empty string
+ * @param string $reportNamePrefix Prefix of the usage report name which defaults to an empty string
  * to showcase default values behavior.
  *
  * @return \Google\Cloud\Compute\V1\Operation
@@ -56,15 +56,15 @@ use Google\Cloud\Compute\V1\UsageExportLocation;
 function set_usage_export_bucket(
     string $projectId,
     string $bucketName,
-    string $reportPrefixName = ''
+    string $reportNamePrefix = ''
 ) {
     // Initialize UsageExportLocation object with provided bucket name and no report name prefix.
     $usageExportLocation = new UsageExportLocation(array(
         "bucket_name" => $bucketName,
-        "report_name_prefix" => $reportPrefixName
+        "report_name_prefix" => $reportNamePrefix
     ));
 
-    if (strlen($reportPrefixName) == 0) {
+    if (strlen($reportNamePrefix) == 0) {
         // Sending empty value for report_name_prefix results in the next usage report
         // being generated with the default prefix value "usage_gce".
         // See https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket
