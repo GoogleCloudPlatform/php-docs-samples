@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Storage;
 
 # [START storage_download_public_file]
-use Google\Auth\CredentialsLoader;
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -35,13 +34,13 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The name of your Cloud Storage object.
  *     Example: `$objectName = 'my-object';`
  * @param string $destination The local destination to save the object.
- *     Example: `$destination = '/path/to/your/file';`
+ *     Example: `$destination = '/home/admin/downloads/my-object';`
  */
 function download_public_file($bucketName, $objectName, $destination)
 {
     // create a storage client without authentication
     $storage = new StorageClient([
-        'credentialsFetcher' => CredentialsLoader::makeInsecureCredentials()
+        'shouldSignRequest' => false,
     ]);
 
     $bucket = $storage->bucket($bucketName);

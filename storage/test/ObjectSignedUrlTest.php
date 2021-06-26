@@ -33,49 +33,54 @@ class ObjectSignedUrlTest extends TestCase
 
     private static $storage;
     private static $bucketName;
-    private static $objectName;
 
-    /** @beforeClass */
-    public static function setUpObject()
+    public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
         self::$bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
-        self::$objectName = sprintf('test-object-%s', time());
-        // Pre-upload an object for testing GET signed urls
-        self::$storage
-            ->bucket(self::$bucketName)
-            ->upload("test file content", [
-                'name' => self::$objectName
-            ]);
     }
 
     public function testGetV2SignedUrl()
     {
-        $output = self::runFunctionSnippet('get_object_v2_signed_url', [
-            self::$bucketName,
-            self::$objectName,
+        $object = self::$storage->bucket(self::$bucketName)->upload('test', [
+            'name' => uniqid('samples-v2-signed-url-'),
         ]);
 
-        $this->assertStringContainsString("The signed url for " . self::$objectName . " is", $output);
+        $output = self::runFunctionSnippet('get_object_v2_signed_url', [
+            self::$bucketName,
+            $object->name(),
+        ]);
+
+        $object->delete();
+
+        $this->assertStringContainsString("The signed url for " . $object->name() . " is", $output);
     }
 
     public function testGetV4SignedUrl()
     {
+        $object = self::$storage->bucket(self::$bucketName)->upload('test', [
+            'name' => uniqid('samples-v4-signed-url-'),
+        ]);
+
         $output = self::runFunctionSnippet('get_object_v4_signed_url', [
             self::$bucketName,
-            self::$objectName,
+            $object->name(),
         ]);
+
+        $object->delete();
 
         $this->assertStringContainsString('Generated GET signed URL:', $output);
     }
 
     public function testGetV4UploadSignedUrl()
     {
-        $uploadObjectName = sprintf('test-upload-object-%s', time());
+        $object = self::$storage->bucket(self::$bucketName)->object(
+            uniqid('samples-v4-upload-url-')
+        );
 
         $output = self::runFunctionSnippet('upload_object_v4_signed_url', [
             self::$bucketName,
-            self::$objectName,
+            $object->name(),
         ]);
 
         $this->assertStringContainsString('Generated PUT signed URL:', $output);
@@ -93,27 +98,32 @@ class ObjectSignedUrlTest extends TestCase
             'body' => 'upload content'
         ]);
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $content = '';
+        try {
+            // Assert file is correctly uploaded to the bucket.
+            $content = $object->downloadAsString();
+            $object->delete();
+        } catch (\Exception $e) {
+        }
 
-        // Assert file is correctly uploaded to the bucket.
-        $content = self::$storage
-            ->bucket(self::$bucketName)
-            ->object($uploadObjectName)
-            ->downloadAsString();
+        $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals('upload content', $content);
     }
 
     public function testGenerateSignedPostPolicy()
     {
+        $object = self::$storage->bucket(self::$bucketName)->object(
+            uniqid('samples-v4-post-policy-')
+        );
+
         $bucketName = self::$bucketName;
-        $objectName = self::$objectName;
         $output = self::runFunctionSnippet('generate_signed_post_policy_v4', [
             $bucketName,
-            $objectName,
+            $object->name(),
         ]);
 
         $this->assertStringContainsString("<form action='https://storage.googleapis.com/$bucketName/", $output);
-        $this->assertStringContainsString("<input name='key' value='$objectName'", $output);
+        $this->assertStringContainsString("<input name='key' value='{$object->name()}'", $output);
         $this->assertStringContainsString("<input name='x-goog-signature'", $output);
         $this->assertStringContainsString("<input name='x-goog-date'", $output);
         $this->assertStringContainsString("<input name='x-goog-credential'", $output);
