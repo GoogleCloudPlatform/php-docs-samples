@@ -74,3 +74,5 @@ function remove_bucket_iam_member($bucketName, $role, $member)
     throw new \RuntimeException('No matching role-member group(s) found.');
 }
 # [END storage_remove_bucket_iam_member]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

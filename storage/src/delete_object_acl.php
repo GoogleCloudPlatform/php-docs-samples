@@ -46,3 +46,6 @@ function delete_object_acl($bucketName, $objectName, $entity, $options = [])
     printf('Deleted %s from gs://%s/%s ACL' . PHP_EOL, $entity, $bucketName, $objectName);
 }
 # [END storage_remove_file_owner]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

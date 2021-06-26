@@ -32,12 +32,16 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName the name of your Cloud Storage bucket.
  *     Example: `$bucketName = 'my-bucket';`
  */
-function lock_retention_policy($bucketName)
+function lock_retention_policy($projectId, $bucketName)
 {
-    $storage = new StorageClient();
+    $storage = new StorageClient([
+        'projectId' => $projectId,
+    ]);
     $bucket = $storage->bucket($bucketName);
     $bucket->reload();
     $bucket->lockRetentionPolicy();
     printf('Bucket %s retention policy locked' . PHP_EOL, $bucketName);
 }
 # [END storage_lock_retention_policy]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

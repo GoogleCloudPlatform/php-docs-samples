@@ -74,3 +74,5 @@ function remove_bucket_conditional_iam_binding($bucketName, $role, $title, $desc
     }
 }
 # [END storage_remove_bucket_conditional_iam_binding]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

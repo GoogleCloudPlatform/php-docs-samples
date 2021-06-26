@@ -38,7 +38,7 @@ function generate_v4_post_policy($bucketName, $objectName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    
+
     $response = $bucket->generateSignedPostPolicyV4(
         $objectName,
         new \DateTime('10 min'),
@@ -61,3 +61,6 @@ function generate_v4_post_policy($bucketName, $objectName)
     echo $output;
 }
 # [END storage_generate_signed_post_policy_v4]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

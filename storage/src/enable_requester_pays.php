@@ -48,3 +48,5 @@ function enable_requester_pays($projectId, $bucketName)
     printf('Requester pays has been enabled for %s' . PHP_EOL, $bucketName);
 }
 # [END storage_enable_requester_pays]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

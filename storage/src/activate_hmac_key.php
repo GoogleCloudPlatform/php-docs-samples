@@ -29,11 +29,10 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Activate an HMAC key.
  *
- * @param string $accessId Access ID for an inactive HMAC key.
  * @param string $projectId Google Cloud Project ID.
- *
+ * @param string $accessId Access ID for an inactive HMAC key.
  */
-function activate_hmac_key($accessId, $projectId)
+function activate_hmac_key($projectId, $accessId)
 {
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().
@@ -45,3 +44,5 @@ function activate_hmac_key($accessId, $projectId)
     printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
 }
 # [END storage_activate_hmac_key]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

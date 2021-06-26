@@ -39,3 +39,5 @@ function enable_default_event_based_hold($bucketName)
     printf('Default event-based hold was enabled for %s' . PHP_EOL, $bucketName);
 }
 # [END storage_enable_default_event_based_hold]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,28 +23,43 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_generate_signed_url]
+# [START storage_generate_signed_post_policy_v4]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Generate a v2 signed URL for downloading an object.
+ * Generates a V4 POST Policy to be used in an HTML form and echo's form.
  *
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of your Google Cloud object.
  *
  * @return void
  */
-function get_object_v2_signed_url($bucketName, $objectName)
+function generate_signed_post_policy_v4($bucketName, $objectName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $object = $bucket->object($objectName);
-    # This URL is valid for 1 hour
-    $url = $object->signedUrl(new \DateTime('next hour'));
 
-    printf('The signed url for %s is %s\n', $objectName, $url);
+    $response = $bucket->generateSignedPostPolicyV4(
+        $objectName,
+        new \DateTime('10 min'),
+        [
+            'fields' => [
+                'x-goog-meta-test' => 'data'
+            ]
+        ]
+    );
+
+    $url = $response['url'];
+    $output = "<form action='$url' method='POST' enctype='multipart/form-data'>" . PHP_EOL;
+    foreach ($response['fields'] as $name => $value) {
+        $output .= "  <input name='$name' value='$value' type='hidden'/>" . PHP_EOL;
+    }
+    $output .= "  <input type='file' name='file'/><br />" . PHP_EOL;
+    $output .= "  <input type='submit' value='Upload File' name='submit'/><br />" . PHP_EOL;
+    $output .= "</form>" . PHP_EOL;
+
+    echo $output;
 }
-# [END storage_generate_signed_url]
-
+# [END storage_generate_signed_post_policy_v4]
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

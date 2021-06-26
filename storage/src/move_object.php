@@ -50,3 +50,6 @@ function move_object($bucketName, $objectName, $newBucketName, $newObjectName)
         $newObjectName);
 }
 # [END storage_move_file]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

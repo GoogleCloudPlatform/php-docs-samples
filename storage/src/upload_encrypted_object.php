@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of your Google Cloud object.
- * @param resource $source the path to the file to upload.
+ * @param string $source the path to the file to upload.
  * @param string $base64EncryptionKey the base64 encoded encryption key.
  *
  * @return void

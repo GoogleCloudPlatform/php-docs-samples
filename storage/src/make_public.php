@@ -43,3 +43,5 @@ function make_public($bucketName, $objectName)
     printf('gs://%s/%s is now public' . PHP_EOL, $bucketName, $objectName);
 }
 # [END storage_make_public]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

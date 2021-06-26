@@ -45,3 +45,6 @@ function copy_object($bucketName, $objectName, $newBucketName, $newObjectName)
         $bucketName, $objectName, $newBucketName, $newObjectName);
 }
 # [END storage_copy_file]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

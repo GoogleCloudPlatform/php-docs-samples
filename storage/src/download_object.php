@@ -45,3 +45,6 @@ function download_object($bucketName, $objectName, $destination)
         $bucketName, $objectName, basename($destination));
 }
 # [END storage_download_file]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
