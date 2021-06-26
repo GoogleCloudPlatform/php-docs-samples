@@ -40,13 +40,17 @@ function download_public_file($bucketName, $objectName, $destination)
 {
     // create a storage client without authentication
     $storage = new StorageClient([
-        'shouldSignRequest' => false,
     ]);
 
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
 
-    $object->downloadToFile($destination);
+    // set `shouldSignRequest` to false to force the client to not authenticate.
+    // if you do not have any client configuration enabled (i.e. application
+    // default credentials), that option can be omitted.
+    $object->downloadToFile($destination, [
+        'shouldSignRequest' => false,
+    ]);
 
     printf(
         'Downloaded public object %s from bucket %s to %s',

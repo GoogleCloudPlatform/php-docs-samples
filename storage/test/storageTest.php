@@ -65,45 +65,51 @@ class storageTest extends TestCase
 
     public function testManageBucketAcl()
     {
+        $bucket = self::$storage->createBucket(uniqid('samples-manage-bucket-acl'));
+
         $jsonKey = CredentialsLoader::fromEnv();
-        $acl = self::$tempBucket->acl();
+        $acl = $bucket->acl();
         $entity = sprintf('user-%s', $jsonKey['client_email']);
-        $bucketUrl = sprintf('gs://%s', self::$tempBucket->name());
-
-        $output = $this->runFunctionSnippet('add_bucket_acl', [
-            self::$tempBucket->name(),
-            $entity,
-            'READER'
-        ]);
-
-        $expected = "Added $entity (READER) to $bucketUrl ACL\n";
-        $this->assertEquals($expected, $output);
-
-        $aclInfo = $acl->get(['entity' => $entity]);
-        $this->assertArrayHasKey('role', $aclInfo);
-        $this->assertEquals('READER', $aclInfo['role']);
-
-        $output = $this->runFunctionSnippet('get_bucket_acl_for_entity', [
-            self::$tempBucket->name(),
-            $entity,
-        ]);
-
-        $expected = "$entity: READER\n";
-        $this->assertEquals($expected, $output);
-
-        $output = $this->runFunctionSnippet('delete_bucket_acl', [
-            self::$tempBucket->name(),
-            $entity,
-        ]);
-
-        $expected = "Deleted $entity from $bucketUrl ACL\n";
-        $this->assertEquals($expected, $output);
+        $bucketUrl = sprintf('gs://%s', $bucket->name());
 
         try {
-            $acl->get(['entity' => $entity]);
-            $this->fail();
-        } catch (NotFoundException $e) {
-            $this->assertTrue(true);
+            $output = $this->runFunctionSnippet('add_bucket_acl', [
+                $bucket->name(),
+                $entity,
+                'READER'
+            ]);
+
+            $expected = "Added $entity (READER) to $bucketUrl ACL\n";
+            $this->assertEquals($expected, $output);
+
+            $aclInfo = $acl->get(['entity' => $entity]);
+            $this->assertArrayHasKey('role', $aclInfo);
+            $this->assertEquals('READER', $aclInfo['role']);
+
+            $output = $this->runFunctionSnippet('get_bucket_acl_for_entity', [
+                $bucket->name(),
+                $entity,
+            ]);
+
+            $expected = "$entity: READER\n";
+            $this->assertEquals($expected, $output);
+
+            $output = $this->runFunctionSnippet('delete_bucket_acl', [
+                $bucket->name(),
+                $entity,
+            ]);
+
+            $expected = "Deleted $entity from $bucketUrl ACL\n";
+            $this->assertEquals($expected, $output);
+
+            try {
+                $acl->get(['entity' => $entity]);
+                $this->fail();
+            } catch (NotFoundException $e) {
+                $this->assertTrue(true);
+            }
+        } finally {
+            $bucket->delete();
         }
     }
 
@@ -502,6 +508,19 @@ class storageTest extends TestCase
             'name' => uniqid('samples-download-public-object-'),
         ]);
 
+        $policy = $object->iam()->policy(['requestedPolicyVersion' => 3]);
+        $policy['version'] = 3;
+
+        $role = 'roles/storage.objectViewer';
+        $members = ['allUsers'];
+
+        $policy['bindings'][] = [
+            'role' => $role,
+            'members' => $members
+        ];
+
+        $object->iam()->setPolicy($policy);
+
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests/' . $object->name());
 
         $output = self::runFunctionSnippet('download_public_file', [
@@ -564,7 +583,7 @@ class storageTest extends TestCase
         $bucket->delete();
 
         $this->assertEquals([$method], $info['cors'][0]['method']);
-        $this->assertEquals([$maxAgeSeconds], $info['cors'][0]['maxAgeSeconds']);
+        $this->assertEquals($maxAgeSeconds, $info['cors'][0]['maxAgeSeconds']);
         $this->assertEquals([$responseHeader], $info['cors'][0]['responseHeader']);
 
         $this->assertEquals(
