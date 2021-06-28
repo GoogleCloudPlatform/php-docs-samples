@@ -18,10 +18,10 @@
 /functions/firebase_analytics   @schandel @samtstern @GoogleCloudPlatform/php-admins
 
 # Client library samples
-/bigtable/                @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/php-admins
-/cloud_sql/               @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/php-admins
-/datastore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
-/firestore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
+/bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
+/cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-admins
+/datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
+/firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
 /iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
 /storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
 
@@ -37,3 +37,6 @@
 /texttospeech/            @bshaffer
 /vision/                  @bshaffer
 /video/                   @bshaffer
+
+# Compute samples owned by Remik
+/compute/cloud-client/    @rsamborski

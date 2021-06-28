@@ -73,3 +73,7 @@ function set_device_state(
     print('Updated device State' . PHP_EOL);
 }
 # [END iot_set_device_state]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

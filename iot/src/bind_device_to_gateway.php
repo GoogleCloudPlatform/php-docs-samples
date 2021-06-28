@@ -23,18 +23,18 @@ use Google\Cloud\Iot\V1\DeviceManagerClient;
 /**
  * Binds a device to a gateway.
  *
- * @param string $projectId Google Cloud project ID
- * @param string $location Google Cloud region
  * @param string $registryId IOT Device Registry ID
  * @param string $deviceId the device ID to bind
  * @param string $gatewayId the ID for the gateway to bind to
+ * @param string $projectId Google Cloud project ID
+ * @param string $location Google Cloud region
  */
 function bind_device_to_gateway(
-    $projectId,
-    $location = 'us-central1',
     $registryId,
     $gatewayId,
-    $deviceId
+    $deviceId,
+    $projectId,
+    $location = 'us-central1'
 ) {
     print('Binding Device to Gateway' . PHP_EOL);
 
@@ -47,3 +47,7 @@ function bind_device_to_gateway(
     print('Device bound');
 }
 # [END iot_bind_device_to_gateway]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -28,8 +28,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) < 3 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [FAMILY_ID]" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf3';
+list($_, $projectId, $instanceId, $tableId) = $argv;
+$familyId = isset($argv[4]) ? $argv[4] : 'cf3';
 
 // [START bigtable_update_gc_rule]
 
@@ -39,13 +39,13 @@ use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'The Bigtable table ID';
 
 $tableAdminClient = new BigtableTableAdminClient();
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
 $columnFamily1 = new ColumnFamily();
 print('Updating column family cf3 GC rule...' . PHP_EOL);

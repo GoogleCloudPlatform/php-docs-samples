@@ -48,7 +48,7 @@ you just created:
 export DB_SOCKET_DIR=/path/to/the/new/directory
 ```
 
-Ues these terminal commands to initialize other environment variables as well:
+Use these terminal commands to initialize other environment variables as well:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json

@@ -28,7 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (count($argv) != 4) {
     return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
 }
-list($_, $project_id, $instance_id, $table_id) = $argv;
+list($_, $projectId, $instanceId, $tableId) = $argv;
 
 // [START bigtable_create_family_gc_max_age]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
@@ -38,13 +38,13 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Protobuf\Duration;
 
 /** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+// $projectId = 'The Google project ID';
+// $instanceId = 'The Bigtable instance ID';
+// $tableId = 'The Bigtable table ID';
 
 $tableAdminClient = new BigtableTableAdminClient();
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
 
 print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
