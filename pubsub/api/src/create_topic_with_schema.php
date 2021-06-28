@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,38 +20,41 @@
  *
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
  */
-
 namespace Google\Cloud\Samples\PubSub;
 
-# [START pubsub_set_subscription_policy]
+# [START pubsub_create_topic_with_schema]
 use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\PubSub\Schema;
 
 /**
- * Adds a user to the policy for a Pub/Sub subscription.
+ * Create a topic with a schema.
  *
- * @param string $projectId  The Google project ID.
- * @param string $subscriptionName  The Pub/Sub subscription name.
- * @param string $userEmail  The user email to add to the policy.
+ * @param string $projectId
+ * @param string $topicId
+ * @param string $schemaId
+ * @param string $encoding
  */
-function set_subscription_policy($projectId, $subscriptionName, $userEmail)
+function create_topic_with_schema($projectId, $topicId, $schemaId, $encoding)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
-    $subscription = $pubsub->subscription($subscriptionName);
-    $policy = $subscription->iam()->policy();
-    $policy['bindings'][] = [
-        'role' => 'roles/pubsub.subscriber',
-        'members' => ['user:' . $userEmail]
-    ];
-    $subscription->iam()->setPolicy($policy);
 
-    printf(
-        'User %s added to policy for %s' . PHP_EOL,
-        $userEmail,
-        $subscriptionName
-    );
+    $schema = $pubsub->schema($schemaId);
+
+    $topic = $pubsub->createTopic($topicId, [
+        'schemaSettings' => [
+            // The schema may be provided as an instance of the schema type,
+            // or by using the schema ID directly.
+            'schema' => $schema,
+            // Encoding may be either `BINARY` or `JSON`.
+            // Provide a string or a constant from Google\Cloud\PubSub\V1\Encoding.
+            'encoding' => $encoding,
+        ]
+    ]);
+
+    printf('Topic %s created', $topic->name());
 }
-# [END pubsub_set_subscription_policy]
+# [END pubsub_create_topic_with_schema]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

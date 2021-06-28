@@ -41,3 +41,6 @@ function remove_bucket_label($bucketName, $labelName)
     printf('Removed label %s from %s' . PHP_EOL, $labelName, $bucketName);
 }
 # [END storage_remove_bucket_label]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

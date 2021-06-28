@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,30 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
  */
+namespace Google\Cloud\Samples\PubSub;
 
-namespace Google\Cloud\Samples\Storage;
-
-# [START storage_delete_bucket]
-use Google\Cloud\Storage\StorageClient;
+# [START pubsub_get_schema]
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Delete a Cloud Storage Bucket.
+ * Get a schema.
  *
- * @param string $bucketName the name of the bucket to delete.
- *
- * @return void
+ * @param string $projectId
+ * @param string $schemaId
  */
-function delete_bucket($bucketName)
+function get_schema($projectId, $schemaId)
 {
-    $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
-    $bucket->delete();
-    printf('Bucket deleted: %s' . PHP_EOL, $bucket->name());
-}
-# [END storage_delete_bucket]
+    $pubsub = new PubSubClient([
+        'projectId' => $projectId,
+    ]);
 
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+    $schema = $pubsub->schema($schemaId);
+    $schema->info();
+
+    printf('Schema %s retrieved', $schema->name());
+}
+# [END pubsub_get_schema]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
