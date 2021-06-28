@@ -100,7 +100,7 @@ function get_usage_export_bucket(string $projectId)
     $projectsClient = new ProjectsClient();
     $projectResponse = $projectsClient->get($projectId);
 
-    // Construct proper values to be displayed, taking into account default values behavior.
+    // Replace the empty value returned by the API with the default value used to generate report file names.
     if ($projectResponse->hasUsageExportLocation()) {
         $responseUsageExportLocation = $projectResponse->getUsageExportLocation();
 
