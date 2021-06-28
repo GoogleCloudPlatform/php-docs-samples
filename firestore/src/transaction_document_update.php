@@ -52,5 +52,6 @@ function transaction_document_update(string $projectId): void
     printf('Ran a simple transaction to update the population field in the SF document in the cities collection.' . PHP_EOL);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
