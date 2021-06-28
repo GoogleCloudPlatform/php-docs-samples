@@ -14,9 +14,6 @@
 /functions                @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
 /run                      @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
 
-# Functions samples owned by the Firebase team
-/functions/firebase_analytics   @schandel @samtstern @GoogleCloudPlatform/php-admins
-
 # Client library samples
 /bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
 /cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-admins
