@@ -18,9 +18,7 @@
     <testsuites>
         <testsuite name="AppEngine for PHP 7.2 Symfony Framework tests">
             <directory>test</directory>
-            <exclude>
-              <directory>./vendor</directory>
-            </exclude>
+            <exclude>./vendor</exclude>
         </testsuite>
     </testsuites>
 </phpunit>

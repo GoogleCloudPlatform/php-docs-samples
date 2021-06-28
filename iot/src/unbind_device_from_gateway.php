@@ -23,18 +23,18 @@ use Google\Cloud\Iot\V1\DeviceManagerClient;
 /**
  * Unbinds a device from a gateway.
  *
- * @param string $projectId (optional) Google Cloud project ID
- * @param string $location (Optional) Google Cloud region
  * @param string $registryId IOT Device Registry ID
  * @param string $deviceId the device ID to unbind
  * @param string $gatewayId the ID for the gateway to unbind from
+ * @param string $projectId (optional) Google Cloud project ID
+ * @param string $location (Optional) Google Cloud region
  */
 function unbind_device_from_gateway(
-    $projectId,
-    $location = 'us-central1',
     $registryId,
     $gatewayId,
-    $deviceId
+    $deviceId,
+    $projectId,
+    $location = 'us-central1'
 ) {
     print('Unbinding Device from Gateway' . PHP_EOL);
 
@@ -47,3 +47,7 @@ function unbind_device_from_gateway(
     print('Device unbound');
 }
 # [END iot_unbind_device_from_gateway]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

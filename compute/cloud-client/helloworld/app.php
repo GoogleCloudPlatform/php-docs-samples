@@ -62,56 +62,56 @@ function print_message(Message $message)
         <div class="main-content">
             <h2 class="collapsible">List Instances</h2>
             <div id="listInstances" class="collapsible-content">
-                <?php foreach ($instancesClient->list_($projectId, $zoneName) as $instance): ?>
+                <?php foreach ($instancesClient->list($projectId, $zoneName) as $instance): ?>
                     <pre><?= print_message($instance) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Zones</h2>
             <div id="listZones" class="collapsible-content">
-                <?php foreach ($zonesClient->list_($projectId) as $zone): ?>
+                <?php foreach ($zonesClient->list($projectId) as $zone): ?>
                     <pre><?= print_message($zone) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Disks</h2>
             <div id="listDisks" class="collapsible-content">
-                <?php foreach ($disksClient->list_($projectId, $zoneName) as $disk): ?>
+                <?php foreach ($disksClient->list($projectId, $zoneName) as $disk): ?>
                     <pre><?= print_message($disk) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Machine Types</h2>
             <div id="listMachineTypes" class="collapsible-content">
-                <?php foreach ($machineTypesClient->list_($projectId, $zoneName) as $machineType): ?>
+                <?php foreach ($machineTypesClient->list($projectId, $zoneName) as $machineType): ?>
                     <pre><?= print_message($machineType) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Images</h2>
             <div id="listImages" class="collapsible-content">
-                <?php foreach ($imagesClient->list_($projectId) as $image): ?>
+                <?php foreach ($imagesClient->list($projectId) as $image): ?>
                     <pre><?= print_message($image) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Firewalls</h2>
             <div id="listFirewalls" class="collapsible-content">
-                <?php foreach ($firewalls = $firewallsClient->list_($projectId) as $firewall): ?>
+                <?php foreach ($firewalls = $firewallsClient->list($projectId) as $firewall): ?>
                     <pre><?= print_message($firewall) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Networks</h2>
             <div id="listNetworks" class="collapsible-content">
-                <?php foreach ($networksClient->list_($projectId) as $network): ?>
+                <?php foreach ($networksClient->list($projectId) as $network): ?>
                     <pre><?= print_message($network) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Operations</h2>
             <div id="listGlobalOperations" class="collapsible-content">
-                <?php foreach ($globalOperationsClient->list_($projectId) as $operation): ?>
+                <?php foreach ($globalOperationsClient->list($projectId) as $operation): ?>
                     <pre><?= print_message($operation) ?></pre>
                 <?php endforeach ?>
             </div>
