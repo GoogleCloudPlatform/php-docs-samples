@@ -175,7 +175,7 @@ class BucketLockTest extends TestCase
         ]);
 
         $this->assertStringContainsString(
-            "Default event-based hold is enabled for {$this->bucket->name()}",
+            "Default event-based hold was enabled for {$this->bucket->name()}",
             $output
         );
 

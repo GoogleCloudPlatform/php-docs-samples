@@ -18,7 +18,6 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-use Google\Auth\CredentialsLoader;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Core\Exception\NotFoundException;
@@ -712,6 +711,9 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Created bucket', $output);
     }
 
+    /**
+     * @group foo
+     */
     public function testObjectCsekToCmek()
     {
         $objectName = uniqid('samples-object-csek-to-cmek-');
@@ -766,7 +768,9 @@ class storageTest extends TestCase
     public function testDeleteFileArchivedGeneration()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-delete-file-archived-generation-'), [
-            'versions' => true,
+            'versioning' => [
+                'enabled' => true,
+            ],
         ]);
 
         $objectName = 'test.txt';

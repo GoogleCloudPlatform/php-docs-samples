@@ -47,12 +47,14 @@ use Google\Cloud\Storage\StorageClient;
 function object_csek_to_cmek($bucketName, $objectName, $decryptionKey, $kmsKeyName)
 {
     $storage = new StorageClient();
-    $object = $storage->bucket($bucketName)->object($objectName);
+    $bucket = $storage->bucket($bucketName);
+
+    $object = $bucket->object($objectName, [
+        'encryptionKey' => $decryptionKey,
+    ]);
 
     $object->copy($bucketName, [
-        'encryptionKey' => $decryptionKey,
         'destinationKmsKeyName' => $kmsKeyName,
-        'useCopySourceHeaders' => true,
     ]);
 
     printf(
