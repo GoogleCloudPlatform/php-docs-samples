@@ -161,7 +161,7 @@ class BucketLockTest extends TestCase
             $this->bucket->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Default event-based hold was enabled for {$this->bucket->name()}",
             $output
         );
@@ -174,7 +174,7 @@ class BucketLockTest extends TestCase
             $this->bucket->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Default event-based hold is enabled for {$this->bucket->name()}",
             $output
         );
@@ -187,7 +187,7 @@ class BucketLockTest extends TestCase
             $this->object->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Event-based hold was released for {$this->object->name()}",
             $output
         );
@@ -199,7 +199,7 @@ class BucketLockTest extends TestCase
             $this->bucket->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Default event-based hold was disabled for {$this->bucket->name()}",
             $output
         );
@@ -211,7 +211,7 @@ class BucketLockTest extends TestCase
             $this->bucket->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Default event-based hold is not enabled for {$this->bucket->name()}",
             $output
         );
@@ -228,7 +228,7 @@ class BucketLockTest extends TestCase
             $this->object->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Event-based hold was set for {$this->object->name()}",
             $output
         );
@@ -241,14 +241,13 @@ class BucketLockTest extends TestCase
             $this->object->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Event-based hold was released for {$this->object->name()}",
             $output
         );
 
         $this->object->reload();
         $this->assertFalse($this->object->info()['eventBasedHold']);
-
     }
 
     public function testEnableDisableTemporaryHold()
@@ -261,7 +260,7 @@ class BucketLockTest extends TestCase
             $this->object->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Temporary hold was set for {$this->object->name()}",
             $output
         );
@@ -274,7 +273,7 @@ class BucketLockTest extends TestCase
             $this->object->name(),
         ]);
 
-        $this->assertEquals(
+        $this->assertStringContainsString(
             "Temporary hold was released for {$this->object->name()}",
             $output
         );

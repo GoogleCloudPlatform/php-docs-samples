@@ -66,11 +66,11 @@ class storageTest extends TestCase
     public function testManageBucketAcl()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-manage-bucket-acl'));
+        $serviceAccountEmail = self::$storage->getServiceAccount();
 
-        $jsonKey = CredentialsLoader::fromEnv();
-        $acl = $bucket->acl();
-        $entity = sprintf('user-%s', $jsonKey['client_email']);
+        $entity = sprintf('user-%s', $serviceAccountEmail);
         $bucketUrl = sprintf('gs://%s', $bucket->name());
+        $acl = $bucket->acl();
 
         try {
             $output = $this->runFunctionSnippet('add_bucket_acl', [

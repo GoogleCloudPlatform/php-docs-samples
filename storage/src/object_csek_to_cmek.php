@@ -52,6 +52,7 @@ function object_csek_to_cmek($bucketName, $objectName, $decryptionKey, $kmsKeyNa
     $object->copy($bucketName, [
         'encryptionKey' => $decryptionKey,
         'destinationKmsKeyName' => $kmsKeyName,
+        'useCopySourceHeaders' => true,
     ]);
 
     printf(

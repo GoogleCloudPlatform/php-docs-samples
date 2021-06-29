@@ -35,7 +35,7 @@ class HmacTest extends TestCase
     public function setUp(): void
     {
         $this->storage = new StorageClient();
-        $this->hmacServiceAccount = self::$projectId . '@appspot.gserviceaccount.com';
+        $this->hmacServiceAccount = $this->storage->getServiceAccount();
         // Delete all HMAC keys.
         $this->deleteAllHmacKeys($this->hmacServiceAccount);
         // Create test key.
