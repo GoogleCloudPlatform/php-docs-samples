@@ -504,22 +504,15 @@ class storageTest extends TestCase
 
     public function testDownloadPublicObject()
     {
-        $object = self::$storage->bucket(self::$bucketName)->upload('test content', [
-            'name' => uniqid('samples-download-public-object-'),
+        $bucket = self::$storage->createBucket(uniqid('samples-download-public-object-'));
+
+        self::runFunctionSnippet('set_bucket_public_iam', [
+            $bucket->name(),
         ]);
 
-        $policy = $object->iam()->policy(['requestedPolicyVersion' => 3]);
-        $policy['version'] = 3;
-
-        $role = 'roles/storage.objectViewer';
-        $members = ['allUsers'];
-
-        $policy['bindings'][] = [
-            'role' => $role,
-            'members' => $members
-        ];
-
-        $object->iam()->setPolicy($policy);
+        $object = $bucket->bucket(self::$bucketName)->upload('test content', [
+            'name' => uniqid('samples-download-public-object-'),
+        ]);
 
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests/' . $object->name());
 
@@ -530,6 +523,7 @@ class storageTest extends TestCase
         ]);
 
         $object->delete();
+        $bucket->delete();
 
         $this->assertEquals(
             sprintf(

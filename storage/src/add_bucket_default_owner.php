@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  *     Example: `$bucketName = 'my-bucket';`
  * @param string $entity The entity for which to update access controls.
  *     Example: `$entity = 'user-example@domain.com';`
- * @param string $role The permissions to add for the specified entity. May
- *     be one of 'OWNER', 'READER', or 'WRITER'.
+ * @param string $role The permissions to add for the specified entity.
  *     Example: `$role = 'OWNER';`
  */
 function add_bucket_default_owner($bucketName, $entity, $role)

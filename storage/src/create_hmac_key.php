@@ -29,13 +29,13 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Create a new HMAC key.
  *
- * @param string $serviceAccountEmail Service account email to associate with the new HMAC key.
- *     Example: `$serviceAccountEmail = 'service-account@iam.gserviceaccount.com';`
  * @param string $projectId The ID of your Google Cloud Platform project.
  *     Example: `$projectId = 'my-project-id';`
+ * @param string $serviceAccountEmail Service account email to associate with the new HMAC key.
+ *     Example: `$serviceAccountEmail = 'service-account@iam.gserviceaccount.com';`
  *
  */
-function create_hmac_key($serviceAccountEmail, $projectId)
+function create_hmac_key($projectId, $serviceAccountEmail)
 {
     $storage = new StorageClient();
     // By default createHmacKey will use the projectId used by StorageClient().

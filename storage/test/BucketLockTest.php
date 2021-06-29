@@ -22,9 +22,9 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for BucketLockCommand.
+ * Unit Tests for Bucket Lock.
  */
-class BucketLockCommandTest extends TestCase
+class BucketLockTest extends TestCase
 {
     use TestTrait;
 
@@ -155,138 +155,131 @@ class BucketLockCommandTest extends TestCase
         );
     }
 
-//     public function testEnableDisableGetDefaultEventBasedHold()
-//     {
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 '--enable-default-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->bucket->reload();
+    public function testEnableDisableGetDefaultEventBasedHold()
+    {
+        $output = self::runFunctionSnippet('enable_default_event_based_hold', [
+            $this->bucket->name(),
+        ]);
 
-//         $this->assertTrue($this->bucket->info()['defaultEventBasedHold']);
+        $this->assertEquals(
+            "Default event-based hold was enabled for {$this->bucket->name()}",
+            $output
+        );
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 '--get-default-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
+        $this->bucket->reload();
 
-//         $this->uploadObject();
-//         $this->assertTrue($this->object->info()['eventBasedHold']);
+        $this->assertTrue($this->bucket->info()['defaultEventBasedHold']);
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 'object' => $this->object->name(),
-//                 '--release-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->object->reload();
-//         $this->assertFalse($this->object->info()['eventBasedHold']);
+        self::runFunctionSnippet('get_default_event_based_hold', [
+            $this->bucket->name(),
+        ]);
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 '--disable-default-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->bucket->reload();
-//         $this->assertFalse($this->bucket->info()['defaultEventBasedHold']);
+        $this->assertEquals(
+            "Default event-based hold is enabled for {$this->bucket->name()}",
+            $output
+        );
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 '--get-default-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
+        $this->uploadObject();
+        $this->assertTrue($this->object->info()['eventBasedHold']);
 
-//         $outputString = <<<EOF
-// Default event-based hold was enabled for {$this->bucket->name()}
-// Default event-based hold is enabled for {$this->bucket->name()}
-// Event-based hold was released for {$this->object->name()}
-// Default event-based hold was disabled for {$this->bucket->name()}
-// Default event-based hold is not enabled for {$this->bucket->name()}
+        self::runFunctionSnippet('release_event_based_hold', [
+            $this->bucket->name(),
+            $this->object->name(),
+        ]);
 
-// EOF;
-//         $this->expectOutputString($outputString);
-//     }
+        $this->assertEquals(
+            "Event-based hold was released for {$this->object->name()}",
+            $output
+        );
 
-//     public function testEnableDisableEventBasedHold()
-//     {
-//         $this->uploadObject();
+        $this->object->reload();
+        $this->assertFalse($this->object->info()['eventBasedHold']);
 
-//         $this->assertFalse(array_key_exists('eventBasedHold', $this->object->info()));
+        self::runFunctionSnippet('disable_default_event_based_hold', [
+            $this->bucket->name(),
+        ]);
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 'object' => $this->object->name(),
-//                 '--set-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->object->reload();
-//         $this->assertTrue($this->object->info()['eventBasedHold']);
+        $this->assertEquals(
+            "Default event-based hold was disabled for {$this->bucket->name()}",
+            $output
+        );
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 'object' => $this->object->name(),
-//                 '--release-event-based-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->object->reload();
-//         $this->assertFalse($this->object->info()['eventBasedHold']);
+        $this->bucket->reload();
+        $this->assertFalse($this->bucket->info()['defaultEventBasedHold']);
 
-//         $outputString = <<<EOF
-// Event-based hold was set for {$this->object->name()}
-// Event-based hold was released for {$this->object->name()}
+        self::runFunctionSnippet('get_default_event_based_hold', [
+            $this->bucket->name(),
+        ]);
 
-// EOF;
-//         $this->expectOutputString($outputString);
-//     }
+        $this->assertEquals(
+            "Default event-based hold is not enabled for {$this->bucket->name()}",
+            $output
+        );
+    }
 
-//     public function testEnableDisableTemporaryHold()
-//     {
-//         $this->uploadObject();
-//         $this->assertFalse(array_key_exists('temporaryHold', $this->object->info()));
+    public function testEnableDisableEventBasedHold()
+    {
+        $this->uploadObject();
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 'object' => $this->object->name(),
-//                 '--set-temporary-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->object->reload();
-//         $this->assertTrue($this->object->info()['temporaryHold']);
+        $this->assertFalse(array_key_exists('eventBasedHold', $this->object->info()));
 
-//         $this->commandTester->execute(
-//             [
-//                 'bucket' => $this->bucket->name(),
-//                 'object' => $this->object->name(),
-//                 '--release-temporary-hold' => true,
-//             ],
-//             ['interactive' => false]
-//         );
-//         $this->object->reload();
-//         $this->assertFalse($this->object->info()['temporaryHold']);
+        $output = self::runFunctionSnippet('set_event_based_hold', [
+            $this->bucket->name(),
+            $this->object->name(),
+        ]);
 
-//         $outputString = <<<EOF
-// Temporary hold was set for {$this->object->name()}
-// Temporary hold was released for {$this->object->name()}
+        $this->assertEquals(
+            "Event-based hold was set for {$this->object->name()}",
+            $output
+        );
 
-// EOF;
-//         $this->expectOutputString($outputString);
-//     }
+        $this->object->reload();
+        $this->assertTrue($this->object->info()['eventBasedHold']);
+
+        $output = self::runFunctionSnippet('release_event_based_hold', [
+            $this->bucket->name(),
+            $this->object->name(),
+        ]);
+
+        $this->assertEquals(
+            "Event-based hold was released for {$this->object->name()}",
+            $output
+        );
+
+        $this->object->reload();
+        $this->assertFalse($this->object->info()['eventBasedHold']);
+
+    }
+
+    public function testEnableDisableTemporaryHold()
+    {
+        $this->uploadObject();
+        $this->assertFalse(array_key_exists('temporaryHold', $this->object->info()));
+
+        $output = self::runFunctionSnippet('set_temporary_hold', [
+            $this->bucket->name(),
+            $this->object->name(),
+        ]);
+
+        $this->assertEquals(
+            "Temporary hold was set for {$this->object->name()}",
+            $output
+        );
+
+        $this->object->reload();
+        $this->assertTrue($this->object->info()['temporaryHold']);
+
+        $output = self::runFunctionSnippet('release_temporary_hold', [
+            $this->bucket->name(),
+            $this->object->name(),
+        ]);
+
+        $this->assertEquals(
+            "Temporary hold was released for {$this->object->name()}",
+            $output
+        );
+
+        $this->object->reload();
+        $this->assertFalse($this->object->info()['temporaryHold']);
+    }
 }

@@ -35,8 +35,7 @@ use Google\Cloud\Storage\StorageClient;
  *     Example: `$objectName = 'my-object';`
  * @param string $entity The entity for which to update access controls.
  *     Example: `$entity = 'user-example@domain.com';`
- * @param string $role The permissions to add for the specified entity. May
- *     be one of 'OWNER', 'READER', or 'WRITER'.
+ * @param string $role The permissions to add for the specified entity.
  *     Example: `$role = 'OWNER';`
  */
 function add_object_acl($bucketName, $objectName, $entity, $role)
