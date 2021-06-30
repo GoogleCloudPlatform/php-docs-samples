@@ -30,12 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Make an object publically accessible.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  */
 function make_public($bucketName, $objectName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
@@ -43,6 +44,7 @@ function make_public($bucketName, $objectName)
     printf('gs://%s/%s is now public' . PHP_EOL, $bucketName, $objectName);
 }
 # [END storage_make_public]
+
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

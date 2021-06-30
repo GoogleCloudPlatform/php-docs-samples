@@ -30,12 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Delete an object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  */
 function delete_object($bucketName, $objectName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

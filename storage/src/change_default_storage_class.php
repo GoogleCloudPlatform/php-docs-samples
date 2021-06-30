@@ -30,10 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Change the default storage class for the given bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  */
 function change_default_storage_class($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

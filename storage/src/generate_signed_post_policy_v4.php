@@ -30,12 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Generates a v4 POST Policy to be used in an HTML form and echo's form.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  */
 function generate_signed_post_policy_v4($bucketName, $objectName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
@@ -61,6 +62,7 @@ function generate_signed_post_policy_v4($bucketName, $objectName)
     echo $output;
 }
 # [END storage_generate_signed_post_policy_v4]
+
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

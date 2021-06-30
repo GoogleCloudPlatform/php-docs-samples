@@ -30,14 +30,15 @@ use Google\Cloud\Storage\StorageClient;
  * Adds or updates a bucket label.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $labelName The name of the label to add.
- *     Example: `$labelName = 'label-key-to-add';`
  * @param string $labelValue The value of the label to add.
- *     Example: `$labelValue = 'label-value-to-add';`
  */
 function add_bucket_label($bucketName, $labelName, $labelValue)
 {
+    // $bucketName = 'my-bucket';
+    // $labelName = 'label-key-to-add';
+    // $labelValue = 'label-value-to-add';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $newLabels = [$labelName => $labelValue];

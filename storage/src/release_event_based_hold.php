@@ -30,12 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Releases an event-based hold for an object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  */
 function release_event_based_hold($bucketName, $objectName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
@@ -43,6 +44,7 @@ function release_event_based_hold($bucketName, $objectName)
     printf('Event-based hold was released for %s' . PHP_EOL, $objectName);
 }
 # [END storage_release_event_based_hold]
+
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

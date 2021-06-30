@@ -30,17 +30,12 @@ use Google\Cloud\Storage\StorageClient;
  * Change the encryption key used to store an existing object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  * @param string $oldBase64EncryptionKey The Base64 encoded AES-256 encryption
  *     key originally used to encrypt the object. See the documentation on
  *     Customer-Supplied Encryption keys for more info:
  *     https://cloud.google.com/storage/docs/encryption/using-customer-supplied-keys
- *
- *     Example: `$oldbase64EncryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';`
  * @param string $newBase64EncryptionKey The new base64 encoded encryption key.
- *     Example: `$newBase64EncryptionKey = '0mMWhFvQOdS4AmxRpo8SJxXn5MjFhbz7DkKBUdUIef8=';`
  */
 function rotate_encryption_key(
     $bucketName,
@@ -48,6 +43,11 @@ function rotate_encryption_key(
     $oldBase64EncryptionKey,
     $newBase64EncryptionKey
 ) {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $oldbase64EncryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';
+    // $newBase64EncryptionKey = '0mMWhFvQOdS4AmxRpo8SJxXn5MjFhbz7DkKBUdUIef8=';
+
     $storage = new StorageClient();
     $object = $storage->bucket($bucketName)->object($objectName);
 

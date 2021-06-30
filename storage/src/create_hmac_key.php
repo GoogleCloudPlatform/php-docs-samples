@@ -30,13 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Create a new HMAC key.
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
- *     Example: `$projectId = 'my-project-id';`
  * @param string $serviceAccountEmail Service account email to associate with the new HMAC key.
- *     Example: `$serviceAccountEmail = 'service-account@iam.gserviceaccount.com';`
- *
  */
 function create_hmac_key($projectId, $serviceAccountEmail)
 {
+    // $projectId = 'my-project-id';
+    // $serviceAccountEmail = 'service-account@iam.gserviceaccount.com';
+
     $storage = new StorageClient();
     // By default createHmacKey will use the projectId used by StorageClient().
     $hmacKeyCreated = $storage->createHmacKey($serviceAccountEmail, ['projectId' => $projectId]);
@@ -46,6 +46,7 @@ function create_hmac_key($projectId, $serviceAccountEmail)
     printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKeyCreated->hmacKey()->info(), true));
 }
 # [END storage_create_hmac_key]
+
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

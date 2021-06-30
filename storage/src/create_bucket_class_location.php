@@ -30,10 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Create a new bucket with a custom default storage class and location.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  */
 function create_bucket_class_location($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $storageClass = 'COLDLINE';
     $location = 'ASIA';

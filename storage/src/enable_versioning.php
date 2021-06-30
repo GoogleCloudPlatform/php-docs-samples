@@ -30,10 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Enable versioning on the specified bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  */
 function enable_versioning($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([

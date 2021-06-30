@@ -30,10 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Remove the CORS configuration from the specified bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  */
 function remove_cors_configuration($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

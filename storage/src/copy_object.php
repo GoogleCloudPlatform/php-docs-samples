@@ -30,16 +30,17 @@ use Google\Cloud\Storage\StorageClient;
  * Copy an object to a new name and/or bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  * @param string $newBucketName The destination bucket name.
- *     Example: `$newBucketName = 'my-other-bucket';`
  * @param string $newObjectName The destination object name.
- *     Example: `$newObjectName = 'my-other-object';`
  */
 function copy_object($bucketName, $objectName, $newBucketName, $newObjectName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $newBucketName = 'my-other-bucket';
+    // $newObjectName = 'my-other-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

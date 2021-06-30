@@ -30,12 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Generate a v4 signed URL for uploading an object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  */
 function generate_upload_signed_url_v4($bucketName, $objectName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
@@ -56,6 +57,7 @@ function generate_upload_signed_url_v4($bucketName, $objectName)
         '--upload-file my-file ' . $url . PHP_EOL);
 }
 # [END storage_generate_upload_signed_url_v4]
+
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

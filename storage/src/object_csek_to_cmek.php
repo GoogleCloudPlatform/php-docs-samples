@@ -31,21 +31,20 @@ use Google\Cloud\Storage\StorageClient;
  * Encryption Key.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  * @param string $decryptionKey The Base64 encoded decryption key, which should
  *     be the same key originally used to encrypt the object.
- *
- *     Example: `$decryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';`
  * @param string $kmsKeyName The name of the KMS key to manage this object.
  *     Key names are provided in the following format:
  *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
- *
- *     Example: `$kmsKeyName = "";`
  */
 function object_csek_to_cmek($bucketName, $objectName, $decryptionKey, $kmsKeyName)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $decryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';
+    // $kmsKeyName = "";
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

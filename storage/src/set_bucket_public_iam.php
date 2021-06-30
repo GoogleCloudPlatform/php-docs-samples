@@ -30,10 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Update the specified bucket's IAM configuration to make it publicly accessible.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  */
 function set_bucket_public_iam($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

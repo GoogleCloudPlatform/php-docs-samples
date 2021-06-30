@@ -30,14 +30,15 @@ use Google\Cloud\Storage\StorageClient;
  * Print an entity's role for an object's ACL.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  * @param string $entity The entity for which to update access controls.
- *     Example: `$entity = 'user-example@domain.com';`
  */
 function get_object_acl_for_entity($bucketName, $objectName, $entity)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
@@ -46,6 +47,7 @@ function get_object_acl_for_entity($bucketName, $objectName, $entity)
     printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
 }
 # [END get_object_acl_for_entity]
+
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

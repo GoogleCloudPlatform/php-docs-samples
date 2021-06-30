@@ -30,12 +30,13 @@ use Google\Cloud\Storage\StorageClient;
  * Activate an HMAC key.
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
- *     Example: `$projectId = 'my-project-id';`
  * @param string $accessId Access ID for an inactive HMAC key.
- *     Example: `$accessId = 'GOOG0234230X00';`
  */
 function activate_hmac_key($projectId, $accessId)
 {
+    // $projectId = 'my-project-id';
+    // $accessId = 'GOOG0234230X00';
+
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().
     $hmacKey = $storage->hmacKey($accessId, $projectId);

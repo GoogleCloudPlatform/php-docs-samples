@@ -729,7 +729,7 @@ class storageTest extends TestCase
         $info = $obj2->reload();
         $obj2->delete();
 
-        $this->assertEquals($this->keyName(), $info['kmsKeyName']);
+        $this->assertStringContainsString($this->keyName(), $info['kmsKeyName']);
         $this->assertEquals(
             sprintf(
                 'Object %s in bucket %s is now managed by the KMS key %s instead of a customer-supplied encryption key',

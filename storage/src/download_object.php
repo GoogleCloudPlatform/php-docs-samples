@@ -30,14 +30,15 @@ use Google\Cloud\Storage\StorageClient;
  * Download an object from Cloud Storage and save it as a local file.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- *     Example: `$bucketName = 'my-bucket';`
  * @param string $objectName The name of your Cloud Storage object.
- *     Example: `$objectName = 'my-object';`
  * @param string $destination The local destination to save the object.
- *     Example: `$destination = '/path/to/your/file';`
  */
 function download_object($bucketName, $objectName, $destination)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $destination = '/path/to/your/file';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
