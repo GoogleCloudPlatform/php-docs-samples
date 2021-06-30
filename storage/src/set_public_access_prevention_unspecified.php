@@ -30,6 +30,8 @@ use Google\Cloud\Storage\StorageClient;
  * Set the bucket Public Access Prevention to unspecified.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ *
  */
 function set_public_access_prevention_unspecified($bucketName)
 {
@@ -48,3 +50,7 @@ function set_public_access_prevention_unspecified($bucketName)
     );
 }
 # [END storage_set_public_access_prevention_unspecified]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

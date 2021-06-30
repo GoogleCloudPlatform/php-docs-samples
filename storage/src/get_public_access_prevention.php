@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function get_bucket_public_access_prevention($bucketName)
+function get_public_access_prevention($bucketName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -45,3 +45,7 @@ function get_bucket_public_access_prevention($bucketName)
     );
 }
 # [END storage_get_public_access_prevention]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
