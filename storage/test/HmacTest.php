@@ -22,7 +22,7 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for managing HMAC keys.
+ * Unit Tests for HMAC.
  */
 class HmacTest extends TestCase
 {
@@ -63,7 +63,7 @@ class HmacTest extends TestCase
     public function testHmacKeyList()
     {
         $output = self::runFunctionSnippet('list_hmac_keys', [
-            self::$projectId
+            self::$projectId,
         ]);
 
         $this->assertStringContainsString('HMAC Key\'s:', $output);
@@ -99,11 +99,13 @@ class HmacTest extends TestCase
         $this->assertStringContainsString('The HMAC key is now inactive', $output);
     }
 
-    /**
-     * @depends testHmacKeyDeactivate
-     */
     public function testHmacKeyActivate()
     {
+        self::runFunctionSnippet('deactivate_hmac_key', [
+            self::$projectId,
+            $this->accessId,
+        ]);
+
         $output = self::runFunctionSnippet('activate_hmac_key', [
             self::$projectId,
             $this->accessId,
