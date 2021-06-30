@@ -103,10 +103,12 @@ class instancesTest extends TestCase
 
     public function testSetUsageExportBucketDefaultPrefix()
     {
-        $output = $this->runFunctionSnippet('set_usage_export_bucket', [
-            'projectId' => self::$projectId,
-            'bucketName' => self::$bucketName
-        ]);
+        // We include files directly as we need access to returned objects
+        require_once "src/set_usage_export_bucket.php";
+        require_once "src/get_usage_export_bucket.php";
+        require_once "src/disable_usage_export_bucket.php";
+
+        // Check default value behaviour for setter
         ob_start();
         $operation = set_usage_export_bucket(self::$projectId, self::$bucketName);
         $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
@@ -118,6 +120,7 @@ class instancesTest extends TestCase
             $operationClient->wait($operation->getName(), self::$projectId);
         }
 
+        // Check default value behaviour for getter
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
@@ -134,15 +137,22 @@ class instancesTest extends TestCase
             $operationClient->wait($operation->getName(), self::$projectId);
         }
 
+        // Make sure the export bucket was properly disabled
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertNull($usageExportLocation);
     }
 
     public function testSetUsageExportBucketCustomPrefix()
     {
+        // We include files directly as we need access to returned objects
+        require_once "src/set_usage_export_bucket.php";
+        require_once "src/get_usage_export_bucket.php";
+        require_once "src/disable_usage_export_bucket.php";
+
         // Set custom prefix
         $customPrefix = "my-custom-prefix";
 
+        // Check user value behaviour for setter
         ob_start();
         $operation = set_usage_export_bucket(self::$projectId, self::$bucketName, $customPrefix);
         $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
@@ -154,6 +164,7 @@ class instancesTest extends TestCase
             $operationClient->wait($operation->getName(), self::$projectId);
         }
 
+        // Check user value behaviour for getter
         ob_start();
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
@@ -170,6 +181,7 @@ class instancesTest extends TestCase
             $operationClient->wait($operation->getName(), self::$projectId);
         }
 
+        // Make sure the export bucket was properly disabled
         $usageExportLocation = get_usage_export_bucket(self::$projectId);
         $this->assertNull($usageExportLocation);
     }
