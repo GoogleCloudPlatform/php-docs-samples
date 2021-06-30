@@ -29,11 +29,10 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete an HMAC key.
  *
- * @param string $accessId Access ID for an HMAC key.
  * @param string $projectId Google Cloud Project ID.
- *
+ * @param string $accessId Access ID for an HMAC key.
  */
-function delete_hmac_key($accessId, $projectId)
+function delete_hmac_key($projectId, $accessId)
 {
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().

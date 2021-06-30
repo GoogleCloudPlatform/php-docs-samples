@@ -43,3 +43,6 @@ function list_objects_with_prefix($bucketName, $prefix)
     }
 }
 # [END storage_list_files_with_prefix]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

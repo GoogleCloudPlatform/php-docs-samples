@@ -44,3 +44,6 @@ function delete_object($bucketName, $objectName, $options = [])
     printf('Deleted gs://%s/%s' . PHP_EOL, $bucketName, $objectName);
 }
 # [END storage_delete_file]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

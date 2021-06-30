@@ -42,3 +42,6 @@ function list_objects($bucketName)
     }
 }
 # [END storage_list_files]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

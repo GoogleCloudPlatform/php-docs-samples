@@ -48,3 +48,6 @@ function add_object_acl($bucketName, $objectName, $entity, $role, $options = [])
     printf('Added %s (%s) to gs://%s/%s ACL' . PHP_EOL, $entity, $role, $bucketName, $objectName);
 }
 # [END storage_add_file_owner]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

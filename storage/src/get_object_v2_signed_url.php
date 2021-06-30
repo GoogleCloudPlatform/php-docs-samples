@@ -45,3 +45,6 @@ function get_object_v2_signed_url($bucketName, $objectName)
     printf('The signed url for %s is %s\n', $objectName, $url);
 }
 # [END storage_generate_signed_url]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

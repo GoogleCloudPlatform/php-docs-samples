@@ -17,16 +17,15 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage\IamCommand;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for IamCommand.
+ * Unit Tests for storage IAM.
  */
-class IamCommandTest extends TestCase
+class IamTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;
@@ -35,11 +34,10 @@ class IamCommandTest extends TestCase
     protected static $user;
     protected static $bucket;
     private static $role = 'roles/storage.objectViewer';
-    private static $commandFile = __DIR__ . '/../storage.php';
 
     public static function setUpBeforeClass(): void
     {
-        self::$storage = new StorageClient();
+        self::$storage = new StorageClient(['projectId' => self::$projectId]);
         self::$user = self::requireEnv('GOOGLE_IAM_USER');
         self::$bucket = self::requireEnv('GOOGLE_STORAGE_BUCKET');
         self::setUpIam();
@@ -75,15 +73,17 @@ class IamCommandTest extends TestCase
 
     public function testAddBucketIamMember()
     {
-        $output = $this->runCommand('iam', [
-            'bucket' => self::$bucket,
-            '--role' => self::$role,
-            '--add-member' => [self::$user],
+        $output = self::runFunctionSnippet('add_bucket_iam_member', [
+            self::$bucket,
+            self::$role,
+            [self::$user],
         ]);
-
         $outputString = sprintf(
-            'Added the following member(s) to role %s for bucket %s
-    %s', self::$role, self::$bucket, self::$user);
+            "Added the following member(s) to role %s for bucket %s\n    %s",
+            self::$role,
+            self::$bucket,
+            self::$user
+        );
 
         $this->assertStringContainsString($outputString, $output);
 
@@ -106,13 +106,13 @@ class IamCommandTest extends TestCase
         $description = 'this condition is always true';
         $expression = '1 < 2';
 
-        $output = $this->runCommand('iam', [
-            'bucket' => self::$bucket,
-            '--role' => self::$role,
-            '--add-member' => [self::$user],
-            '--title' => $title,
-            '--description' => $description,
-            '--expression' => $expression,
+        $output = self::runFunctionSnippet('add_bucket_conditional_iam_binding', [
+            self::$bucket,
+            self::$role,
+            [self::$user],
+            $title,
+            $description,
+            $expression,
         ]);
 
         $outputString = sprintf(
@@ -152,7 +152,9 @@ with condition:
      */
     public function testListIamMembers()
     {
-        $output = $this->runCommand('iam', ['bucket' => self::$bucket]);
+        $output = self::runFunctionSnippet('view_bucket_iam_members', [
+            self::$bucket,
+        ]);
 
         $this->assertStringContainsString(
             'Printing Bucket IAM members for Bucket: ' . self::$bucket,
@@ -186,10 +188,10 @@ Members:
      */
     public function testRemoveBucketIamMember()
     {
-        $output = $this->runCommand('iam', [
-            'bucket' => self::$bucket,
-            '--role' => self::$role,
-            '--remove-member' => self::$user,
+        $output = self::runFunctionSnippet('remove_bucket_iam_member', [
+            self::$bucket,
+            self::$role,
+            self::$user,
         ]);
 
         $expected = sprintf(
@@ -226,13 +228,13 @@ Members:
         $title = 'always true';
         $description = 'this condition is always true';
         $expression = '1 < 2';
-        $output = $this->runCommand('iam', [
-            'bucket' => self::$bucket,
-            '--role' => self::$role,
-            '--remove-binding' => true,
-            '--title' => $title,
-            '--description' => $description,
-            '--expression' => $expression
+
+        $output = self::runFunctionSnippet('remove_bucket_conditional_iam_binding', [
+            self::$bucket,
+            self::$role,
+            $title,
+            $description,
+            $expression
         ]);
 
         $this->assertStringContainsString(

@@ -18,23 +18,22 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\Storage\StorageClient;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for ObjectSignedUrl.
+ *
+ * @group storage-signedurl
  */
 class ObjectSignedUrlTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
     private static $storage;
     private static $bucketName;
     private static $objectName;
-    private static $commandFile = __DIR__ . '/../storage.php';
 
     /** @beforeClass */
     public static function setUpObject()
@@ -52,9 +51,9 @@ class ObjectSignedUrlTest extends TestCase
 
     public function testGetV2SignedUrl()
     {
-        $output = $this->runCommand('get-object-v2-signed-url', [
-            'bucket' => self::$bucketName,
-            'object' => self::$objectName,
+        $output = self::runFunctionSnippet('get_object_v2_signed_url', [
+            self::$bucketName,
+            self::$objectName,
         ]);
 
         $this->assertStringContainsString("The signed url for " . self::$objectName . " is", $output);
@@ -62,9 +61,9 @@ class ObjectSignedUrlTest extends TestCase
 
     public function testGetV4SignedUrl()
     {
-        $output = $this->runCommand('get-object-v4-signed-url', [
-            'bucket' => self::$bucketName,
-            'object' => self::$objectName,
+        $output = self::runFunctionSnippet('get_object_v4_signed_url', [
+            self::$bucketName,
+            self::$objectName,
         ]);
 
         $this->assertStringContainsString('Generated GET signed URL:', $output);
@@ -74,9 +73,9 @@ class ObjectSignedUrlTest extends TestCase
     {
         $uploadObjectName = sprintf('test-upload-object-%s', time());
 
-        $output = $this->runCommand('get-object-v4-upload-signed-url', [
-            'bucket' => self::$bucketName,
-            'object' => $uploadObjectName,
+        $output = self::runFunctionSnippet('upload_object_v4_signed_url', [
+            self::$bucketName,
+            self::$objectName,
         ]);
 
         $this->assertStringContainsString('Generated PUT signed URL:', $output);

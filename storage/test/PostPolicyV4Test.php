@@ -24,8 +24,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for GenerateV4PostPolicy.
+ *
+ * @group storage
+ * @group storage-postpolicyv4
  */
-class GenerateV4PostPolicy extends TestCase
+class PostPolicyV4Test extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;

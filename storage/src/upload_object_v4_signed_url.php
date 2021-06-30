@@ -56,3 +56,6 @@ function upload_object_v4_signed_url($bucketName, $objectName)
         '--upload-file my-file ' . $url . PHP_EOL);
 }
 # [END storage_generate_upload_signed_url_v4]
+
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

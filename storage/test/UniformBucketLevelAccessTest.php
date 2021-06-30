@@ -22,9 +22,9 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for IamConfiguration.
+ * Unit Tests for uniform bucket level access.
  */
-class IamConfigurationTest extends TestCase
+class UniformBucketLevelAccessTest extends TestCase
 {
     use TestTrait;
 
