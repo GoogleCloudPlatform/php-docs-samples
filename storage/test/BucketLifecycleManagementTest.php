@@ -51,7 +51,6 @@ class BucketLifecycleManagementTest extends TestCase
     {
         $bucketName = $this->bucket->name();
         $output = $this->runFunctionSnippet('enable_bucket_lifecycle_management', [
-            self::$projectId,
             $bucketName,
         ]);
         $match = "Lifecycle management is enabled for bucket $bucketName and the rules are:";
@@ -74,7 +73,6 @@ class BucketLifecycleManagementTest extends TestCase
     {
         $bucketName = $this->bucket->name();
         $output = $this->runFunctionSnippet('disable_bucket_lifecycle_management', [
-            self::$projectId,
             $bucketName,
         ]);
 

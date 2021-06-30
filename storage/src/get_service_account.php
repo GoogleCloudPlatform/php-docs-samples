@@ -27,7 +27,10 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * @param string $projectId The project ID
+ * Get the current service account email.
+ *
+ * @param string $projectId The ID of your Google Cloud Platform project.
+ *     Example: `$projectId = 'my-project-id';`
  */
 function get_service_account($projectId)
 {
@@ -41,5 +44,6 @@ function get_service_account($projectId)
 }
 # [END storage_get_service_account]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

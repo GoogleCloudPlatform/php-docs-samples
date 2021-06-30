@@ -28,11 +28,16 @@ use Google\Auth\CredentialsLoader;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $objectName the name of the Cloud Storage object.
- * @param string $destFilePath the path to which the file should be downloaded.
+ * Download a public file using anonymous credentials.
+ *
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $objectName The name of your Cloud Storage object.
+ *     Example: `$objectName = 'my-object';`
+ * @param string $destination The local destination to save the object.
+ *     Example: `$destination = '/path/to/your/file';`
  */
-function download_public_file($bucketName, $objectName, $destFilePath)
+function download_public_file($bucketName, $objectName, $destination)
 {
     // create a storage client without authentication
     $storage = new StorageClient([
@@ -42,16 +47,17 @@ function download_public_file($bucketName, $objectName, $destFilePath)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
 
-    $object->downloadToFile($destFilePath);
+    $object->downloadToFile($destination);
 
     printf(
         'Downloaded public object %s from bucket %s to %s',
         $objectName,
         $bucketName,
-        $destFilePath
+        $destination
     );
 }
 # [END storage_download_public_file]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -29,17 +29,17 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enable a bucket's requesterpays metadata.
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $bucketName Name of your Google Cloud Storage bucket.
- * @param string $kmsKeyName KMS key ID to use as the default KMS key.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $kmsKeyName The KMS key to use as the default KMS key.
+ *     Key names are provided in the following format:
+ *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  *
- * @return void
+ *     Example: `$kmsKeyName = "";`
  */
-function enable_default_kms_key($projectId, $bucketName, $kmsKeyName)
+function enable_default_kms_key($bucketName, $kmsKeyName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId
-    ]);
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'encryption' => [

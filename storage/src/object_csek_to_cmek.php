@@ -27,11 +27,22 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
+ * Migrate an object from a Customer-Specified Encryption Key to a Customer-Managed
+ * Encryption Key.
+ *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $objectName The name of the Cloud Storage object.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $objectName The name of your Cloud Storage object.
+ *     Example: `$objectName = 'my-object';`
  * @param string $decryptionKey The Base64 encoded decryption key, which should
  *     be the same key originally used to encrypt the object.
+ *
+ *     Example: `$decryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';`
  * @param string $kmsKeyName The name of the KMS key to manage this object.
+ *     Key names are provided in the following format:
+ *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
+ *
+ *     Example: `$kmsKeyName = "";`
  */
 function object_csek_to_cmek($bucketName, $objectName, $decryptionKey, $kmsKeyName)
 {
@@ -52,5 +63,6 @@ function object_csek_to_cmek($bucketName, $objectName, $decryptionKey, $kmsKeyNa
 }
 # [END storage_object_csek_to_cmek]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

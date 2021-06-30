@@ -29,9 +29,8 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Print all entities and roles for a bucket's default ACL.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- *
- * @return Google\Cloud\Storage\Acl the ACL for the Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  */
 function get_bucket_default_acl($bucketName)
 {

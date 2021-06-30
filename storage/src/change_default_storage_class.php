@@ -27,7 +27,10 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
+ * Change the default storage class for the given bucket.
+ *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  */
 function change_default_storage_class($bucketName)
 {
@@ -48,5 +51,6 @@ function change_default_storage_class($bucketName)
 }
 # [END storage_change_default_storage_class]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

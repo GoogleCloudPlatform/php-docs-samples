@@ -29,12 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Adds a new member / role IAM pair to a given Cloud Storage bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $role the role you want to add a given member to.
- * @param string[] $members the member(s) you want to give the new role for the Cloud
- * Storage bucket.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $role The role to which the given member should be added.
+ *     Example: `$role = 'roles/storage.objectViewer';`
+ * @param string[] $members The member(s) to be added to the role.
+ *     Example: `$members = ['group:example@google.com'];`
  */
 function add_bucket_iam_member($bucketName, $role, $members)
 {
@@ -57,5 +57,6 @@ function add_bucket_iam_member($bucketName, $role, $members)
     }
 }
 # [END storage_add_bucket_iam_member]
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

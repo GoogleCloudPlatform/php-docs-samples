@@ -27,16 +27,24 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $firstObjectName The ID of the first GCS object to compose
- * @param string $secondObjectName The ID of the second GCS object to compose
- * @param string $targetObjectName The ID of the object to be created
+ * Compose two objects into a single target object.
+ *
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $firstObjectName The name of the first GCS object to compose.
+ *     Example: `$firstObjectName = 'my-object-1';`
+ * @param string $secondObjectName The name of the second GCS object to compose.
+ *     Example: `$secondObjectName = 'my-object-2';`
+ * @param string $targetObjectName The name of the object to be created.
+ *     Example: `$targetObjectName = 'composed-my-object-1-my-object-2';`
  */
 function compose_file($bucketName, $firstObjectName, $secondObjectName, $targetObjectName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
+    // In this example, we are composing only two objects, but Cloud Storage supports
+    // composition of up to 32 objects.
     $objectsToCompose = [$firstObjectName, $secondObjectName];
 
     $targetObject = $bucket->compose($objectsToCompose, $targetObjectName, [
@@ -56,5 +64,6 @@ function compose_file($bucketName, $firstObjectName, $secondObjectName, $targetO
 }
 # [END storage_compose_file]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

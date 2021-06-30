@@ -29,8 +29,10 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete an HMAC key.
  *
- * @param string $projectId Google Cloud Project ID.
+ * @param string $projectId The ID of your Google Cloud Platform project.
+ *     Example: `$projectId = 'my-project-id';`
  * @param string $accessId Access ID for an HMAC key.
+ *     Example: `$accessId = 'GOOG0234230X00';`
  */
 function delete_hmac_key($projectId, $accessId)
 {
@@ -45,5 +47,6 @@ function delete_hmac_key($projectId, $accessId)
     );
 }
 # [END storage_delete_hmac_key]
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

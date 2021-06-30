@@ -64,7 +64,6 @@ class BucketLockCommandTest extends TestCase
     {
         $retentionPeriod = 5;
         $output = self::runFunctionSnippet('set_retention_policy', [
-            self::$projectId,
             self::$bucketName,
             $retentionPeriod,
         ]);
@@ -83,7 +82,6 @@ class BucketLockCommandTest extends TestCase
         $this->assertEquals($this->bucket->info()['retentionPolicy']['retentionPeriod'], $retentionPeriod);
 
         $output = self::runFunctionSnippet('get_retention_policy', [
-            self::$projectId,
             self::$bucketName,
         ]);
 
@@ -103,7 +101,6 @@ class BucketLockCommandTest extends TestCase
         $this->assertNotNull($this->object->info()['retentionExpirationTime']);
 
         $output = self::runFunctionSnippet('remove_retention_policy', [
-            self::$projectId,
             self::$bucketName,
         ]);
 
@@ -123,7 +120,6 @@ class BucketLockCommandTest extends TestCase
     {
         $retentionPeriod = 5;
         $output = self::runFunctionSnippet('set_retention_policy', [
-            self::$projectId,
             self::$bucketName,
             $retentionPeriod,
         ]);
@@ -141,7 +137,6 @@ class BucketLockCommandTest extends TestCase
         ));
 
         $output = self::runFunctionSnippet('lock_retention_policy', [
-            self::$projectId,
             self::$bucketName,
         ]);
 
@@ -151,7 +146,6 @@ class BucketLockCommandTest extends TestCase
         );
 
         $output = self::runFunctionSnippet('get_retention_policy', [
-            self::$projectId,
             self::$bucketName,
         ]);
 

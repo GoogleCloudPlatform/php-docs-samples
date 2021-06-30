@@ -40,7 +40,6 @@ class RequesterPaysTest extends TestCase
     public function testEnableRequesterPays()
     {
         $output = self::runFunctionSnippet('enable_requester_pays', [
-            self::$projectId,
             self::$bucketName,
         ]);
 
@@ -51,7 +50,6 @@ class RequesterPaysTest extends TestCase
     public function testDisableRequesterPays()
     {
         $output = self::runFunctionSnippet('disable_requester_pays', [
-            self::$projectId,
             self::$bucketName,
         ]);
 
@@ -62,7 +60,6 @@ class RequesterPaysTest extends TestCase
     public function testGetRequesterPaysStatus()
     {
         $output = self::runFunctionSnippet('get_requester_pays_status', [
-            self::$projectId,
             self::$bucketName,
         ]);
 

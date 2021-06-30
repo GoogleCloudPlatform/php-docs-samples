@@ -29,23 +29,24 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete an entity from an object's ACL.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $objectName the name of your Cloud Storage object.
- * @param string $entity The entity to update access controls for.
- * @param array $options
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $objectName The name of your Cloud Storage object.
+ *     Example: `$objectName = 'my-object';`
+ * @param string $entity The entity for which to update access controls.
+ *     Example: `$entity = 'user-example@domain.com';`
  */
-function delete_object_acl($bucketName, $objectName, $entity, $options = [])
+function delete_object_acl($bucketName, $objectName, $entity)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $acl = $object->acl();
-    $acl->delete($entity, $options);
+    $acl->delete($entity);
     printf('Deleted %s from gs://%s/%s ACL' . PHP_EOL, $entity, $bucketName, $objectName);
 }
 # [END storage_remove_file_owner]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

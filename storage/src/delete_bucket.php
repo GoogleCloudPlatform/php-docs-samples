@@ -29,9 +29,8 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete a Cloud Storage Bucket.
  *
- * @param string $bucketName the name of the bucket to delete.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  */
 function delete_bucket($bucketName)
 {

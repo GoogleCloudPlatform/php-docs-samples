@@ -27,12 +27,20 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
+ * Update the CORS configuration of a bucket.
+ *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  * @param string $method The HTTP method for the CORS config.
- * @param string $origin The origin for this CORS config to allow requests from
- * @param string $responseHeader The response header to share across origins
+ *     Example: `$method = 'GET';`
+ * @param string $origin The origin from which the CORS config will allow requests.
+ *     Example: `$origin = 'http://example.appspot.com';`
+ * @param string $responseHeader The response header to share across origins.
+ *     Example: `$responseHeader = 'Content-Type';`
  * @param int $maxAgeSeconds The maximum amount of time the browser can make
- *     requests before it must repeat preflighted requests
+ *     requests before it must repeat preflighted requests.
+ *
+ *     Example: `$maxAgeSeconds = 3600;`
  */
 function cors_configuration($bucketName, $method, $origin, $responseHeader, $maxAgeSeconds)
 {
@@ -60,5 +68,6 @@ function cors_configuration($bucketName, $method, $origin, $responseHeader, $max
 }
 # [END storage_cors_configuration]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

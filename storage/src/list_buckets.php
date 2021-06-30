@@ -28,8 +28,6 @@ use Google\Cloud\Storage\StorageClient;
 
 /**
  * List all Cloud Storage buckets for the current project.
- *
- * @return void
  */
 function list_buckets()
 {

@@ -27,11 +27,18 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * Update the given bucket's website configuration.
+ *
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  * @param string $indexPageObject the name of an object in the bucket to use as
  *     an index page for a static website bucket.
+ *
+ *     Example: `$indexPageObject = 'index.html';`
  * @param string $notFoundPageObject the name of an object in the bucket to use
  *     as the 404 Not Found page.
+ *
+ *     Example: `$notFoundPageObject = '404.html';`
  */
 function define_bucket_website_configuration($bucketName, $indexPageObject, $notFoundPageObject)
 {
@@ -54,5 +61,6 @@ function define_bucket_website_configuration($bucketName, $indexPageObject, $not
 }
 # [END storage_define_bucket_website_configuration]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

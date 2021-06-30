@@ -408,7 +408,6 @@ class storageTest extends TestCase
         $kmsEncryptedBucketName = self::$bucketName . '-kms-encrypted';
 
         $output = $this->runFunctionSnippet('enable_default_kms_key', [
-            self::$projectId,
             $kmsEncryptedBucketName,
             $this->keyName(),
         ]);
@@ -430,7 +429,6 @@ class storageTest extends TestCase
         file_put_contents($uploadFrom, 'foo' . rand());
 
         $output = $this->runFunctionSnippet('upload_with_kms_key', [
-            self::$projectId,
             $kmsEncryptedBucketName,
             $objectName,
             $uploadFrom,

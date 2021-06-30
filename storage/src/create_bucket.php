@@ -29,14 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Create a Cloud Storage Bucket.
  *
- * @param string $projectId The Project ID
- * @param string $bucketName The Storage bucket name
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  */
-function create_bucket($projectId, $bucketName)
+function create_bucket($bucketName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $storage = new StorageClient();
 
     $bucket = $storage->createBucket($bucketName);
     printf('Bucket created: %s' . PHP_EOL, $bucket->name());

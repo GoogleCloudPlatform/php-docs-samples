@@ -27,7 +27,10 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
+ * List objects in a specified bucket with all archived generations.
+ *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  */
 function list_file_archived_generations($bucketName)
 {
@@ -44,5 +47,6 @@ function list_file_archived_generations($bucketName)
 }
 # [END storage_list_file_archived_generations]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

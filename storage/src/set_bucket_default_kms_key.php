@@ -27,19 +27,19 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Enable a bucket's requesterpays metadata.
+ * Update the default KMS key on the specified bucket.
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $bucketName Name of your Google Cloud Storage bucket.
- * @param string $kmsKeyName KMS key ID to use as the default KMS key.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $kmsKeyName The KMS key to use as the default KMS key.
+ *     Key names are provided in the following format:
+ *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  *
- * @return void
+ *     Example: `$kmsKeyName = "";`
  */
-function set_bucket_default_kms_key($projectId, $bucketName, $kmsKeyName)
+function set_bucket_default_kms_key($bucketName, $kmsKeyName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId
-    ]);
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'encryption' => [
@@ -51,5 +51,6 @@ function set_bucket_default_kms_key($projectId, $bucketName, $kmsKeyName)
         $bucket->info()['encryption']['defaultKmsKeyName']);
 }
 # [END storage_set_bucket_default_kms_key]
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

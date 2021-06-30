@@ -27,10 +27,16 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
+ * Copy archived generation of a given object to a new object.
+ *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $objectToCopy The name of the object to copy
- * @param string $generationToCopy The generation of the object to copy
+ *     Example: `$bucketName = 'my-bucket';`
+ * @param string $objectToCopy The name of the object to copy.
+ *     Example: `$objectToCopy = 'my-object';`
+ * @param string $generationToCopy The generation of the object to copy.
+ *     Example: `$generationToCopy = 1579287380533984;`
  * @param string $newObjectName The name of the target object.
+ *     Example: `$newObjectName = 'my-object-1579287380533984';`
  */
 function copy_file_archived_generation($bucketName, $objectToCopy, $generationToCopy, $newObjectName)
 {
@@ -55,5 +61,6 @@ function copy_file_archived_generation($bucketName, $objectToCopy, $generationTo
 }
 # [END storage_copy_file_archived_generation]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
