@@ -47,3 +47,5 @@ function get_uniform_bucket_level_access($bucketName)
     }
 }
 # [END storage_get_uniform_bucket_level_access]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

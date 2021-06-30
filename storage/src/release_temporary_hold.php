@@ -41,3 +41,5 @@ function release_temporary_hold($bucketName, $objectName)
     printf('Temporary hold was released for %s' . PHP_EOL, $objectName);
 }
 # [END storage_release_temporary_hold]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

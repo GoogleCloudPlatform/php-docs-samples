@@ -43,3 +43,5 @@ function get_default_event_based_hold($bucketName)
     }
 }
 # [END storage_get_default_event_based_hold]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

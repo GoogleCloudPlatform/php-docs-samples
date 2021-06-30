@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,43 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_upload_encrypted_file]
+# [START storage_generate_signed_post_policy_v4]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Upload an encrypted file.
+ * Generates a V4 POST Policy to be used in an HTML form and echo's form.
  *
  * @param string $bucketName the name of your Google Cloud bucket.
  * @param string $objectName the name of your Google Cloud object.
- * @param string $source the path to the file to upload.
- * @param string $base64EncryptionKey the base64 encoded encryption key.
  *
  * @return void
  */
-function upload_encrypted_object($bucketName, $objectName, $source, $base64EncryptionKey)
+function generate_signed_post_policy_v4($bucketName, $objectName)
 {
     $storage = new StorageClient();
-    $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);
-    $object = $bucket->upload($file, [
-        'name' => $objectName,
-        'encryptionKey' => $base64EncryptionKey,
-    ]);
-    printf('Uploaded encrypted %s to gs://%s/%s' . PHP_EOL,
-        basename($source), $bucketName, $objectName);
-}
-# [END storage_upload_encrypted_file]
 
-// The following 2 lines are only needed to run the samples
+    $response = $bucket->generateSignedPostPolicyV4(
+        $objectName,
+        new \DateTime('10 min'),
+        [
+            'fields' => [
+                'x-goog-meta-test' => 'data'
+            ]
+        ]
+    );
+
+    $url = $response['url'];
+    $output = "<form action='$url' method='POST' enctype='multipart/form-data'>" . PHP_EOL;
+    foreach ($response['fields'] as $name => $value) {
+        $output .= "  <input name='$name' value='$value' type='hidden'/>" . PHP_EOL;
+    }
+    $output .= "  <input type='file' name='file'/><br />" . PHP_EOL;
+    $output .= "  <input type='submit' value='Upload File' name='submit'/><br />" . PHP_EOL;
+    $output .= "</form>" . PHP_EOL;
+
+    echo $output;
+}
+# [END storage_generate_signed_post_policy_v4]
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

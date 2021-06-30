@@ -44,3 +44,5 @@ function create_hmac_key($serviceAccountEmail, $projectId)
     printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKeyCreated->hmacKey()->info(), true));
 }
 # [END storage_create_hmac_key]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

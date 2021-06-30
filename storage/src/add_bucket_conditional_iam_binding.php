@@ -72,3 +72,5 @@ function add_bucket_conditional_iam_binding($bucketName, $role, $members, $title
     printf('    Expression: %s' . PHP_EOL, $expression);
 }
 # [END storage_add_bucket_conditional_iam_binding]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

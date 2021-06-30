@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,38 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_release_event_based_hold]
+# [START storage_generate_upload_signed_url_v4]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Releases an event-based hold for an object.
+ * Generate a v4 signed URL for uploading an object.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $objectName the name of your Cloud Storage object.
+ * @param string $bucketName the name of your Google Cloud bucket.
+ * @param string $objectName the name of your Google Cloud object.
+ *
+ * @return void
  */
-function release_event_based_hold($bucketName, $objectName)
+function generate_upload_signed_url_v4($bucketName, $objectName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
-    $object->update(['eventBasedHold' => false]);
-    printf('Event-based hold was released for %s' . PHP_EOL, $objectName);
+    $url = $object->signedUrl(
+        # This URL is valid for 15 minutes
+        new \DateTime('15 min'),
+        [
+            'method' => 'PUT',
+            'contentType' => 'application/octet-stream',
+            'version' => 'v4',
+        ]
+    );
+
+    print('Generated PUT signed URL:' . PHP_EOL);
+    print($url . PHP_EOL);
+    print('You can use this URL with any user agent, for example:' . PHP_EOL);
+    print("curl -X PUT -H 'Content-Type: application/octet-stream' " .
+        '--upload-file my-file ' . $url . PHP_EOL);
 }
-# [END storage_release_event_based_hold]
+# [END storage_generate_upload_signed_url_v4]
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

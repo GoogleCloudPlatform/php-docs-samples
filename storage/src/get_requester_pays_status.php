@@ -49,3 +49,5 @@ function get_requester_pays_status($projectId, $bucketName)
     }
 }
 # [END storage_get_requester_pays_status]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

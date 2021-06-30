@@ -29,11 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Removes a bucket's retention policy.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $projectId The project ID
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function remove_retention_policy($bucketName)
+function remove_retention_policy($projectId, $bucketName)
 {
-    $storage = new StorageClient();
+    $storage = new StorageClient([
+        'projectId' => $projectId,
+    ]);
     $bucket = $storage->bucket($bucketName);
     $bucket->reload();
 
@@ -49,3 +52,5 @@ function remove_retention_policy($bucketName)
     printf('Removed bucket %s retention policy' . PHP_EOL, $bucketName);
 }
 # [END storage_remove_retention_policy]
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

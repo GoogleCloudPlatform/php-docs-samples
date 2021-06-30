@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,25 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_get_retention_policy]
+# [START storage_list_files_with_prefix]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Gets a bucket's retention policy.
+ * List Cloud Storage bucket objects with specified prefix.
  *
- * @param string $projectId The project ID
- * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ *
+ * @return void
  */
-function get_retention_policy($projectId, $bucketName)
+function list_files_with_prefix($bucketName, $prefix)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $bucket->reload();
-
-    printf('Retention Policy for ' . $bucketName . PHP_EOL);
-    printf('Retention Period: ' . $bucket->info()['retentionPolicy']['retentionPeriod'] . PHP_EOL);
-    if (array_key_exists('isLocked', $bucket->info()['retentionPolicy']) &&
-        $bucket->info()['retentionPolicy']['isLocked']) {
-        printf('Retention Policy is locked' . PHP_EOL);
-    }
-    if ($bucket->info()['retentionPolicy']['effectiveTime']) {
-        printf('Effective Time: ' . $bucket->info()['retentionPolicy']['effectiveTime'] . PHP_EOL);
+    $options = ['prefix' => $prefix];
+    foreach ($bucket->objects($options) as $object) {
+        printf('Object: %s' . PHP_EOL, $object->name());
     }
 }
-# [END storage_get_retention_policy]
+# [END storage_list_files_with_prefix]
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
