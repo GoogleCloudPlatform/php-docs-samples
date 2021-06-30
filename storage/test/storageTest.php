@@ -769,6 +769,42 @@ class storageTest extends TestCase
         );
     }
 
+    public function testDownloadPublicObject()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-download-public-object-'));
+
+        self::runFunctionSnippet('set_bucket_public_iam', [
+            $bucket->name(),
+        ]);
+
+        $object = $bucket->bucket(self::$bucketName)->upload('test content', [
+            'name' => uniqid('samples-download-public-object-'),
+        ]);
+
+        $downloadTo = tempnam(sys_get_temp_dir(), '/tests/' . $object->name());
+
+        $output = self::runFunctionSnippet('download_public_file', [
+            self::$bucketName,
+            $object->name(),
+            $downloadTo,
+        ]);
+
+        $object->delete();
+        $bucket->delete();
+
+        $this->assertEquals(
+            sprintf(
+                'Downloaded public object %s from bucket %s to %s',
+                $object->name(),
+                self::$bucketName,
+                $downloadTo,
+            ),
+            $output
+        );
+
+        $this->assertFileExists($downloadTo);
+    }
+
     private function keyName()
     {
         return sprintf(
