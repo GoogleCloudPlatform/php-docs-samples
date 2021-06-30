@@ -18,10 +18,11 @@
 
 namespace Google\Cloud\Samples\Storage;
 
+use Google\Auth\CredentialsLoader;
+use Google\Cloud\Core\Exception\BadRequestException;
+use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\Core\Exception\NotFoundException;
-use Google\Cloud\Core\Exception\BadRequestException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -64,51 +65,45 @@ class storageTest extends TestCase
 
     public function testManageBucketAcl()
     {
-        $bucket = self::$storage->createBucket(uniqid('samples-manage-bucket-acl'));
-        $serviceAccountEmail = self::$storage->getServiceAccount();
+        $jsonKey = CredentialsLoader::fromEnv();
+        $acl = self::$tempBucket->acl();
+        $entity = sprintf('user-%s', $jsonKey['client_email']);
+        $bucketUrl = sprintf('gs://%s', self::$tempBucket->name());
 
-        $entity = sprintf('user-%s', $serviceAccountEmail);
-        $bucketUrl = sprintf('gs://%s', $bucket->name());
-        $acl = $bucket->acl();
+        $output = $this->runFunctionSnippet('add_bucket_acl', [
+            self::$tempBucket->name(),
+            $entity,
+            'READER'
+        ]);
+
+        $expected = "Added $entity (READER) to $bucketUrl ACL\n";
+        $this->assertEquals($expected, $output);
+
+        $aclInfo = $acl->get(['entity' => $entity]);
+        $this->assertArrayHasKey('role', $aclInfo);
+        $this->assertEquals('READER', $aclInfo['role']);
+
+        $output = $this->runFunctionSnippet('get_bucket_acl_for_entity', [
+            self::$tempBucket->name(),
+            $entity,
+        ]);
+
+        $expected = "$entity: READER\n";
+        $this->assertEquals($expected, $output);
+
+        $output = $this->runFunctionSnippet('delete_bucket_acl', [
+            self::$tempBucket->name(),
+            $entity,
+        ]);
+
+        $expected = "Deleted $entity from $bucketUrl ACL\n";
+        $this->assertEquals($expected, $output);
 
         try {
-            $output = $this->runFunctionSnippet('add_bucket_acl', [
-                $bucket->name(),
-                $entity,
-                'READER'
-            ]);
-
-            $expected = "Added $entity (READER) to $bucketUrl ACL\n";
-            $this->assertEquals($expected, $output);
-
-            $aclInfo = $acl->get(['entity' => $entity]);
-            $this->assertArrayHasKey('role', $aclInfo);
-            $this->assertEquals('READER', $aclInfo['role']);
-
-            $output = $this->runFunctionSnippet('get_bucket_acl_for_entity', [
-                $bucket->name(),
-                $entity,
-            ]);
-
-            $expected = "$entity: READER\n";
-            $this->assertEquals($expected, $output);
-
-            $output = $this->runFunctionSnippet('delete_bucket_acl', [
-                $bucket->name(),
-                $entity,
-            ]);
-
-            $expected = "Deleted $entity from $bucketUrl ACL\n";
-            $this->assertEquals($expected, $output);
-
-            try {
-                $acl->get(['entity' => $entity]);
-                $this->fail();
-            } catch (NotFoundException $e) {
-                $this->assertTrue(true);
-            }
-        } finally {
-            $bucket->delete();
+            $acl->get(['entity' => $entity]);
+            $this->fail();
+        } catch (NotFoundException $e) {
+            $this->assertTrue(true);
         }
     }
 
@@ -718,7 +713,7 @@ class storageTest extends TestCase
     {
         $objectName = uniqid('samples-object-csek-to-cmek-');
         $key = base64_encode(random_bytes(32));
-        $object = self::$storage->bucket(self::$bucketName)->upload('encrypted', [
+        self::$storage->bucket(self::$bucketName)->upload('encrypted', [
             'name' => $objectName,
             'encryptionKey' => $key
         ]);
@@ -732,7 +727,6 @@ class storageTest extends TestCase
 
         $obj2 = self::$storage->bucket(self::$bucketName)->object($objectName);
         $info = $obj2->reload();
-        $object->delete();
         $obj2->delete();
 
         $this->assertEquals($this->keyName(), $info['kmsKeyName']);
