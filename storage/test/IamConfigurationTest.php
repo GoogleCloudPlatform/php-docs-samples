@@ -23,9 +23,10 @@ use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for UniformBucketLevelAccessCommand.
+ * Unit Tests for IamConfiguration.
+ * @group storage-iamconfiguration
  */
-class UniformBucketLevelAccessCommandTest extends TestCase
+class IamConfigurationTest extends TestCase
 {
     use TestTrait;
     use ExecuteCommandTrait;
@@ -41,7 +42,7 @@ class UniformBucketLevelAccessCommandTest extends TestCase
         $this->storage = new StorageClient();
 
         // Append random because tests for multiple PHP versions were running at the same time.
-        $bucketName = 'php-ubla-' . time() . '-' . rand(1000, 9999);
+        $bucketName = 'php-iamconfiguration-' . time() . '-' . rand(1000, 9999);
         $this->bucket = $this->storage->createBucket($bucketName);
     }
 
