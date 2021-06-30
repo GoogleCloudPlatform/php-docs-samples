@@ -170,7 +170,7 @@ class BucketLockTest extends TestCase
 
         $this->assertTrue($this->bucket->info()['defaultEventBasedHold']);
 
-        self::runFunctionSnippet('get_default_event_based_hold', [
+        $output = self::runFunctionSnippet('get_default_event_based_hold', [
             $this->bucket->name(),
         ]);
 
@@ -182,7 +182,7 @@ class BucketLockTest extends TestCase
         $this->uploadObject();
         $this->assertTrue($this->object->info()['eventBasedHold']);
 
-        self::runFunctionSnippet('release_event_based_hold', [
+        $output = self::runFunctionSnippet('release_event_based_hold', [
             $this->bucket->name(),
             $this->object->name(),
         ]);
@@ -195,7 +195,7 @@ class BucketLockTest extends TestCase
         $this->object->reload();
         $this->assertFalse($this->object->info()['eventBasedHold']);
 
-        self::runFunctionSnippet('disable_default_event_based_hold', [
+        $output = self::runFunctionSnippet('disable_default_event_based_hold', [
             $this->bucket->name(),
         ]);
 
@@ -207,7 +207,7 @@ class BucketLockTest extends TestCase
         $this->bucket->reload();
         $this->assertFalse($this->bucket->info()['defaultEventBasedHold']);
 
-        self::runFunctionSnippet('get_default_event_based_hold', [
+        $output = self::runFunctionSnippet('get_default_event_based_hold', [
             $this->bucket->name(),
         ]);
 
