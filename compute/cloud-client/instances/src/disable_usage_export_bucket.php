@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_disable]
 use Google\Cloud\Compute\V1\ProjectsClient;
-use Google\Cloud\Compute\V1\UsageExportLocation;
 
 /**
  * Disable Compute Engine usage export bucket for the Cloud Project.
