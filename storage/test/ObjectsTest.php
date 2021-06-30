@@ -23,8 +23,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for storage objects.
- *
- * @group storage-objects
  */
 class ObjectsTest extends TestCase
 {

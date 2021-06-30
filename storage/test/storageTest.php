@@ -63,6 +63,9 @@ class storageTest extends TestCase
         $this->assertRegExp("/: OWNER/", $output);
     }
 
+    /**
+     * @return void
+     */
     public function testManageBucketAcl()
     {
         $jsonKey = CredentialsLoader::fromEnv();
@@ -496,42 +499,6 @@ class storageTest extends TestCase
         $this->assertEquals($obj->name(), $info['website']['notFoundPage']);
     }
 
-    public function testDownloadPublicObject()
-    {
-        $bucket = self::$storage->createBucket(uniqid('samples-download-public-object-'));
-
-        self::runFunctionSnippet('set_bucket_public_iam', [
-            $bucket->name(),
-        ]);
-
-        $object = $bucket->bucket(self::$bucketName)->upload('test content', [
-            'name' => uniqid('samples-download-public-object-'),
-        ]);
-
-        $downloadTo = tempnam(sys_get_temp_dir(), '/tests/' . $object->name());
-
-        $output = self::runFunctionSnippet('download_public_file', [
-            self::$bucketName,
-            $object->name(),
-            $downloadTo,
-        ]);
-
-        $object->delete();
-        $bucket->delete();
-
-        $this->assertEquals(
-            sprintf(
-                'Downloaded public object %s from bucket %s to %s',
-                $object->name(),
-                self::$bucketName,
-                $downloadTo,
-            ),
-            $output
-        );
-
-        $this->assertFileExists($downloadTo);
-    }
-
     public function testGetServiceAccount()
     {
         $output = self::runFunctionSnippet('get_service_account', [
@@ -706,9 +673,6 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Created bucket', $output);
     }
 
-    /**
-     * @group foo
-     */
     public function testObjectCsekToCmek()
     {
         $objectName = uniqid('samples-object-csek-to-cmek-');

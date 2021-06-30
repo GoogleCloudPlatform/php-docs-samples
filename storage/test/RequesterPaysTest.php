@@ -22,8 +22,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for requester pays samples.
- *
- * @group storage-requesterpays
  */
 class RequesterPaysTest extends TestCase
 {

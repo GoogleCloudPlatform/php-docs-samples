@@ -24,8 +24,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for ObjectSignedUrl.
- *
- * @group storage-signedurl
  */
 class ObjectSignedUrlTest extends TestCase
 {
