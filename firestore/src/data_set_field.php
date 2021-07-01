@@ -47,5 +47,6 @@ function data_set_field(string $projectId): void
     printf('Updated the capital field of the DC document in the cities collection.' . PHP_EOL);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

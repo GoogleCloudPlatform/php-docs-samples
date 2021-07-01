@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,33 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
  */
 
-namespace Google\Cloud\Samples\Firestore;
+namespace Google\Cloud\Samples\Storage;
 
-use Google\Cloud\Firestore\FirestoreClient;
+# [START storage_get_public_access_prevention]
+use Google\Cloud\Storage\StorageClient;
 
 /**
- * Delete a document.
+ * Get the Public Access Prevention setting for a bucket
  *
- * @param string $projectId The Google Cloud Project ID
+ * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function data_delete_doc(string $projectId): void
+function get_public_access_prevention($bucketName)
 {
-    // Create the Cloud Firestore client
-    $db = new FirestoreClient([
-        'projectId' => $projectId,
-    ]);
-    # [START fs_delete_doc]
-    # [START firestore_data_delete_doc]
-    $db->collection('samples/php/cities')->document('DC')->delete();
-    # [END firestore_data_delete_doc]
-    # [END fs_delete_doc]
-    printf('Deleted the DC document in the cities collection.' . PHP_EOL);
+    $storage = new StorageClient();
+    $bucket = $storage->bucket($bucketName);
+
+    $iamConfiguration = $bucket->info()['iamConfiguration'];
+
+    printf(
+        'The bucket public access prevention is %s for %s.' . PHP_EOL,
+        $iamConfiguration['publicAccessPrevention'],
+        $bucketName
+    );
 }
+# [END storage_get_public_access_prevention]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

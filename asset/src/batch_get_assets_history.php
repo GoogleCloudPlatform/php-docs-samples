@@ -37,5 +37,6 @@ function batch_get_assets_history(string $projectId, array $assetNames)
 }
 # [END asset_quickstart_batch_get_assets_history]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

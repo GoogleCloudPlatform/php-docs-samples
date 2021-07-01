@@ -53,5 +53,6 @@ function data_delete_collection(string $projectId, string $collectionName, int $
 # [END firestore_data_delete_collection]
 # [END fs_delete_collection]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

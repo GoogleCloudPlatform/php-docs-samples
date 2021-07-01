@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,24 +23,33 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_delete_bucket]
+# [START storage_set_public_access_prevention_unspecified]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Delete a Cloud Storage Bucket.
+ * Set the bucket Public Access Prevention to unspecified.
  *
- * @param string $bucketName the name of the bucket to delete.
+ * @param string $bucketName the name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  *
- * @return void
  */
-function delete_bucket($bucketName)
+function set_public_access_prevention_unspecified($bucketName)
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $bucket->delete();
-    printf('Bucket deleted: %s' . PHP_EOL, $bucket->name());
+
+    $bucket->update([
+        'iamConfiguration' => [
+            'publicAccessPrevention' => 'unspecified'
+        ]
+    ]);
+
+    printf(
+        'Public Access Prevention has been set to unspecified for %s.' . PHP_EOL,
+        $bucketName
+    );
 }
-# [END storage_delete_bucket]
+# [END storage_set_public_access_prevention_unspecified]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

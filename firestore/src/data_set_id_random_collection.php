@@ -48,5 +48,6 @@ function data_set_id_random_collection(string $projectId): void
     # [END fs_add_doc_data_with_auto_id]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

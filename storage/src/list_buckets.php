@@ -40,5 +40,6 @@ function list_buckets()
 }
 # [END storage_list_buckets]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
