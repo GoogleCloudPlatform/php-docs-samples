@@ -60,6 +60,7 @@ ALT_PROJECT_TESTS=(
     logging
     monitoring
     pubsub/api
+    pubsub/quickstart
     storage
     spanner
     video
