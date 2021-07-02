@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_get]
 use Google\Cloud\Compute\V1\ProjectsClient;
-use Google\Cloud\Compute\V1\UsageExportLocation;
 
 /**
  * Retrieve Compute Engine usage export bucket for the Cloud project.
@@ -63,7 +62,7 @@ function get_usage_export_bucket(string $projectId)
 
         printf(
             "Compute Engine usage export bucket for project `%s` is bucket_name = `%s` with " .
-            "report_name_prefix = `%s`.". PHP_EOL,
+            "report_name_prefix = `%s`." . PHP_EOL,
             $projectId,
             $responseUsageExportLocation->getBucketName(),
             $responseUsageExportLocation->getReportNamePrefix()

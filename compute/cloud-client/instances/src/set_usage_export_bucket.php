@@ -76,7 +76,7 @@ function set_usage_export_bucket(
 
     printf(
         "Compute Engine usage export bucket for project `%s` set to bucket_name = `%s` with " .
-        "report_name_prefix = `%s`.". PHP_EOL,
+        "report_name_prefix = `%s`." . PHP_EOL,
         $projectId,
         $usageExportLocation->getBucketName(),
         (strlen($reportNamePrefix) == 0) ? 'usage_gce' : $usageExportLocation->getReportNamePrefix()

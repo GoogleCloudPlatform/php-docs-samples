@@ -108,8 +108,8 @@ class instancesTest extends TestCase
         ]);
 
         $this->assertStringContainsString('default value of `usage_gce`', $output);
-        $this->assertStringContainsString('project `'. self::$projectId .'`', $output);
-        $this->assertStringContainsString('bucket_name = `'. self::$bucketName .'`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
         $this->assertStringContainsString('report_name_prefix = `usage_gce`', $output);
 
         // Check default value behaviour for getter
@@ -117,20 +117,20 @@ class instancesTest extends TestCase
             'projectId' => self::$projectId
         ]);
         $this->assertStringContainsString('default value of `usage_gce`', $output);
-        $this->assertStringContainsString('project `'. self::$projectId .'`', $output);
-        $this->assertStringContainsString('bucket_name = `'. self::$bucketName .'`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
         $this->assertStringContainsString('report_name_prefix = `usage_gce`', $output);
 
         // Disable usage exports
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertStringContainsString('project `'. self::$projectId .'` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertStringContainsString('project `'. self::$projectId .'` is disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
     }
 
     public function testSetUsageExportBucketCustomPrefix()
@@ -146,28 +146,28 @@ class instancesTest extends TestCase
         ]);
 
         $this->assertStringNotContainsString('default value of `usage_gce`', $output);
-        $this->assertStringContainsString('project `'. self::$projectId .'`', $output);
-        $this->assertStringContainsString('bucket_name = `'. self::$bucketName .'`', $output);
-        $this->assertStringContainsString('report_name_prefix = `'. $customPrefix .'`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
+        $this->assertStringContainsString('report_name_prefix = `' . $customPrefix . '`', $output);
 
         // Check user value behaviour for getter
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId,
         ]);
         $this->assertStringNotContainsString('default value of `usage_gce`', $output);
-        $this->assertStringContainsString('project `'. self::$projectId .'`', $output);
-        $this->assertStringContainsString('bucket_name = `'. self::$bucketName .'`', $output);
-        $this->assertStringContainsString('report_name_prefix = `'. $customPrefix .'`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
+        $this->assertStringContainsString('report_name_prefix = `' . $customPrefix . '`', $output);
 
         // Disable usage exports
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertStringContainsString('project `'. self::$projectId .'` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertStringContainsString('project `'. self::$projectId .'` is disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
     }
 }
