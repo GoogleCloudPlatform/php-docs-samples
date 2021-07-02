@@ -60,7 +60,7 @@ function create_instance_with_processing_units($instanceId)
 
     $instance = $spanner->instance($instanceId);
     $info = $instance->info(['processingUnits']);
-    printf('Instance %s has %d processing units.' . PHP_EOL, $instanceId, $info['processingUnits'])
+    printf('Instance %s has %d processing units.' . PHP_EOL, $instanceId, $info['processingUnits']);
 }
 // [END spanner_create_instance_with_processing_units]
 
