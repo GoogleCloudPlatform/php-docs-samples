@@ -17,10 +17,8 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use DateTime;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use GPBMetadata\Google\Type\Date;
 use PHPUnit\Framework\TestCase;
 
 /**
