@@ -37,8 +37,6 @@ use Google\Cloud\Compute\V1\UsageExportLocation;
  * ```
  *
  * @param string $projectId Your Google Cloud project ID.
- * @return UsageExportLocation|null UsageExportLocation object describing the current usage
- * export settings for project $projectId.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
@@ -58,21 +56,24 @@ function get_usage_export_bucket(string $projectId)
                 // Although the server explicitly sent the empty string value, the next usage
                 // report generated with these settings still has the default prefix value "usage_gce".
                 // See https://cloud.google.com/compute/docs/reference/rest/v1/projects/get
-                print("Report name prefix not set, replacing with default value of `usage_gce`.");
+                print("Report name prefix not set, replacing with default value of `usage_gce`." . PHP_EOL);
                 $responseUsageExportLocation->setReportNamePrefix('usage_gce');
             }
         }
 
-        return $responseUsageExportLocation;
+        printf(
+            "Compute Engine usage export bucket for project `%s` is bucket_name = `%s` with " .
+            "report_name_prefix = `%s`.". PHP_EOL,
+            $projectId,
+            $responseUsageExportLocation->getBucketName(),
+            $responseUsageExportLocation->getReportNamePrefix()
+        );
     } else {
         // The usage reports are disabled.
-        return null;
+        printf("Compute Engine usage export bucket for project `%s` is disabled.", $projectId);
     }
 }
 # [END compute_usage_report_get]
 
-// Run the sample only if called directly
-if (__FILE__ == get_included_files()[0]) {
-    require_once __DIR__ . '/../../../../testing/sample_helpers.php';
-    \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
-}
+require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

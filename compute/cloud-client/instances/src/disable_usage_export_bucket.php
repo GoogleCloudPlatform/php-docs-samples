@@ -25,6 +25,8 @@ namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_disable]
 use Google\Cloud\Compute\V1\ProjectsClient;
+use Google\Cloud\Compute\V1\GlobalOperationsClient;
+use Google\Cloud\Compute\V1\Operation;
 
 /**
  * Disable Compute Engine usage export bucket for the Cloud Project.
@@ -35,20 +37,23 @@ use Google\Cloud\Compute\V1\ProjectsClient;
  *
  * @param string $projectId Your Google Cloud project ID.
  *
- * @return \Google\Cloud\Compute\V1\Operation
- *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function disable_usage_export_bucket(string $projectId)
 {
     // Disable the usage export location by sending null as usageExportLocationResource.
     $projectsClient = new ProjectsClient();
-    return $projectsClient->setUsageExportBucket($projectId, null);
+    $operation = $projectsClient->setUsageExportBucket($projectId, null);
+
+    // Wait for the set operation to complete.
+    if ($operation->getStatus() === Operation\Status::RUNNING) {
+        $operationClient = new GlobalOperationsClient();
+        $operationClient->wait($operation->getName(), $projectId);
+    }
+
+    printf("Compute Engine usage export bucket for project `%s` disabled.", $projectId);
 }
 # [END compute_usage_report_disable]
 
-// Run the sample only if called directly
-if (__FILE__ == get_included_files()[0]) {
-    require_once __DIR__ . '/../../../../testing/sample_helpers.php';
-    \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
-}
+require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
