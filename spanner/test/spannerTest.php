@@ -48,10 +48,10 @@ class spannerTest extends TestCase
     /** @var $instance Instance */
     protected static $instance;
 
-    /** 
+    /**
      * Low cost instance with less than 1000 processing units.
-     * 
-     * @var $instance lowCostInstance 
+     *
+     * @var $instance lowCostInstance
      */
     protected static $lowCostInstance;
 
