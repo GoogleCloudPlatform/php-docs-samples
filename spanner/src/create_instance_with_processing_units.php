@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceId The Spanner instance ID.
  */
-function create_instance_with_processing_units($instanceId)
+function create_instance_with_processing_units(string $instanceId): void
 {
     $spanner = new SpannerClient();
     $instanceConfig = $spanner->instanceConfiguration(

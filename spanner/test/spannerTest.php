@@ -36,8 +36,8 @@ class spannerTest extends TestCase
     /** @var string instanceId */
     protected static $instanceId;
 
-    /** @var string lciInstanceId */
-    protected static $lciInstanceId;
+    /** @var string lowCostInstanceId */
+    protected static $lowCostInstanceId;
 
     /** @var string databaseId */
     protected static $databaseId;
@@ -48,8 +48,12 @@ class spannerTest extends TestCase
     /** @var $instance Instance */
     protected static $instance;
 
-    /** @var $instance lciInstance */
-    protected static $lciInstance;
+    /** 
+     * Low cost instance with less than 1000 processing units.
+     * 
+     * @var $instance lowCostInstance 
+     */
+    protected static $lowCostInstance;
 
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
@@ -67,11 +71,11 @@ class spannerTest extends TestCase
         ]);
 
         self::$instanceId = 'test-' . time() . rand();
-        self::$lciInstanceId = 'test-' . time() . rand();
+        self::$lowCostInstanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
-        self::$lciInstance = $spanner->instance(self::$lciInstanceId);
+        self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
     }
 
     public function testCreateInstance()
@@ -86,7 +90,7 @@ class spannerTest extends TestCase
     public function testCreateInstanceWithProcessingUnits()
     {
         $output = $this->runFunctionSnippet('create_instance_with_processing_units', [
-            'instance_id' => self::$lciInstanceId
+            'instance_id' => self::$lowCostInstanceId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created instance test-', $output);
@@ -716,6 +720,6 @@ class spannerTest extends TestCase
             $database->drop();
         }
         self::$instance->delete();
-        self::$lciInstance->delete();
+        self::$lowCostInstance->delete();
     }
 }
