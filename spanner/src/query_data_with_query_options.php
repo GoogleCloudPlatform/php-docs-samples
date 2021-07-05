@@ -47,7 +47,10 @@ function query_data_with_query_options($instanceId, $databaseId)
         'SELECT VenueId, VenueName, LastUpdateTime FROM Venues',
         [
             'queryOptions' => [
-                'optimizerVersion' => "1"
+                'optimizerVersion' => '1',
+                // Pin the statistics package to the latest version just for
+                // this query.
+                'optimizerStatisticsPackage' => 'latest'
             ]
         ]
     );
