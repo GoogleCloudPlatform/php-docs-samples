@@ -15,6 +15,9 @@
 
 set -ex
 
+PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+DIR="${1:-$PROJECT_ROOT}"
+
 # install local version of php-cs-fixer 3.0 from composer.json
 if [ -f "composer.json" ]; then
     # install composer dependencies
@@ -28,8 +31,5 @@ if [ -f "vendor/bin/php-cs-fixer" ]; then
 elif [ -f "./php-cs-fixer" ]; then
     PHP_CS_FIXER="./php-cs-fixer"
 fi
-
-PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-DIR="${1:-$PROJECT_ROOT}"
 
 $PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php_cs.dist" --path-mode=intersection $DIR
