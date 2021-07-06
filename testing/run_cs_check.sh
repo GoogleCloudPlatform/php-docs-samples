@@ -15,6 +15,12 @@
 
 set -ex
 
+# install local version of php-cs-fixer 3.0 from composer.json
+if [ -f "composer.json" ]; then
+    # install composer dependencies
+    composer -q install
+fi
+
 # run php-cs-fixer
 PHP_CS_FIXER="php-cs-fixer"
 if [ -f "vendor/bin/php-cs-fixer" ]; then
