@@ -15,13 +15,14 @@
 
 set -ex
 
-PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+TESTING_DIR="$( dirname "${BASH_SOURCE[0]}")"
+PROJECT_ROOT="$( cd "${TESTING_DIR}" && pwd )/.."
 DIR="${1:-$PROJECT_ROOT}"
 
 # install local version of php-cs-fixer 3.0 from composer.json
-if [ -f "composer.json" ]; then
+if [ -f "${TESTING_DIR}/composer.json" ]; then
     # install composer dependencies
-    composer -q install
+    composer -q install --working-dir="${TESTING_DIR}"
 fi
 
 # run php-cs-fixer
@@ -30,6 +31,8 @@ if [ -f "vendor/bin/php-cs-fixer" ]; then
     PHP_CS_FIXER="vendor/bin/php-cs-fixer"
 elif [ -f "./php-cs-fixer" ]; then
     PHP_CS_FIXER="./php-cs-fixer"
+elif [ -f "${TESTING_DIR}/vendor/bin/php-cs-fixer" ]; then
+    PHP_CS_FIXER="${TESTING_DIR}/vendor/bin/php-cs-fixer"
 fi
 
-$PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php_cs.dist" --path-mode=intersection $DIR
+$PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php-cs-fixer.dist.php" --path-mode=intersection $DIR
