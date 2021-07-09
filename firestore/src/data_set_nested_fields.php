@@ -57,5 +57,6 @@ function data_set_nested_fields(string $projectId): void
     printf('Updated the age and favorite color fields of the frank document in the users collection.' . PHP_EOL);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

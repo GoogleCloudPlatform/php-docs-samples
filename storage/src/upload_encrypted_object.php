@@ -49,3 +49,7 @@ function upload_encrypted_object($bucketName, $objectName, $source, $base64Encry
         basename($source), $bucketName, $objectName);
 }
 # [END storage_upload_encrypted_file]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
