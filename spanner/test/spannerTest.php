@@ -42,11 +42,17 @@ class spannerTest extends TestCase
     /** @var string databaseId */
     protected static $databaseId;
 
+    /** @var string encryptedDatabaseId */
+    protected static $encryptedDatabaseId;
+
     /** @var string backupId */
     protected static $backupId;
 
     /** @var $instance Instance */
     protected static $instance;
+
+    /** @var string kmsKeyName */
+    protected static $kmsKeyName;
 
     /**
      * Low cost instance with less than 1000 processing units.
@@ -73,8 +79,11 @@ class spannerTest extends TestCase
         self::$instanceId = 'test-' . time() . rand();
         self::$lowCostInstanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
+        self::$encryptedDatabaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
+        self::$kmsKeyName =
+            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
     }
 
@@ -104,6 +113,20 @@ class spannerTest extends TestCase
         $output = $this->runFunctionSnippet('create_database');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database test-', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
+    public function testCreateDatabaseWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
+            self::$instanceId,
+            self::$encryptedDatabaseId,
+            self::$kmsKeyName,
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database en-test-', $output);
     }
 
     /**
