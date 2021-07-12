@@ -80,7 +80,9 @@ class firestoreTest extends TestCase
 
     public function testInitializeProjectId()
     {
-        $output = $this->runFirestoreSnippet('setup_client_create_with_project_id');
+        # The lack of a second parameter implies that a non-empty projectId is
+        # supplied to the snippet's function.
+        $output = $this->runFirestoreSnippet('setup_client_create');
         $this->assertStringContainsString('Created Cloud Firestore client with project ID:', $output);
     }
 
