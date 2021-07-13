@@ -91,7 +91,7 @@ function create_dev_instance($projectId, $instanceId, $clusterId, $locationId = 
             if (!$operationResponse->operationSucceeded()) {
                 print('Error: ' . $operationResponse->getError()->getMessage());
             } else {
-                printf("Instance %s created.".PHP_EOL, $instanceId);
+                printf("Instance %s created." . PHP_EOL, $instanceId);
             }
         } else {
             throw $e;
