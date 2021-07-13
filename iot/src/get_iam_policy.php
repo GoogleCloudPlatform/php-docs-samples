@@ -45,3 +45,7 @@ function get_iam_policy(
     print($policy->serializeToJsonString() . PHP_EOL);
 }
 # [END iot_get_iam_policy]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

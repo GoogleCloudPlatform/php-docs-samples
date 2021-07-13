@@ -32,15 +32,10 @@ This simple command-line application demonstrates how to invoke
 4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php storage.php`. The following commands are available:
+5.  Run `php storage.php` to see a list of commands:
 
     ```sh
-    bucket-acl                       Manage the ACL for Cloud Storage buckets.
-    bucket-default-acl               Manage the default ACL for Cloud Storage buckets.
-    bucket-labels                    Manage Cloud Storage bucket labels
     bucket-lock                      Manage Cloud Storage retention policies and holds
-    buckets                          Manage Cloud Storage buckets
-    encryption                       Upload and download Cloud Storage objects with encryption
     object-acl                       Manage the ACL for Cloud Storage objects
     objects                          Manage Cloud Storage objects
     requester-pays                   Manage Cloud Storage requester pays buckets and objects

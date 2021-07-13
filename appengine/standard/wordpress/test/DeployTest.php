@@ -56,6 +56,10 @@ class DeployTest extends TestCase
 
     public function testIndex()
     {
+        $this->markTestSkipped(
+            'This sample is BROKEN. See https://github.com/GoogleCloudPlatform/php-docs-samples/issues/1348'
+        );
+
         // Access the blog top page
         $resp = $this->client->get('');
         $this->assertEquals('200', $resp->getStatusCode());

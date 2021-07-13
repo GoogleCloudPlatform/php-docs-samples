@@ -26,6 +26,11 @@ namespace Google\Cloud\Samples\Auth;
 use Google_Client;
 use Google_Service_Storage;
 
+/**
+ * Authenticate to a cloud API using a service account implicitly.
+ *
+ * @param string $projectId  The Google project ID.
+ */
 function auth_api_implicit($projectId)
 {
     $client = new Google_Client();
@@ -42,3 +47,7 @@ function auth_api_implicit($projectId)
     }
 }
 # [END auth_api_implicit]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

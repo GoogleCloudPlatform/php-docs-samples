@@ -29,6 +29,7 @@ use Slim\Factory\AppFactory;
 # [START gae_slim_front_controller]
 $app = AppFactory::create();
 $app->addRoutingMiddleware();
+$app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response) {
     // Use the Null Coalesce Operator in PHP7

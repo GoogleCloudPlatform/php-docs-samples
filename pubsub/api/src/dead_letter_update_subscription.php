@@ -56,3 +56,5 @@ function dead_letter_update_subscription($projectId, $topicName, $subscriptionNa
     );
 }
 # [END pubsub_dead_letter_update_subscription]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

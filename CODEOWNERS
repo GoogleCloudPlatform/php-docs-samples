@@ -9,9 +9,28 @@
 # explicitly taken by someone else.
 *                         @GoogleCloudPlatform/php-admins
 
-/bigtable/                @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/php-admins
-/cloud_sql/               @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/php-admins
-/datastore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
-/firestore/               @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/php-admins
+/bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
+/cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-admins
+/datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
+/firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
 /iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
 /storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
+/spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-admins
+
+
+# Functions samples owned by the Firebase team
+/functions/firebase_analytics   @schandel @samtstern
+
+
+# Brent is taking ownership of these samples as they are not supported by the ML team
+/dlp/                     @bshaffer  
+/dialogflow/              @bshaffer
+/language/                @bshaffer
+/speech/                  @bshaffer
+/translate/               @bshaffer
+/texttospeech/            @bshaffer
+/vision/                  @bshaffer
+/video/                   @bshaffer
+
+# Compute samples owned by Remik
+/compute/cloud-client/    @rsamborski

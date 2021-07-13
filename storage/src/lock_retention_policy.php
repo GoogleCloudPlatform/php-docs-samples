@@ -30,6 +30,7 @@ use Google\Cloud\Storage\StorageClient;
  * Locks a bucket's retention policy.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
+ *     Example: `$bucketName = 'my-bucket';`
  */
 function lock_retention_policy($bucketName)
 {

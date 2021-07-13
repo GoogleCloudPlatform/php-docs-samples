@@ -47,3 +47,5 @@ function pull_messages($projectId, $subscriptionName)
 }
 # [END pubsub_subscriber_sync_pull]
 # [END pubsub_quickstart_subscriber]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

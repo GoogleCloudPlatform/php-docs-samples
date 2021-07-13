@@ -24,13 +24,9 @@ function helloworldPubsub(CloudEvent $event): void
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 
     $cloudEventData = $event->getData();
-    if (isset($cloudEventData['data'])) {
-        $name = htmlspecialchars(base64_decode($cloudEventData['data']));
-    } else {
-        $name = 'World';
-    }
+    $pubSubData = base64_decode($cloudEventData['message']['data']);
 
-    $result = 'Hello, ' . $name . '!';
-    fwrite($log, $result . PHP_EOL);
+    $name = $pubSubData ? htmlspecialchars($pubSubData) : 'World';
+    fwrite($log, "Hello, $name!" . PHP_EOL);
 }
 // [END functions_helloworld_pubsub]

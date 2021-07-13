@@ -82,11 +82,41 @@ Instances for YOUR_PROJECT_ID (us-central1-a)
  - my-new-instance-name
 ```
 
+### List all instances
+
+```
+$ php src/list_all_instances.php $YOUR_PROJECT_ID
+All instances for YOUR_PROJECT_ID
+Zone - zones/us-central1-a
+ - my-new-instance-name
+Zone - zones/us-central1-b
+ - my-new-instance-name-2
+ - my-new-instance-name-3
+```
+
 ### Delete an instance
 
 ```
 $ php src/delete_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name"
 Deleted instance my-new-instance-name
+```
+
+### Set usage export bucket
+
+```
+$ php src/set_usage_export_bucket.php $YOUR_PROJECT_ID "my-gcs-bucket-name" "my-report-name-prefix"
+```
+
+### Get usage export bucket
+
+```
+$ php src/get_usage_export_bucket.php $YOUR_PROJECT_ID
+```
+
+### Disable usage export bucket
+
+```
+$ php src/disable_usage_export_bucket.php $YOUR_PROJECT_ID
 ```
 
 ## Troubleshooting
