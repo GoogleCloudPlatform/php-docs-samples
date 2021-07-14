@@ -34,7 +34,7 @@ class EntitiesTest extends TestCase
     {
         $objectName = uniqid("datastoreadmin-export-");
         $uri = uniqid(sprintf(
-            "gs://%s/%s",
+            "gs://%s-datastoreadmin/%s",
             getenv("GOOGLE_STORAGE_BUCKET"),
             $objectName
         ));
