@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_create_dev_instance]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
@@ -40,13 +37,16 @@ use Google\ApiCore\ApiException;
  * @param string $clusterId The ID of the cluster to be generated
  * @param string $locationId The Bigtable region ID where you want your instance to reside
  */
-function create_dev_instance($projectId, $instanceId, $clusterId, $locationId = 'us-east1-b')
-{
+function create_dev_instance(
+    string $projectId,
+    string $instanceId,
+    string $clusterId,
+    string $locationId = 'us-east1-b'
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
     $projectName = $instanceAdminClient->projectName($projectId);
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
-
 
     printf("Creating a DEVELOPMENT Instance" . PHP_EOL);
     // Set options to create an Instance
@@ -54,7 +54,6 @@ function create_dev_instance($projectId, $instanceId, $clusterId, $locationId = 
     $storageType = StorageType::HDD;
     $development = InstanceType::DEVELOPMENT;
     $labels = ['dev-label' => 'dev-label'];
-
 
     # Create instance with given options
     $instance = new Instance();

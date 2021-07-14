@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_create_family_gc_max_versions]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -37,12 +34,14 @@ use Google\Cloud\Bigtable\Admin\V2\GcRule;
  * @param string $instanceId The ID of the Bigtable instance where the table resides
  * @param string $tableId The ID of the table in which the rule needs to be created
  */
-function create_family_gc_max_versions($projectId, $instanceId, $tableId)
-{
+function create_family_gc_max_versions(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
     $tableAdminClient = new BigtableTableAdminClient();
 
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
-
 
     print('Creating column family cf2 with max versions GC rule...' . PHP_EOL);
     $columnFamily2 = new ColumnFamily();

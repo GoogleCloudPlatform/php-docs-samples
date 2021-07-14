@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_create_family_gc_intersection]
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
@@ -39,8 +36,11 @@ use Google\Protobuf\Duration;
  * @param string $instanceId The ID of the Bigtable instance where the table resides
  * @param string $tableId The ID of the table in which the rule needs to be created
  */
-function create_family_gc_intersection($projectId, $instanceId, $tableId)
-{
+function create_family_gc_intersection(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
     $tableAdminClient = new BigtableTableAdminClient();
 
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);

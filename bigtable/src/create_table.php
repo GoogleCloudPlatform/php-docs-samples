@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_create_table]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -38,8 +35,11 @@ use Google\ApiCore\ApiException;
  * @param string $instanceId The ID of the Bigtable instance where you need the table to reside
  * @param string $tableId The ID of the table to be generated
  */
-function create_table($projectId, $instanceId, $tableId)
-{
+function create_table(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $tableAdminClient = new BigtableTableAdminClient();
 

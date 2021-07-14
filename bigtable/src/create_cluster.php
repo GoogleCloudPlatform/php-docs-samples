@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_create_cluster]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
@@ -38,8 +35,12 @@ use Google\ApiCore\ApiException;
  * @param string $clusterId The ID of the cluster to be generated
  * @param string $locationId The Bigtable region ID where you want your cluster to reside
  */
-function create_cluster($projectId, $instanceId, $clusterId, $locationId = 'us-east1-b')
-{
+function create_cluster(
+    string $projectId,
+    string $instanceId,
+    string $clusterId,
+    string $locationId = 'us-east1-b'
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
