@@ -74,7 +74,7 @@ class firestoreTest extends TestCase
 
     public function testInitialize()
     {
-        $output = self::runFunctionSnippet($snippetName, []);
+        $output = self::runFunctionSnippet('setup_client_create', []);
         print_r('output: ' . $output);
         $this->assertStringContainsString('Created Cloud Firestore client with default project ID.', $output);
     }
