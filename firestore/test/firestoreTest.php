@@ -74,7 +74,7 @@ class firestoreTest extends TestCase
 
     public function testInitialize()
     {
-        $output = $this->runFirestoreSnippet('setup_client_create', []);
+        $output = $this->runFirestoreSnippetNoProjectId('setup_client_create');
         print_r('output: ' . $output);
         $this->assertStringContainsString('Created Cloud Firestore client with default project ID.', $output);
     }
@@ -699,5 +699,10 @@ class firestoreTest extends TestCase
         }
 
         return self::runFunctionSnippet($snippetName, $args);
+    }
+
+    private static function runFirestoreSnippetNoProjectId($snippetName)
+    {
+        return self::runFunctionSnippet($snippetName, null);
     }
 }
