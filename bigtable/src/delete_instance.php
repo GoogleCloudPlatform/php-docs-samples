@@ -25,34 +25,34 @@
 // Include Google Cloud dependencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId) = $argv;
-
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
+/**
+ * Delete a cluster
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance to be deleted
+ */
+function delete_instance($projectId, $instanceId)
+{
+    $instanceAdminClient = new BigtableInstanceAdminClient();
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-
-$instanceAdminClient = new BigtableInstanceAdminClient();
-
-$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
-
-
-// [START bigtable_delete_instance]
-printf("Deleting Instance" . PHP_EOL);
-try {
-    $instanceAdminClient->deleteInstance($instanceName);
-    printf("Deleted Instance: %s." . PHP_EOL, $instanceId);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Instance %s does not exists." . PHP_EOL, $instanceId);
-    } else {
-        throw $e;
+    // [START bigtable_delete_instance]
+    printf("Deleting Instance" . PHP_EOL);
+    try {
+        $instanceAdminClient->deleteInstance($instanceName);
+        printf("Deleted Instance: %s." . PHP_EOL, $instanceId);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf("Instance %s does not exists." . PHP_EOL, $instanceId);
+        } else {
+            throw $e;
+        }
     }
 }
 // [END bigtable_delete_instance]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
