@@ -36,7 +36,9 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  */
 function entities_import($projectId, $inputUri)
 {
-    $admin = new DatastoreAdminClient();
+    $admin = new DatastoreAdminClient([
+        'projectId' => $projectId,
+    ]);
 
     $operation = $admin->importEntities($projectId, $inputUri);
 

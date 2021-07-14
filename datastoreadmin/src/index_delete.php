@@ -34,7 +34,9 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  */
 function index_delete($projectId, $indexId)
 {
-    $admin = new DatastoreAdminClient();
+    $admin = new DatastoreAdminClient([
+        'projectId' => $projectId,
+    ]);
 
     $operation = $admin->deleteIndex([
         'projectId' => $projectId,

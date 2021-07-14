@@ -34,7 +34,9 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  */
 function index_get($projectId, $indexId)
 {
-    $admin = new DatastoreAdminClient();
+    $admin = new DatastoreAdminClient([
+        'projectId' => $projectId,
+    ]);
 
     $index = $admin->getIndex([
         'projectId' => $projectId,

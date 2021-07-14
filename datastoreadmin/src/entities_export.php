@@ -36,7 +36,9 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  */
 function entities_export($projectId, $outputUrlPrefix)
 {
-    $admin = new DatastoreAdminClient();
+    $admin = new DatastoreAdminClient([
+        'projectId' => $projectId,
+    ]);
 
     $operation = $admin->exportEntities($projectId, $outputUrlPrefix);
 

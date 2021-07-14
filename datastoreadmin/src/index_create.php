@@ -36,7 +36,9 @@ use Google\Cloud\Datastore\Admin\V1\Index\AncestorMode;
  */
 function index_create($projectId, $kind)
 {
-    $admin = new DatastoreAdminClient();
+    $admin = new DatastoreAdminClient([
+        'projectId' => $projectId,
+    ]);
 
     $operation = $admin->createIndex([
         'projectId' => $projectId,
