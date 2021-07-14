@@ -25,41 +25,43 @@
 // Include Google Cloud dependencies using Composer
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId, $tableId) = $argv;
-
 // [START bigtable_writes_batch]
-
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Mutations;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
-// $tableId = 'mobile-time-series';
+/**
+ * Write data in batches in a table
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
+ * @param string $tableId The ID of the table where the batch data needs to be written
+ */
+function write_batch($projectId, $instanceId, $tableId = 'mobile-time-series')
+{
+    // Connect to an existing table with an existing instance.
+    $dataClient = new BigtableClient([
+        'projectId' => $projectId,
+    ]);
+    $table = $dataClient->table($instanceId, $tableId);
 
-// Connect to an existing table with an existing instance.
-$dataClient = new BigtableClient([
-    'projectId' => $projectId,
-]);
-$table = $dataClient->table($instanceId, $tableId);
+    $timestampMicros = time() * 1000 * 1000;
+    $columnFamilyId = 'stats_summary';
+    $mutations = [
+        (new Mutations())
+            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
+            ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestampMicros),
+        (new Mutations())
+            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
+            ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestampMicros)];
 
-$timestampMicros = time() * 1000 * 1000;
-$columnFamilyId = 'stats_summary';
-$mutations = [
-    (new Mutations())
-        ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
-        ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestampMicros),
-    (new Mutations())
-        ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
-        ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestampMicros)];
+    $table->mutateRows([
+        "tablet#a0b81f74#20190501" => $mutations[0],
+        "tablet#a0b81f74#20190502" => $mutations[1]
+    ]);
 
-$table->mutateRows([
-    "tablet#a0b81f74#20190501" => $mutations[0],
-    "tablet#a0b81f74#20190502" => $mutations[1]
-]);
-
-printf('Successfully wrote 2 rows.' . PHP_EOL);
+    printf('Successfully wrote 2 rows.' . PHP_EOL);
+}
 // [END bigtable_writes_batch]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -25,31 +25,33 @@
 // Include Google Cloud dependencies using Composer
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId, $tableId) = $argv;
-
 // [START bigtable_writes_increment]
-
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\ReadModifyWriteRowRules;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
-// $tableId = 'mobile-time-series';
+/**
+ * Increment an existing value in a table
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
+ * @param string $tableId The ID of the table where the data needs to be incremented
+ */
+function write_increment($projectId, $instanceId, $tableId = 'mobile-time-series')
+{
+    // Connect to an existing table with an existing instance.
+    $dataClient = new BigtableClient([
+        'projectId' => $projectId,
+    ]);
+    $table = $dataClient->table($instanceId, $tableId);
 
-// Connect to an existing table with an existing instance.
-$dataClient = new BigtableClient([
-    'projectId' => $projectId,
-]);
-$table = $dataClient->table($instanceId, $tableId);
+    $columnFamilyId = 'stats_summary';
 
-$columnFamilyId = 'stats_summary';
+    $rules = (new ReadModifyWriteRowRules)->increment($columnFamilyId, 'connected_wifi', 3);
+    $row = $table->readModifyWriteRow('phone#4c410523#20190501', $rules);
 
-$rules = (new ReadModifyWriteRowRules)->increment($columnFamilyId, 'connected_wifi', -1);
-$row = $table->readModifyWriteRow('phone#4c410523#20190501', $rules);
-
-printf('Successfully updated row.' . PHP_EOL);
+    printf('Successfully updated row.' . PHP_EOL);
+}
 // [END bigtable_writes_increment]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
