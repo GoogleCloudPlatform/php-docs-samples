@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_list_column_families]
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
@@ -34,12 +31,14 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table for which the families need to be displayed
  */
-function list_column_families($projectId, $instanceId, $tableId)
-{
+function list_column_families(
+    string $projectId,
+    string  $instanceId,
+    string $tableId
+): void {
     $tableAdminClient = new BigtableTableAdminClient();
 
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
-
 
     $table = $tableAdminClient->getTable($tableName);
     $columnFamilies = $table->getColumnFamilies()->getIterator();

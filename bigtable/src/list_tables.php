@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_list_tables]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -34,8 +31,10 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  */
-function list_tables($projectId, $instanceId)
-{
+function list_tables(
+    string $projectId,
+    string  $instanceId
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $tableAdminClient = new BigtableTableAdminClient();
 

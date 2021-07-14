@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_get_clusters]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
@@ -33,13 +30,14 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  */
-function list_instance_clusters($projectId, $instanceId)
-{
+function list_instance_clusters(
+    string $projectId,
+    string  $instanceId
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
     $projectName = $instanceAdminClient->projectName($projectId);
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
-
 
     printf("Listing Clusters:" . PHP_EOL);
     $getClusters = $instanceAdminClient->listClusters($instanceName)->getClusters();
