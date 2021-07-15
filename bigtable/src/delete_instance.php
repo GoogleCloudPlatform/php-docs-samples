@@ -26,7 +26,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
 /**
- * Delete a cluster
+ * Delete a bigtable instance
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance to be deleted
  */
