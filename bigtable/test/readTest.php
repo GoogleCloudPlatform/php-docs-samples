@@ -74,11 +74,10 @@ final class ReadTest extends TestCase
 
     public function testReadRow()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_row', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -92,11 +91,10 @@ Column Family stats_summary
 
     public function testReadRowPartial()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_row_partial', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row_partial"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -108,11 +106,10 @@ Column Family stats_summary
 
     public function testReadRows()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_rows', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_rows"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -132,11 +129,10 @@ Column Family stats_summary
 
     public function testReadRowRange()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_row_range', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row_range"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -162,11 +158,10 @@ Column Family stats_summary
 
     public function testReadRowRanges()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_row_ranges', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row_ranges"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -204,11 +199,10 @@ Column Family stats_summary
 
     public function testReadPrefix()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_prefix', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_prefix"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -246,11 +240,10 @@ Column Family stats_summary
 
     public function testReadFilter()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runSnippet('read_filter', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_filter"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
