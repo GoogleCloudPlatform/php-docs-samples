@@ -51,7 +51,7 @@ trait BigtableTestTrait
     public static function createDevInstance($instanceIdPrefix)
     {
         $instanceId = uniqid($instanceIdPrefix);
-        $output = self::runSnippet('create_dev_instance', [
+        $output = self::runFunctionSnippet('create_dev_instance', [
             self::$projectId,
             $instanceId,
             $instanceId,
@@ -96,7 +96,7 @@ trait BigtableTestTrait
         self::$instanceAdminClient->deleteInstance($instanceName);
     }
 
-    private static function runSnippet($sampleName, $params = [])
+    private static function runFunctionSnippet($sampleName, $params = [])
     {
         $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
 
