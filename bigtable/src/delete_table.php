@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_delete_table]
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
@@ -35,8 +32,11 @@ use Google\ApiCore\ApiException;
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table to be deleted
  */
-function delete_table($projectId, $instanceId, $tableId)
-{
+function delete_table(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+):void {
     $tableAdminClient = new BigtableTableAdminClient();
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 

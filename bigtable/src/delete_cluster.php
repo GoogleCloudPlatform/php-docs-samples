@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_delete_cluster]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
@@ -35,8 +32,11 @@ use Google\ApiCore\ApiException;
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $clusterId The ID of the cluster to be deleted
  */
-function delete_cluster($projectId, $instanceId, $clusterId)
-{
+function delete_cluster(
+    string $projectId,
+    string $instanceId,
+    string  $clusterId
+):void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 

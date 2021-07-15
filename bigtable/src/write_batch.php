@@ -22,22 +22,21 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-// [START bigtable_writes_conditional]
+// [START bigtable_writes_batch]
 use Google\Cloud\Bigtable\BigtableClient;
-use Google\Cloud\Bigtable\Filter;
 use Google\Cloud\Bigtable\Mutations;
 
 /**
- * Write data conditionally in a table
+ * Write data in batches in a table
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
- * @param string $tableId The ID of the table where the data needs to be written
+ * @param string $tableId The ID of the table where the batch data needs to be written
  */
-function write_conditionally($projectId, $instanceId, $tableId = 'mobile-time-series')
-{
+function write_batch(
+    string $projectId,
+    string $instanceId,
+    string $tableId = 'mobile-time-series'
+):void {
     // Connect to an existing table with an existing instance.
     $dataClient = new BigtableClient([
         'projectId' => $projectId,
@@ -46,20 +45,23 @@ function write_conditionally($projectId, $instanceId, $tableId = 'mobile-time-se
 
     $timestampMicros = time() * 1000 * 1000;
     $columnFamilyId = 'stats_summary';
+    $mutations = [
+        (new Mutations())
+            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
+            ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestampMicros),
+        (new Mutations())
+            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
+            ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestampMicros)];
 
-    $mutations = (new Mutations())->upsert($columnFamilyId, "os_name", "android", $timestampMicros);
-    $predicateFilter = Filter::chain()
-    ->addFilter(Filter::family()->exactMatch($columnFamilyId))
-    ->addFilter(Filter::qualifier()->exactMatch('os_build'))
-    ->addFilter(Filter::value()->regex('PQ2A.*'));
-    $options = ['predicateFilter' => $predicateFilter, 'trueMutations' => $mutations];
+    $table->mutateRows([
+        "tablet#a0b81f74#20190501" => $mutations[0],
+        "tablet#a0b81f74#20190502" => $mutations[1]
+    ]);
 
-    $table->checkAndMutateRow("phone#4c410523#20190501", $options);
-
-    printf('Successfully updated row\'s os_name' . PHP_EOL);
+    printf('Successfully wrote 2 rows.' . PHP_EOL);
 }
-// [END bigtable_writes_conditional]
+// [END bigtable_writes_batch]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

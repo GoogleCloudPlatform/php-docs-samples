@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // [START bigtable_delete_family]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -36,8 +33,12 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
  * @param string $tableId The ID of the table where the column family needs to be deleted
  * @param string $familyId The ID of the column family to be deleted
  */
-function delete_family($projectId, $instanceId, $tableId, $familyId = 'cf2')
-{
+function delete_family(
+    string $projectId,
+    string $instanceId,
+    string $tableId,
+    string $familyId = 'cf2'
+):void {
     $tableAdminClient = new BigtableTableAdminClient();
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 

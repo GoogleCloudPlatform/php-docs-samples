@@ -22,9 +22,6 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 // [START bigtable_writes_increment]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\ReadModifyWriteRowRules;
@@ -35,8 +32,11 @@ use Google\Cloud\Bigtable\ReadModifyWriteRowRules;
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table where the data needs to be incremented
  */
-function write_increment($projectId, $instanceId, $tableId = 'mobile-time-series')
-{
+function write_increment(
+    string $projectId,
+    string $instanceId,
+    string $tableId = 'mobile-time-series'
+):void {
     // Connect to an existing table with an existing instance.
     $dataClient = new BigtableClient([
         'projectId' => $projectId,
@@ -53,5 +53,5 @@ function write_increment($projectId, $instanceId, $tableId = 'mobile-time-series
 // [END bigtable_writes_increment]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
