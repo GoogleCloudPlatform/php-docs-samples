@@ -33,7 +33,7 @@ use Google\ApiCore\ApiException;
 function delete_instance(
     string $projectId,
     string $instanceId
-):void {
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 

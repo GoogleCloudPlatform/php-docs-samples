@@ -36,7 +36,7 @@ function delete_cluster(
     string $projectId,
     string $instanceId,
     string  $clusterId
-):void {
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 

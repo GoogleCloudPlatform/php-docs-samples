@@ -37,7 +37,7 @@ function write_simple(
     string $projectId,
     string $instanceId,
     string $tableId = 'mobile-time-series'
-):void {
+): void {
     // Connect to an existing table with an existing instance.
     $dataClient = new BigtableClient([
         'projectId' => $projectId,

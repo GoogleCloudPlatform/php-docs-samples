@@ -38,7 +38,7 @@ function delete_family(
     string $instanceId,
     string $tableId,
     string $familyId = 'cf2'
-):void {
+): void {
     $tableAdminClient = new BigtableTableAdminClient();
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 

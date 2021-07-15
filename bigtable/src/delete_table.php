@@ -36,7 +36,7 @@ function delete_table(
     string $projectId,
     string $instanceId,
     string $tableId
-):void {
+): void {
     $tableAdminClient = new BigtableTableAdminClient();
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
