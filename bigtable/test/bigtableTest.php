@@ -48,6 +48,21 @@ final class BigtableTest extends TestCase
     /**
      * @depends testCreateProductionInstance
      */
+    public function testGetInstance()
+    {
+        $content = self::runSnippet('get_instance',[
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains("Display Name: ".self::$instanceId,$array);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
     public function testCreateAndDeleteCluster()
     {
         // Create a new cluster as last cluster in an instance cannot be deleted
@@ -180,6 +195,22 @@ final class BigtableTest extends TestCase
 
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testGetCluster()
+    {
+        $content = self::runSnippet('get_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Name: projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
     }
 
     /**
