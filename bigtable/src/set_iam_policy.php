@@ -45,7 +45,6 @@ function set_iam_policy(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
     try {
-
         $policy = new Policy([
             'bindings'=>[
                 new Binding([
@@ -55,7 +54,7 @@ function set_iam_policy(
             ]
         ]);
 
-        $iamPolicy = $instanceAdminClient->setIamPolicy($instanceName,$policy);
+        $iamPolicy = $instanceAdminClient->setIamPolicy($instanceName, $policy);
 
         foreach ($iamPolicy->getBindings() as $binding) {
             echo "\t" . $binding->getRole() . ":" . PHP_EOL;
@@ -63,8 +62,7 @@ function set_iam_policy(
                 echo "\t\t" . $member . PHP_EOL;
             }
         }
-    }
-    catch(ApiException $e){
+    } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf("Instance %s does not exist." . PHP_EOL, $instanceId);
         } else {

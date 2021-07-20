@@ -39,7 +39,6 @@ function update_cluster(
     string $clusterId,
     int $newNumNodes
 ): void {
-
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
@@ -50,13 +49,12 @@ function update_cluster(
         if ($operationResponse->operationSucceeded()) {
             $updatedCluster = $operationResponse->getResult();
             printf("Cluster updated with the new num of nodes: %s." . PHP_EOL, $updatedCluster->getServeNodes());
-            // doSomethingWith($updatedCluster)
+        // doSomethingWith($updatedCluster)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)
         }
-    }
-    catch(ApiException $e){
+    } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf("Cluster %s does not exist." . PHP_EOL, $clusterId);
         } else {

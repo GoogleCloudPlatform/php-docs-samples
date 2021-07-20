@@ -22,44 +22,37 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// [START bigtable_get_iam_policy]
+// [START bigtable_test_iam_permissions]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
 /**
- * Get the IAM policy for a Bigtable instance
+ * Test IAM permissions for the current caller
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  */
-function get_iam_policy(
+function test_iam_permissions(
     string $projectId,
     string $instanceId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
+    // Add the permissions to test against
+    $permissions = ["bigtable.clusters.create", "bigtable.tables.create"];
+
     try {
+        $response = $instanceAdminClient->testIamPermissions($instanceName, $permissions);
 
-        // we could instantiate the BigtableTableAdminClient and pass the tableName to get the IAM policy for the table resource as well.
-        $iamPolicy = $instanceAdminClient->getIamPolicy($instanceName);
-
-        echo $iamPolicy->getVersion() . PHP_EOL;
-
-        foreach ($iamPolicy->getBindings() as $binding) {
-            echo "\t" . $binding->getRole() . ":" . PHP_EOL;
-            foreach ($binding->getmembers() as $member) {
-                echo "\t\t" . $member . PHP_EOL;
-            }
+        // This array will contain the permissions that are passed for the current caller
+        foreach ($response->getPermissions() as $permission) {
+            echo $permission . PHP_EOL;
         }
     } catch (ApiException $e) {
-        if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exist." . PHP_EOL, $instanceId);
-        } else {
-            throw $e;
-        }
+        throw $e;
     }
 }
-// [END bigtable_get_iam_policy]
+// [END bigtable_test_iam_permissions]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

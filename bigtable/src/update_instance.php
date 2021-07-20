@@ -40,7 +40,6 @@ function update_instance(
     string $instanceId,
     string $newDisplayName
 ): void {
-
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
@@ -58,23 +57,22 @@ function update_instance(
 
     // This specifies the fields that need to be updated from $instance
     $updateMask = new FieldMask([
-        'paths'=>['labels','type','display_name']
+        'paths'=>['labels', 'type', 'display_name']
     ]);
 
-    try{
+    try {
         $operationResponse = $instanceAdminClient->partialUpdateInstance($instance, $updateMask);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedInstance = $operationResponse->getResult();
             printf("Instance updated with the new display name: %s." . PHP_EOL, $updatedInstance->getDisplayName());
-            // doSomethingWith($updatedInstance)
+        // doSomethingWith($updatedInstance)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)
         }
-    }
-    catch(ApiException $e){
+    } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf("Instance %s does not exist." . PHP_EOL, $instanceId);
         } else {
