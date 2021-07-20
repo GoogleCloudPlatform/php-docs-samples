@@ -50,14 +50,14 @@ final class BigtableTest extends TestCase
      */
     public function testGetInstance()
     {
-        $content = self::runSnippet('get_instance',[
+        $content = self::runSnippet('get_instance', [
             self::$projectId,
             self::$instanceId
         ]);
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertContains("Display Name: ".self::$instanceId,$array);
+        $this->assertContains("Display Name: " . self::$instanceId, $array);
     }
 
     /**
@@ -66,7 +66,7 @@ final class BigtableTest extends TestCase
     public function testUpdateInstance()
     {
         $updatedName = uniqid(self::INSTANCE_ID_PREFIX);
-        $content = self::runSnippet('update_instance',[
+        $content = self::runSnippet('update_instance', [
             self::$projectId,
             self::$instanceId,
             $updatedName
