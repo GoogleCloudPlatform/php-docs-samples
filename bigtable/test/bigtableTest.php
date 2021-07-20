@@ -61,6 +61,23 @@ final class BigtableTest extends TestCase
     }
 
     /**
+     * @depends testGetInstance
+     */
+    public function testUpdateInstance()
+    {
+        $updatedName = uniqid(self::INSTANCE_ID_PREFIX);
+        $content = self::runSnippet('update_instance',[
+            self::$projectId,
+            self::$instanceId,
+            $updatedName
+        ]);
+
+        $expectedResponse = "Instance updated with the new display name: $updatedName." . PHP_EOL;
+
+        $this->assertSame($expectedResponse, $content);
+    }
+
+    /**
      * @depends testCreateProductionInstance
      */
     public function testCreateAndDeleteCluster()
@@ -130,8 +147,10 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, self::$instanceId);
+
         $this->assertContains('Listing Instances:', $array);
-        $this->assertContains(self::$instanceId, $array);
+        $this->assertContains($instanceName, $array);
     }
 
     /**
@@ -211,6 +230,25 @@ final class BigtableTest extends TestCase
         $array = explode(PHP_EOL, $content);
 
         $this->assertContains('Name: projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+    }
+
+    /**
+     * @depends testGetCluster
+     */
+    public function testUpdateCluster()
+    {
+        $newNumNodes = 2;
+
+        $content = self::runSnippet('update_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            $newNumNodes
+        ]);
+
+        $expectedResponse = "Cluster updated with the new num of nodes: $newNumNodes." . PHP_EOL;
+
+        $this->assertSame($expectedResponse, $content);
     }
 
     /**

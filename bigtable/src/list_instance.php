@@ -48,7 +48,7 @@ $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances(
 $instances = $getInstances->getIterator();
 
 foreach ($instances as $instance) {
-    print($instance->getDisplayName() . PHP_EOL);
+    print($instance->getName() . PHP_EOL);
 }
 
 // [END bigtable_list_instances]
