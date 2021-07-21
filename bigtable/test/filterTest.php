@@ -92,7 +92,7 @@ final class FilterTest extends TestCase
      */
     public function testFilterLimitRowSample()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -104,7 +104,7 @@ final class FilterTest extends TestCase
 
     public function testFilterLimitRowRegex()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -134,7 +134,7 @@ Column Family stats_summary
 
     public function testFilterLimitCellsPerCol()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -188,7 +188,7 @@ Column Family stats_summary
 
     public function testFilterLimitCellsPerRow()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -229,7 +229,7 @@ Column Family stats_summary
 
     public function testFilterLimitCellsPerRowOffset()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -269,7 +269,7 @@ Column Family stats_summary
 
     public function testFilterLimitColFamilyRegex()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -311,7 +311,7 @@ Column Family stats_summary
 
     public function testFilterLimitColQualifierRegex()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -348,7 +348,7 @@ Column Family stats_summary
 
     public function testFilterLimitColRange()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -374,7 +374,7 @@ Column Family cell_plan
 
     public function testFilterLimitValueRange()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -394,7 +394,7 @@ Column Family stats_summary
 
     public function testFilterLimitValueRegex()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -430,7 +430,7 @@ Column Family stats_summary
      */
     public function testFilterLimitTimestampRange()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -446,7 +446,7 @@ Column Family cell_plan
 
     public function testFilterLimitBlockAll()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -460,7 +460,7 @@ Column Family cell_plan
 
     public function testFilterLimitPassAll()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -514,7 +514,7 @@ Column Family stats_summary
 
     public function testFilterModifyStripValue()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -568,7 +568,7 @@ Column Family stats_summary
 
     public function testFilterModifyApplyLabel()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -622,7 +622,7 @@ Column Family stats_summary
 
     public function testFilterComposingChain()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -655,7 +655,7 @@ Column Family cell_plan
 
     public function testFilterComposingInterleave()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -706,7 +706,7 @@ Column Family stats_summary
 
     public function testFilterComposingCondition()
     {
-        $output = self::runFunctionSnippet('filter_snippets', [
+        $output = self::runFileSnippet('filter_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,

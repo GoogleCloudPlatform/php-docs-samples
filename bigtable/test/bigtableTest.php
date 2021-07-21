@@ -108,7 +108,7 @@ final class BigtableTest extends TestCase
      */
     public function testListInstances()
     {
-        $content = self::runFunctionSnippet('list_instance', [
+        $content = self::runFileSnippet('list_instance', [
             self::$projectId,
             self::$instanceId
         ]);
@@ -128,7 +128,7 @@ final class BigtableTest extends TestCase
 
         $this->createTable(self::$projectId, self::$instanceId, self::$clusterId, $tableId);
 
-        $content = self::runFunctionSnippet('list_tables', [
+        $content = self::runFileSnippet('list_tables', [
             self::$projectId,
             self::$instanceId
         ]);
@@ -153,7 +153,7 @@ final class BigtableTest extends TestCase
             $tableId
         ]);
 
-        $content = self::runFunctionSnippet('list_column_families', [
+        $content = self::runFileSnippet('list_column_families', [
             self::$projectId,
             self::$instanceId,
             $tableId,
@@ -171,7 +171,7 @@ final class BigtableTest extends TestCase
      */
     public function testListInstanceClusters()
     {
-        $content = self::runFunctionSnippet('list_instance_clusters', [
+        $content = self::runFileSnippet('list_instance_clusters', [
             self::$projectId,
             self::$instanceId
         ]);
@@ -402,7 +402,7 @@ final class BigtableTest extends TestCase
 
         $tableId = uniqid(self::TABLE_ID_PREFIX);
 
-        $content = self::runFunctionSnippet('hello_world', [
+        $content = self::runFileSnippet('hello_world', [
             self::$projectId,
             self::$instanceId,
             $tableId

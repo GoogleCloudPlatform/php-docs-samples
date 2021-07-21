@@ -96,7 +96,7 @@ trait BigtableTestTrait
         self::$instanceAdminClient->deleteInstance($instanceName);
     }
 
-    private static function runSnippet($sampleName, $params = [])
+    private static function runFileSnippet($sampleName, $params = [])
     {
         $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
 
