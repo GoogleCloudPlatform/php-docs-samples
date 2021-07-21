@@ -1,5 +1,7 @@
 <?php
 
+namespace Google\Cloud\Samples\Bigtable;
+
 /**
  * Copyright 2019 Google LLC.
  *
