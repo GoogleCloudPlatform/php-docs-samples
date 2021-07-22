@@ -74,7 +74,7 @@ final class ReadTest extends TestCase
 
     public function testReadRow()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -92,7 +92,7 @@ Column Family stats_summary
 
     public function testReadRowPartial()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -108,7 +108,7 @@ Column Family stats_summary
 
     public function testReadRows()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -132,7 +132,7 @@ Column Family stats_summary
 
     public function testReadRowRange()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -162,7 +162,7 @@ Column Family stats_summary
 
     public function testReadRowRanges()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -204,7 +204,7 @@ Column Family stats_summary
 
     public function testReadPrefix()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
@@ -246,7 +246,7 @@ Column Family stats_summary
 
     public function testReadFilter()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFileSnippet('read_snippets', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
