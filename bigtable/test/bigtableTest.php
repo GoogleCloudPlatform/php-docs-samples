@@ -50,7 +50,7 @@ final class BigtableTest extends TestCase
      */
     public function testGetInstance()
     {
-        $content = self::runSnippet('get_instance', [
+        $content = self::runFunctionSnippet('get_instance', [
             self::$projectId,
             self::$instanceId
         ]);
@@ -66,7 +66,7 @@ final class BigtableTest extends TestCase
     public function testUpdateInstance()
     {
         $updatedName = uniqid(self::INSTANCE_ID_PREFIX);
-        $content = self::runSnippet('update_instance', [
+        $content = self::runFunctionSnippet('update_instance', [
             self::$projectId,
             self::$instanceId,
             $updatedName
@@ -221,7 +221,7 @@ final class BigtableTest extends TestCase
      */
     public function testGetCluster()
     {
-        $content = self::runSnippet('get_cluster', [
+        $content = self::runFunctionSnippet('get_cluster', [
             self::$projectId,
             self::$instanceId,
             self::$clusterId
@@ -239,7 +239,7 @@ final class BigtableTest extends TestCase
     {
         $newNumNodes = 2;
 
-        $content = self::runSnippet('update_cluster', [
+        $content = self::runFunctionSnippet('update_cluster', [
             self::$projectId,
             self::$instanceId,
             self::$clusterId,
