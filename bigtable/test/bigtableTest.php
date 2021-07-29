@@ -109,8 +109,7 @@ final class BigtableTest extends TestCase
     public function testListInstances()
     {
         $content = self::runFileSnippet('list_instance', [
-            self::$projectId,
-            self::$instanceId
+            self::$projectId
         ]);
 
         $array = explode(PHP_EOL, $content);
