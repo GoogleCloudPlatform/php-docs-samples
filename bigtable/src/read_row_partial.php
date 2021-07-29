@@ -45,8 +45,8 @@ function read_row_partial(
     ]);
     $table = $dataClient->table($instanceId, $tableId);
 
-    $rowkey = "phone#4c410523#20190501";
-    $rowFilter = Filter::qualifier()->regex("os_build");
+    $rowkey = 'phone#4c410523#20190501';
+    $rowFilter = Filter::qualifier()->regex('os_build');
     $row = $table->readRow($rowkey, ['filter' => $rowFilter]);
 
     print_row($rowkey, $row);
@@ -57,7 +57,7 @@ function read_row_partial(
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array)$row as $family => $cols) {
+    foreach ((array) $row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -66,7 +66,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
                 );
             }
         }

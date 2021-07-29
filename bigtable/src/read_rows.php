@@ -45,7 +45,7 @@ function read_rows(
     $table = $dataClient->table($instanceId, $tableId);
 
     $rows = $table->readRows(
-        ["rowKeys" => ["phone#4c410523#20190501", "phone#4c410523#20190502"]]
+        ['rowKeys' => ['phone#4c410523#20190501', 'phone#4c410523#20190502']]
     );
 
     foreach ($rows as $key => $row) {
@@ -58,7 +58,7 @@ function read_rows(
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array)$row as $family => $cols) {
+    foreach ((array) $row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -67,7 +67,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
                 );
             }
         }
