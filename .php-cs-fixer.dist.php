@@ -15,9 +15,7 @@ $config
         ],
         'return_type_declaration' => [
             'space_before' => 'none'
-        ],
-        'single_quote' => true,
-        'cast_spaces' => true,
+        ]
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
