@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Google\Cloud\Samples\Bigtable;
@@ -24,16 +25,17 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// [START bigtable_reads_prefix]
+// [START bigtable_filters_limit_row_sample]
 use Google\Cloud\Bigtable\BigtableClient;
+use Google\Cloud\Bigtable\Filter;
 
 /**
- * Read using a row key prefix
+ * Read partial row data
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table to read from
  */
-function read_prefix(
+function filter_limit_row_sample(
     string $projectId,
     string $instanceId,
     string $tableId
@@ -44,33 +46,17 @@ function read_prefix(
     ]);
     $table = $dataClient->table($instanceId, $tableId);
 
-    $prefix = 'phone#';
-    $end = $prefix;
-    // Increment the last character of the prefix so the filter matches everything in between
-    $end[-1] = chr(
-        ord($end[-1]) + 1
-    );
+    $filter = Filter::key()->sample(.75);
 
-    $rows = $table->readRows([
-        'rowRanges' => [
-            [
-                'startKeyClosed' => $prefix,
-                'endKeyClosed' => $end,
-            ]
-        ]
-    ]);
-
-    foreach ($rows as $key => $row) {
-        print_row($key, $row);
-    }
+    read_filter($table, $filter);
 }
-// [END bigtable_reads_prefix]
+// [END bigtable_filters_limit_row_sample]
 
 // Helper function for printing the row data
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array) $row as $family => $cols) {
+    foreach ((array)$row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -79,7 +65,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
                 );
             }
         }
