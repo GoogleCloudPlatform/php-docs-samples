@@ -36,7 +36,7 @@ use Google\Cloud\Spanner\SpannerClient;
 function list_instance_configs()
 {
     $spanner = new SpannerClient();
-    foreach($spanner->instanceConfigurations() as $config) {
+    foreach ($spanner->instanceConfigurations() as $config) {
         printf("Available leader options for instance config %s: %s" . PHP_EOL,
             $config->info()['displayName'], $config->info()['leaderOptions']
         );
