@@ -60,7 +60,7 @@ function create_database_with_default_leader($instanceId, $databaseId, $defaultL
         ) PRIMARY KEY (SingerId, AlbumId),
         INTERLEAVE IN PARENT Singers ON DELETE CASCADE",
         "ALTER DATABASE `$databaseId` SET OPTIONS (
-        version_retention_period = '$defaultLeader')"
+        default_leader = '$defaultLeader')"
     ]]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
