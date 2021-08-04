@@ -74,7 +74,7 @@ class IamTest extends TestCase
         $output = self::runFunctionSnippet('add_bucket_iam_member', [
             self::$bucket,
             self::$role,
-            [self::$user],
+            self::$user,
         ]);
         $outputString = sprintf(
             "Added the following member(s) to role %s for bucket %s\n    %s",
@@ -107,7 +107,7 @@ class IamTest extends TestCase
         $output = self::runFunctionSnippet('add_bucket_conditional_iam_binding', [
             self::$bucket,
             self::$role,
-            [self::$user],
+            self::$user,
             $title,
             $description,
             $expression,
