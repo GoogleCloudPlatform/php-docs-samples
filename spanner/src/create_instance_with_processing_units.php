@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,44 +23,46 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_query_with_query_options]
+// [START spanner_create_instance_with_processing_units]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Database;
 
 /**
- * Queries sample data using SQL with query options.
+ * Creates an instance.
  * Example:
  * ```
- * query_data_with_query_options($instanceId, $databaseId);
+ * create_instance_with_processing_units($instanceId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
- * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_query_options($instanceId, $databaseId)
+function create_instance_with_processing_units(string $instanceId): void
 {
     $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-
-    $results = $database->execute(
-        'SELECT VenueId, VenueName, LastUpdateTime FROM Venues',
+    $instanceConfig = $spanner->instanceConfiguration(
+        'regional-us-central1'
+    );
+    $operation = $spanner->createInstance(
+        $instanceConfig,
+        $instanceId,
         [
-            'queryOptions' => [
-                'optimizerVersion' => '1',
-                // Pin the statistics package to the latest version just for
-                // this query.
-                'optimizerStatisticsPackage' => 'latest'
+            'displayName' => 'This is a display name.',
+            'processingUnits' => 500,
+            'labels' => [
+                'cloud_spanner_samples' => true,
             ]
         ]
     );
 
-    foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, LastUpdateTime: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['LastUpdateTime']);
-    }
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
+    printf('Created instance %s' . PHP_EOL, $instanceId);
+
+    $instance = $spanner->instance($instanceId);
+    $info = $instance->info(['processingUnits']);
+    printf('Instance %s has %d processing units.' . PHP_EOL, $instanceId, $info['processingUnits']);
 }
-// [END spanner_query_with_query_options]
+// [END spanner_create_instance_with_processing_units]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

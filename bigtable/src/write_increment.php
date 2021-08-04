@@ -24,35 +24,35 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// [START bigtable_delete_family]
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+// [START bigtable_writes_increment]
+use Google\Cloud\Bigtable\BigtableClient;
+use Google\Cloud\Bigtable\ReadModifyWriteRowRules;
 
 /**
- * Delete a column family in a table
+ * Increment an existing value in a table
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
- * @param string $tableId The ID of the table where the column family needs to be deleted
- * @param string $familyId The ID of the column family to be deleted
+ * @param string $tableId The ID of the table where the data needs to be incremented
  */
-function delete_family(
+function write_increment(
     string $projectId,
     string $instanceId,
-    string $tableId,
-    string $familyId = 'cf2'
+    string $tableId = 'mobile-time-series'
 ): void {
-    $tableAdminClient = new BigtableTableAdminClient();
-    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
+    // Connect to an existing table with an existing instance.
+    $dataClient = new BigtableClient([
+        'projectId' => $projectId,
+    ]);
+    $table = $dataClient->table($instanceId, $tableId);
 
-    print("Delete a column family $familyId..." . PHP_EOL);
-    // Delete a column family
-    $columnModification = new Modification();
-    $columnModification->setId($familyId);
-    $columnModification->setDrop(true);
-    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-    print("Column family $familyId deleted successfully." . PHP_EOL);
+    $columnFamilyId = 'stats_summary';
+
+    $rules = (new ReadModifyWriteRowRules)->increment($columnFamilyId, 'connected_wifi', 3);
+    $row = $table->readModifyWriteRow('phone#4c410523#20190501', $rules);
+
+    printf('Successfully updated row.' . PHP_EOL);
 }
-// [END bigtable_delete_family]
+// [END bigtable_writes_increment]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
