@@ -19,25 +19,23 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for ObjectAclCommand.
+ * Unit Tests for object ACLs.
  */
-class ObjectAclCommandTest extends TestCase
+class ObjectAclTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait;
+    use TestTrait;
 
     private static $storage;
     private static $bucketName;
-    private static $commandFile = __DIR__ . '/../storage.php';
 
     public static function setUpBeforeClass(): void
     {
         self::$storage = new StorageClient();
-        self::$bucketName = sprintf(
+        self::$bucketName = getenv('GOOGLE_STORAGE_BUCKET_LEGACY') ?: sprintf(
             '%s-legacy',
             self::requireEnv('GOOGLE_STORAGE_BUCKET')
         );
@@ -47,9 +45,9 @@ class ObjectAclCommandTest extends TestCase
     {
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
 
-        $output = $this->runCommand('object-acl', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
+        $output = self::runFunctionSnippet('get_object_acl', [
+            self::$bucketName,
+            $objectName,
         ]);
 
         $this->assertStringContainsString(': OWNER', $output);
@@ -63,28 +61,27 @@ class ObjectAclCommandTest extends TestCase
         $object = $bucket->object($objectName);
         $acl = $object->acl();
 
-        $output = $this->runCommand('object-acl', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--entity' => 'allAuthenticatedUsers',
-            '--create' => true,
+        $output = self::runFunctionSnippet('add_object_acl', [
+            self::$bucketName,
+            $objectName,
+            'allAuthenticatedUsers',
+            'READER',
         ]);
 
         $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
         $this->assertArrayHasKey('role', $aclInfo);
         $this->assertEquals('READER', $aclInfo['role']);
 
-        $output .= $this->runCommand('object-acl', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--entity' => 'allAuthenticatedUsers',
+        $output .= self::runFunctionSnippet('get_object_acl_for_entity', [
+            self::$bucketName,
+            $objectName,
+            'allAuthenticatedUsers',
         ]);
 
-        $output .= $this->runCommand('object-acl', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--entity' => 'allAuthenticatedUsers',
-            '--delete' => true,
+        $output .= self::runFunctionSnippet('delete_object_acl', [
+            self::$bucketName,
+            $objectName,
+            'allAuthenticatedUsers',
         ]);
 
         try {
