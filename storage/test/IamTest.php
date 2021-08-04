@@ -287,5 +287,4 @@ Members:
 
         $this->assertTrue($hasBinding, 'has public viewable iam binding');
     }
-
 }

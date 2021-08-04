@@ -777,7 +777,7 @@ class storageTest extends TestCase
             $bucket->name(),
         ]);
 
-        $object = $bucket->bucket(self::$bucketName)->upload('test content', [
+        $object = self::$storage->bucket(self::$bucketName)->upload('test content', [
             'name' => uniqid('samples-download-public-object-'),
         ]);
 
