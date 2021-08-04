@@ -234,4 +234,48 @@ EOF;
         $this->assertEquals('value', $object->reload()['metadata']['keyToAddOrUpdate']);
         $object->delete();
     }
+
+    public function testGetMetadata()
+    {
+        $objectName = uniqid('set-metadata-');
+
+        $content = 'content';
+        $object = self::$storage->bucket(self::$bucketName)->upload($content, [
+            'name' => $objectName,
+        ]);
+
+        $info = $object->reload();
+        $output = self::runFunctionSnippet('object_metadata', [
+            self::$bucketName,
+            $object->name(),
+        ]);
+
+        $object->delete();
+
+        $fields = [
+            'Blob' => 'name',
+            'Bucket' => 'bucket',
+            'Storage class' => 'storageClass',
+            'ID' => 'id',
+            'Size' => 'size',
+            'Updated' => 'updated',
+            'Generation' => 'generation',
+            'Metageneration' => 'metageneration',
+            'Etag' => 'etag',
+            'Crc32c' => 'crc32c',
+            'MD5 Hash' => 'md5Hash',
+        ];
+
+        foreach ($fields as $key => $val) {
+            $this->assertStringContainsString(
+                sprintf('%s: %s', $key, $info[$val]),
+                $output
+            );
+        }
+
+        $this->assertStringNotContainsString('Temporary Hold', $output);
+        $this->assertStringNotContainsString('Event-based hold', $output);
+        $this->assertStringNotContainsString('Custom Time', $output);
+        $this->assertStringNotContainsString('Retention Expiration Time', $output);
+    }
 }
