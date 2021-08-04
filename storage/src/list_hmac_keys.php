@@ -29,11 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * List HMAC keys.
  *
- * @param string $projectId Google Cloud Project ID.
- *
+ * @param string $projectId The ID of your Google Cloud Platform project.
  */
 function list_hmac_keys($projectId)
 {
+    // $projectId = 'my-project-id';
+
     $storage = new StorageClient();
     // By default hmacKeys will use the projectId used by StorageClient() to list HMAC Keys.
     $hmacKeys = $storage->hmacKeys(['projectId' => $projectId]);
@@ -45,3 +46,7 @@ function list_hmac_keys($projectId)
     }
 }
 # [END storage_list_hmac_keys]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

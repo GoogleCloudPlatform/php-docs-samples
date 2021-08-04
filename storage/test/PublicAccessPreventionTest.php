@@ -23,7 +23,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for public access prevention
- * @group pap
  */
 class PublicAccessPreventionTest extends TestCase
 {

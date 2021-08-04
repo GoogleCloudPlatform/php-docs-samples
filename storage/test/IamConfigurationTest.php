@@ -19,19 +19,15 @@ namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for IamConfiguration.
- * @group storage-iamconfiguration
  */
 class IamConfigurationTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
-    private static $commandFile = __DIR__ . '/../storage.php';
     protected $storage;
     protected $bucket;
 
@@ -53,10 +49,10 @@ class IamConfigurationTest extends TestCase
 
     public function testEnableUniformBucketLevelAccess()
     {
-        $output = $this->runCommand('uniform-bucket-level-access', [
-            'bucket' => $this->bucket->name(),
-            '--enable' => true,
+        $output = self::runFunctionSnippet('enable_uniform_bucket_level_access', [
+            $this->bucket->name(),
         ]);
+
         $outputString = <<<EOF
 Uniform bucket-level access was enabled for {$this->bucket->name()}
 
@@ -71,9 +67,8 @@ EOF;
     /** @depends testEnableUniformBucketLevelAccess */
     public function testDisableUniformBucketLevelAccess()
     {
-        $output = $this->runCommand('uniform-bucket-level-access', [
-            'bucket' => $this->bucket->name(),
-            '--disable' => true,
+        $output = self::runFunctionSnippet('disable_uniform_bucket_level_access', [
+            $this->bucket->name(),
         ]);
 
         $outputString = <<<EOF
@@ -90,9 +85,8 @@ EOF;
     /** @depends testDisableUniformBucketLevelAccess */
     public function testGetUniformBucketLevelAccess()
     {
-        $output = $this->runCommand('uniform-bucket-level-access', [
-            'bucket' => $this->bucket->name(),
-            '--get' => true,
+        $output = self::runFunctionSnippet('get_uniform_bucket_level_access', [
+            $this->bucket->name(),
         ]);
 
         $outputString = <<<EOF
