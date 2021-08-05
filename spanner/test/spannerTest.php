@@ -107,7 +107,7 @@ class spannerTest extends TestCase
         self::$multiInstanceId = 'test-' . time() . rand() . 'm';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
-        self::$defaultLeader = 'us-east4';
+        self::$defaultLeader = 'us-central1';
         self::$updatedDefaultLeader = "us-east4";
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
 
@@ -798,12 +798,12 @@ class spannerTest extends TestCase
      */
     private function testUpdateDatabaseWithDefaultLeader()
     {
-        $output = $this->runFunctionSnippet('create_database_with_default_leader', [
+        $output = $this->runFunctionSnippet('update_database_with_default_leader', [
             'instance_id' => self::$multiInstanceId,
             'database_id' => self::$multiDatabaseId,
             'defaultLeader' => self::$updatedDefaultLeader
         ]);
-        $this->assertStringContainsString(self::$defaultLeader, $output);
+        $this->assertStringContainsString(self::$updatedDefaultLeader, $output);
     }
 
     /**
