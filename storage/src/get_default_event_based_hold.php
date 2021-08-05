@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enables a default event-based hold for a bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function get_default_event_based_hold($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
@@ -43,3 +45,7 @@ function get_default_event_based_hold($bucketName)
     }
 }
 # [END storage_get_default_event_based_hold]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

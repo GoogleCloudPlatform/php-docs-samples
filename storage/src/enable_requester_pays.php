@@ -29,16 +29,13 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enable a bucket's requesterpays metadata.
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $bucketName Name of your Google Cloud Storage bucket.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function enable_requester_pays($projectId, $bucketName)
+function enable_requester_pays($bucketName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId
-    ]);
+    // $bucketName = 'my-bucket';
+
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'billing' => [
@@ -48,3 +45,7 @@ function enable_requester_pays($projectId, $bucketName)
     printf('Requester pays has been enabled for %s' . PHP_EOL, $bucketName);
 }
 # [END storage_enable_requester_pays]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
