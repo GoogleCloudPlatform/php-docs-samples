@@ -17,21 +17,17 @@
 
 namespace Google\Cloud\Samples\Storage\Tests;
 
-use Google\Cloud\Samples\Storage\RequesterPaysCommand;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for RequesterPaysCommand.
+ * Unit Tests for requester pays samples.
  */
-class RequesterPaysCommandTest extends TestCase
+class RequesterPaysTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
     private static $bucketName;
-    private static $commandFile = __DIR__ . '/../storage.php';
 
     /** @beforeClass */
     public static function getBucketName()
@@ -41,10 +37,8 @@ class RequesterPaysCommandTest extends TestCase
 
     public function testEnableRequesterPays()
     {
-        $output = $this->runCommand('requester-pays', [
-            'project' => self::$projectId,
-            'bucket' => self::$bucketName,
-            '--enable' => true,
+        $output = self::runFunctionSnippet('enable_requester_pays', [
+            self::$bucketName,
         ]);
 
         $this->assertStringContainsString("Requester pays has been enabled", $output);
@@ -53,10 +47,8 @@ class RequesterPaysCommandTest extends TestCase
     /** @depends testEnableRequesterPays */
     public function testDisableRequesterPays()
     {
-        $output = $this->runCommand('requester-pays', [
-            'project' => self::$projectId,
-            'bucket' => self::$bucketName,
-            '--disable' => true,
+        $output = self::runFunctionSnippet('disable_requester_pays', [
+            self::$bucketName,
         ]);
 
         $this->assertStringContainsString("Requester pays has been disabled", $output);
@@ -65,10 +57,8 @@ class RequesterPaysCommandTest extends TestCase
     /** depends testDisableRequesterPays */
     public function testGetRequesterPaysStatus()
     {
-        $output = $this->runCommand('requester-pays', [
-            'project' => self::$projectId,
-            'bucket' => self::$bucketName,
-            '--check-status' => true,
+        $output = self::runFunctionSnippet('get_requester_pays_status', [
+            self::$bucketName,
         ]);
 
         $this->assertStringContainsString("Requester Pays is disabled", $output);
@@ -84,12 +74,13 @@ class RequesterPaysCommandTest extends TestCase
             basename($objectName)
         ]);
 
-        $output = $this->runCommand('requester-pays', [
-            'project' => self::$projectId,
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            'download-to' => $destination,
+        $output = self::runFunctionSnippet('download_file_requester_pays', [
+            self::$projectId,
+            self::$bucketName,
+            $objectName,
+            $destination,
         ]);
+
         $this->assertStringContainsString("using requester-pays requests", $output);
     }
 }
