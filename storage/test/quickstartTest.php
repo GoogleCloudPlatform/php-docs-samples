@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+use Google\Cloud\Storage\Bucket;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +45,7 @@ class quickstartTest extends TestCase
         $output = ob_get_clean();
 
         // Make sure it looks correct
-        $this->assertInstanceOf('Google\Cloud\Storage\Bucket', $bucket);
+        $this->assertInstanceOf(Bucket::class, $bucket);
         $this->assertEquals($bucketName, $bucket->name());
         $bucket->delete();
     }

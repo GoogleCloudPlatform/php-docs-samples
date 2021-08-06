@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\Storage\StorageClient;
 use PHPUnit\Framework\TestCase;
 
@@ -28,12 +27,10 @@ use PHPUnit\Framework\TestCase;
 class GenerateV4PostPolicy extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
     private static $storage;
     private static $bucketName;
     private static $objectName;
-    private static $commandFile = __DIR__ . '/../storage.php';
 
     /** @beforeClass */
     public static function setUpObject()
@@ -47,9 +44,9 @@ class GenerateV4PostPolicy extends TestCase
     {
         $bucketName = self::$bucketName;
         $objectName = self::$objectName;
-        $output = $this->runCommand('generate-v4-post-policy', [
-            'bucket' => $bucketName,
-            'object' => $objectName,
+        $output = self::runFunctionSnippet('generate_v4_post_policy', [
+            $bucketName,
+            $objectName,
         ]);
 
         $this->assertStringContainsString("<form action='https://storage.googleapis.com/$bucketName/", $output);

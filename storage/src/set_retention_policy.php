@@ -29,18 +29,25 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Sets a bucket's retention policy.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $retentionPeriod the number of seconds for your retention period.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param int $retentionPeriod The retention period for objects in bucket, in seconds.
  */
 function set_retention_policy($bucketName, $retentionPeriod)
 {
+    // $bucketName = 'my-bucket';
+    // $retentionPeriod = 3600;
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([
         'retentionPolicy' => [
             'retentionPeriod' => $retentionPeriod
         ]]);
-    printf('Bucket %s retention period set for %s seconds' . PHP_EOL, $bucketName,
+    printf('Bucket %s retention period set to %s seconds' . PHP_EOL, $bucketName,
         $retentionPeriod);
 }
 # [END storage_set_retention_policy]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
