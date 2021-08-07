@@ -33,8 +33,11 @@ use Google\Cloud\Datastore\Admin\V1\Index\AncestorMode;
  *
  * @param string $projectId The Google Cloud project ID.
  * @param string $kind The entity kind to which this index applies.
+ * @param int $initialPollDelayMillis number of milliseconds to wait before
+ *   polling the operation. Increase $initialPollDelayMillis to 12000 for
+ *   projects in Firestore-in-Datastore-mode.
  */
-function index_create($projectId, $kind)
+function index_create($projectId, $kind, int $initialPollDelayMillis = 1000)
 {
     $admin = new DatastoreAdminClient([
         'projectId' => $projectId,
@@ -50,7 +53,7 @@ function index_create($projectId, $kind)
 
     $operation->pollUntilComplete([
         // delay the start of the polling operation to ensure the operation is ready.
-        'initialPollDelayMillis' => 5000,
+        'initialPollDelayMillis' => $initialPollDelayMillis,
     ]);
 
     if (!$operation->operationFailed() && $operation->getResult() !== null) {
