@@ -31,7 +31,7 @@ class IndexTest extends TestCase
             'projectId' => self::$projectId,
             'kind' => $kind,
             // 2 minutes required for these tests to pass
-            'initialPollDelayMillis' => 12000
+            'initialPollDelayMillis' => 120000
         ]);
 
         $res = preg_match('/^The create index operation succeeded\. Index ID: (\S{0,})\n$/', $output, $matches);
