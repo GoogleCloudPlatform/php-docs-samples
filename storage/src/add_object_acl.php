@@ -29,22 +29,27 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Add an entity and role to an object's ACL.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $objectName the name of your Cloud Storage object.
- * @param string $entity The entity to update access controls for.
- * @param string $role The permissions to add for the specified entity. May
- *        be one of 'OWNER', 'READER', or 'WRITER'.
- * @param array $options
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $objectName The name of your Cloud Storage object.
+ * @param string $entity The entity for which to update access controls.
+ * @param string $role The permissions to add for the specified entity.
  */
-function add_object_acl($bucketName, $objectName, $entity, $role, $options = [])
+function add_object_acl($bucketName, $objectName, $entity, $role)
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $entity = 'user-example@domain.com';
+    // $role = 'OWNER';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $acl = $object->acl();
-    $acl->add($entity, $role, $options);
+    $acl->add($entity, $role);
     printf('Added %s (%s) to gs://%s/%s ACL' . PHP_EOL, $entity, $role, $bucketName, $objectName);
 }
 # [END storage_add_file_owner]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
