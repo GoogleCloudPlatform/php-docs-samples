@@ -63,7 +63,7 @@ final class BigtableTest extends TestCase
 
         $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
 
-        $this->assertContains("AppProfile created: " . $appProfileName, $array);
+        $this->assertContains('AppProfile created: ' . $appProfileName, $array);
 
         $this->checkAppProfile($appProfileName);
     }
@@ -82,7 +82,7 @@ final class BigtableTest extends TestCase
 
         $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
 
-        $this->assertContains("Name: " . $appProfileName, $array);
+        $this->assertContains('Name: ' . $appProfileName, $array);
     }
 
     /**
@@ -98,7 +98,7 @@ final class BigtableTest extends TestCase
 
         $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
 
-        $this->assertContains("Name: " . $appProfileName, $array);
+        $this->assertContains('Name: ' . $appProfileName, $array);
     }
 
     /**
@@ -120,7 +120,7 @@ final class BigtableTest extends TestCase
             self::$appProfileId
         );
 
-        $this->assertContains("App profile updated: " . $appProfileName, $array);
+        $this->assertContains('App profile updated: ' . $appProfileName, $array);
 
         // let's check if the allow_transactional_writes also changed
         $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
@@ -142,7 +142,7 @@ final class BigtableTest extends TestCase
 
         $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
 
-        $this->assertContains("App Profile " . self::$appProfileId . " deleted.", $array);
+        $this->assertContains('App Profile ' . self::$appProfileId . ' deleted.', $array);
 
         // let's check if we can fetch the profile or not
         try {
