@@ -50,7 +50,7 @@ function update_cluster(
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedCluster = $operationResponse->getResult();
-            printf("Cluster updated with the new num of nodes: %s." . PHP_EOL, $updatedCluster->getServeNodes());
+            printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
         // doSomethingWith($updatedCluster)
         } else {
             $error = $operationResponse->getError();
@@ -58,10 +58,10 @@ function update_cluster(
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Cluster %s does not exist." . PHP_EOL, $clusterId);
-        } else {
-            throw $e;
+            printf('Cluster %s does not exist.' . PHP_EOL, $clusterId);
+            return;
         }
+        throw $e;
     }
 }
 // [END bigtable_update_cluster]

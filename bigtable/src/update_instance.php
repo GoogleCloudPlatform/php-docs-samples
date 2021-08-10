@@ -47,7 +47,7 @@ function update_instance(
 
     $newType = InstanceType::PRODUCTION;
     $newLabels = [
-        "new-label-key"=>"label-val"
+        'new-label-key'=>'label-val'
     ];
 
     $instance = new Instance([
@@ -68,7 +68,7 @@ function update_instance(
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedInstance = $operationResponse->getResult();
-            printf("Instance updated with the new display name: %s." . PHP_EOL, $updatedInstance->getDisplayName());
+            printf('Instance updated with the new display name: %s.' . PHP_EOL, $updatedInstance->getDisplayName());
         // doSomethingWith($updatedInstance)
         } else {
             $error = $operationResponse->getError();
@@ -76,10 +76,10 @@ function update_instance(
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exist." . PHP_EOL, $instanceId);
-        } else {
-            throw $e;
+            printf('Instance %s does not exist.' . PHP_EOL, $instanceId);
+            return;
         }
+        throw $e;
     }
 }
 // [END bigtable_update_instance]

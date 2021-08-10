@@ -42,36 +42,36 @@ function get_instance(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Fetching the Instance %s" . PHP_EOL, $instanceId);
+    printf('Fetching the Instance %s' . PHP_EOL, $instanceId);
     try {
         $instance = $instanceAdminClient->getInstance($instanceName);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists." . PHP_EOL, $instanceId);
+            printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
             return;
-        } else {
-            throw $e;
         }
+        throw $e;
     }
 
-    printf("Printing Details:" . PHP_EOL);
+    printf('Printing Details:' . PHP_EOL);
 
     // Fetch some commonly used metadata
-    echo "Name: " . $instance->getName() . PHP_EOL;
-    echo "Display Name: " . $instance->getDisplayName() . PHP_EOL;
-    echo "State: " . State::name($instance->getState()) . PHP_EOL;
-    echo "Type: " . Type::name($instance->getType()) . PHP_EOL;
-    echo "Labels: " . PHP_EOL;
+    printf('Name: ' . $instance->getName() . PHP_EOL);
+    printf('Display Name: ' . $instance->getDisplayName() . PHP_EOL);
+    printf('State: ' . State::name($instance->getState()) . PHP_EOL);
+    printf('Type: ' . Type::name($instance->getType()) . PHP_EOL);
+    printf('Labels: ' . PHP_EOL);
 
     $labels = $instance->getLabels();
 
-    // Labels are an object of the MapField class which implement the IteratorAggregate, Countable and ArrayAccess interfaces so you can do the following:
-    echo "\tNum of Labels: " . $labels->count() . PHP_EOL;
-    echo "\tLabel with a key(dev-label): " . ($labels->offsetExists('dev-label') ? $labels['dev-label'] : 'N/A') . PHP_EOL;
+    // Labels are an object of the MapField class which implement the IteratorAggregate, Countable
+    // and ArrayAccess interfaces so you can do the following:
+    printf("\tNum of Labels: " . $labels->count() . PHP_EOL);
+    printf("\tLabel with a key(dev-label): " . ($labels->offsetExists('dev-label') ? $labels['dev-label'] : 'N/A') . PHP_EOL);
 
     // we can even loop over all the labels
     foreach ($labels as $key => $val) {
-        echo "\t$key: $val" . PHP_EOL;
+        printf("\t$key: $val" . PHP_EOL);
     }
 }
 // [END bigtable_get_instance]

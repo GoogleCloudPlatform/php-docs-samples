@@ -40,15 +40,18 @@ function test_iam_permissions(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    // Add the permissions to test against
-    $permissions = ["bigtable.clusters.create", "bigtable.tables.create"];
+    // The set of permissions to check for the `resource`. Permissions with
+    // wildcards (such as '*' or 'bigtable.*') are not allowed. For more
+    // information see
+    // [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions)
+    $permissions = ['bigtable.clusters.create', 'bigtable.tables.create', 'bigtable.tables.list'];
 
     try {
         $response = $instanceAdminClient->testIamPermissions($instanceName, $permissions);
 
         // This array will contain the permissions that are passed for the current caller
         foreach ($response->getPermissions() as $permission) {
-            echo $permission . PHP_EOL;
+            printf($permission . PHP_EOL);
         }
     } catch (ApiException $e) {
         throw $e;

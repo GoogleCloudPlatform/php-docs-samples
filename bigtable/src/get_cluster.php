@@ -43,28 +43,27 @@ function get_cluster(
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     
-    printf("Fetching the Cluster %s" . PHP_EOL, $clusterId);
+    printf('Fetching the Cluster %s' . PHP_EOL, $clusterId);
     try {
         $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
         $cluster = $instanceAdminClient->getCluster($clusterName);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Cluster %s does not exists." . PHP_EOL, $clusterId);
+            printf('Cluster %s does not exists.' . PHP_EOL, $clusterId);
             return;
-        } else {
-            throw $e;
         }
+        throw $e;
     }
 
-    printf("Printing Details:" . PHP_EOL);
+    printf('Printing Details:' . PHP_EOL);
 
     // Fetch some commonly used metadata
-    echo "Name: " . $cluster->getName() . PHP_EOL;
-    echo "Location: " . $cluster->getLocation() . PHP_EOL;
-    echo "State: " . State::name($cluster->getState()) . PHP_EOL;
-    echo "Default Storage Type: " . StorageType::name($cluster->getDefaultStorageType()) . PHP_EOL;
-    echo "Nodes: " . $cluster->getServeNodes() . PHP_EOL;
-    echo "Encryption Config: " . ($cluster->hasEncryptionConfig() ? $cluster->getEncryptionConfig()->getKmsKeyName() : "N/A") . PHP_EOL;
+    printf('Name: ' . $cluster->getName() . PHP_EOL);
+    printf('Location: ' . $cluster->getLocation() . PHP_EOL);
+    printf('State: ' . State::name($cluster->getState()) . PHP_EOL);
+    printf('Default Storage Type: ' . StorageType::name($cluster->getDefaultStorageType()) . PHP_EOL);
+    printf('Nodes: ' . $cluster->getServeNodes() . PHP_EOL);
+    printf('Encryption Config: ' . ($cluster->hasEncryptionConfig() ? $cluster->getEncryptionConfig()->getKmsKeyName() : "N/A") . PHP_EOL);
 }
 // [END bigtable_get_cluster]
 

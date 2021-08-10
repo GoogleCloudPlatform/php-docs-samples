@@ -41,24 +41,23 @@ function get_iam_policy(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
     try {
-
         // we could instantiate the BigtableTableAdminClient and pass the tableName to get the IAM policy for the table resource as well.
         $iamPolicy = $instanceAdminClient->getIamPolicy($instanceName);
 
-        echo $iamPolicy->getVersion() . PHP_EOL;
+        printf($iamPolicy->getVersion() . PHP_EOL);
 
         foreach ($iamPolicy->getBindings() as $binding) {
-            echo "\t" . $binding->getRole() . ":" . PHP_EOL;
+            printf("\t" . $binding->getRole() . ':' . PHP_EOL);
             foreach ($binding->getmembers() as $member) {
-                echo "\t\t" . $member . PHP_EOL;
+                printf("\t\t" . $member . PHP_EOL);
             }
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exist." . PHP_EOL, $instanceId);
-        } else {
-            throw $e;
+            printf('Instance %s does not exist.' . PHP_EOL, $instanceId);
+            return;
         }
+        throw $e;
     }
 }
 // [END bigtable_get_iam_policy]

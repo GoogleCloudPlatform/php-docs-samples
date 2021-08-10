@@ -57,7 +57,7 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
-        $this->assertContains("Display Name: " . self::$instanceId, $array);
+        $this->assertContains('Display Name: ' . self::$instanceId, $array);
     }
 
     /**
@@ -109,7 +109,7 @@ final class BigtableTest extends TestCase
 
         try {
             self::$instanceAdminClient->getCluster($clusterName);
-            $this->fail(sprintf('Cluster %s still exists', $cluster->getName()));
+            $this->fail(sprintf('Cluster %s still exists', $clusterName));
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $this->assertTrue(true);
