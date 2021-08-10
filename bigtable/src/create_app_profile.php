@@ -47,15 +47,15 @@ function create_app_profile(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
     $appProfile = new AppProfile([
-        'name'=>$appProfileId,
-        'description'=>'Description for this newly created AppProfile'
+        'name' => $appProfileId,
+        'description' => 'Description for this newly created AppProfile'
     ]);
 
     // create a new routing policy
     // allow_transactional_writes refers to Single-Row-Transactions(https://cloud.google.com/bigtable/docs/app-profiles#single-row-transactions)
     $routingPolicy = new SingleClusterRouting([
-        'cluster_id'=>$clusterId,
-        'allow_transactional_writes'=>false
+        'cluster_id' => $clusterId,
+        'allow_transactional_writes' => false
     ]);
 
     // set the newly created routing policy to our app profile
@@ -65,19 +65,19 @@ function create_app_profile(
     // $routingPolicy = new \Google\Cloud\Bigtable\Admin\V2\AppProfile\MultiClusterRoutingUseAny();
     // $appProfile->setMultiClusterRoutingUseAny($routingPolicy);
 
-    printf("Creating a new AppProfile %s" . PHP_EOL, $appProfileId);
+    printf('Creating a new AppProfile %s' . PHP_EOL, $appProfileId);
 
     try {
         $newAppProfile = $instanceAdminClient->createAppProfile($instanceName, $appProfileId, $appProfile);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'ALREADY_EXISTS') {
-            printf("AppProfile %s already exists.", $appProfileId);
-        } else {
-            throw $e;
+            printf('AppProfile %s already exists.', $appProfileId);
+            return;
         }
+        throw $e;
     }
 
-    printf("AppProfile created: %s", $newAppProfile->getName());
+    printf('AppProfile created: %s', $newAppProfile->getName());
 }
 // [END bigtable_create_app_profile]
 

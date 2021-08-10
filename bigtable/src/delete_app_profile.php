@@ -43,19 +43,18 @@ function delete_app_profile(
     $appProfileName = $instanceAdminClient->appProfileName($projectId, $instanceId, $appProfileId);
     $ignoreWarnings = true;
 
-    printf("Deleting the App Profile" . PHP_EOL);
+    printf('Deleting the App Profile: %s' . PHP_EOL, $appProfileId);
 
     try {
         // If $ignoreWarnings is set to false, Bigtable will warn you that all future requests using the AppProfile will fail
         $instanceAdminClient->deleteAppProfile($appProfileName, $ignoreWarnings);
-        printf("App Profile %s deleted." . PHP_EOL, $appProfileId);
+        printf('App Profile %s deleted.' . PHP_EOL, $appProfileId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("App Profile %s does not exist." . PHP_EOL, $appProfileId);
+            printf('App Profile %s does not exist.' . PHP_EOL, $appProfileId);
             return;
-        } else {
-            throw $e;
         }
+        throw $e;
     }
 }
 // [END bigtable_delete_app_profile]

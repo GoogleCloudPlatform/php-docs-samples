@@ -42,29 +42,30 @@ function get_app_profile(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $appProfileName = $instanceAdminClient->appProfileName($projectId, $instanceId, $appProfileId);
 
-    printf("Fetching the App Profile %s" . PHP_EOL, $appProfileId);
+    printf('Fetching the App Profile %s' . PHP_EOL, $appProfileId);
     try {
         $appProfile = $instanceAdminClient->getAppProfile($appProfileName);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("App profile %s does not exist." . PHP_EOL, $appProfileId);
+            printf('App profile %s does not exist.' . PHP_EOL, $appProfileId);
             return;
-        } else {
-            throw $e;
         }
+        throw $e;
     }
 
-    printf("Printing Details:" . PHP_EOL);
+    printf('Printing Details:' . PHP_EOL);
 
     // Fetch some commonly used metadata
-    echo "Name: " . $appProfile->getName() . PHP_EOL;
-    echo "Etag: " . $appProfile->getEtag() . PHP_EOL;
-    echo "Description: " . $appProfile->getDescription() . PHP_EOL;
-    echo "Routing Policy: " . $appProfile->getRoutingPolicy() . PHP_EOL;
+    printf('Name: %s' . PHP_EOL, $appProfile->getName());
+    printf('Etag: %s' . PHP_EOL, $appProfile->getEtag());
+    printf('Description: %s' . PHP_EOL, $appProfile->getDescription());
+    printf('Routing Policy: %s' . PHP_EOL,  $appProfile->getRoutingPolicy());
 
     if ($appProfile->hasSingleClusterRouting()) {
-        echo "Cluster: " . $appProfile->getSingleClusterRouting()->getClusterId() . PHP_EOL;
-        echo "Single-Row Transactions: " . ($appProfile->getSingleClusterRouting()->getAllowTransactionalWrites() ? "Yes" : "No") . PHP_EOL;
+        $clusterId = $appProfile->getSingleClusterRouting()->getClusterId();
+        $singleRowTransactions = $appProfile->getSingleClusterRouting()->getAllowTransactionalWrites() ? 'Yes' : 'No';
+        printf('Cluster: %s' . PHP_EOL, $clusterId);
+        printf('Single-Row Transactions: %s' . PHP_EOL, $singleRowTransactions);
     }
 }
 // [END bigtable_get_app_profile]

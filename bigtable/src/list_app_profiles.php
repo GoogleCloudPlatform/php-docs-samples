@@ -40,22 +40,21 @@ function list_app_profiles(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Fetching App Profiles" . PHP_EOL);
+    printf('Fetching App Profiles' . PHP_EOL);
 
     try {
         $appProfiles = $instanceAdminClient->listAppProfiles($instanceName);
 
         foreach ($appProfiles->iterateAllElements() as $profile) {
             // You can fetch any AppProfile metadata from the $profile object(see get_app_profile.php)
-            echo "Name: " . $profile->getName() . PHP_EOL;
+            printf('Name: %s' . PHP_EOL, $profile->getName());
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exist." . PHP_EOL, $instanceId);
+            printf('Instance %s does not exist.' . PHP_EOL, $instanceId);
             return;
-        } else {
-            throw $e;
         }
+        throw $e;
     }
 }
 // [END bigtable_list_app_profiles]

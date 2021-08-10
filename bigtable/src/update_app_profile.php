@@ -48,15 +48,15 @@ function update_app_profile(
     $appProfileName = $instanceAdminClient->appProfileName($projectId, $instanceId, $appProfileId);
 
     $appProfile = new AppProfile([
-        'name'=>$appProfileName,
-        'description'=>'The updated description',
+        'name' => $appProfileName,
+        'description' => 'The updated description',
     ]);
 
     // create a new routing policy
     // allow_transactional_writes refers to Single-Row-Transactions(https://cloud.google.com/bigtable/docs/app-profiles#single-row-transactions)
     $routingPolicy = new SingleClusterRouting([
-        'cluster_id'=>$clusterId,
-        'allow_transactional_writes'=>true
+        'cluster_id' => $clusterId,
+        'allow_transactional_writes' => true
     ]);
 
     // set the newly created routing policy to our app profile
@@ -70,34 +70,32 @@ function update_app_profile(
     $routingPolicyStr = $appProfile->getRoutingPolicy();
 
     $updateMask = new FieldMask([
-        'paths'=>['description', $routingPolicyStr]
-        // use the following to update to multi cluster routing
-        // 'paths'=>['description','multi_cluster_routing_use_any']
+        'paths' => ['description', $routingPolicyStr]
     ]);
 
-    printf("Updating the AppProfile %s" . PHP_EOL, $appProfileId);
+    printf('Updating the AppProfile %s' . PHP_EOL, $appProfileId);
 
     try {
         // Bigtable warns you while updating the routing policy, or when toggling the allow_transactional_writes
         // to force it to update, we set ignoreWarnings to true.
         // If you just want to update something simple like description, you can remove it.
-        $operationResponse = $instanceAdminClient->updateAppProfile($appProfile, $updateMask, ['ignoreWarnings'=>true]);
+        $operationResponse = $instanceAdminClient->updateAppProfile($appProfile, $updateMask, ['ignoreWarnings' => true]);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedAppProfile = $operationResponse->getResult();
-            printf("App profile updated: %s" . PHP_EOL, $updatedAppProfile->getName());
-        // doSomethingWith($updatedAppProfile)
+            printf('App profile updated: %s' . PHP_EOL, $updatedAppProfile->getName());
+            // doSomethingWith($updatedAppProfile)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("App Profile %s does not exist." . PHP_EOL, $appProfileId);
-        } else {
-            throw $e;
+            printf('App Profile %s does not exist.' . PHP_EOL, $appProfileId);
+            return;
         }
+        throw $e;
     }
 }
 // [END bigtable_update_app_profile]
