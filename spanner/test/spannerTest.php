@@ -48,13 +48,13 @@ class spannerTest extends TestCase
     /** @var string backupId */
     protected static $backupId;
 
-    /** @var $instance Instance */
+    /** @var Instance $instance */
     protected static $instance;
 
     /** @var string multiInstanceId */
     protected static $multiInstanceId;
 
-    /** @var $multiInstance Instance */
+    /** @var Instance $multiInstance */
     protected static $multiInstance;
 
     /** @var string multiDatabaseId */

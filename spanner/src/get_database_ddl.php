@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Updates the default leader of the database.
+ * Gets the database DDL statements.
  * Example:
  * ```
  * get_database_ddl($instanceId, $databaseId);
@@ -49,5 +49,6 @@ function get_database_ddl($instanceId, $databaseId)
 }
 // [END spanner_get_database_ddl]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

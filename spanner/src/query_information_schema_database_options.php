@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Updates the default leader of the database.
+ * Queries the default leader of a database.
  * Example:
  * ```
  * query_information_schema_database_options($instanceId, $databaseId);
@@ -45,7 +45,8 @@ function query_information_schema_database_options($instanceId, $databaseId)
     $results = $database->execute(
         "SELECT s.OPTION_NAME, s.OPTION_VALUE
         FROM INFORMATION_SCHEMA.DATABASE_OPTIONS s
-        WHERE s.OPTION_NAME = 'default_leader'");
+        WHERE s.OPTION_NAME = 'default_leader'"
+    );
 
     foreach ($results as $row) {
         $optionName = $row['OPTION_NAME'];
@@ -58,5 +59,6 @@ function query_information_schema_database_options($instanceId, $databaseId)
 }
 // [END spanner_query_information_schema_database_options]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
