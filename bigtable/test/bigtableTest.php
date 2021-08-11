@@ -13,8 +13,10 @@ final class BigtableTest extends TestCase
     const INSTANCE_ID_PREFIX = 'php-instance-';
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
+    const APP_PROFILE_ID_PREFIX = 'php-app-profile-';
 
     private static $clusterId;
+    private static $appProfileId;
 
     public static function setUpBeforeClass(): void
     {
@@ -30,6 +32,7 @@ final class BigtableTest extends TestCase
     {
         self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
         self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
+        self::$appProfileId = uniqid(self::APP_PROFILE_ID_PREFIX);
 
         $content = self::runFunctionSnippet('create_production_instance', [
             self::$projectId,
@@ -75,6 +78,115 @@ final class BigtableTest extends TestCase
         $expectedResponse = "Instance updated with the new display name: $updatedName." . PHP_EOL;
 
         $this->assertSame($expectedResponse, $content);
+    }
+  
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testCreateAppProfile()
+    {
+        $content = self::runFunctionSnippet('create_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('AppProfile created: ' . $appProfileName, $array);
+
+        $this->checkAppProfile($appProfileName);
+    }
+
+    /**
+     * @depends testCreateAppProfile
+     */
+    public function testGetAppProfile()
+    {
+        $content = self::runFunctionSnippet('get_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('Name: ' . $appProfileName, $array);
+    }
+
+    /**
+     * @depends testGetAppProfile
+     */
+    public function testListAppProfiles()
+    {
+        $content = self::runFunctionSnippet('list_app_profiles', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('Name: ' . $appProfileName, $array);
+    }
+
+    /**
+     * @depends testGetAppProfile
+     */
+    public function testUpdateAppProfile()
+    {
+        $content = self::runFunctionSnippet('update_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(
+            self::$projectId,
+            self::$instanceId,
+            self::$appProfileId
+        );
+
+        $this->assertContains('App profile updated: ' . $appProfileName, $array);
+
+        // let's check if the allow_transactional_writes also changed
+        $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
+
+        $this->assertTrue($appProfile->getSingleClusterRouting()->getAllowTransactionalWrites());
+    }
+
+    /**
+     * @depends testCreateAppProfile
+     */
+    public function testDeleteAppProfile()
+    {
+        $content = self::runFunctionSnippet('delete_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('App Profile ' . self::$appProfileId . ' deleted.', $array);
+
+        // let's check if we can fetch the profile or not
+        try {
+            self::$instanceAdminClient->getAppProfile($appProfileName);
+            $this->fail(sprintf('App Profile %s still exists', self::$appProfileId));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -569,6 +681,21 @@ final class BigtableTest extends TestCase
         try {
             $table = self::$tableAdminClient->getTable($tableName);
             $this->assertEquals($table->getName(), $tableName);
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $error = json_decode($e->getMessage(), true);
+                $this->fail($error['message']);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    private function checkAppProfile($appProfileName)
+    {
+        try {
+            $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
+            $this->assertEquals($appProfile->getName(), $appProfileName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);
