@@ -85,7 +85,7 @@ function update_app_profile(
         if ($operationResponse->operationSucceeded()) {
             $updatedAppProfile = $operationResponse->getResult();
             printf('App profile updated: %s' . PHP_EOL, $updatedAppProfile->getName());
-            // doSomethingWith($updatedAppProfile)
+        // doSomethingWith($updatedAppProfile)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)
