@@ -29,6 +29,38 @@ use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\ZoneOperationsClient;
 
+/**
+ * This method waits for an operation to be completed. Calling this function
+ * will block until the operation is finished.
+ *
+ * @param Operation $operation The Operation object representing the operation you want to
+wait on.
+ * @param string $projectId Your Google Cloud project ID.
+ * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").
+ *
+ * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @return Operation Finished Operation object.
+ */
+function wait_for_operation(
+    Operation $operation,
+    string $projectId,
+    string $zone
+): Operation {
+    $operationClient = new ZoneOperationsClient();
+
+    while ($operation->getStatus() != Operation\Status::DONE) {
+        // Wait for the operation to complete.
+        $operation = $operationClient->wait($operation->getName(), $projectId, $zone);
+
+        if ($operation->hasError()) {
+            printf("Operation failed with error(s): %s" . PHP_EOL, $operation->getError()->serializeToString());
+            return $operation;
+        }
+    }
+
+    printf("Operation successful" . PHP_EOL);
+    return $operation;
+}
 # [END compute_instances_operation_check]
 
 /**
@@ -53,19 +85,12 @@ function delete_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
-    # [START compute_instances_operation_check]
-    if ($operation->getStatus() === Operation\Status::RUNNING) {
-        // Wait for the operation to complete.
-        $operationClient = new ZoneOperationsClient();
-
-        // Default timeout of 60 s is not always enough for operation to finish,
-        // to avoid an exception we set timeout to 180000 ms = 180 s = 3 minutes
-        $optionalArgs = ['timeoutMillis' => 180000];
-        $operationClient->wait($operation->getName(), $projectId, $zone, $optionalArgs);
+    $operation = wait_for_operation($operation, $projectId, $zone);
+    if (! $operation->getError()) {
+        printf('Deleted instance %s' . PHP_EOL, $instanceName);
+    } else {
+        printf('Instance deletion failed!' . PHP_EOL);
     }
-    # [END compute_instances_operation_check]
-
-    printf('Deleted instance %s' . PHP_EOL, $instanceName);
 }
 # [END compute_instances_delete]
 
