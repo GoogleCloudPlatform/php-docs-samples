@@ -37,6 +37,8 @@ trait BigtableTestTrait
     private static $bigtableClient;
     private static $instanceId;
     private static $tableId;
+    private static $policyEmail;
+    private static $policyRole;
 
     public static function setUpBigtableVars()
     {
@@ -46,6 +48,8 @@ trait BigtableTestTrait
         self::$bigtableClient = new BigtableClient([
             'projectId' => self::$projectId,
         ]);
+        self::$policyEmail = 'test@example.com';
+        self::$policyRole = 'roles/bigtable.user';
     }
 
     public static function createDevInstance($instanceIdPrefix)

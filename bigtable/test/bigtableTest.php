@@ -603,6 +603,41 @@ final class BigtableTest extends TestCase
     }
 
     /**
+    * @depends testCreateProductionInstance
+    */
+    public function testSetIamPolicy()
+    {
+        $user = 'user:' . self::$policyEmail;
+        $content=self::runFunctionSnippet('set_iam_policy', [
+            self::$projectId,
+            self::$instanceId,
+            $user,
+            self::$policyRole
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains(self::$policyRole . ':' . $user, $array);
+    }
+
+    /**
+    * @depends testSetIamPolicy
+    */
+    public function testGetIamPolicy()
+    {
+        $user = 'user:' . self::$policyEmail;
+
+        $content=self::runFunctionSnippet('get_iam_policy', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains(self::$policyRole . ':' . $user, $array);
+    }
+
+    /**
      * @depends testCreateProductionInstance
      */
     public function testDeleteInstance()

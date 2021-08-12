@@ -59,9 +59,8 @@ function set_iam_policy(
         $iamPolicy = $instanceAdminClient->setIamPolicy($instanceName, $policy);
 
         foreach ($iamPolicy->getBindings() as $binding) {
-            printf("\t" . $binding->getRole() . ":" . PHP_EOL);
             foreach ($binding->getmembers() as $member) {
-                printf("\t\t" . $member . PHP_EOL);
+                printf('%s:%s' . PHP_EOL, $binding->getRole(), $member);
             }
         }
     } catch (ApiException $e) {
