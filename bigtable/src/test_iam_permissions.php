@@ -26,7 +26,6 @@ namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_test_iam_permissions]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\ApiCore\ApiException;
 
 /**
  * Test IAM permissions for the current caller
@@ -46,15 +45,11 @@ function test_iam_permissions(
     // [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions)
     $permissions = ['bigtable.clusters.create', 'bigtable.tables.create', 'bigtable.tables.list'];
 
-    try {
-        $response = $instanceAdminClient->testIamPermissions($instanceName, $permissions);
+    $response = $instanceAdminClient->testIamPermissions($instanceName, $permissions);
 
-        // This array will contain the permissions that are passed for the current caller
-        foreach ($response->getPermissions() as $permission) {
-            printf($permission . PHP_EOL);
-        }
-    } catch (ApiException $e) {
-        throw $e;
+    // This array will contain the permissions that are passed for the current caller
+    foreach ($response->getPermissions() as $permission) {
+        printf($permission . PHP_EOL);
     }
 }
 // [END bigtable_test_iam_permissions]
