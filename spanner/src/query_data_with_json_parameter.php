@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_query_with_json_parameter]
+use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -50,6 +51,9 @@ function query_data_with_json_parameter($instanceId, $databaseId)
         [
             'parameters' => [
                 'venueDetails' => $exampleJson
+            ],
+            'types' => [
+                'venueDetails' => Database::TYPE_JSON
             ]
         ]
     );
