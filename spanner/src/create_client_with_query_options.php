@@ -41,7 +41,12 @@ function create_client_with_query_options($instanceId, $databaseId)
 {
     $spanner = new SpannerClient([
         'queryOptions' => [
-            'optimizerVersion' => "1"
+            'optimizerVersion' => '1',
+            // Pin the statistics package used for this client instance to the
+            // latest version. The list of available statistics packages can be
+            // found by querying the "INFORMATION_SCHEMA.SPANNER_STATISTICS"
+            // table.
+            'optimizerStatisticsPackage' => 'latest'
         ]
     ]);
     $instance = $spanner->instance($instanceId);
@@ -58,5 +63,6 @@ function create_client_with_query_options($instanceId, $databaseId)
 }
 // [END spanner_create_client_with_query_options]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -43,5 +43,6 @@ function setup_client_create_with_project_id(string $projectId): void
 # [END firestore_setup_client_create_with_project_id]
 # [END fs_initialize_project_id]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

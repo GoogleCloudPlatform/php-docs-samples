@@ -29,12 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete a Cloud Storage Bucket.
  *
- * @param string $bucketName the name of the bucket to delete.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function delete_bucket($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->delete();
@@ -42,5 +42,6 @@ function delete_bucket($bucketName)
 }
 # [END storage_delete_bucket]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
