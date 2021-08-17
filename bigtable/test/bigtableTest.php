@@ -14,9 +14,13 @@ final class BigtableTest extends TestCase
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
     const APP_PROFILE_ID_PREFIX = 'php-app-profile-';
+    const SERVICE_ACCOUNT_ID_PREFIX = 'php-sa-';    // Shortened due to length constraint b/w 6 and 30.
 
     private static $clusterId;
     private static $appProfileId;
+    private static $serviceAccountId;
+    private static $serviceAccountEmail;
+    private static $policyRole;
 
     public static function setUpBeforeClass(): void
     {
@@ -607,7 +611,11 @@ final class BigtableTest extends TestCase
     */
     public function testSetIamPolicy()
     {
-        $user = 'user:' . self::$policyEmail;
+        self::$policyRole = 'roles/bigtable.user';
+        self::$serviceAccountId = uniqid(self::SERVICE_ACCOUNT_ID_PREFIX);
+        self::$serviceAccountEmail = $this->createServiceAccount(self::$serviceAccountId);
+
+        $user = 'serviceAccount:' . self::$serviceAccountEmail;
         $content=self::runFunctionSnippet('set_iam_policy', [
             self::$projectId,
             self::$instanceId,
@@ -625,7 +633,7 @@ final class BigtableTest extends TestCase
     */
     public function testGetIamPolicy()
     {
-        $user = 'user:' . self::$policyEmail;
+        $user = 'serviceAccount:' . self::$serviceAccountEmail;
 
         $content=self::runFunctionSnippet('get_iam_policy', [
             self::$projectId,
@@ -635,6 +643,9 @@ final class BigtableTest extends TestCase
         $array = explode(PHP_EOL, $content);
 
         $this->assertContains(self::$policyRole . ':' . $user, $array);
+
+        // cleanup
+        $this->deleteServiceAccount(self::$serviceAccountEmail);
     }
 
     /**

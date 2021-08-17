@@ -26,6 +26,9 @@ use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
+use Google_Client;
+use Google_Service_Iam;
+use Google_Service_Iam_CreateServiceAccountRequest;
 
 trait BigtableTestTrait
 {
@@ -37,8 +40,6 @@ trait BigtableTestTrait
     private static $bigtableClient;
     private static $instanceId;
     private static $tableId;
-    private static $policyEmail;
-    private static $policyRole;
 
     public static function setUpBigtableVars()
     {
@@ -48,8 +49,6 @@ trait BigtableTestTrait
         self::$bigtableClient = new BigtableClient([
             'projectId' => self::$projectId,
         ]);
-        self::$policyEmail = 'test@example.com';
-        self::$policyRole = 'roles/bigtable.user';
     }
 
     public static function createDevInstance($instanceIdPrefix)
@@ -89,6 +88,35 @@ trait BigtableTestTrait
         );
 
         return $tableId;
+    }
+
+    public static function createServiceAccount($serviceAccountId)
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $client = new Google_Client();
+        $client->useApplicationDefaultCredentials();
+        $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+        $service = new Google_Service_Iam($client);
+
+        $name = 'projects/' . self::$projectId;
+        $requestBody = new Google_Service_Iam_CreateServiceAccountRequest();
+        $requestBody->setAccountId($serviceAccountId);
+        $response = $service->projects_serviceAccounts->create($name, $requestBody);
+
+        return $response['email'];
+    }
+
+    public static function deleteServiceAccount($serviceAccountEmail)
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $client = new Google_Client();
+        $client->useApplicationDefaultCredentials();
+        $client->addScope('https://www.googleapis.com/auth/cloud-platform');
+        $service = new Google_Service_Iam($client);
+
+        $name = 'projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail;
+
+        $service->projects_serviceAccounts->delete($name);
     }
 
     public static function deleteBigtableInstance()
