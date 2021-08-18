@@ -26,9 +26,9 @@ use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
-use Google_Client;
-use Google_Service_Iam;
-use Google_Service_Iam_CreateServiceAccountRequest;
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 
 trait BigtableTestTrait
 {
@@ -93,30 +93,53 @@ trait BigtableTestTrait
     public static function createServiceAccount($serviceAccountId)
     {
         // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
-        $client = new Google_Client();
-        $client->useApplicationDefaultCredentials();
-        $client->addScope('https://www.googleapis.com/auth/cloud-platform');
-        $service = new Google_Service_Iam($client);
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
 
-        $name = 'projects/' . self::$projectId;
-        $requestBody = new Google_Service_Iam_CreateServiceAccountRequest();
-        $requestBody->setAccountId($serviceAccountId);
-        $response = $service->projects_serviceAccounts->create($name, $requestBody);
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
 
-        return $response['email'];
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+
+        // make the request
+        $response = $client->post('/v1/projects/' . self::$projectId . '/serviceAccounts', [
+            'json'=>[
+                'accountId'=>$serviceAccountId,
+                'serviceAccount'=>[
+                    'displayName'=>'Test Service Account',
+                    'description'=>'This account should be deleted automatically after the unit tests complete.'
+                ]
+            ]
+        ]);
+
+        return json_decode($response->getBody())->email;
     }
 
     public static function deleteServiceAccount($serviceAccountEmail)
     {
         // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
-        $client = new Google_Client();
-        $client->useApplicationDefaultCredentials();
-        $client->addScope('https://www.googleapis.com/auth/cloud-platform');
-        $service = new Google_Service_Iam($client);
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
 
-        $name = 'projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail;
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
 
-        $service->projects_serviceAccounts->delete($name);
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+
+        // make the request
+        $client->delete('/v1/projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail);
     }
 
     public static function deleteBigtableInstance()
