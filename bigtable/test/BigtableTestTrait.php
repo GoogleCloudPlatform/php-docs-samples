@@ -109,11 +109,11 @@ trait BigtableTestTrait
 
         // make the request
         $response = $client->post('/v1/projects/' . self::$projectId . '/serviceAccounts', [
-            'json'=>[
-                'accountId'=>$serviceAccountId,
-                'serviceAccount'=>[
-                    'displayName'=>'Test Service Account',
-                    'description'=>'This account should be deleted automatically after the unit tests complete.'
+            'json' => [
+                'accountId' => $serviceAccountId,
+                'serviceAccount' => [
+                    'displayName' => 'Test Service Account',
+                    'description' => 'This account should be deleted automatically after the unit tests complete.'
                 ]
             ]
         ]);
