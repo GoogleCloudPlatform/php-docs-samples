@@ -26,6 +26,9 @@ use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 
 trait BigtableTestTrait
 {
@@ -85,6 +88,58 @@ trait BigtableTestTrait
         );
 
         return $tableId;
+    }
+
+    public static function createServiceAccount($serviceAccountId)
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+
+        // make the request
+        $response = $client->post('/v1/projects/' . self::$projectId . '/serviceAccounts', [
+            'json' => [
+                'accountId' => $serviceAccountId,
+                'serviceAccount' => [
+                    'displayName' => 'Test Service Account',
+                    'description' => 'This account should be deleted automatically after the unit tests complete.'
+                ]
+            ]
+        ]);
+
+        return json_decode($response->getBody())->email;
+    }
+
+    public static function deleteServiceAccount($serviceAccountEmail)
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+
+        // make the request
+        $client->delete('/v1/projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail);
     }
 
     public static function deleteBigtableInstance()
