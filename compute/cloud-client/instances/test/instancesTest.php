@@ -51,7 +51,6 @@ class instancesTest extends TestCase
         // Remove the bucket
         self::$bucket->delete();
     }
-
     public function testCreateInstance()
     {
         $output = $this->runFunctionSnippet('create_instance', [
@@ -169,5 +168,26 @@ class instancesTest extends TestCase
             'projectId' => self::$projectId,
         ]);
         $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
+    }
+    public function testListAllImages()
+    {
+        $output = $this->runFunctionSnippet('list_all_images', [
+        'projectId' => 'windows-sql-cloud',
+    ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
+    }
+    public function testListImagesByPage()
+    {
+        $output = $this->runFunctionSnippet('list_images_by_page', [
+            'projectId' => 'windows-sql-cloud',
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $this->assertStringContainsString('Page 2', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
     }
 }
