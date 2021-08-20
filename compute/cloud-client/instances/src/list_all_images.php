@@ -44,9 +44,9 @@ function list_all_images(string $projectId)
     $optionalArgs = array('maxResults' => 100,'filter' =>"deprecated.state != DEPRECATED");
 
     /**
-     * Although the `max_results` parameter is specified in the request, the iterable returned
-     * by the `list()` method hides the pagination mechanic. The library makes multiple
-     * requests to the API for you, so you can simply iterate over all the images.
+     * Although the maxResults parameter is specified in the request, the iterateAllElements() method
+     * hides the pagination mechanic. The library makes multiple requests to the API for you,
+     * so you can simply iterate over all the images.
     */
     $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
     printf("=================== Flat list of images ===================" . PHP_EOL);

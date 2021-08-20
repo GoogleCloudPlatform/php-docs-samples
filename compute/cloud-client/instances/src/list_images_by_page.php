@@ -31,18 +31,19 @@ use Google\Cloud\Compute\V1\ImagesClient;
  * divided into pages as returned by the Compute Engine API.
  * Example:
  * ```
- * list_images_by_page($projectId,$pageSize);
+ * list_images_by_page($projectId, $pageSize);
  * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to list images from.
  * @param int $pageSize Size of the pages you want the API to return on each call.
+ * 
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function list_images_by_page(string $projectId, int $pageSize = 10)
 {
     $imagesClient = new ImagesClient();
     $pageNum = 1;
-    //Listing only non-deprecated images to reduce the size of the reply.
+    // Listing only non-deprecated images to reduce the size of the reply.
     $optionalArgs = array( 'maxResults' => $pageSize, 'filter' =>"deprecated.state != DEPRECATED");
 
     /**
