@@ -27,35 +27,40 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Compute\V1\ImagesClient;
 
 /**
- * List all images for a particular Cloud project in pages.
+ * Prints a list of all non-deprecated image names available in a given project,
+ * divided into pages as returned by the Compute Engine API.
  * Example:
  * ```
- * list_images_by_page($projectId);
+ * list_images_by_page($projectId,$pageSize);
  * ```
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param int $page_size Size of the pages you want the API to return on each call.
+ * @param string $projectId Project ID or project number of the Cloud project you want to list images from.
+ * @param int $pageSize Size of the pages you want the API to return on each call.
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_images_by_page(string $projectId, int $page_size = 10)
+function list_images_by_page(string $projectId, int $pageSize = 10)
 {
     $imagesClient = new ImagesClient();
-    $page_num = 1;
-    $optionalArgs = array( 'maxResults' => $page_size, 'filter' =>"deprecated.state != DEPRECATED");
-    // Iterate through elements by page using ImagesClient
+    $pageNum = 1;
+    //Listing only non-deprecated images to reduce the size of the reply.
+    $optionalArgs = array( 'maxResults' => $pageSize, 'filter' =>"deprecated.state != DEPRECATED");
+
+    /**
+     * Use the 'iteratePages()' method of returned response to have more granular control of iteration over
+     * paginated results from the API. Each time you want to access the next page, the library retrieves
+     * that page from the API.
+     */
     $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
     printf("=================== Paginated list of images ===================" . PHP_EOL);
     foreach ($pagedResponse->iteratePages() as $page) {
-        printf('Page ' . $page_num . ':' . PHP_EOL);
+        printf('Page ' . $pageNum . ':' . PHP_EOL);
         foreach ($page as $element) {
             printf(' - %s' . PHP_EOL, $element->getName());
-            $page_num++;
         }
+        $pageNum++;
     }
 }
 # [END compute_images_list_page]
-
-
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
