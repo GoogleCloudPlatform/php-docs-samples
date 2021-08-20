@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Prints a list of a bucket's lables.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function get_bucket_labels($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $info = $bucket->info();

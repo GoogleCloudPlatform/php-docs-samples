@@ -36,14 +36,48 @@ class spannerTest extends TestCase
     /** @var string instanceId */
     protected static $instanceId;
 
+    /** @var string lowCostInstanceId */
+    protected static $lowCostInstanceId;
+
     /** @var string databaseId */
     protected static $databaseId;
+
+    /** @var string encryptedDatabaseId */
+    protected static $encryptedDatabaseId;
 
     /** @var string backupId */
     protected static $backupId;
 
-    /** @var $instance Instance */
+    /** @var Instance $instance */
     protected static $instance;
+
+    /** @var string multiInstanceId */
+    protected static $multiInstanceId;
+
+    /** @var Instance $multiInstance */
+    protected static $multiInstance;
+
+    /** @var string multiDatabaseId */
+    protected static $multiDatabaseId;
+
+    /** @var string instanceConfig */
+    protected static $instanceConfig;
+
+    /** @var string defaultLeader */
+    protected static $defaultLeader;
+
+    /** @var string defaultLeader */
+    protected static $updatedDefaultLeader;
+
+    /** @var string kmsKeyName */
+    protected static $kmsKeyName;
+
+    /**
+     * Low cost instance with less than 1000 processing units.
+     *
+     * @var $instance lowCostInstance
+     */
+    protected static $lowCostInstance;
 
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
@@ -61,15 +95,40 @@ class spannerTest extends TestCase
         ]);
 
         self::$instanceId = 'test-' . time() . rand();
+        self::$lowCostInstanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
+        self::$encryptedDatabaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
+        self::$kmsKeyName =
+            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
+        self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
+
+        self::$multiInstanceId = 'test-' . time() . rand() . 'm';
+        self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
+        self::$instanceConfig = 'nam3';
+        self::$defaultLeader = 'us-central1';
+        self::$updatedDefaultLeader = "us-east4";
+        self::$multiInstance = $spanner->instance(self::$multiInstanceId);
+
+        $config = $spanner->instanceConfiguration(self::$instanceConfig);
+        $operation = self::$multiInstance->create($config);
+        $operation->pollUntilComplete();
     }
 
     public function testCreateInstance()
     {
         $output = $this->runFunctionSnippet('create_instance', [
             'instance_id' => self::$instanceId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance test-', $output);
+    }
+
+    public function testCreateInstanceWithProcessingUnits()
+    {
+        $output = $this->runFunctionSnippet('create_instance_with_processing_units', [
+            'instance_id' => self::$lowCostInstanceId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created instance test-', $output);
@@ -83,6 +142,20 @@ class spannerTest extends TestCase
         $output = $this->runFunctionSnippet('create_database');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database test-', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
+    public function testCreateDatabaseWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
+            self::$instanceId,
+            self::$encryptedDatabaseId,
+            self::$kmsKeyName,
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database en-test-', $output);
     }
 
     /**
@@ -684,6 +757,79 @@ class spannerTest extends TestCase
         });
     }
 
+    private function testGetInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('get_instance_config', [
+            'instance_config' => self::$instanceConfig
+        ]);
+        $this->assertStringContainsString(self::$instanceConfig, $output);
+    }
+
+    private function testListInstanceConfigs()
+    {
+        $output = $this->runFunctionSnippet('list_instance_configs');
+        $this->assertStringContainsString(self::$instanceConfig, $output);
+    }
+
+    private function testCreateDatabaseWithDefaultLeader()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_default_leader', [
+            'instance_id' => self::$multiInstanceId,
+            'database_id' => self::$multiDatabaseId,
+            'defaultLeader' => self::$defaultLeader
+        ]);
+        $this->assertStringContainsString(self::$defaultLeader, $output);
+    }
+
+    /**
+     * @depends testCreateDatabaseWithDefaultLeader
+     */
+    private function testQueryInformationSchemaDatabaseOptions()
+    {
+        $output = $this->runFunctionSnippet('query_information_schema_database_options', [
+            'instance_id' => self::$multiInstanceId,
+            'database_id' => self::$multiDatabaseId,
+        ]);
+        $this->assertStringContainsString(self::$defaultLeader, $output);
+    }
+
+    /**
+     * @depends testCreateDatabaseWithDefaultLeader
+     */
+    private function testUpdateDatabaseWithDefaultLeader()
+    {
+        $output = $this->runFunctionSnippet('update_database_with_default_leader', [
+            'instance_id' => self::$multiInstanceId,
+            'database_id' => self::$multiDatabaseId,
+            'defaultLeader' => self::$updatedDefaultLeader
+        ]);
+        $this->assertStringContainsString(self::$updatedDefaultLeader, $output);
+    }
+
+    /**
+     * @depends testUpdateDatabaseWithDefaultLeader
+     */
+    private function testGetDatabaseDdl()
+    {
+        $output = $this->runFunctionSnippet('get_database_ddl', [
+            'instance_id' => self::$multiInstanceId,
+            'database_id' => self::$multiDatabaseId,
+        ]);
+        $this->assertStringContainsString(self::$multiDatabaseId, $output);
+        $this->assertStringContainsString(self::$updatedDefaultLeader, $output);
+    }
+
+    /**
+     * @depends testUpdateDatabaseWithDefaultLeader
+     */
+    private function testListDatabases()
+    {
+        $output = $this->runFunctionSnippet('list_databases');
+        $this->assertStringContainsString(self::$databaseId, $output);
+        $this->assertStringContainsString(self::$multiDatabaseId, $output);
+        $this->assertStringContainsString(self::$updatedDefaultLeader, $output);
+    }
+
     private function runFunctionSnippet($sampleName, $params = [])
     {
         return $this->traitRunFunctionSnippet(
@@ -698,6 +844,10 @@ class spannerTest extends TestCase
             $database = self::$instance->database(self::$databaseId);
             $database->drop();
         }
+        $database = self::$multiInstance->database(self::$databaseId);
+        $database->drop();
         self::$instance->delete();
+        self::$lowCostInstance->delete();
+        self::$multiInstance->delete();
     }
 }
