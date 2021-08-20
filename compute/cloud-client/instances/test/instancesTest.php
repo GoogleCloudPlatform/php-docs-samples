@@ -172,8 +172,8 @@ class instancesTest extends TestCase
     public function testListAllImages()
     {
         $output = $this->runFunctionSnippet('list_all_images', [
-        'projectId' => 'windows-sql-cloud',
-    ]);
+            'projectId' => 'windows-sql-cloud',
+        ]);
 
         $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
         $arr = explode(PHP_EOL, $output);
