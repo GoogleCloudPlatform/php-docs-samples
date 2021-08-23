@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,19 @@
 
 declare(strict_types=1);
 
-// [START kms_create_key_hsm]
+// [START kms_create_key_mac]
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
-use Google\Cloud\Kms\V1\ProtectionLevel;
 use Google\Protobuf\Duration;
 
-function create_key_hsm_sample(
+function create_key_mac_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
-    string $id = 'my-hsm-key'
+    string $id = 'my-mac-key'
 ) {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
@@ -40,10 +39,9 @@ function create_key_hsm_sample(
 
     // Build the key.
     $key = (new CryptoKey())
-        ->setPurpose(CryptoKeyPurpose::ENCRYPT_DECRYPT)
+        ->setPurpose(CryptoKeyPurpose::MAC)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
-            ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION)
-            ->setProtectionLevel(ProtectionLevel::HSM)
+            ->setAlgorithm(CryptoKeyVersionAlgorithm::HMAC_SHA256)
         )
 
         // Optional: customize how long key versions should be kept before destroying.
@@ -53,10 +51,10 @@ function create_key_hsm_sample(
 
     // Call the API.
     $createdKey = $client->createCryptoKey($keyRingName, $id, $key);
-    printf('Created hsm key: %s' . PHP_EOL, $createdKey->getName());
+    printf('Created mac key: %s' . PHP_EOL, $createdKey->getName());
     return $createdKey;
 }
-// [END kms_create_key_hsm]
+// [END kms_create_key_mac]
 
 if (isset($argv)) {
     if (count($argv) === 0) {
@@ -65,5 +63,5 @@ if (isset($argv)) {
 
     require_once __DIR__ . '/../vendor/autoload.php';
     list($_, $projectId, $locationId, $keyRingId, $id) = $argv;
-    create_key_hsm_sample($projectId, $locationId, $keyRingId, $id);
+    create_key_mac_sample($projectId, $locationId, $keyRingId, $id);
 }
