@@ -1,5 +1,7 @@
 <?php
 
+namespace Google\Cloud\Samples\Bigtable;
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,29 +24,35 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// [START bigtable_list_instances]
+// [START bigtable_test_iam_permissions]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 /**
- * List Bigtable instances in a project
+ * Test IAM permissions for the current caller
  * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
  */
-function list_instance(string $projectId): void
-{
+function test_iam_permissions(
+    string $projectId,
+    string $instanceId
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    $projectName = $instanceAdminClient->projectName($projectId);
+    // The set of permissions to check for the `resource`. Permissions with
+    // wildcards (such as '*' or 'bigtable.*') are not allowed. For more
+    // information see
+    // [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions)
+    $permissions = ['bigtable.clusters.create', 'bigtable.tables.create', 'bigtable.tables.list'];
 
-    printf("Listing Instances:" . PHP_EOL);
+    $response = $instanceAdminClient->testIamPermissions($instanceName, $permissions);
 
-    $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
-    $instances = $getInstances->getIterator();
-
-    foreach ($instances as $instance) {
-        print($instance->getName() . PHP_EOL);
+    // This array will contain the permissions that are passed for the current caller
+    foreach ($response->getPermissions() as $permission) {
+        printf($permission . PHP_EOL);
     }
 }
-// [END bigtable_list_instances]
+// [END bigtable_test_iam_permissions]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

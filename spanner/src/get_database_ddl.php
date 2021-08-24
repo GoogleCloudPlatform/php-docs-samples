@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,32 +18,36 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-// [START bigtable_list_instances]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+namespace Google\Cloud\Samples\Spanner;
+
+// [START spanner_get_database_ddl]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * List Bigtable instances in a project
- * @param string $projectId The Google Cloud project ID
+ * Gets the database DDL statements.
+ * Example:
+ * ```
+ * get_database_ddl($instanceId, $databaseId);
+ * ```
+ *
+ * @param string $instanceId The Spanner instance ID.
+ * @param string $databaseId The Spanner database ID.
  */
-function list_instance(string $projectId): void
+function get_database_ddl($instanceId, $databaseId)
 {
-    $instanceAdminClient = new BigtableInstanceAdminClient();
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $projectName = $instanceAdminClient->projectName($projectId);
-
-    printf("Listing Instances:" . PHP_EOL);
-
-    $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
-    $instances = $getInstances->getIterator();
-
-    foreach ($instances as $instance) {
-        print($instance->getName() . PHP_EOL);
+    printf("Retrieved database DDL for $databaseId" . PHP_EOL);
+    foreach ($database->ddl() as $statement) {
+        printf("%s" . PHP_EOL, $statement);
     }
 }
-// [END bigtable_list_instances]
+// [END spanner_get_database_ddl]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

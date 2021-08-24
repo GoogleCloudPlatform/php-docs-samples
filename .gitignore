@@ -8,6 +8,7 @@ credentials.*
 **/vendor/
 **/build/
 .php_cs.cache
+.php-cs-fixer.cache
 .vscode/
 .kokoro/secrets.sh
 .phpunit.result.cache
