@@ -51,6 +51,7 @@ class instancesTest extends TestCase
         // Remove the bucket
         self::$bucket->delete();
     }
+
     public function testCreateInstance()
     {
         $output = $this->runFunctionSnippet('create_instance', [
@@ -169,6 +170,7 @@ class instancesTest extends TestCase
         ]);
         $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
     }
+
     public function testListAllImages()
     {
         $output = $this->runFunctionSnippet('list_all_images', [
@@ -179,6 +181,7 @@ class instancesTest extends TestCase
         $arr = explode(PHP_EOL, $output);
         $this->assertGreaterThanOrEqual(2, count($arr));
     }
+
     public function testListImagesByPage()
     {
         $output = $this->runFunctionSnippet('list_images_by_page', [
