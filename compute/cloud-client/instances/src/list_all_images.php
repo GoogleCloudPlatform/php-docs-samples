@@ -41,15 +41,15 @@ function list_all_images(string $projectId)
 {
     $imagesClient = new ImagesClient();
     // Listing only non-deprecated images to reduce the size of the reply.
-    $optionalArgs = array('maxResults' => 100,'filter' =>"deprecated.state != DEPRECATED");
+    $optionalArgs = ['maxResults' => 100, 'filter' => 'deprecated.state != DEPRECATED'];
 
     /**
      * Although the maxResults parameter is specified in the request, the iterateAllElements() method
      * hides the pagination mechanic. The library makes multiple requests to the API for you,
      * so you can simply iterate over all the images.
-    */
+     */
     $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
-    printf("=================== Flat list of images ===================" . PHP_EOL);
+    print("=================== Flat list of images ===================" . PHP_EOL);
     foreach ($pagedResponse->iterateAllElements() as $element) {
         printf(' - %s' . PHP_EOL, $element->getName());
     }

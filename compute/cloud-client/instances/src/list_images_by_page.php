@@ -44,7 +44,7 @@ function list_images_by_page(string $projectId, int $pageSize = 10)
     $imagesClient = new ImagesClient();
     $pageNum = 1;
     // Listing only non-deprecated images to reduce the size of the reply.
-    $optionalArgs = array( 'maxResults' => $pageSize, 'filter' =>"deprecated.state != DEPRECATED");
+    $optionalArgs = ['maxResults' => $pageSize, 'filter' => 'deprecated.state != DEPRECATED'];
 
     /**
      * Use the 'iteratePages()' method of returned response to have more granular control of iteration over
@@ -52,9 +52,9 @@ function list_images_by_page(string $projectId, int $pageSize = 10)
      * that page from the API.
      */
     $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
-    printf("=================== Paginated list of images ===================" . PHP_EOL);
+    print("=================== Paginated list of images ===================" . PHP_EOL);
     foreach ($pagedResponse->iteratePages() as $page) {
-        printf('Page ' . $pageNum . ':' . PHP_EOL);
+        printf('Page %s:' . PHP_EOL, $pageNum);
         foreach ($page as $element) {
             printf(' - %s' . PHP_EOL, $element->getName());
         }
