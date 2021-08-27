@@ -65,7 +65,7 @@ class assetTest extends TestCase
         $this->runEventuallyConsistentTest(function () use ($assetName) {
             $output = $this->runFunctionSnippet('list_assets', [
               'projectId' => self::$projectId,
-              'assetTypes' => ['storage.buckets'],
+              'assetTypes' => ['storage.googleapis.com/Bucket'],
               'pageSize' => 1000,
             ]);
 
