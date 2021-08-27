@@ -170,4 +170,27 @@ class instancesTest extends TestCase
         ]);
         $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
     }
+
+    public function testListAllImages()
+    {
+        $output = $this->runFunctionSnippet('list_all_images', [
+            'projectId' => 'windows-sql-cloud',
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
+    }
+
+    public function testListImagesByPage()
+    {
+        $output = $this->runFunctionSnippet('list_images_by_page', [
+            'projectId' => 'windows-sql-cloud',
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $this->assertStringContainsString('Page 2', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
+    }
 }
