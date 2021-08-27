@@ -21,15 +21,21 @@ namespace Google\Cloud\Samples\Asset;
 use Google\Cloud\Asset\V1\AssetServiceClient;
 
 /**
- * @param string $projectId the project Id for list assets.
+ * @param string       $projectId  Tthe project Id for list assets.
+ * @param string|array $assetTypes (Optional) Asset types to list for.
+ * @param int          $pageSize   (Optional) Size of one result page.
  */
-function list_assets(string $projectId)
+function list_assets(string $projectId, array $assetTypes = [], int $pageSize)
 {
     // Instantiate a client.
     $client = new AssetServiceClient();
 
     // Run request
-    $response = $client->listAssets("projects/$projectId");
+    $response = $client->listAssets(
+      "projects/$projectId", [
+        'assetTypes' => $assetTypes,
+        'pageSize' => $pageSize,
+      ]);
 
     // Print the asset names in the result
     foreach ($response->getPage() as $asset) {

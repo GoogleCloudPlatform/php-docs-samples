@@ -64,7 +64,9 @@ class assetTest extends TestCase
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
         $this->runEventuallyConsistentTest(function () use ($assetName) {
             $output = $this->runFunctionSnippet('list_assets', [
-                'projectId' => self::$projectId,
+              'projectId' => self::$projectId,
+              'assetTypes' => ['storage.buckets'],
+              'pageSize' => 1000,
             ]);
 
             $this->assertStringContainsString($assetName, $output);
