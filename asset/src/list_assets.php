@@ -29,7 +29,7 @@ function list_assets(string $projectId)
     $client = new AssetServiceClient();
 
     // Run request
-    $response = $client->listAssets("projects/$project");
+    $response = $client->listAssets("projects/$projectId");
 
     // Print the asset names in the result
     foreach ($response->getPage() as $asset) {
