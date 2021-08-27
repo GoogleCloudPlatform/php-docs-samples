@@ -168,6 +168,11 @@ class dlpTest extends TestCase
     public function testTriggers()
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        // Use a different bucket for triggers so we don't trigger a bunch of
+        // DLP jobs on our actual storage bucket. This will create the trigger
+        // on a nonexistant bucket.
+        $bucketName .= '-dlp-triggers';
+
         $displayName = uniqid("My trigger display name ");
         $description = uniqid("My trigger description ");
         $triggerId = uniqid('my-php-test-trigger-');
