@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,7 @@ namespace Google\Cloud\Samples\Asset;
 use Google\Cloud\Asset\V1\AssetServiceClient;
 
 /**
- * @param string       $scope      Scope of the search
- * @param string       $query      (Optional) Query statement
- * @param string|array $assetTypes (Optional) Asset types to search for
- * @param int          $pageSize   (Optional) Size of each result page
- * @param string       $pageToken  (Optional) Token produced by the preceding call
- * @param string       $orderBy    (Optional) Fields to sort the results
+ * @param string $projectId the project Id for list assets.
  */
 function list_assets(string $projectId)
 {
@@ -36,7 +31,7 @@ function list_assets(string $projectId)
     // Run request
     $response = $client->listAssets("projects/$project");
 
-    // Print the asset names in the first page of the result
+    // Print the asset names in the result
     foreach ($response->getPage() as $asset) {
         print($asset->getName() . PHP_EOL);
     }
