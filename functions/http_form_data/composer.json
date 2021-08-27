@@ -1,7 +1,7 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7",
-        "guzzlehttp/psr7": "^1.7"
+        "google/cloud-functions-framework": "^0.8",
+        "guzzlehttp/psr7": "^2.0"
     },
     "scripts": {
         "start": [
