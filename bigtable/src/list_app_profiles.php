@@ -1,5 +1,7 @@
 <?php
 
+namespace Google\Cloud\Samples\Bigtable;
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,29 +24,40 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// [START bigtable_list_instances]
+// [START bigtable_list_app_profiles]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\ApiCore\ApiException;
 
 /**
- * List Bigtable instances in a project
+ * List the App profiles for an instance
  * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
  */
-function list_instance(string $projectId): void
-{
+function list_app_profiles(
+    string $projectId,
+    string $instanceId
+): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    $projectName = $instanceAdminClient->projectName($projectId);
+    printf('Fetching App Profiles' . PHP_EOL);
 
-    printf("Listing Instances:" . PHP_EOL);
+    try {
+        $appProfiles = $instanceAdminClient->listAppProfiles($instanceName);
 
-    $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
-    $instances = $getInstances->getIterator();
-
-    foreach ($instances as $instance) {
-        print($instance->getName() . PHP_EOL);
+        foreach ($appProfiles->iterateAllElements() as $profile) {
+            // You can fetch any AppProfile metadata from the $profile object(see get_app_profile.php)
+            printf('Name: %s' . PHP_EOL, $profile->getName());
+        }
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('Instance %s does not exist.' . PHP_EOL, $instanceId);
+            return;
+        }
+        throw $e;
     }
 }
-// [END bigtable_list_instances]
+// [END bigtable_list_app_profiles]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

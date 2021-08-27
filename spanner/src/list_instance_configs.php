@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,32 +18,31 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-// [START bigtable_list_instances]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+namespace Google\Cloud\Samples\Spanner;
+
+// [START spanner_list_instance_configs]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * List Bigtable instances in a project
- * @param string $projectId The Google Cloud project ID
+ * Lists the available instance configurations.
+ * Example:
+ * ```
+ * list_instance_configs();
+ * ```
  */
-function list_instance(string $projectId): void
+function list_instance_configs()
 {
-    $instanceAdminClient = new BigtableInstanceAdminClient();
-
-    $projectName = $instanceAdminClient->projectName($projectId);
-
-    printf("Listing Instances:" . PHP_EOL);
-
-    $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
-    $instances = $getInstances->getIterator();
-
-    foreach ($instances as $instance) {
-        print($instance->getName() . PHP_EOL);
+    $spanner = new SpannerClient();
+    foreach ($spanner->instanceConfigurations() as $config) {
+        printf("Available leader options for instance config %s: %s" . PHP_EOL,
+            $config->info()['displayName'], $config->info()['leaderOptions']
+        );
     }
 }
-// [END bigtable_list_instances]
+// [END spanner_list_instance_configs]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
