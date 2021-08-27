@@ -29,12 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Deactivate an HMAC key.
  *
+ * @param string $projectId The ID of your Google Cloud Platform project.
  * @param string $accessId Access ID for an inactive HMAC key.
- * @param string $projectId Google Cloud Project ID.
- *
  */
-function deactivate_hmac_key($accessId, $projectId)
+function deactivate_hmac_key($projectId, $accessId)
 {
+    // $projectId = 'my-project-id';
+    // $accessId = 'GOOG0234230X00';
+
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().
     $hmacKey = $storage->hmacKey($accessId, $projectId);
@@ -45,3 +47,7 @@ function deactivate_hmac_key($accessId, $projectId)
     printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
 }
 # [END storage_deactivate_hmac_key]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

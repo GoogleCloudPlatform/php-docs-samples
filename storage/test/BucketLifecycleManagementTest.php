@@ -30,7 +30,6 @@ class BucketLifecycleManagementTest extends TestCase
     use TestTrait;
     use ExecuteCommandTrait;
 
-    private static $commandFile = __DIR__ . '/../storage.php';
     protected $bucket;
 
     public function setUp(): void
@@ -51,9 +50,8 @@ class BucketLifecycleManagementTest extends TestCase
     public function testEnableBucketLifecycleManagement()
     {
         $bucketName = $this->bucket->name();
-        $output = $this->runCommand('bucket-lifecycle-management', [
-            'bucket' => $bucketName,
-            '--enable' => true,
+        $output = $this->runFunctionSnippet('enable_bucket_lifecycle_management', [
+            $bucketName,
         ]);
         $match = "Lifecycle management is enabled for bucket $bucketName and the rules are:";
         $this->assertStringContainsString($match, $output);
@@ -74,10 +72,10 @@ class BucketLifecycleManagementTest extends TestCase
     public function testDisableBucketLifecycleManagement()
     {
         $bucketName = $this->bucket->name();
-        $output = $this->runCommand('bucket-lifecycle-management', [
-            'bucket' => $bucketName,
-            '--disable' => true,
+        $output = $this->runFunctionSnippet('disable_bucket_lifecycle_management', [
+            $bucketName,
         ]);
+
         $expectedOutput = "Lifecycle management is disabled for bucket $bucketName.\n";
         $this->assertEquals($expectedOutput, $output);
         $this->bucket->reload();

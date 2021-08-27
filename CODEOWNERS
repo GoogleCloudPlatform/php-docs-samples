@@ -15,6 +15,7 @@
 /firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
 /iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
 /storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
+/spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-admins
 
 
 # Functions samples owned by the Firebase team

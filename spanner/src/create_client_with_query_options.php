@@ -41,7 +41,12 @@ function create_client_with_query_options($instanceId, $databaseId)
 {
     $spanner = new SpannerClient([
         'queryOptions' => [
-            'optimizerVersion' => "1"
+            'optimizerVersion' => '1',
+            // Pin the statistics package used for this client instance to the
+            // latest version. The list of available statistics packages can be
+            // found by querying the "INFORMATION_SCHEMA.SPANNER_STATISTICS"
+            // table.
+            'optimizerStatisticsPackage' => 'latest'
         ]
     ]);
     $instance = $spanner->instance($instanceId);
