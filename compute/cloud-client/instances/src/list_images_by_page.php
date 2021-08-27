@@ -36,7 +36,7 @@ use Google\Cloud\Compute\V1\ImagesClient;
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to list images from.
  * @param int $pageSize Size of the pages you want the API to return on each call.
- * 
+ *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 function list_images_by_page(string $projectId, int $pageSize = 10)
