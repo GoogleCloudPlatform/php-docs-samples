@@ -44,8 +44,8 @@ function query_data_with_json_parameter($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $exampleJson = [
-        "rating" => 9,
-        "open" => true,
+        'rating' => 9,
+        'open' => true,
     ];
 
     $results = $database->execute(

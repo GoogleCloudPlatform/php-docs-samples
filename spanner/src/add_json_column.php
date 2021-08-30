@@ -43,7 +43,7 @@ function add_json_column($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "ALTER TABLE Venues ADD COLUMN VenueDetails JSON"
+        'ALTER TABLE Venues ADD COLUMN VenueDetails JSON'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
