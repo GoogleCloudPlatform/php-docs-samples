@@ -43,14 +43,17 @@ function query_data_with_json_parameter($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleJson = '{\"rating\":9,\"open\":true}';
+    $exampleJson = [
+        "rating" => 9,
+        "open" => true,
+    ];
 
     $results = $database->execute(
         'SELECT VenueId, VenueDetails FROM Venues ' .
         'WHERE JSON_VALUE(VenueDetails, \'$.rating\') = JSON_VALUE(@venueDetails, \'$.rating\')',
         [
             'parameters' => [
-                'venueDetails' => $exampleJson
+                'venueDetails' => json_encode($exampleJson)
             ],
             'types' => [
                 'venueDetails' => Database::TYPE_JSON
