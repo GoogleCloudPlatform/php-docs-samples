@@ -62,8 +62,11 @@ function query_data_with_json_parameter($instanceId, $databaseId)
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueDetails: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueDetails']);
+        printf(
+            'VenueId: %s, VenueDetails: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueDetails']
+        );
     }
 }
 // [END spanner_query_with_json_parameter]

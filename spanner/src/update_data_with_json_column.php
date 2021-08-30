@@ -55,7 +55,7 @@ function update_data_with_json_column($instanceId, $databaseId)
             ],
             [
                 'VenueId' => 19,
-                'VenueDetails' => '{\"rating\":9,\"open\":true}'
+                'VenueDetails' => "{\"rating\":9,\"open\":true}"
             ],
             [
                 'VenueId' => 42,
