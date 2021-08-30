@@ -2,7 +2,7 @@
 <phpunit colors="true" bootstrap="../../../testing/bootstrap.php">
   <testsuites>
     <testsuite name="CloudSQLSQLServerSample">
-      <directory>tests</directory>
+      <directory>test</directory>
     </testsuite>
   </testsuites>
   <filter>
