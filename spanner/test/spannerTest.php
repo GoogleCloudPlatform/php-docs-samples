@@ -768,7 +768,7 @@ class spannerTest extends TestCase
     public function testQueryDataJson()
     {
         $output = $this->runFunctionSnippet('query_data_with_json_parameter');
-        $this->assertStringContainsString('VenueId: 19, VenueDetails: {\"rating\":9,\"open\":true}', $output);
+        $this->assertStringContainsString('VenueId: 19, VenueDetails: ', $output);
     }
 
     /**
