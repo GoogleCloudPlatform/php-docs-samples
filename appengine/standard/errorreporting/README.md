@@ -62,7 +62,7 @@ or add the `auto_prepend_file` above to your local `php.ini`.
 Now run the sample locally using PHP's build-in web server:
 
 ```
-# export environemnt variables locally which are set by App Engine when deployed
+# export environment variables locally which are set by App Engine when deployed
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 export GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
 export GAE_SERVICE=local

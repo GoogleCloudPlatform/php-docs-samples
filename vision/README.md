@@ -37,7 +37,7 @@ This simple command-line application demonstrates how to invoke
   list            Lists commands
   localize-object Detect objects in an image using Google Cloud Vision API
   logo            Detect logos in an image using Google Cloud Vision API
-  property        Detect image proerties in an image using Google Cloud Vision API
+  property        Detect image properties in an image using Google Cloud Vision API
   safe-search     Detect adult content in an image using Google Cloud Vision API
   text            Detect text in an image using Google Cloud Vision API
   crop-hints      Detect crop hints in an image using Google Cloud Vision API

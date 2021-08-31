@@ -53,7 +53,7 @@ authentication:
 
 These samples require you to first set up a [Spanner Instance][create-instance].
 Once you've finished with the samples, you can [delete your instance][delete-instance]
-to prevent incuring any additional charges.
+to prevent incurring any additional charges.
 
 [create-instance]: https://cloud.google.com/spanner/docs/create-manage-instances
 [delete-instance]: https://cloud.google.com/spanner/docs/create-manage-instances#delete-instance

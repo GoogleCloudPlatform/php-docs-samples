@@ -12,7 +12,7 @@ This directory contains samples for setting up and using
 [error-reporting]: https://cloud.google.com/error-reporting/docs/setup/php
 
 `quickstart.php` and `src/report_error.php` are simple command-line programs to
-demonstrate logging exceptions, errors, and PHP fatral errors to
+demonstrate logging exceptions, errors, and PHP fatal errors to
 Stackdriver Error Reporting.
 
 # Installation
