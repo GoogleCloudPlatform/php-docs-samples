@@ -1,5 +1,7 @@
 <?php
 
+namespace Google\Cloud\Samples\Bigtable;
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -32,7 +34,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
  */
 function list_instance_clusters(
     string $projectId,
-    string  $instanceId
+    string $instanceId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
 

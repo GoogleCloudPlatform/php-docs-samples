@@ -1,5 +1,7 @@
 <?php
 
+namespace Google\Cloud\Samples\Bigtable;
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -33,7 +35,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
  */
 function list_tables(
     string $projectId,
-    string  $instanceId
+    string $instanceId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $tableAdminClient = new BigtableTableAdminClient();

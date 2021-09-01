@@ -1,5 +1,7 @@
 <?php
 
+namespace Google\Cloud\Samples\Bigtable;
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -33,7 +35,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
  */
 function list_column_families(
     string $projectId,
-    string  $instanceId,
+    string $instanceId,
     string $tableId
 ): void {
     $tableAdminClient = new BigtableTableAdminClient();
