@@ -47,7 +47,7 @@ function write_increment(
 
     $columnFamilyId = 'stats_summary';
 
-    $rules = (new ReadModifyWriteRowRules)->increment($columnFamilyId, 'connected_wifi', 3);
+    $rules = (new ReadModifyWriteRowRules())->increment($columnFamilyId, 'connected_wifi', 3);
     $row = $table->readModifyWriteRow('phone#4c410523#20190501', $rules);
 
     printf('Successfully updated row.' . PHP_EOL);

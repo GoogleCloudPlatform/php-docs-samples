@@ -59,7 +59,7 @@ function get_app_profile(
     printf('Name: %s' . PHP_EOL, $appProfile->getName());
     printf('Etag: %s' . PHP_EOL, $appProfile->getEtag());
     printf('Description: %s' . PHP_EOL, $appProfile->getDescription());
-    printf('Routing Policy: %s' . PHP_EOL,  $appProfile->getRoutingPolicy());
+    printf('Routing Policy: %s' . PHP_EOL, $appProfile->getRoutingPolicy());
 
     if ($appProfile->hasSingleClusterRouting()) {
         $clusterId = $appProfile->getSingleClusterRouting()->getClusterId();

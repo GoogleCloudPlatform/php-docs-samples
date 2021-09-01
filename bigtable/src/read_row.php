@@ -43,7 +43,7 @@ function read_row(
         'projectId' => $projectId,
     ]);
     $table = $dataClient->table($instanceId, $tableId);
-    
+
     $rowkey = 'phone#4c410523#20190501';
     $row = $table->readRow($rowkey);
 

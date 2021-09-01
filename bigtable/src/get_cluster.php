@@ -42,7 +42,7 @@ function get_cluster(
     string $clusterId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
-    
+
     printf('Fetching the Cluster %s' . PHP_EOL, $clusterId);
     try {
         $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
