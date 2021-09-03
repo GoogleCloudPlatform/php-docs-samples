@@ -49,20 +49,17 @@ function filter_limit_col_range(
         ->rangeWithinFamily("cell_plan")
         ->startClosed("data_plan_01gb")
         ->endOpen("data_plan_10gb");
-    read_filter($table, $filter);
-}
 
-// Helper function for printing the filtered data
-function read_filter($table, $filter)
-{
     $rows = $table->readRows([
         'filter' => $filter
     ]);
 
     foreach ($rows as $key => $row) {
+        // helper function defined in https://cloud.google.com/bigtable/docs/samples/bigtable-reads-print
         print_row($key, $row);
     }
 }
+// [END bigtable_filters_limit_col_range]
 
 // Helper function for printing the row data
 function print_row($key, $row)
@@ -84,7 +81,6 @@ function print_row($key, $row)
     }
     print(PHP_EOL);
 }
-// [END bigtable_filters_limit_col_range]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
