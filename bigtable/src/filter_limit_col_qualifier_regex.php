@@ -52,7 +52,7 @@ function filter_limit_col_qualifier_regex(
     ]);
 
     foreach ($rows as $key => $row) {
-        // helper function defined in https://cloud.google.com/bigtable/docs/samples/bigtable-reads-print
+        // The "print_row" helper function is defined in https://cloud.google.com/bigtable/docs/samples/bigtable-reads-print
         print_row($key, $row);
     }
 }
