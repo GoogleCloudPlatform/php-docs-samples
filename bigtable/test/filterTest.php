@@ -419,10 +419,14 @@ Column Family stats_summary
 
     public function testFilterLimitTimestampRange()
     {
+        // since we select the endTime as an open ended timestamp, we add a buffer to our expected timestamp
+        // we add 1000 since bigtable has a 1000 microseconds(1ms) granularity
+        $endTime = self::$timestampMicrosMinusHr+1000;
         $output = self::runFunctionSnippet('filter_limit_timestamp_range', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId
+            self::$tableId,
+            $endTime
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501

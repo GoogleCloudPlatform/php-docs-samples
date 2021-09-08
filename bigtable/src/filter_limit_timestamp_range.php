@@ -33,24 +33,26 @@ use Google\Cloud\Bigtable\Filter;
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table to read from
+ * @param int $endTime The timestamp upto which you want to fetch the rows
  */
 function filter_limit_timestamp_range(
     string $projectId,
     string $instanceId,
-    string $tableId
+    string $tableId,
+    int $endTime = null
 ): void {
     // Connect to an existing table with an existing instance.
     $dataClient = new BigtableClient([
         'projectId' => $projectId,
     ]);
     $table = $dataClient->table($instanceId, $tableId);
+    $endTime = is_null($endTime) ? (time() - 60 * 60) * 1000 * 1000 : $endTime;
 
     $start = 0;
-    $end = (time() - 60 * 60) * 1000 * 1000;
     $filter = Filter::timestamp()
         ->range()
         ->startClosed($start)
-        ->endOpen($end);
+        ->endOpen($endTime);
 
     $rows = $table->readRows([
         'filter' => $filter
