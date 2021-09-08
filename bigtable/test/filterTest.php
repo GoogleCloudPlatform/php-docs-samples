@@ -417,10 +417,6 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @retryAttempts 3
-     * @retryDelaySeconds 10
-     */
     public function testFilterLimitTimestampRange()
     {
         $output = self::runFunctionSnippet('filter_limit_timestamp_range', [
@@ -429,9 +425,9 @@ Column Family stats_summary
             self::$tableId
         ]);
 
-        $result = 'Reading data for row phone#4c410523#20190501' . PHP_EOL . 
-                'Column Family cell_plan' . PHP_EOL . 
-                "\t" . sprintf('data_plan_01gb: 1 @%1$s', self::$timestampMicrosMinusHr);
+        $result = sprintf('Reading data for row phone#4c410523#20190501
+Column Family cell_plan
+	data_plan_01gb: 1 @%1$s', self::$timestampMicrosMinusHr);
 
         $this->assertEquals($result, trim($output));
     }
