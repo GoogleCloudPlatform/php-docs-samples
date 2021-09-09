@@ -33,8 +33,8 @@ use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
  * @param string $keyName The name of the key you wish to create
  */
 function create_key(
-    string $keyName,
-    string $projectId
+    string $projectId,
+    string $keyName
 ): void {
     $client = new RecaptchaEnterpriseServiceClient();
     $formattedProject = $client->projectName($projectId);

@@ -44,14 +44,16 @@ function list_keys(
 
         printf('Keys fetched' . PHP_EOL);
 
-        // either fetch the first page
-        foreach ($response->getPage() as $key) {
+        // either iterate over all the keys and let the library handle the paging
+        foreach ($response->iterateAllElements() as $key) {
             printf($key->getDisplayName() . PHP_EOL);
         }
 
-        // or iterate over all the keys and let the library handle the paging
-        // foreach($response->iterateAllElements() as $key){
-        //     printf($key->getDisplayName() . PHP_EOL);
+        // or fetch each page and process the keys as needed
+        // foreach ($response->iteratePages() as $page) {
+        //     foreach ($page as $key) {
+        //         printf($key->getDisplayName() . PHP_EOL);
+        //     }
         // }
     } catch (exception $e) {
         printf('listKeys() call failed with the following error: ');
