@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Recaptcha;
+
 /**
  * For instructions on how to run the full sample:
  *
