@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Recaptcha;
+
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;

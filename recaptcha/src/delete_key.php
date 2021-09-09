@@ -42,10 +42,9 @@ function delete_key(
 
         printf('The key: %s is deleted.' . PHP_EOL, $keyId);
     } catch (ApiException $e) {
-        if($e->getStatus() === 'NOT_FOUND'){
+        if ($e->getStatus() === 'NOT_FOUND') {
             printf('The key with Key ID: %s doesn\'t exist.' . PHP_EOL, $keyId);
-        }
-        else{
+        } else {
             printf('deleteKey() call failed with the following error: ');
             printf($e->getBasicMessage() . PHP_EOL);
         }
