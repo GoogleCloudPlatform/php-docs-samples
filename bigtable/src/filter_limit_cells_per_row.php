@@ -23,22 +23,21 @@
 
 namespace Google\Cloud\Samples\Bigtable;
 
-// [START bigtable_writes_conditional]
+// [START bigtable_filters_limit_cells_per_row]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
-use Google\Cloud\Bigtable\Mutations;
 
 /**
- * Write data conditionally in a table
+ * Create a limiting filter on cells per row
  *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
- * @param string $tableId The ID of the table where the data needs to be written
+ * @param string $tableId The ID of the table to read from
  */
-function write_conditionally(
+function filter_limit_cells_per_row(
     string $projectId,
     string $instanceId,
-    string $tableId = 'mobile-time-series'
+    string $tableId
 ): void {
     // Connect to an existing table with an existing instance.
     $dataClient = new BigtableClient([
@@ -46,21 +45,39 @@ function write_conditionally(
     ]);
     $table = $dataClient->table($instanceId, $tableId);
 
-    $timestampMicros = time() * 1000 * 1000;
-    $columnFamilyId = 'stats_summary';
+    $filter = Filter::limit()->cellsPerRow(2);
 
-    $mutations = (new Mutations())->upsert($columnFamilyId, "os_name", "android", $timestampMicros);
-    $predicateFilter = Filter::chain()
-    ->addFilter(Filter::family()->exactMatch($columnFamilyId))
-    ->addFilter(Filter::qualifier()->exactMatch('os_build'))
-    ->addFilter(Filter::value()->regex('PQ2A.*'));
-    $options = ['predicateFilter' => $predicateFilter, 'trueMutations' => $mutations];
+    $rows = $table->readRows([
+        'filter' => $filter
+    ]);
 
-    $table->checkAndMutateRow("phone#4c410523#20190501", $options);
-
-    printf('Successfully updated row\'s os_name' . PHP_EOL);
+    foreach ($rows as $key => $row) {
+        // The "print_row" helper function is defined in https://cloud.google.com/bigtable/docs/samples/bigtable-reads-print
+        print_row($key, $row);
+    }
 }
-// [END bigtable_writes_conditional]
+// [END bigtable_filters_limit_cells_per_row]
+
+// Helper function for printing the row data
+function print_row($key, $row)
+{
+    printf('Reading data for row %s' . PHP_EOL, $key);
+    foreach ((array)$row as $family => $cols) {
+        printf('Column Family %s' . PHP_EOL, $family);
+        foreach ($cols as $col => $data) {
+            for ($i = 0; $i < count($data); $i++) {
+                printf(
+                    "\t%s: %s @%s%s" . PHP_EOL,
+                    $col,
+                    $data[$i]['value'],
+                    $data[$i]['timeStamp'],
+                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                );
+            }
+        }
+    }
+    print(PHP_EOL);
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
