@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -24,6 +21,8 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_create_cluster]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
@@ -32,6 +31,7 @@ use Google\ApiCore\ApiException;
 
 /**
  * Create a cluster in an existing Bigtable instance
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the parent Bigtable instance
  * @param string $clusterId The ID of the cluster to be generated
