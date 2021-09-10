@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +21,8 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_update_app_profile]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\AppProfile;
@@ -33,6 +32,7 @@ use Google\Protobuf\FieldMask;
 
 /**
  * Update an App Profile
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $clusterId The ID of the new cluster where the new App Profile will route it's requests(in case of single cluster routing)

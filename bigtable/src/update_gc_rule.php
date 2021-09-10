@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -24,6 +21,8 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_update_gc_rule]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -33,6 +32,7 @@ use Google\ApiCore\ApiException;
 
 /**
  * Update the GC Rule for an existing column family in the table
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table where the rule needs to be updated

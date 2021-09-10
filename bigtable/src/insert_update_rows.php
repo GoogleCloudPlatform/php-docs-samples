@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -24,6 +21,8 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_insert_update_rows]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
@@ -35,6 +34,7 @@ use Google\ApiCore\ApiException;
 
 /**
  * Perform insert/update operations on a Bigtable
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table on which we intend to insert/update rows

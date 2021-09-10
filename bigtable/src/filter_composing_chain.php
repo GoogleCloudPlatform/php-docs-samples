@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +21,15 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_filters_composing_chain]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Filter;
 
 /**
  * Create a composite filter using chaining
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table to read from
@@ -48,7 +48,7 @@ function filter_composing_chain(
     $filter = Filter::chain()
         ->addFilter(Filter::limit()->cellsPerColumn(1))
         ->addFilter(Filter::family()->exactMatch("cell_plan"));
-    
+
     $rows = $table->readRows([
         'filter' => $filter
     ]);
