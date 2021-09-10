@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,41 +25,39 @@ namespace Google\Cloud\Samples\Recaptcha;
 
 // [START recaptcha_enterprise_list_site_keys]
 use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
+use Google\ApiCore\ApiException;
 
 /**
  * List all the reCAPTCHA keys associate to a Google Cloud project
+ *
  * @param string $projectId Your Google Cloud project ID
  */
-function list_keys(
-    string $projectId
-): void {
+function list_keys(string $projectId): void
+{
     $client = new RecaptchaEnterpriseServiceClient();
     $formattedProject = $client->projectName($projectId);
 
     try {
-        $response = $client->listKeys(
-            $formattedProject,
-            [
-                'pageSize'=>2
-            ]
-        );
+        $response = $client->listKeys($formattedProject, [
+            'pageSize' => 2
+        ]);
 
-        printf('Keys fetched' . PHP_EOL);
+        print('Keys fetched' . PHP_EOL);
 
-        // either iterate over all the keys and let the library handle the paging
+        // Either iterate over all the keys and let the library handle the paging
         foreach ($response->iterateAllElements() as $key) {
-            printf($key->getDisplayName() . PHP_EOL);
+            print($key->getDisplayName() . PHP_EOL);
         }
 
-        // or fetch each page and process the keys as needed
+        // Or fetch each page and process the keys as needed
         // foreach ($response->iteratePages() as $page) {
         //     foreach ($page as $key) {
-        //         printf($key->getDisplayName() . PHP_EOL);
+        //         print($key->getDisplayName() . PHP_EOL);
         //     }
         // }
-    } catch (exception $e) {
-        printf('listKeys() call failed with the following error: ');
-        printf($e);
+    } catch (ApiException $e) {
+        print('listKeys() call failed with the following error: ');
+        print($e);
     }
 }
 // [END recaptcha_enterprise_list_site_keys]

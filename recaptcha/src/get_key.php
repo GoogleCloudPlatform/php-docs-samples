@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,36 +26,38 @@ namespace Google\Cloud\Samples\Recaptcha;
 // [START recaptcha_enterprise_get_site_key]
 use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
+use Google\ApiCore\ApiException;
 
 /**
  * Get a reCAPTCHA key from a google cloud project
+ *
  * @param string $projectId Your Google Cloud project ID
  * @param string $keyId The 40 char long key ID you wish to fetch
  */
-function get_key(
-    string $projectId,
-    string $keyId
-): void {
+function get_key(string $projectId, string $keyId): void
+{
     $client = new RecaptchaEnterpriseServiceClient();
     $formattedKeyName = $client->keyName($projectId, $keyId);
 
     try {
-        // returns a 'Google\Cloud\RecaptchaEnterprise\V1\Key' object
-        $key = $client->getKey(
-            $formattedKeyName
-        );
+        // Returns a 'Google\Cloud\RecaptchaEnterprise\V1\Key' object
+        $key = $client->getKey($formattedKeyName);
         $webSettings = $key->getWebSettings();
 
-        printf('Key fetched' . PHP_EOL);
-        printf('Display name: ' . $key->getDisplayName() . PHP_EOL);
+        print('Key fetched' . PHP_EOL);
+        printf('Display name: %s' . PHP_EOL, $key->getDisplayName());
         // $key->getCreateTime() returns a Google\Protobuf\Timestamp object
-        printf('Create time: ' . $key->getCreateTime()->getSeconds() . PHP_EOL);
-        printf('Web platform settings: ' . ($key->hasWebSettings() ? 'Yes' : 'No') . PHP_EOL);
-        printf('Allowed all domains: ' . ($key->hasWebSettings() && $webSettings->getAllowAllDomains() ? 'Yes' : 'No') . PHP_EOL);
-        printf('Integration Type: ' . ($key->hasWebSettings() ? IntegrationType::name($webSettings->getIntegrationType()) : 'N/A') . PHP_EOL);
-    } catch (exception $e) {
-        printf('getKey() call failed with the following error: ');
-        printf($e);
+        printf('Create time: %d' . PHP_EOL, $key->getCreateTime()->getSeconds());
+        printf('Web platform settings: %s' . PHP_EOL, $key->hasWebSettings() ? 'Yes' : 'No');
+        printf('Allowed all domains: %s' . PHP_EOL, $key->hasWebSettings() && $webSettings->getAllowAllDomains() ? 'Yes' : 'No');
+        printf('Integration Type: %s' . PHP_EOL, $key->hasWebSettings() ? IntegrationType::name($webSettings->getIntegrationType()) : 'N/A');
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('The key with Key ID: %s doesn\'t exist.' . PHP_EOL, $keyId);
+        } else {
+            print('getKey() call failed with the following error: ');
+            print($e);
+        }
     }
 }
 // [END recaptcha_enterprise_get_site_key]

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,11 @@ use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\ChallengeSecurityPreference;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
 use Google\Protobuf\FieldMask;
+use Google\ApiCore\ApiException;
 
 /**
  * Update an existing reCAPTCHA site key
+ *
  * @param string $projectId Your Google Cloud project ID
  * @param string $keyId The 40 char long key ID you wish to update
  * @param string $updatedName The updated display name of the reCAPTCHA key
@@ -45,22 +47,22 @@ function update_key(
     $client = new RecaptchaEnterpriseServiceClient();
     $formattedKeyName = $client->keyName($projectId, $keyId);
 
-    // create the settings for the key
-    // in order to create other keys we'll use AndroidKeySettings or IOSKeySettings
+    // Create the settings for the key.
+    // In order to create other keys we'll use AndroidKeySettings or IOSKeySettings
     $settings = new WebKeySettings();
 
-    // either allow the key to work for all domains(Not recommended)
+    // Allow the key to work for all domains(Not recommended)
     // $settings->setAllowAllDomains(false);
-    // or explicitly set the allowed domains for the key as an array of strings
+    // ...or explicitly set the allowed domains for the key as an array of strings
     $settings->setAllowedDomains(['google.com']);
 
-    // specify the type of the key
-    // score based key -> IntegrationType::SCORE
-    // checkbox based key -> IntegrationType::CHECKBOX
+    // Specify the type of the key
+    // - score based key -> IntegrationType::SCORE
+    // - checkbox based key -> IntegrationType::CHECKBOX
     // Read https://cloud.google.com/recaptcha-enterprise/docs/choose-key-type
     $settings->setIntegrationType(IntegrationType::CHECKBOX);
 
-    // specify the possible challenge frequency and difficulty
+    // Specify the possible challenge frequency and difficulty
     // Read https://cloud.google.com/recaptcha-enterprise/docs/reference/rest/v1/projects.keys#challengesecuritypreference
     $settings->setChallengeSecurityPreference(ChallengeSecurityPreference::SECURITY);
 
@@ -70,21 +72,22 @@ function update_key(
     $key->setWebSettings($settings);
 
     $updateMask = new FieldMask([
-        'paths'=>['display_name', 'web_settings']
+        'paths' => ['display_name', 'web_settings']
     ]);
 
     try {
-        $updatedKey = $client->updateKey(
-            $key,
-            [
-                'updateMask'=>$updateMask
-            ]
-        );
+        $updatedKey = $client->updateKey($key, [
+            'updateMask'=>$updateMask
+        ]);
 
         printf('The key: %s is updated.' . PHP_EOL, $updatedKey->getDisplayName());
-    } catch (exception $e) {
-        printf('updateKey() call failed with the following error: ');
-        printf($e);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('The key with Key ID: %s doesn\'t exist.' . PHP_EOL, $keyId);
+        } else {
+            print('updateKey() call failed with the following error: ');
+            print($e);
+        }
     }
 }
 // [END recaptcha_enterprise_update_site_key]

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2020 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ class recaptchaTest extends TestCase
             self::$keyName
         ]);
 
-        // since we need the value from the output string we don't use assertRegExp
+        // Since we need the value from the output string we don't use assertRegExp
         preg_match('/The key: projects\/.+\/keys\/(.+) is created\./', trim($output), $matches);
-        if (count($matches)<2) {
+        if (count($matches) < 2) {
             $this->fail();
         }
 
-        // extract keyId from the output
+        // Extract keyId from the output
         self::$keyId = $matches[1];
         $this->assertTrue(true);
     }
@@ -77,12 +77,13 @@ class recaptchaTest extends TestCase
         ]);
 
         $array = explode(PHP_EOL, $output);
+        $expectedType = IntegrationType::name(IntegrationType::CHECKBOX);
 
         $this->assertContains('Key fetched', $array);
-        $this->assertContains('Display name: ' . self::$keyName, $array);
+        $this->assertContains(sprintf('Display name: %s', self::$keyName), $array);
         $this->assertContains('Web platform settings: Yes', $array);
         $this->assertContains('Allowed all domains: Yes', $array);
-        $this->assertContains('Integration Type: ' . IntegrationType::name(IntegrationType::CHECKBOX), $array);
+        $this->assertContains(sprintf('Integration Type: %s', $expectedType), $array);
     }
 
     /**
@@ -97,7 +98,7 @@ class recaptchaTest extends TestCase
             $updatedName
         ]);
 
-        $this->assertSame('The key: ' . $updatedName . ' is updated.', trim($output));
+        $this->assertSame(sprintf('The key: %s is updated.', $updatedName), trim($output));
     }
 
     /**
@@ -110,6 +111,6 @@ class recaptchaTest extends TestCase
             self::$keyId
         ]);
 
-        $this->assertSame('The key: ' . self::$keyId . ' is deleted.', trim($output));
+        $this->assertSame(sprintf('The key: %s is deleted.', self::$keyId), trim($output));
     }
 }
