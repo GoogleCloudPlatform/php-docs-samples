@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.8",
+        "google/cloud-functions-framework": "^1.0",
         "guzzlehttp/guzzle": "^7.2.0"
     },
     "scripts": {
