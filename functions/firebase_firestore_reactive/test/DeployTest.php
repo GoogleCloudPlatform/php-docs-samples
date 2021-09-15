@@ -152,9 +152,16 @@ class DeployTest extends TestCase
             );
         }
 
-        self::$firestoreClient
+        $ret = self::$firestoreClient
             ->collection(self::$collectionName)
             ->document(self::$documentName)
             ->set($data);
+
+
+        if (!is_object($ret)) {
+            var_dump($ret);
+        } else {
+            var_dump(get_class($ret));
+        }
     }
 }
