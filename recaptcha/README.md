@@ -33,7 +33,6 @@ This simple command-line application demonstrates how to invoke
 1.  **Install dependencies** via [Composer][install-composer]. If composer is
     installed locally:
 
-
     ```text
     $ php composer.phar install
     ```
