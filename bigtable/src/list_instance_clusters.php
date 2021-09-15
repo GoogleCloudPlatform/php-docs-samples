@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,17 +21,20 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_get_clusters]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 /**
  * List clusters of an instance
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  */
 function list_instance_clusters(
     string $projectId,
-    string  $instanceId
+    string $instanceId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
 
