@@ -16,5 +16,11 @@
   ],
   "branchPrefix": "renovate/{{parentDir}}-",
   "prConcurrentLimit": 10,
-  "dependencyDashboard": true
+  "dependencyDashboard": true,
+  "packageRules": [
+    {
+      "matchPaths": ["functions/**"],
+      "branchPrefix": "renovate/functions-"
+    }
+  ]
 }
