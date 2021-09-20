@@ -59,6 +59,20 @@ class assetTest extends TestCase
         $assetFile->delete();
     }
 
+    public function testListAssets()
+    {
+        $assetName = '//storage.googleapis.com/' . self::$bucketName;
+        $this->runEventuallyConsistentTest(function () use ($assetName) {
+            $output = $this->runFunctionSnippet('list_assets', [
+                'projectId' => self::$projectId,
+                'assetTypes' => ['storage.googleapis.com/Bucket'],
+                'pageSize' => 1000,
+            ]);
+
+            $this->assertStringContainsString($assetName, $output);
+        }, 10, true);
+    }
+
     public function testBatchGetAssetsHistory()
     {
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
