@@ -111,7 +111,7 @@ $table->mutateRows($entries);
 printf('Getting a single greeting by row key.' . PHP_EOL);
 $key = 'greeting0';
 // Only retrieve the most recent version of the cell.
-$rowFilter = (new RowFilter)->setCellsPerColumnLimitFilter(1);
+$rowFilter = (new RowFilter())->setCellsPerColumnLimitFilter(1);
 
 $column = 'greeting';
 $columnFamilyId = 'cf1';

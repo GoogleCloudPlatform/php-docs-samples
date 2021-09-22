@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,11 +21,14 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_list_instances]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 
 /**
  * List Bigtable instances in a project
+ *
  * @param string $projectId The Google Cloud project ID
  */
 function list_instance(string $projectId): void
