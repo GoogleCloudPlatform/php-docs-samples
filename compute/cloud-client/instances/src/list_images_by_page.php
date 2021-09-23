@@ -52,7 +52,7 @@ function list_images_by_page(string $projectId, int $pageSize = 10)
      * that page from the API.
      */
     $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
-    print("=================== Paginated list of images ===================" . PHP_EOL);
+    print('=================== Paginated list of images ===================' . PHP_EOL);
     foreach ($pagedResponse->iteratePages() as $page) {
         printf('Page %s:' . PHP_EOL, $pageNum);
         foreach ($page as $element) {

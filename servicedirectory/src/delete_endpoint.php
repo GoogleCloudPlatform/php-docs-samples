@@ -37,7 +37,6 @@ use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 // Instantiate a client.
 $client = new RegistrationServiceClient();
 
-
 // Run request.
 $endpointName = RegistrationServiceClient::endpointName($projectId, $locationId, $namespaceId, $serviceId, $endpointId);
 $endpoint = $client->deleteEndpoint($endpointName);

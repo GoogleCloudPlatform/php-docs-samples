@@ -47,8 +47,8 @@ function filter_limit_value_range(
 
     $filter = Filter::value()
         ->range()
-        ->startClosed("PQ2A.190405")
-        ->endOpen("PQ2A.190406");
+        ->startClosed('PQ2A.190405')
+        ->endOpen('PQ2A.190406');
 
     $rows = $table->readRows([
         'filter' => $filter
@@ -65,7 +65,7 @@ function filter_limit_value_range(
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array)$row as $family => $cols) {
+    foreach ((array) $row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -74,7 +74,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
                 );
             }
         }

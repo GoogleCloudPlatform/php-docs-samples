@@ -144,11 +144,11 @@ class CloudSqlTest extends TestCase
 
         // Clean up.
         $result = $model->delete($breakfastId);
-        $this->assertTrue((bool)$result);
+        $this->assertTrue((bool) $result);
         $this->assertFalse($model->read($breakfastId));
-        $this->assertTrue((bool)$model->read($bellId));
+        $this->assertTrue((bool) $model->read($bellId));
         $result = $model->delete($bellId);
-        $this->assertTrue((bool)$result);
+        $this->assertTrue((bool) $result);
         $this->assertFalse($model->read($bellId));
     }
 }

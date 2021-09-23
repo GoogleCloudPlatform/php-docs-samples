@@ -57,7 +57,7 @@ if ($operation->operationSucceeded()) {
     $explicitAnnotation = $results->getExplicitAnnotation();
     foreach ($explicitAnnotation->getFrames() as $frame) {
         $time = $frame->getTimeOffset();
-        printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos()/1000000000.0);
+        printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos() / 1000000000.0);
         printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
     }
 } else {

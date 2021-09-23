@@ -42,26 +42,26 @@ final class ReadTest extends TestCase
 
         self::$timestampMicros = time() * 1000 * 1000;
         self::$bigtableClient->table(self::$instanceId, self::$tableId)->mutateRows([
-            "phone#4c410523#20190501" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestampMicros),
-            "phone#4c410523#20190502" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestampMicros),
-            "phone#4c410523#20190505" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros),
-            "phone#5c10102#20190501" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestampMicros),
-            "phone#5c10102#20190502" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros)
+            'phone#4c410523#20190501' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.003', self::$timestampMicros),
+            'phone#4c410523#20190502' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.004', self::$timestampMicros),
+            'phone#4c410523#20190505' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros),
+            'phone#5c10102#20190501' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190401.002', self::$timestampMicros),
+            'phone#5c10102#20190502' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros)
         ]);
     }
 
