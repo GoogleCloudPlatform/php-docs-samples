@@ -51,12 +51,12 @@ function wait_for_operation(
         $operation = $operationClient->wait($operation->getName(), $projectId, $zone);
 
         if ($operation->hasError()) {
-            printf("Operation failed with error(s): %s" . PHP_EOL, $operation->getError()->serializeToString());
+            printf('Operation failed with error(s): %s' . PHP_EOL, $operation->getError()->serializeToString());
             return $operation;
         }
     }
 
-    print("Operation successful" . PHP_EOL);
+    print('Operation successful' . PHP_EOL);
     return $operation;
 }
 # [END compute_instances_operation_check]
