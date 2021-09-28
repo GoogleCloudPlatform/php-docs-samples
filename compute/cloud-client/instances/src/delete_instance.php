@@ -50,8 +50,10 @@ function delete_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
     $operation = wait_for_operation($operation, $projectId, $zone);
-    if (! $operation->getError()) {
+    if (empty($operation->getError())) {
         printf('Deleted instance %s' . PHP_EOL, $instanceName);
     } else {
         printf('Instance deletion failed!' . PHP_EOL);

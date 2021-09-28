@@ -83,9 +83,10 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    // Wait for the create operation to complete.
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
     $operation = wait_for_operation($operation, $projectId, $zone);
-    if (! $operation->getError()) {
+    if (empty($operation->getError())) {
         printf('Created instance %s' . PHP_EOL, $instanceName);
     } else {
         printf('Instance creation failed!' . PHP_EOL);
