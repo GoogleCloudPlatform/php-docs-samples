@@ -20,10 +20,12 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
 use PHPUnit\Framework\TestCase;
 use PDO;
+use Symfony\Component\Process\Process;
 
 class CloudSqlTest extends TestCase
 {
     use TestTrait;
+    private static $process;
 
     public function setUp(): void
     {
@@ -31,11 +33,23 @@ class CloudSqlTest extends TestCase
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
         $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
         $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-        $socket = "/tmp/cloudsql/${connection}";
+        $socketDir = '/tmp/cloudsql';
+        $socket = "${socketDir}/${connection}";
+
+        // create the directory to store the unix socket for cloud_sql_proxy
+        if (!is_dir($socketDir)) {
+            mkdir($socketDir, 0755, true);
+        }
+
+        self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connection, '-dir', $socketDir]);
+        self::$process->start();
+        self::$process->waitUntil(function ($type, $buffer) {
+            return str_contains($buffer, 'Ready for new connections');
+        });
 
         if (!file_exists($socket)) {
             $this->markTestSkipped(
-                "You must run 'cloud_sql_proxy -instances=${connection} -dir=/cloudsql'"
+                "You must run 'cloud_sql_proxy -instances=${connection} -dir=${socketDir}'"
             );
         }
         $dsn = "mysql:unix_socket=${socket};dbname=${dbName}";
@@ -44,6 +58,11 @@ class CloudSqlTest extends TestCase
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $this->model = new CloudSqlDataModel($pdo);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::$process->stop();
     }
 
     public function testDataModel()
