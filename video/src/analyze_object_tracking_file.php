@@ -41,8 +41,9 @@ $inputContent = file_get_contents($path);
 
 # Execute a request.
 $features = [Feature::OBJECT_TRACKING];
-$operation = $video->annotateVideo($features, [
+$operation = $video->annotateVideo([
     'inputContent' => $inputContent,
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.

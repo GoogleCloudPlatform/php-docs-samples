@@ -44,8 +44,9 @@ $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
 $features = [Feature::EXPLICIT_CONTENT_DETECTION];
-$operation = $video->annotateVideo($features, [
+$operation = $video->annotateVideo([
     'inputUri' => $uri,
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.
