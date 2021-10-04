@@ -26,13 +26,14 @@ namespace Google\Cloud\Samples\Compute;
 # [START compute_instances_operation_check]
 use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\ZoneOperationsClient;
+use Google\Cloud\Compute\V1\GlobalOperationsClient;
 
 /**
  * This method waits for an operation to be completed. Calling this function
  * will block until the operation is finished.
  *
  * @param Operation $operation The Operation object representing the operation you want to
-wait on.
+ * wait on.
  * @param string $projectId Your Google Cloud project ID.
  * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").
  *
@@ -44,12 +45,18 @@ function wait_for_operation(
     string $projectId,
     string $zone
 ): Operation {
-    $operationClient = new ZoneOperationsClient();
-
+    if ($zone ='unspecified') {
+        $operationClient = new GlobalOperationsClient();
+    } else {
+        $operationClient = new ZoneOperationsClient();
+    }
     while ($operation->getStatus() != Operation\Status::DONE) {
         // Wait for the operation to complete.
-        $operation = $operationClient->wait($operation->getName(), $projectId, $zone);
-
+        if ($zone='unspecified') {
+            $operation = $operationClient->wait($operation->getName(), $projectId);
+        } else {
+            $operation = $operationClient->wait($operation->getName(), $projectId, $zone);
+        }
         if ($operation->hasError()) {
             printf('Operation failed with error(s): %s' . PHP_EOL, $operation->getError()->serializeToString());
             return $operation;
