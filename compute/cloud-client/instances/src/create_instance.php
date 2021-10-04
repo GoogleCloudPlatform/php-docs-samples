@@ -23,6 +23,8 @@
 
 namespace Google\Cloud\Samples\Compute;
 
+include_once "wait_for_operation.php";
+
 # [START compute_instances_create]
 use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
@@ -30,7 +32,6 @@ use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Instance;
 use Google\Cloud\Compute\V1\NetworkInterface;
 use Google\Cloud\Compute\V1\Operation;
-use Google\Cloud\Compute\V1\ZoneOperationsClient;
 
 /**
  * Create an instance in the specified project and zone.
@@ -64,6 +65,7 @@ function create_instance(
         ->setSourceImage($sourceImage);
     $disk = (new AttachedDisk())
         ->setBoot(true)
+        ->setAutoDelete(true)
         ->setInitializeParams($diskInitializeParams);
 
     // Use the network interface provided in the $networkName argument.
@@ -81,13 +83,14 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    // Wait for the create operation to complete.
-    if ($operation->getStatus() === Operation\Status::RUNNING) {
-        $operationClient = new ZoneOperationsClient();
-        $operationClient->wait($operation->getName(), $projectId, $zone);
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
+    $operation = wait_for_operation($operation, $projectId, $zone);
+    if (empty($operation->getError())) {
+        printf('Created instance %s' . PHP_EOL, $instanceName);
+    } else {
+        printf('Instance creation failed!' . PHP_EOL);
     }
-
-    printf('Created instance %s' . PHP_EOL, $instanceName);
 }
 # [END compute_instances_create]
 

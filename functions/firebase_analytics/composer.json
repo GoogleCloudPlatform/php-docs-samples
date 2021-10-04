@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7.2"
+        "google/cloud-functions-framework": "^0.8.0"
     },
     "scripts": {
         "start": [

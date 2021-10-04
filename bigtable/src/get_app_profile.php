@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +21,15 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_get_app_profile]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
 /**
  * Get the App Profile
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $appProfileId The ID of the App Profile to fetch
@@ -59,7 +59,7 @@ function get_app_profile(
     printf('Name: %s' . PHP_EOL, $appProfile->getName());
     printf('Etag: %s' . PHP_EOL, $appProfile->getEtag());
     printf('Description: %s' . PHP_EOL, $appProfile->getDescription());
-    printf('Routing Policy: %s' . PHP_EOL,  $appProfile->getRoutingPolicy());
+    printf('Routing Policy: %s' . PHP_EOL, $appProfile->getRoutingPolicy());
 
     if ($appProfile->hasSingleClusterRouting()) {
         $clusterId = $appProfile->getSingleClusterRouting()->getClusterId();
