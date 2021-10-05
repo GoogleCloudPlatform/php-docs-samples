@@ -38,8 +38,12 @@ class IntegrationTest extends TestCase
         self::$process->setTimeout(120);
         self::$process->start();
         self::$process->waitUntil(function ($type, $buffer) {
+            print($buffer);
             return str_contains($buffer, 'Ready for new connections');
         });
+        if (!self::$process->isRunning()) {
+            throw new \Exception('Failed to start cloud_sql_proxy');
+        }
     }
 
     public static function tearDownAfterClass(): void
