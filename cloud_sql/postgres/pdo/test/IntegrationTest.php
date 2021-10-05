@@ -37,15 +37,12 @@ class IntegrationTest extends TestCase
         self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName . '=tcp:5432,' . $connectionName, '-dir', $socketDir]);
         self::$process->start();
         self::$process->waitUntil(function ($type, $buffer) {
-            var_dump($buffer);
             return str_contains($buffer, 'Ready for new connections');
         });
     }
 
     public static function tearDownAfterClass(): void
     {
-        var_dump($process->getOutput());
-        exit;
         self::$process->stop();
     }
 
