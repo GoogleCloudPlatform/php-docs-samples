@@ -21,6 +21,7 @@ namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 use Google\Cloud\Samples\CloudSQL\MySQL\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -28,33 +29,16 @@ use Symfony\Component\Process\Process;
 class IntegrationTest extends TestCase
 {
     use TestTrait;
-    private static $process;
+    use CloudSqlProxyTrait;
 
     public static function setUpBeforeClass(): void
     {
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
+        // '3306' was not working on kokoro we probably just need to update cloud_sql_proxy
+        $port = null;
 
-        // create the directory to store the unix socket for cloud_sql_proxy
-        if (!is_dir($socketDir)) {
-            mkdir($socketDir, 0755, true);
-        }
-
-        self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName, '-dir', $socketDir]);
-        self::$process->setTimeout(120);
-        self::$process->start();
-        self::$process->waitUntil(function ($type, $buffer) {
-            print($buffer);
-            return str_contains($buffer, 'Ready for new connections');
-        });
-        if (!self::$process->isRunning()) {
-            throw new \Exception('Failed to start cloud_sql_proxy');
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$process->stop();
+        self::startCloudSqlProxy($connectionName, $socketDir, $port);
     }
 
     public function testUnixConnection()

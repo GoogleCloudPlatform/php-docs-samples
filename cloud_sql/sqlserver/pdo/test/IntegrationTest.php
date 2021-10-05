@@ -21,6 +21,7 @@ namespace Google\Cloud\Samples\CloudSQL\SQLServer\Tests;
 use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -28,22 +29,15 @@ use Symfony\Component\Process\Process;
 class IntegrationTest extends TestCase
 {
     use TestTrait;
-    private static $process;
+    use CloudSqlProxyTrait;
 
     public static function setUpBeforeClass(): void
     {
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_SQLSERVER');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
-        self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName . '=tcp:1433,' . $connectionName, '-dir', $socketDir]);
-        self::$process->start();
-        self::$process->waitUntil(function ($type, $buffer) {
-            return str_contains($buffer, 'Ready for new connections');
-        });
-    }
+        $port = '1433';
 
-    public static function tearDownAfterClass(): void
-    {
-        self::$process->stop();
+        self::startCloudSqlProxy($connectionName, $socketDir, $port);
     }
 
     // public function testUnixConnection()
