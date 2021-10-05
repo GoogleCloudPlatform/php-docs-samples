@@ -100,7 +100,7 @@ class DBInitializer
         array $connConfig
     ): PDO {
         try {
-            # [START cloud_sql_postgres_pdo_create_socket]
+            # [START cloud_sql_sqlserver_pdo_create_socket]
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
             // $dbName = 'your_db_name';
@@ -117,7 +117,7 @@ class DBInitializer
 
             // Connect to the database.
             $conn = new PDO($dsn, $username, $password, $connConfig);
-            # [END cloud_sql_postgres_pdo_create_socket]
+            # [END cloud_sql_sqlserver_pdo_create_socket]
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(

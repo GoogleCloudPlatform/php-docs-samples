@@ -35,6 +35,7 @@ class IntegrationTest extends TestCase
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
         self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName, '-dir', $socketDir]);
+        self::$process->setTimeout(120);
         self::$process->start();
         self::$process->waitUntil(function ($type, $buffer) {
             return str_contains($buffer, 'Ready for new connections');
