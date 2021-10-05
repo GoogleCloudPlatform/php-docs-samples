@@ -34,6 +34,12 @@ class IntegrationTest extends TestCase
     {
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
+
+        // create the directory to store the unix socket for cloud_sql_proxy
+        if (!is_dir($socketDir)) {
+            mkdir($socketDir, 0755, true);
+        }
+
         self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName, '-dir', $socketDir]);
         self::$process->setTimeout(120);
         self::$process->start();
