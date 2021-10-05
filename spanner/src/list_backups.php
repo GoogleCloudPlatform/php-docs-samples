@@ -65,7 +65,7 @@ function list_backups($instanceId)
     // List all backups that expire before a timestamp.
     $expireTime = $spanner->timestamp(new \DateTime('+30 days'));
     print("All backups that expire before $expireTime:" . PHP_EOL);
-    $filter ="expire_time < \"$expireTime\"";
+    $filter = "expire_time < \"$expireTime\"";
     foreach ($instance->backups(['filter' => $filter]) as $backup) {
         print('  ' . basename($backup->name()) . PHP_EOL);
     }

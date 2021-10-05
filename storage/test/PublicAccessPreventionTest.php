@@ -52,7 +52,7 @@ class PublicAccessPreventionTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                "Public Access Prevention has been set to enforced for %s.",
+                'Public Access Prevention has been set to enforced for %s.',
                 self::$bucket->name()
             ),
             $output
@@ -73,7 +73,7 @@ class PublicAccessPreventionTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                "Public Access Prevention has been set to inherited for %s.",
+                'Public Access Prevention has been set to inherited for %s.',
                 self::$bucket->name()
             ),
             $output
@@ -94,7 +94,7 @@ class PublicAccessPreventionTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                "The bucket public access prevention is inherited for %s.",
+                'The bucket public access prevention is inherited for %s.',
                 self::$bucket->name()
             ),
             $output

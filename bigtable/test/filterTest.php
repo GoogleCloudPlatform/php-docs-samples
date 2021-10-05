@@ -49,33 +49,33 @@ final class FilterTest extends TestCase
         self::$timestampMicros = time() * 1000 * 1000;
         self::$timestampMicrosMinusHr = (time() - 60 * 60) * 1000 * 1000;
         self::$bigtableClient->table(self::$instanceId, self::$tableId)->mutateRows([
-            "phone#4c410523#20190501" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_01gb", true, self::$timestampMicrosMinusHr)
-                ->upsert('cell_plan', "data_plan_01gb", false, self::$timestampMicros)
-                ->upsert('cell_plan', "data_plan_05gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestampMicros),
-            "phone#4c410523#20190502" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_05gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestampMicros),
-            "phone#4c410523#20190505" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_05gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros),
-            "phone#5c10102#20190501" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_10gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestampMicros),
-            "phone#5c10102#20190502" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_10gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros)
+            'phone#4c410523#20190501' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_01gb', true, self::$timestampMicrosMinusHr)
+                ->upsert('cell_plan', 'data_plan_01gb', false, self::$timestampMicros)
+                ->upsert('cell_plan', 'data_plan_05gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.003', self::$timestampMicros),
+            'phone#4c410523#20190502' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_05gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.004', self::$timestampMicros),
+            'phone#4c410523#20190505' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_05gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros),
+            'phone#5c10102#20190501' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_10gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190401.002', self::$timestampMicros),
+            'phone#5c10102#20190502' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_10gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros)
         ]);
     }
 
@@ -100,7 +100,7 @@ final class FilterTest extends TestCase
             self::$instanceId,
             self::$tableId
         ]);
-        $result = "Reading data for row ";
+        $result = 'Reading data for row ';
         $this->assertStringContainsString($result, trim($output));
     }
 
@@ -421,7 +421,7 @@ Column Family stats_summary
     {
         // since we select the endTime as an open ended timestamp, we add a buffer to our expected timestamp
         // we add 1000 since bigtable has a 1000 microseconds(1ms) granularity
-        $endTime = self::$timestampMicrosMinusHr+1000;
+        $endTime = self::$timestampMicrosMinusHr + 1000;
         $output = self::runFunctionSnippet('filter_limit_timestamp_range', [
             self::$projectId,
             self::$instanceId,
@@ -444,7 +444,7 @@ Column Family cell_plan
             self::$tableId
         ]);
 
-        $result = "";
+        $result = '';
 
         $this->assertEquals($result, trim($output));
     }

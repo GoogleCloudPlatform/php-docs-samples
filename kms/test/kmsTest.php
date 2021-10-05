@@ -440,7 +440,7 @@ class kmsTest extends TestCase
             self::$locationId,
             self::$keyRingId,
             self::$asymmetricDecryptKeyId,
-            "1",
+            '1',
             $plaintext
         ]);
 
@@ -650,7 +650,6 @@ class kmsTest extends TestCase
         $verifyResponse = $client->macVerify($keyVersionName, $data, $signResponse->getMac());
         $this->assertTrue($verifyResponse->getSuccess());
     }
-
 
     public function testUpdateKeyAddRotation()
     {

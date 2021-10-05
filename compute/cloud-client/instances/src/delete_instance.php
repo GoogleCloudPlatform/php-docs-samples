@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-include_once "wait_for_operation.php";
+include_once 'wait_for_operation.php';
 
 # [START compute_instances_delete]
 use Google\Cloud\Compute\V1\InstancesClient;

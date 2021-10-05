@@ -29,6 +29,6 @@ $psrLogger = $logging->psrLogger('error-log', [
 // exception hander. This will ensure all exceptions are logged to Stackdriver.
 Bootstrap::init($psrLogger);
 
-print("Throwing a test exception. You can view the message at https://console.cloud.google.com/errors." . PHP_EOL);
+print('Throwing a test exception. You can view the message at https://console.cloud.google.com/errors.' . PHP_EOL);
 throw new Exception('quickstart.php test exception');
 # [END error_reporting_quickstart]
