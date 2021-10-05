@@ -81,7 +81,6 @@ $container['db'] = function () {
     }
 };
 
-
 // Configure the templating engine.
 $container['view'] = function () {
     return Twig::create(__DIR__ . '/../views');

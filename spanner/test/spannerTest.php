@@ -101,14 +101,14 @@ class spannerTest extends TestCase
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
-            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
+            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
 
         self::$multiInstanceId = 'test-' . time() . rand() . 'm';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
         self::$defaultLeader = 'us-central1';
-        self::$updatedDefaultLeader = "us-east4";
+        self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
 
         $config = $spanner->instanceConfiguration(self::$instanceConfig);
@@ -226,7 +226,7 @@ class spannerTest extends TestCase
         );
 
         foreach ($results as $row) {
-            $this->fail("Not all data was deleted.");
+            $this->fail('Not all data was deleted.');
         }
 
         $output = $this->runFunctionSnippet('insert_data');
@@ -592,7 +592,6 @@ class spannerTest extends TestCase
         $output = $this->runFunctionSnippet('get_commit_stats');
         $this->assertStringContainsString('Updated data with 10 mutations.', $output);
     }
-
 
     /**
      * @depends testCreateDatabase

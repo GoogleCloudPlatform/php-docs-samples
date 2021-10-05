@@ -23,7 +23,7 @@ function listFiles(ServerRequestInterface $request): string
 {
     $contents = scandir(__DIR__);
 
-    $output = "Files:" . PHP_EOL;
+    $output = 'Files:' . PHP_EOL;
 
     foreach ($contents as $file) {
         $output .= "\t" . $file . PHP_EOL;

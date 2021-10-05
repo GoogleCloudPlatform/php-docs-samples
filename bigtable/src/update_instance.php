@@ -47,19 +47,19 @@ function update_instance(
 
     $newType = InstanceType::PRODUCTION;
     $newLabels = [
-        'new-label-key'=>'label-val'
+        'new-label-key' => 'label-val'
     ];
 
     $instance = new Instance([
-        'name'=>$instanceName,
-        'display_name'=>$newDisplayName,
-        'labels'=>$newLabels,
-        'type'=>$newType
+        'name' => $instanceName,
+        'display_name' => $newDisplayName,
+        'labels' => $newLabels,
+        'type' => $newType
     ]);
 
     // This specifies the fields that need to be updated from $instance
     $updateMask = new FieldMask([
-        'paths'=>['labels', 'type', 'display_name']
+        'paths' => ['labels', 'type', 'display_name']
     ]);
 
     try {

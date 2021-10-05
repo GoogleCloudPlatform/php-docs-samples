@@ -30,7 +30,6 @@ if (count($argv) < 4 || count($argv) > 5) {
 list($_, $projectId, $datasetId, $tableId) = $argv;
 $startIndex = isset($argv[4]) ? $argv[4] : 0;
 
-
 # [START bigquery_browse_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 

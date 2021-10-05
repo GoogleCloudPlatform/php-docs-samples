@@ -48,8 +48,8 @@ class Votes
      */
     public function createTableIfNotExists()
     {
-        $existsStmt = "SELECT * FROM INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_NAME = ?";
+        $existsStmt = 'SELECT * FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_NAME = ?';
 
         $stmt = $this->connection->prepare($existsStmt);
         $stmt->execute(['votes']);
@@ -58,12 +58,12 @@ class Votes
 
         // If the table does not exist, create it.
         if (!$row) {
-            $sql = "CREATE TABLE votes (
+            $sql = 'CREATE TABLE votes (
                 vote_id INT NOT NULL IDENTITY,
                 time_cast DATETIME NOT NULL,
                 candidate VARCHAR(6) NOT NULL,
                 PRIMARY KEY (vote_id)
-            );";
+            );';
 
             $this->connection->exec($sql);
         }
@@ -76,7 +76,7 @@ class Votes
      */
     public function listVotes(): array
     {
-        $sql = "SELECT TOP 5 candidate, time_cast FROM votes ORDER BY time_cast DESC";
+        $sql = 'SELECT TOP 5 candidate, time_cast FROM votes ORDER BY time_cast DESC';
         $statement = $this->connection->prepare($sql);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ class Votes
      */
     public function getCountByValue(string $value): int
     {
-        $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE candidate = ?";
+        $sql = 'SELECT COUNT(vote_id) as voteCount FROM votes WHERE candidate = ?';
 
         $statement = $this->connection->prepare($sql);
         $statement->execute([$value]);
@@ -111,7 +111,7 @@ class Votes
 
         # [START cloud_sql_sqlserver_pdo_connection]
         // Use prepared statements to guard against SQL injection.
-        $sql = "INSERT INTO votes (time_cast, candidate) VALUES (GETDATE(), :voteValue)";
+        $sql = 'INSERT INTO votes (time_cast, candidate) VALUES (GETDATE(), :voteValue)';
 
         try {
             $statement = $conn->prepare($sql);
@@ -120,7 +120,7 @@ class Votes
             $res = $statement->execute();
         } catch (PDOException $e) {
             throw new RuntimeException(
-                "Could not insert vote into database. The PDO exception was " .
+                'Could not insert vote into database. The PDO exception was ' .
                 $e->getMessage(),
                 $e->getCode(),
                 $e
