@@ -33,7 +33,7 @@ class CloudSqlTest extends TestCase
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
         $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
         $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-        $socketDir = '/tmp/cloudsql';
+        $socketDir = $this->requireEnv('DB_SOCKET_DIR');
         $socket = "${socketDir}/${connection}";
 
         // create the directory to store the unix socket for cloud_sql_proxy
