@@ -24,7 +24,6 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
 
 class IntegrationTest extends TestCase
 {
