@@ -46,29 +46,29 @@ class IntegrationTest extends TestCase
         self::$process->stop();
     }
 
-    public function testUnixConnection()
-    {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
+    // public function testUnixConnection()
+    // {
+    //     $connConfig = [
+    //         PDO::ATTR_TIMEOUT => 5,
+    //         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    //     ];
 
-        $dbPass = $this->requireEnv('SQLSERVER_PASSWORD');
-        $dbName = $this->requireEnv('SQLSERVER_DATABASE');
-        $dbUser = $this->requireEnv('SQLSERVER_USER');
-        $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_SQLSERVER');
-        $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+    //     $dbPass = $this->requireEnv('SQLSERVER_PASSWORD');
+    //     $dbName = $this->requireEnv('SQLSERVER_DATABASE');
+    //     $dbUser = $this->requireEnv('SQLSERVER_USER');
+    //     $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_SQLSERVER');
+    //     $socketDir = $this->requireEnv('DB_SOCKET_DIR');
 
-        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $connectionName,
-            $socketDir,
-            $connConfig
-        ));
-        $this->assertIsArray($votes->listVotes());
-    }
+    //     $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
+    //         $dbUser,
+    //         $dbPass,
+    //         $dbName,
+    //         $connectionName,
+    //         $socketDir,
+    //         $connConfig
+    //     ));
+    //     $this->assertIsArray($votes->listVotes());
+    // }
 
     public function testTcpConnection()
     {
