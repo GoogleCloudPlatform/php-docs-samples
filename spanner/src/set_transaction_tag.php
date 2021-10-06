@@ -44,13 +44,14 @@ function set_transaction_tag(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
-        $rowCount = $t->executeUpdate(
+        $t->executeUpdate(
             "UPDATE Venues SET Capacity = Capacity/4 WHERE OutdoorVenue = false",
             [
                 'requestOptions' => ['requestTag' => 'app=concert,env=dev,action=update']
             ]
         );
-        $rowCount = $t->executeUpdate(
+        print("Venue capacities updated." . PHP_EOL);
+        $t->executeUpdate(
             "INSERT INTO Venues (VenueId, VenueName, Capacity, OutdoorVenue) "
             . "VALUES (@venueId, @venueName, @capacity, @outdoorVenue)",
             [
@@ -63,6 +64,7 @@ function set_transaction_tag(string $instanceId, string $databaseId): void
                 'requestOptions' => ['requestTag' => 'app=concert,env=dev,action=insert']
             ]
         );
+        print("New venue inserted." . PHP_EOL);
         $t->commit();
     }, [
         'requestOptions' => ['transactionTag' => 'app=concert,env=dev']
