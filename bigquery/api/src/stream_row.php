@@ -30,7 +30,7 @@ if (count($argv) < 4 || count($argv) > 5) {
     return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [DATA]\n", __FILE__);
 }
 list($_, $projectId, $datasetId, $tableId) = $argv;
-$data = isset($argv[4]) ? json_decode($argv[4], true) : ["field1" => "value1"];
+$data = isset($argv[4]) ? json_decode($argv[4], true) : ['field1' => 'value1'];
 
 # [START bigquery_table_insert_rows]
 use Google\Cloud\BigQuery\BigQueryClient;

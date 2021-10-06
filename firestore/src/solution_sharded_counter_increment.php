@@ -46,7 +46,7 @@ function solution_sharded_counter_increment(string $projectId): void
     foreach ($docCollection as $doc) {
         $numShards++;
     }
-    $shardIdx = random_int(0, $numShards-1);
+    $shardIdx = random_int(0, $numShards - 1);
     $doc = $ref->document($shardIdx);
     $doc->update([
         ['path' => 'Cnt', 'value' => FieldValue::increment(1)]

@@ -43,7 +43,7 @@ function query_data_with_numeric_parameter($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $exampleNumeric = $spanner->numeric("100000");
+    $exampleNumeric = $spanner->numeric('100000');
 
     $results = $database->execute(
         'SELECT VenueId, Revenue FROM Venues ' .

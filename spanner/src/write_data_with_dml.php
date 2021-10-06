@@ -48,7 +48,7 @@ function write_data_with_dml($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "INSERT Singers (SingerId, FirstName, LastName) VALUES "
+            'INSERT Singers (SingerId, FirstName, LastName) VALUES '
             . "(12, 'Melissa', 'Garcia'), "
             . "(13, 'Russell', 'Morales'), "
             . "(14, 'Jacqueline', 'Long'), "

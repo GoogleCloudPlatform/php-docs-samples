@@ -29,8 +29,9 @@ $video = new VideoIntelligenceServiceClient();
 $features = [Feature::LABEL_DETECTION];
 $options = [
     'inputUri' => 'gs://cloud-samples-data/video/cat.mp4',
+    'features' => $features
 ];
-$operation = $video->annotateVideo($features, $options);
+$operation = $video->annotateVideo($options);
 
 # Wait for the request to complete.
 $operation->pollUntilComplete();
@@ -48,8 +49,8 @@ if ($operation->operationSucceeded()) {
             $start = $segment->getSegment()->getStartTimeOffset();
             $end = $segment->getSegment()->getEndTimeOffset();
             printf('  Segment: %ss to %ss' . PHP_EOL,
-                $start->getSeconds() + $start->getNanos()/1000000000.0,
-                $end->getSeconds() + $end->getNanos()/1000000000.0
+                $start->getSeconds() + $start->getNanos() / 1000000000.0,
+                $end->getSeconds() + $end->getNanos() / 1000000000.0
             );
             printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
         }

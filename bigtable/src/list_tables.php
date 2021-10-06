@@ -42,7 +42,7 @@ function list_tables(
 
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Listing Tables:" . PHP_EOL);
+    printf('Listing Tables:' . PHP_EOL);
     $tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
     if (empty($tables)) {
         print('No table exists.' . PHP_EOL);
