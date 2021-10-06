@@ -47,9 +47,10 @@ $client = new VideoIntelligenceServiceClient();
 
 # execute a request.
 $features = [Feature::SPEECH_TRANSCRIPTION];
-$operation = $client->annotateVideo($features, [
+$operation = $client->annotateVideo([
     'inputUri' => $uri,
     'videoContext' => $videoContext,
+    'features' => $features,
 ]);
 
 print('Processing video for speech transcription...' . PHP_EOL);

@@ -37,7 +37,7 @@ function list_instance(string $projectId): void
 
     $projectName = $instanceAdminClient->projectName($projectId);
 
-    printf("Listing Instances:" . PHP_EOL);
+    printf('Listing Instances:' . PHP_EOL);
 
     $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
     $instances = $getInstances->getIterator();

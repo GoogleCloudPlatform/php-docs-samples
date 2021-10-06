@@ -59,8 +59,8 @@ function update_data_with_dml_structs($instanceId, $databaseId)
 
         $rowCount = $t->executeUpdate(
             "UPDATE Singers SET LastName = 'Grant' "
-             . "WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) "
-             . "= @name",
+             . 'WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) '
+             . '= @name',
             [
                 'parameters' => [
                     'name' => $nameValue

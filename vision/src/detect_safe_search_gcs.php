@@ -41,11 +41,11 @@ function detect_safe_search_gcs($path)
         $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
         'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
 
-        printf("Adult: %s" . PHP_EOL, $likelihoodName[$adult]);
-        printf("Medical: %s" . PHP_EOL, $likelihoodName[$medical]);
-        printf("Spoof: %s" . PHP_EOL, $likelihoodName[$spoof]);
-        printf("Violence: %s" . PHP_EOL, $likelihoodName[$violence]);
-        printf("Racy: %s" . PHP_EOL, $likelihoodName[$racy]);
+        printf('Adult: %s' . PHP_EOL, $likelihoodName[$adult]);
+        printf('Medical: %s' . PHP_EOL, $likelihoodName[$medical]);
+        printf('Spoof: %s' . PHP_EOL, $likelihoodName[$spoof]);
+        printf('Violence: %s' . PHP_EOL, $likelihoodName[$violence]);
+        printf('Racy: %s' . PHP_EOL, $likelihoodName[$racy]);
     } else {
         print('No Results.' . PHP_EOL);
     }

@@ -52,7 +52,7 @@ class UnitTest extends TestCase
         $this->assertEquals(
             $statusCode,
             $response->getStatusCode(),
-            $label . ": status code"
+            $label . ': status code'
         );
 
         if ($expected !== null) {

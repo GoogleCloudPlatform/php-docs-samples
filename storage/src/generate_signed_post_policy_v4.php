@@ -57,7 +57,7 @@ function generate_signed_post_policy_v4($bucketName, $objectName)
     }
     $output .= "  <input type='file' name='file'/><br />" . PHP_EOL;
     $output .= "  <input type='submit' value='Upload File' name='submit'/><br />" . PHP_EOL;
-    $output .= "</form>" . PHP_EOL;
+    $output .= '</form>' . PHP_EOL;
 
     echo $output;
 }

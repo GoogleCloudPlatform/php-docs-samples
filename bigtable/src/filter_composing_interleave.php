@@ -47,7 +47,7 @@ function filter_composing_interleave(
 
     $filter = Filter::interleave()
         ->addFilter(Filter::value()->exactMatch(unpack('C*', 1)))
-        ->addFilter(Filter::qualifier()->exactMatch("os_build"));
+        ->addFilter(Filter::qualifier()->exactMatch('os_build'));
 
     $rows = $table->readRows([
         'filter' => $filter
@@ -64,7 +64,7 @@ function filter_composing_interleave(
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array)$row as $family => $cols) {
+    foreach ((array) $row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -73,7 +73,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
                 );
             }
         }

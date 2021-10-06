@@ -28,7 +28,7 @@ $app = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 
 $twilioAccountSid = getenv('TWILIO_ACCOUNT_SID');
-$twilioAuthToken  = getenv('TWILIO_AUTH_TOKEN');
+$twilioAuthToken = getenv('TWILIO_AUTH_TOKEN');
 $twilioNumber = getenv('TWILIO_FROM_NUMBER');
 
 # [START gae_flex_twilio_receive_call]

@@ -48,10 +48,10 @@ function filter_composing_condition(
     $filter = Filter::condition(
         Filter::chain()
             ->addFilter(Filter::value()->exactMatch(unpack('C*', 1)))
-            ->addFilter(Filter::qualifier()->exactMatch("data_plan_10gb"))
+            ->addFilter(Filter::qualifier()->exactMatch('data_plan_10gb'))
     )
-        ->then(Filter::label("passed-filter"))
-        ->otherwise(Filter::label("filtered-out"));
+        ->then(Filter::label('passed-filter'))
+        ->otherwise(Filter::label('filtered-out'));
 
     $rows = $table->readRows([
         'filter' => $filter
@@ -68,7 +68,7 @@ function filter_composing_condition(
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array)$row as $family => $cols) {
+    foreach ((array) $row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -77,7 +77,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
                 );
             }
         }

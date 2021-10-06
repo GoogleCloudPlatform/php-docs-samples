@@ -36,7 +36,7 @@ $response = $imageAnnotator->labelDetection($image);
 $labels = $response->getLabelAnnotations();
 
 if ($labels) {
-    echo("Labels:" . PHP_EOL);
+    echo('Labels:' . PHP_EOL);
     foreach ($labels as $label) {
         echo($label->getDescription() . PHP_EOL);
     }

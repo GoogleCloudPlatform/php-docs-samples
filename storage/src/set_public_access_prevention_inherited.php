@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,25 +23,33 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_get_bucket_metadata]
+# [START storage_set_public_access_prevention_inherited]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Get bucket metadata.
+ * Set the bucket Public Access Prevention to inherited.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function get_bucket_metadata($bucketName)
+function set_public_access_prevention_inherited($bucketName)
 {
     // $bucketName = 'my-bucket';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $info = $bucket->info();
 
-    printf('Bucket Metadata: %s' . PHP_EOL, print_r($info));
+    $bucket->update([
+        'iamConfiguration' => [
+            'publicAccessPrevention' => 'inherited'
+        ]
+    ]);
+
+    printf(
+        'Public Access Prevention has been set to inherited for %s.' . PHP_EOL,
+        $bucketName
+    );
 }
-# [END storage_get_bucket_metadata]
+# [END storage_set_public_access_prevention_inherited]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

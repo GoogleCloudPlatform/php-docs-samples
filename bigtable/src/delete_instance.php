@@ -40,13 +40,13 @@ function delete_instance(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Deleting Instance" . PHP_EOL);
+    printf('Deleting Instance' . PHP_EOL);
     try {
         $instanceAdminClient->deleteInstance($instanceName);
-        printf("Deleted Instance: %s." . PHP_EOL, $instanceId);
+        printf('Deleted Instance: %s.' . PHP_EOL, $instanceId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists." . PHP_EOL, $instanceId);
+            printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
         } else {
             throw $e;
         }

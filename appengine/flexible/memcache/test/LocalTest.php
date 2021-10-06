@@ -62,26 +62,26 @@ class LocalTest extends TestCase
         // Use a random key to avoid colliding with simultaneous tests.
 
         // Test the /memcached REST API.
-        $request1 = (new RequestFactory)->createRequest('PUT', "/memcached/testkey1");
+        $request1 = (new RequestFactory)->createRequest('PUT', '/memcached/testkey1');
         $request1->getBody()->write('sour');
         $response1 = $app->handle($request1);
         $this->assertEquals(200, (string) $response1->getStatusCode());
 
         // Check that the key was written as expected
-        $request2 = (new RequestFactory)->createRequest('GET', "/memcached/testkey1");
+        $request2 = (new RequestFactory)->createRequest('GET', '/memcached/testkey1');
         $response2 = $app->handle($request2);
-        $this->assertEquals("sour", (string) $response2->getBody());
+        $this->assertEquals('sour', (string) $response2->getBody());
 
         // Test the /memcached REST API with a new value.
-        $request3 = (new RequestFactory)->createRequest('PUT', "/memcached/testkey2");
+        $request3 = (new RequestFactory)->createRequest('PUT', '/memcached/testkey2');
         $request3->getBody()->write('sweet');
         $response3 = $app->handle($request3);
         $this->assertEquals(200, (string) $response3->getStatusCode());
 
         // Check that the key was written as expected
-        $request4 = (new RequestFactory)->createRequest('GET', "/memcached/testkey2");
+        $request4 = (new RequestFactory)->createRequest('GET', '/memcached/testkey2');
         $response4 = $app->handle($request4);
-        $this->assertEquals("sweet", (string) $response4->getBody());
+        $this->assertEquals('sweet', (string) $response4->getBody());
     }
 }
 
