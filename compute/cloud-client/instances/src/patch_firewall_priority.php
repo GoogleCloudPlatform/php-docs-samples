@@ -28,7 +28,6 @@ include_once 'wait_for_operation.php';
 # [START compute_firewall_patch]
 use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Firewall;
-use Google\Cloud\Compute\V1\Operation;
 
 /**
  * Modifies the priority of a given firewall rule.
@@ -56,7 +55,7 @@ function patch_firewall_priority(string $projectId, string $firewallRule, int $p
 
   // Wait for the create operation to complete using a custom helper function.
   // @see src/wait_for_operation.php
-  $operation = wait_for_operation($operation, $projectId, $zone = 'unspecified');
+  $operation = wait_for_operation($operation, $projectId);
   if (empty($operation->getError())) {
       printf ('Patched Priority! %s' . PHP_EOL, $firewallRule);
   } else {
