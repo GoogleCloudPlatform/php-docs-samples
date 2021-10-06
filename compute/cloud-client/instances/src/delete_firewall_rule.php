@@ -27,7 +27,6 @@ include_once 'wait_for_operation.php';
 
 # [START compute_firewall_delete]
 use Google\Cloud\Compute\V1\FirewallsClient;
-use Google\Cloud\Compute\V1\Operation;
 
 /**
  * Delete a firewall rule from the specified project.
@@ -51,7 +50,7 @@ function delete_firewall_rule(string $projectId, string $firewallRule)
 
   // Wait for the create operation to complete using a custom helper function.
   // @see src/wait_for_operation.php
-  $operation = wait_for_operation($operation, $projectId, $zone = 'unspecified');
+  $operation = wait_for_operation($operation, $projectId);
   if (empty($operation->getError())) {
       printf('Rule Deleted! %s' . PHP_EOL, $firewallRule);
   } else {

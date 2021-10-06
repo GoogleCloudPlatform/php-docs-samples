@@ -29,7 +29,6 @@ include_once 'wait_for_operation.php';
 use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Allowed;
 use Google\Cloud\Compute\V1\Firewall;
-use Google\Cloud\Compute\V1\Operation;
 
 /**
  * Creates a simple firewall rule allowing for incoming HTTP and HTTPS access from the entire Internet.
@@ -77,7 +76,7 @@ function create_firewall_rule(string $projectId, string $firewallRule, string $n
 
   // Wait for the create operation to complete using a custom helper function.
   // @see src/wait_for_operation.php
-  $operation = wait_for_operation($operation, $projectId, $zone = 'unspecified');
+  $operation = wait_for_operation($operation, $projectId);
   if (empty($operation->getError())) {
         printf('Created rule %s' . PHP_EOL, $firewallRule);
   } else {

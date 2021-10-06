@@ -26,6 +26,7 @@ namespace Google\Cloud\Samples\Compute;
 # [START compute_instances_operation_check]
 use Google\Cloud\Compute\V1\Operation;
 use Google\Cloud\Compute\V1\ZoneOperationsClient;
+use Google\Cloud\Compute\V1\RegionOperationsClient;
 use Google\Cloud\Compute\V1\GlobalOperationsClient;
 
 /**
@@ -35,28 +36,41 @@ use Google\Cloud\Compute\V1\GlobalOperationsClient;
  * @param Operation $operation The Operation object representing the operation you want to
  * wait on.
  * @param string $projectId Your Google Cloud project ID.
- * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @return Operation Finished Operation object.
  */
 function wait_for_operation(
     Operation $operation,
-    string $projectId,
-    string $zone
+    string $projectId
 ): Operation {
-    if ($zone ='unspecified') {
-        $operationClient = new GlobalOperationsClient();
-    } else {
+    // Select proper OperationsClient based on Operation type.
+    if (! empty($zoneUrl = $operation->getZone())) {
         $operationClient = new ZoneOperationsClient();
+
+        // Last element of the URL is the Zone name.
+        $exploded_zone = explode('/', $zoneUrl);
+        $zone = array_pop($exploded_zone);
+    } elseif (! empty($regionUrl = $operation->getZone())) {
+        $operationClient = new RegionOperationsClient();
+
+        // Last element of the URL is the Region name.
+        $exploded_region = explode('/', $regionUrl);
+        $region = array_pop($exploded_region);
+    } else {
+        $operationClient = new GlobalOperationsClient();
     }
+
     while ($operation->getStatus() != Operation\Status::DONE) {
         // Wait for the operation to complete.
-        if ($zone='unspecified') {
-            $operation = $operationClient->wait($operation->getName(), $projectId);
-        } else {
+        if (! empty($zone)) {
             $operation = $operationClient->wait($operation->getName(), $projectId, $zone);
+        } elseif (! empty($region)) {
+            $operation = $operationClient->wait($operation->getName(), $projectId, $region);
+        } else {
+            $operation = $operationClient->wait($operation->getName(), $projectId);
         }
+
         if ($operation->hasError()) {
             printf('Operation failed with error(s): %s' . PHP_EOL, $operation->getError()->serializeToString());
             return $operation;
