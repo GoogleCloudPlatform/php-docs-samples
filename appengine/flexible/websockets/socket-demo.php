@@ -42,7 +42,7 @@ class SocketDemo implements MessageComponentInterface
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $output = "Message received: " . $msg . "\n";
+        $output = 'Message received: ' . $msg . "\n";
         echo $output;
         foreach ($this->clients as $client) {
             $client->send($output);
@@ -59,7 +59,7 @@ class SocketDemo implements MessageComponentInterface
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $conn->close();
-        echo "Connection closed due to error: " . $e->getMessage() . "\n";
+        echo 'Connection closed due to error: ' . $e->getMessage() . "\n";
         echo "\t" . $this->clients->count() . " connection(s) active.\n";
     }
 }

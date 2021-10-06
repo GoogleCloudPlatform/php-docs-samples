@@ -47,7 +47,7 @@ $strm = $speechClient->streamingRecognize();
 $strm->write($strmReq);
 
 $strmReq = new StreamingRecognizeRequest();
-$f = fopen($audioFile, "rb");
+$f = fopen($audioFile, 'rb');
 $fsize = filesize($audioFile);
 $bytes = fread($f, $fsize);
 $strmReq->setAudioContent($bytes);

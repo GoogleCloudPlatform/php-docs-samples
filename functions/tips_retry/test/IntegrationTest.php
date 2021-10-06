@@ -38,7 +38,6 @@ class IntegrationTest extends TestCase
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
-
     private static function makeData(array $jsonArray)
     {
         return [

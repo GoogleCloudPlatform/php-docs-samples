@@ -22,7 +22,7 @@ use Google\CloudFunctions\CloudEvent;
 function firebaseRemoteConfig(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-    
+
     $data = $cloudevent->getData();
 
     fwrite($log, 'Update type: ' . $data['updateType'] . PHP_EOL);

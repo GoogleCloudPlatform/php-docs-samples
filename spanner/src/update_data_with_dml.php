@@ -52,9 +52,9 @@ function update_data_with_dml($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "UPDATE Albums "
-            . "SET MarketingBudget = MarketingBudget * 2 "
-            . "WHERE SingerId = 1 and AlbumId = 1");
+            'UPDATE Albums '
+            . 'SET MarketingBudget = MarketingBudget * 2 '
+            . 'WHERE SingerId = 1 and AlbumId = 1');
         $t->commit();
         printf('Updated %d row(s).' . PHP_EOL, $rowCount);
     });

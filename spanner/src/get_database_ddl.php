@@ -44,7 +44,7 @@ function get_database_ddl($instanceId, $databaseId)
 
     printf("Retrieved database DDL for $databaseId" . PHP_EOL);
     foreach ($database->ddl() as $statement) {
-        printf("%s" . PHP_EOL, $statement);
+        printf('%s' . PHP_EOL, $statement);
     }
 }
 // [END spanner_get_database_ddl]

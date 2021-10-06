@@ -138,7 +138,7 @@ class instancesTest extends TestCase
     public function testSetUsageExportBucketCustomPrefix()
     {
         // Set custom prefix
-        $customPrefix = "my-custom-prefix";
+        $customPrefix = 'my-custom-prefix';
 
         // Check user value behaviour for setter
         $output = $this->runFunctionSnippet('set_usage_export_bucket', [

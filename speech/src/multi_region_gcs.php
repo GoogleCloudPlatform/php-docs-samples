@@ -26,7 +26,7 @@ use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 # The name of the audio file to transcribe
-$gcsURI = "gs://cloud-samples-data/speech/brooklyn_bridge.raw";
+$gcsURI = 'gs://cloud-samples-data/speech/brooklyn_bridge.raw';
 
 # set string as audio content
 $audio = (new RecognitionAudio())
