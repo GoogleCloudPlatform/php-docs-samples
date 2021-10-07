@@ -51,7 +51,7 @@ function disable_usage_export_bucket(string $projectId)
         $operationClient->wait($operation->getName(), $projectId);
     }
 
-    printf("Compute Engine usage export bucket for project `%s` disabled.", $projectId);
+    printf('Compute Engine usage export bucket for project `%s` disabled.', $projectId);
 }
 # [END compute_usage_report_disable]
 

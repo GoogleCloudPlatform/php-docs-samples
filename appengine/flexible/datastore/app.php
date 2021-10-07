@@ -72,7 +72,7 @@ $app->get('/', function (Request $request, Response $response) {
             $entity['user_ip']);
     }
     # [END gae_flex_datastore_query]
-    array_unshift($visits, "Last 10 visits:");
+    array_unshift($visits, 'Last 10 visits:');
     $response->getBody()->write(implode("\n", $visits));
 
     return $response

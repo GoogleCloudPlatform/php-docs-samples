@@ -92,7 +92,6 @@ function validate_jwt($iapJwt, $expectedAudience)
     assert($jwt['iss'] == 'https://cloud.google.com/iap');
     assert($jwt['aud'] == $expectedAudience);
 
-
     print('Printing user identity information from ID token payload:');
     printf('sub: %s', $jwt['sub']);
     printf('email: %s', $jwt['email']);

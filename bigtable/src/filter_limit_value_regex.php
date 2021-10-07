@@ -45,7 +45,7 @@ function filter_limit_value_regex(
     ]);
     $table = $dataClient->table($instanceId, $tableId);
 
-    $filter = Filter::value()->regex("PQ2A.*$");
+    $filter = Filter::value()->regex('PQ2A.*$');
 
     $rows = $table->readRows([
         'filter' => $filter
@@ -62,7 +62,7 @@ function filter_limit_value_regex(
 function print_row($key, $row)
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
-    foreach ((array)$row as $family => $cols) {
+    foreach ((array) $row as $family => $cols) {
         printf('Column Family %s' . PHP_EOL, $family);
         foreach ($cols as $col => $data) {
             for ($i = 0; $i < count($data); $i++) {
@@ -71,7 +71,7 @@ function print_row($key, $row)
                     $col,
                     $data[$i]['value'],
                     $data[$i]['timeStamp'],
-                    $data[$i]['labels'] ? sprintf(" [%s]", $data[$i]['labels']) : ''
+                    $data[$i]['labels'] ? sprintf(' [%s]', $data[$i]['labels']) : ''
                 );
             }
         }

@@ -100,7 +100,7 @@ function formatSlackMessage(Google_Service_Kgsearch_SearchResponse $kgResponse, 
  */
 function searchKnowledgeGraph(string $query): Google_Service_Kgsearch_SearchResponse
 {
-    $API_KEY = getenv("KG_API_KEY");
+    $API_KEY = getenv('KG_API_KEY');
 
     $apiClient = new Google\Client();
     $apiClient->setDeveloperKey($API_KEY);

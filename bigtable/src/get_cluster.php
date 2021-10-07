@@ -63,7 +63,7 @@ function get_cluster(
     printf('State: ' . State::name($cluster->getState()) . PHP_EOL);
     printf('Default Storage Type: ' . StorageType::name($cluster->getDefaultStorageType()) . PHP_EOL);
     printf('Nodes: ' . $cluster->getServeNodes() . PHP_EOL);
-    printf('Encryption Config: ' . ($cluster->hasEncryptionConfig() ? $cluster->getEncryptionConfig()->getKmsKeyName() : "N/A") . PHP_EOL);
+    printf('Encryption Config: ' . ($cluster->hasEncryptionConfig() ? $cluster->getEncryptionConfig()->getKmsKeyName() : 'N/A') . PHP_EOL);
 }
 // [END bigtable_get_cluster]
 

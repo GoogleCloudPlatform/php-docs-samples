@@ -41,7 +41,7 @@ $model = 'nmt';  // "base" for standard edition, "nmt" for premium
 $translate = new TranslateClient();
 $result = $translate->translate($text, [
     'target' => $targetLanguage,
-    'model'  => $model,
+    'model' => $model,
 ]);
 print("Source language: $result[source]\n");
 print("Translation: $result[text]\n");
