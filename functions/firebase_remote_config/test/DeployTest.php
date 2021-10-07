@@ -68,7 +68,6 @@ class DeployTest extends TestCase
             '--trigger-event' => $event
         ], '');
 
-
         // Sleep after deployment for a few seconds
         printf('Sleeping after deployment for %d second(s)' . PHP_EOL, $sleep = 30);
         sleep($sleep);
