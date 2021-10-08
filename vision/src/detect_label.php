@@ -32,7 +32,7 @@ function detect_label($path)
     $labels = $response->getLabelAnnotations();
 
     if ($labels) {
-        print("Labels:" . PHP_EOL);
+        print('Labels:' . PHP_EOL);
         foreach ($labels as $label) {
             print($label->getDescription() . PHP_EOL);
         }

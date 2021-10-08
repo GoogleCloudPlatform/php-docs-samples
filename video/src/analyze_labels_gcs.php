@@ -38,8 +38,9 @@ $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
 $features = [Feature::LABEL_DETECTION];
-$operation = $video->annotateVideo($features, [
+$operation = $video->annotateVideo([
     'inputUri' => $uri,
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.
@@ -59,8 +60,8 @@ if ($operation->operationSucceeded()) {
             $start = $segment->getSegment()->getStartTimeOffset();
             $end = $segment->getSegment()->getEndTimeOffset();
             printf('  Segment: %ss to %ss' . PHP_EOL,
-                $start->getSeconds() + $start->getNanos()/1000000000.0,
-                $end->getSeconds() + $end->getNanos()/1000000000.0);
+                $start->getSeconds() + $start->getNanos() / 1000000000.0,
+                $end->getSeconds() + $end->getNanos() / 1000000000.0);
             printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
         }
     }
@@ -76,8 +77,8 @@ if ($operation->operationSucceeded()) {
             $start = $shot->getSegment()->getStartTimeOffset();
             $end = $shot->getSegment()->getEndTimeOffset();
             printf('  Shot: %ss to %ss' . PHP_EOL,
-                $start->getSeconds() + $start->getNanos()/1000000000.0,
-                $end->getSeconds() + $end->getNanos()/1000000000.0);
+                $start->getSeconds() + $start->getNanos() / 1000000000.0,
+                $end->getSeconds() + $end->getNanos() / 1000000000.0);
             printf('  Confidence: %f' . PHP_EOL, $shot->getConfidence());
         }
     }

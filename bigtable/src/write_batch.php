@@ -49,15 +49,15 @@ function write_batch(
     $columnFamilyId = 'stats_summary';
     $mutations = [
         (new Mutations())
-            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
-            ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestampMicros),
+            ->upsert($columnFamilyId, 'connected_wifi', 1, $timestampMicros)
+            ->upsert($columnFamilyId, 'os_build', '12155.0.0-rc1', $timestampMicros),
         (new Mutations())
-            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
-            ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestampMicros)];
+            ->upsert($columnFamilyId, 'connected_wifi', 1, $timestampMicros)
+            ->upsert($columnFamilyId, 'os_build', '12145.0.0-rc6', $timestampMicros)];
 
     $table->mutateRows([
-        "tablet#a0b81f74#20190501" => $mutations[0],
-        "tablet#a0b81f74#20190502" => $mutations[1]
+        'tablet#a0b81f74#20190501' => $mutations[0],
+        'tablet#a0b81f74#20190502' => $mutations[1]
     ]);
 
     printf('Successfully wrote 2 rows.' . PHP_EOL);

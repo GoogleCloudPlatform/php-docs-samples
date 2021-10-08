@@ -31,7 +31,7 @@ session_start();
  * oauth2_redirect_uri.
  */
 $client = new Google_Client();
-$client->setApplicationName("Google Compute Engine PHP Starter Application");
+$client->setApplicationName('Google Compute Engine PHP Starter Application');
 $client->setClientId('YOUR_CLIENT_ID');
 $client->setClientSecret('YOUR_CLIENT_SECRET');
 $client->setRedirectUri('YOUR_REDIRECT_URI');
@@ -70,17 +70,17 @@ define('DEFAULT_NETWORK', BASE_URL . DEFAULT_PROJECT .
 function generateMarkup($apiRequestName, $apiResponse)
 {
     $apiRequestMarkup = '';
-    $apiRequestMarkup .= "<header><h2>" . $apiRequestName . "</h2></header>";
+    $apiRequestMarkup .= '<header><h2>' . $apiRequestName . '</h2></header>';
 
     if ($apiResponse['items'] == '') {
-        $apiRequestMarkup .= "<pre>";
+        $apiRequestMarkup .= '<pre>';
         $apiRequestMarkup .= print_r(json_decode(json_encode($apiResponse), true), true);
-        $apiRequestMarkup .= "</pre>";
+        $apiRequestMarkup .= '</pre>';
     } else {
         foreach ($apiResponse['items'] as $response) {
-            $apiRequestMarkup .= "<pre>";
+            $apiRequestMarkup .= '<pre>';
             $apiRequestMarkup .= print_r(json_decode(json_encode($response), true), true);
-            $apiRequestMarkup .= "</pre>";
+            $apiRequestMarkup .= '</pre>';
         }
     }
 

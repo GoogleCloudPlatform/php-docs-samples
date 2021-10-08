@@ -49,7 +49,7 @@ class DeployTest extends TestCase
     {
         // Use the first test case as the source of the deployed environment variable.
         $cases = self::cases();
-        $env = sprintf("%s=%s", $cases[0]['varName'], $cases[0]['varValue']);
+        $env = sprintf('%s=%s', $cases[0]['varName'], $cases[0]['varValue']);
         self::$fn->deploy(['--update-env-vars' => $env]);
     }
 

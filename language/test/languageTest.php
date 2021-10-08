@@ -116,7 +116,6 @@ class languageTest extends TestCase
         $this->assertStringContainsString('Name: Washington D.C.', $output);
     }
 
-
     public function testAnalyzeEntitiesFromFile()
     {
         $output = $this->runSnippet('analyze_entities_from_file', [
@@ -143,7 +142,6 @@ class languageTest extends TestCase
         $this->assertStringContainsString('  Magnitude:', $output);
         $this->assertStringContainsString('  Score:', $output);
     }
-
 
     public function testAnalyzeSentimentFromFile()
     {

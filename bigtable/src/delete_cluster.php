@@ -42,13 +42,13 @@ function delete_cluster(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
-    printf("Deleting Cluster" . PHP_EOL);
+    printf('Deleting Cluster' . PHP_EOL);
     try {
         $instanceAdminClient->deleteCluster($clusterName);
-        printf("Cluster %s deleted." . PHP_EOL, $clusterId);
+        printf('Cluster %s deleted.' . PHP_EOL, $clusterId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Cluster %s does not exist." . PHP_EOL, $clusterId);
+            printf('Cluster %s does not exist.' . PHP_EOL, $clusterId);
         } else {
             throw $e;
         }

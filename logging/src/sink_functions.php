@@ -81,7 +81,6 @@ function list_sinks($projectId)
 }
 // [END logging_list_sinks]
 
-
 // [START logging_update_sink]
 /**
  * Update a log sink.

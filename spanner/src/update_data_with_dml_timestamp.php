@@ -48,8 +48,8 @@ function update_data_with_dml_timestamp($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "UPDATE Albums "
-            . "SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() WHERE SingerId = 1");
+            'UPDATE Albums '
+            . 'SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() WHERE SingerId = 1');
         $t->commit();
         printf('Updated %d row(s).' . PHP_EOL, $rowCount);
     });
