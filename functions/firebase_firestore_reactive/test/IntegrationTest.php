@@ -54,7 +54,7 @@ class IntegrationTest extends TestCase
                         'value' => [
                             'fields' => [
                                 'original' => [
-                                    'stringValue'=> self::$value
+                                    'stringValue' => self::$value
                                 ]
                             ],
                             'name' => '/documents/some_collection/blah',

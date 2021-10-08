@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Translate;
 
 use PHPUnit\Framework\TestCase;

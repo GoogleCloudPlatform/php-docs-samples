@@ -52,12 +52,12 @@ class Votes
             $stmt = $this->connection->prepare('SELECT 1 FROM votes');
             $stmt->execute();
         } catch (PDOException $e) {
-            $sql = "CREATE TABLE votes (
+            $sql = 'CREATE TABLE votes (
                 vote_id INT NOT NULL AUTO_INCREMENT,
                 time_cast DATETIME NOT NULL,
                 candidate VARCHAR(6) NOT NULL,
                 PRIMARY KEY (vote_id)
-            );";
+            );';
 
             $this->connection->exec($sql);
         }
@@ -70,7 +70,7 @@ class Votes
      */
     public function listVotes(): array
     {
-        $sql = "SELECT candidate, time_cast FROM votes ORDER BY time_cast DESC LIMIT 5";
+        $sql = 'SELECT candidate, time_cast FROM votes ORDER BY time_cast DESC LIMIT 5';
         $statement = $this->connection->prepare($sql);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -84,7 +84,7 @@ class Votes
      */
     public function getCountByValue(string $value): int
     {
-        $sql = "SELECT COUNT(vote_id) as voteCount FROM votes WHERE candidate = ?";
+        $sql = 'SELECT COUNT(vote_id) as voteCount FROM votes WHERE candidate = ?';
 
         $statement = $this->connection->prepare($sql);
         $statement->execute([$value]);
@@ -105,7 +105,7 @@ class Votes
 
         # [START cloud_sql_mysql_pdo_connection]
         // Use prepared statements to guard against SQL injection.
-        $sql = "INSERT INTO votes (time_cast, candidate) VALUES (NOW(), :voteValue)";
+        $sql = 'INSERT INTO votes (time_cast, candidate) VALUES (NOW(), :voteValue)';
 
         try {
             $statement = $conn->prepare($sql);
@@ -114,7 +114,7 @@ class Votes
             $res = $statement->execute();
         } catch (PDOException $e) {
             throw new RuntimeException(
-                "Could not insert vote into database. The PDO exception was " .
+                'Could not insert vote into database. The PDO exception was ' .
                 $e->getMessage(),
                 $e->getCode(),
                 $e

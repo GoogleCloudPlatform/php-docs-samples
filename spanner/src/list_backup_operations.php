@@ -43,8 +43,8 @@ function list_backup_operations($instanceId, $databaseId)
 
     // List the CreateBackup operations.
     $filter = "(metadata.database:$databaseId) AND " .
-              "(metadata.@type:type.googleapis.com/" .
-              "google.spanner.admin.database.v1.CreateBackupMetadata)";
+              '(metadata.@type:type.googleapis.com/' .
+              'google.spanner.admin.database.v1.CreateBackupMetadata)';
 
     $operations = $instance->backupOperations(['filter' => $filter]);
 

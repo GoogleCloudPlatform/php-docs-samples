@@ -49,7 +49,7 @@ function list_all_images(string $projectId)
      * so you can simply iterate over all the images.
      */
     $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
-    print("=================== Flat list of images ===================" . PHP_EOL);
+    print('=================== Flat list of images ===================' . PHP_EOL);
     foreach ($pagedResponse->iterateAllElements() as $element) {
         printf(' - %s' . PHP_EOL, $element->getName());
     }

@@ -44,6 +44,6 @@ function tipsRetry(CloudEvent $event): void
      * failure, it should return *without* throwing an exception.
      */
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-    fwrite($log, "Not retrying" . PHP_EOL);
+    fwrite($log, 'Not retrying' . PHP_EOL);
 }
 // [END functions_tips_retry]

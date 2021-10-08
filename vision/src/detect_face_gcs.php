@@ -34,16 +34,16 @@ function detect_face_gcs($path)
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
     'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
 
-    printf("%d faces found:" . PHP_EOL, count($faces));
+    printf('%d faces found:' . PHP_EOL, count($faces));
     foreach ($faces as $face) {
         $anger = $face->getAngerLikelihood();
-        printf("Anger: %s" . PHP_EOL, $likelihoodName[$anger]);
+        printf('Anger: %s' . PHP_EOL, $likelihoodName[$anger]);
 
         $joy = $face->getJoyLikelihood();
-        printf("Joy: %s" . PHP_EOL, $likelihoodName[$joy]);
+        printf('Joy: %s' . PHP_EOL, $likelihoodName[$joy]);
 
         $surprise = $face->getSurpriseLikelihood();
-        printf("Surprise: %s" . PHP_EOL, $likelihoodName[$surprise]);
+        printf('Surprise: %s' . PHP_EOL, $likelihoodName[$surprise]);
 
         # get bounds
         $vertices = $face->getBoundingPoly()->getVertices();

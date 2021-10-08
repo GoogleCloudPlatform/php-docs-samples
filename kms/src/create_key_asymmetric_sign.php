@@ -46,7 +46,7 @@ function create_key_asymmetric_sign_sample(
 
         // Optional: customize how long key versions should be kept before destroying.
         ->setDestroyScheduledDuration((new Duration())
-            ->setSeconds(24*60*60)
+            ->setSeconds(24 * 60 * 60)
         );
 
     // Call the API.
@@ -55,7 +55,6 @@ function create_key_asymmetric_sign_sample(
     return $createdKey;
 }
 // [END kms_create_key_asymmetric_sign]
-
 
 if (isset($argv)) {
     if (count($argv) === 0) {
