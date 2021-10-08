@@ -745,6 +745,25 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
+    public function testSetTransactionTag()
+    {
+        $output = $this->runFunctionSnippet('set_transaction_tag');
+        $this->assertStringContainsString('Venue capacities updated.', $output);
+        $this->assertStringContainsString('New venue inserted.', $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testSetRequestTag()
+    {
+        $output = $this->runFunctionSnippet('set_request_tag');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
     public function testCreateClientWithQueryOptions()
     {
         $this->runEventuallyConsistentTest(function () {
