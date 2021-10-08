@@ -127,7 +127,7 @@ class DBInitializer
                     'The PHP error was %s',
                     $e->getMessage()
                 ),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         } catch (PDOException $e) {
@@ -140,7 +140,7 @@ class DBInitializer
                     'https://cloud.google.com/sql/docs/mysql/connect-external-app',
                     $e->getMessage()
                 ),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         }

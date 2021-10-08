@@ -39,7 +39,7 @@ function list_databases($instanceId)
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
-    printf("Databases for %s" . PHP_EOL, $instance->name());
+    printf('Databases for %s' . PHP_EOL, $instance->name());
     foreach ($instance->databases() as $database) {
         if (isset($database->info()['defaultLeader'])) {
             printf("\t%s (default leader = %s)" . PHP_EOL,

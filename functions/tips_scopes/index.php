@@ -44,7 +44,7 @@ function scopeDemo(ServerRequestInterface $request): string
     if (file_exists($cachePath)) {
         // Read cached value from file, using file locking to prevent race
         // conditions between function executions.
-        $response .= "Reading cached value." . PHP_EOL;
+        $response .= 'Reading cached value.' . PHP_EOL;
         $fh = fopen($cachePath, 'r');
         flock($fh, LOCK_EX);
         $instanceVar = stream_get_contents($fh);
@@ -52,7 +52,7 @@ function scopeDemo(ServerRequestInterface $request): string
     } else {
         // Compute cached value + write to file, using file locking to prevent
         // race conditions between function executions.
-        $response .= "Cache empty, computing value." . PHP_EOL;
+        $response .= 'Cache empty, computing value.' . PHP_EOL;
         $instanceVar = _heavyComputation();
         file_put_contents($cachePath, $instanceVar, LOCK_EX);
     }

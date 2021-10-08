@@ -38,7 +38,7 @@ class monitoringTest extends TestCase
     // Make retry function longer because creating a metric takes a while
     private function retrySleepFunc($attempts)
     {
-        sleep(pow(2, $attempts+2));
+        sleep(pow(2, $attempts + 2));
     }
 
     public function testCreateMetric()

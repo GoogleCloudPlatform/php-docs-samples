@@ -48,9 +48,9 @@ function update_data_with_numeric_column($instanceId, $databaseId)
 
     $database->transaction(['singleUse' => true])
         ->updateBatch('Venues', [
-            ['VenueId' => 4, 'Revenue' => $spanner->numeric("35000")],
-            ['VenueId' => 19, 'Revenue' => $spanner->numeric("104500")],
-            ['VenueId' => 42, 'Revenue' => $spanner->numeric("99999999999999999999999999999.99")],
+            ['VenueId' => 4, 'Revenue' => $spanner->numeric('35000')],
+            ['VenueId' => 19, 'Revenue' => $spanner->numeric('104500')],
+            ['VenueId' => 42, 'Revenue' => $spanner->numeric('99999999999999999999999999999.99')],
         ])
         ->commit();
 

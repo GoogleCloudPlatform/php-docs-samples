@@ -48,10 +48,10 @@ function set_iam_policy(
 
     try {
         $policy = new Policy([
-            'bindings'=>[
+            'bindings' => [
                 new Binding([
-                    'role'=>$role,
-                    'members'=>[$email]
+                    'role' => $role,
+                    'members' => [$email]
                 ])
             ]
         ]);

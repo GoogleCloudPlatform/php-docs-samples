@@ -44,8 +44,9 @@ $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
 $features = [Feature::EXPLICIT_CONTENT_DETECTION];
-$operation = $video->annotateVideo($features, [
+$operation = $video->annotateVideo([
     'inputUri' => $uri,
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.
@@ -57,7 +58,7 @@ if ($operation->operationSucceeded()) {
     $explicitAnnotation = $results->getExplicitAnnotation();
     foreach ($explicitAnnotation->getFrames() as $frame) {
         $time = $frame->getTimeOffset();
-        printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos()/1000000000.0);
+        printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos() / 1000000000.0);
         printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
     }
 } else {
