@@ -35,11 +35,11 @@ use Google\Cloud\Compute\V1\Firewall;
  *
  * Example:
  * ```
- * create_firewall_rule($projectId, $firewallRule, $network);
+ * create_firewall_rule($projectId, $firewallRuleName, $network);
  * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to create a rule for.
- * @param string $firewallRule Name of the rule that is created.
+ * @param string $firewallRuleName Name of the rule that is created.
  * @param string $network Name of the network the rule will be applied to. Available name formats:
  *                        https://www.googleapis.com/compute/v1/projects/{project_id}/global/networks/{network}
  *                        projects/{project_id}/global/networks/{network}
@@ -47,41 +47,46 @@ use Google\Cloud\Compute\V1\Firewall;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function create_firewall_rule(string $projectId, string $firewallRule, string $network = 'global/networks/default')
+
+//Set a constant for INGRESS and EGRESS
+const EGRESS = 432880501;
+const INGRESS = 516931221;
+
+function create_firewall_rule(string $projectId, string $firewallRuleName, string $network = 'global/networks/default')
 {
-  $firewallsClient = new FirewallsClient();
-  $tcp_80_443_allowed = (new Allowed())
+    $firewallsClient = new FirewallsClient();
+    $tcp_80_443_allowed = (new Allowed())
       ->setIPProtocol('tcp')
       ->setPorts(['80', '443']);
-  $firewallResource = (new Firewall())
-      ->setName($firewallRule)
-      ->setDirection(0)
+    $firewallResource = (new Firewall())
+      ->setName($firewallRuleName)
+      ->setDirection(INGRESS)
       ->setAllowed([$tcp_80_443_allowed])
       ->setSourceRanges(['0.0.0.0/0'])
       ->setNetwork($network)
       ->setDescription('Allowing TCP traffic on port 80 and 443 from Internet.');
 
-  /**
-  * Note that the default value of priority for the firewall API is 1000.
-  * If you check the value of its priority at this point it will be
-  * equal to 0, however it is not treated as "set" by the library and thus
-  * the default will be applied to the new rule. If you want to create a rule
-  * that has priority == 0, you need to explicitly set it so:
-  *
-  *   ->setPriority(0)
-  */
+    /**
+    * Note that the default value of priority for the firewall API is 1000.
+    * If you check the value of its priority at this point it will be
+    * equal to 0, however it is not treated as "set" by the library and thus
+    * the default will be applied to the new rule. If you want to create a rule
+    * that has priority == 0, you need to explicitly set it so:
+    *
+    *   $firewallResource->setPriority(0);
+    */
 
-  //Create the firewall rule using Firewalls Client.
-  $operation = $firewallsClient->insert($firewallResource, $projectId);
+    //Create the firewall rule using Firewalls Client.
+    $operation = $firewallsClient->insert($firewallResource, $projectId);
 
-  // Wait for the create operation to complete using a custom helper function.
-  // @see src/wait_for_operation.php
-  $operation = wait_for_operation($operation, $projectId);
-  if (empty($operation->getError())) {
-        printf('Created rule %s' . PHP_EOL, $firewallRule);
-  } else {
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
+    $operation = wait_for_operation($operation, $projectId);
+    if (empty($operation->getError())) {
+        printf('Created rule %s .' . PHP_EOL, $firewallRuleName);
+    } else {
         printf('Firewall rule creation failed!' . PHP_EOL);
-  }
+    }
 }
 # [END compute_firewall_create]
 

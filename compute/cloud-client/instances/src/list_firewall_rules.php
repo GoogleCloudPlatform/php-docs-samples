@@ -40,14 +40,14 @@ use Google\Cloud\Compute\V1\FirewallsClient;
  */
 function list_firewall_rules(string $projectId)
 {
-  // List all firewall rules defined for the project using Firewalls Client.
-  $firewallClient = new FirewallsClient();
-  $firewallList = $firewallClient->list($projectId);
+    // List all firewall rules defined for the project using Firewalls Client.
+    $firewallClient = new FirewallsClient();
+    $firewallList = $firewallClient->list($projectId);
 
-  print('--- Firewall Rules ---' . PHP_EOL);
-  foreach ($firewallList->iterateAllElements() as $firewall) {
-    printf(' -  %s'. PHP_EOL, $firewall->getName() . ' : ' . $firewall->getDescription());
-  }
+    print('--- Firewall Rules ---' . PHP_EOL);
+    foreach ($firewallList->iterateAllElements() as $firewall) {
+        printf(' -  %s : %s : %s' . PHP_EOL, $firewall->getName(), $firewall->getDescription(), $firewall->getNetwork());
+    }
 }
 # [END compute_firewall_list]
 

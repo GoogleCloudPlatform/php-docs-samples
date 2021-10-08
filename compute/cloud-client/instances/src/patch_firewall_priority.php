@@ -34,33 +34,32 @@ use Google\Cloud\Compute\V1\Firewall;
  *
  * Example:
  * ```
- * patch_firewall_priority($projectId, $firewallRule, $priority);
+ * patch_firewall_priority($projectId, $firewallRuleName, $priority);
  * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to patch a rule from.
- * @param string $firewallRule Name of the rule that you want to modify.
+ * @param string $firewallRuleName Name of the rule that you want to modify.
  * @param int $priority The new priority to be set for the rule.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function patch_firewall_priority(string $projectId, string $firewallRule, int $priority)
+function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority)
 {
-  $firewallsClient = new FirewallsClient();
-  $firewallResource = (new Firewall())
-  ->setPriority($priority);
+    $firewallsClient = new FirewallsClient();
+    $firewallResource = (new Firewall())->setPriority($priority);
 
-  // The patch operation doesn't require the full definition of a Firewall object. It will only update
-  // the values that were set in it, in this case it will only change the priority.
-  $operation = $firewallsClient->patch($firewallRule, $firewallResource, $projectId);
+    // The patch operation doesn't require the full definition of a Firewall object. It will only update
+    // the values that were set in it, in this case it will only change the priority.
+    $operation = $firewallsClient->patch($firewallRuleName, $firewallResource, $projectId);
 
-  // Wait for the create operation to complete using a custom helper function.
-  // @see src/wait_for_operation.php
-  $operation = wait_for_operation($operation, $projectId);
-  if (empty($operation->getError())) {
-      printf ('Patched Priority! %s' . PHP_EOL, $firewallRule);
-  } else {
-      print('Patching failed!' . PHP_EOL);
-  }
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
+    $operation = wait_for_operation($operation, $projectId);
+    if (empty($operation->getError())) {
+        printf('Patched %s priority to %d' . PHP_EOL, $firewallRuleName, $priority);
+    } else {
+        print('Patching failed!' . PHP_EOL);
+    }
 }
 # [END compute_firewall_patch]
 

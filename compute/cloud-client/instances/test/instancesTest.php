@@ -28,7 +28,7 @@ class instancesTest extends TestCase
     private static $instanceName;
     private static $bucketName;
     private static $bucket;
-    private static $firewallRule;
+    private static $firewallRuleName;
     private static $priority;
 
     private const DEFAULT_ZONE = 'us-central1-a';
@@ -138,7 +138,7 @@ class instancesTest extends TestCase
     public function testSetUsageExportBucketCustomPrefix()
     {
         // Set custom prefix
-        $customPrefix = 'my-custom-prefix';
+        $customPrefix = "my-custom-prefix";
 
         // Check user value behaviour for setter
         $output = $this->runFunctionSnippet('set_usage_export_bucket', [
@@ -200,9 +200,9 @@ class instancesTest extends TestCase
     {
         $output = $this->runFunctionSnippet('create_firewall_rule', [
             'projectId' => self::$projectId,
-            'firewallRule' => self::$firewallRule = 'test-firewall-rule',
+            'firewallRuleName' => self::$firewallRuleName = 'test-firewall-rule',
         ]);
-        $this->assertStringContainsString('Created rule ' . self::$firewallRule, $output);
+        $this->assertStringContainsString('Created rule ' . self::$firewallRuleName, $output);
     }
 
     /**
@@ -212,9 +212,9 @@ class instancesTest extends TestCase
     {
         $output = $this->runFunctionSnippet('print_firewall_rule', [
             'projectId' => self::$projectId,
-            'firewallRule' => self::$firewallRule = 'test-firewall-rule',
+            'firewallRuleName' => self::$firewallRuleName = 'test-firewall-rule',
         ]);
-        $this->assertStringContainsString(self::$firewallRule, $output);
+        $this->assertStringContainsString(self::$firewallRuleName, $output);
         $this->assertStringContainsString('0.0.0.0/0', $output);
     }
     
@@ -226,7 +226,7 @@ class instancesTest extends TestCase
         $output = $this->runFunctionSnippet('list_firewall_rules', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertStringContainsString(self::$firewallRule, $output);
+        $this->assertStringContainsString(self::$firewallRuleName, $output);
         $this->assertStringContainsString('Allowing TCP traffic on port 80 and 443 from Internet.', $output);
     }
 
@@ -237,10 +237,11 @@ class instancesTest extends TestCase
     {
         $output = $this->runFunctionSnippet('patch_firewall_priority', [
             'projectId' => self::$projectId,
+            'firewallRuleName' => self::$firewallRuleName,
             'priority' => self::$priority = '20',
-            'firewallRule' => self::$firewallRule,
+            
         ]);
-        $this->assertStringContainsString('Patched Priority! ' . self::$firewallRule, $output);
+        $this->assertStringContainsString('Patched ' . self::$firewallRuleName . ' priority', $output);
     }
     /**
      * @depends testCreateFirewallRule
@@ -249,8 +250,8 @@ class instancesTest extends TestCase
     {
         $output = $this->runFunctionSnippet('delete_firewall_rule', [
             'projectId' => self::$projectId,
-            'firewallRule' => self::$firewallRule,
+            'firewallRuleName' => self::$firewallRuleName,
         ]);
-        $this->assertStringContainsString('Rule Deleted! ' . self::$firewallRule, $output);
+        $this->assertStringContainsString('Rule ' . self::$firewallRuleName . ' deleted',  $output);
     }
 }

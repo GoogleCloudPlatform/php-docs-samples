@@ -33,29 +33,29 @@ use Google\Cloud\Compute\V1\FirewallsClient;
  *
  * Example:
  * ```
- * delete_firewall_rule($projectId, $firewallRule);
+ * delete_firewall_rule($projectId, $firewallRuleName);
  * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to delete a rule for.
- * @param string $firewallRule Name of the rule that is deleted.
+ * @param string $firewallRuleName Name of the rule that is deleted.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function delete_firewall_rule(string $projectId, string $firewallRule)
+function delete_firewall_rule(string $projectId, string $firewallRuleName)
 {
-  $firewallsClient = new FirewallsClient();
+    $firewallsClient = new FirewallsClient();
 
-  // Delete the firewall rule using Firewalls Client.
-  $operation = $firewallsClient->delete($firewallRule, $projectId);
+    // Delete the firewall rule using Firewalls Client.
+    $operation = $firewallsClient->delete($firewallRuleName, $projectId);
 
-  // Wait for the create operation to complete using a custom helper function.
-  // @see src/wait_for_operation.php
-  $operation = wait_for_operation($operation, $projectId);
-  if (empty($operation->getError())) {
-      printf('Rule Deleted! %s' . PHP_EOL, $firewallRule);
-  } else {
-      print('Deletion failed!' . PHP_EOL);
-  }
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
+    $operation = wait_for_operation($operation, $projectId);
+    if (empty($operation->getError())) {
+        printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
+    } else {
+        print('Deletion failed!' . PHP_EOL);
+    }
 }
 # [END compute_firewall_delete]
 
