@@ -41,8 +41,9 @@ $inputContent = file_get_contents($path);
 
 # Execute a request.
 $features = [Feature::OBJECT_TRACKING];
-$operation = $video->annotateVideo($features, [
+$operation = $video->annotateVideo([
     'inputContent' => $inputContent,
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.
@@ -60,15 +61,15 @@ if ($operation->operationSucceeded()) {
     $start = $objectEntity->getSegment()->getStartTimeOffset();
     $end = $objectEntity->getSegment()->getEndTimeOffset();
     printf('  Segment: %ss to %ss' . PHP_EOL,
-        $start->getSeconds() + $start->getNanos()/1000000000.0,
-        $end->getSeconds() + $end->getNanos()/1000000000.0);
+        $start->getSeconds() + $start->getNanos() / 1000000000.0,
+        $end->getSeconds() + $end->getNanos() / 1000000000.0);
     printf('  Confidence: %f' . PHP_EOL, $objectEntity->getConfidence());
 
     foreach ($objectEntity->getFrames() as $objectEntityFrame) {
         $offset = $objectEntityFrame->getTimeOffset();
         $boundingBox = $objectEntityFrame->getNormalizedBoundingBox();
         printf('  Time offset: %ss' . PHP_EOL,
-            $offset->getSeconds() + $offset->getNanos()/1000000000.0);
+            $offset->getSeconds() + $offset->getNanos() / 1000000000.0);
         printf('  Bounding box position:' . PHP_EOL);
         printf('   Left: %s', $boundingBox->getLeft());
         printf('   Top: %s', $boundingBox->getTop());

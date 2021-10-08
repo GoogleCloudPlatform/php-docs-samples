@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,57 +23,54 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_dml_structs]
+// [START spanner_set_transaction_tag]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Transaction;
-use Google\Cloud\Spanner\StructType;
-use Google\Cloud\Spanner\StructValue;
 
 /**
- * Update data with a DML statement using Structs.
- *
- * The database and table must already exist and can be created using
- * `create_database`.
+ * Executes a transaction with a transaction tag.
  * Example:
  * ```
- * insert_data($instanceId, $databaseId);
+ * spanner_set_transaction_tag($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_dml_structs($instanceId, $databaseId)
+function set_transaction_tag(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
-        $nameValue = (new StructValue)
-            ->add('FirstName', 'Timothy')
-            ->add('LastName', 'Campbell');
-        $nameType = (new StructType)
-            ->add('FirstName', Database::TYPE_STRING)
-            ->add('LastName', Database::TYPE_STRING);
-
-        $rowCount = $t->executeUpdate(
-            "UPDATE Singers SET LastName = 'Grant' "
-             . 'WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) '
-             . '= @name',
+        $t->executeUpdate(
+            'UPDATE Venues SET Capacity = CAST(Capacity/4 AS INT64) WHERE OutdoorVenue = false',
+            [
+                'requestOptions' => ['requestTag' => 'app=concert,env=dev,action=update']
+            ]
+        );
+        print('Venue capacities updated.' . PHP_EOL);
+        $t->executeUpdate(
+            'INSERT INTO Venues (VenueId, VenueName, Capacity, OutdoorVenue, LastUpdateTime) '
+            . 'VALUES (@venueId, @venueName, @capacity, @outdoorVenue, PENDING_COMMIT_TIMESTAMP())',
             [
                 'parameters' => [
-                    'name' => $nameValue
+                    'venueId' => 81,
+                    'venueName' => 'Venue 81',
+                    'capacity' => 1440,
+                    'outdoorVenue' => true,
                 ],
-                'types' => [
-                    'name' => $nameType
-                ]
-            ]);
+                'requestOptions' => ['requestTag' => 'app=concert,env=dev,action=insert']
+            ]
+        );
+        print('New venue inserted.' . PHP_EOL);
         $t->commit();
-        printf('Updated %d row(s).' . PHP_EOL, $rowCount);
-    });
+    }, [
+        'requestOptions' => ['transactionTag' => 'app=concert,env=dev']
+    ]);
 }
-// [END spanner_dml_structs]
+// [END spanner_set_transaction_tag]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

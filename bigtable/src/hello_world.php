@@ -26,7 +26,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
+    return printf('Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID' . PHP_EOL, __FILE__);
 }
 list($_, $projectId, $instanceId, $tableId) = $argv;
 

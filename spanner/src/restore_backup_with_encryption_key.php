@@ -62,7 +62,7 @@ function restore_backup_with_encryption_key($instanceId, $databaseId, $backupId,
     $encryptionConfig = $database->info()['encryptionConfig'];
 
     printf(
-        "Database %s restored from backup %s using encryption key %s" . PHP_EOL,
+        'Database %s restored from backup %s using encryption key %s' . PHP_EOL,
         $sourceDatabase, $sourceBackup, $encryptionConfig['kmsKeyName']);
 }
 // [END spanner_restore_backup_with_encryption_key]

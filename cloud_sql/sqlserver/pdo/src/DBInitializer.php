@@ -25,7 +25,6 @@ use RuntimeException;
 
 class DBInitializer
 {
-
     /**
      *  @param $username string username of the database user
      *  @param $password string password of the database user
@@ -75,7 +74,7 @@ class DBInitializer
                     'https://cloud.google.com/sql/docs/sqlserver/connect-external-app',
                     $e->getMessage()
                 ),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         }
