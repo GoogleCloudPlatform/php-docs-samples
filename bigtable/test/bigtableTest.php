@@ -83,7 +83,7 @@ final class BigtableTest extends TestCase
 
         $this->assertSame($expectedResponse, $content);
     }
-  
+
     /**
      * @depends testCreateProductionInstance
      */
@@ -616,7 +616,7 @@ final class BigtableTest extends TestCase
         self::$serviceAccountEmail = $this->createServiceAccount(self::$serviceAccountId);
 
         $user = 'serviceAccount:' . self::$serviceAccountEmail;
-        $content=self::runFunctionSnippet('set_iam_policy', [
+        $content = self::runFunctionSnippet('set_iam_policy', [
             self::$projectId,
             self::$instanceId,
             $user,
@@ -635,7 +635,7 @@ final class BigtableTest extends TestCase
     {
         $user = 'serviceAccount:' . self::$serviceAccountEmail;
 
-        $content=self::runFunctionSnippet('get_iam_policy', [
+        $content = self::runFunctionSnippet('get_iam_policy', [
             self::$projectId,
             self::$instanceId
         ]);

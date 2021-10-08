@@ -73,7 +73,7 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
     }
 
     // intermediate transcript info
-    print(PHP_EOL . str_repeat("=", 20) . PHP_EOL);
+    print(PHP_EOL . str_repeat('=', 20) . PHP_EOL);
     $stream = $sessionsClient->streamingDetectIntent();
     foreach ($requests as $request) {
         $stream->write($request);
@@ -88,7 +88,7 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
 
     // get final response and relevant info
     if ($response) {
-        print(str_repeat("=", 20) . PHP_EOL);
+        print(str_repeat('=', 20) . PHP_EOL);
         $queryResult = $response->getQueryResult();
         $queryText = $queryResult->getQueryText();
         $intent = $queryResult->getIntent();

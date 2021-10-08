@@ -47,18 +47,18 @@ function create_database_with_default_leader($instanceId, $databaseId, $defaultL
     }
 
     $operation = $instance->createDatabase($databaseId, ['statements' => [
-        "CREATE TABLE Singers (
+        'CREATE TABLE Singers (
             SingerId     INT64 NOT NULL,
             FirstName    STRING(1024),
             LastName     STRING(1024),
             SingerInfo   BYTES(MAX)
-        ) PRIMARY KEY (SingerId)",
-        "CREATE TABLE Albums (
+        ) PRIMARY KEY (SingerId)',
+        'CREATE TABLE Albums (
             SingerId     INT64 NOT NULL,
             AlbumId      INT64 NOT NULL,
             AlbumTitle   STRING(MAX)
         ) PRIMARY KEY (SingerId, AlbumId),
-        INTERLEAVE IN PARENT Singers ON DELETE CASCADE",
+        INTERLEAVE IN PARENT Singers ON DELETE CASCADE',
         "ALTER DATABASE `$databaseId` SET OPTIONS (
         default_leader = '$defaultLeader')"
     ]]);

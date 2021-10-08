@@ -22,7 +22,7 @@ use Google\CloudFunctions\CloudEvent;
 function firebaseAnalytics(CloudEvent $cloudevent): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-    
+
     $data = $cloudevent->getData();
 
     fwrite($log, 'Function triggered by the following event:' . $data['resource'] . PHP_EOL);

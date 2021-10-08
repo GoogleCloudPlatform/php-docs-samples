@@ -167,7 +167,7 @@ EOF;
 
         $this->assertEquals(
             sprintf(
-                "New composite object %s was created by combining %s and %s",
+                'New composite object %s was created by combining %s and %s',
                 $targetName,
                 $object1Name,
                 $object2Name

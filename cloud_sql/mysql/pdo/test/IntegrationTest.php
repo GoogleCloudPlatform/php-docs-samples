@@ -21,29 +21,23 @@ namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 use Google\Cloud\Samples\CloudSQL\MySQL\DBInitializer;
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
 
 class IntegrationTest extends TestCase
 {
     use TestTrait;
-    private static $process;
+    use CloudSqlProxyTrait;
 
     public static function setUpBeforeClass(): void
     {
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
-        self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName . '=tcp:3306,' . $connectionName, '-dir', $socketDir]);
-        self::$process->start();
-        self::$process->waitUntil(function ($type, $buffer) {
-            return str_contains($buffer, 'Ready for new connections');
-        });
-    }
+        // '3306' was not working on kokoro we probably just need to update cloud_sql_proxy
+        $port = null;
 
-    public static function tearDownAfterClass(): void
-    {
-        self::$process->stop();
+        self::startCloudSqlProxy($connectionName, $socketDir, $port);
     }
 
     public function testUnixConnection()

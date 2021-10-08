@@ -37,7 +37,6 @@ class IntegrationTest extends TestCase
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
-
     public function dataProvider()
     {
         return [

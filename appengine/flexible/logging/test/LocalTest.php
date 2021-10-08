@@ -33,7 +33,7 @@ class LocalTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $text = (string) $response->getBody();
-        $this->assertStringContainsString("Logs:", $text);
+        $this->assertStringContainsString('Logs:', $text);
     }
 
     public function testAsyncLog()

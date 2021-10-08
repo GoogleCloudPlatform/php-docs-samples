@@ -33,6 +33,6 @@ class LocalTest extends TestCase
         $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $text = (string) $response->getBody();
-        $this->assertStringContainsString("Last 10 visits:", $text);
+        $this->assertStringContainsString('Last 10 visits:', $text);
     }
 }

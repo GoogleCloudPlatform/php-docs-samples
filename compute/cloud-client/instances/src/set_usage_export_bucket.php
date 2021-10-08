@@ -52,16 +52,16 @@ function set_usage_export_bucket(
 ) {
     // Initialize UsageExportLocation object with provided bucket name and no report name prefix.
     $usageExportLocation = new UsageExportLocation(array(
-        "bucket_name" => $bucketName,
-        "report_name_prefix" => $reportNamePrefix
+        'bucket_name' => $bucketName,
+        'report_name_prefix' => $reportNamePrefix
     ));
 
     if (strlen($reportNamePrefix) == 0) {
         // Sending empty value for report_name_prefix results in the next usage report
         // being generated with the default prefix value "usage_gce".
         // See https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket
-        print("Setting report_name_prefix to empty value causes the " .
-            "report to have the default value of `usage_gce`." . PHP_EOL);
+        print('Setting report_name_prefix to empty value causes the ' .
+            'report to have the default value of `usage_gce`.' . PHP_EOL);
     }
 
     // Set the usage export location.
@@ -75,8 +75,8 @@ function set_usage_export_bucket(
     }
 
     printf(
-        "Compute Engine usage export bucket for project `%s` set to bucket_name = `%s` with " .
-        "report_name_prefix = `%s`." . PHP_EOL,
+        'Compute Engine usage export bucket for project `%s` set to bucket_name = `%s` with ' .
+        'report_name_prefix = `%s`.' . PHP_EOL,
         $projectId,
         $usageExportLocation->getBucketName(),
         (strlen($reportNamePrefix) == 0) ? 'usage_gce' : $usageExportLocation->getReportNamePrefix()

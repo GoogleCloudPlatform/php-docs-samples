@@ -83,10 +83,14 @@ class DeployTest extends TestCase
         );
         $event = 'providers/cloud.firestore/eventTypes/document.write';
 
-        return self::$fn->deploy([
+        self::$fn->deploy([
             '--trigger-resource' => $resource,
             '--trigger-event' => $event
         ], '');
+
+        // Sleep after deployment for a few seconds
+        printf('Sleeping after deployment for %d second(s)' . PHP_EOL, $sleep = 30);
+        sleep($sleep);
     }
 
     public function dataProvider()
@@ -126,7 +130,7 @@ class DeployTest extends TestCase
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
             $this->assertStringContainsString($expected, $actual);
-        }, 5, 30);
+        }, $retries = 6, $initialSleep = 10);
     }
 
     /**

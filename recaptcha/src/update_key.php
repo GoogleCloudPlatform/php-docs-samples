@@ -77,7 +77,7 @@ function update_key(
 
     try {
         $updatedKey = $client->updateKey($key, [
-            'updateMask'=>$updateMask
+            'updateMask' => $updateMask
         ]);
 
         printf('The key: %s is updated.' . PHP_EOL, $updatedKey->getDisplayName());

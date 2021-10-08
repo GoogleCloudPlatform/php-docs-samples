@@ -51,7 +51,7 @@ class ObjectSignedUrlTest extends TestCase
 
         $object->delete();
 
-        $this->assertStringContainsString("The signed url for " . $object->name() . " is", $output);
+        $this->assertStringContainsString('The signed url for ' . $object->name() . ' is', $output);
     }
 
     public function testGetV4SignedUrl()
