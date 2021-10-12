@@ -29,6 +29,7 @@ include_once 'wait_for_operation.php';
 use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Allowed;
 use Google\Cloud\Compute\V1\Firewall;
+use Google\Cloud\Compute\V1\Firewall\Direction;
 
 /**
  * Creates a simple firewall rule allowing for incoming HTTP and HTTPS access from the entire Internet.
@@ -48,10 +49,6 @@ use Google\Cloud\Compute\V1\Firewall;
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
 
-//Set a constant for INGRESS and EGRESS
-const EGRESS = 432880501;
-const INGRESS = 516931221;
-
 function create_firewall_rule(string $projectId, string $firewallRuleName, string $network = 'global/networks/default')
 {
     $firewallsClient = new FirewallsClient();
@@ -60,7 +57,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
       ->setPorts(['80', '443']);
     $firewallResource = (new Firewall())
       ->setName($firewallRuleName)
-      ->setDirection(INGRESS)
+      ->setDirection(Direction::INGRESS)
       ->setAllowed([$tcp_80_443_allowed])
       ->setSourceRanges(['0.0.0.0/0'])
       ->setNetwork($network)
@@ -83,7 +80,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
     // @see src/wait_for_operation.php
     $operation = wait_for_operation($operation, $projectId);
     if (empty($operation->getError())) {
-        printf('Created rule %s .' . PHP_EOL, $firewallRuleName);
+        printf('Created rule %s.' . PHP_EOL, $firewallRuleName);
     } else {
         printf('Firewall rule creation failed!' . PHP_EOL);
     }

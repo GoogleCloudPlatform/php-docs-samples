@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Compute;
 
 use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Firewall\Direction;
 
 /**
  * Prints details about a particular firewall rule in the specified project
@@ -48,7 +49,7 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
     printf('Kind: %s' . PHP_EOL, $response->getKind());
     printf('Name: %s' . PHP_EOL, $response->getName());
     printf('Creation Time: %s' . PHP_EOL, $response->getCreationTimestamp());
-    if ($direction= 516931221) {
+    if ($direction = Direction::INGRESS) {
         print('Direction: INGRESS' . PHP_EOL);
     } else {
         print('Direction: EGRESS' . PHP_EOL);
