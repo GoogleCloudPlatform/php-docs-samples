@@ -52,16 +52,16 @@ use Google\Cloud\Compute\V1\Firewall\Direction;
 function create_firewall_rule(string $projectId, string $firewallRuleName, string $network = 'global/networks/default')
 {
     $firewallsClient = new FirewallsClient();
-    $tcp_80_443_allowed = (new Allowed())
+    $allowedPorts = (new Allowed())
       ->setIPProtocol('tcp')
       ->setPorts(['80', '443']);
     $firewallResource = (new Firewall())
       ->setName($firewallRuleName)
       ->setDirection(Direction::INGRESS)
-      ->setAllowed([$tcp_80_443_allowed])
+      ->setAllowed([$allowedPorts])
       ->setSourceRanges(['0.0.0.0/0'])
       ->setNetwork($network)
-      ->setDescription('Allowing TCP traffic on port 80 and 443 from Internet.');
+      ->setDescription('Allowing TCP traffic on ports 80 and 443 from Internet.');
 
     /**
     * Note that the default value of priority for the firewall API is 1000.

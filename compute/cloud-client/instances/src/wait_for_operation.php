@@ -44,32 +44,28 @@ function wait_for_operation(
     Operation $operation,
     string $projectId
 ): Operation {
-    // Select proper OperationsClient based on Operation type.
+    // Select proper OperationsClient based on Operation type and create arguments list
+    $waitArguments = array($operation->getName(), $projectId);
+
     if (! empty($zoneUrl = $operation->getZone())) {
         $operationClient = new ZoneOperationsClient();
 
         // Last element of the URL is the Zone name.
-        $exploded_zone = explode('/', $zoneUrl);
-        $zone = array_pop($exploded_zone);
+        $explodedZone = explode('/', $zoneUrl);
+        $waitArguments[] = array_pop($explodedZone);
     } elseif (! empty($regionUrl = $operation->getZone())) {
         $operationClient = new RegionOperationsClient();
 
         // Last element of the URL is the Region name.
-        $exploded_region = explode('/', $regionUrl);
-        $region = array_pop($exploded_region);
+        $explodedRegion = explode('/', $regionUrl);
+        $waitArguments[] = array_pop($explodedRegion);
     } else {
         $operationClient = new GlobalOperationsClient();
     }
 
     while ($operation->getStatus() != Operation\Status::DONE) {
         // Wait for the operation to complete.
-        if (! empty($zone)) {
-            $operation = $operationClient->wait($operation->getName(), $projectId, $zone);
-        } elseif (! empty($region)) {
-            $operation = $operationClient->wait($operation->getName(), $projectId, $region);
-        } else {
-            $operation = $operationClient->wait($operation->getName(), $projectId);
-        }
+        $operation = $operationClient->wait(...$waitArguments);
 
         if ($operation->hasError()) {
             printf('Operation failed with error(s): %s' . PHP_EOL, $operation->getError()->serializeToString());
