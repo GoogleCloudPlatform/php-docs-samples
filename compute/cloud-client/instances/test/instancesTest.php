@@ -229,7 +229,7 @@ class instancesTest extends TestCase
             'projectId' => self::$projectId
         ]);
         $this->assertStringContainsString(self::$firewallRuleName, $output);
-        $this->assertStringContainsString('Allowing TCP traffic on port 80 and 443 from Internet.', $output);
+        $this->assertStringContainsString('Allowing TCP traffic on ports 80 and 443 from Internet.', $output);
     }
 
     /**
