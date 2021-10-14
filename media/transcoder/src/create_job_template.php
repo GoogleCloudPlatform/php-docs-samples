@@ -25,13 +25,13 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_template]
-use Google\Cloud\Video\Transcoder\V1beta1\AudioStream;
-use Google\Cloud\Video\Transcoder\V1beta1\ElementaryStream;
-use Google\Cloud\Video\Transcoder\V1beta1\JobConfig;
-use Google\Cloud\Video\Transcoder\V1beta1\JobTemplate;
-use Google\Cloud\Video\Transcoder\V1beta1\MuxStream;
-use Google\Cloud\Video\Transcoder\V1beta1\TranscoderServiceClient;
-use Google\Cloud\Video\Transcoder\V1beta1\VideoStream;
+use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
+use Google\Cloud\Video\Transcoder\V1\JobConfig;
+use Google\Cloud\Video\Transcoder\V1\JobTemplate;
+use Google\Cloud\Video\Transcoder\V1\MuxStream;
+use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\VideoStream;
 
 /**
  * Creates a job template.
@@ -55,21 +55,25 @@ function create_job_template($projectId, $location, $templateId)
                         ->setKey("video-stream0")
                         ->setVideoStream(
                             (new VideoStream())
-                                ->setCodec("h264")
-                                ->setBitrateBps(550000)
-                                ->setFrameRate(60)
-                                ->setHeightPixels(360)
-                                ->setWidthPixels(640)
+                                ->setH264(
+                                    (new VideoStream\H264CodecSettings())
+                                        ->setBitrateBps(550000)
+                                        ->setFrameRate(60)
+                                        ->setHeightPixels(360)
+                                        ->setWidthPixels(640)
+                                )
                         ),
                     (new ElementaryStream())
                         ->setKey("video-stream1")
                         ->setVideoStream(
                             (new VideoStream())
-                                ->setCodec("h264")
-                                ->setBitrateBps(2500000)
-                                ->setFrameRate(60)
-                                ->setHeightPixels(720)
-                                ->setWidthPixels(1280)
+                                ->setH264(
+                                    (new VideoStream\H264CodecSettings())
+                                        ->setBitrateBps(2500000)
+                                        ->setFrameRate(60)
+                                        ->setHeightPixels(720)
+                                        ->setWidthPixels(1280)
+                                )
                         ),
                     (new ElementaryStream())
                         ->setKey("audio-stream0")
@@ -96,7 +100,6 @@ function create_job_template($projectId, $location, $templateId)
     // Print job template name.
     printf('Job template: %s' . PHP_EOL, $response->getName());
 }
-
 # [END transcoder_create_job_template]
 
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

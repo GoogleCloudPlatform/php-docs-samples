@@ -25,8 +25,8 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_from_template]
-use Google\Cloud\Video\Transcoder\V1beta1\TranscoderServiceClient;
-use Google\Cloud\Video\Transcoder\V1beta1\Job;
+use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Job;
 
 /**
  * Creates a job based on a job template.

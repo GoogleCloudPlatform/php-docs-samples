@@ -25,11 +25,11 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_get_job_state]
-use Google\Cloud\Video\Transcoder\V1beta1\Job;
-use Google\Cloud\Video\Transcoder\V1beta1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Job;
+use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 
 /**
- * Gets a Transcoder job.
+ * Gets a Transcoder job's state.
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
  * @param string $location The location of the job.
@@ -43,10 +43,9 @@ function get_job_state($projectId, $location, $jobId)
     $formattedName = $transcoderServiceClient->jobName($projectId, $location, $jobId);
     $job = $transcoderServiceClient->getJob($formattedName);
 
-    // Print job name.
+    // Print job state.
     printf('Job state: %s' . PHP_EOL, Job\ProcessingState::name($job->getState()));
 }
-
 # [END transcoder_get_job_state]
 
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

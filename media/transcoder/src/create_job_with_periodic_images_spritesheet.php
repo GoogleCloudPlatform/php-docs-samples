@@ -25,14 +25,14 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_with_periodic_images_spritesheet]
-use Google\Cloud\Video\Transcoder\V1beta1\AudioStream;
-use Google\Cloud\Video\Transcoder\V1beta1\ElementaryStream;
-use Google\Cloud\Video\Transcoder\V1beta1\Job;
-use Google\Cloud\Video\Transcoder\V1beta1\JobConfig;
-use Google\Cloud\Video\Transcoder\V1beta1\MuxStream;
-use Google\Cloud\Video\Transcoder\V1beta1\SpriteSheet;
-use Google\Cloud\Video\Transcoder\V1beta1\TranscoderServiceClient;
-use Google\Cloud\Video\Transcoder\V1beta1\VideoStream;
+use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
+use Google\Cloud\Video\Transcoder\V1\Job;
+use Google\Cloud\Video\Transcoder\V1\JobConfig;
+use Google\Cloud\Video\Transcoder\V1\MuxStream;
+use Google\Cloud\Video\Transcoder\V1\SpriteSheet;
+use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\VideoStream;
 use Google\Protobuf\Duration;
 
 /**
@@ -60,11 +60,13 @@ function create_job_with_periodic_images_spritesheet($projectId, $location, $inp
                         ->setKey("video-stream0")
                         ->setVideoStream(
                             (new VideoStream())
-                                ->setCodec("h264")
-                                ->setBitrateBps(550000)
-                                ->setFrameRate(60)
-                                ->setHeightPixels(360)
-                                ->setWidthPixels(640)
+                                ->setH264(
+                                    (new VideoStream\H264CodecSettings())
+                                        ->setBitrateBps(550000)
+                                        ->setFrameRate(60)
+                                        ->setHeightPixels(360)
+                                        ->setWidthPixels(640)
+                                )
                         ),
                     (new ElementaryStream())
                         ->setKey("audio-stream0")
@@ -105,7 +107,6 @@ function create_job_with_periodic_images_spritesheet($projectId, $location, $inp
     // Print job name.
     printf('Job: %s' . PHP_EOL, $response->getName());
 }
-
 # [END transcoder_create_job_with_periodic_images_spritesheet]
 
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

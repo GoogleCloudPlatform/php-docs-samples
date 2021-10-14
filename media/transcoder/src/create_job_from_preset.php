@@ -25,8 +25,8 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_from_preset]
-use Google\Cloud\Video\Transcoder\V1beta1\TranscoderServiceClient;
-use Google\Cloud\Video\Transcoder\V1beta1\Job;
+use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Job;
 
 /**
  * Creates a job based on a job preset.
@@ -35,7 +35,7 @@ use Google\Cloud\Video\Transcoder\V1beta1\Job;
  * @param string $location The location of the job.
  * @param string $inputUri Uri of the video in the Cloud Storage bucket.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
- * @param string $preset The preset template.
+ * @param string $preset The preset template (for example, "preset/web-hd").
  */
 function create_job_from_preset($projectId, $location, $inputUri, $outputUri, $preset)
 {

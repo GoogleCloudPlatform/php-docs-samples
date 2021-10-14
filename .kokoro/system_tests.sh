@@ -43,6 +43,8 @@ if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
            --plaintext-file=.kokoro/secrets.sh
 fi
 
+export GOOGLE_PROJECT_NUMBER=$(gcloud projects list --filter="projectId:$GCLOUD_PROJECT" --format="value(PROJECT_NUMBER)")
+
 # Unencrypt and extract secrets
 source .kokoro/secrets.sh
 
