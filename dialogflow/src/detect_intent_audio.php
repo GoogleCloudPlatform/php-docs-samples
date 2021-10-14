@@ -58,7 +58,7 @@ function detect_intent_audio($projectId, $path, $sessionId, $languageCode = 'en-
     $fulfilmentText = $queryResult->getFulfillmentText();
 
     // output relevant info
-    print(str_repeat("=", 20) . PHP_EOL);
+    print(str_repeat('=', 20) . PHP_EOL);
     printf('Query text: %s' . PHP_EOL, $queryText);
     printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
         $confidence);

@@ -54,14 +54,14 @@ class LocalTest extends TestCase
                 return $endPromise;
             })
             ->otherwise(function ($e) {
-                echo "Error: " . $e->getMessage() . "\n";
+                echo 'Error: ' . $e->getMessage() . "\n";
                 throw $e;
             });
 
         $this->loop->run();
         $resolvedMsg = Block\await($basePromise, $this->loop);
         $this->assertStringContainsString(
-            "Message received: Hello World!",
+            'Message received: Hello World!',
             strval($resolvedMsg)
         );
     }

@@ -91,7 +91,7 @@ function insert_update_rows(
         'rk5' => [
             'cf1' => [
                 'cq5' => [
-                    'value' => "Value5",
+                    'value' => 'Value5',
                     'timeStamp' => time_in_microseconds()
                 ]
             ]

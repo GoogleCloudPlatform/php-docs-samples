@@ -26,7 +26,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
+    return printf('Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [LOCATION_ID]' . PHP_EOL, __FILE__);
 }
 list($_, $projectId, $instanceId, $tableId) = $argv;
 $locationId = isset($argv[5]) ? $argv[5] : 'us-east1-b';

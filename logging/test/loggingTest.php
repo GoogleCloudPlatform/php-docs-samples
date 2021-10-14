@@ -38,7 +38,7 @@ class loggingTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$sinkName = sprintf("sink-%s", uniqid());
+        self::$sinkName = sprintf('sink-%s', uniqid());
     }
 
     public function setUp(): void
@@ -138,7 +138,7 @@ class loggingTest extends TestCase
 
     public function testWriteAndList()
     {
-        $message = sprintf("Test Message %s", uniqid());
+        $message = sprintf('Test Message %s', uniqid());
         $output = $this->runCommand('write', [
             'project' => self::$projectId,
             'message' => $message,

@@ -52,7 +52,7 @@ class PublicAccessPreventionTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                "Public Access Prevention has been set to enforced for %s.",
+                'Public Access Prevention has been set to enforced for %s.',
                 self::$bucket->name()
             ),
             $output
@@ -65,15 +65,15 @@ class PublicAccessPreventionTest extends TestCase
     }
 
     /** @depends testSetPublicAccessPreventionToEnforced */
-    public function testSetPublicAccessPreventionToUnspecified()
+    public function testSetPublicAccessPreventionToInherited()
     {
-        $output = self::runFunctionSnippet('set_public_access_prevention_unspecified', [
+        $output = self::runFunctionSnippet('set_public_access_prevention_inherited', [
             self::$bucket->name(),
         ]);
 
         $this->assertStringContainsString(
             sprintf(
-                "Public Access Prevention has been set to unspecified for %s.",
+                'Public Access Prevention has been set to inherited for %s.',
                 self::$bucket->name()
             ),
             $output
@@ -82,10 +82,10 @@ class PublicAccessPreventionTest extends TestCase
         self::$bucket->reload();
         $bucketInformation = self::$bucket->info();
         $pap = $bucketInformation['iamConfiguration']['publicAccessPrevention'];
-        $this->assertEquals('unspecified', $pap);
+        $this->assertEquals('inherited', $pap);
     }
 
-    /** @depends testSetPublicAccessPreventionToUnspecified */
+    /** @depends testSetPublicAccessPreventionToInherited */
     public function testGetPublicAccessPrevention()
     {
         $output = self::runFunctionSnippet('get_public_access_prevention', [
@@ -94,7 +94,7 @@ class PublicAccessPreventionTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                "The bucket public access prevention is unspecified for %s.",
+                'The bucket public access prevention is inherited for %s.',
                 self::$bucket->name()
             ),
             $output
@@ -103,6 +103,6 @@ class PublicAccessPreventionTest extends TestCase
         self::$bucket->reload();
         $bucketInformation = self::$bucket->info();
         $pap = $bucketInformation['iamConfiguration']['publicAccessPrevention'];
-        $this->assertEquals('unspecified', $pap);
+        $this->assertEquals('inherited', $pap);
     }
 }

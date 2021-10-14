@@ -41,7 +41,7 @@ class RequesterPaysTest extends TestCase
             self::$bucketName,
         ]);
 
-        $this->assertStringContainsString("Requester pays has been enabled", $output);
+        $this->assertStringContainsString('Requester pays has been enabled', $output);
     }
 
     /** @depends testEnableRequesterPays */
@@ -51,7 +51,7 @@ class RequesterPaysTest extends TestCase
             self::$bucketName,
         ]);
 
-        $this->assertStringContainsString("Requester pays has been disabled", $output);
+        $this->assertStringContainsString('Requester pays has been disabled', $output);
     }
 
     /** depends testDisableRequesterPays */
@@ -61,7 +61,7 @@ class RequesterPaysTest extends TestCase
             self::$bucketName,
         ]);
 
-        $this->assertStringContainsString("Requester Pays is disabled", $output);
+        $this->assertStringContainsString('Requester Pays is disabled', $output);
     }
 
     public function testDownloadFileRequesterPays()
@@ -81,6 +81,6 @@ class RequesterPaysTest extends TestCase
             $destination,
         ]);
 
-        $this->assertStringContainsString("using requester-pays requests", $output);
+        $this->assertStringContainsString('using requester-pays requests', $output);
     }
 }
