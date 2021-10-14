@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-// [START functions_helloworld_http]
+<!-- [START functions_helloworld_http] ->
 <?php
 
 use Psr\Http\Message\ServerRequestInterface;
