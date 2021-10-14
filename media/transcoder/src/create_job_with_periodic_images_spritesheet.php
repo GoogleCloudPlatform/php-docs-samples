@@ -95,10 +95,7 @@ function create_job_with_periodic_images_spritesheet($projectId, $location, $inp
                         ->setFilePrefix("large-sprite-sheet")
                         ->setSpriteWidthPixels(128)
                         ->setSpriteHeightPixels(72)
-                        ->setInterval(
-                            (new Duration())
-                                ->setSeconds(7)
-                        )
+                        ->setInterval(new Duration(['seconds' => 7]))
                 ])
         );
 
