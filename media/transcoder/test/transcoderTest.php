@@ -104,7 +104,7 @@ class transcoderTest extends TestCase
                self::$projectId,
                self::$location,
                $jobId
-           ]);
+            ]);
             $this->assertStringContainsString('Job state: SUCCEEDED' . PHP_EOL, $output);
         }, 5, true);
     }
@@ -134,14 +134,11 @@ class transcoderTest extends TestCase
         ]);
         $this->assertStringContainsString($jobTemplateName, $output);
 
-        $output = $this->runFunctionSnippet(
-            'delete_job_template',
-            [
+        $output = $this->runFunctionSnippet('delete_job_template', [
             self::$projectId,
             self::$location,
             $jobTemplateId
-        ]
-        );
+        ]);
         $this->assertStringContainsString('Deleted job template' . PHP_EOL, $output);
     }
 
@@ -177,14 +174,11 @@ class transcoderTest extends TestCase
         $this->assertStringContainsString($jobId, $listOutput);
 
         // Test Delete method
-        $deleteOutput  = $this->runFunctionSnippet(
-            'delete_job',
-            [
+        $deleteOutput = $this->runFunctionSnippet('delete_job', [
             self::$projectId,
             self::$location,
             $jobId
-        ]
-        );
+        ]);
         $this->assertStringContainsString('Deleted job' . PHP_EOL, $deleteOutput);
     }
 
@@ -206,14 +200,11 @@ class transcoderTest extends TestCase
         sleep(30);
         $this->assertJobStateSucceeded($jobId);
 
-        $this->runFunctionSnippet(
-            'delete_job',
-            [
+        $this->runFunctionSnippet('delete_job', [
             self::$projectId,
             self::$location,
             $jobId
-        ]
-        );
+        ]);
     }
 
     public function testJobFromTemplate()
@@ -241,23 +232,17 @@ class transcoderTest extends TestCase
         sleep(30);
         $this->assertJobStateSucceeded($jobId);
 
-        $this->runFunctionSnippet(
-            'delete_job',
-            [
+        $this->runFunctionSnippet('delete_job', [
             self::$projectId,
             self::$location,
             $jobId
-        ]
-        );
+        ]);
 
-        $this->runFunctionSnippet(
-            'delete_job_template',
-            [
+        $this->runFunctionSnippet('delete_job_template', [
             self::$projectId,
             self::$location,
             $jobTemplateId
-        ]
-        );
+        ]);
     }
 
     public function testJobAnimatedOverlay()
@@ -278,14 +263,11 @@ class transcoderTest extends TestCase
         sleep(30);
         $this->assertJobStateSucceeded($jobId);
 
-        $this->runFunctionSnippet(
-            'delete_job',
-            [
+        $this->runFunctionSnippet('delete_job', [
             self::$projectId,
             self::$location,
             $jobId
-        ]
-        );
+        ]);
     }
 
     public function testJobStaticOverlay()
@@ -306,14 +288,11 @@ class transcoderTest extends TestCase
         sleep(30);
         $this->assertJobStateSucceeded($jobId);
 
-        $this->runFunctionSnippet(
-            'delete_job',
-            [
+        $this->runFunctionSnippet('delete_job', [
             self::$projectId,
             self::$location,
             $jobId
-        ]
-        );
+        ]);
     }
 
     public function testJobPeriodicImagesSpritesheet()

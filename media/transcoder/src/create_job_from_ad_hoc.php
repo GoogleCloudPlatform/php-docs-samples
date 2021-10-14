@@ -47,55 +47,54 @@ function create_job_from_ad_hoc($projectId, $location, $inputUri, $outputUri)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedParent = $transcoderServiceClient->locationName($projectId, $location);
+    $jobConfig =
+        (new JobConfig())->setElementaryStreams([
+            (new ElementaryStream())
+                ->setKey('video-stream0')
+                ->setVideoStream(
+                    (new VideoStream())
+                        ->setH264(
+                            (new VideoStream\H264CodecSettings())
+                                ->setBitrateBps(550000)
+                                ->setFrameRate(60)
+                                ->setHeightPixels(360)
+                                ->setWidthPixels(640)
+                        )
+                ),
+            (new ElementaryStream())
+                ->setKey('video-stream1')
+                ->setVideoStream(
+                    (new VideoStream())
+                        ->setH264(
+                            (new VideoStream\H264CodecSettings())
+                                ->setBitrateBps(2500000)
+                                ->setFrameRate(60)
+                                ->setHeightPixels(720)
+                                ->setWidthPixels(1280)
+                        )
+                ),
+            (new ElementaryStream())
+                ->setKey('audio-stream0')
+                ->setAudioStream(
+                    (new AudioStream())
+                        ->setCodec('aac')
+                        ->setBitrateBps(64000)
+                )
+            ])->setMuxStreams([
+                (new MuxStream())
+                    ->setKey('sd')
+                    ->setContainer('mp4')
+                    ->setElementaryStreams(['video-stream0', 'audio-stream0']),
+                (new MuxStream())
+                    ->setKey('hd')
+                    ->setContainer('mp4')
+                    ->setElementaryStreams(['video-stream1', 'audio-stream0'])
+        ]);
+
     $job = (new Job())
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
-        ->setConfig(
-            (new JobConfig())
-                ->setElementaryStreams([
-                    (new ElementaryStream())
-                        ->setKey("video-stream0")
-                        ->setVideoStream(
-                            (new VideoStream())
-                                ->setH264(
-                                    (new VideoStream\H264CodecSettings())
-                                        ->setBitrateBps(550000)
-                                        ->setFrameRate(60)
-                                        ->setHeightPixels(360)
-                                        ->setWidthPixels(640)
-                                )
-                        ),
-                    (new ElementaryStream())
-                        ->setKey("video-stream1")
-                        ->setVideoStream(
-                            (new VideoStream())
-                                ->setH264(
-                                    (new VideoStream\H264CodecSettings())
-                                        ->setBitrateBps(2500000)
-                                        ->setFrameRate(60)
-                                        ->setHeightPixels(720)
-                                        ->setWidthPixels(1280)
-                                )
-                        ),
-                    (new ElementaryStream())
-                        ->setKey("audio-stream0")
-                        ->setAudioStream(
-                            (new AudioStream())
-                                ->setCodec("aac")
-                                ->setBitrateBps(64000)
-                        )
-                ])
-                ->setMuxStreams([
-                    (new MuxStream())
-                        ->setKey("sd")
-                        ->setContainer("mp4")
-                        ->setElementaryStreams(["video-stream0", "audio-stream0"]),
-                    (new MuxStream())
-                        ->setKey("hd")
-                        ->setContainer("mp4")
-                        ->setElementaryStreams(["video-stream1", "audio-stream0"])
-                ])
-        );
+        ->setConfig($jobConfig);
 
     $response = $transcoderServiceClient->createJob($formattedParent, $job);
 

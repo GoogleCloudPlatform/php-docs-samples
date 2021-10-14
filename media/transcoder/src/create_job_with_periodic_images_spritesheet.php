@@ -50,54 +50,52 @@ function create_job_with_periodic_images_spritesheet($projectId, $location, $inp
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedParent = $transcoderServiceClient->locationName($projectId, $location);
+    $jobConfig =
+        (new JobConfig())->setElementaryStreams([
+            (new ElementaryStream())
+                ->setKey('video-stream0')
+                ->setVideoStream(
+                    (new VideoStream())
+                        ->setH264(
+                            (new VideoStream\H264CodecSettings())
+                                ->setBitrateBps(550000)
+                                ->setFrameRate(60)
+                                ->setHeightPixels(360)
+                                ->setWidthPixels(640)
+                        )
+                ),
+            (new ElementaryStream())
+                ->setKey('audio-stream0')
+                ->setAudioStream(
+                    (new AudioStream())
+                        ->setCodec('aac')
+                        ->setBitrateBps(64000)
+                )
+        ])->setMuxStreams([
+            (new MuxStream())
+                ->setKey('sd')
+                ->setContainer('mp4')
+                ->setElementaryStreams(['video-stream0', 'audio-stream0'])
+        ])->setSpriteSheets([
+            (new SpriteSheet())
+                ->setFilePrefix('small-sprite-sheet')
+                ->setSpriteWidthPixels(64)
+                ->setSpriteHeightPixels(32)
+                ->setInterval(
+                    (new Duration())
+                        ->setSeconds(7)
+                ),
+            (new SpriteSheet())
+                ->setFilePrefix('large-sprite-sheet')
+                ->setSpriteWidthPixels(128)
+                ->setSpriteHeightPixels(72)
+                ->setInterval(new Duration(['seconds' => 7]))
+        ]);
+
     $job = (new Job())
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
-        ->setConfig(
-            (new JobConfig())
-                ->setElementaryStreams([
-                    (new ElementaryStream())
-                        ->setKey("video-stream0")
-                        ->setVideoStream(
-                            (new VideoStream())
-                                ->setH264(
-                                    (new VideoStream\H264CodecSettings())
-                                        ->setBitrateBps(550000)
-                                        ->setFrameRate(60)
-                                        ->setHeightPixels(360)
-                                        ->setWidthPixels(640)
-                                )
-                        ),
-                    (new ElementaryStream())
-                        ->setKey("audio-stream0")
-                        ->setAudioStream(
-                            (new AudioStream())
-                                ->setCodec("aac")
-                                ->setBitrateBps(64000)
-                        )
-                ])
-                ->setMuxStreams([
-                    (new MuxStream())
-                        ->setKey("sd")
-                        ->setContainer("mp4")
-                        ->setElementaryStreams(["video-stream0", "audio-stream0"])
-                ])
-                ->setSpriteSheets([
-                    (new SpriteSheet())
-                        ->setFilePrefix("small-sprite-sheet")
-                        ->setSpriteWidthPixels(64)
-                        ->setSpriteHeightPixels(32)
-                        ->setInterval(
-                            (new Duration())
-                                ->setSeconds(7)
-                        ),
-                    (new SpriteSheet())
-                        ->setFilePrefix("large-sprite-sheet")
-                        ->setSpriteWidthPixels(128)
-                        ->setSpriteHeightPixels(72)
-                        ->setInterval(new Duration(['seconds' => 7]))
-                ])
-        );
+        ->setConfig($jobConfig);
 
     $response = $transcoderServiceClient->createJob($formattedParent, $job);
 

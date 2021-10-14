@@ -50,75 +50,73 @@ function create_job_with_static_overlay($projectId, $location, $inputUri, $overl
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedParent = $transcoderServiceClient->locationName($projectId, $location);
+    $jobConfig =
+        (new JobConfig())->setElementaryStreams([
+            (new ElementaryStream())
+                ->setKey('video-stream0')
+                ->setVideoStream(
+                    (new VideoStream())
+                        ->setH264(
+                            (new VideoStream\H264CodecSettings())
+                                ->setBitrateBps(550000)
+                                ->setFrameRate(60)
+                                ->setHeightPixels(360)
+                                ->setWidthPixels(640)
+                        )
+                ),
+            (new ElementaryStream())
+                ->setKey('audio-stream0')
+                ->setAudioStream(
+                    (new AudioStream())
+                        ->setCodec('aac')
+                        ->setBitrateBps(64000)
+                )
+        ])->setMuxStreams([
+            (new MuxStream())
+                ->setKey('sd')
+                ->setContainer('mp4')
+                ->setElementaryStreams(['video-stream0', 'audio-stream0'])
+        ])->setOverlays([
+            (new Overlay())
+                ->setImage(
+                    (new Overlay\Image())
+                        ->setUri($overlayImageUri)
+                        ->setResolution(
+                            (new Overlay\NormalizedCoordinate())
+                                ->setX(1)
+                                ->setY(0.5)
+                        )
+                        ->setAlpha(1)
+                )
+                ->setAnimations([
+                    (new Overlay\Animation())
+                        ->setAnimationStatic(
+                            (new Overlay\AnimationStatic())
+                                ->setXy(
+                                    (new Overlay\NormalizedCoordinate())
+                                        ->setY(0)
+                                        ->setX(0)
+                                )
+                                ->setStartTimeOffset(
+                                    (new Duration())
+                                        ->setSeconds(0)
+                                )
+                        ),
+                    (new Overlay\Animation())
+                        ->setAnimationEnd(
+                            (new Overlay\AnimationEnd())
+                                ->setStartTimeOffset(
+                                    (new Duration())
+                                        ->setSeconds(10)
+                                )
+                        )
+                ])
+        ]);
+
     $job = (new Job())
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
-        ->setConfig(
-            (new JobConfig())
-                ->setElementaryStreams([
-                    (new ElementaryStream())
-                        ->setKey("video-stream0")
-                        ->setVideoStream(
-                            (new VideoStream())
-                                ->setH264(
-                                    (new VideoStream\H264CodecSettings())
-                                        ->setBitrateBps(550000)
-                                        ->setFrameRate(60)
-                                        ->setHeightPixels(360)
-                                        ->setWidthPixels(640)
-                                )
-                        ),
-                    (new ElementaryStream())
-                        ->setKey("audio-stream0")
-                        ->setAudioStream(
-                            (new AudioStream())
-                                ->setCodec("aac")
-                                ->setBitrateBps(64000)
-                        )
-                ])
-                ->setMuxStreams([
-                    (new MuxStream())
-                        ->setKey("sd")
-                        ->setContainer("mp4")
-                        ->setElementaryStreams(["video-stream0", "audio-stream0"])
-                ])
-                ->setOverlays([
-                    (new Overlay())
-                        ->setImage(
-                            (new Overlay\Image())
-                                ->setUri($overlayImageUri)
-                                ->setResolution(
-                                    (new Overlay\NormalizedCoordinate())
-                                        ->setX(1)
-                                        ->setY(0.5)
-                                )
-                                ->setAlpha(1)
-                        )
-                        ->setAnimations([
-                            (new Overlay\Animation())
-                                ->setAnimationStatic(
-                                    (new Overlay\AnimationStatic())
-                                        ->setXy(
-                                            (new Overlay\NormalizedCoordinate())
-                                                ->setY(0)
-                                                ->setX(0)
-                                        )
-                                        ->setStartTimeOffset(
-                                            (new Duration())
-                                                ->setSeconds(0)
-                                        )
-                                ),
-                            (new Overlay\Animation())
-                                ->setAnimationEnd(
-                                    (new Overlay\AnimationEnd())
-                                        ->setStartTimeOffset(
-                                            (new Duration())
-                                                ->setSeconds(10)
-                                        )
-                                )
-                        ])
-                ])
-        );
+        ->setConfig($jobConfig);
 
     $response = $transcoderServiceClient->createJob($formattedParent, $job);
 

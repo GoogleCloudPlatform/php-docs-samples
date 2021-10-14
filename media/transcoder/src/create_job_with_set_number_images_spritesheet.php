@@ -33,7 +33,6 @@ use Google\Cloud\Video\Transcoder\V1\MuxStream;
 use Google\Cloud\Video\Transcoder\V1\SpriteSheet;
 use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 use Google\Cloud\Video\Transcoder\V1\VideoStream;
-use Google\Protobuf\Duration;
 
 /**
  * Creates a job that generates two spritesheets from the input video. Each
@@ -50,55 +49,53 @@ function create_job_with_set_number_images_spritesheet($projectId, $location, $i
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedParent = $transcoderServiceClient->locationName($projectId, $location);
+    $jobConfig =
+        (new JobConfig())->setElementaryStreams([
+            (new ElementaryStream())
+                ->setKey('video-stream0')
+                ->setVideoStream(
+                    (new VideoStream())
+                        ->setH264(
+                            (new VideoStream\H264CodecSettings())
+                                ->setBitrateBps(550000)
+                                ->setFrameRate(60)
+                                ->setHeightPixels(360)
+                                ->setWidthPixels(640)
+                        )
+                ),
+            (new ElementaryStream())
+                ->setKey('audio-stream0')
+                ->setAudioStream(
+                    (new AudioStream())
+                        ->setCodec('aac')
+                        ->setBitrateBps(64000)
+                )
+        ])->setMuxStreams([
+            (new MuxStream())
+                ->setKey('sd')
+                ->setContainer('mp4')
+                ->setElementaryStreams(['video-stream0', 'audio-stream0'])
+        ])->setSpriteSheets([
+            (new SpriteSheet())
+                ->setFilePrefix('small-sprite-sheet')
+                ->setSpriteWidthPixels(64)
+                ->setSpriteHeightPixels(32)
+                ->setColumnCount(10)
+                ->setRowCount(10)
+                ->setTotalCount(100),
+            (new SpriteSheet())
+                ->setFilePrefix('large-sprite-sheet')
+                ->setSpriteWidthPixels(128)
+                ->setSpriteHeightPixels(72)
+                ->setColumnCount(10)
+                ->setRowCount(10)
+                ->setTotalCount(100)
+        ]);
+
     $job = (new Job())
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
-        ->setConfig(
-            (new JobConfig())
-                ->setElementaryStreams([
-                    (new ElementaryStream())
-                        ->setKey("video-stream0")
-                        ->setVideoStream(
-                            (new VideoStream())
-                                ->setH264(
-                                    (new VideoStream\H264CodecSettings())
-                                        ->setBitrateBps(550000)
-                                        ->setFrameRate(60)
-                                        ->setHeightPixels(360)
-                                        ->setWidthPixels(640)
-                                )
-                        ),
-                    (new ElementaryStream())
-                        ->setKey("audio-stream0")
-                        ->setAudioStream(
-                            (new AudioStream())
-                                ->setCodec("aac")
-                                ->setBitrateBps(64000)
-                        )
-                ])
-                ->setMuxStreams([
-                    (new MuxStream())
-                        ->setKey("sd")
-                        ->setContainer("mp4")
-                        ->setElementaryStreams(["video-stream0", "audio-stream0"])
-                ])
-                ->setSpriteSheets([
-                    (new SpriteSheet())
-                        ->setFilePrefix("small-sprite-sheet")
-                        ->setSpriteWidthPixels(64)
-                        ->setSpriteHeightPixels(32)
-                        ->setColumnCount(10)
-                        ->setRowCount(10)
-                        ->setTotalCount(100),
-                    (new SpriteSheet())
-                        ->setFilePrefix("large-sprite-sheet")
-                        ->setSpriteWidthPixels(128)
-                        ->setSpriteHeightPixels(72)
-                        ->setColumnCount(10)
-                        ->setRowCount(10)
-                        ->setTotalCount(100)
-                ])
-        );
+        ->setConfig($jobConfig);
 
     $response = $transcoderServiceClient->createJob($formattedParent, $job);
 
