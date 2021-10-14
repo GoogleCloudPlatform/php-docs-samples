@@ -54,85 +54,65 @@ function create_job_with_animated_overlay($projectId, $location, $inputUri, $ove
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
         ->setConfig(
-            (new JobConfig())
-                ->setElementaryStreams([
-                    (new ElementaryStream())
-                        ->setKey("video-stream0")
-                        ->setVideoStream(
-                            (new VideoStream())
-                                ->setH264(
-                                    (new VideoStream\H264CodecSettings())
-                                        ->setBitrateBps(550000)
-                                        ->setFrameRate(60)
-                                        ->setHeightPixels(360)
-                                        ->setWidthPixels(640)
-                                )
-                        ),
-                    (new ElementaryStream())
-                        ->setKey("audio-stream0")
-                        ->setAudioStream(
-                            (new AudioStream())
-                                ->setCodec("aac")
-                                ->setBitrateBps(64000)
+            (new JobConfig())->setElementaryStreams([
+                (new ElementaryStream())
+                    ->setKey("video-stream0")
+                    ->setVideoStream(
+                        (new VideoStream())->setH264(
+                            (new VideoStream\H264CodecSettings())
+                                ->setBitrateBps(550000)
+                                ->setFrameRate(60)
+                                ->setHeightPixels(360)
+                                ->setWidthPixels(640)
                         )
-                ])
-                ->setMuxStreams([
-                    (new MuxStream())
-                        ->setKey("sd")
-                        ->setContainer("mp4")
-                        ->setElementaryStreams(["video-stream0", "audio-stream0"])
-                ])
-                ->setOverlays([
-                    (new Overlay())
-                        ->setImage(
-                            (new Overlay\Image())
-                                ->setUri($overlayImageUri)
-                                ->setResolution(
-                                    (new Overlay\NormalizedCoordinate())
-                                        ->setX(0)
-                                        ->setY(0)
-                                )
-                                ->setAlpha(1)
+                    ),
+                (new ElementaryStream())
+                    ->setKey("audio-stream0")
+                    ->setAudioStream(
+                        (new AudioStream())
+                            ->setCodec("aac")
+                            ->setBitrateBps(64000)
+                    )
+            ])->setMuxStreams([
+                (new MuxStream())
+                    ->setKey("sd")
+                    ->setContainer("mp4")
+                    ->setElementaryStreams(["video-stream0", "audio-stream0"])
+            ])->setOverlays([
+                (new Overlay())->setImage(
+                    (new Overlay\Image())
+                        ->setUri($overlayImageUri)
+                        ->setResolution(
+                            (new Overlay\NormalizedCoordinate())
+                                ->setX(0)
+                                ->setY(0)
                         )
-                        ->setAnimations([
-                            (new Overlay\Animation())
-                                ->setAnimationFade(
-                                    (new Overlay\AnimationFade())
-                                        ->setFadeType(Overlay\FadeType::FADE_IN)
-                                        ->setXy(
-                                            (new Overlay\NormalizedCoordinate())
-                                                ->setY(0.5)
-                                                ->setX(0.5)
-                                        )
-                                        ->setStartTimeOffset(
-                                            (new Duration())
-                                                ->setSeconds(5)
-                                        )
-                                        ->setEndTimeOffset(
-                                            (new Duration())
-                                                ->setSeconds(10)
-                                        )
-                                ),
-                            (new Overlay\Animation())
-                                ->setAnimationFade(
-                                    (new Overlay\AnimationFade())
-                                        ->setFadeType(Overlay\FadeType::FADE_OUT)
-                                        ->setXy(
-                                            (new Overlay\NormalizedCoordinate())
-                                                ->setY(0.5)
-                                                ->setX(0.5)
-                                        )
-                                        ->setStartTimeOffset(
-                                            (new Duration())
-                                                ->setSeconds(12)
-                                        )
-                                        ->setEndTimeOffset(
-                                            (new Duration())
-                                                ->setSeconds(15)
-                                        )
-                                )
-                        ])
+                        ->setAlpha(1)
+                )->setAnimations([
+                    (new Overlay\Animation())->setAnimationFade(
+                        (new Overlay\AnimationFade())
+                            ->setFadeType(Overlay\FadeType::FADE_IN)
+                            ->setXy(
+                                (new Overlay\NormalizedCoordinate())
+                                    ->setY(0.5)
+                                    ->setX(0.5)
+                            )
+                            ->setStartTimeOffset(new Duration(['seconds' => 5]))
+                            ->setEndTimeOffset(new Duration(['seconds' => 10]))
+                    ),
+                    (new Overlay\Animation())->setAnimationFade(
+                        (new Overlay\AnimationFade())
+                            ->setFadeType(Overlay\FadeType::FADE_OUT)
+                            ->setXy(
+                                (new Overlay\NormalizedCoordinate())
+                                    ->setY(0.5)
+                                    ->setX(0.5)
+                            )
+                            ->setStartTimeOffset(new Duration(['seconds' => 12]))
+                            ->setEndTimeOffset(new Duration(['seconds' => 15]))
+                    )
                 ])
+            ])
         );
 
     $response = $transcoderServiceClient->createJob($formattedParent, $job);
