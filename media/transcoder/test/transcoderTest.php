@@ -360,13 +360,10 @@ class transcoderTest extends TestCase
         sleep(30);
         $this->assertJobStateSucceeded($jobId);
 
-        $this->runFunctionSnippet(
-            'delete_job',
-            [
+        $this->runFunctionSnippet('delete_job', [
             self::$projectId,
             self::$location,
             $jobId
-        ]
-        );
+        ]);
     }
 }
