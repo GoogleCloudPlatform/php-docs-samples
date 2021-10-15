@@ -23,7 +23,6 @@ use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use PHPUnitRetry\RetryTrait;
 
 /**
  * Unit Tests for Transcoder commands.
@@ -112,7 +111,7 @@ class transcoderTest extends TestCase
     public function testJobTemplate()
     {
         $jobTemplateId = sprintf('php-test-template-%s', time());
-        $jobTemplateName = sprintf("projects/%s/locations/%s/jobTemplates/%s", self::$projectNumber, self::$location, $jobTemplateId);
+        $jobTemplateName = sprintf('projects/%s/locations/%s/jobTemplates/%s', self::$projectNumber, self::$location, $jobTemplateId);
 
         $output = $this->runFunctionSnippet('create_job_template', [
             self::$projectId,
@@ -152,7 +151,7 @@ class transcoderTest extends TestCase
         ]);
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $createOutput);
 
-        $jobId = explode("/", $createOutput);
+        $jobId = explode('/', $createOutput);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);
@@ -194,7 +193,7 @@ class transcoderTest extends TestCase
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
 
-        $jobId = explode("/", $output);
+        $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);
@@ -226,7 +225,7 @@ class transcoderTest extends TestCase
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
 
-        $jobId = explode("/", $output);
+        $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);
@@ -257,7 +256,7 @@ class transcoderTest extends TestCase
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
 
-        $jobId = explode("/", $output);
+        $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);
@@ -282,7 +281,7 @@ class transcoderTest extends TestCase
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
 
-        $jobId = explode("/", $output);
+        $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);
@@ -306,7 +305,7 @@ class transcoderTest extends TestCase
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
 
-        $jobId = explode("/", $output);
+        $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);
@@ -330,7 +329,7 @@ class transcoderTest extends TestCase
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
 
-        $jobId = explode("/", $output);
+        $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
         sleep(30);

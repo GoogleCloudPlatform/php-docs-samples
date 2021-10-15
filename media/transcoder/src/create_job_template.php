@@ -50,7 +50,7 @@ function create_job_template($projectId, $location, $templateId)
     $jobTemplate = (new JobTemplate())->setConfig(
         (new JobConfig())->setElementaryStreams([
             (new ElementaryStream())
-                ->setKey("video-stream0")
+                ->setKey('video-stream0')
                 ->setVideoStream(
                     (new VideoStream())->setH264(
                         (new VideoStream\H264CodecSettings())
@@ -61,7 +61,7 @@ function create_job_template($projectId, $location, $templateId)
                     )
                 ),
             (new ElementaryStream())
-                ->setKey("video-stream1")
+                ->setKey('video-stream1')
                 ->setVideoStream(
                     (new VideoStream())->setH264(
                         (new VideoStream\H264CodecSettings())
@@ -72,21 +72,21 @@ function create_job_template($projectId, $location, $templateId)
                     )
                 ),
             (new ElementaryStream())
-                ->setKey("audio-stream0")
+                ->setKey('audio-stream0')
                 ->setAudioStream(
                     (new AudioStream())
-                        ->setCodec("aac")
+                        ->setCodec('aac')
                         ->setBitrateBps(64000)
                 )
         ])->setMuxStreams([
             (new MuxStream())
-                ->setKey("sd")
-                ->setContainer("mp4")
-                ->setElementaryStreams(["video-stream0", "audio-stream0"]),
+                ->setKey('sd')
+                ->setContainer('mp4')
+                ->setElementaryStreams(['video-stream0', 'audio-stream0']),
             (new MuxStream())
-                ->setKey("hd")
-                ->setContainer("mp4")
-                ->setElementaryStreams(["video-stream1", "audio-stream0"])
+                ->setKey('hd')
+                ->setContainer('mp4')
+                ->setElementaryStreams(['video-stream1', 'audio-stream0'])
         ])
     );
 
