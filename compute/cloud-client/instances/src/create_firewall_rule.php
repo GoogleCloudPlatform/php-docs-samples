@@ -60,6 +60,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
       ->setDirection(Direction::INGRESS)
       ->setAllowed([$allowedPorts])
       ->setSourceRanges(['0.0.0.0/0'])
+      ->setTargetTags(['web'])
       ->setNetwork($network)
       ->setDescription('Allowing TCP traffic on ports 80 and 443 from Internet.');
 
