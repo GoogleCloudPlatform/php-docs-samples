@@ -23,13 +23,10 @@
 
 namespace Google\Cloud\Samples\Compute;
 
+include_once 'wait_for_operation.php';
+
 # [START compute_instances_delete]
 use Google\Cloud\Compute\V1\InstancesClient;
-# [START compute_instances_operation_check]
-use Google\Cloud\Compute\V1\Operation;
-use Google\Cloud\Compute\V1\ZoneOperationsClient;
-
-# [END compute_instances_operation_check]
 
 /**
  * Delete an instance.
@@ -53,19 +50,14 @@ function delete_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
-    # [START compute_instances_operation_check]
-    if ($operation->getStatus() === Operation\Status::RUNNING) {
-        // Wait for the operation to complete.
-        $operationClient = new ZoneOperationsClient();
-
-        // Default timeout of 60 s is not always enough for operation to finish,
-        // to avoid an exception we set timeout to 180000 ms = 180 s = 3 minutes
-        $optionalArgs = ['timeoutMillis' => 180000];
-        $operationClient->wait($operation->getName(), $projectId, $zone, $optionalArgs);
+    // Wait for the create operation to complete using a custom helper function.
+    // @see src/wait_for_operation.php
+    $operation = wait_for_operation($operation, $projectId, $zone);
+    if (empty($operation->getError())) {
+        printf('Deleted instance %s' . PHP_EOL, $instanceName);
+    } else {
+        printf('Instance deletion failed!' . PHP_EOL);
     }
-    # [END compute_instances_operation_check]
-
-    printf('Deleted instance %s' . PHP_EOL, $instanceName);
 }
 # [END compute_instances_delete]
 

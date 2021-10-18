@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 // [START functions_tips_phpinfo]
 
 use Psr\Http\Message\ServerRequestInterface;

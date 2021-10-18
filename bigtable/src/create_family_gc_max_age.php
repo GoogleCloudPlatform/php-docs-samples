@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,13 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId, $tableId) = $argv;
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_family_gc_max_age]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
@@ -37,30 +30,40 @@ use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Protobuf\Duration;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
-// $tableId = 'The Bigtable table ID';
+/**
+ * Create a new column family with a max age GC rule
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance where the table resides
+ * @param string $tableId The ID of the table in which the rule needs to be created
+ */
+function create_family_gc_max_age(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
+    $tableAdminClient = new BigtableTableAdminClient();
 
-$tableAdminClient = new BigtableTableAdminClient();
+    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
-$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
+    print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
+    // Create a column family with GC policy : maximum age
+    // where age = current time minus cell timestamp
 
+    $columnFamily1 = new ColumnFamily();
+    $duration = new Duration();
+    $duration->setSeconds(3600 * 24 * 5);
+    $MaxAgeRule = (new GcRule())->setMaxAge($duration);
+    $columnFamily1->setGcRule($MaxAgeRule);
 
-print('Creating column family cf1 with MaxAge GC Rule...' . PHP_EOL);
-// Create a column family with GC policy : maximum age
-// where age = current time minus cell timestamp
-
-$columnFamily1 = new ColumnFamily();
-$duration = new Duration();
-$duration->setSeconds(3600 * 24 * 5);
-$MaxAgeRule = (new GcRule)->setMaxAge($duration);
-$columnFamily1->setGcRule($MaxAgeRule);
-
-$columnModification = new Modification();
-$columnModification->setId('cf1');
-$columnModification->setCreate($columnFamily1);
-$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-print('Created column family cf1 with MaxAge GC Rule.' . PHP_EOL);
-
+    $columnModification = new Modification();
+    $columnModification->setId('cf1');
+    $columnModification->setCreate($columnFamily1);
+    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+    print('Created column family cf1 with MaxAge GC Rule.' . PHP_EOL);
+}
 // [END bigtable_create_family_gc_max_age]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -29,18 +29,18 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete an entity from a bucket's default ACL.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $entity the name of the entity to remove from the ACL.
- * @param array $options
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $entity The entity for which to update access controls.
  */
-function delete_bucket_acl($bucketName, $entity, $options = [])
+function delete_bucket_acl($bucketName, $entity)
 {
+    // $bucketName = 'my-bucket';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->acl();
-    $acl->delete($entity, $options);
+    $acl->delete($entity);
     printf('Deleted %s from gs://%s ACL' . PHP_EOL, $entity, $bucketName);
 }
 # [END storage_remove_bucket_owner]

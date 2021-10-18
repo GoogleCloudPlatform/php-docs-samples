@@ -101,6 +101,24 @@ $ php src/delete_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-
 Deleted instance my-new-instance-name
 ```
 
+### Set usage export bucket
+
+```
+$ php src/set_usage_export_bucket.php $YOUR_PROJECT_ID "my-gcs-bucket-name" "my-report-name-prefix"
+```
+
+### Get usage export bucket
+
+```
+$ php src/get_usage_export_bucket.php $YOUR_PROJECT_ID
+```
+
+### Disable usage export bucket
+
+```
+$ php src/disable_usage_export_bucket.php $YOUR_PROJECT_ID
+```
+
 ## Troubleshooting
 
 If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:

@@ -16,38 +16,80 @@ This simple command-line application demonstrates how to invoke
 
 * See [LICENSE](../../LICENSE)
 
-## Build and Run
-1.  **Enable APIs** - [Enable the Storage API](https://console.cloud.google.com/flows/enableapi?apiid=storage_api)
-    and create a new project or select an existing project.
-2.  **Download The Credentials** - Click "Go to credentials" after enabling the APIs. Click "New Credentials"
-    and select "Service Account Key". Create a new service account, use the JSON key type, and
-    select "Create". Once downloaded, set the environment variable `GOOGLE_APPLICATION_CREDENTIALS`
-    to the path of the JSON key that was downloaded.
-3.  **Clone the repo** and cd into this directory
+### Authentication
 
-    ```sh
-    $ git clone https://github.com/GoogleCloudPlatform/php-docs-samples
-    $ cd php-docs-samples/storage
-    ```
-4.  **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
+Authentication is typically done through [Application Default Credentials][adc]
+which means you do not have to change the code to authenticate as long as
+your environment has credentials. You have a few options for setting up
+authentication:
+
+1. When running locally, use the [Google Cloud SDK][google-cloud-sdk]
+
+        gcloud auth application-default login
+
+1. When running on App Engine or Compute Engine, credentials are already
+   set-up. However, you may need to configure your Compute Engine instance
+   with [additional scopes][additional_scopes].
+
+1. You can create a [Service Account key file][service_account_key_file]. This file can be used to
+   authenticate to Google Cloud Platform services from any environment. To use
+   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
+   the path to the key file, for example:
+
+        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+
+[adc]: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
+[additional_scopes]: https://cloud.google.com/compute/docs/authentication#using
+[service_account_key_file]: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+
+## Install Dependencies
+
+1. [Enable the Cloud Storage API](https://console.cloud.google.com/flows/enableapi?apiid=storage.googleapis.com).
+
+1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
-5.  Run `php storage.php` to see a list of commands:
 
-    ```sh
-    bucket-lock                      Manage Cloud Storage retention policies and holds
-    object-acl                       Manage the ACL for Cloud Storage objects
-    objects                          Manage Cloud Storage objects
-    requester-pays                   Manage Cloud Storage requester pays buckets and objects
-    uniform-bucket-level-access      Manage Cloud Storage uniform bucket-level access buckets
-    get-object-v2-signed-url         Generate a v2 signed URL for downloading an object.
-    get-object-v4-signed-url         Generate a v4 signed URL for downloading an object.
-    get-object-v4-upload-signed-url  Generate a v4 signed URL for uploading an object.
-    hmac-sa-manage                   Manage HMAC Service Account keys.
-    hmac-sa-list                     List HMAC Service Account keys.
-    hmac-sa-create                   Create an HMAC Service Account key.
-    ```
-6. Run `php storage.php COMMAND --help` to print information about the usage of each command.
+1. Create a service account at the
+[Service account section in the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts/)
+
+1. Download the json key file of the service account.
+
+1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
+
+## Samples
+
+To run the Storage Samples, run any of the files in `src/` on the CLI:
+
+```
+$ php src/create_bucket.php
+
+Usage: create_bucket.php $bucketName
+
+  @param string $projectId The Project ID
+  @param string $bucketName The Storage bucket name
+```
+
+## Troubleshooting
+
+If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:
+
+```
+[Google\Cloud\Core\Exception\GoogleException]
+No project ID was provided, and we were unable to detect a default project ID.
+```
+
+## The client library
+
+This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+You can read the documentation for more details on API usage and use GitHub
+to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
+
+[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
+[google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
+[google-cloud-sdk]: https://cloud.google.com/sdk/
+
 
 ## Contributing changes
 

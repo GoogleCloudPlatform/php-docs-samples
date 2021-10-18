@@ -53,7 +53,7 @@ class dlpTest extends TestCase
     {
         $output = $this->runSnippet('inspect_string', [
             self::$projectId,
-            "My name is Gary Smith and my email is gary@example.com"
+            'My name is Gary Smith and my email is gary@example.com'
         ]);
 
         $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
@@ -168,8 +168,13 @@ class dlpTest extends TestCase
     public function testTriggers()
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-        $displayName = uniqid("My trigger display name ");
-        $description = uniqid("My trigger description ");
+        // Use a different bucket for triggers so we don't trigger a bunch of
+        // DLP jobs on our actual storage bucket. This will create the trigger
+        // on a nonexistant bucket.
+        $bucketName .= '-dlp-triggers';
+
+        $displayName = uniqid('My trigger display name ');
+        $description = uniqid('My trigger description ');
         $triggerId = uniqid('my-php-test-trigger-');
         $scanPeriod = 1;
         $autoPopulateTimespan = true;
@@ -201,12 +206,12 @@ class dlpTest extends TestCase
 
     public function testInspectTemplates()
     {
-        $displayName = uniqid("My inspect template display name ");
-        $description = uniqid("My inspect template description ");
+        $displayName = uniqid('My inspect template display name ');
+        $description = uniqid('My inspect template description ');
         $templateId = uniqid('my-php-test-inspect-template-');
         $fullTemplateId = sprintf('projects/%s/locations/global/inspectTemplates/%s', self::$projectId, $templateId);
 
-        $output  = $this->runSnippet('create_inspect_template', [
+        $output = $this->runSnippet('create_inspect_template', [
             self::$projectId,
             $templateId,
             $displayName,

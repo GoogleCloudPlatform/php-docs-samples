@@ -26,7 +26,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
+    return printf('Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID' . PHP_EOL, __FILE__);
 }
 list($_, $projectId, $instanceId, $tableId) = $argv;
 
@@ -111,7 +111,7 @@ $table->mutateRows($entries);
 printf('Getting a single greeting by row key.' . PHP_EOL);
 $key = 'greeting0';
 // Only retrieve the most recent version of the cell.
-$rowFilter = (new RowFilter)->setCellsPerColumnLimitFilter(1);
+$rowFilter = (new RowFilter())->setCellsPerColumnLimitFilter(1);
 
 $column = 'greeting';
 $columnFamilyId = 'cf1';

@@ -63,7 +63,6 @@ $app->get('/auth/info/googlejwt', function (Request $request, Response $response
         ->withHeader('Content-Type', 'application/json');
 });
 
-
 $app->get('/auth/info/googleidtoken', function (Request $request, Response $response) {
     // Auth info with Google ID token.
     $userInfo = get_user_info($request);

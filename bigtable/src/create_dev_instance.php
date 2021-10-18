@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,17 +21,9 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId, $clusterId) = $argv;
-$locationId = isset($argv[4]) ? $argv[4] : 'us-east1-b';
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_dev_instance]
-
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
@@ -40,66 +31,76 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\ApiCore\ApiException;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
-// $clusterId = 'The Bigtable cluster ID';
-// $locationId = 'The Bigtable region ID';
+/**
+ * Create a development Bigtable instance
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance to be generated
+ * @param string $clusterId The ID of the cluster to be generated
+ * @param string $locationId The Bigtable region ID where you want your instance to reside
+ */
+function create_dev_instance(
+    string $projectId,
+    string $instanceId,
+    string $clusterId,
+    string $locationId = 'us-east1-b'
+): void {
+    $instanceAdminClient = new BigtableInstanceAdminClient();
 
+    $projectName = $instanceAdminClient->projectName($projectId);
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
+    printf('Creating a DEVELOPMENT Instance' . PHP_EOL);
+    // Set options to create an Instance
 
-$projectName = $instanceAdminClient->projectName($projectId);
-$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
+    $storageType = StorageType::HDD;
+    $development = InstanceType::DEVELOPMENT;
+    $labels = ['dev-label' => 'dev-label'];
 
+    # Create instance with given options
+    $instance = new Instance();
+    $instance->setDisplayName($instanceId);
+    $instance->setLabels($labels);
+    $instance->setType($development);
 
-printf("Creating a DEVELOPMENT Instance" . PHP_EOL);
-// Set options to create an Instance
-
-$storageType = StorageType::HDD;
-$development = InstanceType::DEVELOPMENT;
-$labels = ['dev-label' => 'dev-label'];
-
-
-# Create instance with given options
-$instance = new Instance();
-$instance->setDisplayName($instanceId);
-$instance->setLabels($labels);
-$instance->setType($development);
-
-// Create cluster with given options
-$cluster = new Cluster();
-$cluster->setDefaultStorageType($storageType);
-$cluster->setLocation(
-    $instanceAdminClient->locationName(
-        $projectId,
-        $locationId
-    )
-);
-$clusters = [
-    $clusterId => $cluster
-];
-// Create development instance with given options
-try {
-    $instanceAdminClient->getInstance($instanceName);
-    printf("Instance %s already exists." . PHP_EOL, $instanceId);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Creating a development Instance: %s" . PHP_EOL, $instanceId);
-        $operationResponse = $instanceAdminClient->createInstance(
-            $projectName,
-            $instanceId,
-            $instance,
-            $clusters
-        );
-        $operationResponse->pollUntilComplete();
-        if (!$operationResponse->operationSucceeded()) {
-            print('Error: ' . $operationResponse->getError()->getMessage());
+    // Create cluster with given options
+    $cluster = new Cluster();
+    $cluster->setDefaultStorageType($storageType);
+    $cluster->setLocation(
+        $instanceAdminClient->locationName(
+            $projectId,
+            $locationId
+        )
+    );
+    $clusters = [
+        $clusterId => $cluster
+    ];
+    // Create development instance with given options
+    try {
+        $instanceAdminClient->getInstance($instanceName);
+        printf('Instance %s already exists.' . PHP_EOL, $instanceId);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('Creating a development Instance: %s' . PHP_EOL, $instanceId);
+            $operationResponse = $instanceAdminClient->createInstance(
+                $projectName,
+                $instanceId,
+                $instance,
+                $clusters
+            );
+            $operationResponse->pollUntilComplete();
+            if (!$operationResponse->operationSucceeded()) {
+                print('Error: ' . $operationResponse->getError()->getMessage());
+            } else {
+                printf('Instance %s created.' . PHP_EOL, $instanceId);
+            }
         } else {
-            printf("Instance %s created.", $instanceId);
+            throw $e;
         }
-    } else {
-        throw $e;
     }
+    // [END bigtable_create_dev_instance]
 }
-// [END bigtable_create_dev_instance]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

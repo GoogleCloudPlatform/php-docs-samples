@@ -15,15 +15,19 @@
 
 set -ex
 
-# run php-cs-fixer
-PHP_CS_FIXER="php-cs-fixer"
-if [ -f "vendor/bin/php-cs-fixer" ]; then
-    PHP_CS_FIXER="vendor/bin/php-cs-fixer"
-elif [ -f "./php-cs-fixer" ]; then
-    PHP_CS_FIXER="./php-cs-fixer"
-fi
-
 PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 DIR="${1:-$PROJECT_ROOT}"
+
+# we run the script from PROJECT_ROOT
+cd $PROJECT_ROOT
+
+# install local version of php-cs-fixer 3.0 from composer.json
+composer -q install -d testing/
+
+# run php-cs-fixer
+PHP_CS_FIXER="php-cs-fixer"
+if [ -f "testing/vendor/bin/php-cs-fixer" ]; then
+    PHP_CS_FIXER="testing/vendor/bin/php-cs-fixer"
+fi
 
 $PHP_CS_FIXER fix --dry-run --diff --config="${PROJECT_ROOT}/.php-cs-fixer.dist.php" --path-mode=intersection $DIR

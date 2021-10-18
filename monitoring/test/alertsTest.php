@@ -190,7 +190,7 @@ class alertsTest extends TestCase
 
     /**
      * @depends testBackupPolicies
-     * @retryAttempts 2
+     * @retryAttempts 3
      * @retryDelaySeconds 10
      */
     public function testRestorePolicies()

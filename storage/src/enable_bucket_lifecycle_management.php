@@ -30,10 +30,12 @@ use Google\Cloud\Storage\Bucket;
 /**
  * Enable bucket lifecycle management.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function enable_bucket_lifecycle_management($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
@@ -55,3 +57,7 @@ function enable_bucket_lifecycle_management($bucketName)
     }
 }
 # [END storage_enable_bucket_lifecycle_management]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

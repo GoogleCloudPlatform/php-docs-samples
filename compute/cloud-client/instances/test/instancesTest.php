@@ -17,8 +17,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-use Google\Cloud\Compute\V1\Operation;
-use Google\Cloud\Compute\V1\GlobalOperationsClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
@@ -103,74 +101,96 @@ class instancesTest extends TestCase
 
     public function testSetUsageExportBucketDefaultPrefix()
     {
+        // Check default value behaviour for setter
         $output = $this->runFunctionSnippet('set_usage_export_bucket', [
             'projectId' => self::$projectId,
             'bucketName' => self::$bucketName
         ]);
-        ob_start();
-        $operation = set_usage_export_bucket(self::$projectId, self::$bucketName);
-        $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
 
-        // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING) {
-            // Wait until operation completes
-            $operationClient = new GlobalOperationsClient();
-            $operationClient->wait($operation->getName(), self::$projectId);
-        }
+        $this->assertStringContainsString('default value of `usage_gce`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
+        $this->assertStringContainsString('report_name_prefix = `usage_gce`', $output);
 
-        ob_start();
-        $usageExportLocation = get_usage_export_bucket(self::$projectId);
-        $this->assertStringContainsString('default value of `usage_gce`', ob_get_clean());
-        $this->assertEquals($usageExportLocation->getBucketName(), self::$bucketName);
-        $this->assertEquals($usageExportLocation->getReportNamePrefix(), 'usage_gce');
+        // Check default value behaviour for getter
+        $output = $this->runFunctionSnippet('get_usage_export_bucket', [
+            'projectId' => self::$projectId
+        ]);
+        $this->assertStringContainsString('default value of `usage_gce`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
+        $this->assertStringContainsString('report_name_prefix = `usage_gce`', $output);
 
         // Disable usage exports
-        $operation = disable_usage_export_bucket(self::$projectId);
+        $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
 
-        // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING) {
-            // Wait until operation completes
-            $operationClient = new GlobalOperationsClient();
-            $operationClient->wait($operation->getName(), self::$projectId);
-        }
-
-        $usageExportLocation = get_usage_export_bucket(self::$projectId);
-        $this->assertNull($usageExportLocation);
+        $output = $this->runFunctionSnippet('get_usage_export_bucket', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
     }
 
     public function testSetUsageExportBucketCustomPrefix()
     {
         // Set custom prefix
-        $customPrefix = "my-custom-prefix";
+        $customPrefix = 'my-custom-prefix';
 
-        ob_start();
-        $operation = set_usage_export_bucket(self::$projectId, self::$bucketName, $customPrefix);
-        $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
+        // Check user value behaviour for setter
+        $output = $this->runFunctionSnippet('set_usage_export_bucket', [
+            'projectId' => self::$projectId,
+            'bucketName' => self::$bucketName,
+            'reportNamePrefix' => $customPrefix
+        ]);
 
-        // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING) {
-            // Wait until operation completes
-            $operationClient = new GlobalOperationsClient();
-            $operationClient->wait($operation->getName(), self::$projectId);
-        }
+        $this->assertStringNotContainsString('default value of `usage_gce`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
+        $this->assertStringContainsString('report_name_prefix = `' . $customPrefix . '`', $output);
 
-        ob_start();
-        $usageExportLocation = get_usage_export_bucket(self::$projectId);
-        $this->assertStringNotContainsString('default value of `usage_gce`', ob_get_clean());
-        $this->assertEquals($usageExportLocation->getBucketName(), self::$bucketName);
-        $this->assertEquals($usageExportLocation->getReportNamePrefix(), $customPrefix);
+        // Check user value behaviour for getter
+        $output = $this->runFunctionSnippet('get_usage_export_bucket', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertStringNotContainsString('default value of `usage_gce`', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
+        $this->assertStringContainsString('bucket_name = `' . self::$bucketName . '`', $output);
+        $this->assertStringContainsString('report_name_prefix = `' . $customPrefix . '`', $output);
 
         // Disable usage exports
-        $operation = disable_usage_export_bucket(self::$projectId);
+        $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
 
-        // Wait for the settings to take place
-        if ($operation->getStatus() === Operation\Status::RUNNING) {
-            // Wait until operation completes
-            $operationClient = new GlobalOperationsClient();
-            $operationClient->wait($operation->getName(), self::$projectId);
-        }
+        $output = $this->runFunctionSnippet('get_usage_export_bucket', [
+            'projectId' => self::$projectId,
+        ]);
+        $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
+    }
 
-        $usageExportLocation = get_usage_export_bucket(self::$projectId);
-        $this->assertNull($usageExportLocation);
+    public function testListAllImages()
+    {
+        $output = $this->runFunctionSnippet('list_all_images', [
+            'projectId' => 'windows-sql-cloud',
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
+    }
+
+    public function testListImagesByPage()
+    {
+        $output = $this->runFunctionSnippet('list_images_by_page', [
+            'projectId' => 'windows-sql-cloud',
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $this->assertStringContainsString('Page 2', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
     }
 }

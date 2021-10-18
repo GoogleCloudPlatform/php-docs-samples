@@ -77,9 +77,9 @@ class EndpointsCommand extends Command
             }
 
             $oauth = new OAuth2([
-                'issuer'    => 'jwt-client.endpoints.sample.google.com',
-                'audience'  => 'echo.endpoints.sample.google.com',
-                'scope'     => 'email',
+                'issuer' => 'jwt-client.endpoints.sample.google.com',
+                'audience' => 'echo.endpoints.sample.google.com',
+                'scope' => 'email',
                 'authorizationUri' => 'https://accounts.google.com/o/oauth2/auth',
                 'tokenCredentialUri' => 'https://www.googleapis.com/oauth2/v4/token',
             ]);
@@ -105,7 +105,7 @@ class EndpointsCommand extends Command
                 $oauth->setClientId($config['installed']['client_id']);
                 $oauth->setClientSecret($config['installed']['client_secret']);
                 $oauth->setRedirectUri('urn:ietf:wg:oauth:2.0:oob');
-                $authUrl = $oauth->buildFullAuthorizationUri(['access_type'  => 'offline']);
+                $authUrl = $oauth->buildFullAuthorizationUri(['access_type' => 'offline']);
                 `open '$authUrl'`;
 
                 // prompt for the auth code
@@ -116,7 +116,7 @@ class EndpointsCommand extends Command
 
                 $token = $oauth->fetchAuthToken();
                 if (empty($token['id_token'])) {
-                    return $output->writeln("<error>unable to retrieve ID token</error>");
+                    return $output->writeln('<error>unable to retrieve ID token</error>');
                 }
                 $headers['Authorization'] = sprintf('Bearer %s', $token['id_token']);
             }
@@ -132,7 +132,7 @@ class EndpointsCommand extends Command
 
         $response = $http->request($method, $path, [
             'query' => ['key' => $api_key],
-            'body'  => $body,
+            'body' => $body,
             'headers' => $headers
         ]);
 

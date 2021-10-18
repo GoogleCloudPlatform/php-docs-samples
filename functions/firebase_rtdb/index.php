@@ -22,8 +22,8 @@ use Google\CloudFunctions\CloudEvent;
 function firebaseRTDB(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-    
-    fwrite($log, "Event: " . $cloudevent->getId() . PHP_EOL);
+
+    fwrite($log, 'Event: ' . $cloudevent->getId() . PHP_EOL);
 
     $data = $cloudevent->getData();
     $resource = $data['resource'] ?? '<null>';

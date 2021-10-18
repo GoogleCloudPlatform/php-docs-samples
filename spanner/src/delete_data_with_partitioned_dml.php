@@ -50,7 +50,7 @@ function delete_data_with_partitioned_dml($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $rowCount = $database->executePartitionedUpdate(
-        "DELETE FROM Singers WHERE SingerId > 10"
+        'DELETE FROM Singers WHERE SingerId > 10'
     );
 
     printf('Deleted %d row(s).' . PHP_EOL, $rowCount);
