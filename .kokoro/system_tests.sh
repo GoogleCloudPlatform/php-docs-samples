@@ -53,7 +53,7 @@ export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 # Load phpbrew shell
 source /root/.phpbrew/bashrc
 
-# decide which php version to use (this is for TESTING ONLY)
+# decide which php version to use
 if [ -z "${GOOGLE_ALT_PROJECT_ID}" ]; then
   # By default use PHP 7.4
   phpbrew switch $(phpbrew list | grep 7.4)
