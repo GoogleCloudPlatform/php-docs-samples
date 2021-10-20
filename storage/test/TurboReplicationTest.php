@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Storage\Tests;
 
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Storage\Bucket;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -60,7 +59,7 @@ class TurboReplicationTest extends TestCase
         );
 
         self::$bucket = self::$storage->bucket(self::$bucketName); 
-        $this->assertEquals(Bucket::RPO_ASYNC_TYRBO, self::$bucket->rpo());
+        $this->assertEquals('ASYNC_TURBO', self::$bucket->info()['rpo']);
     }
 
     /** @depends testCreateBucketWithTurboReplication */
@@ -73,7 +72,7 @@ class TurboReplicationTest extends TestCase
         $this->assertEquals(
             sprintf(
                 'The bucket\'s RPO value is: %s.' . PHP_EOL,
-                Bucket::RPO_ASYNC_TYRBO
+                'ASYNC_TURBO'
             ),
             $output
         );
@@ -95,7 +94,7 @@ class TurboReplicationTest extends TestCase
         );
 
         self::$bucket->reload();
-        $this->assertEquals(Bucket::RPO_DEFAULT, self::$bucket->rpo());
+        $this->assertEquals('DEFAULT', self::$bucket->info()['rpo']);
     }
 
     /** @depends testCreateBucketWithTurboReplication */
@@ -114,6 +113,6 @@ class TurboReplicationTest extends TestCase
         );
 
         self::$bucket->reload();
-        $this->assertEquals(Bucket::RPO_ASYNC_TYRBO, self::$bucket->rpo());
+        $this->assertEquals('ASYNC_TURBO', self::$bucket->info()['rpo']);
     }
 }

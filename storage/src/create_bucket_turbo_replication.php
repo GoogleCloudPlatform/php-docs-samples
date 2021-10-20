@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Storage;
 
 # [START storage_create_bucket_turbo_replication]
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Storage\Bucket;
 
 /**
  * Create a Cloud Storage Bucket with Turbo Replication set to `ASYNC_TURBO`.
@@ -39,11 +38,11 @@ function create_bucket_turbo_replication($bucketName, $location = 'nam4')
     // $bucketName = 'my-bucket';
 
     $storage = new StorageClient();
-    $rpo = Bucket::RPO_ASYNC_TYRBO;
+    $rpo = 'ASYNC_TURBO';
 
     // providing a location which is a dual region location
     // makes sure the locationType is set to 'dual-region' implicitly
-    // we can pass 'locationType' => Bucket::LOCATION_TYPE_DUAL_REGION
+    // we can pass 'locationType' => 'dual-region'
     // to make it explicit
     $bucket = $storage->createBucket($bucketName, [
         'location' => $location,

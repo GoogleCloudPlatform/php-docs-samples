@@ -40,7 +40,7 @@ function get_turbo_replication_status($bucketName)
 
     printf(
         'The bucket\'s RPO value is: %s.' . PHP_EOL,
-        $bucket->rpo()
+        $bucket->info()['rpo']
     );
 }
 # [END storage_get_turbo_replication]
