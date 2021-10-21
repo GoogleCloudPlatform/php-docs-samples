@@ -25,41 +25,43 @@ namespace Google\Cloud\Samples\Compute;
 
 include_once 'wait_for_operation.php';
 
-# [START compute_instances_delete]
-use Google\Cloud\Compute\V1\InstancesClient;
+# [START compute_firewall_patch]
+use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Firewall;
 
 /**
- * Delete an instance.
+ * Modifies the priority of a given firewall rule.
+ *
  * Example:
  * ```
- * delete_instance($projectId, $zone, $instanceName);
+ * patch_firewall_priority($projectId, $firewallRuleName, $priority);
  * ```
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").
- * @param string $instanceName Unique name for the Compute instance to delete.
+ * @param string $projectId Project ID or project number of the Cloud project you want to patch a rule from.
+ * @param string $firewallRuleName Name of the rule that you want to modify.
+ * @param int $priority The new priority to be set for the rule.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function delete_instance(
-    string $projectId,
-    string $zone,
-    string $instanceName
-) {
-    // Delete the Compute Engine instance using InstancesClient.
-    $instancesClient = new InstancesClient();
-    $operation = $instancesClient->delete($instanceName, $projectId, $zone);
+function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority)
+{
+    $firewallsClient = new FirewallsClient();
+    $firewallResource = (new Firewall())->setPriority($priority);
+
+    // The patch operation doesn't require the full definition of a Firewall object. It will only update
+    // the values that were set in it, in this case it will only change the priority.
+    $operation = $firewallsClient->patch($firewallRuleName, $firewallResource, $projectId);
 
     // Wait for the create operation to complete using a custom helper function.
     // @see src/wait_for_operation.php
     $operation = wait_for_operation($operation, $projectId);
     if (empty($operation->getError())) {
-        printf('Deleted instance %s' . PHP_EOL, $instanceName);
+        printf('Patched %s priority to %d.' . PHP_EOL, $firewallRuleName, $priority);
     } else {
-        printf('Instance deletion failed!' . PHP_EOL);
+        print('Patching failed!' . PHP_EOL);
     }
 }
-# [END compute_instances_delete]
+# [END compute_firewall_patch]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

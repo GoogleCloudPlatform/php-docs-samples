@@ -25,41 +25,39 @@ namespace Google\Cloud\Samples\Compute;
 
 include_once 'wait_for_operation.php';
 
-# [START compute_instances_delete]
-use Google\Cloud\Compute\V1\InstancesClient;
+# [START compute_firewall_delete]
+use Google\Cloud\Compute\V1\FirewallsClient;
 
 /**
- * Delete an instance.
+ * Delete a firewall rule from the specified project.
+ *
  * Example:
  * ```
- * delete_instance($projectId, $zone, $instanceName);
+ * delete_firewall_rule($projectId, $firewallRuleName);
  * ```
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").
- * @param string $instanceName Unique name for the Compute instance to delete.
+ * @param string $projectId Project ID or project number of the Cloud project you want to delete a rule for.
+ * @param string $firewallRuleName Name of the rule that is deleted.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function delete_instance(
-    string $projectId,
-    string $zone,
-    string $instanceName
-) {
-    // Delete the Compute Engine instance using InstancesClient.
-    $instancesClient = new InstancesClient();
-    $operation = $instancesClient->delete($instanceName, $projectId, $zone);
+function delete_firewall_rule(string $projectId, string $firewallRuleName)
+{
+    $firewallsClient = new FirewallsClient();
+
+    // Delete the firewall rule using Firewalls Client.
+    $operation = $firewallsClient->delete($firewallRuleName, $projectId);
 
     // Wait for the create operation to complete using a custom helper function.
     // @see src/wait_for_operation.php
     $operation = wait_for_operation($operation, $projectId);
     if (empty($operation->getError())) {
-        printf('Deleted instance %s' . PHP_EOL, $instanceName);
+        printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
     } else {
-        printf('Instance deletion failed!' . PHP_EOL);
+        print('Deletion failed!' . PHP_EOL);
     }
 }
-# [END compute_instances_delete]
+# [END compute_firewall_delete]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
