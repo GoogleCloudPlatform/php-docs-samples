@@ -39,6 +39,7 @@ REST_TESTS=(
     error_reporting
     iot
     monitoring
+    speech
     video
     vision
 )
