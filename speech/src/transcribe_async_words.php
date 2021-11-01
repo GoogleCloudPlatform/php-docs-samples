@@ -43,10 +43,6 @@ $encoding = AudioEncoding::LINEAR16;
 $sampleRateHertz = 32000;
 $languageCode = 'en-US';
 
-if (!extension_loaded('grpc')) {
-    throw new \Exception('Install the grpc extension (pecl install grpc)');
-}
-
 // When true, time offsets for every word will be included in the response.
 $enableWordTimeOffsets = true;
 
