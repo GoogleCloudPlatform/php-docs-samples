@@ -26,34 +26,36 @@ use PHPUnit\Framework\TestCase;
 
 class StorageTransferTest extends TestCase
 {
-	use TestTrait;
+    use TestTrait;
 
-	private static $sourceBucket;
+    private static $sourceBucket;
     private static $sinkBucket;
     private static $storage;
     private static $sts;
 
     public static function setUpBeforeClass(): void
     {
-    	self::checkProjectEnvVars();
-    	self::$storage = new StorageClient();
-    	self::$sts = new StorageTransferServiceClient();
-    	self::$sourceBucket = self::$storage->createBucket(
-            sprintf('php-source-bucket-%s', time()));
-    	self::$sinkBucket = self::$storage->createBucket(
-            sprintf('php-sink-bucket-%s', time()));
+        self::checkProjectEnvVars();
+        self::$storage = new StorageClient();
+        self::$sts = new StorageTransferServiceClient();
+        self::$sourceBucket = self::$storage->createBucket(
+            sprintf('php-source-bucket-%s', time())
+        );
+        self::$sinkBucket = self::$storage->createBucket(
+            sprintf('php-sink-bucket-%s', time())
+        );
 
-    	self::grantStsPermissions(self::$sourceBucket);
-    	self::grantStsPermissions(self::$sinkBucket);
+        self::grantStsPermissions(self::$sourceBucket);
+        self::grantStsPermissions(self::$sinkBucket);
     }
 
     public static function tearDownAfterClass(): void
     {
-    	self::$sourceBucket->delete();
-    	self::$sinkBucket->delete();
+        self::$sourceBucket->delete();
+        self::$sinkBucket->delete();
     }
 
-	public function testQuickstart()
+    public function testQuickstart()
     {
         $output = $this->runFunctionSnippet('quickstart', [
             self::$projectId, self::$sinkBucket->name(), self::$sourceBucket->name()
@@ -64,23 +66,24 @@ class StorageTransferTest extends TestCase
         preg_match('/transferJobs\/\d+/', $output, $match);
         $jobName = $match[0];
         $transferJob = new TransferJob([
-		    'name' => $jobName,
-		    'status' => Status::DELETED
-	    ]);
+            'name' => $jobName,
+            'status' => Status::DELETED
+        ]);
 
-	    self::$sts->updateTransferJob($jobName, self::$projectId, $transferJob);
+        self::$sts->updateTransferJob($jobName, self::$projectId, $transferJob);
     }
 
     private static function grantStsPermissions($bucket)
     {
-    	$googleServiceAccount = self::$sts->getGoogleServiceAccount(self::$projectId);
-    	$email = $googleServiceAccount->getAccountEmail();
-    	$members = ['serviceAccount:' . $email];
+        $googleServiceAccount = self::$sts->getGoogleServiceAccount(self::$projectId);
+        $email = $googleServiceAccount->getAccountEmail();
+        $members = ['serviceAccount:' . $email];
 
-    	$policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
+        $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
         $policy['version'] = 3;
 
-        array_push($policy['bindings'],
+        array_push(
+            $policy['bindings'],
             ['role' => 'roles/storage.objectViewer', 'members' => $members],
             ['role' => 'roles/storage.legacyBucketReader', 'members' => $members],
             ['role' => 'roles/storage.legacyBucketWriter', 'members' => $members]
