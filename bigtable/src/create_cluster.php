@@ -48,18 +48,18 @@ function create_cluster(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
-    printf("Adding Cluster to Instance %s" . PHP_EOL, $instanceId);
+    printf('Adding Cluster to Instance %s' . PHP_EOL, $instanceId);
     try {
         $instanceAdminClient->getInstance($instanceName);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists." . PHP_EOL, $instanceId);
+            printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
             return;
         } else {
             throw $e;
         }
     }
-    printf("Listing Clusters:" . PHP_EOL);
+    printf('Listing Clusters:' . PHP_EOL);
 
     $storage_type = StorageType::SSD;
     $serve_nodes = 3;
@@ -81,7 +81,7 @@ function create_cluster(
     );
     try {
         $instanceAdminClient->getCluster($clusterName);
-        printf("Cluster %s already exists, aborting...", $clusterId);
+        printf('Cluster %s already exists, aborting...', $clusterId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             $operationResponse = $instanceAdminClient->createCluster($instanceName, $clusterId, $cluster);
@@ -89,10 +89,10 @@ function create_cluster(
             $operationResponse->pollUntilComplete();
             if ($operationResponse->operationSucceeded()) {
                 $result = $operationResponse->getResult();
-                printf("Cluster created: %s", $clusterId);
+                printf('Cluster created: %s', $clusterId);
             } else {
                 $error = $operationResponse->getError();
-                printf("Cluster not created: %s", $error);
+                printf('Cluster not created: %s', $error);
             }
         } else {
             throw $e;

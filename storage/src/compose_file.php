@@ -56,7 +56,7 @@ function compose_file($bucketName, $firstObjectName, $secondObjectName, $targetO
 
     if ($targetObject->exists()) {
         printf(
-            "New composite object %s was created by combining %s and %s",
+            'New composite object %s was created by combining %s and %s',
             $targetObject->name(),
             $firstObjectName,
             $secondObjectName

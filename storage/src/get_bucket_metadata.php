@@ -39,7 +39,7 @@ function get_bucket_metadata($bucketName)
     $bucket = $storage->bucket($bucketName);
     $info = $bucket->info();
 
-    printf("Bucket Metadata: %s" . PHP_EOL, print_r($info));
+    printf('Bucket Metadata: %s' . PHP_EOL, print_r($info));
 }
 # [END storage_get_bucket_metadata]
 

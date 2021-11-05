@@ -50,10 +50,10 @@ class DeployTest extends TestCase
         $key = rand(0, 1000);
 
         // Test the /memcached REST API.
-        $this->put("/memcached/test$key", "sour");
-        $this->assertEquals("sour", $this->get("/memcached/test$key"));
-        $this->put("/memcached/test$key", "sweet");
-        $this->assertEquals("sweet", $this->get("/memcached/test$key"));
+        $this->put("/memcached/test$key", 'sour');
+        $this->assertEquals('sour', $this->get("/memcached/test$key"));
+        $this->put("/memcached/test$key", 'sweet');
+        $this->assertEquals('sweet', $this->get("/memcached/test$key"));
 
         // Make sure it handles a POST request too, which will increment the
         // counter.

@@ -87,7 +87,7 @@ class spannerBackupTest extends TestCase
         self::$instance = $spanner->instance(self::$instanceId);
 
         self::$kmsKeyName =
-            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
+            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -129,7 +129,7 @@ class spannerBackupTest extends TestCase
     public function testCreateBackup()
     {
         $database = self::$instance->database(self::$databaseId);
-        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
+        $results = $database->execute('SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp');
         $row = $results->rows()->current();
         $versionTime = $row['Timestamp'];
 
@@ -207,7 +207,6 @@ class spannerBackupTest extends TestCase
         $this->assertStringContainsString(self::$backupId, $output);
         $this->assertStringContainsString(self::$databaseId, $output);
     }
-
 
     /**
      * @depends testRestoreBackupWithEncryptionKey
