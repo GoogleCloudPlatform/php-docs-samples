@@ -104,7 +104,7 @@ class DBInitializer
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
             // $dbName = 'your_db_name';
-            // $connectionName = getenv("CLOUD_SQL_CONNECTION_NAME");
+            // $connectionName = getenv("INSTANCE_CONNECTION_NAME");
             // $socketDir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
 
             // Connect using UNIX sockets
