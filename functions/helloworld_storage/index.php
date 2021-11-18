@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2020 Google LLC.
  *
@@ -17,9 +18,16 @@
 
 // [START functions_helloworld_storage]
 
-use Google\CloudFunctions\CloudEvent;
+use CloudEvents\V1\CloudEventInterface;
+use Google\CloudFunctions\FunctionsFramework;
 
-function helloGCS(CloudEvent $cloudevent)
+// Register the function with Functions Framework.
+// This enables omitting the `FUNCTIONS_SIGNATURE_TYPE=cloudevent` environment
+// variable when deploying. The `FUNCTION_TARGET` environment variable should
+// match the first parameter.
+FunctionsFramework::cloudEvent('helloGCS', 'helloGCS');
+
+function helloGCS(CloudEventInterface $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     $data = $cloudevent->getData();
