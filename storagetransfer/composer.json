@@ -4,7 +4,6 @@
         "paragonie/random_compat": "^9.0.0"
     },
     "require-dev": {
-    	"google/cloud-storage": "^1.20.1",
-        "guzzlehttp/guzzle": "^7.0"
+        "google/cloud-storage": "^1.20.1"
     }
 }
