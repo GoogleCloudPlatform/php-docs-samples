@@ -21,7 +21,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
 To run the Cloud SQL proxy, you need to set the instance connection name. See the instructions [here](https://cloud.google.com/sql/docs/sqlserver/quickstart-proxy-test#get_the_instance_connection_name) for finding the instance connection name.
 
 ```bash
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 ```
 
 Once the proxy is ready, use one of the following commands to start the proxy in the background.
@@ -30,7 +30,7 @@ You may connect to your instance via TCP. To connect via TCP, you must provide a
 
 ```bash
 $ ./cloud_sql_proxy \
-    --instances=$CLOUD_SQL_CONNECTION_NAME=tcp:1433 \
+    --instances=$INSTANCE_CONNECTION_NAME=tcp:1433 \
     --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
 ```
 
