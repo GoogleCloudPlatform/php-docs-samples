@@ -38,11 +38,12 @@ class StorageTransferTest extends TestCase
         self::checkProjectEnvVars();
         self::$storage = new StorageClient();
         self::$sts = new StorageTransferServiceClient();
+        $uniqueBucketId = time() . rand();
         self::$sourceBucket = self::$storage->createBucket(
-            sprintf('php-source-bucket-%s', time())
+            sprintf('php-source-bucket-%s', $uniqueBucketId)
         );
         self::$sinkBucket = self::$storage->createBucket(
-            sprintf('php-sink-bucket-%s', time())
+            sprintf('php-sink-bucket-%s', $uniqueBucketId)
         );
 
         self::grantStsPermissions(self::$sourceBucket);
