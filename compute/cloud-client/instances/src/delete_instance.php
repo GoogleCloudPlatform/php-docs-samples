@@ -23,8 +23,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-include_once 'wait_for_operation.php';
-
 # [START compute_instances_delete]
 use Google\Cloud\Compute\V1\InstancesClient;
 
@@ -40,6 +38,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  * @param string $instanceName Unique name for the Compute instance to delete.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
 function delete_instance(
     string $projectId,
@@ -50,13 +49,14 @@ function delete_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);
 
-    // Wait for the create operation to complete using a custom helper function.
-    // @see src/wait_for_operation.php
-    $operation = wait_for_operation($operation, $projectId);
-    if (empty($operation->getError())) {
+    // Wait for the operation to complete.
+    $operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
+        // $result = $operation->getResult(); // Optionally get operation result
         printf('Deleted instance %s' . PHP_EOL, $instanceName);
     } else {
-        printf('Instance deletion failed!' . PHP_EOL);
+        $error = $operation->getError();
+        printf('Instance deletion failed: %s' . PHP_EOL, $error);
     }
 }
 # [END compute_instances_delete]

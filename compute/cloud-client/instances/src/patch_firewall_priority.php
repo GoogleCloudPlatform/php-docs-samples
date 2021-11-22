@@ -23,8 +23,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-include_once 'wait_for_operation.php';
-
 # [START compute_firewall_patch]
 use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Firewall;
@@ -42,6 +40,7 @@ use Google\Cloud\Compute\V1\Firewall;
  * @param int $priority The new priority to be set for the rule.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
 function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority)
 {
@@ -52,13 +51,14 @@ function patch_firewall_priority(string $projectId, string $firewallRuleName, in
     // the values that were set in it, in this case it will only change the priority.
     $operation = $firewallsClient->patch($firewallRuleName, $firewallResource, $projectId);
 
-    // Wait for the create operation to complete using a custom helper function.
-    // @see src/wait_for_operation.php
-    $operation = wait_for_operation($operation, $projectId);
-    if (empty($operation->getError())) {
+    // Wait for the operation to complete.
+    $operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
+        // $result = $operation->getResult(); // Optionally get operation result
         printf('Patched %s priority to %d.' . PHP_EOL, $firewallRuleName, $priority);
     } else {
-        print('Patching failed!' . PHP_EOL);
+        $error = $operation->getError();
+        printf('Patching failed: %s' . PHP_EOL, $error);
     }
 }
 # [END compute_firewall_patch]

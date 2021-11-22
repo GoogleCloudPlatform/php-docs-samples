@@ -23,8 +23,6 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-include_once 'wait_for_operation.php';
-
 # [START compute_firewall_create]
 use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Allowed;
@@ -47,6 +45,7 @@ use Google\Cloud\Compute\V1\Firewall\Direction;
  *                        global/networks/{network}
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
 
 function create_firewall_rule(string $projectId, string $firewallRuleName, string $network = 'global/networks/default')
@@ -77,13 +76,14 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
     //Create the firewall rule using Firewalls Client.
     $operation = $firewallsClient->insert($firewallResource, $projectId);
 
-    // Wait for the create operation to complete using a custom helper function.
-    // @see src/wait_for_operation.php
-    $operation = wait_for_operation($operation, $projectId);
-    if (empty($operation->getError())) {
+    // Wait for the operation to complete.
+    $operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
+        // $result = $operation->getResult(); // Optionally get operation result
         printf('Created rule %s.' . PHP_EOL, $firewallRuleName);
     } else {
-        printf('Firewall rule creation failed!' . PHP_EOL);
+        $error = $operation->getError();
+        printf('Firewall rule creation failed: %s' . PHP_EOL, $error);
     }
 }
 # [END compute_firewall_create]
