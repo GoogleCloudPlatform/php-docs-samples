@@ -54,11 +54,10 @@ function patch_firewall_priority(string $projectId, string $firewallRuleName, in
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        // $result = $operation->getResult(); // Optionally get operation result
         printf('Patched %s priority to %d.' . PHP_EOL, $firewallRuleName, $priority);
     } else {
         $error = $operation->getError();
-        printf('Patching failed: %s' . PHP_EOL, $error);
+        printf('Patching failed: %s' . PHP_EOL, $error->getMessage());
     }
 }
 # [END compute_firewall_patch]

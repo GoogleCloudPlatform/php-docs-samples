@@ -52,11 +52,10 @@ function delete_instance(
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        // $result = $operation->getResult(); // Optionally get operation result
         printf('Deleted instance %s' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Instance deletion failed: %s' . PHP_EOL, $error);
+        printf('Instance deletion failed: %s' . PHP_EOL, $error->getMessage());
     }
 }
 # [END compute_instances_delete]

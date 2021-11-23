@@ -86,11 +86,10 @@ function create_instance(
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        // $result = $operation->getResult(); // Optionally get operation result
         printf('Created instance %s' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Instance creation failed: %s' . PHP_EOL, $error);
+        printf('Instance creation failed: %s' . PHP_EOL, $error->getMessage());
     }
     # [END compute_instances_operation_check]
 }

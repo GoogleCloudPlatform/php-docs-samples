@@ -50,11 +50,10 @@ function delete_firewall_rule(string $projectId, string $firewallRuleName)
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        // $result = $operation->getResult(); // Optionally get operation result
         printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
     } else {
         $error = $operation->getError();
-        printf('Rule deletion failed: %s' . PHP_EOL, $error);
+        printf('Rule deletion failed: %s' . PHP_EOL, $error->getMessage());
     }
 }
 # [END compute_firewall_delete]

@@ -71,7 +71,6 @@ function set_usage_export_bucket(
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        // $result = $operation->getResult(); // Optionally get operation result
         printf(
             'Compute Engine usage export bucket for project `%s` set to bucket_name = `%s` with ' .
             'report_name_prefix = `%s`.' . PHP_EOL,
@@ -81,7 +80,7 @@ function set_usage_export_bucket(
         );
     } else {
         $error = $operation->getError();
-        printf('Setting usage export bucket failed: %s' . PHP_EOL, $error);
+        printf('Setting usage export bucket failed: %s' . PHP_EOL, $error->getMessage());
     }
 }
 # [END compute_usage_report_set]
