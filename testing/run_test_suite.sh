@@ -167,8 +167,10 @@ do
         composer -q install
     fi
     if [ $? != 0 ]; then
+        # Generate the lock file (required for check-platform-reqs)
+        composer update --ignore-platform-reqs
         # If the PHP required version is too low, skip the test
-        if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
+        if composer check-platform-reqs | grep "requires php" | grep failed ; then
             echo "Skipping tests in $DIR (incompatible PHP version)"
         else
             # Run composer without "-q"
