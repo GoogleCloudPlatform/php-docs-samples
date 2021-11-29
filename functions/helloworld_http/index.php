@@ -16,7 +16,14 @@ limitations under the License.
 <!-- [START functions_helloworld_http] ->
 <?php
 
+use Google\CloudFunctions\FunctionsFramework;
 use Psr\Http\Message\ServerRequestInterface;
+
+// Register the function with Functions Framework.
+// This enables omitting the `FUNCTIONS_SIGNATURE_TYPE=http` environment
+// variable when deploying. The `FUNCTION_TARGET` environment variable should
+// match the first parameter.
+FunctionsFramework::http('helloHttp', 'helloHttp');
 
 function helloHttp(ServerRequestInterface $request): string
 {
