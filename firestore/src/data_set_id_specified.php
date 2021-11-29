@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Set document data with a given document ID.
- * ```
- * data_set_id_specified('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_id_specified($projectId)
+function data_set_id_specified(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -49,5 +48,6 @@ function data_set_id_specified($projectId)
     printf('Added document with ID: new-city-id' . PHP_EOL);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

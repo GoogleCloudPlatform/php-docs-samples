@@ -92,12 +92,12 @@ function validate_jwt($iapJwt, $expectedAudience)
     assert($jwt['iss'] == 'https://cloud.google.com/iap');
     assert($jwt['aud'] == $expectedAudience);
 
-
     print('Printing user identity information from ID token payload:');
     printf('sub: %s', $jwt['sub']);
     printf('email: %s', $jwt['email']);
 }
 # [END iap_validate_jwt]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

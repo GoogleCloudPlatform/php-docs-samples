@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Increments a randomly picked shard of distributed counter.
- * ```
- * solution_sharded_counter_increment('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function solution_sharded_counter_increment($projectId)
+function solution_sharded_counter_increment(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -47,7 +46,7 @@ function solution_sharded_counter_increment($projectId)
     foreach ($docCollection as $doc) {
         $numShards++;
     }
-    $shardIdx = random_int(0, $numShards-1);
+    $shardIdx = random_int(0, $numShards - 1);
     $doc = $ref->document($shardIdx);
     $doc->update([
         ['path' => 'Cnt', 'value' => FieldValue::increment(1)]
@@ -56,5 +55,6 @@ function solution_sharded_counter_increment($projectId)
     # [END fs_update_distributed_counter]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

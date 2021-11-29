@@ -22,11 +22,13 @@ use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 class alertsTest extends TestCase
 {
     use ExecuteCommandTrait;
     use TestTrait;
+    use RetryTrait;
 
     private static $commandFile = __DIR__ . '/../alerts.php';
     private static $policyId;
@@ -43,9 +45,17 @@ class alertsTest extends TestCase
         self::$policyId = $matches[1];
     }
 
+    /**
+     * @depends testCreatePolicy
+     * @retryAttempts 2
+     * @retryDelaySeconds 10
+     */
     public function testEnablePolicies()
     {
-        $policyName = AlertPolicyServiceClient::alertPolicyName(self::$projectId, self::$policyId);
+        $policyName = AlertPolicyServiceClient::alertPolicyName(
+            self::$projectId,
+            self::$policyId
+        );
         $output = $this->runAlertCommand('enable-policies', [
             'filter' => sprintf('name = "%s"', $policyName),
             'enable' => true,
@@ -54,13 +64,25 @@ class alertsTest extends TestCase
             sprintf('Policy %s is already enabled', $policyName),
             $output
         );
+    }
 
+    /**
+     * @depends testEnablePolicies
+     */
+    public function testDisablePolicies()
+    {
+        $policyName = AlertPolicyServiceClient::alertPolicyName(
+            self::$projectId,
+            self::$policyId
+        );
         $output = $this->runAlertCommand('enable-policies', [
             'filter' => sprintf('name = "%s"', $policyName),
             'enable' => false,
         ]);
-
-        $this->assertStringContainsString(sprintf('Disabled %s', $policyName), $output);
+        $this->assertStringContainsString(
+            sprintf('Disabled %s', $policyName),
+            $output
+        );
     }
 
     /** @depends testCreatePolicy */
@@ -148,10 +170,11 @@ class alertsTest extends TestCase
         $this->assertStringContainsString(self::$channelId, $output);
     }
 
-    /** @depends testCreateChannel */
-    public function testBackupAndRestore()
+    /**
+     * @depends testCreateChannel
+     */
+    public function testBackupPolicies()
     {
-        // backup
         $output = $this->runAlertCommand('backup-policies');
         $this->assertStringContainsString('Backed up alert policies', $output);
 
@@ -163,8 +186,15 @@ class alertsTest extends TestCase
         $this->assertGreaterThan(0, count($backup['channels']));
         $this->assertStringContainsString(self::$policyId, $backupJson);
         $this->assertStringContainsString(self::$channelId, $backupJson);
+    }
 
-        // restore
+    /**
+     * @depends testBackupPolicies
+     * @retryAttempts 3
+     * @retryDelaySeconds 10
+     */
+    public function testRestorePolicies()
+    {
         $output = $this->runAlertCommand('restore-policies');
         $this->assertStringContainsString('Restored alert policies', $output);
     }

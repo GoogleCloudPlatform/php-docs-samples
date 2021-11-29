@@ -29,11 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Removes a label from a bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $labelName the name of the label to remove.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $labelName The name of the label to remove.
  */
 function remove_bucket_label($bucketName, $labelName)
 {
+    // $bucketName = 'my-bucket';
+    // $labelName = 'label-key-to-remove';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $labels = [$labelName => null];
@@ -41,3 +44,7 @@ function remove_bucket_label($bucketName, $labelName)
     printf('Removed label %s from %s' . PHP_EOL, $labelName, $bucketName);
 }
 # [END storage_remove_bucket_label]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\TestUtils\TestTrait;

@@ -43,7 +43,7 @@ function add_timestamp_column($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)"
+        'ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
@@ -53,5 +53,6 @@ function add_timestamp_column($instanceId, $databaseId)
 }
 // [END spanner_add_timestamp_column]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

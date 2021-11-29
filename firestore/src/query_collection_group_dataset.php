@@ -27,9 +27,8 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create example collection group for documents.
- * ```
- * query_collection_group_dataset('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
 function query_collection_group_dataset(string $projectId): void
 {
@@ -86,5 +85,6 @@ function query_collection_group_dataset(string $projectId): void
     # [END fs_collection_group_query_data_setup]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -48,12 +48,12 @@ function write_read_with_dml($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "INSERT Singers (SingerId, FirstName, LastName) "
+            'INSERT Singers (SingerId, FirstName, LastName) '
             . " VALUES (11, 'Timothy', 'Campbell')");
 
         printf('Inserted %d row(s).' . PHP_EOL, $rowCount);
 
-        $results = $t->execute("SELECT FirstName, LastName FROM Singers WHERE SingerId = 11");
+        $results = $t->execute('SELECT FirstName, LastName FROM Singers WHERE SingerId = 11');
 
         foreach ($results as $row) {
             printf('%s %s' . PHP_EOL, $row['FirstName'], $row['LastName']);
@@ -64,5 +64,6 @@ function write_read_with_dml($instanceId, $databaseId)
 }
 // [END spanner_dml_write_then_read]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

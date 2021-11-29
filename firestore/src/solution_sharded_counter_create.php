@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Creates the specified multiple shards as a subcollection.
- * ```
- * solution_sharded_counter_create('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function solution_sharded_counter_create($projectId)
+function solution_sharded_counter_create(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -49,5 +48,6 @@ function solution_sharded_counter_create($projectId)
     # [END fs_initialize_distributed_counter]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

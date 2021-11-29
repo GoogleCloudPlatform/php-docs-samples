@@ -58,7 +58,7 @@ class DBInitializer
                 sprintf(
                     'Invalid or missing configuration! Make sure you have set ' .
                     '$username, $password, $dbName, and $host (for TCP mode) ' .
-                    'or $cloud_sql_connection_name (for UNIX socket mode). ' .
+                    'or $connectionName (for UNIX socket mode). ' .
                     'The PHP error was %s',
                     $e->getMessage()
                 ),
@@ -104,7 +104,7 @@ class DBInitializer
             // $username = 'your_db_user';
             // $password = 'yoursupersecretpassword';
             // $dbName = 'your_db_name';
-            // $connectionName = getenv("CLOUD_SQL_CONNECTION_NAME");
+            // $connectionName = getenv("INSTANCE_CONNECTION_NAME");
             // $socketDir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
 
             // Connect using UNIX sockets
@@ -127,7 +127,7 @@ class DBInitializer
                     'The PHP error was %s',
                     $e->getMessage()
                 ),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         } catch (PDOException $e) {
@@ -140,7 +140,7 @@ class DBInitializer
                     'https://cloud.google.com/sql/docs/postgres/connect-external-app',
                     $e->getMessage()
                 ),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         }

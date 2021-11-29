@@ -37,9 +37,10 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
+$features = [Feature::SHOT_CHANGE_DETECTION];
 $operation = $video->annotateVideo([
     'inputUri' => $uri,
-    'features' => [Feature::SHOT_CHANGE_DETECTION]
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.
@@ -52,8 +53,8 @@ if ($operation->operationSucceeded()) {
         $start = $shot->getStartTimeOffset();
         $end = $shot->getEndTimeOffset();
         printf('Shot: %ss to %ss' . PHP_EOL,
-            $start->getSeconds() + $start->getNanos()/1000000000.0,
-            $end->getSeconds() + $end->getNanos()/1000000000.0);
+            $start->getSeconds() + $start->getNanos() / 1000000000.0,
+            $end->getSeconds() + $end->getNanos() / 1000000000.0);
     }
 } else {
     print_r($operation->getError());

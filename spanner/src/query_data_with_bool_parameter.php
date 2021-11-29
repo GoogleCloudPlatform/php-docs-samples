@@ -58,10 +58,11 @@ function query_data_with_bool_parameter($instanceId, $databaseId)
     foreach ($results as $row) {
         printf('VenueId: %s, VenueName: %s, OutdoorVenue: %s' . PHP_EOL,
             $row['VenueId'], $row['VenueName'],
-            $row['OutdoorVenue'] ? "True" : "False");
+            $row['OutdoorVenue'] ? 'True' : 'False');
     }
 }
 // [END spanner_query_with_bool_parameter]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

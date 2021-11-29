@@ -29,19 +29,21 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Upload a file using KMS encryption.
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $bucketName the name of your Google Cloud bucket.
- * @param string $objectName the name of the object.
- * @param string $source the path to the file to upload.
- * @param string $kmsKeyName KMS key ID used to encrypt objects server side.
- *
- * @return Psr\Http\Message\StreamInterface
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $objectName The name of your Cloud Storage object.
+ * @param string $source The path to the file to upload.
+ * @param string $kmsKeyName The KMS key used to encrypt objects server side.
+ *     Key names are provided in the following format:
+ *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  */
-function upload_with_kms_key($projectId, $bucketName, $objectName, $source, $kmsKeyName)
+function upload_with_kms_key($bucketName, $objectName, $source, $kmsKeyName)
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId,
-    ]);
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $source = '/path/to/your/file';
+    // $kmsKeyName = "";
+
+    $storage = new StorageClient();
     $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->upload($file, [
@@ -55,3 +57,7 @@ function upload_with_kms_key($projectId, $bucketName, $objectName, $source, $kms
         $kmsKeyName);
 }
 # [END storage_upload_with_kms_key]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

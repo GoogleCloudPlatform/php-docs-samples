@@ -29,6 +29,12 @@ use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
+/**
+ * Authenticate to a cloud API with HTTP using a service account explicitly.
+ *
+ * @param string $projectId           The Google project ID.
+ * @param string $serviceAccountPath  Path to service account credentials JSON.
+ */
 function auth_http_explicit($projectId, $serviceAccountPath)
 {
     # Construct service account credentials using the service account key file
@@ -59,3 +65,7 @@ function auth_http_explicit($projectId, $serviceAccountPath)
     }
 }
 # [END auth_http_explicit]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

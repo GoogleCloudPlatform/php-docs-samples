@@ -46,9 +46,11 @@ function set_topic_policy($projectId, $topicName, $userEmail)
     ];
     $topic->iam()->setPolicy($policy);
 
-    printf('User %s added to policy for %s' . PHP_EOL,
+    printf(
+        'User %s added to policy for %s' . PHP_EOL,
         $userEmail,
-        $topicName);
+        $topicName
+    );
 }
 # [END pubsub_set_topic_policy]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

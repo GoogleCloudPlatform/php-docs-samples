@@ -3,11 +3,12 @@
         "php": "^7.2|^7.3|^7.4|^8.0"
     },
     "require-dev": {
-        "google/cloud-tools": "dev-master",
-        "phpunit/phpunit": "^7|^8",
         "bshaffer/phpunit-retry-annotations": "^0.2.0",
+        "google/auth": "^1.12",
+        "google/cloud-tools": "dev-master",
         "guzzlehttp/guzzle": "^7.0",
-        "symfony/browser-kit": "^4.0",
-        "google/auth": "^1.12"
+        "phpunit/phpunit": "^7|^8",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "composer/semver": "^3.2"
     }
 }

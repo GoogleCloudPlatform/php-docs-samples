@@ -43,7 +43,6 @@ use Google\Analytics\Data\V1beta\Metric;
  */
 $property_id = 'YOUR-GA4-PROPERTY-ID';
 
-
 // [START analyticsdata_json_credentials_initialize]
 /* TODO(developer): Replace this variable with a valid path to the
  *  credentials.json file for your service account downloaded from the

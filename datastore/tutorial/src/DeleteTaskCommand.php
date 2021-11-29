@@ -59,5 +59,7 @@ class DeleteTaskCommand extends Command
         $taskId = intval($input->getArgument('taskId'));
         delete_task($datastore, $taskId);
         $output->writeln(sprintf('Task %d deleted successfully.', $taskId));
+
+        return 0;
     }
 }

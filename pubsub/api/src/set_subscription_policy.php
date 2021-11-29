@@ -46,9 +46,11 @@ function set_subscription_policy($projectId, $subscriptionName, $userEmail)
     ];
     $subscription->iam()->setPolicy($policy);
 
-    printf('User %s added to policy for %s' . PHP_EOL,
+    printf(
+        'User %s added to policy for %s' . PHP_EOL,
         $userEmail,
-        $subscriptionName);
+        $subscriptionName
+    );
 }
 # [END pubsub_set_subscription_policy]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create an example collection of documents.
- * ```
- * query_filter_dataset('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_dataset($projectId)
+function query_filter_dataset(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -85,5 +84,6 @@ function query_filter_dataset($projectId)
     # [END fs_query_create_examples]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

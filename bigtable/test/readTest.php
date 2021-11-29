@@ -21,6 +21,9 @@ namespace Google\Cloud\Samples\Bigtable\Tests;
 use Google\Cloud\Bigtable\Mutations;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 final class ReadTest extends TestCase
 {
     use BigtableTestTrait;
@@ -39,26 +42,26 @@ final class ReadTest extends TestCase
 
         self::$timestampMicros = time() * 1000 * 1000;
         self::$bigtableClient->table(self::$instanceId, self::$tableId)->mutateRows([
-            "phone#4c410523#20190501" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestampMicros),
-            "phone#4c410523#20190502" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestampMicros),
-            "phone#4c410523#20190505" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros),
-            "phone#5c10102#20190501" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestampMicros),
-            "phone#5c10102#20190502" => (new Mutations())
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros)
+            'phone#4c410523#20190501' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.003', self::$timestampMicros),
+            'phone#4c410523#20190502' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.004', self::$timestampMicros),
+            'phone#4c410523#20190505' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros),
+            'phone#5c10102#20190501' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190401.002', self::$timestampMicros),
+            'phone#5c10102#20190502' => (new Mutations())
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros)
         ]);
     }
 
@@ -74,11 +77,10 @@ final class ReadTest extends TestCase
 
     public function testReadRow()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_row', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -92,11 +94,10 @@ Column Family stats_summary
 
     public function testReadRowPartial()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_row_partial', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row_partial"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -108,11 +109,10 @@ Column Family stats_summary
 
     public function testReadRows()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_rows', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_rows"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -132,11 +132,10 @@ Column Family stats_summary
 
     public function testReadRowRange()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_row_range', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row_range"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -162,11 +161,10 @@ Column Family stats_summary
 
     public function testReadRowRanges()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_row_ranges', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_row_ranges"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -204,11 +202,10 @@ Column Family stats_summary
 
     public function testReadPrefix()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_prefix', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_prefix"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -246,11 +243,10 @@ Column Family stats_summary
 
     public function testReadFilter()
     {
-        $output = self::runSnippet('read_snippets', [
+        $output = self::runFunctionSnippet('read_filter', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "read_filter"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501

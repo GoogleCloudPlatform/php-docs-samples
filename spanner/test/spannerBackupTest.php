@@ -44,6 +44,9 @@ class spannerBackupTest extends TestCase
     /** @var string backupId */
     protected static $backupId;
 
+    /** @var string encryptedBackupId */
+    protected static $encryptedBackupId;
+
     /** @var string databaseId */
     protected static $databaseId;
 
@@ -53,8 +56,14 @@ class spannerBackupTest extends TestCase
     /** @var string restoredDatabaseId */
     protected static $restoredDatabaseId;
 
+    /** @var string encryptedRestoredDatabaseId */
+    protected static $encryptedRestoredDatabaseId;
+
     /** @var $instance Instance */
     protected static $instance;
+
+    /** @var string kmsKeyName */
+    protected static $kmsKeyName;
 
     public static function setUpBeforeClass(): void
     {
@@ -72,8 +81,13 @@ class spannerBackupTest extends TestCase
         self::$retentionPeriod = '7d';
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
-        self::$restoredDatabaseId = self::$databaseId . '-res';
+        self::$encryptedBackupId = 'en-backup-' . self::$databaseId;
+        self::$restoredDatabaseId = self::$databaseId . '-r';
+        self::$encryptedRestoredDatabaseId = self::$databaseId . '-en-r';
         self::$instance = $spanner->instance(self::$instanceId);
+
+        self::$kmsKeyName =
+            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -84,6 +98,18 @@ class spannerBackupTest extends TestCase
         ]);
         $this->assertStringContainsString(self::$databaseId, $output);
         $this->assertStringContainsString(self::$retentionPeriod, $output);
+    }
+
+    public function testCreateBackupWithEncryptionKey()
+    {
+        $database = self::$instance->database(self::$databaseId);
+
+        $output = $this->runFunctionSnippet('create_backup_with_encryption_key', [
+            self::$databaseId,
+            self::$encryptedBackupId,
+            self::$kmsKeyName,
+        ]);
+        $this->assertStringContainsString(self::$backupId, $output);
     }
 
     /**
@@ -103,7 +129,7 @@ class spannerBackupTest extends TestCase
     public function testCreateBackup()
     {
         $database = self::$instance->database(self::$databaseId);
-        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
+        $results = $database->execute('SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp');
         $row = $results->rows()->current();
         $versionTime = $row['Timestamp'];
 
@@ -168,14 +194,27 @@ class spannerBackupTest extends TestCase
         $this->assertStringContainsString(self::$databaseId, $output);
     }
 
+    /**
+     * @depends testCreateBackupWithEncryptionKey
+     */
+    public function testRestoreBackupWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('restore_backup_with_encryption_key', [
+            self::$encryptedRestoredDatabaseId,
+            self::$encryptedBackupId,
+            self::$kmsKeyName,
+        ]);
+        $this->assertStringContainsString(self::$backupId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
+    }
 
     /**
-     * @depends testRestoreBackup
+     * @depends testRestoreBackupWithEncryptionKey
      */
     public function testListDatabaseOperations()
     {
         $output = $this->runFunctionSnippet('list_database_operations');
-        $this->assertStringContainsString(self::$restoredDatabaseId, $output);
+        $this->assertStringContainsString(self::$encryptedRestoredDatabaseId, $output);
     }
 
     /**

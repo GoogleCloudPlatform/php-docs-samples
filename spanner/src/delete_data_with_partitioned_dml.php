@@ -50,12 +50,13 @@ function delete_data_with_partitioned_dml($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $rowCount = $database->executePartitionedUpdate(
-        "DELETE FROM Singers WHERE SingerId > 10"
+        'DELETE FROM Singers WHERE SingerId > 10'
     );
 
     printf('Deleted %d row(s).' . PHP_EOL, $rowCount);
 }
 // [END spanner_dml_partitioned_delete]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

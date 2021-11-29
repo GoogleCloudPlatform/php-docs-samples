@@ -2,6 +2,6 @@
     "require": {
         "google/cloud-bigquery": "^1.16.0",
         "google/cloud-storage": "^1.9",
-        "google/cloud-asset": "^1.2.0"
+        "google/cloud-asset": "^1.4.2"
     }
 }

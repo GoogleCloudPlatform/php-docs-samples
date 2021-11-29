@@ -28,13 +28,9 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Add data to a document.
  *
- * ```
- * setup_dataset('your-project-id');
- * ```
- *
  * @param string $projectId The Google Cloud Project ID
  */
-function setup_dataset($projectId)
+function setup_dataset(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -65,5 +61,6 @@ function setup_dataset($projectId)
     # [END fs_add_data_2]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

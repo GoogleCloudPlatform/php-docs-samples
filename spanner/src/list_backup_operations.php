@@ -43,8 +43,8 @@ function list_backup_operations($instanceId, $databaseId)
 
     // List the CreateBackup operations.
     $filter = "(metadata.database:$databaseId) AND " .
-              "(metadata.@type:type.googleapis.com/" .
-              "google.spanner.admin.database.v1.CreateBackupMetadata)";
+              '(metadata.@type:type.googleapis.com/' .
+              'google.spanner.admin.database.v1.CreateBackupMetadata)';
 
     $operations = $instance->backupOperations(['filter' => $filter]);
 
@@ -60,5 +60,6 @@ function list_backup_operations($instanceId, $databaseId)
 }
 // [END spanner_list_backup_operations]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

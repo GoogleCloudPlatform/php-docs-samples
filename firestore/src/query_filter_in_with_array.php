@@ -27,9 +27,8 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Create a query with IN clause with array item.
- * ```
- * query_filter_in_with_array('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
 function query_filter_in_with_array(string $projectId): void
 {
@@ -48,5 +47,6 @@ function query_filter_in_with_array(string $projectId): void
     }
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -15,15 +15,13 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Storage;
 
 use Google\Auth\CredentialsLoader;
+use Google\Cloud\Core\Exception\BadRequestException;
+use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
-use Google\Cloud\Core\Exception\NotFoundException;
-use Google\Cloud\Core\Exception\BadRequestException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,9 +30,7 @@ use PHPUnit\Framework\TestCase;
 class storageTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
 
-    private static $commandFile = __DIR__ . '/../storage.php';
     private static $bucketName;
     private static $storage;
     private static $tempBucket;
@@ -51,18 +47,24 @@ class storageTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
+        foreach (self::$tempBucket->objects(['versions' => true]) as $object) {
+            $object->delete();
+        }
         self::$tempBucket->delete();
     }
 
     public function testBucketAcl()
     {
-        $output = $this->runCommand('bucket-acl', [
-            'bucket' => self::$tempBucket->name(),
+        $output = $this->runFunctionSnippet('get_bucket_acl', [
+            self::$tempBucket->name(),
         ]);
 
-        $this->assertRegExp("/: OWNER/", $output);
+        $this->assertRegExp('/: OWNER/', $output);
     }
 
+    /**
+     * @return void
+     */
     public function testManageBucketAcl()
     {
         $jsonKey = CredentialsLoader::fromEnv();
@@ -70,10 +72,10 @@ class storageTest extends TestCase
         $entity = sprintf('user-%s', $jsonKey['client_email']);
         $bucketUrl = sprintf('gs://%s', self::$tempBucket->name());
 
-        $output = $this->runCommand('bucket-acl', [
-            'bucket' => self::$tempBucket->name(),
-            '--entity' => $entity,
-            '--create' => true,
+        $output = $this->runFunctionSnippet('add_bucket_acl', [
+            self::$tempBucket->name(),
+            $entity,
+            'READER'
         ]);
 
         $expected = "Added $entity (READER) to $bucketUrl ACL\n";
@@ -83,18 +85,17 @@ class storageTest extends TestCase
         $this->assertArrayHasKey('role', $aclInfo);
         $this->assertEquals('READER', $aclInfo['role']);
 
-        $output = $this->runCommand('bucket-acl', [
-            'bucket' => self::$tempBucket->name(),
-            '--entity' => $entity,
+        $output = $this->runFunctionSnippet('get_bucket_acl_for_entity', [
+            self::$tempBucket->name(),
+            $entity,
         ]);
 
         $expected = "$entity: READER\n";
         $this->assertEquals($expected, $output);
 
-        $output = $this->runCommand('bucket-acl', [
-            'bucket' => self::$tempBucket->name(),
-            '--entity' => $entity,
-            '--delete' => true,
+        $output = $this->runFunctionSnippet('delete_bucket_acl', [
+            self::$tempBucket->name(),
+            $entity,
         ]);
 
         $expected = "Deleted $entity from $bucketUrl ACL\n";
@@ -110,9 +111,9 @@ class storageTest extends TestCase
 
     public function testListBuckets()
     {
-        $output = $this->runCommand('buckets');
+        $output = $this->runFunctionSnippet('list_buckets');
 
-        $this->assertStringContainsString("Bucket:", $output);
+        $this->assertStringContainsString('Bucket:', $output);
     }
 
     public function testCreateGetDeleteBuckets()
@@ -122,25 +123,16 @@ class storageTest extends TestCase
 
         $this->assertFalse($bucket->exists());
 
-        $this->runCommand('buckets', [
-            'bucket' => $bucketName,
-            '--create' => true,
-        ]);
+        $this->runFunctionSnippet('create_bucket', [$bucketName]);
 
         $bucket->reload();
         $this->assertTrue($bucket->exists());
 
-        $output = $this->runCommand('buckets', [
-          'bucket' => $bucketName,
-          '--metadata' => true,
-        ]);
+        $output = $this->runFunctionSnippet('get_bucket_metadata', [$bucketName]);
 
-        $this->assertStringContainsString("Bucket Metadata:", $output);
+        $this->assertStringContainsString('Bucket Metadata:', $output);
 
-        $output = $this->runCommand('buckets', [
-            'bucket' => $bucketName,
-            '--delete' => true,
-        ]);
+        $output = $this->runFunctionSnippet('delete_bucket', [$bucketName]);
 
         $this->assertFalse($bucket->exists());
 
@@ -149,11 +141,11 @@ class storageTest extends TestCase
 
     public function testBucketDefaultAcl()
     {
-        $output = $this->runCommand('bucket-default-acl', [
-            'bucket' => self::$tempBucket->name(),
+        $output = $this->runFunctionSnippet('get_bucket_default_acl', [
+            self::$tempBucket->name(),
         ]);
 
-        $this->assertStringContainsString(": OWNER", $output);
+        $this->assertStringContainsString(': OWNER', $output);
     }
 
     public function testManageBucketDefaultAcl()
@@ -161,25 +153,24 @@ class storageTest extends TestCase
         $bucketName = self::$tempBucket->name();
         $acl = self::$tempBucket->defaultAcl();
 
-        $output = $this->runCommand('bucket-default-acl', [
-            'bucket' => $bucketName,
-            '--entity' => 'allAuthenticatedUsers',
-            '--create' => true
+        $output = $this->runFunctionSnippet('add_bucket_default_acl', [
+            $bucketName,
+            'allAuthenticatedUsers',
+            'READER',
         ]);
 
         $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
         $this->assertArrayHasKey('role', $aclInfo);
         $this->assertEquals('READER', $aclInfo['role']);
 
-        $output .= $this->runCommand('bucket-default-acl', [
-            'bucket' => $bucketName,
-            '--entity' => 'allAuthenticatedUsers'
+        $output .= $this->runFunctionSnippet('get_bucket_default_acl_for_entity', [
+            $bucketName,
+            'allAuthenticatedUsers',
         ]);
 
-        $output .= $this->runCommand('bucket-default-acl', [
-            'bucket' => $bucketName,
-            '--entity' => 'allAuthenticatedUsers',
-            '--delete' => true
+        $output .= $this->runFunctionSnippet('delete_bucket_default_acl', [
+            $bucketName,
+            'allAuthenticatedUsers'
         ]);
 
         try {
@@ -190,13 +181,18 @@ class storageTest extends TestCase
         }
 
         $bucketUrl = sprintf('gs://%s', $bucketName);
-        $outputString = <<<EOF
-Added allAuthenticatedUsers (READER) to $bucketUrl default ACL
-allAuthenticatedUsers: READER
-Deleted allAuthenticatedUsers from $bucketUrl default ACL
-
-EOF;
-        $this->assertEquals($outputString, $output);
+        $this->assertStringContainsString(
+            sprintf('Added allAuthenticatedUsers (READER) to %s default ACL', $bucketUrl),
+            $output
+        );
+        $this->assertStringContainsString(
+            'allAuthenticatedUsers: READER',
+            $output
+        );
+        $this->assertStringContainsString(
+            sprintf('Deleted allAuthenticatedUsers from %s default ACL', $bucketUrl),
+            $output
+        );
     }
 
     public function testManageBucketLabels()
@@ -207,10 +203,10 @@ EOF;
         $value2 = 'value2-' . time();
         $value3 = 'value3-' . time();
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName,
-            'label' => $label1,
-            '--value' => $value1
+        $output = $this->runFunctionSnippet('add_bucket_label', [
+            self::$bucketName,
+            $label1,
+            $value1
         ]);
 
         $this->assertEquals(sprintf(
@@ -220,16 +216,16 @@ EOF;
             self::$bucketName
         ), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName
+        $output = $this->runFunctionSnippet('get_bucket_labels', [
+            self::$bucketName
         ]);
 
         $this->assertStringContainsString(sprintf('%s: value1', $label1), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName,
-            'label' => $label2,
-            '--value' => $value2,
+        $output = $this->runFunctionSnippet('add_bucket_label', [
+            self::$bucketName,
+            $label2,
+            $value2,
         ]);
 
         $this->assertEquals(sprintf(
@@ -239,17 +235,17 @@ EOF;
             self::$bucketName
         ), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName
+        $output = $this->runFunctionSnippet('get_bucket_labels', [
+            self::$bucketName
         ]);
 
         $this->assertStringContainsString(sprintf('%s: %s', $label1, $value1), $output);
         $this->assertStringContainsString(sprintf('%s: %s', $label2, $value2), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName,
-            'label' => $label1,
-            '--value' => $value3
+        $output = $this->runFunctionSnippet('add_bucket_label', [
+            self::$bucketName,
+            $label1,
+            $value3
         ]);
 
         $this->assertEquals(sprintf(
@@ -259,17 +255,16 @@ EOF;
             self::$bucketName
         ), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName
+        $output = $this->runFunctionSnippet('get_bucket_labels', [
+            self::$bucketName
         ]);
 
         $this->assertStringContainsString(sprintf('%s: %s', $label1, $value3), $output);
         $this->assertStringNotContainsString($value1, $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName,
-            'label' => $label1,
-            '--remove' => true
+        $output = $this->runFunctionSnippet('remove_bucket_label', [
+            self::$bucketName,
+            $label1,
         ]);
 
         $this->assertEquals(sprintf(
@@ -278,10 +273,9 @@ EOF;
             self::$bucketName
         ), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName,
-            'label' => $label2,
-            '--remove' => true
+        $output = $this->runFunctionSnippet('remove_bucket_label', [
+            self::$bucketName,
+            $label2,
         ]);
 
         $this->assertEquals(sprintf(
@@ -290,8 +284,8 @@ EOF;
             self::$bucketName
         ), $output);
 
-        $output = $this->runCommand('bucket-labels', [
-            'bucket' => self::$bucketName
+        $output = $this->runFunctionSnippet('get_bucket_labels', [
+            self::$bucketName
         ]);
 
         $this->assertStringNotContainsString($label1, $output);
@@ -300,11 +294,9 @@ EOF;
 
     public function testGenerateEncryptionKey()
     {
-        $output = $this->runCommand('encryption', [
-            '--generate-key' => true
-        ]);
+        $output = $this->runFunctionSnippet('generate_encryption_key');
 
-        $this->assertStringContainsString("Your encryption key:", $output);
+        $this->assertStringContainsString('Your encryption key:', $output);
     }
 
     public function testEncryptedFile()
@@ -318,30 +310,32 @@ EOF;
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
 
-        $output = $this->runCommand('encryption', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--key'  => $key,
-            '--upload-from' => $uploadFrom,
+        $output = $this->runFunctionSnippet('upload_encrypted_object', [
+            self::$bucketName,
+            $objectName,
+            $uploadFrom,
+            $key,
         ]);
 
-        $output .= $this->runCommand('encryption', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--key'  => $key,
-            '--download-to' => $downloadTo,
+        $output .= $this->runFunctionSnippet('download_encrypted_object', [
+            self::$bucketName,
+            $objectName,
+            $downloadTo,
+            $key,
         ]);
 
         $this->assertTrue(file_exists($downloadTo));
         $this->assertEquals($contents, file_get_contents($downloadTo));
 
         $objectUrl = sprintf('gs://%s/%s', self::$bucketName, $objectName);
-        $outputString = <<<EOF
-Uploaded encrypted $uploadFromBasename to $objectUrl
-Encrypted object $objectUrl downloaded to $downloadToBasename
-
-EOF;
-        $this->assertEquals($outputString, $output);
+        $this->assertStringContainsString(
+            sprintf('Uploaded encrypted %s to %s', $uploadFromBasename, $objectUrl),
+            $output
+        );
+        $this->assertStringContainsString(
+            sprintf('Encrypted object %s downloaded to %s', $objectUrl, $downloadToBasename),
+            $output
+        );
     }
 
     public function testRotateEncryptionKey()
@@ -355,72 +349,69 @@ EOF;
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
 
-        $output = $this->runCommand('encryption', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--key'  => $key,
-            '--upload-from' => $uploadFrom,
+        $output = $this->runFunctionSnippet('upload_encrypted_object', [
+            self::$bucketName,
+            $objectName,
+            $uploadFrom,
+            $key,
         ]);
 
-        $output .= $this->runCommand('encryption', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--key'  => $key,
-            '--rotate-key' => $newKey,
+        $output .= $this->runFunctionSnippet('rotate_encryption_key', [
+            self::$bucketName,
+            $objectName,
+            $key,
+            $newKey,
         ]);
 
-        $output .= $this->runCommand('encryption', [
-            'bucket' => self::$bucketName,
-            'object' => $objectName,
-            '--key'  => $newKey,
-            '--download-to' => $downloadTo,
+        $output .= $this->runFunctionSnippet('download_encrypted_object', [
+            self::$bucketName,
+            $objectName,
+            $downloadTo,
+            $newKey,
         ]);
 
         $this->assertTrue(file_exists($downloadTo));
         $this->assertEquals($contents, file_get_contents($downloadTo));
 
         $objectUrl = sprintf('gs://%s/%s', self::$bucketName, $objectName);
-        $outputString = <<<EOF
-Uploaded encrypted $uploadFromBasename to $objectUrl
-Rotated encryption key for object $objectUrl
-Encrypted object $objectUrl downloaded to $downloadToBasename
-
-EOF;
-        $this->assertEquals($outputString, $output);
+        $this->assertStringContainsString(
+            sprintf('Uploaded encrypted %s to %s', $uploadFromBasename, $objectUrl),
+            $output
+        );
+        $this->assertStringContainsString(
+            sprintf('Rotated encryption key for object %s', $objectUrl),
+            $output
+        );
+        $this->assertStringContainsString(
+            sprintf('Encrypted object %s downloaded to %s', $objectUrl, $downloadToBasename),
+            $output
+        );
     }
 
     public function testDownloadEncryptedFileFails()
     {
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The provided encryption key is incorrect');
+
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT') . '.encrypted';
         $invalidKey = base64_encode(random_bytes(32));
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
 
-        try {
-            $output = $this->runCommand('encryption', [
-                'bucket' => self::$bucketName,
-                'object' => $objectName,
-                '--key'  => $invalidKey,
-                '--download-to' => $downloadTo,
-            ]);
-            $this->fail('An exception should have been thrown');
-        } catch (BadRequestException $e) {
-            // Expected exception
-        }
-
-        $this->assertStringContainsString(
-            'The provided encryption key is incorrect',
-            $e->getMessage()
-        );
+        $output = $this->runFunctionSnippet('download_encrypted_object', [
+            self::$bucketName,
+            $objectName,
+            $downloadTo,
+            $invalidKey,
+        ]);
     }
 
     public function testEnableDefaultKmsKey()
     {
         $kmsEncryptedBucketName = self::$bucketName . '-kms-encrypted';
 
-        $output = $this->runCommand('enable-default-kms-key', [
-            'project' => self::$projectId,
-            'bucket' => $kmsEncryptedBucketName,
-            'kms-key-name' => $this->keyName(),
+        $output = $this->runFunctionSnippet('enable_default_kms_key', [
+            $kmsEncryptedBucketName,
+            $this->keyName(),
         ]);
 
         $this->assertEquals($output, sprintf(
@@ -439,12 +430,11 @@ EOF;
         $uploadFrom = tempnam(sys_get_temp_dir(), '/tests');
         file_put_contents($uploadFrom, 'foo' . rand());
 
-        $output = $this->runCommand('upload-with-kms-key', [
-            'project' => self::$projectId,
-            'bucket' => $kmsEncryptedBucketName,
-            'object' => $objectName,
-            'upload-from' => $uploadFrom,
-            'kms-key-name' => $this->keyName(),
+        $output = $this->runFunctionSnippet('upload_with_kms_key', [
+            $kmsEncryptedBucketName,
+            $objectName,
+            $uploadFrom,
+            $this->keyName(),
         ]);
 
         $this->assertEquals($output, sprintf(
@@ -454,6 +444,364 @@ EOF;
             $objectName,
             $this->keyName()
         ));
+    }
+
+    public function testBucketVersioning()
+    {
+        $output = self::runFunctionSnippet('enable_versioning', [
+            self::$bucketName,
+        ]);
+
+        $this->assertEquals(
+            sprintf('Versioning is now enabled for bucket %s', self::$bucketName),
+            $output,
+        );
+
+        $output = self::runFunctionSnippet('disable_versioning', [
+            self::$bucketName,
+        ]);
+
+        $this->assertEquals(
+            sprintf('Versioning is now disabled for bucket %s', self::$bucketName),
+            $output,
+        );
+    }
+
+    public function testBucketWebsiteConfiguration()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-website-configuration-'));
+        $obj = $bucket->upload('test', [
+            'name' => 'test.html'
+        ]);
+
+        $output = self::runFunctionSnippet('define_bucket_website_configuration', [
+            $bucket->name(),
+            $obj->name(),
+            $obj->name(),
+        ]);
+
+        $info = $bucket->reload();
+        $obj->delete();
+        $bucket->delete();
+
+        $this->assertEquals(
+            sprintf(
+                'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
+                $bucket->name(),
+                $obj->name(),
+                $obj->name(),
+            ),
+            $output
+        );
+
+        $this->assertEquals($obj->name(), $info['website']['mainPageSuffix']);
+        $this->assertEquals($obj->name(), $info['website']['notFoundPage']);
+    }
+
+    public function testGetServiceAccount()
+    {
+        $output = self::runFunctionSnippet('get_service_account', [
+            self::$projectId,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('The GCS service account email for project %s is ', self::$projectId),
+            $output
+        );
+    }
+
+    public function testCorsConfiguration()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-cors-configuration-'));
+
+        $method = 'GET';
+        $origin = 'https://google.com';
+        $responseHeader = 'Content-Type';
+        $maxAgeSeconds = 10;
+
+        $output = self::runFunctionSnippet('cors_configuration', [
+            $bucket->name(),
+            $method,
+            $origin,
+            $responseHeader,
+            $maxAgeSeconds,
+        ]);
+
+        $info = $bucket->reload();
+
+        $removeOutput = self::runFunctionSnippet('remove_cors_configuration', [
+            $bucket->name(),
+        ]);
+        $removeInfo = $bucket->reload();
+
+        $bucket->delete();
+
+        $this->assertEquals([$method], $info['cors'][0]['method']);
+        $this->assertEquals($maxAgeSeconds, $info['cors'][0]['maxAgeSeconds']);
+        $this->assertEquals([$responseHeader], $info['cors'][0]['responseHeader']);
+
+        $this->assertEquals(
+            sprintf(
+                'Bucket %s was updated with a CORS config to allow GET requests from ' .
+                '%s sharing %s responses across origins.',
+                $bucket->name(),
+                $origin,
+                $responseHeader
+            ),
+            $output
+        );
+
+        $this->assertArrayNotHasKey('cors', $removeInfo);
+        $this->assertEquals(
+            sprintf('Removed CORS configuration from bucket %s', $bucket->name()),
+            $removeOutput
+        );
+    }
+
+    public function testListFileArchivedGenerations()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-list-file-archived-generations-'), [
+            'versioning' => [
+                'enabled' => true,
+            ]
+        ]);
+
+        $objectv1 = $bucket->upload('v1', [
+            'name' => 'test.txt',
+        ]);
+
+        $objectv2 = $bucket->upload('v2', [
+            'name' => 'test.txt',
+        ]);
+
+        $output = self::runFunctionSnippet('list_file_archived_generations', [
+            $bucket->name(),
+        ]);
+
+        foreach ($bucket->objects(['versions' => true]) as $object) {
+            $object->delete();
+        }
+
+        $bucket->delete();
+
+        $lines = explode(PHP_EOL, trim($output));
+        $this->assertCount(2, $lines);
+        $this->assertStringMatchesFormat('test.txt,%d', $lines[0]);
+        $this->assertStringMatchesFormat('test.txt,%d', $lines[1]);
+    }
+
+    public function testCopyFileArchivedGeneration()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-copy-file-archived-generation-'), [
+            'versioning' => [
+                'enabled' => true,
+            ]
+        ]);
+
+        $objectv1 = $bucket->upload('v1', [
+            'name' => 'test.txt',
+        ]);
+
+        $objectv2 = $bucket->upload('v2', [
+            'name' => 'test.txt',
+        ]);
+
+        $newObjectName = 'v3.txt';
+
+        $output = self::runFunctionSnippet('copy_file_archived_generation', [
+            $bucket->name(),
+            $objectv1->name(),
+            $objectv1->info()['generation'],
+            $newObjectName,
+        ]);
+
+        $newObjContents = '';
+        try {
+            $newObj = $bucket->object($newObjectName);
+            $newObjContents = $newObj->downloadAsString();
+        } catch (\Exception $e) {
+        }
+
+        foreach ($bucket->objects(['versions' => true]) as $object) {
+            $object->delete();
+        }
+
+        $bucket->delete();
+
+        $this->assertEquals('v1', $newObjContents);
+        $this->assertEquals(
+            sprintf(
+                'Generation %s of object %s in bucket %s was copied to %s',
+                $objectv1->info()['generation'],
+                $objectv1->name(),
+                $bucket->name(),
+                $newObjectName
+            ),
+            $output
+        );
+    }
+
+    public function testBucketDeleteDefaultKmsKey()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-bucket-delete-default-kms-key-'));
+
+        $output = self::runFunctionSnippet('bucket_delete_default_kms_key', [
+            $bucket->name(),
+        ]);
+
+        $info = $bucket->reload();
+
+        $bucket->delete();
+
+        $this->assertEquals(sprintf('Default KMS key was removed from %s', $bucket->name()), $output);
+        $this->assertArrayNotHasKey('encryption', $info);
+    }
+
+    public function testCreateBucketClassLocation()
+    {
+        $bucketName = uniqid('samples-create-bucket-class-location-');
+        $output = self::runFunctionSnippet('create_bucket_class_location', [
+            $bucketName,
+        ]);
+
+        $bucket = self::$storage->bucket($bucketName);
+        $exists = $bucket->exists();
+        $bucket->delete();
+
+        $this->assertTrue($exists);
+        $this->assertStringContainsString('Created bucket', $output);
+    }
+
+    public function testObjectCsekToCmek()
+    {
+        $objectName = uniqid('samples-object-csek-to-cmek-');
+        $key = base64_encode(random_bytes(32));
+        self::$storage->bucket(self::$bucketName)->upload('encrypted', [
+            'name' => $objectName,
+            'encryptionKey' => $key
+        ]);
+
+        $output = self::runFunctionSnippet('object_csek_to_cmek', [
+            self::$bucketName,
+            $objectName,
+            $key,
+            $this->keyName(),
+        ]);
+
+        $obj2 = self::$storage->bucket(self::$bucketName)->object($objectName);
+        $info = $obj2->reload();
+        $obj2->delete();
+
+        $this->assertStringContainsString($this->keyName(), $info['kmsKeyName']);
+        $this->assertEquals(
+            sprintf(
+                'Object %s in bucket %s is now managed by the KMS key %s instead of a customer-supplied encryption key',
+                $objectName,
+                self::$bucketName,
+                $this->keyName()
+            ),
+            $output
+        );
+    }
+
+    public function testChangeDefaultStorageClass()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-change-default-storage-class-'));
+
+        $output = self::runFunctionSnippet('change_default_storage_class', [
+            $bucket->name(),
+        ]);
+
+        $info = $bucket->reload();
+        $bucket->delete();
+
+        $this->assertEquals('COLDLINE', $info['storageClass']);
+        $this->assertEquals(
+            sprintf('Default storage class for bucket %s has been set to %s', $bucket->name(), 'COLDLINE'),
+            $output
+        );
+    }
+
+    public function testDeleteFileArchivedGeneration()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-delete-file-archived-generation-'), [
+            'versioning' => [
+                'enabled' => true,
+            ],
+        ]);
+
+        $objectName = 'test.txt';
+
+        $obj1 = $bucket->upload('v1', [
+            'name' => $objectName,
+        ]);
+
+        $generationToDelete = $obj1->info()['generation'];
+
+        $bucket->upload('v2', [
+            'name' => $objectName,
+        ]);
+
+        $output = self::runFunctionSnippet('delete_file_archived_generation', [
+            $bucket->name(),
+            $objectName,
+            $generationToDelete,
+        ]);
+
+        $exists = $obj1->exists();
+
+        foreach ($bucket->objects(['versions' => true]) as $object) {
+            $object->delete();
+        }
+
+        $bucket->delete();
+
+        $this->assertFalse($exists);
+        $this->assertEquals(
+            sprintf(
+                'Generation %s of object %s was deleted from %s',
+                $generationToDelete,
+                $objectName,
+                $bucket->name()
+            ),
+            $output
+        );
+    }
+
+    public function testDownloadPublicObject()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-download-public-object-'));
+
+        self::runFunctionSnippet('set_bucket_public_iam', [
+            $bucket->name(),
+        ]);
+
+        $object = self::$storage->bucket(self::$bucketName)->upload('test content', [
+            'name' => uniqid('samples-download-public-object-'),
+        ]);
+
+        $downloadTo = tempnam(sys_get_temp_dir(), '/tests/' . $object->name());
+
+        $output = self::runFunctionSnippet('download_public_file', [
+            self::$bucketName,
+            $object->name(),
+            $downloadTo,
+        ]);
+
+        $object->delete();
+        $bucket->delete();
+
+        $this->assertEquals(
+            sprintf(
+                'Downloaded public object %s from bucket %s to %s',
+                $object->name(),
+                self::$bucketName,
+                $downloadTo,
+            ),
+            $output
+        );
+
+        $this->assertFileExists($downloadTo);
     }
 
     private function keyName()

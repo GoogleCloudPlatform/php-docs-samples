@@ -29,12 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Print all entities and roles for a bucket's ACL.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- *
- * @return Google\Cloud\Storage\Acl the ACL for the Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function get_bucket_acl($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->acl();
@@ -43,3 +43,7 @@ function get_bucket_acl($bucketName)
     }
 }
 # [END storage_print_bucket_acl]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

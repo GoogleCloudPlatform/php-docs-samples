@@ -36,6 +36,7 @@ $filter = isset($argv[2]) ? $argv[2] : '';
  * List Data Loss Prevention API jobs corresponding to a given filter.
  */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\DlpJobType;
 
 /** Uncomment and populate these variables in your code */
@@ -63,16 +64,18 @@ foreach ($jobs as $job) {
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
     $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
 
-    if (count($infoTypeStats) > 0) {
-        foreach ($infoTypeStats as $infoTypeStat) {
-            printf(
-                '  Found %s instance(s) of type %s' . PHP_EOL,
-                $infoTypeStat->getCount(),
-                $infoTypeStat->getInfoType()->getName()
-            );
+    if ($job->getState() == JobState::DONE) {
+        if (count($infoTypeStats) > 0) {
+            foreach ($infoTypeStats as $infoTypeStat) {
+                printf(
+                    '  Found %s instance(s) of type %s' . PHP_EOL,
+                    $infoTypeStat->getCount(),
+                    $infoTypeStat->getInfoType()->getName()
+                );
+            }
+        } else {
+            print('  No findings.' . PHP_EOL);
         }
-    } else {
-        print('  No findings.' . PHP_EOL);
     }
 }
 # [END dlp_list_jobs]

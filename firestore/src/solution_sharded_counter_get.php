@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Returns a total count across all shards of distributed counter.
- * ```
- * solution_sharded_counter_get('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function solution_sharded_counter_get($projectId)
+function solution_sharded_counter_get(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -49,5 +48,6 @@ function solution_sharded_counter_get($projectId)
     printf('The current value of the distributed counter: %d' . PHP_EOL, $result);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

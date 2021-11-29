@@ -37,9 +37,10 @@ use Google\Cloud\VideoIntelligence\V1\Feature;
 $video = new VideoIntelligenceServiceClient();
 
 # Execute a request.
+$features = [Feature::TEXT_DETECTION];
 $operation = $video->annotateVideo([
     'inputUri' => $uri,
-    'features' => [Feature::TEXT_DETECTION]
+    'features' => $features,
 ]);
 
 # Wait for the request to complete.
@@ -56,8 +57,8 @@ if ($operation->operationSucceeded()) {
             $start = $segment->getSegment()->getStartTimeOffset();
             $end = $segment->getSegment()->getEndTimeOffset();
             printf('  Segment: %ss to %ss' . PHP_EOL,
-                $start->getSeconds() + $start->getNanos()/1000000000.0,
-                $end->getSeconds() + $end->getNanos()/1000000000.0);
+                $start->getSeconds() + $start->getNanos() / 1000000000.0,
+                $end->getSeconds() + $end->getNanos() / 1000000000.0);
             printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
         }
     }

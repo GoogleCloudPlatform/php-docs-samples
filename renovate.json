@@ -11,6 +11,16 @@
       "phpunit/phpunit"
     ]
   }],
+  "ignorePaths": [
+      "appengine/flexible/"
+  ],
   "branchPrefix": "renovate/{{parentDir}}-",
-  "prConcurrentLimit": 5
+  "prConcurrentLimit": 10,
+  "dependencyDashboard": true,
+  "packageRules": [
+    {
+      "matchPaths": ["functions/**"],
+      "branchPrefix": "renovate/functions-"
+    }
+  ]
 }

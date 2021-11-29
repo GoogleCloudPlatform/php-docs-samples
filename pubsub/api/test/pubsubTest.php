@@ -31,8 +31,6 @@ class PubSubTest extends TestCase
     use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
 
-    private static $commandFile = __DIR__ . '/../pubsub.php';
-
     public function testSubscriptionPolicy()
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');

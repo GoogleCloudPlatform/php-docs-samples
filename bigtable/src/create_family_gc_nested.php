@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,16 +21,9 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId, $tableId) = $argv;
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_family_gc_nested]
-
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Union as GcRuleUnion;
@@ -40,51 +32,61 @@ use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Protobuf\Duration;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
-// $tableId = 'The Bigtable table ID';
+/**
+ * Create a new column family with a nested GC rule
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance where the table resides
+ * @param string $tableId The ID of the table in which the rule needs to be created
+ */
+function create_family_gc_nested(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
+    $tableAdminClient = new BigtableTableAdminClient();
 
-$tableAdminClient = new BigtableTableAdminClient();
+    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
-$tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
+    print('Creating column family cf5 with a Nested GC rule...' . PHP_EOL);
+    // Create a column family with nested GC policies.
+    // Create a nested GC rule:
+    // Drop cells that are either older than the 10 recent versions
+    // OR
+    // Drop cells that are older than a month AND older than the
+    // 2 recent versions
+    $columnFamily5 = new ColumnFamily();
+    $rule1 = (new GcRule())->setMaxNumVersions(10);
 
+    $rule2Intersection = new GcRuleIntersection();
+    $rule2Duration1 = new Duration();
+    $rule2Duration1->setSeconds(3600 * 24 * 30);
+    $rule2Array = [
+        (new GcRule())->setMaxAge($rule2Duration1),
+        (new GcRule())->setMaxNumVersions(2)
+    ];
+    $rule2Intersection->setRules($rule2Array);
+    $rule2 = new GcRule();
+    $rule2->setIntersection($rule2Intersection);
 
-print('Creating column family cf5 with a Nested GC rule...' . PHP_EOL);
-// Create a column family with nested GC policies.
-// Create a nested GC rule:
-// Drop cells that are either older than the 10 recent versions
-// OR
-// Drop cells that are older than a month AND older than the
-// 2 recent versions
-$columnFamily5 = new ColumnFamily();
-$rule1 = (new GcRule)->setMaxNumVersions(10);
+    $nestedRule = new GcRuleUnion();
+    $nestedRule->setRules([
+        $rule1,
+        $rule2
+    ]);
+    $nestedRule = (new GcRule())->setUnion($nestedRule);
 
-$rule2Intersection = new GcRuleIntersection();
-$rule2Duration1 = new Duration();
-$rule2Duration1->setSeconds(3600 * 24 * 30);
-$rule2Array = [
-    (new GcRule)->setMaxAge($rule2Duration1),
-    (new GcRule)->setMaxNumVersions(2)
-];
-$rule2Intersection->setRules($rule2Array);
-$rule2 = new GcRule();
-$rule2->setIntersection($rule2Intersection);
+    $columnFamily5->setGCRule($nestedRule);
 
-$nestedRule = new GcRuleUnion();
-$nestedRule->setRules([
-    $rule1,
-    $rule2
-]);
-$nestedRule = (new GcRule())->setUnion($nestedRule);
+    $columnModification = new Modification();
+    $columnModification->setId('cf5');
+    $columnModification->setCreate($columnFamily5);
+    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 
-$columnFamily5->setGCRule($nestedRule);
-
-$columnModification = new Modification();
-$columnModification->setId('cf5');
-$columnModification->setCreate($columnFamily5);
-$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-
-print('Created column family cf5 with a Nested GC rule.' . PHP_EOL);
-
+    print('Created column family cf5 with a Nested GC rule.' . PHP_EOL);
+}
 // [END bigtable_create_family_gc_nested]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

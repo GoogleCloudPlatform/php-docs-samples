@@ -26,6 +26,12 @@ namespace Google\Cloud\Samples\Auth;
 // Imports the Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
+/**
+ * Authenticate to a cloud client library using a service account explicitly.
+ *
+ * @param string $projectId           The Google project ID.
+ * @param string $serviceAccountPath  Path to service account credentials JSON.
+ */
 function auth_cloud_explicit($projectId, $serviceAccountPath)
 {
     # Explicitly use service account credentials by specifying the private key
@@ -42,3 +48,7 @@ function auth_cloud_explicit($projectId, $serviceAccountPath)
     }
 }
 # [END auth_cloud_explicit]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

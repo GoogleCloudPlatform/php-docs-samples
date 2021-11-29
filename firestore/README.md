@@ -63,9 +63,11 @@ authentication:
 To run the Firestore Samples, run any of the files in `src/` on the CLI:
 
 ```
-$ php src/add_data.php
-Usage: add_data.php $projectId
-	@param string $projectId The Google Cloud Project ID
+$ php src/setup_dataset.php
+
+Usage: setup_dataset.php $projectId
+
+    @param string $projectId The Google Cloud Project ID
 ```
 
 ## The client library

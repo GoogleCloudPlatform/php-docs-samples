@@ -41,7 +41,7 @@ $securityCenterClient = new SecurityCenterClient();
 $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 $notificationConfigName = $securityCenterClient::notificationConfigName($organizationId, $notificationConfigId);
 
-$streamingConfig = (new StreamingConfig())->setFilter("state = \"ACTIVE\"");
+$streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
 $fieldMask = (new FieldMask())->setPaths(['description', 'pubsub_topic', 'streaming_config.filter']);
 $notificationConfig = (new NotificationConfig())
     ->setName($notificationConfigName)

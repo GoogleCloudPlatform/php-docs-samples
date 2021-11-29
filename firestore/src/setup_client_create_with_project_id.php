@@ -23,19 +23,18 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
+# TODO(craiglabenz): Remove the `firestore_setup_client_create_with_project_id`
+#                    region tag after consolidating to `firestore_setup_client_create`
 # [START fs_initialize_project_id]
 # [START firestore_setup_client_create_with_project_id]
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Initialize Cloud Firestore with a provided project ID.
- * ```
- * setup_client_create_with_project_id('your-project-id');
- * ```
  *
  * @param string $projectId Your Google Cloud Project ID
  */
-function setup_client_create_with_project_id($projectId)
+function setup_client_create_with_project_id(string $projectId): void
 {
     // Create the Cloud Firestore client with a provided project ID.
     $db = new FirestoreClient([
@@ -45,6 +44,9 @@ function setup_client_create_with_project_id($projectId)
 }
 # [END firestore_setup_client_create_with_project_id]
 # [END fs_initialize_project_id]
+# TODO(craiglabenz): Remove the `firestore_setup_client_create_with_project_id`
+#                    region tag after consolidating to `firestore_setup_client_create`
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

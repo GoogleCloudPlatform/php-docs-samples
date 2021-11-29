@@ -28,6 +28,11 @@ use Google\Auth\ApplicationDefaultCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
+/**
+ * Authenticate to a cloud API with HTTP using a service account implicitly.
+ *
+ * @param string $projectId The Google project ID.
+ */
 function auth_http_implicit($projectId)
 {
     # Get the credentials and project ID from the environment using Google Auth
@@ -56,3 +61,7 @@ function auth_http_implicit($projectId)
     }
 }
 # [END auth_http_implicit]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

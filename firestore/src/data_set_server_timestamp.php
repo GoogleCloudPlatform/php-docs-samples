@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FieldValue;
 
 /**
  * Update field with server timestamp.
- * ```
- * data_set_server_timestamp('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_server_timestamp($projectId)
+function data_set_server_timestamp(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -53,5 +52,6 @@ function data_set_server_timestamp($projectId)
     printf('Updated the timestamp field of the some-id document in the objects collection.' . PHP_EOL);
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

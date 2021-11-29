@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,35 +21,39 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $projectId, $instanceId) = $argv;
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_tables]
-
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $instanceId = 'The Bigtable instance ID';
+/**
+ * List tables in an instance
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
+ */
+function list_tables(
+    string $projectId,
+    string $instanceId
+): void {
+    $instanceAdminClient = new BigtableInstanceAdminClient();
+    $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
-$tableAdminClient = new BigtableTableAdminClient();
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-$instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
-
-printf("Listing Tables:" . PHP_EOL);
-$tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
-if (empty($tables)) {
-    print('No table exists.' . PHP_EOL);
-    return;
-}
-foreach ($tables as $table) {
-    print($table->getName() . PHP_EOL);
+    printf('Listing Tables:' . PHP_EOL);
+    $tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
+    if (empty($tables)) {
+        print('No table exists.' . PHP_EOL);
+        return;
+    }
+    foreach ($tables as $table) {
+        print($table->getName() . PHP_EOL);
+    }
 }
 // [END bigtable_list_tables]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

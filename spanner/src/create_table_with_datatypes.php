@@ -43,7 +43,7 @@ function create_table_with_datatypes($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "CREATE TABLE Venues (
+        'CREATE TABLE Venues (
             VenueId		           INT64 NOT NULL,
             VenueName              STRING(100),
             VenueInfo              BYTES(MAX),
@@ -53,7 +53,7 @@ function create_table_with_datatypes($instanceId, $databaseId)
             OutdoorVenue           BOOL,
             PopularityScore        FLOAT64,
             LastUpdateTime TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
-    	) PRIMARY KEY (VenueId)"
+    	) PRIMARY KEY (VenueId)'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
@@ -64,5 +64,6 @@ function create_table_with_datatypes($instanceId, $databaseId)
 }
 // [END spanner_create_table_with_datatypes]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

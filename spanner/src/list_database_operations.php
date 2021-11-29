@@ -41,8 +41,8 @@ function list_database_operations($instanceId)
     $instance = $spanner->instance($instanceId);
 
     // List the databases that are being optimized after a restore operation.
-    $filter = "(metadata.@type:type.googleapis.com/" .
-              "google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)";
+    $filter = '(metadata.@type:type.googleapis.com/' .
+              'google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)';
 
     $operations = $instance->databaseOperations(['filter' => $filter]);
 
@@ -57,5 +57,6 @@ function list_database_operations($instanceId)
 }
 // [END spanner_list_database_operations]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -29,13 +29,19 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Disables a default event-based hold for a bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function disable_default_event_based_hold($bucketName)
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update(['defaultEventBasedHold' => false]);
     printf('Default event-based hold was disabled for %s' . PHP_EOL, $bucketName);
 }
 # [END storage_disable_default_event_based_hold]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

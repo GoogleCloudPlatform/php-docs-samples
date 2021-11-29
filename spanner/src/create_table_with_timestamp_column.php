@@ -43,14 +43,14 @@ function create_table_with_timestamp_column($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "CREATE TABLE Performances (
+        'CREATE TABLE Performances (
     		SingerId	INT64 NOT NULL,
     		VenueId		INT64 NOT NULL,
     		EventDate	DATE,
     		Revenue		INT64,
     		LastUpdateTime	TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
     	) PRIMARY KEY (SingerId, VenueId, EventDate),
-    	INTERLEAVE IN PARENT Singers on DELETE CASCADE"
+    	INTERLEAVE IN PARENT Singers on DELETE CASCADE'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
@@ -61,5 +61,6 @@ function create_table_with_timestamp_column($instanceId, $databaseId)
 }
 // [END spanner_create_table_with_timestamp_column]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

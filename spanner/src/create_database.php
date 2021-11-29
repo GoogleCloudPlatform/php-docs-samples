@@ -46,18 +46,18 @@ function create_database($instanceId, $databaseId)
     }
 
     $operation = $instance->createDatabase($databaseId, ['statements' => [
-        "CREATE TABLE Singers (
+        'CREATE TABLE Singers (
             SingerId     INT64 NOT NULL,
             FirstName    STRING(1024),
             LastName     STRING(1024),
             SingerInfo   BYTES(MAX)
-        ) PRIMARY KEY (SingerId)",
-        "CREATE TABLE Albums (
+        ) PRIMARY KEY (SingerId)',
+        'CREATE TABLE Albums (
             SingerId     INT64 NOT NULL,
             AlbumId      INT64 NOT NULL,
             AlbumTitle   STRING(MAX)
         ) PRIMARY KEY (SingerId, AlbumId),
-        INTERLEAVE IN PARENT Singers ON DELETE CASCADE"
+        INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
     ]]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
@@ -68,5 +68,6 @@ function create_database($instanceId, $databaseId)
 }
 // [END spanner_create_database]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

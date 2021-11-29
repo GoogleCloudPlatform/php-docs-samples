@@ -28,11 +28,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Create a composite index chained query, which combines an equality operator with a range comparison. You will need to
  * create a custom index. @see https://cloud.google.com/firestore/docs/query-data/indexing.
- * ```
- * query_filter_compound_multi_eq_lt('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_compound_multi_eq_lt($projectId)
+function query_filter_compound_multi_eq_lt(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -51,5 +50,6 @@ function query_filter_compound_multi_eq_lt($projectId)
     }
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

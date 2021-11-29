@@ -57,7 +57,7 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
         $transferAmount = 200000;
 
         $results = $t->execute(
-            "SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2"
+            'SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2'
         );
         $resultsRow = $results->rows()->current();
         $album2budget = $resultsRow['MarketingBudget'];
@@ -67,7 +67,7 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
         // client library.
         if ($album2budget >= $transferAmount) {
             $results = $t->execute(
-                "SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1"
+                'SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1'
             );
             $resultsRow = $results->rows()->current();
             $album1budget = $resultsRow['MarketingBudget'];
@@ -77,9 +77,9 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
 
             // Update the albums
             $t->executeUpdate(
-                "UPDATE Albums "
-                . "SET MarketingBudget = @AlbumBudget "
-                . "WHERE SingerId = 1 and AlbumId = 1",
+                'UPDATE Albums '
+                . 'SET MarketingBudget = @AlbumBudget '
+                . 'WHERE SingerId = 1 and AlbumId = 1',
                 [
                     'parameters' => [
                         'AlbumBudget' => $album1budget
@@ -87,9 +87,9 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
                 ]
             );
             $t->executeUpdate(
-                "UPDATE Albums "
-                . "SET MarketingBudget = @AlbumBudget "
-                . "WHERE SingerId = 2 and AlbumId = 2",
+                'UPDATE Albums '
+                . 'SET MarketingBudget = @AlbumBudget '
+                . 'WHERE SingerId = 2 and AlbumId = 2',
                 [
                     'parameters' => [
                         'AlbumBudget' => $album2budget
@@ -105,5 +105,6 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
 }
 // [END spanner_dml_getting_started_update]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -27,11 +27,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Add document data with an auto-generated id.
- * ```
- * data_set_id_random_collection('your-project-id');
- * ```
+ *
+ * @param string $projectId The Google Cloud Project ID
  */
-function data_set_id_random_collection($projectId)
+function data_set_id_random_collection(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
@@ -49,5 +48,6 @@ function data_set_id_random_collection($projectId)
     # [END fs_add_doc_data_with_auto_id]
 }
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

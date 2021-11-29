@@ -23,8 +23,6 @@ fi
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
-    jobs
-    asset
 )
 
 # Directories we do not want to run tests in, even if they exist
@@ -41,6 +39,7 @@ REST_TESTS=(
     error_reporting
     iot
     monitoring
+    speech
     video
     vision
 )
@@ -62,10 +61,12 @@ ALT_PROJECT_TESTS=(
     logging
     monitoring
     pubsub/api
+    pubsub/quickstart
     storage
     spanner
     video
     vision
+    compute/cloud-client/instances
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
@@ -166,8 +167,11 @@ do
         composer -q install
     fi
     if [ $? != 0 ]; then
+        # Generate the lock file (required for check-platform-reqs)
+        composer update --ignore-platform-reqs
         # If the PHP required version is too low, skip the test
-        if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
+        EXPLICITLY_SKIPPED=$(php $TESTDIR/check_version.php "$(cat composer.json | jq -r .require.php)");
+        if composer check-platform-reqs | grep "requires php" | grep failed && [ "$EXPLICITLY_SKIPPED" -eq "1" ]; then
             echo "Skipping tests in $DIR (incompatible PHP version)"
         else
             # Run composer without "-q"
