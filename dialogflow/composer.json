@@ -1,7 +1,7 @@
 {
     "require": {
         "google/cloud-dialogflow": "^0.23",
-        "symfony/console": "^5.0"
+        "symfony/console": "^6.0"
     },
     "autoload": {
         "files": [
