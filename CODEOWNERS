@@ -10,9 +10,9 @@
 *                         @GoogleCloudPlatform/php-admins
 
 # Serverless samples
-/appengine/standard       @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
-/functions                @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
-/run                      @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/php-admins
+/appengine/standard       @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/php-admins
+/functions                @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/php-admins
+/run                      @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/php-admins
 
 # Client library samples
 /bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
