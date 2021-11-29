@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -24,12 +21,15 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_delete_cluster]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
 /**
  * Delete a cluster
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $clusterId The ID of the cluster to be deleted
@@ -42,13 +42,13 @@ function delete_cluster(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
-    printf("Deleting Cluster" . PHP_EOL);
+    printf('Deleting Cluster' . PHP_EOL);
     try {
         $instanceAdminClient->deleteCluster($clusterName);
-        printf("Cluster %s deleted." . PHP_EOL, $clusterId);
+        printf('Cluster %s deleted.' . PHP_EOL, $clusterId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Cluster %s does not exist." . PHP_EOL, $clusterId);
+            printf('Cluster %s does not exist.' . PHP_EOL, $clusterId);
         } else {
             throw $e;
         }

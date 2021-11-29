@@ -43,7 +43,7 @@ if (isset($_GET['type'])) {
             print('Triggering a PHP Fatal Error by including a file with a syntax error.');
             print($linkText);
             $filename = tempnam(sys_get_temp_dir(), 'php_syntax_error');
-            file_put_contents($filename, "<?php syntax-error");
+            file_put_contents($filename, '<?php syntax-error');
             require($filename);
             break;
         default:

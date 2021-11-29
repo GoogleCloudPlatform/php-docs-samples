@@ -41,8 +41,8 @@ function list_database_operations($instanceId)
     $instance = $spanner->instance($instanceId);
 
     // List the databases that are being optimized after a restore operation.
-    $filter = "(metadata.@type:type.googleapis.com/" .
-              "google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)";
+    $filter = '(metadata.@type:type.googleapis.com/' .
+              'google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)';
 
     $operations = $instance->databaseOperations(['filter' => $filter]);
 

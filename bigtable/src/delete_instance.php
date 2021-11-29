@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -24,12 +21,15 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_delete_instance]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
 /**
  * Delete a bigtable instance
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance to be deleted
  */
@@ -40,13 +40,13 @@ function delete_instance(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Deleting Instance" . PHP_EOL);
+    printf('Deleting Instance' . PHP_EOL);
     try {
         $instanceAdminClient->deleteInstance($instanceName);
-        printf("Deleted Instance: %s." . PHP_EOL, $instanceId);
+        printf('Deleted Instance: %s.' . PHP_EOL, $instanceId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Instance %s does not exists." . PHP_EOL, $instanceId);
+            printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
         } else {
             throw $e;
         }

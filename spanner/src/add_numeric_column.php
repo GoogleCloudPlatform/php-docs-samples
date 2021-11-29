@@ -43,7 +43,7 @@ function add_numeric_column($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "ALTER TABLE Venues ADD COLUMN Revenue NUMERIC"
+        'ALTER TABLE Venues ADD COLUMN Revenue NUMERIC'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);

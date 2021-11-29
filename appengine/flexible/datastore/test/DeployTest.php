@@ -30,6 +30,6 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $resp->getStatusCode(),
             'top page status code');
 
-        $this->assertStringContainsString("Last 10 visits:", (string) $resp->getBody());
+        $this->assertStringContainsString('Last 10 visits:', (string) $resp->getBody());
     }
 }

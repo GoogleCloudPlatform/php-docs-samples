@@ -86,7 +86,7 @@ function list_entries($projectId, $loggerName)
             }
             $entryText = '{' . implode(', ', $entryPayload) . '}';
         }
-        printf("%s : %s" . PHP_EOL, $entryInfo['timestamp'], $entryText);
+        printf('%s : %s' . PHP_EOL, $entryInfo['timestamp'], $entryText);
     }
 }
 // [END logging_list_log_entries]

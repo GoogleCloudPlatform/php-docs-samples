@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -22,25 +21,28 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_list_tables]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 /**
  * List tables in an instance
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  */
 function list_tables(
     string $projectId,
-    string  $instanceId
+    string $instanceId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $tableAdminClient = new BigtableTableAdminClient();
 
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Listing Tables:" . PHP_EOL);
+    printf('Listing Tables:' . PHP_EOL);
     $tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
     if (empty($tables)) {
         print('No table exists.' . PHP_EOL);

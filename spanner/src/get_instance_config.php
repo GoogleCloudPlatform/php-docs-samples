@@ -35,7 +35,7 @@ function get_instance_config($instanceConfig)
 {
     $spanner = new SpannerClient();
     $config = $spanner->instanceConfiguration($instanceConfig);
-    printf("Available leader options for instance config %s: %s" . PHP_EOL,
+    printf('Available leader options for instance config %s: %s' . PHP_EOL,
         $instanceConfig, $config->info()['leaderOptions']
     );
 }

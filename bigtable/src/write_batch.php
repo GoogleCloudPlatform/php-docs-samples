@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +21,15 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_writes_batch]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\Mutations;
 
 /**
  * Write data in batches in a table
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table where the batch data needs to be written
@@ -49,15 +49,15 @@ function write_batch(
     $columnFamilyId = 'stats_summary';
     $mutations = [
         (new Mutations())
-            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
-            ->upsert($columnFamilyId, "os_build", "12155.0.0-rc1", $timestampMicros),
+            ->upsert($columnFamilyId, 'connected_wifi', 1, $timestampMicros)
+            ->upsert($columnFamilyId, 'os_build', '12155.0.0-rc1', $timestampMicros),
         (new Mutations())
-            ->upsert($columnFamilyId, "connected_wifi", 1, $timestampMicros)
-            ->upsert($columnFamilyId, "os_build", "12145.0.0-rc6", $timestampMicros)];
+            ->upsert($columnFamilyId, 'connected_wifi', 1, $timestampMicros)
+            ->upsert($columnFamilyId, 'os_build', '12145.0.0-rc6', $timestampMicros)];
 
     $table->mutateRows([
-        "tablet#a0b81f74#20190501" => $mutations[0],
-        "tablet#a0b81f74#20190502" => $mutations[1]
+        'tablet#a0b81f74#20190501' => $mutations[0],
+        'tablet#a0b81f74#20190502' => $mutations[1]
     ]);
 
     printf('Successfully wrote 2 rows.' . PHP_EOL);

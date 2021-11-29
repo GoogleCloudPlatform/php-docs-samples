@@ -53,14 +53,14 @@ function update_data_with_batch_dml($instanceId, $databaseId)
     $batchDmlResult = $database->runTransaction(function (Transaction $t) {
         $result = $t->executeUpdateBatch([
             [
-                'sql' => "INSERT INTO Albums "
-                . "(SingerId, AlbumId, AlbumTitle, MarketingBudget) "
+                'sql' => 'INSERT INTO Albums '
+                . '(SingerId, AlbumId, AlbumTitle, MarketingBudget) '
                 . "VALUES (1, 3, 'Test Album Title', 10000)"
             ],
             [
-                'sql' => "UPDATE Albums "
-                . "SET MarketingBudget = MarketingBudget * 2 "
-                . "WHERE SingerId = 1 and AlbumId = 3"
+                'sql' => 'UPDATE Albums '
+                . 'SET MarketingBudget = MarketingBudget * 2 '
+                . 'WHERE SingerId = 1 and AlbumId = 3'
             ],
         ]);
         $t->commit();
