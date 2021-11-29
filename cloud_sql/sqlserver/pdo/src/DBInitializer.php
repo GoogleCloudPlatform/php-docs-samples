@@ -56,8 +56,7 @@ class DBInitializer
             throw new RuntimeException(
                 sprintf(
                     'Invalid or missing configuration! Make sure you have set ' .
-                    '$username, $password, $dbName, and $dbHost (for TCP mode) ' .
-                    'or $cloud_sql_connection_name (for UNIX socket mode). ' .
+                    '$username, $password, $dbName, and $dbHost (for TCP mode).' .
                     'The PHP error was %s',
                     $e->getMessage()
                 ),
