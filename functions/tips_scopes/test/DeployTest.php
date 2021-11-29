@@ -44,6 +44,9 @@ class DeployTest extends TestCase
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true
         ]);
+
+        sleep(1); // avoid race condition
+
         $secondResp = $this->client->post('', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
             // 'debug' => true

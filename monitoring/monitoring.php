@@ -76,7 +76,6 @@ $application->add(new Command('delete-uptime-check'))
         );
     });
 
-
 $application->add(new Command('get-descriptor'))
     ->setDefinition(clone $inputDefinition)
     ->addArgument('metric_id', InputArgument::REQUIRED, 'The metric descriptor id')

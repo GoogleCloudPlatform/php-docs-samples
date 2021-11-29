@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Storage;
 
 use Google\Auth\CredentialsLoader;
@@ -60,7 +59,7 @@ class storageTest extends TestCase
             self::$tempBucket->name(),
         ]);
 
-        $this->assertRegExp("/: OWNER/", $output);
+        $this->assertRegExp('/: OWNER/', $output);
     }
 
     /**
@@ -114,7 +113,7 @@ class storageTest extends TestCase
     {
         $output = $this->runFunctionSnippet('list_buckets');
 
-        $this->assertStringContainsString("Bucket:", $output);
+        $this->assertStringContainsString('Bucket:', $output);
     }
 
     public function testCreateGetDeleteBuckets()
@@ -131,7 +130,7 @@ class storageTest extends TestCase
 
         $output = $this->runFunctionSnippet('get_bucket_metadata', [$bucketName]);
 
-        $this->assertStringContainsString("Bucket Metadata:", $output);
+        $this->assertStringContainsString('Bucket Metadata:', $output);
 
         $output = $this->runFunctionSnippet('delete_bucket', [$bucketName]);
 
@@ -146,7 +145,7 @@ class storageTest extends TestCase
             self::$tempBucket->name(),
         ]);
 
-        $this->assertStringContainsString(": OWNER", $output);
+        $this->assertStringContainsString(': OWNER', $output);
     }
 
     public function testManageBucketDefaultAcl()
@@ -297,7 +296,7 @@ class storageTest extends TestCase
     {
         $output = $this->runFunctionSnippet('generate_encryption_key');
 
-        $this->assertStringContainsString("Your encryption key:", $output);
+        $this->assertStringContainsString('Your encryption key:', $output);
     }
 
     public function testEncryptedFile()

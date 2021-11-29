@@ -50,7 +50,7 @@ function update_data_with_partitioned_dml($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $rowCount = $database->executePartitionedUpdate(
-        "UPDATE Albums SET MarketingBudget = 100000 WHERE SingerId > 1"
+        'UPDATE Albums SET MarketingBudget = 100000 WHERE SingerId > 1'
     );
 
     printf('Updated %d row(s).' . PHP_EOL, $rowCount);

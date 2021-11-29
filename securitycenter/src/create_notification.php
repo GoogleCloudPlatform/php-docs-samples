@@ -37,7 +37,7 @@ $securityCenterClient = new SecurityCenterClient();
 $organizationName = $securityCenterClient::organizationName($organizationId);
 $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 
-$streamingConfig = (new StreamingConfig())->setFilter("state = \"ACTIVE\"");
+$streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
 $notificationConfig = (new NotificationConfig())
     ->setDescription('A sample notification config')
     ->setPubsubTopic($pubsubTopic)
