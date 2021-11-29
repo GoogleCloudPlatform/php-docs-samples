@@ -21,7 +21,7 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Update the environment variables `REDIS_HOST` and `REDIS_PORT` in `app.yaml`
    with your configuration values. These values are used when the application is
-   deployed. Run the following command to get the values for your isntance:
+   deployed. Run the following command to get the values for your instance:
 
         $ gcloud beta redis instances describe YOUR_INSTANCE_NAME --region=REGION_ID
 
@@ -66,7 +66,7 @@ $ gcloud beta compute networks vpc-access connectors create CONNECTOR_NAME \
 	--project=PROJECT_ID
 ```
 
-Next, you neded to [configure App Engine to connect to your VPC network][connecting-appengine].
+Next, you need to [configure App Engine to connect to your VPC network][connecting-appengine].
 This is done by modifying [`app.yaml`](app.yaml) and setting the full name of
 the connector you just created under `vpc_access_connector`.
 

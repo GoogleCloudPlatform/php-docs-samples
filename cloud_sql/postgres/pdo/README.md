@@ -71,12 +71,12 @@ Then use the following command to launch the proxy in the background:
 
 ### TCP mode
 
-To run the sample locally with a TCP conneciton, set environment variables and
+To run the sample locally with a TCP connection, set environment variables and
 launch the proxy as shown below.
 
 #### Linux / macOS
 
-Use these terminal commands to initalie environment variables:
+Use these terminal commands to initialize environment variables:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
@@ -95,7 +95,7 @@ safe.
 Then use the following command to launch the proxy in the background:
 
 ```bash
-./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:5432 -credential_file=$GOOGLE_APPLICAITON_CREDENTIALS &
+./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:5432 -credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 #### Windows/PowerShell
@@ -115,7 +115,7 @@ secure - consider a more secure solution such as
 [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets
 safe.
 
-Then use the following command to launch the proxy in a seperate PowerShell
+Then use the following command to launch the proxy in a separate PowerShell
 session:
 
 ```powershell

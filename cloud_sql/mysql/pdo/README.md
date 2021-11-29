@@ -91,7 +91,7 @@ safe.
 Then use the following command to launch the proxy in the background:
 
 ```bash
-./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:3306 -credential_file=$GOOGLE_APPLICAITON_CREDENTIALS &
+./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:3306 -credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 #### Windows/PowerShell
