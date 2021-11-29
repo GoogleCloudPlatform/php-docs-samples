@@ -25,7 +25,6 @@ use RuntimeException;
 
 class DBInitializer
 {
-
     /**
      *  @param $username string username of the database user
      *  @param $password string password of the database user
@@ -57,8 +56,7 @@ class DBInitializer
             throw new RuntimeException(
                 sprintf(
                     'Invalid or missing configuration! Make sure you have set ' .
-                    '$username, $password, $dbName, and $dbHost (for TCP mode) ' .
-                    'or $cloud_sql_connection_name (for UNIX socket mode). ' .
+                    '$username, $password, $dbName, and $dbHost (for TCP mode).' .
                     'The PHP error was %s',
                     $e->getMessage()
                 ),
@@ -75,7 +73,7 @@ class DBInitializer
                     'https://cloud.google.com/sql/docs/sqlserver/connect-external-app',
                     $e->getMessage()
                 ),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         }

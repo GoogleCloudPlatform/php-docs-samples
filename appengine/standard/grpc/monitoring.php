@@ -41,7 +41,7 @@ $m->setType('custom.googleapis.com/my_metric');
 $r = new MonitoredResource();
 $r->setType('gce_instance');
 $r->setLabels([
-    'instance_id' =>$instanceId,
+    'instance_id' => $instanceId,
     'zone' => 'us-central1-f',
 ]);
 

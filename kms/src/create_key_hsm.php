@@ -24,6 +24,7 @@ use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\ProtectionLevel;
+use Google\Protobuf\Duration;
 
 function create_key_hsm_sample(
     string $projectId = 'my-project',
@@ -43,6 +44,11 @@ function create_key_hsm_sample(
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
             ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION)
             ->setProtectionLevel(ProtectionLevel::HSM)
+        )
+
+        // Optional: customize how long key versions should be kept before destroying.
+        ->setDestroyScheduledDuration((new Duration())
+            ->setSeconds(24 * 60 * 60)
         );
 
     // Call the API.

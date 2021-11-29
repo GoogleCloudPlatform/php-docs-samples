@@ -22,9 +22,9 @@ use Google\CloudFunctions\CloudEvent;
 function firebaseFirestore(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
-    
-    fwrite($log, "Event: " . $cloudevent->getId() . PHP_EOL);
-    fwrite($log, "Event Type: " . $cloudevent->getType() . PHP_EOL);
+
+    fwrite($log, 'Event: ' . $cloudevent->getId() . PHP_EOL);
+    fwrite($log, 'Event Type: ' . $cloudevent->getType() . PHP_EOL);
 
     $data = $cloudevent->getData();
 

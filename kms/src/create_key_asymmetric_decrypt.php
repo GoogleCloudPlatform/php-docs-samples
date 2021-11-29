@@ -23,6 +23,7 @@ use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Protobuf\Duration;
 
 function create_key_asymmetric_decrypt_sample(
     string $projectId = 'my-project',
@@ -41,6 +42,11 @@ function create_key_asymmetric_decrypt_sample(
         ->setPurpose(CryptoKeyPurpose::ASYMMETRIC_DECRYPT)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
             ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_DECRYPT_OAEP_2048_SHA256)
+        )
+
+        // Optional: customize how long key versions should be kept before destroying.
+        ->setDestroyScheduledDuration((new Duration())
+            ->setSeconds(24 * 60 * 60)
         );
 
     // Call the API.
@@ -49,7 +55,6 @@ function create_key_asymmetric_decrypt_sample(
     return $createdKey;
 }
 // [END kms_create_key_asymmetric_decrypt]
-
 
 if (isset($argv)) {
     if (count($argv) === 0) {

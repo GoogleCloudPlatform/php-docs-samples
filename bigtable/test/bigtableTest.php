@@ -14,9 +14,13 @@ final class BigtableTest extends TestCase
     const CLUSTER_ID_PREFIX = 'php-cluster-';
     const TABLE_ID_PREFIX = 'php-table-';
     const APP_PROFILE_ID_PREFIX = 'php-app-profile-';
+    const SERVICE_ACCOUNT_ID_PREFIX = 'php-sa-';    // Shortened due to length constraint b/w 6 and 30.
 
     private static $clusterId;
     private static $appProfileId;
+    private static $serviceAccountId;
+    private static $serviceAccountEmail;
+    private static $policyRole;
 
     public static function setUpBeforeClass(): void
     {
@@ -46,6 +50,38 @@ final class BigtableTest extends TestCase
         );
 
         $this->checkInstance($instanceName);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testGetInstance()
+    {
+        $content = self::runFunctionSnippet('get_instance', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Display Name: ' . self::$instanceId, $array);
+    }
+
+    /**
+     * @depends testGetInstance
+     */
+    public function testUpdateInstance()
+    {
+        $updatedName = uniqid(self::INSTANCE_ID_PREFIX);
+        $content = self::runFunctionSnippet('update_instance', [
+            self::$projectId,
+            self::$instanceId,
+            $updatedName
+        ]);
+
+        $expectedResponse = "Instance updated with the new display name: $updatedName." . PHP_EOL;
+
+        $this->assertSame($expectedResponse, $content);
     }
 
     /**
@@ -226,8 +262,10 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, self::$instanceId);
+
         $this->assertContains('Listing Instances:', $array);
-        $this->assertContains(self::$instanceId, $array);
+        $this->assertContains($instanceName, $array);
     }
 
     /**
@@ -291,6 +329,41 @@ final class BigtableTest extends TestCase
 
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testGetCluster()
+    {
+        $content = self::runFunctionSnippet('get_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Name: projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+    }
+
+    /**
+     * @depends testGetCluster
+     */
+    public function testUpdateCluster()
+    {
+        $newNumNodes = 2;
+
+        $content = self::runFunctionSnippet('update_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            $newNumNodes
+        ]);
+
+        $expectedResponse = "Cluster updated with the new num of nodes: $newNumNodes." . PHP_EOL;
+
+        $this->assertSame($expectedResponse, $content);
     }
 
     /**
@@ -531,6 +604,48 @@ final class BigtableTest extends TestCase
         $this->assertContains('Hello Cloud Bigtable!', $array);
         $this->assertContains('Hello PHP!', $array);
         $this->assertContains(sprintf('Deleted %s table.', $tableId), $array);
+    }
+
+    /**
+    * @depends testCreateProductionInstance
+    */
+    public function testSetIamPolicy()
+    {
+        self::$policyRole = 'roles/bigtable.user';
+        self::$serviceAccountId = uniqid(self::SERVICE_ACCOUNT_ID_PREFIX);
+        self::$serviceAccountEmail = $this->createServiceAccount(self::$serviceAccountId);
+
+        $user = 'serviceAccount:' . self::$serviceAccountEmail;
+        $content = self::runFunctionSnippet('set_iam_policy', [
+            self::$projectId,
+            self::$instanceId,
+            $user,
+            self::$policyRole
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains(self::$policyRole . ':' . $user, $array);
+    }
+
+    /**
+    * @depends testSetIamPolicy
+    */
+    public function testGetIamPolicy()
+    {
+        $user = 'serviceAccount:' . self::$serviceAccountEmail;
+
+        $content = self::runFunctionSnippet('get_iam_policy', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains(self::$policyRole . ':' . $user, $array);
+
+        // cleanup
+        $this->deleteServiceAccount(self::$serviceAccountEmail);
     }
 
     /**

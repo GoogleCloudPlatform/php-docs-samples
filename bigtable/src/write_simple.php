@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +21,8 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_writes_simple]
 use Google\Cloud\Bigtable\BigtableClient;
 use Google\Cloud\Bigtable\DataUtil;
@@ -31,6 +30,7 @@ use Google\Cloud\Bigtable\Mutations;
 
 /**
  * Write data in a table
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table where the data needs to be written
@@ -49,11 +49,11 @@ function write_simple(
     $timestampMicros = time() * 1000 * 1000;
     $columnFamilyId = 'stats_summary';
     $mutations = (new Mutations())
-    ->upsert($columnFamilyId, "connected_cell", 1, $timestampMicros)
-    ->upsert($columnFamilyId, "connected_wifi", DataUtil::intToByteString(1), $timestampMicros)
-    ->upsert($columnFamilyId, "os_build", "PQ2A.190405.003", $timestampMicros);
+    ->upsert($columnFamilyId, 'connected_cell', 1, $timestampMicros)
+    ->upsert($columnFamilyId, 'connected_wifi', DataUtil::intToByteString(1), $timestampMicros)
+    ->upsert($columnFamilyId, 'os_build', 'PQ2A.190405.003', $timestampMicros);
 
-    $table->mutateRow("phone#4c410523#20190501", $mutations);
+    $table->mutateRow('phone#4c410523#20190501', $mutations);
 
     printf('Successfully wrote row.' . PHP_EOL);
 }

@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -24,6 +21,8 @@ namespace Google\Cloud\Samples\Bigtable;
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
  */
 
+namespace Google\Cloud\Samples\Bigtable;
+
 // [START bigtable_create_prod_instance]
 use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
@@ -34,6 +33,7 @@ use Google\ApiCore\ApiException;
 
 /**
  * Create a production Bigtable instance
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance to be generated
  * @param string $clusterId The ID of the cluster to be generated
@@ -71,11 +71,11 @@ function create_production_instance(
     ];
     try {
         $instanceAdminClient->getInstance($instanceName);
-        printf("Instance %s already exists." . PHP_EOL, $instanceId);
-        throw new Exception(sprintf("Instance %s already exists." . PHP_EOL, $instanceId));
+        printf('Instance %s already exists.' . PHP_EOL, $instanceId);
+        throw new Exception(sprintf('Instance %s already exists.' . PHP_EOL, $instanceId));
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Creating an Instance: %s" . PHP_EOL, $instanceId);
+            printf('Creating an Instance: %s' . PHP_EOL, $instanceId);
             $operationResponse = $instanceAdminClient->createInstance(
                 $projectName,
                 $instanceId,
@@ -86,7 +86,7 @@ function create_production_instance(
             if (!$operationResponse->operationSucceeded()) {
                 print('Error: ' . $operationResponse->getError()->getMessage());
             } else {
-                printf("Instance %s created.", $instanceId);
+                printf('Instance %s created.', $instanceId);
             }
         } else {
             throw $e;

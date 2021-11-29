@@ -44,6 +44,7 @@ class kmsTest extends TestCase
     private static $asymmetricSignEcKeyId;
     private static $asymmetricSignRsaKeyId;
     private static $hsmKeyId;
+    private static $macKeyId;
     private static $symmetricKeyId;
 
     public static function setUpBeforeClass(): void
@@ -64,6 +65,9 @@ class kmsTest extends TestCase
 
         self::$hsmKeyId = self::randomId();
         self::createHsmKey(self::$hsmKeyId);
+
+        self::$macKeyId = self::randomId();
+        self::createMacKey(self::$macKeyId);
 
         self::$symmetricKeyId = self::randomId();
         self::createSymmetricKey(self::$symmetricKeyId);
@@ -153,6 +157,19 @@ class kmsTest extends TestCase
             ->setVersionTemplate((new CryptoKeyVersionTemplate)
                 ->setProtectionLevel(ProtectionLevel::HSM)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION))
+            ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
+        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+    }
+
+    private static function createMacKey(string $id)
+    {
+        $client = new KeyManagementServiceClient();
+        $keyRingName = $client->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
+        $key = (new CryptoKey())
+            ->setPurpose(CryptoKeyPurpose::MAC)
+            ->setVersionTemplate((new CryptoKeyVersionTemplate)
+                ->setProtectionLevel(ProtectionLevel::HSM)
+                ->setAlgorithm(CryptoKeyVersionAlgorithm::HMAC_SHA256))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
         return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
     }
@@ -266,6 +283,20 @@ class kmsTest extends TestCase
         $this->assertStringContainsString('Created labeled key', $output);
         $this->assertEquals('alpha', $key->getLabels()['team']);
         $this->assertEquals('cc1234', $key->getLabels()['cost_center']);
+    }
+
+    public function testCreateKeyMac()
+    {
+        list($key, $output) = $this->runSample('create_key_mac', [
+          self::$projectId,
+          self::$locationId,
+          self::$keyRingId,
+          self::randomId()
+        ]);
+
+        $this->assertStringContainsString('Created mac key', $output);
+        $this->assertEquals(CryptoKeyPurpose::MAC, $key->getPurpose());
+        $this->assertEquals(CryptoKeyVersionAlgorithm::HMAC_SHA256, $key->getVersionTemplate()->getAlgorithm());
     }
 
     public function testCreateKeyRing()
@@ -409,7 +440,7 @@ class kmsTest extends TestCase
             self::$locationId,
             self::$keyRingId,
             self::$asymmetricDecryptKeyId,
-            "1",
+            '1',
             $plaintext
         ]);
 
@@ -436,6 +467,18 @@ class kmsTest extends TestCase
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, self::$symmetricKeyId);
         $response = $client->decrypt($keyName, $response->getCiphertext());
         $this->assertEquals($plaintext, $response->getPlaintext());
+    }
+
+    public function testGenerateRandomBytes()
+    {
+        list($response, $output) = $this->runSample('generate_random_bytes', [
+            self::$projectId,
+            self::$locationId,
+            256
+        ]);
+
+        $this->assertStringContainsString('Random bytes', $output);
+        $this->assertEquals(256, strlen($response->getData()));
     }
 
     public function testGetKeyLabels()
@@ -586,6 +629,28 @@ class kmsTest extends TestCase
         $this->assertEquals(1, $verified);
     }
 
+    public function testSignMac()
+    {
+        $data = 'my data';
+
+        list($signResponse, $output) = $this->runSample('sign_mac', [
+            self::$projectId,
+            self::$locationId,
+            self::$keyRingId,
+            self::$macKeyId,
+            '1',
+            $data
+        ]);
+
+        $this->assertStringContainsString('Signature', $output);
+        $this->assertNotEmpty($signResponse->getMac());
+
+        $client = new KeyManagementServiceClient();
+        $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$macKeyId, '1');
+        $verifyResponse = $client->macVerify($keyVersionName, $data, $signResponse->getMac());
+        $this->assertTrue($verifyResponse->getSuccess());
+    }
+
     public function testUpdateKeyAddRotation()
     {
         list($key, $output) = $this->runSample('update_key_add_rotation', [
@@ -697,5 +762,28 @@ class kmsTest extends TestCase
         // PHP does not currently support custom MGF, so this sample is just a
         // comment.
         $this->assertTrue(true);
+    }
+
+    public function testVerifyMac()
+    {
+        $data = 'my data';
+
+        $client = new KeyManagementServiceClient();
+        $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$macKeyId, '1');
+
+        $signResponse = $client->macSign($keyVersionName, $data);
+
+        list($verifyResponse, $output) = $this->runSample('verify_mac', [
+          self::$projectId,
+          self::$locationId,
+          self::$keyRingId,
+          self::$macKeyId,
+          '1',
+          $data,
+          $signResponse->getMac(),
+        ]);
+
+        $this->assertStringContainsString('Signature verified', $output);
+        $this->assertTrue($verifyResponse->getSuccess());
     }
 }

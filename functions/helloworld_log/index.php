@@ -36,14 +36,14 @@ function helloLogging(ServerRequestInterface $request): string
 
     // This doesn't log anything
     error_log('error_log does not log in Cloud Functions!');
-    
+
     // This will log an error message and immediately terminate the function execution
     // trigger_error('fatal errors are logged!');
-    
+
     // For HTTP functions, this is added to the HTTP response
     // For CloudEvent functions, this does nothing
     var_dump('var_dump goes to HTTP response for HTTP functions');
-    
+
     // You can also dump variables using var_export() and forward
     // the resulting string to Cloud Logging via an fwrite() call.
     $entry = var_export('var_export output can be captured.', true);

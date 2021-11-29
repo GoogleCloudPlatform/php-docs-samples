@@ -29,7 +29,7 @@ function intent_list($projectId)
 
     foreach ($intents->iterateAllElements() as $intent) {
         // print relevant info
-        print(str_repeat("=", 20) . PHP_EOL);
+        print(str_repeat('=', 20) . PHP_EOL);
         printf('Intent name: %s' . PHP_EOL, $intent->getName());
         printf('Intent display name: %s' . PHP_EOL, $intent->getDisplayName());
         printf('Action: %s' . PHP_EOL, $intent->getAction());
