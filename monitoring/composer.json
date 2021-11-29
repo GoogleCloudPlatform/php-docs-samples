@@ -1,6 +1,6 @@
 {
     "require": {
-        "symfony/console": "^5.0",
+        "symfony/console": "^6.0",
         "google/cloud-monitoring": "^1.0.0"
     },
     "autoload": {
