@@ -170,7 +170,7 @@ do
         # Generate the lock file (required for check-platform-reqs)
         composer update --ignore-platform-reqs
         # If the PHP required version is too low, skip the test
-        EXPLICITLY_SKIPPED=$(php $TESTDIR/check_version.php $(cat composer.json | jq -r .require.php));
+        EXPLICITLY_SKIPPED=$(php $TESTDIR/check_version.php "$(cat composer.json | jq -r .require.php)");
         if composer check-platform-reqs | grep "requires php" | grep failed && [ "$EXPLICITLY_SKIPPED" -eq "1" ]; then
             echo "Skipping tests in $DIR (incompatible PHP version)"
         else
