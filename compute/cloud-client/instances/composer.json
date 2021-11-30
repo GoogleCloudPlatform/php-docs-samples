@@ -1,6 +1,5 @@
 {
     "require": {
-        "google/cloud-compute": "^0.4.0",
-        "google/cloud-storage": "^1.23"
+        "google/cloud": "1.0 as dev-gce_rc0"
     }
 }
