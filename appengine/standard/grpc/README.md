@@ -29,7 +29,7 @@ been packaged with the Dev AppServer for PHP at this time. You can install gRPC
 locally and run them using PHP's build-in web server:
 
 ```
-# export environemnt variables locally which are set by app engine when deployed
+# export environment variables locally which are set by app engine when deployed
 export GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
 export GAE_INSTANCE=local
 
