@@ -63,7 +63,7 @@ function copy_backup($instanceId, $backupId, $sourceBackupId)
             basename($info['name']), $info['sizeBytes'], $info['createTime'], $sourceBackupId);
     } else {
         print('Backup is not ready!' . PHP_EOL);
-    }  
+    }
 }
 // [END spanner_copy_backup]
 
