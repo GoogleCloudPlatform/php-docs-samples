@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/speech/README.md
  */
 
 if (count($argv) != 2) {
