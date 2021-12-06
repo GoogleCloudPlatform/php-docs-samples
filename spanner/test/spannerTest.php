@@ -745,6 +745,34 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertDataWithDatatypes
      */
+    public function testAddJsonColumn()
+    {
+        $output = $this->runFunctionSnippet('add_json_column');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Added VenueDetails as a JSON column in Venues table', $output);
+    }
+
+    /**
+     * @depends testAddJsonColumn
+     */
+    public function testUpdateDataJson()
+    {
+        $output = $this->runFunctionSnippet('update_data_with_json_column');
+        $this->assertEquals('Updated data.' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testUpdateDataJson
+     */
+    public function testQueryDataJson()
+    {
+        $output = $this->runFunctionSnippet('query_data_with_json_parameter');
+        $this->assertStringContainsString('VenueId: 19, VenueDetails: ', $output);
+    }
+
+    /**
+     * @depends testInsertDataWithDatatypes
+     */
     public function testSetTransactionTag()
     {
         $output = $this->runFunctionSnippet('set_transaction_tag');
