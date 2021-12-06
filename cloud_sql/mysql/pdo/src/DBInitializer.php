@@ -22,6 +22,7 @@ namespace Google\Cloud\Samples\CloudSQL\MySQL;
 use PDO;
 use PDOException;
 use RuntimeException;
+use TypeError;
 
 class DBInitializer
 {

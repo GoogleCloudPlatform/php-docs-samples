@@ -62,7 +62,6 @@ function delete_sink($projectId, $sinkName)
  * List log sinks.
  *
  * @param string $projectId
- * @return ItemIterator<Google\Cloud\Logging\Sink>
  */
 function list_sinks($projectId)
 {

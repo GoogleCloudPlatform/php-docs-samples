@@ -52,11 +52,11 @@ function write_log($projectId, $loggerName, $message)
 // [END logging_write_log_entry]
 
 // [START logging_list_log_entries]
-/** Return an iterator for listing log entries.
+/**
+ * Print the timestamp and entry for the project and logger.
  *
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
- * @return ItemIterator<Google\Cloud\Logging\Entry>
  */
 function list_entries($projectId, $loggerName)
 {
