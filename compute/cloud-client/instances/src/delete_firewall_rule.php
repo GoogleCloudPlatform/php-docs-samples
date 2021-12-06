@@ -53,7 +53,7 @@ function delete_firewall_rule(string $projectId, string $firewallRuleName)
         printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
     } else {
         $error = $operation->getError();
-        printf('Rule deletion failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to delete firewall rule: %s' . PHP_EOL, $error->getMessage());
     }
 }
 # [END compute_firewall_delete]

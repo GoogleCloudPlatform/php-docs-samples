@@ -55,7 +55,7 @@ function delete_instance(
         printf('Deleted instance %s' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Instance deletion failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to delete instance: %s' . PHP_EOL, $error->getMessage());
     }
 }
 # [END compute_instances_delete]
