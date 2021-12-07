@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-use Google\Cloud\Core\Iterator\ItemIterator;
 // [START logging_write_log_entry]
 // [START logging_list_log_entries]
 // [START logging_delete_log]
