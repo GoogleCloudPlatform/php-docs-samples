@@ -56,7 +56,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
       ->setPorts(['80', '443']);
     $firewallResource = (new Firewall())
       ->setName($firewallRuleName)
-      ->setDirection(Direction::INGRESS)
+      ->setDirection(Direction::name(Direction::INGRESS))
       ->setAllowed([$allowedPorts])
       ->setSourceRanges(['0.0.0.0/0'])
       ->setTargetTags(['web'])
