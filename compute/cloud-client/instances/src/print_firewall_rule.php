@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Compute;
 
 use Google\Cloud\Compute\V1\FirewallsClient;
-use Google\Cloud\Compute\V1\Firewall\Direction;
 
 /**
  * Prints details about a particular firewall rule in the specified project
