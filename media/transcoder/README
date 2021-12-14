@@ -50,7 +50,21 @@ See the [Transcoder Documentation](https://cloud.google.com/transcoder/docs/) fo
 
 ## Troubleshooting
 
-* See the [Troubleshooting guide](https://cloud.google.com/transcoder/docs/troubleshooting) for more information.
+### bcmath extension missing
+
+If you see an error like this:
+
+```
+PHP Fatal error:  Uncaught Error: Call to undefined function Google\Protobuf\Internal\bcsub() in /usr/local/google/home/user/github/GoogleCloudPlatform/php-docs-samples/media/transcoder/vendor/google/protobuf/src/Google/Protobuf/Internal/Message.php:986
+```
+
+You may need to install the bcmath PHP extension.
+e.g. (may depend on your php version)
+```
+$ sudo apt-get install php7.3-bcmath
+```
+
+See the [Troubleshooting guide](https://cloud.google.com/transcoder/docs/troubleshooting) for more information.
 
 ## Contributing changes
 
