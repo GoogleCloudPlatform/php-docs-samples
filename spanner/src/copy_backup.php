@@ -28,41 +28,46 @@ use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Copy a backup from another source backup.
+ * Create a copy backup from another source backup.
  * Example:
  * ```
- * copy_backup($instanceId, $backupId, $sourceBackupId);
+ * copy_backup($destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId);
  * ```
  *
- * @param string $instanceId The Spanner instance ID.
- * @param string $backupId The Spanner backup ID.
+ * @param string $destInstanceId The Spanner instance ID where the copy backup will reside.
+ * @param string $destBackupId The Spanner backup ID of the new backup to be created.
+ * @param string $sourceInstanceId The Spanner instance ID of the source backup.
  * @param string $sourceBackupId The Spanner backup ID of the source.
  */
-function copy_backup($instanceId, $backupId, $sourceBackupId)
+function copy_backup($destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId)
 {
     $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
+
+    // You can create a cross region backup by using the source and destination
+    // instances which are in different regions
+    $destInstance = $spanner->instance($destInstanceId);
+    $sourceInstance = $spanner->instance($sourceInstanceId);
+    $sourceBackup = $sourceInstance->backup($sourceBackupId);
+    $destBackup = $destInstance->backup($destBackupId);
 
     $expireTime = new \DateTime('+8 hours');
-    $backup = $instance->backup($sourceBackupId);
-    $operation = $backup->createCopy($backupId, $expireTime);
+    $operation = $sourceBackup->createCopy($destBackup, $expireTime);
 
     print('Waiting for operation to complete...' . PHP_EOL);
 
     $operation->pollUntilComplete();
-    $newBackup = $instance->backup($backupId);
-    $newBackup->reload();
+    $destBackup->reload();
 
-    $ready = ($newBackup->state() == Backup::STATE_READY);
+    $ready = ($destBackup->state() == Backup::STATE_READY);
 
     if ($ready) {
         print('Backup is ready!' . PHP_EOL);
-        $info = $newBackup->info();
+        $info = $destBackup->info();
         printf(
             'Backup %s of size %d bytes was copied at %s from the source backup %s' . PHP_EOL,
             basename($info['name']), $info['sizeBytes'], $info['createTime'], $sourceBackupId);
     } else {
-        print('Backup is not ready!' . PHP_EOL);
+        printf('Unexpected state: %s' . PHP_EOL, $destBackup->state());
     }
 }
 // [END spanner_copy_backup]

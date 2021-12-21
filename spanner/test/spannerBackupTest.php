@@ -173,9 +173,12 @@ class spannerBackupTest extends TestCase
         $output = $this->runFunctionSnippet('copy_backup', [
             self::$instanceId,
             $newBackupId,
+            self::$instanceId,
             self::$backupId
         ]);
-        $this->assertStringContainsString($newBackupId, $output);
+
+        $regex = '/Backup %s of size \d+ bytes was copied at \w+ from the source backup %s/';
+        $this->assertRegExp(sprintf($regex, self::$backupId, $newBackupId), $output);
     }
 
     /**
