@@ -30,6 +30,7 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
 use Google\ApiCore\ApiException;
+use Exception;
 
 /**
  * Create a production Bigtable instance
