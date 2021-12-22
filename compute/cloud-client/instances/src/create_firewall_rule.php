@@ -27,7 +27,12 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Allowed;
 use Google\Cloud\Compute\V1\Firewall;
-use Google\Cloud\Compute\V1\Firewall\Direction;
+
+/**
+ * To correctly handle string enums in Cloud Compute library
+ * use constants defined in Enums subfolder.
+ */
+use Google\Cloud\Compute\V1\Enums\Firewall\Direction;
 
 /**
  * Creates a simple firewall rule allowing for incoming HTTP and HTTPS access from the entire Internet.
@@ -56,7 +61,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
       ->setPorts(['80', '443']);
     $firewallResource = (new Firewall())
       ->setName($firewallRuleName)
-      ->setDirection(Direction::name(Direction::INGRESS))
+      ->setDirection(Direction::INGRESS)
       ->setAllowed([$allowedPorts])
       ->setSourceRanges(['0.0.0.0/0'])
       ->setTargetTags(['web'])
