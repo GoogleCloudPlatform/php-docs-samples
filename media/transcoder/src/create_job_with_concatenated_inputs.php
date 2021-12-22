@@ -51,15 +51,15 @@ use Google\Protobuf\Duration;
  */
 function create_job_with_concatenated_inputs($projectId, $location, $input1Uri, $startTimeInput1, $endTimeInput1, $input2Uri, $startTimeInput2, $endTimeInput2, $outputUri)
 {
-    $startTimeInput1Sec = (int)floor(abs($startTimeInput1));
-    $startTimeInput1Nanos = (int)(1000000000 * bcsub(abs($startTimeInput1), floor(abs($startTimeInput1)), 4));
-    $endTimeInput1Sec = (int)floor(abs($endTimeInput1));
-    $endTimeInput1Nanos = (int)(1000000000 * bcsub(abs($endTimeInput1), floor(abs($endTimeInput1)), 4));
+    $startTimeInput1Sec = (int) floor(abs($startTimeInput1));
+    $startTimeInput1Nanos = (int) (1000000000 * bcsub(abs($startTimeInput1), floor(abs($startTimeInput1)), 4));
+    $endTimeInput1Sec = (int) floor(abs($endTimeInput1));
+    $endTimeInput1Nanos = (int) (1000000000 * bcsub(abs($endTimeInput1), floor(abs($endTimeInput1)), 4));
 
-    $startTimeInput2Sec = (int)floor(abs($startTimeInput2));
-    $startTimeInput2Nanos = (int)(1000000000 * bcsub(abs($startTimeInput2), floor(abs($startTimeInput2)), 4));
-    $endTimeInput2Sec = (int)floor(abs($endTimeInput2));
-    $endTimeInput2Nanos = (int)(1000000000 * bcsub(abs($endTimeInput2), floor(abs($endTimeInput2)), 4));
+    $startTimeInput2Sec = (int) floor(abs($startTimeInput2));
+    $startTimeInput2Nanos = (int) (1000000000 * bcsub(abs($startTimeInput2), floor(abs($startTimeInput2)), 4));
+    $endTimeInput2Sec = (int) floor(abs($endTimeInput2));
+    $endTimeInput2Nanos = (int) (1000000000 * bcsub(abs($endTimeInput2), floor(abs($endTimeInput2)), 4));
 
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();
