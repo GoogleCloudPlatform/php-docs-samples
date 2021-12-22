@@ -33,8 +33,6 @@ use GuzzleHttp\HandlerStack;
  *
  * @param string $url The Identity-Aware Proxy-protected URL to fetch.
  * @param string $clientId The client ID used by Identity-Aware Proxy.
- *
- * @return The response body.
  */
 function make_iap_request($url, $clientId)
 {
