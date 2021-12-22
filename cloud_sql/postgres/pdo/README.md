@@ -52,7 +52,7 @@ Use these terminal commands to initialize other environment variables as well:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
@@ -66,21 +66,21 @@ safe.
 Then use the following command to launch the proxy in the background:
 
 ```bash
-./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 ### TCP mode
 
-To run the sample locally with a TCP conneciton, set environment variables and
+To run the sample locally with a TCP connection, set environment variables and
 launch the proxy as shown below.
 
 #### Linux / macOS
 
-Use these terminal commands to initalie environment variables:
+Use these terminal commands to initialize environment variables:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_HOST='127.0.0.1'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
@@ -95,7 +95,7 @@ safe.
 Then use the following command to launch the proxy in the background:
 
 ```bash
-./cloud_sql_proxy -instances=$CLOUD_SQL_CONNECTION_NAME=tcp:5432 -credential_file=$GOOGLE_APPLICAITON_CREDENTIALS &
+./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:5432 -credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 #### Windows/PowerShell
@@ -115,7 +115,7 @@ secure - consider a more secure solution such as
 [Secret Manager](https://cloud.google.com/secret-manager/) to help keep secrets
 safe.
 
-Then use the following command to launch the proxy in a seperate PowerShell
+Then use the following command to launch the proxy in a separate PowerShell
 session:
 
 ```powershell

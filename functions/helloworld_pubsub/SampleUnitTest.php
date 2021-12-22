@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2020 Google LLC.
  *
@@ -21,7 +22,8 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\HelloworldPubsub\Test;
 
-use Google\CloudFunctions\CloudEvent;
+use CloudEvents\V1\CloudEventImmutable;
+use CloudEvents\V1\CloudEventInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,15 +47,14 @@ class SampleUnitTest extends TestCase
     {
         return [
             [
-                'cloudevent' => CloudEvent::fromArray([
-                    'id' => uniqid(),
-                    'source' => 'pubsub.googleapis.com',
-                    'specversion' => '1.0',
-                    'type' => 'google.cloud.pubsub.topic.v1.messagePublished',
-                    'data' => [
+                'cloudevent' => new CloudEventImmutable(
+                    uniqId(), // id
+                    'pubsub.googleapis.com', // source
+                    'google.cloud.pubsub.topic.v1.messagePublished', // type
+                    [
                         'data' => base64_encode('John')
-                    ],
-                ]),
+                    ]
+                ),
                 'expected' => 'Hello, John!'
             ],
         ];
@@ -63,7 +64,7 @@ class SampleUnitTest extends TestCase
      * @dataProvider dataProvider
      */
     public function testFunction(
-        CloudEvent $cloudevent,
+        CloudEventInterface $cloudevent,
         string $expected
     ): void {
         // Capture function output by overriding the function's logging behavior.

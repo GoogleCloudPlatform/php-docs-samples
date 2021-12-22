@@ -1,0 +1,21 @@
+<phpunit bootstrap="../testing/bootstrap.php">
+    <testsuites>
+        <testsuite name="PHP storagetransfer test">
+            <directory>test</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+    </php>
+</phpunit>
