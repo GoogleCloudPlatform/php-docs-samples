@@ -129,7 +129,7 @@ class instancesTest extends TestCase
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
             'projectId' => self::$projectId
         ]);
-        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` was disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId
@@ -167,7 +167,7 @@ class instancesTest extends TestCase
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
             'projectId' => self::$projectId
         ]);
-        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` was disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId
