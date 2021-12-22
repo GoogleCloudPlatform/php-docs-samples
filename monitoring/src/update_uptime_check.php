@@ -39,7 +39,7 @@ function update_uptime_checks($projectId, $configName, $newDisplayName = null, $
         'projectId' => $projectId,
     ]);
 
-    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($displayName);
+    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($configName);
     $fieldMask = new FieldMask();
     if ($newDisplayName) {
         $fieldMask->getPaths()[] = 'display_name';
