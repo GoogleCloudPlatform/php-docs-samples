@@ -39,8 +39,12 @@ class transcoderTest extends TestCase
 
     private static $testVideoFileName = 'ChromeCast.mp4';
     private static $testOverlayImageFileName = 'overlay.jpg';
+    private static $testConcatVideo1FileName = 'ForBiggerEscapes.mp4';
+    private static $testConcatVideo2FileName = 'ForBiggerJoyrides.mp4';
 
     private static $inputVideoUri;
+    private static $inputConcatVideo1Uri;
+    private static $inputConcatVideo2Uri;
     private static $inputOverlayUri;
     private static $outputUriForPreset;
     private static $outputUriForAdHoc;
@@ -49,6 +53,7 @@ class transcoderTest extends TestCase
     private static $outputUriForStaticOverlay;
     private static $outputUriForPeriodicImagesSpritesheet;
     private static $outputUriForSetNumberImagesSpritesheet;
+    private static $outputUriForConcat;
     private static $preset = 'preset/web-hd';
 
     private static $jobIdRegex;
@@ -71,12 +76,24 @@ class transcoderTest extends TestCase
             'name' => self::$testVideoFileName
         ]);
 
+        $file = fopen(__DIR__ . '/data/' . self::$testConcatVideo1FileName, 'r');
+        self::$bucket->upload($file, [
+            'name' => self::$testConcatVideo1FileName
+        ]);
+
+        $file = fopen(__DIR__ . '/data/' . self::$testConcatVideo2FileName, 'r');
+        self::$bucket->upload($file, [
+            'name' => self::$testConcatVideo2FileName
+        ]);
+
         $file = fopen(__DIR__ . '/data/' . self::$testOverlayImageFileName, 'r');
         self::$bucket->upload($file, [
             'name' => self::$testOverlayImageFileName
         ]);
 
         self::$inputVideoUri = sprintf('gs://%s/%s', $bucketName, self::$testVideoFileName);
+        self::$inputConcatVideo1Uri = sprintf('gs://%s/%s', $bucketName, self::$testConcatVideo1FileName);
+        self::$inputConcatVideo2Uri = sprintf('gs://%s/%s', $bucketName, self::$testConcatVideo2FileName);
         self::$inputOverlayUri = sprintf('gs://%s/%s', $bucketName, self::$testOverlayImageFileName);
         self::$outputUriForPreset = sprintf('gs://%s/test-output-preset/', $bucketName);
         self::$outputUriForAdHoc = sprintf('gs://%s/test-output-adhoc/', $bucketName);
@@ -85,6 +102,7 @@ class transcoderTest extends TestCase
         self::$outputUriForStaticOverlay = sprintf('gs://%s/test-output-static-overlay/', $bucketName);
         self::$outputUriForPeriodicImagesSpritesheet = sprintf('gs://%s/test-output-periodic-spritesheet/', $bucketName);
         self::$outputUriForSetNumberImagesSpritesheet = sprintf('gs://%s/test-output-set-number-spritesheet/', $bucketName);
+        self::$outputUriForConcat = sprintf('gs://%s/test-output-concat/', $bucketName);
 
         self::$jobIdRegex = sprintf('~projects/%s/locations/%s/jobs/~', self::$projectNumber, self::$location);
     }
@@ -325,6 +343,35 @@ class transcoderTest extends TestCase
             self::$location,
             self::$inputVideoUri,
             self::$outputUriForSetNumberImagesSpritesheet
+        ]);
+
+        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+
+        $jobId = explode('/', $output);
+        $jobId = trim($jobId[(count($jobId) - 1)]);
+
+        sleep(30);
+        $this->assertJobStateSucceeded($jobId);
+
+        $this->runFunctionSnippet('delete_job', [
+            self::$projectId,
+            self::$location,
+            $jobId
+        ]);
+    }
+
+    public function testJobConcat()
+    {
+        $output = $this->runFunctionSnippet('create_job_with_concatenated_inputs', [
+            self::$projectId,
+            self::$location,
+            self::$inputConcatVideo1Uri,
+            0,
+            8.1,
+            self::$inputConcatVideo2Uri,
+            3.5,
+            15,
+            self::$outputUriForConcat
         ]);
 
         $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
