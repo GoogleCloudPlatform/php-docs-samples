@@ -1,6 +1,7 @@
 {
     "require": {
         "google/cloud-video-transcoder": "^0.3.0",
-        "google/cloud-storage": "^1.9"
+        "google/cloud-storage": "^1.9",
+        "ext-bcmath":  "*"
     }
 }
