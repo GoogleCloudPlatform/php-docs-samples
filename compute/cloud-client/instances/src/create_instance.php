@@ -32,12 +32,12 @@ use Google\Cloud\Compute\V1\NetworkInterface;
 
 /**
  * To correctly handle string enums in Cloud Compute library
- * use constants defined in Enums subfolder.
+ * use constants defined in the Enums subfolder.
  */
 use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 
 /**
- * Create an instance in the specified project and zone.
+ * Creates an instance in the specified project and zone.
  * Example:
  * ```
  * create_instance($projectId, $zone, $instanceName);

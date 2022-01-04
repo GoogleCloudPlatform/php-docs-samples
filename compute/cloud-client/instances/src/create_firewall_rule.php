@@ -30,12 +30,12 @@ use Google\Cloud\Compute\V1\Firewall;
 
 /**
  * To correctly handle string enums in Cloud Compute library
- * use constants defined in Enums subfolder.
+ * use constants defined in the Enums subfolder.
  */
 use Google\Cloud\Compute\V1\Enums\Firewall\Direction;
 
 /**
- * Creates a simple firewall rule allowing for incoming HTTP and HTTPS access from the entire Internet.
+ * Creates a simple firewall rule allowing incoming HTTP and HTTPS access from the entire internet.
  *
  * Example:
  * ```
