@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-use Google\Cloud\Core\Iterator\ItemIterator;
 // [START logging_use]
 use Google\Cloud\Logging\LoggingClient;
 
@@ -62,7 +61,6 @@ function delete_sink($projectId, $sinkName)
  * List log sinks.
  *
  * @param string $projectId
- * @return ItemIterator<Google\Cloud\Logging\Sink>
  */
 function list_sinks($projectId)
 {

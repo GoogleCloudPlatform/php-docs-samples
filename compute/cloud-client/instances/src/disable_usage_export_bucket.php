@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_disable]
 use Google\Cloud\Compute\V1\ProjectsClient;
-use Google\Cloud\Compute\V1\GlobalOperationsClient;
 use Google\Cloud\Compute\V1\Operation;
 
 /**
@@ -45,13 +44,14 @@ function disable_usage_export_bucket(string $projectId)
     $projectsClient = new ProjectsClient();
     $operation = $projectsClient->setUsageExportBucket($projectId, null);
 
-    // Wait for the set operation to complete.
-    if ($operation->getStatus() === Operation\Status::RUNNING) {
-        $operationClient = new GlobalOperationsClient();
-        $operationClient->wait($operation->getName(), $projectId);
+    // Wait for the operation to complete.
+    $operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
+        printf('Compute Engine usage export bucket for project `%s` was disabled.', $projectId);
+    } else {
+        $error = $operation->getError();
+        printf('Failed to disable usage report bucket for project `%s`: %s' . PHP_EOL, $projectId, $error->getMessage());
     }
-
-    printf('Compute Engine usage export bucket for project `%s` disabled.', $projectId);
 }
 # [END compute_usage_report_disable]
 

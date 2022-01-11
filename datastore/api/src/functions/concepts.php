@@ -803,7 +803,7 @@ function transactional_retry(
     for ($i = 0; $i < $retries; $i++) {
         try {
             transfer_funds($datastore, $fromKey, $toKey, 10);
-        } catch (Google\Cloud\Exception\ConflictException $e) {
+        } catch (\Google\Cloud\Core\Exception\ConflictException $e) {
             // if $i >= $retries, the failure is final
             continue;
         }
