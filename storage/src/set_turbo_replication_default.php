@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_set_turbo_replication_default]
+# [START storage_set_rpo_default]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -49,7 +49,7 @@ function set_turbo_replication_default($bucketName)
         $bucketName
     );
 }
-# [END storage_set_turbo_replication_default]
+# [END storage_set_rpo_default]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

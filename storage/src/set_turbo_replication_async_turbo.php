@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_set_turbo_replication_async_turbo]
+# [START storage_set_rpo_async_turbo]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -48,7 +48,7 @@ function set_turbo_replication_async_turbo($bucketName)
         $bucketName
     );
 }
-# [END storage_set_turbo_replication_async_turbo]
+# [END storage_set_rpo_async_turbo]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

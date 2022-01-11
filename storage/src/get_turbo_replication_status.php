@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_get_turbo_replication]
+# [START storage_get_rpo]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -43,7 +43,7 @@ function get_turbo_replication_status($bucketName)
         $bucket->info()['rpo']
     );
 }
-# [END storage_get_turbo_replication]
+# [END storage_get_rpo]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
