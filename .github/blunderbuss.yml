@@ -13,6 +13,10 @@ assign_issues_by:
   - 'api: cloudiot'
   to:
   - laszlokorossy
+- labels:
+  - 'api: spanner'
+  to:
+  - shivgautam
 
 assign_prs_by:
 - labels:
