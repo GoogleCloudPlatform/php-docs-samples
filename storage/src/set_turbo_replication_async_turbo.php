@@ -38,9 +38,10 @@ function set_turbo_replication_async_turbo($bucketName)
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
+    $rpo = 'ASYNC_TURBO';
 
     $bucket->update([
-        'rpo' => 'ASYNC_TURBO'
+        'rpo' => $rpo
     ]);
 
     printf(

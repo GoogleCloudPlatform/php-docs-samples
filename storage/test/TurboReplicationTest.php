@@ -58,7 +58,7 @@ class TurboReplicationTest extends TestCase
             $output
         );
 
-        self::$bucket = self::$storage->bucket(self::$bucketName); 
+        self::$bucket = self::$storage->bucket(self::$bucketName);
         $this->assertEquals('ASYNC_TURBO', self::$bucket->info()['rpo']);
     }
 

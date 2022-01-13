@@ -37,11 +37,12 @@ function set_turbo_replication_default($bucketName)
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
+    $rpo = 'DEFAULT';
 
     // Updating the rpo value of a multi-region bucket to DEFAULT has no effect
     // and updating the rpo value of a regional bucket will throw an exception.
     $bucket->update([
-        'rpo' => 'DEFAULT'
+        'rpo' => $rpo
     ]);
 
     printf(
