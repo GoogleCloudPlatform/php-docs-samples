@@ -143,7 +143,7 @@ class DeployTest extends TestCase
         self::$apiHttpClient->post('/v1/accounts:delete', [
             'headers' => ['If-Match' => '*'],
             'json' => [
-                'localId' =>  $idToken
+                'localId' => $idToken
             ]
         ]);
     }
