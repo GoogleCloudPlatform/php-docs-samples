@@ -18,7 +18,7 @@ To use logging sinks, you will also need a Google Cloud Storage Bucket.
 
 You must add Cloud Logging as an owner to the bucket. To do so, add
 `cloud-logs@google.com` as an owner to the bucket. See the
-[exportings logs](https://cloud.google.com/logging/docs/export/configure_export#configuring_log_sinks)
+[exporting logs](https://cloud.google.com/logging/docs/export/configure_export#configuring_log_sinks)
 docs for complete details.
 
 # Running locally
