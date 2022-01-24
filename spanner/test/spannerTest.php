@@ -17,7 +17,9 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
+use Google\Cloud\Spanner\Admin\Instance\V1\CreateInstanceConfigMetadata;
 use Google\Cloud\Spanner\Database;
+use Google\Cloud\Spanner\InstanceConfiguration;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
@@ -62,6 +64,12 @@ class spannerTest extends TestCase
 
     /** @var string instanceConfig */
     protected static $instanceConfig;
+
+    /** @var string $customInstanceConfigId */
+    protected static $customInstanceConfigId;
+
+    /** @var InstanceConfiguration $customInstanceConfig */
+    protected static $customInstanceConfig;
 
     /** @var string defaultLeader */
     protected static $defaultLeader;
@@ -111,6 +119,9 @@ class spannerTest extends TestCase
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
 
+        self::$customInstanceConfigId = 'custom-' . time() . rand();
+        self::$customInstanceConfig = $spanner->instanceConfiguration(self::$customInstanceConfigId);
+
         $config = $spanner->instanceConfiguration(self::$instanceConfig);
         $operation = self::$multiInstance->create($config);
         $operation->pollUntilComplete();
@@ -132,6 +143,63 @@ class spannerTest extends TestCase
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created instance test-', $output);
+    }
+
+    public function testCreateInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('create_instance_config', [
+            'instance_config_id' => self::$customInstanceConfigId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    /**
+     * @depends testCreateInstanceConfig
+     */
+    public function testUpdateInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('update_instance_config', [
+            'instance_config_id' => self::$customInstanceConfigId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(sprintf('Updated instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    /**
+     * @depends testUpdateInstanceConfig
+     */
+    public function testDeleteInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('delete_instance_config', [
+            'instance_config_id' => self::$customInstanceConfigId
+        ]);
+        $this->assertStringContainsString(sprintf('Deleted instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    /**
+     * @depends testUpdateInstanceConfig
+     */
+    public function testListInstanceConfigOperations()
+    {
+        $output = $this->runFunctionSnippet('list_instance_config_operations', [
+            'instance_config_id' => self::$customInstanceConfigId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            sprintf(
+                'Instance config operation for %s of type %s has status done.',
+                self::$customInstanceConfigId,
+                'type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata'
+            ),
+            $output);
+        $this->assertStringContainsString(
+            sprintf(
+                'Instance config operation for %s of type %s has status done.',
+                self::$customInstanceConfigId,
+                'type.googleapis.com/google.spanner.admin.instance.v1.UpdateInstanceConfigMetadata'
+            ),
+            $output);
     }
 
     /**
@@ -895,5 +963,8 @@ class spannerTest extends TestCase
         self::$instance->delete();
         self::$lowCostInstance->delete();
         self::$multiInstance->delete();
+        if (self::$customInstanceConfig->exists()) {
+            self::$customInstanceConfig->delete();
+        }
     }
 }
