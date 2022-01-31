@@ -27,11 +27,11 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Set the bucket's Turbo Replication(rpo) setting to `DEFAULT`.
+ * Set the bucket's replication behavior or recovery point objective (RPO) to `DEFAULT`.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function set_turbo_replication_default($bucketName)
+function set_rpo_default($bucketName)
 {
     // $bucketName = 'my-bucket';
 
@@ -46,7 +46,7 @@ function set_turbo_replication_default($bucketName)
     ]);
 
     printf(
-        'Turbo Replication has been set to DEFAULT for %s.' . PHP_EOL,
+        'The replication behavior or recovery point objective (RPO) has been set to DEFAULT for %s.' . PHP_EOL,
         $bucketName
     );
 }
