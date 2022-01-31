@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function set_turbo_replication_async_turbo($bucketName)
+function set_rpo_async_turbo($bucketName)
 {
     // $bucketName = 'my-bucket';
 
@@ -45,7 +45,7 @@ function set_turbo_replication_async_turbo($bucketName)
     ]);
 
     printf(
-        'Turbo Replication has been set to ASYNC_TURBO for %s.' . PHP_EOL,
+        'The replication behavior or recovery point objective (RPO) has has been set to ASYNC_TURBO for %s.' . PHP_EOL,
         $bucketName
     );
 }
