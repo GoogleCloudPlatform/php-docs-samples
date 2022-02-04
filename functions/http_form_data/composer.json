@@ -6,7 +6,7 @@
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "TMPDIR=./tmp FUNCTION_TARGET=uploadFile php -S localhost:${PORT:-8080} vendor/bin/router.php"
+            "TMPDIR=./tmp FUNCTION_TARGET=uploadFile php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     }
 }
