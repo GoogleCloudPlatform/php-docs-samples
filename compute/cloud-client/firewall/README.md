@@ -82,6 +82,28 @@ $ php src/list_firewall_rules.php $YOUR_PROJECT_ID
  -  default-allow-internal : Allow internal traffic on the default network : https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/networks/default
 ```
 
+### Print firewall rule
+
+```
+$ php src/print_firewall_rule.php $YOUR_PROJECT_ID "my-firewall-rule"
+ID: $ID
+Kind: compute#firewall
+Name: my-firewall-rule
+Creation Time: $TIMESTAMP
+Direction: INGRESS
+Network: https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/networks/default
+Disabled: false
+Priority: 100
+Self Link: https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/firewalls/my-firewall-rule
+Logging Enabled: false
+--Allowed--
+Protocol: tcp
+ - Ports: 80
+ - Ports: 443
+--Source Ranges--
+ - Range: 0.0.0.0/0
+```
+
 ### Delete a firewall rule
 
 ```
@@ -92,7 +114,8 @@ Rule my-firewall-rule deleted successfully!
 ### Set firewall rule priority
 
 ```
-$ php src/set_usage_export_bucket.php $YOUR_PROJECT_ID "my-gcs-bucket-name" "my-report-name-prefix"
+$ php src/patch_firewall_priority.php $YOUR_PROJECT_ID "my-firewall-rule" 100
+Patched my-firewall-rule priority to 100.
 ```
 
 ## Troubleshooting
