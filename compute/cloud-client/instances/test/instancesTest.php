@@ -28,16 +28,12 @@ class instancesTest extends TestCase
     private static $instanceName;
     private static $bucketName;
     private static $bucket;
-    private static $firewallRuleName;
-    private static $priority;
 
     private const DEFAULT_ZONE = 'us-central1-a';
 
     public static function setUpBeforeClass(): void
     {
         self::$instanceName = sprintf('test-compute-instance-%s', rand());
-        self::$firewallRuleName = 'test-firewall-rule';
-        self::$priority = 20;
 
         // Generate bucket name
         self::$bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
@@ -196,63 +192,5 @@ class instancesTest extends TestCase
         $this->assertStringContainsString('Page 2', $output);
         $arr = explode(PHP_EOL, $output);
         $this->assertGreaterThanOrEqual(2, count($arr));
-    }
-
-    public function testCreateFirewallRule()
-    {
-        $output = $this->runFunctionSnippet('create_firewall_rule', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName
-        ]);
-        $this->assertStringContainsString('Created rule ' . self::$firewallRuleName, $output);
-    }
-
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testPrintFirewallRule()
-    {
-        $output = $this->runFunctionSnippet('print_firewall_rule', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName
-        ]);
-        $this->assertStringContainsString(self::$firewallRuleName, $output);
-        $this->assertStringContainsString('0.0.0.0/0', $output);
-    }
-
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testListFirewallRules()
-    {
-        $output = $this->runFunctionSnippet('list_firewall_rules', [
-            'projectId' => self::$projectId
-        ]);
-        $this->assertStringContainsString(self::$firewallRuleName, $output);
-        $this->assertStringContainsString('Allowing TCP traffic on ports 80 and 443 from Internet.', $output);
-    }
-
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testPatchFirewallPriority()
-    {
-        $output = $this->runFunctionSnippet('patch_firewall_priority', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName,
-            'priority' => self::$priority
-        ]);
-        $this->assertStringContainsString('Patched ' . self::$firewallRuleName . ' priority', $output);
-    }
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testDeleteFirewallRule()
-    {
-        $output = $this->runFunctionSnippet('delete_firewall_rule', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName
-        ]);
-        $this->assertStringContainsString('Rule ' . self::$firewallRuleName . ' deleted',  $output);
     }
 }
