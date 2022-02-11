@@ -91,6 +91,45 @@ class instancesTest extends TestCase
      * @depends testListInstances
      * @depends testListAllInstances
      */
+    public function testStopInstance()
+    {
+        $output = $this->runFunctionSnippet('stop_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' stopped successfully', $output);
+    }
+
+    /**
+     * @depends testStopInstance
+     */
+    public function testStartInstance()
+    {
+        $output = $this->runFunctionSnippet('start_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' started successfully', $output);
+    }
+
+    /**
+     * @depends testStartInstance
+     */
+    public function testResetInstance()
+    {
+        $output = $this->runFunctionSnippet('reset_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' reset successfully', $output);
+    }
+
+    /**
+     * @depends testResetInstance
+     */
     public function testDeleteInstance()
     {
         $output = $this->runFunctionSnippet('delete_instance', [
