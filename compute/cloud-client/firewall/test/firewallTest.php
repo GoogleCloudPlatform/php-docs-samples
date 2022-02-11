@@ -31,7 +31,7 @@ class firewallTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$firewallRuleName = 'test-firewall-rule';
+        self::$firewallRuleName = sprintf('test-firewall-rule-%s', rand());
         self::$priority = 20;
     }
 
