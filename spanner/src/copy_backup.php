@@ -43,8 +43,6 @@ function copy_backup($destInstanceId, $destBackupId, $sourceInstanceId, $sourceB
 {
     $spanner = new SpannerClient();
 
-    // You can create a cross region backup by using the source and destination
-    // instances which are in different regions
     $destInstance = $spanner->instance($destInstanceId);
     $sourceInstance = $spanner->instance($sourceInstanceId);
     $sourceBackup = $sourceInstance->backup($sourceBackupId);
@@ -66,6 +64,7 @@ function copy_backup($destInstanceId, $destBackupId, $sourceInstanceId, $sourceB
         printf(
             'Backup %s of size %d bytes was copied at %s from the source backup %s' . PHP_EOL,
             basename($info['name']), $info['sizeBytes'], $info['createTime'], $sourceBackupId);
+        printf('Version time of the copied backup: %s' . PHP_EOL, $info['versionTime']);
     } else {
         printf('Unexpected state: %s' . PHP_EOL, $destBackup->state());
     }

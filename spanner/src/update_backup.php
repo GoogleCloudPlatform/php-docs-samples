@@ -25,7 +25,7 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_update_backup]
 use Google\Cloud\Spanner\SpannerClient;
-use \DateTime;
+use DateTime;
 
 /**
  * Update the backup expire time.
@@ -43,14 +43,14 @@ function update_backup($instanceId, $backupId)
     $backup = $instance->backup($backupId);
     $backup->reload();
 
-    // The new expire time can't be greater than maxExpireTime for the backup.
     $newExpireTime = new DateTime('+30 days');
     $maxExpireTime = new DateTime($backup->info()['maxExpireTime']);
-    $newExpireTime = $newExpireTime > $maxExpireTime ? $maxExpireTime : $newExpireTime;
+    // The new expire time can't be greater than maxExpireTime for the backup.
+    $newExpireTime = min($newExpireTime, $maxExpireTime);
 
     $backup->updateExpireTime($newExpireTime);
 
-    print("Backup $backupId new expire time: " . $backup->info()['expireTime'] . PHP_EOL);
+    printf('Backup %s new expire time: %s' . PHP_EOL, $backupId, $backup->info()['expireTime']);
 }
 // [END spanner_update_backup]
 
