@@ -1,12 +1,12 @@
-Google Cloud Compute PHP Instances Samples
-==========================================
+Google Cloud Compute Engine PHP Samples - Instances
+===================================================
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.svg
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=compute/cloud-client/instances
 
-This directory contains samples for calling [Google Cloud Compute][compute]
+This directory contains samples for calling [Google Cloud Compute Engine][compute] APIs
 from PHP. Specifically, they show how to manage your Compute Engine [instances][instances].
 
 [compute]: https://cloud.google.com/compute/docs/apis
@@ -26,7 +26,7 @@ authentication:
         gcloud auth application-default login
 
 1. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
+   set. However, you may need to configure your Compute Engine instance
    with [additional scopes][additional_scopes].
 
 1. You can create a [Service Account key file][service_account_key_file]. This file can be used to
@@ -42,20 +42,20 @@ authentication:
 
 ## Install Dependencies
 
-1. **Install dependencies** via [Composer](http://getcomposer.org/doc/00-intro.md).
+1. **Install dependencies** using [Composer](http://getcomposer.org/doc/00-intro.md).
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 
-1. Create a service account at the
-[Service account section in the Cloud Console](https://console.cloud.google.com/iam-admin/serviceaccounts/)
+1. Create a [service account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating).
 
-1. Download the json key file of the service account.
+1. [Download the json key file](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#getting_a_service_account_key)
+   of the service account.
 
-1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
+1. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to that file.
 
 ## Samples
 
-To run the Compute Samples, run any of the files in `src/` on the CLI to print
+To run the Compute samples, run any of the files in `src/` on the CLI to print
 the usage instructions:
 
 ```
