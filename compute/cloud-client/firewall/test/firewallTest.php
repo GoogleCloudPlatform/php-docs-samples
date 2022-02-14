@@ -82,7 +82,9 @@ class firewallTest extends TestCase
         $this->assertStringContainsString('Patched ' . self::$firewallRuleName . ' priority', $output);
     }
     /**
-     * @depends testCreateFirewallRule
+     * @depends testPrintFirewallRule
+     * @depends testListFirewallRules
+     * @depends testPatchFirewallPriority
      */
     public function testDeleteFirewallRule()
     {

@@ -88,6 +88,8 @@ class instancesTest extends TestCase
 
     /**
      * @depends testCreateInstance
+     * @depends testListInstances
+     * @depends testListAllInstances
      */
     public function testDeleteInstance()
     {
