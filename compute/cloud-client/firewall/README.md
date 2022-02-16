@@ -1,5 +1,5 @@
-Google Cloud Compute Engine PHP Samples - Instances
-===================================================
+Google Cloud Compute Engine PHP Samples - Firewall
+==================================================
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
@@ -7,10 +7,10 @@ Google Cloud Compute Engine PHP Samples - Instances
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googlecloudplatform/php-docs-samples&page=editor&working_dir=compute/cloud-client/instances
 
 This directory contains samples for calling [Google Cloud Compute Engine][compute] APIs
-from PHP. Specifically, they show how to manage your Compute Engine [instances][instances].
+from PHP. Specifically, they show how to manage your [VPC firewall rules][firewall_rules].
 
 [compute]: https://cloud.google.com/compute/docs/apis
-[instances]: https://cloud.google.com/compute/docs/instances/stop-start-instance
+[firewall_rules]: https://cloud.google.com/vpc/docs/firewalls
 
 ## Setup
 
@@ -59,64 +59,63 @@ To run the Compute samples, run any of the files in `src/` on the CLI to print
 the usage instructions:
 
 ```
-$ php src/list_instances.php
+$ php list_firewall_rules.php 
 
-Usage: list_instances.php $projectId $zone
+Usage: list_firewall_rules.php $projectId
 
-  @param string $projectId Your Google Cloud project ID.
-  @param string $zone The zone to create the instance in (e.g. "us-central1-a")
+  @param string $projectId Project ID or project number of the Cloud project you want to list rules from.
 ```
 
-### Create an instance
+### Create a firewall rule
 
 ```
-$ php src/create_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name"
-Created instance my-new-instance-name
+$ php src/create_firewall_rule.php $YOUR_PROJECT_ID "my-firewall-rule"
+Created rule my-firewall-rule
 ```
 
-### List instances
+### List firewall rules
 
 ```
-$ php src/list_instances.php $YOUR_PROJECT_ID "us-central1-a"
-Instances for YOUR_PROJECT_ID (us-central1-a)
- - my-new-instance-name
+$ php src/list_firewall_rules.php $YOUR_PROJECT_ID
+--- Firewall Rules ---
+ -  default-allow-icmp : Allow ICMP from anywhere : https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/networks/default
+ -  default-allow-internal : Allow internal traffic on the default network : https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/networks/default
 ```
 
-### List all instances
+### Print firewall rule
 
 ```
-$ php src/list_all_instances.php $YOUR_PROJECT_ID
-All instances for YOUR_PROJECT_ID
-Zone - zones/us-central1-a
- - my-new-instance-name
-Zone - zones/us-central1-b
- - my-new-instance-name-2
- - my-new-instance-name-3
+$ php src/print_firewall_rule.php $YOUR_PROJECT_ID "my-firewall-rule"
+ID: $ID
+Kind: compute#firewall
+Name: my-firewall-rule
+Creation Time: $TIMESTAMP
+Direction: INGRESS
+Network: https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/networks/default
+Disabled: false
+Priority: 100
+Self Link: https://www.googleapis.com/compute/v1/projects/$YOUR_PROJECT_ID/global/firewalls/my-firewall-rule
+Logging Enabled: false
+--Allowed--
+Protocol: tcp
+ - Ports: 80
+ - Ports: 443
+--Source Ranges--
+ - Range: 0.0.0.0/0
 ```
 
-### Delete an instance
+### Delete a firewall rule
 
 ```
-$ php src/delete_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name"
-Deleted instance my-new-instance-name
+$ php src/delete_firewall_rule.php $YOUR_PROJECT_ID "my-firewall-rule"
+Rule my-firewall-rule deleted successfully!
 ```
 
-### Set usage export bucket
+### Set firewall rule priority
 
 ```
-$ php src/set_usage_export_bucket.php $YOUR_PROJECT_ID "my-gcs-bucket-name" "my-report-name-prefix"
-```
-
-### Get usage export bucket
-
-```
-$ php src/get_usage_export_bucket.php $YOUR_PROJECT_ID
-```
-
-### Disable usage export bucket
-
-```
-$ php src/disable_usage_export_bucket.php $YOUR_PROJECT_ID
+$ php src/patch_firewall_priority.php $YOUR_PROJECT_ID "my-firewall-rule" 100
+Patched my-firewall-rule priority to 100.
 ```
 
 ## Troubleshooting
