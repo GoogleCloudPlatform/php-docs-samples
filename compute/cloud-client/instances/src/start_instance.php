@@ -58,10 +58,8 @@ function start_instance(
         $error = $operation->getError();
         printf('Starting instance failed: %s' . PHP_EOL, $error->getMessage());
     }
-    # [END compute_instances_operation_check]
 }
-
-# [END compute_stop_instance]
+# [END compute_start_instance]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

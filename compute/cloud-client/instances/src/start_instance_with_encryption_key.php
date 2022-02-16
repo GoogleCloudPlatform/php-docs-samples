@@ -84,9 +84,7 @@ function start_instance_with_encryption_key(
         $error = $operation->getError();
         printf('Starting instance failed: %s' . PHP_EOL, $error->getMessage());
     }
-    # [END compute_instances_operation_check]
 }
-
 # [END compute_start_enc_instance]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
