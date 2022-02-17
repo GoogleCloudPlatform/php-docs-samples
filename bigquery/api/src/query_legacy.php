@@ -29,7 +29,7 @@ if (count($argv) != 2) {
 }
 list($_, $projectId) = $argv;
 
-// [START bigquery_query_legacy_large_results]
+// [START bigquery_query_legacy]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 $query = 'SELECT corpus FROM [bigquery-public-data:samples.shakespeare] GROUP BY corpus';
@@ -49,4 +49,4 @@ foreach ($queryResults as $row) {
     }
 }
 printf('Found %s row(s)' . PHP_EOL, $i);
-// [END bigquery_query_legacy_large_results]
+// [END bigquery_query_legacy]
