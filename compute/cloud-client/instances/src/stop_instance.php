@@ -36,7 +36,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  *
  * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
  * @param string $zone Name of the zone your instance belongs to.
- * @param string $instanceName Name of the instance your want to stop.
+ * @param string $instanceName Name of the instance you want to stop.
   *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
@@ -56,7 +56,7 @@ function stop_instance(
         printf('Instance %s stopped successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Stopping instance failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to stop instance: %s' . PHP_EOL, $error->getMessage());
     }
 }
 

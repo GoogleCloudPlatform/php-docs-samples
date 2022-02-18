@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_instances_create_with_encryption_key]
+# [START compute_instances_create_encrypted]
 use Google\Cloud\Compute\V1\CustomerEncryptionKey;
 use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
@@ -38,7 +38,7 @@ use Google\Cloud\Compute\V1\NetworkInterface;
 use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 
 /**
- * Creates an instance in the specified project and zone with boot disk encrypted with customer provided key.
+ * Creates an instance with encrypted disk customer provided key in the specified project and zone.
  * Example:
  * ```
  * create_instance_with_encryption_key($projectId, $zone, $instanceName, $key);
@@ -47,7 +47,7 @@ use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
  * @param string $projectId Project ID of the Cloud project to create the instance in.
  * @param string $zone Zone to create the instance in (like "us-central1-a").
  * @param string $instanceName Unique name for this Compute Engine instance.
- * @param string $key Bytes object representing a raw base64 encoded key to your machines boot disk.
+ * @param string $key Bytes object representing a raw base64 encoded key to your instance's boot disk.
  *                    For more information about disk encryption see:
  *                    https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#specifications
  * @param string $machineType Machine type of the instance being created.
@@ -109,7 +109,7 @@ function create_instance_with_encryption_key(
         printf('Instance creation failed: %s' . PHP_EOL, $error->getMessage());
     }
 }
-# [END compute_instances_create_with_encryption_key]
+# [END compute_instances_create_encrypted]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -36,7 +36,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  *
  * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
  * @param string $zone Name of the zone your instance belongs to.
- * @param string $instanceName Name of the instance your want to reset.
+ * @param string $instanceName Name of the instance you want to reset.
   *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
@@ -56,7 +56,7 @@ function reset_instance(
         printf('Instance %s reset successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Resetting instance failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to reset instance: %s' . PHP_EOL, $error->getMessage());
     }
 }
 
