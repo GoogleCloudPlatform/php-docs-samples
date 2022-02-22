@@ -39,8 +39,8 @@ use Google\Cloud\Compute\V1\InstancesStartWithEncryptionKeyRequest;
  *
  * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
  * @param string $zone Name of the zone your instance belongs to.
- * @param string $instanceName Name of the instance your want to stop.
- * @param string $key Bytes object representing a raw base64 encoded key to your machines boot disk.
+ * @param string $instanceName Name of the instance you want to stop.
+ * @param string $key Bytes object representing a raw base64 encoded key to your instance's boot disk.
  *                    For more information about disk encryption see:
  *                    https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#specifications
  *

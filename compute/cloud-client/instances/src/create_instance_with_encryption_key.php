@@ -38,7 +38,7 @@ use Google\Cloud\Compute\V1\NetworkInterface;
 use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 
 /**
- * Creates an instance with encrypted disk customer provided key in the specified project and zone.
+ * Creates an instance in the specified project and zone with encrypted disk that uses customer provided key.
  * Example:
  * ```
  * create_instance_with_encryption_key($projectId, $zone, $instanceName, $key);
