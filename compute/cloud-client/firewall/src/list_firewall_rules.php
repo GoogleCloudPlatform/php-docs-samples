@@ -29,10 +29,6 @@ use Google\Cloud\Compute\V1\FirewallsClient;
 /**
  * Return a list of all the firewall rules in specified project. Also prints the
  * list of firewall names and their descriptions.
- * Example:
- * ```
- * list_firewall_rules($projectId);
- * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to list rules from.
  *

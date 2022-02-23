@@ -29,10 +29,6 @@ use Google\Cloud\Compute\V1\Operation;
 
 /**
  * Disable Compute Engine usage export bucket for the Cloud Project.
- * Example:
- * ```
- * disable_usage_export_bucket($projectId);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  *

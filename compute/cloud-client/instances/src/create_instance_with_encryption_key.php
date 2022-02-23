@@ -39,10 +39,6 @@ use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 
 /**
  * Creates an instance in the specified project and zone with encrypted disk that uses customer provided key.
- * Example:
- * ```
- * create_instance_with_encryption_key($projectId, $zone, $instanceName, $key);
- * ```
  *
  * @param string $projectId Project ID of the Cloud project to create the instance in.
  * @param string $zone Zone to create the instance in (like "us-central1-a").

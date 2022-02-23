@@ -29,11 +29,6 @@ use Google\Cloud\Compute\V1\InstancesClient;
 /**
  * Starts a stopped Google Compute Engine instance (with unencrypted disks).
  *
- * Example:
- * ```
- * start_instance($projectId, $zone, $instanceName);
- * ```
- *
  * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
  * @param string $zone Name of the zone your instance belongs to.
  * @param string $instanceName Name of the instance you want to stop.

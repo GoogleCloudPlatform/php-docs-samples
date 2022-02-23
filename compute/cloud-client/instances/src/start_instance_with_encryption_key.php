@@ -32,11 +32,6 @@ use Google\Cloud\Compute\V1\InstancesStartWithEncryptionKeyRequest;
 /**
  * Starts a stopped Google Compute Engine instance (with encrypted disks).
  *
- * Example:
- * ```
- * start_instance_with_encryption_key($projectId, $zone, $instanceName, $key);
- * ```
- *
  * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
  * @param string $zone Name of the zone your instance belongs to.
  * @param string $instanceName Name of the instance you want to stop.

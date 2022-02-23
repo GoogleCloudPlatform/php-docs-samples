@@ -29,11 +29,6 @@ use Google\Cloud\Compute\V1\FirewallsClient;
 /**
  * Delete a firewall rule from the specified project.
  *
- * Example:
- * ```
- * delete_firewall_rule($projectId, $firewallRuleName);
- * ```
- *
  * @param string $projectId Project ID or project number of the Cloud project you want to delete a rule for.
  * @param string $firewallRuleName Name of the rule that is deleted.
  *
