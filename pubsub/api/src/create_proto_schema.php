@@ -24,7 +24,6 @@ namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_create_proto_schema]
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\Schema\Type;
 
 /**
  * Create a Schema with an Protocol Buffer definition.
@@ -33,14 +32,14 @@ use Google\Cloud\PubSub\V1\Schema\Type;
  * @param string $schemaId
  * @param string $protoFile
  */
-function create_proto_schema($projectId, $schemaId, $protoFile)
+function create_proto_schema($projectId, $schemaId, $protoFile): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
 
-    $definition = file_get_contents($protoFile);
-    $schema = $pubsub->createSchema($schemaId, Type::PROTOCOL_BUFFER, $definition);
+    $definition = (string) file_get_contents($protoFile);
+    $schema = $pubsub->createSchema($schemaId, 'PROTOCOL_BUFFER', $definition);
 
     printf('Schema %s created.', $schema->name());
 }

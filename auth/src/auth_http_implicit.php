@@ -33,7 +33,7 @@ use GuzzleHttp\HandlerStack;
  *
  * @param string $projectId The Google project ID.
  */
-function auth_http_implicit($projectId)
+function auth_http_implicit($projectId): void
 {
     # Get the credentials and project ID from the environment using Google Auth
     # library's ApplicationDefaultCredentials class.

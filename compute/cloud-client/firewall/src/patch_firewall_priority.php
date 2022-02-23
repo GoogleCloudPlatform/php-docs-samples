@@ -37,7 +37,7 @@ use Google\Cloud\Compute\V1\Firewall;
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
-function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority)
+function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority): void
 {
     $firewallsClient = new FirewallsClient();
     $firewallResource = (new Firewall())->setPriority($priority);

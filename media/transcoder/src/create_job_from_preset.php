@@ -37,7 +37,7 @@ use Google\Cloud\Video\Transcoder\V1\Job;
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  * @param string $preset The preset template (for example, "preset/web-hd").
  */
-function create_job_from_preset($projectId, $location, $inputUri, $outputUri, $preset)
+function create_job_from_preset($projectId, $location, $inputUri, $outputUri, $preset): void
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

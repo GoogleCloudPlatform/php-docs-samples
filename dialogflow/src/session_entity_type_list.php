@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
 
-function session_entity_type_list($projectId, $sessionId)
+function session_entity_type_list($projectId, $sessionId): void
 {
     $sessionEntityTypesClient = new SessionEntityTypesClient();
     $parent = $sessionEntityTypesClient->sessionName($projectId, $sessionId);

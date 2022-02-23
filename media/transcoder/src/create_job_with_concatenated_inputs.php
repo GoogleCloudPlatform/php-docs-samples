@@ -49,17 +49,17 @@ use Google\Protobuf\Duration;
  * @param float  $endTimeInput2 End time, in fractional seconds, relative to the second input video timeline.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
-function create_job_with_concatenated_inputs($projectId, $location, $input1Uri, $startTimeInput1, $endTimeInput1, $input2Uri, $startTimeInput2, $endTimeInput2, $outputUri)
+function create_job_with_concatenated_inputs($projectId, $location, $input1Uri, $startTimeInput1, $endTimeInput1, $input2Uri, $startTimeInput2, $endTimeInput2, $outputUri): void
 {
     $startTimeInput1Sec = (int) floor(abs($startTimeInput1));
-    $startTimeInput1Nanos = (int) (1000000000 * bcsub(abs($startTimeInput1), floor(abs($startTimeInput1)), 4));
+    $startTimeInput1Nanos = (int) (1000000000 * bcsub((string) abs($startTimeInput1), (string) floor(abs($startTimeInput1)), 4));
     $endTimeInput1Sec = (int) floor(abs($endTimeInput1));
-    $endTimeInput1Nanos = (int) (1000000000 * bcsub(abs($endTimeInput1), floor(abs($endTimeInput1)), 4));
+    $endTimeInput1Nanos = (int) (1000000000 * bcsub((string) abs($endTimeInput1), (string) floor(abs($endTimeInput1)), 4));
 
     $startTimeInput2Sec = (int) floor(abs($startTimeInput2));
-    $startTimeInput2Nanos = (int) (1000000000 * bcsub(abs($startTimeInput2), floor(abs($startTimeInput2)), 4));
+    $startTimeInput2Nanos = (int) (1000000000 * bcsub((string) abs($startTimeInput2), (string) floor(abs($startTimeInput2)), 4));
     $endTimeInput2Sec = (int) floor(abs($endTimeInput2));
-    $endTimeInput2Nanos = (int) (1000000000 * bcsub(abs($endTimeInput2), floor(abs($endTimeInput2)), 4));
+    $endTimeInput2Nanos = (int) (1000000000 * bcsub((string) abs($endTimeInput2), (string) floor(abs($endTimeInput2)), 4));
 
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

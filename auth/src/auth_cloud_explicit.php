@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $projectId           The Google project ID.
  * @param string $serviceAccountPath  Path to service account credentials JSON.
  */
-function auth_cloud_explicit($projectId, $serviceAccountPath)
+function auth_cloud_explicit($projectId, $serviceAccountPath): void
 {
     # Explicitly use service account credentials by specifying the private key
     # file.

@@ -46,7 +46,7 @@ $globalOperationsClient = new GlobalOperationsClient();
 /**
  * Helper function to pretty-print a Protobuf message.
  */
-function print_message(Message $message)
+function print_message(Message $message): void
 {
     return json_encode(
         json_decode($message->serializeToJsonString(), true),

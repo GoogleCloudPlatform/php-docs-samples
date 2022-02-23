@@ -40,7 +40,7 @@ function solution_sharded_counter_create(string $projectId): void
     $numShards = 10;
     $ref = $db->collection('samples/php/distributedCounters');
     for ($i = 0; $i < $numShards; $i++) {
-        $doc = $ref->document($i);
+        $doc = $ref->document((string) $i);
         $doc->set(['Cnt' => 0]);
     }
     # [END firestore_solution_sharded_counter_create]

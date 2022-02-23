@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $projectId The Google project ID.
  */
-function auth_cloud_implicit($projectId)
+function auth_cloud_implicit($projectId): void
 {
     $config = [
         'projectId' => $projectId,

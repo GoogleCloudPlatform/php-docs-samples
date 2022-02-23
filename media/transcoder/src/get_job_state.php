@@ -35,7 +35,7 @@ use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
  * @param string $location The location of the job.
  * @param string $jobId The job ID.
  */
-function get_job_state($projectId, $location, $jobId)
+function get_job_state($projectId, $location, $jobId): void
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

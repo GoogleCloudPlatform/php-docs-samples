@@ -35,7 +35,7 @@ use Google\Cloud\Compute\V1\ProjectsClient;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function get_usage_export_bucket(string $projectId)
+function get_usage_export_bucket(string $projectId): void
 {
     // Get the usage export location for the project from the server.
     $projectsClient = new ProjectsClient();

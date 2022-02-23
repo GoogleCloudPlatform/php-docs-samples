@@ -31,7 +31,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId
  * @param string $schemaId
  */
-function delete_schema($projectId, $schemaId)
+function delete_schema($projectId, $schemaId): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

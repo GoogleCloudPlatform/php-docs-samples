@@ -23,7 +23,7 @@
  *
  * @return string
  */
-function base64url_decode($input)
+function base64url_decode($input): void
 {
     $input .= str_repeat('=', (4 - strlen($input) % 4) % 4);
     return base64_decode(strtr($input, '-_', '+/'), true);
@@ -38,7 +38,7 @@ function base64url_decode($input)
 *
 * @return string
 */
-function base64url_encode($input, $padding = true)
+function base64url_encode($input, $padding = true): void
 {
     $output = strtr(base64_encode($input), '+/', '-_');
     return ($padding) ? $output : str_replace('=', '',  $output);
@@ -63,7 +63,7 @@ function base64url_encode($input, $padding = true)
  *
  * @return string
  */
-function sign_url($url, $keyName, $base64UrlKey, $expirationTime)
+function sign_url($url, $keyName, $base64UrlKey, $expirationTime): void
 {
     // Decode the key
     $decodedKey = base64url_decode($base64UrlKey);

@@ -34,7 +34,7 @@ use Google\Auth\Credentials\GCECredentials;
  *
  * @param $metadataKey the key for the metadata server
  */
-function request_metadata_using_google_cloud($metadataKey)
+function request_metadata_using_google_cloud($metadataKey): void
 {
     $metadata = new Google\Cloud\Core\Compute\Metadata();
     $metadataValue = $metadata->get($metadataKey);
@@ -47,7 +47,7 @@ function request_metadata_using_google_cloud($metadataKey)
  *
  * @param $metadataKey the key for the metadata server
  */
-function request_metadata_using_curl($metadataKey)
+function request_metadata_using_curl($metadataKey): void
 {
     $url = 'http://metadata/computeMetadata/v1/' . $metadataKey;
 
@@ -60,7 +60,7 @@ function request_metadata_using_curl($metadataKey)
 }
 # [END gae_metadata]
 
-function print_metadata_paths($root = '')
+function print_metadata_paths($root = ''): void
 {
     $keys = request_metadata_using_google_cloud($root);
     $html = '<ul>';

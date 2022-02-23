@@ -31,7 +31,7 @@ use Google\Cloud\PubSub\PubSubClient;
  *
  * @param string $projectId  The Google project ID.
  */
-function list_subscriptions($projectId)
+function list_subscriptions($projectId): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

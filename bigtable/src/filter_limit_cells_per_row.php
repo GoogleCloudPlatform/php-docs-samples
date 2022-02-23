@@ -59,7 +59,10 @@ function filter_limit_cells_per_row(
 // [END bigtable_filters_limit_cells_per_row]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+/**
+ * @param array<mixed> $row
+ */
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

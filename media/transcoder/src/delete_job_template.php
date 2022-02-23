@@ -34,7 +34,7 @@ use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
  * @param string $location The location of the job template.
  * @param string $templateId The user-defined template ID.
  */
-function delete_job_template($projectId, $location, $templateId)
+function delete_job_template($projectId, $location, $templateId): void
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

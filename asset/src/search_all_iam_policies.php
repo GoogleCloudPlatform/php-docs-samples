@@ -31,7 +31,7 @@ function search_all_iam_policies(
     string $query = '',
     int $pageSize = 0,
     string $pageToken = ''
-) {
+): void {
     // Instantiate a client.
     $asset = new AssetServiceClient();
 

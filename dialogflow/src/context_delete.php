@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\ContextsClient;
 
-function context_delete($projectId, $contextId, $sessionId)
+function context_delete($projectId, $contextId, $sessionId): void
 {
     $contextsClient = new ContextsClient();
 

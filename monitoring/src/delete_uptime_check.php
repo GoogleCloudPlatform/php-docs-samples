@@ -35,7 +35,7 @@ use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
  * @param string $projectId Your project ID
  * @param string $configName
  */
-function delete_uptime_check($projectId, $configName)
+function delete_uptime_check($projectId, $configName): void
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,

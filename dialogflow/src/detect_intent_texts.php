@@ -27,7 +27,7 @@ use Google\Cloud\Dialogflow\V2\QueryInput;
  * Using the same `session_id` between requests allows continuation
  * of the conversation.
  */
-function detect_intent_texts($projectId, $texts, $sessionId, $languageCode = 'en-US')
+function detect_intent_texts($projectId, $texts, $sessionId, $languageCode = 'en-US'): void
 {
     // new session
     $sessionsClient = new SessionsClient();

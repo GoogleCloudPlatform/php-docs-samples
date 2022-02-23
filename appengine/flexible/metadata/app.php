@@ -19,7 +19,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Factory\AppFactory;
 
 # [START gae_flex_metadata]
-function get_external_ip_using_google_cloud()
+function get_external_ip_using_google_cloud(): void
 {
     $metadata = new Google\Cloud\Core\Compute\Metadata();
     $externalIp = $metadata->get(
@@ -28,7 +28,7 @@ function get_external_ip_using_google_cloud()
     return $externalIp;
 }
 
-function get_external_ip_using_curl()
+function get_external_ip_using_curl(): void
 {
     $url = 'http://metadata.google.internal/computeMetadata/v1/' .
         'instance/network-interfaces/0/access-configs/0/external-ip';

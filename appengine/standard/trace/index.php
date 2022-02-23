@@ -28,7 +28,7 @@ $exporter = new StackdriverExporter([
 
 Tracer::start($exporter);
 
-function trace_callable()
+function trace_callable(): void
 {
     # [START span_with_closure]
     Tracer::inSpan(

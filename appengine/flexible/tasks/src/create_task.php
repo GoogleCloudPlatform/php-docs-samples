@@ -42,7 +42,7 @@ use Google_Service_CloudTasks_CreateTaskRequest;
  * @param integer $inSeconds The number of seconds from now to schedule task attempt.
  *
  */
-function create_task($projectId, $queueId, $location, $payload = 'helloworld', $inSeconds = null)
+function create_task($projectId, $queueId, $location, $payload = 'helloworld', $inSeconds = null): void
 {
     // Instantiate the client, authenticate, and add scopes.
     $client = new Google_Client();

@@ -34,7 +34,7 @@ use Google\Cloud\Compute\V1\FirewallsClient;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_firewall_rules(string $projectId)
+function list_firewall_rules(string $projectId): void
 {
     // List all firewall rules defined for the project using Firewalls Client.
     $firewallClient = new FirewallsClient();

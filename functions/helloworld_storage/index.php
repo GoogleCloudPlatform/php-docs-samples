@@ -28,7 +28,7 @@ use Google\CloudFunctions\FunctionsFramework;
 // match the first parameter.
 FunctionsFramework::cloudEvent('helloGCS', 'helloGCS');
 
-function helloGCS(CloudEventInterface $cloudevent)
+function helloGCS(CloudEventInterface $cloudevent): void
 {
     // This function supports all Cloud Storage event types.
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');

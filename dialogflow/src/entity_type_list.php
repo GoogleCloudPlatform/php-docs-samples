@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 
-function entity_type_list($projectId)
+function entity_type_list($projectId): void
 {
     // get entity types
     $entityTypesClient = new EntityTypesClient();

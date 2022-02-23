@@ -39,15 +39,14 @@ use AvroDataIOWriter;
  * @param string $projectId
  * @param string $topicId
  * @param string $definitionFile
- * @return void
  */
-function publish_avro_records($projectId, $topicId, $definitionFile)
+function publish_avro_records($projectId, $topicId, $definitionFile): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
 
-    $definition = file_get_contents($definitionFile);
+    $definition = (string) file_get_contents($definitionFile);
 
     $messageData = [
         'name' => 'Alaska',

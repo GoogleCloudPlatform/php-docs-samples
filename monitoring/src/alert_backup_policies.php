@@ -32,7 +32,7 @@ use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
  *
  * @param string $projectId Your project ID
  */
-function alert_backup_policies($projectId)
+function alert_backup_policies($projectId): void
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,

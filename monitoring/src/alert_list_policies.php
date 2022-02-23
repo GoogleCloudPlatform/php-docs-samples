@@ -35,7 +35,7 @@ use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
  *
  * @param string $projectId Your project ID
  */
-function alert_list_policies($projectId)
+function alert_list_policies($projectId): void
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,

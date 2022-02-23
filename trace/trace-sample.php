@@ -44,7 +44,7 @@ if (getenv('USE_NULL_EXPORTER')) {
 Tracer::start($exporter);
 # [END trace_setup_php_tracer_start]
 
-function trace_callable()
+function trace_callable(): void
 {
     # [START trace_setup_php_span_with_closure]
     Tracer::inSpan(

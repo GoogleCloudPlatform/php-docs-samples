@@ -41,7 +41,7 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function write_timeseries($projectId)
+function write_timeseries($projectId): void
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
