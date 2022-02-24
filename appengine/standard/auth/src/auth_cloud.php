@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Auth;
 // Imports the Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
-function auth_cloud($projectId)
+function auth_cloud($projectId): void
 {
     # If you don't specify credentials when constructing the client, the
     # client library will look for credentials in the environment.

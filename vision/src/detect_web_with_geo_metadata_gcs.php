@@ -28,7 +28,7 @@ use Google\Cloud\Vision\V1\WebDetectionParams;
  * Detect web entities on an image and include the image's geo metadata
  * to improve the quality of the detection.
  */
-function detect_web_with_geo_metadata_gcs($path)
+function detect_web_with_geo_metadata_gcs($path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 

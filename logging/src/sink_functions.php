@@ -30,7 +30,7 @@ use Google\Cloud\Logging\LoggingClient;
  * @param string $destination The destination of the sink.
  * @param string $filterString The filter for the sink.
  */
-function create_sink($projectId, $sinkName, $destination, $filterString)
+function create_sink($projectId, $sinkName, $destination, $filterString): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logging->createSink(
@@ -48,7 +48,7 @@ function create_sink($projectId, $sinkName, $destination, $filterString)
  * @param string $projectId The Google project ID.
  * @param string $sinkName The name of the sink.
  */
-function delete_sink($projectId, $sinkName)
+function delete_sink($projectId, $sinkName): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logging->sink($sinkName)->delete();
@@ -62,7 +62,7 @@ function delete_sink($projectId, $sinkName)
  *
  * @param string $projectId
  */
-function list_sinks($projectId)
+function list_sinks($projectId): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $sinks = $logging->sinks();
@@ -87,7 +87,7 @@ function list_sinks($projectId)
  * @param string sinkName
  * @param string $filterString
  */
-function update_sink($projectId, $sinkName, $filterString)
+function update_sink($projectId, $sinkName, $filterString): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $sink = $logging->sink($sinkName);

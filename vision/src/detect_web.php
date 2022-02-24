@@ -22,7 +22,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // $path = 'path/to/your/image.jpg'
 
-function detect_web($path)
+function detect_web($path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 

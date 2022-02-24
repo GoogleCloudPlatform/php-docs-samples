@@ -32,7 +32,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId  The Google project ID.
  * @param string $subscriptionName  The Pub/Sub subscription name.
  */
-function get_subscription_policy($projectId, $subscriptionName)
+function get_subscription_policy($projectId, $subscriptionName): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

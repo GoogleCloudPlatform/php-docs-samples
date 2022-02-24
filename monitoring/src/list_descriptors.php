@@ -34,7 +34,7 @@ use Google\Cloud\Monitoring\V3\MetricServiceClient;
  *
  * @param string $projectId Your project ID
  */
-function list_descriptors($projectId)
+function list_descriptors($projectId): void
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,

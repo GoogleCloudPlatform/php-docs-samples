@@ -23,7 +23,7 @@
 
 use Psr\Http\Message\ServerRequestInterface;
 
-function helloBuildExtension(ServerRequestInterface $request)
+function helloBuildExtension(ServerRequestInterface $request): void
 {
     return helloworld_from_extension();
 }

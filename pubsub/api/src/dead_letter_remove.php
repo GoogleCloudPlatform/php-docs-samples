@@ -33,7 +33,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $subscriptionName  The Pub/Sub subscription name.
  */
-function dead_letter_remove($projectId, $topicName, $subscriptionName)
+function dead_letter_remove($projectId, $topicName, $subscriptionName): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

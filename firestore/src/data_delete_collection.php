@@ -34,7 +34,7 @@ use Google\Cloud\Firestore\FirestoreClient;
  */
 # [START fs_delete_collection]
 # [START firestore_data_delete_collection]
-function data_delete_collection(string $projectId, string $collectionName, int $batchSize)
+function data_delete_collection(string $projectId, string $collectionName, int $batchSize): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([

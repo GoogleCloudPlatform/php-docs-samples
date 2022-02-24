@@ -4,7 +4,7 @@ namespace Google\Cloud\Samples;
 
 use ReflectionFunction;
 
-function execute_sample(string $file, string $namespace, ?array $argv)
+function execute_sample(string $file, string $namespace, ?array $argv): void
 {
     // Return if sample file is not being executed via CLI
     if (is_null($argv)) {
@@ -57,7 +57,7 @@ function execute_sample(string $file, string $namespace, ?array $argv)
     call_user_func_array($functionName, $argv);
 }
 
-function get_usage(string $file, ReflectionFunction $functionReflection)
+function get_usage(string $file, ReflectionFunction $functionReflection): string
 {
     // Print basic usage
     $paramNames = [];

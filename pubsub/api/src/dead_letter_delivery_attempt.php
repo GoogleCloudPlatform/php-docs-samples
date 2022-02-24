@@ -35,7 +35,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionName  The Pub/Sub subscription name.
  * @param string $message The contents of a pubsub message data field.
  */
-function dead_letter_delivery_attempt($projectId, $topicName, $subscriptionName, $message)
+function dead_letter_delivery_attempt($projectId, $topicName, $subscriptionName, $message): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

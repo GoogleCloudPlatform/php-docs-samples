@@ -28,7 +28,7 @@ use Google\Cloud\Datastore\DatastoreClient;
  * @param string $projectId
  * @return DatastoreClient
  */
-function build_datastore_service($projectId)
+function build_datastore_service($projectId): void
 {
     $datastore = new DatastoreClient(['projectId' => $projectId]);
     return $datastore;
@@ -40,7 +40,7 @@ function build_datastore_service($projectId)
  *
  * @return DatastoreClient
  */
-function build_datastore_service_with_namespace()
+function build_datastore_service_with_namespace(): void
 {
     $namespaceId = getenv('CLOUD_DATASTORE_NAMESPACE');
     if ($namespaceId === false) {
@@ -57,7 +57,7 @@ function build_datastore_service_with_namespace()
  * @param $description
  * @return Google\Cloud\Datastore\Entity
  */
-function add_task(DatastoreClient $datastore, $description)
+function add_task(DatastoreClient $datastore, $description): void
 {
     $taskKey = $datastore->key('Task');
     $task = $datastore->entity(
@@ -81,7 +81,7 @@ function add_task(DatastoreClient $datastore, $description)
  * @param DatastoreClient $datastore
  * @param int $taskId
  */
-function mark_done(DatastoreClient $datastore, $taskId)
+function mark_done(DatastoreClient $datastore, $taskId): void
 {
     $taskKey = $datastore->key('Task', $taskId);
     $transaction = $datastore->transaction();
@@ -99,7 +99,7 @@ function mark_done(DatastoreClient $datastore, $taskId)
  * @param DatastoreClient $datastore
  * @param $taskId
  */
-function delete_task(DatastoreClient $datastore, $taskId)
+function delete_task(DatastoreClient $datastore, $taskId): void
 {
     $taskKey = $datastore->key('Task', $taskId);
     $datastore->delete($taskKey);
@@ -113,7 +113,7 @@ function delete_task(DatastoreClient $datastore, $taskId)
  * @param DatastoreClient $datastore
  * @return EntityIterator<Google\Cloud\Datastore\Entity>
  */
-function list_tasks(DatastoreClient $datastore)
+function list_tasks(DatastoreClient $datastore): void
 {
     $query = $datastore->query()
         ->kind('Task')

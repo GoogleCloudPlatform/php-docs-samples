@@ -44,7 +44,7 @@ use Google\Protobuf\Duration;
  * @param string $inputUri Uri of the video in the Cloud Storage bucket.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
-function create_job_with_periodic_images_spritesheet($projectId, $location, $inputUri, $outputUri)
+function create_job_with_periodic_images_spritesheet($projectId, $location, $inputUri, $outputUri): void
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

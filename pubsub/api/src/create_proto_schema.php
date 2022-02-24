@@ -33,7 +33,7 @@ use Google\Cloud\PubSub\V1\Schema\Type;
  * @param string $schemaId
  * @param string $protoFile
  */
-function create_proto_schema($projectId, $schemaId, $protoFile)
+function create_proto_schema($projectId, $schemaId, $protoFile): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

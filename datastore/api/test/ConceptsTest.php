@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  * @param int $length
  * @return string
  */
-function generateRandomString($length = 10)
+function generateRandomString($length = 10): void
 {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $ret = '';

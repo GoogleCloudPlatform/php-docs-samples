@@ -34,7 +34,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionName  The Pub/Sub subscription name.
  * @param string $deadLetterTopicName The Pub/Sub topic to use for dead letter policy.
  */
-function dead_letter_create_subscription($projectId, $topicName, $subscriptionName, $deadLetterTopicName)
+function dead_letter_create_subscription($projectId, $topicName, $subscriptionName, $deadLetterTopicName): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

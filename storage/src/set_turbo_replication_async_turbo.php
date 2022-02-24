@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function set_turbo_replication_async_turbo($bucketName)
+function set_turbo_replication_async_turbo($bucketName): void
 {
     // $bucketName = 'my-bucket';
 

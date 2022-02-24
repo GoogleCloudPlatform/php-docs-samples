@@ -23,7 +23,7 @@ use Google\Cloud\Dialogflow\V2\IntentsClient;
 /**
 * Delete intent with the given intent type and intent value.
 */
-function intent_delete($projectId, $intentId)
+function intent_delete($projectId, $intentId): void
 {
     $intentsClient = new IntentsClient();
     $intentName = $intentsClient->intentName($projectId, $intentId);

@@ -48,7 +48,7 @@ use Google\Cloud\Compute\V1\Enums\Firewall\Direction;
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
 
-function create_firewall_rule(string $projectId, string $firewallRuleName, string $network = 'global/networks/default')
+function create_firewall_rule(string $projectId, string $firewallRuleName, string $network = 'global/networks/default'): void
 {
     $firewallsClient = new FirewallsClient();
     $allowedPorts = (new Allowed())

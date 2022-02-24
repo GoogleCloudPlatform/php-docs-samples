@@ -27,7 +27,7 @@ use Psr\Log\LogLevel;
  * @param string $loggerName The name of the logger.
  * @param string $message The log message.
  */
-function write_with_psr_logger($projectId, $loggerName, $message, $level = LogLevel::WARNING)
+function write_with_psr_logger($projectId, $loggerName, $message, $level = LogLevel::WARNING): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logger = $logging->psrLogger($loggerName);

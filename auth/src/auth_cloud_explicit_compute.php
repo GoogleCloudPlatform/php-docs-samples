@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $projectId           The Google project ID.
  */
-function auth_cloud_explicit_compute($projectId)
+function auth_cloud_explicit_compute($projectId): void
 {
     $gceCredentials = new GCECredentials();
     $config = [

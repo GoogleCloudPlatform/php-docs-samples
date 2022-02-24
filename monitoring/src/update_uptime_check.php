@@ -33,7 +33,7 @@ use Google\Protobuf\FieldMask;
  * update_uptime_checks($projectId);
  * ```
  */
-function update_uptime_checks($projectId, $configName, $newDisplayName = null, $newHttpCheckPath = null)
+function update_uptime_checks($projectId, $configName, $newDisplayName = null, $newHttpCheckPath = null): void
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,

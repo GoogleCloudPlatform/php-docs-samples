@@ -31,7 +31,7 @@ use Google_Service_Storage;
  *
  * @param string $projectId  The Google project ID.
  */
-function auth_api_implicit($projectId)
+function auth_api_implicit($projectId): void
 {
     $client = new Google_Client();
     $client->useApplicationDefaultCredentials();

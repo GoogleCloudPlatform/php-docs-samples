@@ -59,7 +59,10 @@ function filter_limit_pass_all(
 // [END bigtable_filters_limit_pass_all]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+/**
+ * @param array<mixed> $row
+ */
+function print_row(int $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

@@ -32,7 +32,7 @@ use Google\Cloud\Vision\V1\OutputConfig;
 // $path = 'gs://path/to/your/document.pdf'
 // $output = 'gs://path/to/store/results/'
 
-function detect_pdf_gcs($path, $output)
+function detect_pdf_gcs($path, $output): void
 {
     # select ocr feature
     $feature = (new Feature())

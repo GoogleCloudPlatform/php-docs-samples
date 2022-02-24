@@ -24,7 +24,7 @@ use Google\Cloud\Dialogflow\V2\EntityType_Entity;
 /**
 * Create an entity of the given entity type.
 */
-function entity_create($projectId, $entityTypeId, $entityValue, $synonyms = [])
+function entity_create($projectId, $entityTypeId, $entityValue, $synonyms = []): void
 {
     // synonyms must be exactly [$entityValue] if the entityTypes'
     // kind is KIND_LIST

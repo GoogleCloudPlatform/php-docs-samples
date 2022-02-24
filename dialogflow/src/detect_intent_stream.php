@@ -29,7 +29,7 @@ use Google\Cloud\Dialogflow\V2\StreamingDetectIntentRequest;
 * Using the same `session_id` between requests allows continuation
 * of the conversation.
 */
-function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en-US')
+function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en-US'): void
 {
     // need to use gRPC
     if (!defined('Grpc\STATUS_OK')) {

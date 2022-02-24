@@ -29,7 +29,7 @@ use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
 /**
  * @param string $projectId Your project ID
  */
-function alert_delete_channel($projectId, $channelId)
+function alert_delete_channel($projectId, $channelId): void
 {
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,

@@ -24,6 +24,9 @@
 if (isset($argv)) {
     return print("This file is for example only and cannot be executed\n");
 }
+$projectId = '';
+$datasetId = '';
+$tableId = '';
 
 # [START bigquery_get_table]
 use Google\Cloud\BigQuery\BigQueryClient;

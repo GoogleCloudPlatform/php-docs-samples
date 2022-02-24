@@ -37,7 +37,7 @@ use Google\Auth\AccessToken;
  *
  * @return (user_id, user_email).
  */
-function validate_jwt_from_app_engine($iapJwt, $cloudProjectNumber, $cloudProjectId)
+function validate_jwt_from_app_engine($iapJwt, $cloudProjectNumber, $cloudProjectId): void
 {
     $expectedAudience = sprintf(
         '/projects/%s/apps/%s',
@@ -58,7 +58,7 @@ function validate_jwt_from_app_engine($iapJwt, $cloudProjectNumber, $cloudProjec
  *     application. See https://cloud.google.com/iap/docs/signed-headers-howto
  *     for details on how to get this value.
  */
-function validate_jwt_from_compute_engine($iapJwt, $cloudProjectNumber, $backendServiceId)
+function validate_jwt_from_compute_engine($iapJwt, $cloudProjectNumber, $backendServiceId): void
 {
     $expectedAudience = sprintf(
         '/projects/%s/global/backendServices/%s',
@@ -76,7 +76,7 @@ function validate_jwt_from_compute_engine($iapJwt, $cloudProjectNumber, $backend
  *     App Engine:     /projects/{PROJECT_NUMBER}/apps/{PROJECT_ID}
  *     Compute Engine: /projects/{PROJECT_NUMBER}/global/backendServices/{BACKEND_SERVICE_ID}
  */
-function validate_jwt($iapJwt, $expectedAudience)
+function validate_jwt($iapJwt, $expectedAudience): void
 {
     // Validate the signature using the IAP cert URL.
     $token = new AccessToken();

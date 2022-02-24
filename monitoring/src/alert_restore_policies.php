@@ -36,7 +36,7 @@ use Google\ApiCore\ApiException;
 /**
  * @param string $projectId Your project ID
  */
-function alert_restore_policies($projectId)
+function alert_restore_policies($projectId): void
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,

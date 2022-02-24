@@ -46,7 +46,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId
  * @param string $subscriptionId
  */
-function subscribe_proto_messages($projectId, $subscriptionId)
+function subscribe_proto_messages($projectId, $subscriptionId): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

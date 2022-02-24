@@ -38,7 +38,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $message    The message to publish.
  */
-function publish_message_batch($projectId, $topicName, $message)
+function publish_message_batch($projectId, $topicName, $message): void
 {
     // Check if the batch daemon is running.
     if (getenv('IS_BATCH_DAEMON_RUNNING') !== 'true') {

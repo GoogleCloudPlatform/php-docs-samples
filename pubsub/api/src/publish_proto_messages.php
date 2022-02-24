@@ -50,7 +50,7 @@ use Utilities\StateProto;
  * @param string $topicId
  * @return void
  */
-function publish_proto_messages($projectId, $topicId)
+function publish_proto_messages($projectId, $topicId): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

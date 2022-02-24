@@ -49,7 +49,7 @@ use Google\Protobuf\Duration;
  * @param float  $endTimeInput2 End time, in fractional seconds, relative to the second input video timeline.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
-function create_job_with_concatenated_inputs($projectId, $location, $input1Uri, $startTimeInput1, $endTimeInput1, $input2Uri, $startTimeInput2, $endTimeInput2, $outputUri)
+function create_job_with_concatenated_inputs($projectId, $location, $input1Uri, $startTimeInput1, $endTimeInput1, $input2Uri, $startTimeInput2, $endTimeInput2, $outputUri): void
 {
     $startTimeInput1Sec = (int) floor(abs($startTimeInput1));
     $startTimeInput1Nanos = (int) (1000000000 * bcsub(abs($startTimeInput1), floor(abs($startTimeInput1)), 4));

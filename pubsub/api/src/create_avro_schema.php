@@ -33,7 +33,7 @@ use Google\Cloud\PubSub\V1\Schema\Type;
  * @param string $schemaId
  * @param string $avscFile
  */
-function create_avro_schema($projectId, $schemaId, $avscFile)
+function create_avro_schema($projectId, $schemaId, $avscFile): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

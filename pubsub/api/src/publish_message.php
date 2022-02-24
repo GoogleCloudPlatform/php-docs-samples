@@ -35,7 +35,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $message  The message to publish.
  */
-function publish_message($projectId, $topicName, $message)
+function publish_message($projectId, $topicName, $message): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

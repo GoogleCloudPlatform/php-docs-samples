@@ -44,7 +44,7 @@ use Google\Protobuf\Duration;
  * @param string $overlayImageUri Uri of the JPEG image for the overlay in the Cloud Storage bucket. Must be a JPEG.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
-function create_job_with_static_overlay($projectId, $location, $inputUri, $overlayImageUri, $outputUri)
+function create_job_with_static_overlay($projectId, $location, $inputUri, $overlayImageUri, $outputUri): void
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

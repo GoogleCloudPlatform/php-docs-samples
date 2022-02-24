@@ -32,7 +32,7 @@ use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
  * list_uptime_check_ips($projectId);
  * ```
  */
-function list_uptime_check_ips($projectId)
+function list_uptime_check_ips($projectId): void
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,

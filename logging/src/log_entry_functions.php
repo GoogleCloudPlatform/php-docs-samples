@@ -33,7 +33,7 @@ use Google\Cloud\Logging\LoggingClient;
  * @param string $loggerName The name of the logger.
  * @param string $message The log message.
  */
-function write_log($projectId, $loggerName, $message)
+function write_log($projectId, $loggerName, $message): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logger = $logging->logger($loggerName, [
@@ -57,7 +57,7 @@ function write_log($projectId, $loggerName, $message)
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
  */
-function list_entries($projectId, $loggerName)
+function list_entries($projectId, $loggerName): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $loggerFullName = sprintf('projects/%s/logs/%s', $projectId, $loggerName);
@@ -96,7 +96,7 @@ function list_entries($projectId, $loggerName)
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
  */
-function delete_logger($projectId, $loggerName)
+function delete_logger($projectId, $loggerName): void
 {
     $logging = new LoggingClient(['projectId' => $projectId]);
     $logger = $logging->logger($loggerName);

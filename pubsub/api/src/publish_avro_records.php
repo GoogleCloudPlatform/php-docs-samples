@@ -41,7 +41,7 @@ use AvroDataIOWriter;
  * @param string $definitionFile
  * @return void
  */
-function publish_avro_records($projectId, $topicId, $definitionFile)
+function publish_avro_records($projectId, $topicId, $definitionFile): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

@@ -19,7 +19,7 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function firebaseRTDB(CloudEvent $cloudevent)
+function firebaseRTDB(CloudEvent $cloudevent): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 

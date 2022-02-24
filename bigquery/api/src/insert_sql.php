@@ -43,7 +43,9 @@ $bigQuery = new BigQueryClient([
 ]);
 $dataset = $bigQuery->dataset($datasetId);
 // run a sync query for each line of the import
-$file = fopen($source, 'r');
+if (!$file = fopen($source, 'r')) {
+    throw new InvalidArgumentException('Unable to open source file');
+}
 while ($line = fgets($file)) {
     if (0 !== strpos(trim($line), 'INSERT')) {
         continue;

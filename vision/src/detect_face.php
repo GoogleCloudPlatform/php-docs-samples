@@ -22,7 +22,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // [END vision_face_detection_tutorial_imports]
 
-function detect_face($path, $outFile = null)
+function detect_face($path, $outFile = null): void
 {
     // [START vision_face_detection_tutorial_client]
     $imageAnnotator = new ImageAnnotatorClient();

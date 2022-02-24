@@ -34,7 +34,7 @@ use Google\Protobuf\FieldMask;
  * @param string $alertPolicyId Your alert policy id ID
  * @param array $channelIds array of channel IDs
  */
-function alert_replace_channels($projectId, $alertPolicyId, array $channelIds)
+function alert_replace_channels($projectId, $alertPolicyId, array $channelIds): void
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,

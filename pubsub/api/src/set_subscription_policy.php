@@ -33,7 +33,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionName  The Pub/Sub subscription name.
  * @param string $userEmail  The user email to add to the policy.
  */
-function set_subscription_policy($projectId, $subscriptionName, $userEmail)
+function set_subscription_policy($projectId, $subscriptionName, $userEmail): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

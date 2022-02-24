@@ -32,7 +32,7 @@ use Google_Service_Storage;
  * @param string $projectId           The Google project ID.
  * @param string $serviceAccountPath  Path to service account credentials JSON.
  */
-function auth_api_explicit($projectId, $serviceAccountPath)
+function auth_api_explicit($projectId, $serviceAccountPath): void
 {
     $client = new Google_Client();
     $client->setAuthConfig($serviceAccountPath);

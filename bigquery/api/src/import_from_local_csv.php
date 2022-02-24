@@ -47,7 +47,10 @@ $bigQuery = new BigQueryClient([
 $dataset = $bigQuery->dataset($datasetId);
 $table = $dataset->table($tableId);
 // create the import job
-$loadConfig = $table->load(fopen($source, 'r'))->sourceFormat('CSV');
+if (!$file = fopen($source, 'r')) {
+    throw new InvalidArgumentException('Unable to open source file');
+}
+$loadConfig = $table->load($file)->sourceFormat('CSV');
 
 $job = $table->runJob($loadConfig);
 // poll the job until it is complete
