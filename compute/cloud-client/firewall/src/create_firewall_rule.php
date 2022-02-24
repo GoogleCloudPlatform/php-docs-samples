@@ -37,11 +37,6 @@ use Google\Cloud\Compute\V1\Enums\Firewall\Direction;
 /**
  * Creates a simple firewall rule allowing incoming HTTP and HTTPS access from the entire internet.
  *
- * Example:
- * ```
- * create_firewall_rule($projectId, $firewallRuleName, $network);
- * ```
- *
  * @param string $projectId Project ID or project number of the Cloud project you want to create a rule for.
  * @param string $firewallRuleName Name of the rule that is created.
  * @param string $network Name of the network the rule will be applied to. Available name formats:

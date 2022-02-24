@@ -94,6 +94,34 @@ Zone - zones/us-central1-b
  - my-new-instance-name-3
 ```
 
+### Stop an instance
+
+```
+$ php src/stop_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name"
+Instance my-new-instance-name stopped successfully
+```
+
+### Start an instance
+
+```
+$ php src/start_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name"
+Instance my-new-instance-name started successfully
+```
+
+### Start an instance with encrypted disk
+
+```
+$ php src/start_instance_with_encryption_key.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name" $ENC_KEY
+Instance my-new-instance-name started successfully
+```
+
+### Reset an instance
+
+```
+$ php src/reset_instance.php $YOUR_PROJECT_ID "us-central1-a" "my-new-instance-name"
+Instance my-new-instance-name reset successfully
+```
+
 ### Delete an instance
 
 ```

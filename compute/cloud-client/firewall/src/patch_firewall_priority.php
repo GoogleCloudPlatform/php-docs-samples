@@ -30,11 +30,6 @@ use Google\Cloud\Compute\V1\Firewall;
 /**
  * Modifies the priority of a given firewall rule.
  *
- * Example:
- * ```
- * patch_firewall_priority($projectId, $firewallRuleName, $priority);
- * ```
- *
  * @param string $projectId Project ID or project number of the Cloud project you want to patch a rule from.
  * @param string $firewallRuleName Name of the rule that you want to modify.
  * @param int $priority The new priority to be set for the rule.

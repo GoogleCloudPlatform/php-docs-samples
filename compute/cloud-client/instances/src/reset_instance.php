@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,35 +23,39 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_firewall_delete]
-use Google\Cloud\Compute\V1\FirewallsClient;
+# [START compute_reset_instance]
+use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
- * Delete a firewall rule from the specified project.
+ * Reset a running Google Compute Engine instance (with unencrypted disks).
  *
- * @param string $projectId Project ID or project number of the Cloud project you want to delete a rule for.
- * @param string $firewallRuleName Name of the rule that is deleted.
- *
+ * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
+ * @param string $zone Name of the zone your instance belongs to.
+ * @param string $instanceName Name of the instance you want to reset.
+  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
-function delete_firewall_rule(string $projectId, string $firewallRuleName)
-{
-    $firewallsClient = new FirewallsClient();
-
-    // Delete the firewall rule using Firewalls Client.
-    $operation = $firewallsClient->delete($firewallRuleName, $projectId);
+function reset_instance(
+    string $projectId,
+    string $zone,
+    string $instanceName
+) {
+    // Stop the Compute Engine instance using InstancesClient.
+    $instancesClient = new InstancesClient();
+    $operation = $instancesClient->reset($instanceName, $projectId, $zone);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
+        printf('Instance %s reset successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to delete firewall rule: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to reset instance: %s' . PHP_EOL, $error->getMessage());
     }
 }
-# [END compute_firewall_delete]
+
+# [END compute_reset_instance]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
