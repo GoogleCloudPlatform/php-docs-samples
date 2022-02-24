@@ -29,6 +29,7 @@ final class WriteTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        self::requireGrpc();
         self::setUpBigtableVars();
         self::$instanceId = self::createDevInstance(self::INSTANCE_ID_PREFIX);
         self::$tableId = self::createTable(self::TABLE_ID_PREFIX);
@@ -79,8 +80,6 @@ final class WriteTest extends TestCase
 
     public function testWriteBatch()
     {
-        $this->requireGrpc();
-
         $output = $this->runFunctionSnippet('write_batch', [
             self::$projectId,
             self::$instanceId,
