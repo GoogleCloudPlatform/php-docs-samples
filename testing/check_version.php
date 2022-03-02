@@ -2,7 +2,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-if (count($argv) > 2) {
+if (count($argv) != 2) {
     die('Usage: check_version.php CONSTRAINT' . PHP_EOL);
 }
 
