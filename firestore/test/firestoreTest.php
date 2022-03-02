@@ -384,6 +384,21 @@ class firestoreTest extends TestCase
     /**
      * @depends testRetrieveCreateExamples
      */
+    public function testGetCustomType()
+    {
+        $output = $this->runFirestoreSnippet('data_get_as_custom_type');
+        $this->assertStringContainsString('Document data:', $output);
+        $this->assertStringContainsString('Google\Cloud\Samples\Firestore\City', $output);
+        $this->assertStringContainsString('[population] => 860000', $output);
+        $this->assertStringContainsString('[state] => CA', $output);
+        $this->assertStringContainsString('[capital] =>', $output);
+        $this->assertStringContainsString('[name] => San Francisco', $output);
+        $this->assertStringContainsString('[country] => USA', $output);
+    }
+
+    /**
+     * @depends testRetrieveCreateExamples
+     */
     public function testGetDocument()
     {
         $output = $this->runFirestoreSnippet('data_get_as_map');
@@ -692,7 +707,7 @@ class firestoreTest extends TestCase
     {
         if ($args === null) {
             $args = [
-                self::$firestoreProjectId
+                self::$firestoreProjectId,
             ];
         }
 
