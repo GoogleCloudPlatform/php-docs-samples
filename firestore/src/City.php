@@ -23,7 +23,6 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
-# [START custom_class_def]
 # [START firestore_data_custom_type_definition]
 class City
 {
@@ -91,4 +90,3 @@ class City
 }
 
 # [END firestore_data_custom_type_definition]
-# [END custom_class_def]
