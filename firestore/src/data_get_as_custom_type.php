@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Firestore;
 
 use Google\Cloud\Firestore\FirestoreClient;
+
 include "City.php";
 
 /**
