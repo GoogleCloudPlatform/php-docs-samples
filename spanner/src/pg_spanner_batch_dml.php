@@ -34,7 +34,8 @@ use Google\Cloud\Spanner\Database;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_batch_dml(string $instanceId, string $databaseId): void {
+function pg_spanner_batch_dml(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
@@ -43,7 +44,7 @@ function pg_spanner_batch_dml(string $instanceId, string $databaseId): void {
         $result = $t->executeUpdateBatch([
             [
                 'sql' => 'INSERT INTO Singers (SingerId, "FirstName", "LastName")'
-                    .' VALUES ($1, $2, $3)',
+                    . ' VALUES ($1, $2, $3)',
                 'parameters' => [
                     'p1' => 1,
                     'p2' => 'Alice',
@@ -57,7 +58,7 @@ function pg_spanner_batch_dml(string $instanceId, string $databaseId): void {
             ],
             [
                 'sql' => 'INSERT INTO Singers (SingerId, "FirstName", "LastName")'
-                    .' VALUES ($1, $2, $3)',
+                    . ' VALUES ($1, $2, $3)',
                 'parameters' => [
                     'p1' => 2,
                     'p2' => 'Bruce',

@@ -32,7 +32,8 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_cast_data_type(string $instanceId, string $databaseId): void {
+function pg_spanner_cast_data_type(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
@@ -42,9 +43,8 @@ function pg_spanner_cast_data_type(string $instanceId, string $databaseId): void
     "'2022-03-03T00:00:00UTC'::timestamptz as timestamp";
 
     $results = $database->execute($sql);
-    
 
-    foreach($results as $row){
+    foreach ($results as $row) {
         printf('String: %s' . PHP_EOL, $row['str']);
         printf('Int: %d' . PHP_EOL, $row['int']);
         printf('Decimal: %s' . PHP_EOL, $row['dec']);

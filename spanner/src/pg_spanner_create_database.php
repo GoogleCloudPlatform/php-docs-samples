@@ -33,7 +33,8 @@ use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_create_database(string $instanceId, string $databaseId): void {
+function pg_spanner_create_database(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
 

@@ -33,7 +33,8 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_dml_with_params(string $instanceId, string $databaseId): void {
+function pg_spanner_dml_with_params(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

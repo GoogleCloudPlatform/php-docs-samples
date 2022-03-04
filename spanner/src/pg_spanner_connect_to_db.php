@@ -32,7 +32,8 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_connect_to_db(string $instanceId, string $databaseId): void {
+function pg_spanner_connect_to_db(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
 
     // Instance Admin Client

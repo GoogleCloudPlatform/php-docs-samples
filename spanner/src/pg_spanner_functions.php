@@ -32,14 +32,15 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_functions(string $instanceId, string $databaseId): void {
+function pg_spanner_functions(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     // Use the PostgreSQL `to_timestamp` function to convert a number of
     // seconds since epoch to a timestamp.
-	// 1284352323 seconds = Monday, September 13, 2010 4:32:03 AM.
+    // 1284352323 seconds = Monday, September 13, 2010 4:32:03 AM.
     $results = $database->execute('SELECT to_timestamp(1284352323) AS time');
 
     $row = $results->rows()->current();

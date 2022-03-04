@@ -23,43 +23,31 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_information_schema]
+// [START spanner_postgresql_partitioned_dml]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Query the information schema metadata in a Spanner PostgreSQL database
+ * Execute Partitioned DML on a Spanner PostgreSQL database.
+ * See also https://cloud.google.com/spanner/docs/dml-partitioned.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_information_schema(string $instanceId, string $databaseId): void
+function pg_spanner_partitioned_dml(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // The Spanner INFORMATION_SCHEMA tables can be used to query the metadata of tables and
-    // columns of PostgreSQL databases. The returned results will include additional PostgreSQL
-    // metadata columns.
+    // Spanner PostgreSQL has the same transaction limits as normal Spanner. This includes a
+    // maximum of 20,000 mutations in a single read/write transaction. Large update operations can
+    // be executed using Partitioned DML. This is also supported on Spanner PostgreSQL.
+    // See https://cloud.google.com/spanner/docs/dml-partitioned for more information.
+    $count = $database->executePartitionedUpdate('DELETE FROM Singers WHERE "FirstName" IS NOT NULL');
 
-    // Get all the user tables in the database. PostgreSQL uses the `public` schema for user
-    // tables. The table_catalog is equal to the database name.
-
-    $results = $database->execute('SELECT table_catalog, table_schema, table_name,'
-        . ' user_defined_type_catalog,'
-        . ' user_defined_type_schema,'
-        . ' user_defined_type_name'
-        . ' FROM INFORMATION_SCHEMA.tables'
-        . ' WHERE table_schema=\'public\'');
-
-    printf('Details fetched.' . PHP_EOL);
-    foreach ($results as $row) {
-        foreach ($row as $key => $val) {
-            printf('%s: %s' . PHP_EOL, $key, $val);
-        }
-    }
+    printf('Deleted %s rows.' . PHP_EOL, $count);
 }
-// [END spanner_postgresql_information_schema]
+// [END spanner_postgresql_partitioned_dml]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
