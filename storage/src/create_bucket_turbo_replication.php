@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a Cloud Storage Bucket with Turbo Replication set to `ASYNC_TURBO`.
+ * Create a Cloud Storage bucket with the recovery point objective (RPO) set to `ASYNC_TURBO`.
  * The bucket must be a dual-region bucket for this setting to take effect.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
@@ -48,7 +48,7 @@ function create_bucket_turbo_replication($bucketName, $location = 'nam4')
         'location' => $location,
         'rpo' => $rpo
     ]);
-    printf('Bucket with Turbo Replication set to \'ASYNC_TURBO\' created: %s' . PHP_EOL, $bucket->name());
+    printf('Bucket with recovery point objective (RPO) set to \'ASYNC_TURBO\' created: %s' . PHP_EOL, $bucket->name());
 }
 # [END storage_create_bucket_turbo_replication]
 
