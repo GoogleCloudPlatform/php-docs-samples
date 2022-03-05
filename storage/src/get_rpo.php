@@ -27,11 +27,11 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Get the bucket's Turbo Replication(rpo) setting.
+ * Get the bucket's recovery point objective (RPO) setting.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function get_turbo_replication_status($bucketName)
+function get_rpo($bucketName)
 {
     // $bucketName = 'my-bucket';
 
