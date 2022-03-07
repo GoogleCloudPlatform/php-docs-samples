@@ -23,33 +23,35 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_firewall_list]
+# [START compute_firewall_delete]
 use Google\Cloud\Compute\V1\FirewallsClient;
 
 /**
- * Return a list of all the firewall rules in specified project. Also prints the
- * list of firewall names and their descriptions.
- * Example:
- * ```
- * list_firewall_rules($projectId);
- * ```
+ * Delete a firewall rule from the specified project.
  *
- * @param string $projectId Project ID or project number of the Cloud project you want to list rules from.
+ * @param string $projectId Project ID or project number of the Cloud project you want to delete a rule for.
+ * @param string $firewallRuleName Name of the rule that is deleted.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
-function list_firewall_rules(string $projectId)
+function delete_firewall_rule(string $projectId, string $firewallRuleName)
 {
-    // List all firewall rules defined for the project using Firewalls Client.
-    $firewallClient = new FirewallsClient();
-    $firewallList = $firewallClient->list($projectId);
+    $firewallsClient = new FirewallsClient();
 
-    print('--- Firewall Rules ---' . PHP_EOL);
-    foreach ($firewallList->iterateAllElements() as $firewall) {
-        printf(' -  %s : %s : %s' . PHP_EOL, $firewall->getName(), $firewall->getDescription(), $firewall->getNetwork());
+    // Delete the firewall rule using Firewalls Client.
+    $operation = $firewallsClient->delete($firewallRuleName, $projectId);
+
+    // Wait for the operation to complete.
+    $operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
+        printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
+    } else {
+        $error = $operation->getError();
+        printf('Failed to delete firewall rule: %s' . PHP_EOL, $error->getMessage());
     }
 }
-# [END compute_firewall_list]
+# [END compute_firewall_delete]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

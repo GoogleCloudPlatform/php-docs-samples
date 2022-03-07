@@ -28,10 +28,6 @@ use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
  * List all instances for a particular Cloud project.
- * Example:
- * ```
- * list_all_instances($projectId);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  *

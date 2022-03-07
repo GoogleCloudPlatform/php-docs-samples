@@ -23,29 +23,29 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_instances_list]
-use Google\Cloud\Compute\V1\InstancesClient;
+# [START compute_firewall_list]
+use Google\Cloud\Compute\V1\FirewallsClient;
 
 /**
- * List all instances for a particular Cloud project and zone.
+ * Return a list of all the firewall rules in specified project. Also prints the
+ * list of firewall names and their descriptions.
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $zone Zone to list instances for (like "us-central1-a").
+ * @param string $projectId Project ID or project number of the Cloud project you want to list rules from.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_instances(string $projectId, string $zone)
+function list_firewall_rules(string $projectId)
 {
-    // List Compute Engine instances using InstancesClient.
-    $instancesClient = new InstancesClient();
-    $instancesList = $instancesClient->list($projectId, $zone);
+    // List all firewall rules defined for the project using Firewalls Client.
+    $firewallClient = new FirewallsClient();
+    $firewallList = $firewallClient->list($projectId);
 
-    printf('Instances for %s (%s)' . PHP_EOL, $projectId, $zone);
-    foreach ($instancesList as $instance) {
-        printf(' - %s' . PHP_EOL, $instance->getName());
+    print('--- Firewall Rules ---' . PHP_EOL);
+    foreach ($firewallList->iterateAllElements() as $firewall) {
+        printf(' -  %s : %s : %s' . PHP_EOL, $firewall->getName(), $firewall->getDescription(), $firewall->getNetwork());
     }
 }
-# [END compute_instances_list]
+# [END compute_firewall_list]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

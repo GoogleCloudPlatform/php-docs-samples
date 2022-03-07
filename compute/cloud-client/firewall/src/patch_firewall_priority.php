@@ -23,33 +23,39 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_usage_report_disable]
-use Google\Cloud\Compute\V1\ProjectsClient;
-use Google\Cloud\Compute\V1\Operation;
+# [START compute_firewall_patch]
+use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Firewall;
 
 /**
- * Disable Compute Engine usage export bucket for the Cloud Project.
+ * Modifies the priority of a given firewall rule.
  *
- * @param string $projectId Your Google Cloud project ID.
+ * @param string $projectId Project ID or project number of the Cloud project you want to patch a rule from.
+ * @param string $firewallRuleName Name of the rule that you want to modify.
+ * @param int $priority The new priority to be set for the rule.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
-function disable_usage_export_bucket(string $projectId)
+function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority)
 {
-    // Disable the usage export location by sending null as usageExportLocationResource.
-    $projectsClient = new ProjectsClient();
-    $operation = $projectsClient->setUsageExportBucket($projectId, null);
+    $firewallsClient = new FirewallsClient();
+    $firewallResource = (new Firewall())->setPriority($priority);
+
+    // The patch operation doesn't require the full definition of a Firewall object. It will only update
+    // the values that were set in it, in this case it will only change the priority.
+    $operation = $firewallsClient->patch($firewallRuleName, $firewallResource, $projectId);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        printf('Compute Engine usage export bucket for project `%s` was disabled.', $projectId);
+        printf('Patched %s priority to %d.' . PHP_EOL, $firewallRuleName, $priority);
     } else {
         $error = $operation->getError();
-        printf('Failed to disable usage report bucket for project `%s`: %s' . PHP_EOL, $projectId, $error->getMessage());
+        printf('Patching failed: %s' . PHP_EOL, $error->getMessage());
     }
 }
-# [END compute_usage_report_disable]
+# [END compute_firewall_patch]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

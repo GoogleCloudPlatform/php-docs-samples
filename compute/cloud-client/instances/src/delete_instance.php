@@ -28,10 +28,6 @@ use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
  * Delete an instance.
- * Example:
- * ```
- * delete_instance($projectId, $zone, $instanceName);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $zone Zone where the instance you want to delete is (like "us-central1-a").

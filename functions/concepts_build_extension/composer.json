@@ -7,7 +7,7 @@
         "start": [
            "@gcp-build",
            "Composer\\Config::disableProcessTimeout",
-           "FUNCTION_TARGET=helloBuildExtension php -d 'extension=./my_custom_extension.so' -S localhost:${PORT:-8080} vendor/bin/router.php"
+           "FUNCTION_TARGET=helloBuildExtension php -d 'extension=./my_custom_extension.so' -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     }
 }

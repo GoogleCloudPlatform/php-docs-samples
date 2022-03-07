@@ -44,11 +44,6 @@ $encoding = AudioEncoding::LINEAR16;
 $sampleRateHertz = 32000;
 $languageCode = 'en-US';
 
-// the gRPC extension is required for streaming
-if (!extension_loaded('grpc')) {
-    throw new \Exception('Install the grpc extension (pecl install grpc)');
-}
-
 $speechClient = new SpeechClient();
 try {
     $config = (new RecognitionConfig())
