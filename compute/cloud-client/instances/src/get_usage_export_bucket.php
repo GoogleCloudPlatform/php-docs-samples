@@ -30,10 +30,6 @@ use Google\Cloud\Compute\V1\ProjectsClient;
  * Retrieve Compute Engine usage export bucket for the Cloud project.
  * Replaces the empty value returned by the API with the default value used
  * to generate report file names.
- * Example:
- * ```
- * get_usage_export_bucket($projectId);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  *

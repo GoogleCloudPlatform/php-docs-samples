@@ -31,10 +31,6 @@ use Google\Cloud\Compute\V1\Operation;
 /**
  * Set Compute Engine usage export bucket for the Cloud project.
  * This sample presents how to interpret the default value for the report name prefix parameter.
- * Example:
- * ```
- * set_usage_export_bucket($projectId, $bucketName, $reportNamePrefix);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $bucketName Google Cloud Storage bucket used to store Compute Engine usage reports.

@@ -5,7 +5,7 @@
     "scripts": {
        "start": [
            "Composer\\Config::disableProcessTimeout",
-           "FUNCTION_TARGET=httpMethod php -S localhost:${PORT:-8080} vendor/bin/router.php"
+           "FUNCTION_TARGET=httpMethod php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     }
 }
