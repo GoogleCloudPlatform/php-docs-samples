@@ -287,6 +287,14 @@ class FunctionsTest extends TestCase
         $this->assertStringContainsString('Found 1 row(s)', $output);
     }
 
+    public function testQueryLegacy()
+    {
+        $output = $this->runSnippet('query_legacy');
+        $this->assertStringContainsString('tempest', $output);
+        $this->assertStringContainsString('kinghenryviii', $output);
+        $this->assertStringContainsString('Found 42 row(s)', $output);
+    }
+
     private function runSnippet($sampleName, $params = [])
     {
         $argv = array_merge([0, self::$projectId], $params);

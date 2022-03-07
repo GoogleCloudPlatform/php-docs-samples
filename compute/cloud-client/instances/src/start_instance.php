@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,44 +23,38 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-# [START compute_firewall_patch]
-use Google\Cloud\Compute\V1\FirewallsClient;
-use Google\Cloud\Compute\V1\Firewall;
+# [START compute_start_instance]
+use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
- * Modifies the priority of a given firewall rule.
+ * Starts a stopped Google Compute Engine instance (with unencrypted disks).
  *
- * Example:
- * ```
- * patch_firewall_priority($projectId, $firewallRuleName, $priority);
- * ```
- *
- * @param string $projectId Project ID or project number of the Cloud project you want to patch a rule from.
- * @param string $firewallRuleName Name of the rule that you want to modify.
- * @param int $priority The new priority to be set for the rule.
- *
+ * @param string $projectId Project ID or project number of the Cloud project your instance belongs to.
+ * @param string $zone Name of the zone your instance belongs to.
+ * @param string $instanceName Name of the instance you want to stop.
+  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
-function patch_firewall_priority(string $projectId, string $firewallRuleName, int $priority)
-{
-    $firewallsClient = new FirewallsClient();
-    $firewallResource = (new Firewall())->setPriority($priority);
-
-    // The patch operation doesn't require the full definition of a Firewall object. It will only update
-    // the values that were set in it, in this case it will only change the priority.
-    $operation = $firewallsClient->patch($firewallRuleName, $firewallResource, $projectId);
+function start_instance(
+    string $projectId,
+    string $zone,
+    string $instanceName
+) {
+    // Start the Compute Engine instance using InstancesClient.
+    $instancesClient = new InstancesClient();
+    $operation = $instancesClient->start($instanceName, $projectId, $zone);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
     if ($operation->operationSucceeded()) {
-        printf('Patched %s priority to %d.' . PHP_EOL, $firewallRuleName, $priority);
+        printf('Instance %s started successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Patching failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to start instance: %s' . PHP_EOL, $error->getMessage());
     }
 }
-# [END compute_firewall_patch]
+# [END compute_start_instance]
 
 require_once __DIR__ . '/../../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
