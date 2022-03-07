@@ -28,10 +28,6 @@ use Google\Cloud\Compute\V1\ImagesClient;
 
 /**
  * Prints a list of all non-deprecated image names available in given project.
- * Example:
- * ```
- * list_all_images($projectId);
- * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to list images from.
  *

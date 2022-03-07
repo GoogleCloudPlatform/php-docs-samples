@@ -26,12 +26,7 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Compute\V1\FirewallsClient;
 
 /**
- * Prints details about a particular firewall rule in the specified project
- *
- * Example:
- * ```
- * print_firewall_rule($projectId, $firewallRuleName);
- * ```
+ * Prints details about a particular firewall rule in the specified project.
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to print a rule from.
  * @param string $firewallRuleName Unique name for the firewall rule.
