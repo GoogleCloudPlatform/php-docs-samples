@@ -195,6 +195,31 @@ class PubSubTest extends TestCase
         $this->assertRegExp(sprintf('/%s/', $subscription), $output);
     }
 
+    public function testCreateAndDeleteSubscriptionWithFilter()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $filter = "attributes.author=\"unknown\"";
+        $output = $this->runFunctionSnippet('create_subscription_with_filter', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $filter
+        ]);
+
+        $this->assertRegExp('/Subscription created:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertRegExp("attributes.author=\"unknown\"", $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertRegExp('/Subscription deleted:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+    }
+
     public function testCreateAndDeletePushSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
