@@ -26,20 +26,20 @@ namespace Google\Cloud\Samples\Firestore;
 # [START firestore_data_custom_type_definition]
 class City
 {
-    public $name;
-    public $state;
-    public $country;
-    public $capital;
-    public $population;
-    public $regions;
+    public string $name;
+    public string $state;
+    public string $country;
+    public bool $capital;
+    public int $population;
+    public array $regions;
 
     public function __construct(
-        $name,
-        $state,
-        $country,
-        $capital = false,
-        $population = 0,
-        $regions = []
+        string $name,
+        string $state,
+        string $country,
+        bool $capital = false,
+        int $population = 0,
+        array $regions = []
     ) {
         $this->name = $name;
         $this->state = $state;
@@ -49,20 +49,26 @@ class City
         $this->regions = $regions;
     }
 
-    public static function from_map($source)
+    public static function fromArray(array $source): City
     {
+        // implementation of fromArray is excluded for brevity
         # [START_EXCLUDE]
-        $city = new City($source['name'], $source['state'], $source['country']);
-        $city->capital = $source['capital'] ?? null;
-        $city->population = $source['population'] ?? null;
-        $city->regions = $source['regions'] ?? null;
+        $city = new City(
+            $source['name'],
+            $source['state'],
+            $source['country'],
+            $source['capital'] ?? false,
+            $source['population'] ?? 0,
+            $source['regions'] ?? []
+        );
 
         return $city;
         # [END_EXCLUDE]
     }
 
-    public function to_map()
+    public function toArray(): array
     {
+        // implementation of toArray is excluded for brevity
         # [START_EXCLUDE]
         $dest = [
             'name' => $this->name,
@@ -79,13 +85,24 @@ class City
 
     public function __toString()
     {
-        return ("Custom Type data(\
-        name={$this->name}, \
-        country={$this->country}, \
-        population={$this->population}, \
-        capital={$this->capital}, \
-        regions={$this->regions}\
-       )");
+        return sprintf(
+            <<<EOF
+        Custom Type data(
+            name=%s,
+            state=%s,
+            country=%s,
+            capital=%s,
+            population=%s,
+            regions=%s
+        )
+        EOF,
+            $this->name,
+            $this->state,
+            $this->country,
+            $this->population,
+            $this->captital ? 'true' : 'false',
+            implode(", ", $this->regions)
+        );
     }
 }
 

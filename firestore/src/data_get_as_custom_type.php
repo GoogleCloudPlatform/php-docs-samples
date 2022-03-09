@@ -41,7 +41,7 @@ function data_get_as_custom_type(string $projectId): void
     # [START firestore_data_get_as_custom_type]
     $docRef = $db->collection('samples/php/cities')->document('SF');
     $snapshot = $docRef->snapshot();
-    $city = City::from_map($snapshot->data());
+    $city = City::fromArray($snapshot->data());
 
     if ($snapshot->exists()) {
         printf('Document data:' . PHP_EOL);
