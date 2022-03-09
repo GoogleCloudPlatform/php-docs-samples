@@ -101,7 +101,7 @@ class City
             $this->country,
             $this->population,
             $this->captital ? 'true' : 'false',
-            implode(", ", $this->regions)
+            implode(', ', $this->regions)
         );
     }
 }
