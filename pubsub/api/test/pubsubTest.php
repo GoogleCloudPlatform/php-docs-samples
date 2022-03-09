@@ -209,7 +209,6 @@ class PubSubTest extends TestCase
 
         $this->assertRegExp('/Subscription created:/', $output);
         $this->assertRegExp(sprintf('/%s/', $subscription), $output);
-        $this->assertRegExp('/attributes.author=\"unknown\"/', $output);
 
         $output = $this->runFunctionSnippet('delete_subscription', [
             self::$projectId,
