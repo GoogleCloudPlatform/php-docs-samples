@@ -199,7 +199,7 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
-        $filter = "attributes.author=\"unknown\"";
+        $filter = 'attributes.author="unknown"';
         $output = $this->runFunctionSnippet('create_subscription_with_filter', [
             self::$projectId,
             $topic,
