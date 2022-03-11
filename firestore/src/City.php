@@ -26,12 +26,18 @@ namespace Google\Cloud\Samples\Firestore;
 # [START firestore_data_custom_type_definition]
 class City
 {
-    public string $name;
-    public string $state;
-    public string $country;
-    public bool $capital;
-    public int $population;
-    public array $regions;
+    /* var string */
+    public $name;
+    /* var string */
+    public $state;
+    /* var string */
+    public $country;
+    /* var bool */
+    public $capital;
+    /* var int */
+    public $population;
+    /* var array */
+    public $regions;
 
     public function __construct(
         string $name,
