@@ -45,7 +45,7 @@ function data_get_as_custom_type(string $projectId): void
 
     if ($snapshot->exists()) {
         printf('Document data:' . PHP_EOL);
-        print_r($city);
+        print_r((string) $city);
     } else {
         printf('Document %s does not exist!' . PHP_EOL, $snapshot->id());
     }

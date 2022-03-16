@@ -91,24 +91,27 @@ class City
 
     public function __toString()
     {
+        // implementation of __toString is excluded for brevity
+        # [START_EXCLUDE]
         return sprintf(
             <<<EOF
         Custom Type data(
-            name=%s,
-            state=%s,
-            country=%s,
-            capital=%s,
-            population=%s,
-            regions=%s
+            [name] => %s,
+            [state] => %s,
+            [country] => %s,
+            [capital] => %s,
+            [population] => %s,
+            [regions] => %s
         )
         EOF,
             $this->name,
             $this->state,
             $this->country,
-            $this->population,
             $this->capital ? 'true' : 'false',
+            $this->population,
             implode(', ', $this->regions)
         );
+        # [END_EXCLUDE]
     }
 }
 
