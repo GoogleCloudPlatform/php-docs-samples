@@ -42,9 +42,10 @@ function create_subscription_with_filter($projectId, $topicName, $subscriptionNa
     $topic = $pubsub->topic($topicName);
     $subscription = $topic->subscription($subscriptionName);
 
-    $subscription->create(array($filter));
+    $subscription->create(['filter' => $filter]);
 
     printf('Subscription created: %s' . PHP_EOL, $subscription->name());
+    printf('Subscription info: %s' . PHP_EOL, json_encode($subscription->info()));
 }
 # [END pubsub_create_subscription_with_filter]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
