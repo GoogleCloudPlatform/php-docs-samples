@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_download_file]
-# [START storage_stream_file_download]
+# [START storage_file_download_from_memory]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -32,27 +31,24 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your Cloud Storage object.
- * @param string $destination The local destination to save the object.
  */
-function download_object($bucketName, $objectName, $destination)
+function download_object_into_memory($bucketName, $objectName)
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
-    // $destination = '/path/to/your/file';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
-    $object->downloadToFile($destination);
+    $contents = $object->downloadAsString();
     printf(
-        'Downloaded gs://%s/%s to %s' . PHP_EOL,
+        'Downloaded %s from gs://%s/%s' . PHP_EOL,
+        $contents,
         $bucketName,
-        $objectName,
-        basename($destination)
+        $objectName
     );
 }
-# [END storage_stream_file_download]
-# [END storage_download_file]
+# [END storage_file_download_from_memory]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

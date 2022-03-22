@@ -180,6 +180,31 @@ EOF;
         $bucket->object($targetName)->delete();
     }
 
+    public function testUploadAndDownloadObjectFromMemory()
+    {
+        $objectName = 'test-object-' . time();
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+        $object = $bucket->object($objectName);
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('upload_object_from_memory', [
+          self::$bucketName,
+          $objectName,
+          $contents,
+      ]);
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('download_object_into_memory', [
+          self::$bucketName,
+          $objectName
+      ]);
+        $this->assertStringContainsString($contents, $output);
+    }
+
     public function testChangeStorageClass()
     {
         $objectName = uniqid('change-storage-class-');
