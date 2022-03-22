@@ -190,19 +190,63 @@ EOF;
         $this->assertFalse($object->exists());
 
         $output = self::runFunctionSnippet('upload_object_from_memory', [
-          self::$bucketName,
-          $objectName,
-          $contents,
-      ]);
+            self::$bucketName,
+            $objectName,
+            $contents,
+        ]);
 
         $object->reload();
         $this->assertTrue($object->exists());
 
         $output = self::runFunctionSnippet('download_object_into_memory', [
-          self::$bucketName,
-          $objectName
-      ]);
+            self::$bucketName,
+            $objectName
+        ]);
         $this->assertStringContainsString($contents, $output);
+    }
+
+    public function testDownloadByteRange()
+    {
+        $objectName = 'test-object-' . time();
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+        $object = $bucket->object($objectName);
+        $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
+        $downloadToBasename = basename($downloadTo);
+        $start_pos = 1;
+        $end_pos = strlen($contents) - 2;
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('upload_object_from_memory', [
+            self::$bucketName,
+            $objectName,
+            $contents
+        ]);
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $output .= self::runFunctionSnippet('download_byte_range', [
+            self::$bucketName,
+            $objectName,
+            $start_pos,
+            $end_pos,
+            $downloadTo,
+        ]);
+
+        $this->assertTrue(file_exists($downloadTo));
+        $expectedContents = substr($contents, $start_pos, $end_pos - $start_pos + 1);
+        $this->assertEquals($expectedContents, file_get_contents($downloadTo));
+        $this->assertStringContainsString(
+            sprintf(
+                'Downloaded gs://%s/%s to %s',
+                self::$bucketName,
+                $objectName,
+                $downloadToBasename,
+            ),
+            $output
+        );
     }
 
     public function testChangeStorageClass()
