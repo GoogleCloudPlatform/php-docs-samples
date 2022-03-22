@@ -207,7 +207,7 @@ EOF;
 
     public function testDownloadByteRange()
     {
-        $objectName = 'test-object-' . time();
+        $objectName = 'test-object-download-byte-range-' . time();
         $bucket = self::$storage->bucket(self::$bucketName);
         $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
         $object = $bucket->object($objectName);
