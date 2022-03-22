@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_file_download_from_memory]
+# [START storage_file_download_into_memory]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -48,7 +48,7 @@ function download_object_into_memory($bucketName, $objectName)
         $objectName
     );
 }
-# [END storage_file_download_from_memory]
+# [END storage_file_download_into_memory]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
