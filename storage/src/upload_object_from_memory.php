@@ -33,8 +33,11 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The name of your Cloud Storage object.
  * @param string $contents The contents to upload to the file.
  */
-function upload_object_from_memory($bucketName, $objectName, $contents)
-{
+function upload_object_from_memory(
+    string $bucketName,
+    string $objectName,
+    string $contents
+): void {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
     // $contents = 'these are my contents';

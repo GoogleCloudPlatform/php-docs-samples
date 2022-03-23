@@ -213,8 +213,8 @@ EOF;
         $object = $bucket->object($objectName);
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
-        $start_pos = 1;
-        $end_pos = strlen($contents) - 2;
+        $startPos = 1;
+        $endPos = strlen($contents) - 2;
 
         $this->assertFalse($object->exists());
 
@@ -230,13 +230,13 @@ EOF;
         $output .= self::runFunctionSnippet('download_byte_range', [
             self::$bucketName,
             $objectName,
-            $start_pos,
-            $end_pos,
+            $startPos,
+            $endPos,
             $downloadTo,
         ]);
 
         $this->assertTrue(file_exists($downloadTo));
-        $expectedContents = substr($contents, $start_pos, $end_pos - $start_pos + 1);
+        $expectedContents = substr($contents, $startPos, $endPos - $startPos + 1);
         $this->assertEquals($expectedContents, file_get_contents($downloadTo));
         $this->assertStringContainsString(
             sprintf(

@@ -31,12 +31,17 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your Cloud Storage object.
- * @param string $start_byte The starting byte at which to begin the download.
- * @param string $end_byte The ending byte at which to end the download.
+ * @param int $startByte The starting byte at which to begin the download.
+ * @param int $endByte The ending byte at which to end the download.
  * @param string $destination The local destination to save the object.
  */
-function download_byte_range($bucketName, $objectName, $start_byte, $end_byte, $destination)
-{
+function download_byte_range(
+    string $bucketName,
+    string $objectName,
+    int $startByte,
+    int $endByte,
+    string $destination
+): void {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
     // $start_byte = 1;
@@ -49,7 +54,7 @@ function download_byte_range($bucketName, $objectName, $start_byte, $end_byte, $
     $object->downloadToFile($destination, [
         'restOptions' => [
             'headers' => [
-                'Range' => "bytes=$start_byte-$end_byte",
+                'Range' => "bytes=$startByte-$endByte",
             ],
         ],
     ]);
