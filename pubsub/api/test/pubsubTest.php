@@ -206,8 +206,7 @@ class PubSubTest extends TestCase
             $subscription,
             $filter
         ]);
-        $this->assertStringContainsString('Subscription created:', $output);
-        $this->assertStringContainsString(sprintf('%s', $subscription), $output);
+        $this->assertStringContainsString(sprintf('Subscription created: %s', $subscription), $output);
         $this->assertStringContainsString('"filter":"attributes.author=\"unknown\""', $output);
 
         $output = $this->runFunctionSnippet('delete_subscription', [
