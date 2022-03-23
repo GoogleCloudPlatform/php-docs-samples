@@ -214,8 +214,11 @@ class PubSubTest extends TestCase
             $subscription,
         ]);
 
-        $this->assertStringContainsString('Subscription deleted:', $output);
-        $this->assertStringContainsString(sprintf('%s', $subscription), $output);
+        $this->assertStringContainsString(sprintf(
+            'Subscription deleted: projects/%s/subscriptions/%s',
+            self::$projectId,
+            $subscription
+        ), $output);
     }
 
     public function testCreateAndDeletePushSubscription()
