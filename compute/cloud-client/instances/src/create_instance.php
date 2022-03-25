@@ -23,22 +23,21 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-include_once 'wait_for_operation.php';
-
 # [START compute_instances_create]
 use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Instance;
 use Google\Cloud\Compute\V1\NetworkInterface;
-use Google\Cloud\Compute\V1\Operation;
 
 /**
- * Create an instance in the specified project and zone.
- * Example:
- * ```
- * create_instance($projectId, $zone, $instanceName);
- * ```
+ * To correctly handle string enums in Cloud Compute library
+ * use constants defined in the Enums subfolder.
+ */
+use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
+
+/**
+ * Creates an instance in the specified project and zone.
  *
  * @param string $projectId Project ID of the Cloud project to create the instance in.
  * @param string $zone Zone to create the instance in (like "us-central1-a").
@@ -48,6 +47,7 @@ use Google\Cloud\Compute\V1\Operation;
  * @param string $networkName Network interface to associate with the instance.
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
+ * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
 function create_instance(
     string $projectId,
@@ -66,6 +66,7 @@ function create_instance(
     $disk = (new AttachedDisk())
         ->setBoot(true)
         ->setAutoDelete(true)
+        ->setType(Type::PERSISTENT)
         ->setInitializeParams($diskInitializeParams);
 
     // Use the network interface provided in the $networkName argument.
@@ -83,14 +84,16 @@ function create_instance(
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->insert($instance, $projectId, $zone);
 
-    // Wait for the create operation to complete using a custom helper function.
-    // @see src/wait_for_operation.php
-    $operation = wait_for_operation($operation, $projectId);
-    if (empty($operation->getError())) {
+    # [START compute_instances_operation_check]
+    // Wait for the operation to complete.
+    $operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
         printf('Created instance %s' . PHP_EOL, $instanceName);
     } else {
-        printf('Instance creation failed!' . PHP_EOL);
+        $error = $operation->getError();
+        printf('Instance creation failed: %s' . PHP_EOL, $error->getMessage());
     }
+    # [END compute_instances_operation_check]
 }
 # [END compute_instances_create]
 

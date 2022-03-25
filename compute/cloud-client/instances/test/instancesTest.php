@@ -26,18 +26,18 @@ class instancesTest extends TestCase
     use TestTrait;
 
     private static $instanceName;
+    private static $encInstanceName;
+    private static $encKey;
     private static $bucketName;
     private static $bucket;
-    private static $firewallRuleName;
-    private static $priority;
 
     private const DEFAULT_ZONE = 'us-central1-a';
 
     public static function setUpBeforeClass(): void
     {
         self::$instanceName = sprintf('test-compute-instance-%s', rand());
-        self::$firewallRuleName = 'test-firewall-rule';
-        self::$priority = 20;
+        self::$encInstanceName = sprintf('test-compute-instance-customer-encryption-key-%s', rand());
+        self::$encKey = base64_encode(random_bytes(32));
 
         // Generate bucket name
         self::$bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
@@ -66,6 +66,17 @@ class instancesTest extends TestCase
         $this->assertStringContainsString('Created instance ' . self::$instanceName, $output);
     }
 
+    public function testCreateInstanceWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('create_instance_with_encryption_key', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName,
+            'key' => self::$encKey
+        ]);
+        $this->assertStringContainsString('Created instance ' . self::$encInstanceName, $output);
+    }
+
     /**
      * @depends testCreateInstance
      */
@@ -92,6 +103,78 @@ class instancesTest extends TestCase
 
     /**
      * @depends testCreateInstance
+     * @depends testListInstances
+     * @depends testListAllInstances
+     */
+    public function testStopInstance()
+    {
+        $output = $this->runFunctionSnippet('stop_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' stopped successfully', $output);
+    }
+
+    /**
+     * @depends testStopInstance
+     */
+    public function testStartInstance()
+    {
+        $output = $this->runFunctionSnippet('start_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' started successfully', $output);
+    }
+
+    /**
+     * @depends testCreateInstanceWithEncryptionKey
+     */
+    public function testStartWithEncryptionKeyInstance()
+    {
+        // Stop instance
+        $output = $this->runFunctionSnippet('stop_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$encInstanceName . ' stopped successfully', $output);
+
+        // Restart instance with customer encryption key
+        $output = $this->runFunctionSnippet('start_instance_with_encryption_key', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName,
+            'key' => self::$encKey
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$encInstanceName . ' started successfully', $output);
+    }
+
+    /**
+     * @depends testStartInstance
+     * @depends testStartWithEncryptionKeyInstance
+     */
+    public function testResetInstance()
+    {
+        $output = $this->runFunctionSnippet('reset_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' reset successfully', $output);
+
+        $output = $this->runFunctionSnippet('reset_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$encInstanceName . ' reset successfully', $output);
+    }
+
+    /**
+     * @depends testResetInstance
      */
     public function testDeleteInstance()
     {
@@ -129,7 +212,7 @@ class instancesTest extends TestCase
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
             'projectId' => self::$projectId
         ]);
-        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` was disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId
@@ -167,7 +250,7 @@ class instancesTest extends TestCase
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
             'projectId' => self::$projectId
         ]);
-        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` was disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
             'projectId' => self::$projectId
@@ -196,63 +279,5 @@ class instancesTest extends TestCase
         $this->assertStringContainsString('Page 2', $output);
         $arr = explode(PHP_EOL, $output);
         $this->assertGreaterThanOrEqual(2, count($arr));
-    }
-
-    public function testCreateFirewallRule()
-    {
-        $output = $this->runFunctionSnippet('create_firewall_rule', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName
-        ]);
-        $this->assertStringContainsString('Created rule ' . self::$firewallRuleName, $output);
-    }
-
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testPrintFirewallRule()
-    {
-        $output = $this->runFunctionSnippet('print_firewall_rule', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName
-        ]);
-        $this->assertStringContainsString(self::$firewallRuleName, $output);
-        $this->assertStringContainsString('0.0.0.0/0', $output);
-    }
-
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testListFirewallRules()
-    {
-        $output = $this->runFunctionSnippet('list_firewall_rules', [
-            'projectId' => self::$projectId
-        ]);
-        $this->assertStringContainsString(self::$firewallRuleName, $output);
-        $this->assertStringContainsString('Allowing TCP traffic on ports 80 and 443 from Internet.', $output);
-    }
-
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testPatchFirewallPriority()
-    {
-        $output = $this->runFunctionSnippet('patch_firewall_priority', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName,
-            'priority' => self::$priority
-        ]);
-        $this->assertStringContainsString('Patched ' . self::$firewallRuleName . ' priority', $output);
-    }
-    /**
-     * @depends testCreateFirewallRule
-     */
-    public function testDeleteFirewallRule()
-    {
-        $output = $this->runFunctionSnippet('delete_firewall_rule', [
-            'projectId' => self::$projectId,
-            'firewallRuleName' => self::$firewallRuleName
-        ]);
-        $this->assertStringContainsString('Rule ' . self::$firewallRuleName . ' deleted',  $output);
     }
 }

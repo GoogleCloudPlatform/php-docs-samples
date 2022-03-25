@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  staticanalysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'
+
+    - name: Run Script
+      run: |
+        composer global require phpstan/phpstan
+        for dir in $(find * -type d -name src -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
+        do
+          composer install --working-dir=$dir --ignore-platform-reqs
+          echo "<?php require_once 'testing/sample_helpers.php';require_once '$dir/vendor/autoload.php';" > autoload.php
+          ~/.composer/vendor/bin/phpstan analyse $dir/src --autoload-file=autoload.php
+        done
