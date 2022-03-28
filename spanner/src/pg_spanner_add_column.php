@@ -23,39 +23,32 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_create_postgres_database]
+// [START spanner_postgresql_add_column]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Creates a database that uses Postgres dialect
+ * Add a column to a table present in a PG Spanner database.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_create_database(string $instanceId, string $databaseId): void
+function pg_spanner_add_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    if (!$instance->exists()) {
-        throw new \LogicException("Instance $instanceId does not exist");
-    }
-
-    $operation = $instance->createDatabase($databaseId, [
-        'databaseDialect' => DatabaseDialect::POSTGRESQL
-    ]);
+    $operation = $database->updateDdl(
+        'ALTER TABLE Singers ADD COLUMN SingerAge bigint'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    $database = $instance->database($databaseId);
-    $dialect = DatabaseDialect::name($database->info()['databaseDialect']);
-
-    printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
-        $databaseId, $dialect, $instanceId);
+    print('Added column SingerAge on table Singers' . PHP_EOL);
 }
-// [END spanner_create_postgres_database]
+// [END spanner_postgresql_add_column]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
