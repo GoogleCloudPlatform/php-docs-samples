@@ -171,6 +171,16 @@ class spannerPgTest extends TestCase
     }
 
     /**
+     * @depends testCreateTableCaseSensitivity
+     */
+    public function testPgAddColumn()
+    {
+        $output = $this->runFunctionSnippet('pg_spanner_query_parameter');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertStringContainsString('Added column SingerAge on table Singers', $output);
+    }
+
+    /**
      * @depends testBatchDml
      */
     public function testInterleavedTable()
