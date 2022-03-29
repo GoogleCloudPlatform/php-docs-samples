@@ -44,8 +44,8 @@ function download_byte_range(
 ): void {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
-    // $start_byte = 1;
-    // $end_byte = 5;
+    // $startByte = 1;
+    // $endByte = 5;
     // $destination = '/path/to/your/file';
 
     $storage = new StorageClient();
