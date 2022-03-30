@@ -804,6 +804,20 @@ class storageTest extends TestCase
         $this->assertFileExists($downloadTo);
     }
 
+    public function testSetClientEndpoint()
+    {
+        $testEndpoint = 'https://test-endpoint.com';
+
+        $output = self::runFunctionSnippet('set_client_endpoint', [
+          self::$projectId,
+          $testEndpoint,
+        ]);
+
+        $this->assertStringContainsString(sprintf('[apiEndpoint:Google\Cloud\Storage\Connection\Rest:private] => %s', $testEndpoint), $output);
+        $this->assertStringContainsString(sprintf('[baseUri:Google\Cloud\Core\RequestBuilder:private] => %s/storage/v1/', $testEndpoint), $output);
+        $this->assertStringContainsString('Storage Client initialized.', $output);
+    }
+
     private function keyName()
     {
         return sprintf(
