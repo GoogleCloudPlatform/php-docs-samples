@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Upload a file.
+ * Upload an object from memory buffer.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your Cloud Storage object.
