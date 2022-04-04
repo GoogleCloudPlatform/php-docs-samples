@@ -171,7 +171,6 @@ class spannerBackupTest extends TestCase
         $newBackupId = 'copy-' . self::$backupId;
 
         $output = $this->runFunctionSnippet('copy_backup', [
-            self::$instanceId,
             $newBackupId,
             self::$instanceId,
             self::$backupId
