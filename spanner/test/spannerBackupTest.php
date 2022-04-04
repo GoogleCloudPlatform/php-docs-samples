@@ -100,17 +100,17 @@ class spannerBackupTest extends TestCase
         $this->assertStringContainsString(self::$retentionPeriod, $output);
     }
 
-    public function testCreateBackupWithEncryptionKey()
-    {
-        $database = self::$instance->database(self::$databaseId);
+    // public function testCreateBackupWithEncryptionKey()
+    // {
+    //     $database = self::$instance->database(self::$databaseId);
 
-        $output = $this->runFunctionSnippet('create_backup_with_encryption_key', [
-            self::$databaseId,
-            self::$encryptedBackupId,
-            self::$kmsKeyName,
-        ]);
-        $this->assertStringContainsString(self::$backupId, $output);
-    }
+    //     $output = $this->runFunctionSnippet('create_backup_with_encryption_key', [
+    //         self::$databaseId,
+    //         self::$encryptedBackupId,
+    //         self::$kmsKeyName,
+    //     ]);
+    //     $this->assertStringContainsString(self::$backupId, $output);
+    // }
 
     /**
      * @depends testCreateDatabaseWithVersionRetentionPeriod
@@ -178,7 +178,7 @@ class spannerBackupTest extends TestCase
         ]);
 
         $regex = '/Backup %s of size \d+ bytes was copied at \w+ from the source backup %s/';
-        $this->assertRegExp(sprintf($regex, self::$backupId, $newBackupId), $output);
+        $this->assertRegExp(sprintf($regex, $newBackupId, self::$backupId), $output);
     }
 
     /**
