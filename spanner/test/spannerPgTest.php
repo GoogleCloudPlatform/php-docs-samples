@@ -175,9 +175,9 @@ class spannerPgTest extends TestCase
      */
     public function testPgAddColumn()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_query_parameter');
+        $output = $this->runFunctionSnippet('pg_spanner_add_column');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertStringContainsString('Added column SingerAge on table Singers', $output);
+        $this->assertStringContainsString('Added column Rating on table Singers', $output);
     }
 
     /**
@@ -237,6 +237,12 @@ class spannerPgTest extends TestCase
             . 'SingerId: 3, Name: NULL' . PHP_EOL;
 
         $this->assertEquals($expected, $output);
+    }
+
+    public function testIndexCreateSorting()
+    {
+        $output = $this->runFunctionSnippet('pg_spanner_index_create_sorting');
+        $this->assertStringContainsString('Added the SingersBySingerName index.', $output);
     }
 
     public static function tearDownAfterClass(): void

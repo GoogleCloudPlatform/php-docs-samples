@@ -23,32 +23,32 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_add_column]
+// [START spanner_postgresql_create_storing_index]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Add a column to a table present in a PG Spanner database.
+ * Create a new storing index in a Spanner PostgreSQL database.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_add_column(string $instanceId, string $databaseId): void
+function pg_spanner_index_create_sorting(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        'ALTER TABLE Singers ADD COLUMN Rating DOUBLE PRECISION'
+        'CREATE INDEX SingersBySingerName ON Singers(FirstName) INCLUDE(LastName, SingerInfo)'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    print('Added column Rating on table Singers' . PHP_EOL);
+    print('Added the SingersBySingerName index.' . PHP_EOL);
 }
-// [END spanner_postgresql_add_column]
+// [END spanner_postgresql_create_storing_index]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
