@@ -25,7 +25,7 @@ use Google\Cloud\StorageTransfer\V1\TransferSpec;
 use Google\Cloud\StorageTransfer\V1\GcsData;
 
 /**
- * Creates and runs a tranfser job between two GCS buckets
+ * Creates and runs a transfer job between two GCS buckets
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $sourceGcsBucketName The name of the GCS bucket to transfer objects from.
