@@ -41,9 +41,9 @@ function create_bucket_notification(
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    // $notification = $bucket->createNotification($topicName);
+    $notification = $bucket->createNotification($topicName);
 
-    printf('Successfully created notification with ID %s for bucket %s', ($notification ? $notification->id() : "missing notification id"), $bucketName);
+    printf('Successfully created notification with ID %s for bucket %s', ($notification ? $notification->id() : "missing_notification_id"), $bucketName);
 }
 # [END storage_create_bucket_notifications]
 
