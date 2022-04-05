@@ -38,8 +38,6 @@ class BucketNotificationsTest extends TestCase
 
     public function setUp(): void
     {
-        // Sleep to avoid the rate limit for creating/deleting.
-        sleep(5 + rand(2, 4));
         $this->storage = new StorageClient();
         // Append random because tests for multiple PHP versions were running at the same time.
         $uniqueName = sprintf('%s-%s', date_create()->format('Uv'), rand(1000, 9999));
