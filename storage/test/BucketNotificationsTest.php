@@ -17,23 +17,24 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-use Google\Cloud\IAM\PolicyBuilder;
+use Google\Cloud\Core\Iam\PolicyBuilder;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for notification commands.
+ * Unit Tests for commands to publish storage notifications.
  */
 class BucketNotificationsTest extends TestCase
 {
     use TestTrait;
 
     private static $bucketName;
-    protected $storage;
-    protected $bucket;
-    protected $object;
+    private $topicName;
+    private $storage;
+    private $topic;
+    private $bucket;
 
     public function setUp(): void
     {
@@ -41,46 +42,36 @@ class BucketNotificationsTest extends TestCase
         sleep(5 + rand(2, 4));
         $this->storage = new StorageClient();
         // Append random because tests for multiple PHP versions were running at the same time.
-        self::$bucketName = 'php-bucket-lock-' . time() . '-' . rand(1000, 9999);
+        $uniqueName = sprintf('%s-%s', date_create()->format('Uv'), rand(1000, 9999));
+        self::$bucketName = 'php-bucket-lock-' . $uniqueName;
         $this->bucket = $this->storage->createBucket(self::$bucketName);
-    }
-
-    public function tearDown(): void
-    {
-        $this->object && $this->object->delete();
-        $this->bucket->delete();
-    }
-
-    public function uploadObject()
-    {
-        $objectName = 'test-object-' . time();
-        $file = tempnam(sys_get_temp_dir(), '/tests');
-        file_put_contents($file, 'foo' . rand());
-        $this->object = $this->bucket->upload($file, [
-            'name' => $objectName,
-        ]);
-        $this->object->reload();
-    }
-
-    public function testCreateBucketNotification()
-    {
-        $topicName = 'test-topic';
-
+        // Create topic to publish messages
         $pubSub = new PubSubClient();
+        $this->topicName = 'php-storage-bucket-notification-test-topic' . $uniqueName;
+        $this->topic = $pubSub->createTopic($this->topicName);
+        // Allow IAM role roles/pubsub.publisher to project's GCS Service Agent on the target PubSubTopic
         $serviceAccountEmail = $this->storage->getServiceAccount();
-        $topic = $pubSub->topic($topicName);
-        $iam = $topic->iam();
+        $iam = $this->topic->iam();
         $updatedPolicy = (new PolicyBuilder($iam->policy()))
             ->addBinding('roles/pubsub.publisher', [
                 "serviceAccount:$serviceAccountEmail",
             ])
             ->result();
         $iam->setPolicy($updatedPolicy);
+    }
 
-        $output = $this->runFunctionSnippet('create_bucket_notification', [self::$bucketName, $topicName]);
+    public function tearDown(): void
+    {
+        $this->bucket->delete();
+        $this->topic->delete();
+    }
+
+    public function testCreateBucketNotification()
+    {
+        $output = $this->runFunctionSnippet('create_bucket_notification', [self::$bucketName, $this->topicName]);
 
         $this->assertStringContainsString('Successfully created notification', $output);
         $this->assertStringContainsString(self::$bucketName, $output);
-        $this->assertStringContainsString($topicName, $output);
+        $this->assertStringContainsString($this->topicName, $output);
     }
 }
