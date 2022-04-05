@@ -47,6 +47,8 @@ function list_backup_operations(
     $filter = '(metadata.@type:type.googleapis.com/' .
               'google.spanner.admin.database.v1.CreateBackupMetadata) AND ' . "(metadata.database:$databaseId)";
 
+    // See https://cloud.google.com/spanner/docs/reference/rpc/google.spanner.admin.database.v1#listbackupoperationsrequest
+    // for the possible filter values
     $operations = $instance->backupOperations(['filter' => $filter]);
 
     foreach ($operations as $operation) {

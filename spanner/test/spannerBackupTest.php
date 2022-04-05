@@ -168,7 +168,7 @@ class spannerBackupTest extends TestCase
      */
     public function testCopyBackup()
     {
-        $newBackupId = 'copy-' . self::$backupId;
+        $newBackupId = 'copy-' . self::$backupId . '-' . time();
 
         $output = $this->runFunctionSnippet('copy_backup', [
             $newBackupId,
@@ -176,7 +176,7 @@ class spannerBackupTest extends TestCase
             self::$backupId
         ]);
 
-        $regex = '/Backup %s of size \d+ bytes was copied at \w+ from the source backup %s/';
+        $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
         $this->assertRegExp(sprintf($regex, $newBackupId, self::$backupId), $output);
     }
 
