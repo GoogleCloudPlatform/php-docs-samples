@@ -813,8 +813,8 @@ class storageTest extends TestCase
           $testEndpoint,
         ]);
 
-        $this->assertStringContainsString(sprintf('[apiEndpoint:Google\Cloud\Storage\Connection\Rest:private] => %s', $testEndpoint), $output);
-        $this->assertStringContainsString(sprintf('[baseUri:Google\Cloud\Core\RequestBuilder:private] => %s/storage/v1/', $testEndpoint), $output);
+        $this->assertStringContainsString(sprintf('API endpoint: %s', $testEndpoint), $output);
+        $this->assertStringContainsString(sprintf('Base URI: %s/storage/v1/', $testEndpoint), $output);
         $this->assertStringContainsString('Storage Client initialized.', $output);
     }
 

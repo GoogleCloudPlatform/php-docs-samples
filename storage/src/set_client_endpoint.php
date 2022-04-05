@@ -44,7 +44,27 @@ function set_client_endpoint(
         'apiEndpoint' => $endpoint,
     ]);
 
-    print_r($storage);
+    // fetching apiEndpoint and baseUri from StorageClient is excluded for brevity
+    # [START_EXCLUDE]
+    $connectionProperty = new \ReflectionProperty($storage, 'connection');
+    $connectionProperty->setAccessible(true);
+    $connection = $connectionProperty->getValue($storage);
+
+    $apiEndpointProperty = new \ReflectionProperty($connection, 'apiEndpoint');
+    $apiEndpointProperty->setAccessible(true);
+    $apiEndpoint = $apiEndpointProperty->getValue($connection);
+
+    $requestBuilderProperty = new \ReflectionProperty($connection, 'requestBuilder');
+    $requestBuilderProperty->setAccessible(true);
+    $requestBuilder = $requestBuilderProperty->getValue($connection);
+
+    $baseUriProperty = new \ReflectionProperty($requestBuilder, 'baseUri');
+    $baseUriProperty->setAccessible(true);
+    $baseUri = $baseUriProperty->getValue($requestBuilder);
+    # [END_EXCLUDE]
+
+    printf('API endpoint: %s' . PHP_EOL, $apiEndpoint);
+    printf('Base URI: %s' . PHP_EOL, $baseUri);
     print('Storage Client initialized.' . PHP_EOL);
 }
 # [END storage_set_client_endpoint]
