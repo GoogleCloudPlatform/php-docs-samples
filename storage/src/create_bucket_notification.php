@@ -45,7 +45,7 @@ function create_bucket_notification(
 
     printf(
         'Successfully created notification with ID %s for bucket %s in topic %s',
-        ($notification ? $notification->id() : "missing_notification_id"),
+        $notification->id(),
         $bucketName,
         $topicName
     );
