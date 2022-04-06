@@ -57,7 +57,7 @@ Payload Format: %s
 Blob Name Prefix: %s
 Etag: %s
 Self Link: %s
-EOF.PHP_EOL,
+EOF . PHP_EOL,
         $notification->id(),
         $notificationInfo['topic'],
         $notificationInfo['event_types'] ?? '',
