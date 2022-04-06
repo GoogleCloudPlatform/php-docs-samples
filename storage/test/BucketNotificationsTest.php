@@ -160,4 +160,44 @@ class BucketNotificationsTest extends TestCase
             $output
         );
     }
+
+    public function testDeleteBucketNotifications()
+    {
+        // create a notification before deleting
+        $this->runFunctionSnippet(
+            'create_bucket_notifications',
+            [
+                self::$bucketName,
+                $this->topicName,
+            ]
+        );
+
+        $output = $this->runFunctionSnippet(
+            'list_bucket_notifications',
+            [
+              self::$bucketName,
+          ]
+        );
+        $this->assertStringContainsString('Found notification with id 1', $output);
+
+        // first notification has id 1
+        $notificationId = '1';
+
+        $output = $this->runFunctionSnippet(
+            'delete_bucket_notifications',
+            [
+            self::$bucketName,
+            $notificationId
+        ]
+        );
+
+        $output .= $this->runFunctionSnippet(
+            'list_bucket_notifications',
+            [
+              self::$bucketName,
+          ]
+        );
+        $this->assertStringContainsString('Successfully deleted notification with ID '.$notificationId, $output);
+        $this->assertStringContainsString('Listed 0 notifications of storage bucket', $output);
+    }
 }
