@@ -66,7 +66,7 @@ class BucketNotificationsTest extends TestCase
 
     public function testCreateBucketNotification()
     {
-        $output = $this->runFunctionSnippet('create_bucket_notification', [self::$bucketName, $this->topicName]);
+        $output = $this->runFunctionSnippet('create_bucket_notifications', [self::$bucketName, $this->topicName]);
 
         $this->assertStringContainsString('Successfully created notification', $output);
         $this->assertStringContainsString(self::$bucketName, $output);

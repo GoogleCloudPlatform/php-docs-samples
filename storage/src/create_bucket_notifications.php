@@ -28,11 +28,13 @@ use Google\Cloud\Storage\StorageClient;
 
 /**
  * Creates a notification configuration for a bucket.
+ * This sample is used on this page:
+ *   https://cloud.google.com/storage/docs/reporting-changes
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $topicName The name of the topic you would like to create a notification.
  */
-function create_bucket_notification(
+function create_bucket_notifications(
     string $bucketName,
     string $topicName
 ): void {
