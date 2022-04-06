@@ -43,10 +43,10 @@ function list_bucket_notifications(
     $notifications = $bucket->notifications();
 
     foreach ($notifications as $notification) {
-        printf('Found notification with id %s'. PHP_EOL, $notification->id());
+        printf('Found notification with id %s' . PHP_EOL, $notification->id());
     }
     printf(
-        'Listed %s notifications of storage bucket %s.'. PHP_EOL,
+        'Listed %s notifications of storage bucket %s.' . PHP_EOL,
         iterator_count($notifications),
         $bucketName,
     );

@@ -60,10 +60,10 @@ Self Link: %s
 EOF.PHP_EOL,
         $notification->id(),
         $notificationInfo['topic'],
-        $notificationInfo['event_types']??'',
-        $notificationInfo['custom_attributes']??'',
+        $notificationInfo['event_types'] ?? '',
+        $notificationInfo['custom_attributes'] ?? '',
         $notificationInfo['payload_format'],
-        $notificationInfo['blob_name_prefix']??'',
+        $notificationInfo['blob_name_prefix'] ?? '',
         $notificationInfo['etag'],
         $notificationInfo['selfLink']
     );

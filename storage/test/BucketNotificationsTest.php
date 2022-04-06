@@ -146,7 +146,7 @@ class BucketNotificationsTest extends TestCase
           Blob Name Prefix: %s
           Etag: %s
           Self Link: https://www.googleapis.com/storage/v1/b/%s/notificationConfigs/%s
-          EOF.PHP_EOL,
+          EOF . PHP_EOL,
                 $notificationId,
                 $topicName,
                 '',
@@ -197,7 +197,7 @@ class BucketNotificationsTest extends TestCase
               self::$bucketName,
           ]
         );
-        $this->assertStringContainsString('Successfully deleted notification with ID '.$notificationId, $output);
+        $this->assertStringContainsString('Successfully deleted notification with ID ' . $notificationId, $output);
         $this->assertStringContainsString('Listed 0 notifications of storage bucket', $output);
     }
 }

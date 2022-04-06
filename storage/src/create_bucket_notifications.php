@@ -46,7 +46,7 @@ function create_bucket_notifications(
     $notification = $bucket->createNotification($topicName);
 
     printf(
-        'Successfully created notification with ID %s for bucket %s in topic %s'. PHP_EOL,
+        'Successfully created notification with ID %s for bucket %s in topic %s' . PHP_EOL,
         $notification->id(),
         $bucketName,
         $topicName
