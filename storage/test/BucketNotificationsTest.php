@@ -66,10 +66,98 @@ class BucketNotificationsTest extends TestCase
 
     public function testCreateBucketNotification()
     {
-        $output = $this->runFunctionSnippet('create_bucket_notifications', [self::$bucketName, $this->topicName]);
+        $output = $this->runFunctionSnippet(
+            'create_bucket_notifications',
+            [
+                self::$bucketName,
+                $this->topicName,
+            ]
+        );
 
-        $this->assertStringContainsString('Successfully created notification', $output);
-        $this->assertStringContainsString(self::$bucketName, $output);
-        $this->assertStringContainsString($this->topicName, $output);
+        // first notification has id 1
+        $this->assertStringContainsString(sprintf(
+            'Successfully created notification with ID 1 for bucket %s in topic %s',
+            self::$bucketName,
+            $this->topicName
+        ), $output);
+    }
+
+    public function testListBucketNotification()
+    {
+        // create a notification before listing
+        $output = $this->runFunctionSnippet(
+            'create_bucket_notifications',
+            [
+                self::$bucketName,
+                $this->topicName,
+            ]
+        );
+
+        $output .= $this->runFunctionSnippet(
+            'list_bucket_notifications',
+            [
+                self::$bucketName,
+            ]
+        );
+
+        // first notification has id 1
+        $this->assertStringContainsString('Found notification with id 1', $output);
+        $this->assertStringContainsString(sprintf(
+            'Listed 1 notifications of storage bucket %s.',
+            self::$bucketName,
+        ), $output);
+    }
+
+    public function testPrintPubsubBucketNotification()
+    {
+        // create a notification before printing
+        $output = $this->runFunctionSnippet(
+            'create_bucket_notifications',
+            [
+                self::$bucketName,
+                $this->topicName,
+            ]
+        );
+        // first notification has id 1
+        $notificationId = '1';
+
+        $output .= $this->runFunctionSnippet(
+            'print_pubsub_bucket_notification',
+            [
+                self::$bucketName,
+                $notificationId,
+            ]
+        );
+
+        $topicName = sprintf(
+            '//pubsub.googleapis.com/projects/%s/topics/%s',
+            getenv('GOOGLE_PROJECT_ID'),
+            $this->topicName
+        );
+
+        $this->assertStringContainsString(
+            sprintf(
+                <<<EOF
+          Notification ID: %s
+          Topic Name: %s
+          Event Types: %s
+          Custom Attributes: %s
+          Payload Format: %s
+          Blob Name Prefix: %s
+          Etag: %s
+          Self Link: https://www.googleapis.com/storage/v1/b/%s/notificationConfigs/%s
+          EOF.PHP_EOL,
+                $notificationId,
+                $topicName,
+                '',
+                '',
+                'JSON_API_V1',
+                '',
+                $notificationId,
+                self::$bucketName,
+                $notificationId
+            ),
+            $output
+        );
     }
 }

@@ -47,13 +47,26 @@ function print_pubsub_bucket_notification(
     $notification = $bucket->notification($notificationId);
     $notificationInfo = $notification->info();
 
-    printf('Notification ID: %s' . PHP_EOL, $notification->id());
-    printf('Event Types: %s' . PHP_EOL, $notificationInfo['event_types'] ?? '');
-    printf('Custom Attributes: %s' . PHP_EOL, $notificationInfo['custom_attributes'] ?? '');
-    printf('Payload Format: %s' . PHP_EOL, $notificationInfo['payload_format']);
-    printf('Blob Name Prefix: %s' . PHP_EOL, $notificationInfo['blob_name_prefix'] ?? '');
-    printf('Etag: %s' . PHP_EOL, $notificationInfo['etag']);
-    printf('Self Link: %s' . PHP_EOL, $notificationInfo['selfLink']);
+    printf(
+        <<<EOF
+Notification ID: %s
+Topic Name: %s
+Event Types: %s
+Custom Attributes: %s
+Payload Format: %s
+Blob Name Prefix: %s
+Etag: %s
+Self Link: %s
+EOF.PHP_EOL,
+        $notification->id(),
+        $notificationInfo['topic'],
+        $notificationInfo['event_types']??'',
+        $notificationInfo['custom_attributes']??'',
+        $notificationInfo['payload_format'],
+        $notificationInfo['blob_name_prefix']??'',
+        $notificationInfo['etag'],
+        $notificationInfo['selfLink']
+    );
 }
 # [END storage_print_pubsub_bucket_notification]
 
