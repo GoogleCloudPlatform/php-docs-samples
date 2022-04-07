@@ -166,6 +166,23 @@ class spannerBackupTest extends TestCase
     /**
      * @depends testCreateBackup
      */
+    public function testCopyBackup()
+    {
+        $newBackupId = 'copy-' . self::$backupId . '-' . time();
+
+        $output = $this->runFunctionSnippet('copy_backup', [
+            $newBackupId,
+            self::$instanceId,
+            self::$backupId
+        ]);
+
+        $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
+        $this->assertRegExp(sprintf($regex, $newBackupId, self::$backupId), $output);
+    }
+
+    /**
+     * @depends testCreateBackup
+     */
     public function testListBackups()
     {
         $output = $this->runFunctionSnippet('list_backups');

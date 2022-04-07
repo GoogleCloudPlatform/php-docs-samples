@@ -28,10 +28,6 @@ use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
  * List all instances for a particular Cloud project and zone.
- * Example:
- * ```
- * list_instances($projectId, $zone);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $zone Zone to list instances for (like "us-central1-a").

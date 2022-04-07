@@ -29,10 +29,6 @@ use Google\Cloud\Compute\V1\ImagesClient;
 /**
  * Prints a list of all non-deprecated image names available in a given project,
  * divided into pages as returned by the Compute Engine API.
- * Example:
- * ```
- * list_images_by_page($projectId, $pageSize);
- * ```
  *
  * @param string $projectId Project ID or project number of the Cloud project you want to list images from.
  * @param int $pageSize Size of the pages you want the API to return on each call.

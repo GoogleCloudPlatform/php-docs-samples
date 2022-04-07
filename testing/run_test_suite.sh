@@ -67,6 +67,7 @@ ALT_PROJECT_TESTS=(
     video
     vision
     compute/cloud-client/instances
+    compute/cloud-client/firewall
 )
 
 TMP_REPORT_DIR=$(mktemp -d)

@@ -38,10 +38,6 @@ use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 
 /**
  * Creates an instance in the specified project and zone.
- * Example:
- * ```
- * create_instance($projectId, $zone, $instanceName);
- * ```
  *
  * @param string $projectId Project ID of the Cloud project to create the instance in.
  * @param string $zone Zone to create the instance in (like "us-central1-a").
