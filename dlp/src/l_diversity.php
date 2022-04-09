@@ -189,3 +189,7 @@ function l_diversity(
     }
 }
 # [END dlp_l_diversity]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
