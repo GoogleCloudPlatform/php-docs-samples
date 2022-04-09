@@ -40,13 +40,13 @@ use Google\Cloud\Dlp\V2\ContentItem;
  * @param string $callingProjectId The GCP Project ID to run the API call under
  * @param string $string           The string to deidentify
  * @param int    $numberToMask     (Optional) The maximum number of sensitive characters to mask in a match
- * @param string $maskingCharacter (Optional) The character to mask matching sensitive data with
+ * @param string $maskingCharacter (Optional) The character to mask matching sensitive data with (defaults to "x")
  */
 function deidentify_mask(
     string $callingProjectId,
     string $string,
     int $numberToMask = 0,
-    string $maskingCharacter = ''
+    string $maskingCharacter = 'x'
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

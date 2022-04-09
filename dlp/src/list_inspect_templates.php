@@ -32,7 +32,7 @@ use Google\Cloud\Dlp\V2\DlpServiceClient;
  *
  * @param string $callingProjectId  The project ID to run the API call under
  */
-function list_inspect_template(string $callingProjectId): void
+function list_inspect_templates(string $callingProjectId): void
 {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

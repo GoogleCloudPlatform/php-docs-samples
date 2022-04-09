@@ -48,7 +48,6 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
  * @param string $datasetId         The ID of the dataset to inspect
  * @param string $tableId           The ID of the table to inspect
- * @param string $columnName        The name of the column to compute risk metrics for, e.g. "age"
  * @param int    $maxFindings       (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_bigquery(
@@ -58,7 +57,6 @@ function inspect_bigquery(
     string $subscriptionId,
     string $datasetId,
     string $tableId,
-    string $columnName,
     int $maxFindings = 0
 ): void {
     // Instantiate a client.
