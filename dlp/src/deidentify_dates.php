@@ -25,6 +25,8 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_date_shift]
+use DateTime;
+use Exception;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DateShiftConfig;
@@ -45,7 +47,7 @@ use Google\Type\Date;
  * If contextFieldName is not specified, a random shift amount will be used for every row.
  * If contextFieldName is specified, then 'wrappedKey' and 'keyName' must also be set.
  *
- * @param string $callingProject    The GCP Project ID to run the API call under
+ * @param string $callingProjectId  The GCP Project ID to run the API call under
  * @param string $inputCsvFile      The path to the CSV file to deidentify
  * @param string $outputCsvFile     The path to save the date-shifted CSV file to
  * @param string $dateFieldNames    The comma-separated list of (date) fields in the CSV file to date shift
@@ -56,7 +58,7 @@ use Google\Type\Date;
  * @param string $wrappedKey        (Optional) The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key
  */
 function deidentify_dates(
-    string $callingProject,
+    string $callingProjectId,
     string $inputCsvFile,
     string $outputCsvFile,
     string $dateFieldNames,

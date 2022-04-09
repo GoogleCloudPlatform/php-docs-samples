@@ -25,6 +25,7 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_k_map]
+use Exception;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;

@@ -47,7 +47,6 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $tableId          The ID of the table to inspect
  * @param string $columnName       The name of the column to compute risk metrics for, e.g. "age"
  */
-
 function categorical_stats(
     string $callingProjectId,
     string $dataProjectId,

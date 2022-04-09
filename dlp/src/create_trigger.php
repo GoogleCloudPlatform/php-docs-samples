@@ -53,7 +53,6 @@ use Google\Protobuf\Duration;
  * @param bool   $autoPopulateTimespan (Optional) Automatically limit scan to new content only
  * @param int    $maxFindings          (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
-
 function create_trigger(
     string $callingProjectId,
     string $bucketName,

@@ -42,6 +42,7 @@ use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
  * @param int    $maxFindings      (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function create_inspect_template(
+    string $callingProjectId,
     string $templateId,
     string $displayName = '',
     string $description = '',
