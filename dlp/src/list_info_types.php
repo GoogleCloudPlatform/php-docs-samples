@@ -22,41 +22,36 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) > 3) {
-    return print("Usage: php list_info_types.php [FILTER] [LANGUAGE_CODE]\n");
-}
-$filter = isset($argv[1]) ? $argv[1] : '';
-$languageCode = isset($argv[2]) ? $argv[2] : '';
+namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_info_types]
-/**
- * Lists all Info Types for the Data Loss Prevention (DLP) API.
- */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $filter = ''; // (Optional) filter to use, empty for ''.
-// $languageCode = ''; // (Optional) language code, empty for 'en-US'.
+/**
+ * Lists all Info Types for the Data Loss Prevention (DLP) API.
+ *
+ * @param string $filter        (Optional) filter to use
+ * @param string $languageCode  (Optional) language code, empty for 'en-US'
+ */
+function list_info_types(string $filter = '', string $languageCode = ''): void
+{
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
+    // Run request
+    $response = $dlp->listInfoTypes([
+        'languageCode' => $languageCode,
+        'filter' => $filter
+    ]);
 
-// Run request
-$response = $dlp->listInfoTypes([
-    'languageCode' => $languageCode,
-    'filter' => $filter
-]);
-
-// Print the results
-print('Info Types:' . PHP_EOL);
-foreach ($response->getInfoTypes() as $infoType) {
-    printf(
-        '  %s (%s)' . PHP_EOL,
-        $infoType->getDisplayName(),
-        $infoType->getName()
-    );
+    // Print the results
+    print('Info Types:' . PHP_EOL);
+    foreach ($response->getInfoTypes() as $infoType) {
+        printf(
+            '  %s (%s)' . PHP_EOL,
+            $infoType->getDisplayName(),
+            $infoType->getName()
+        );
+    }
 }
 # [END dlp_list_info_types]

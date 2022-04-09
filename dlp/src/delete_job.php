@@ -22,30 +22,26 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php delete_job.php JOB_ID\n");
-}
-list($_, $jobId) = $argv;
+namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_delete_job]
-/**
- * Delete results of a Data Loss Prevention API job
- */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $jobId = 'The name of the job whose results should be deleted';
+/**
+ * Delete results of a Data Loss Prevention API job
+ *
+ * @param string $jobId The name of the job whose results should be deleted
+ */
+function delete_job(string $jobId): void
+{
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
+    // Run job-deletion request
+    // The Parent project ID is automatically extracted from this parameter
+    $dlp->deleteDlpJob($jobId);
 
-// Run job-deletion request
-// The Parent project ID is automatically extracted from this parameter
-$dlp->deleteDlpJob($jobId);
-
-// Print status
-printf('Successfully deleted job %s' . PHP_EOL, $jobId);
+    // Print status
+    printf('Successfully deleted job %s' . PHP_EOL, $jobId);
+}
 // [END dlp_delete_job]
