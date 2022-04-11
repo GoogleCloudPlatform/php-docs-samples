@@ -175,8 +175,8 @@ class BucketNotificationsTest extends TestCase
         $output = $this->runFunctionSnippet(
             'list_bucket_notifications',
             [
-              self::$bucketName,
-          ]
+                self::$bucketName,
+            ]
         );
         $this->assertStringContainsString('Found notification with id 1', $output);
 
@@ -186,16 +186,16 @@ class BucketNotificationsTest extends TestCase
         $output = $this->runFunctionSnippet(
             'delete_bucket_notifications',
             [
-            self::$bucketName,
-            $notificationId
-        ]
+                self::$bucketName,
+                $notificationId
+            ]
         );
 
         $output .= $this->runFunctionSnippet(
             'list_bucket_notifications',
             [
-              self::$bucketName,
-          ]
+                self::$bucketName,
+            ]
         );
         $this->assertStringContainsString('Successfully deleted notification with ID ' . $notificationId, $output);
         $this->assertStringContainsString('Listed 0 notifications of storage bucket', $output);
