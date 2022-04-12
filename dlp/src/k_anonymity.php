@@ -39,13 +39,13 @@ use Google\Cloud\PubSub\PubSubClient;
 /**
  * Computes the k-anonymity of a column set in a Google BigQuery table.
  *
- * @param string $callingProjectId  The project ID to run the API call under
- * @param string $dataProjectId     The project ID containing the target Datastore
- * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes
- * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId         The ID of the dataset to inspect
- * @param string $tableId           The ID of the table to inspect
- * @param array  $quasiIdNames      Array columns that form a composite key (quasi-identifiers)
+ * @param string    $callingProjectId  The project ID to run the API call under
+ * @param string    $dataProjectId     The project ID containing the target Datastore
+ * @param string    $topicId           The name of the Pub/Sub topic to notify once the job completes
+ * @param string    $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
+ * @param string    $datasetId         The ID of the dataset to inspect
+ * @param string    $tableId           The ID of the table to inspect
+ * @param string[]  $quasiIdNames      Array columns that form a composite key (quasi-identifiers)
  */
 function k_anonymity(
     string $callingProjectId,
