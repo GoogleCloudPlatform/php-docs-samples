@@ -61,10 +61,10 @@ function set_client_endpoint(
     $baseUriProperty = new \ReflectionProperty($requestBuilder, 'baseUri');
     $baseUriProperty->setAccessible(true);
     $baseUri = $baseUriProperty->getValue($requestBuilder);
-    # [END_EXCLUDE]
 
     printf('API endpoint: %s' . PHP_EOL, $apiEndpoint);
     printf('Base URI: %s' . PHP_EOL, $baseUri);
+    # [END_EXCLUDE]
     print('Storage Client initialized.' . PHP_EOL);
 }
 # [END storage_set_client_endpoint]
