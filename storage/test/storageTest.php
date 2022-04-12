@@ -809,8 +809,8 @@ class storageTest extends TestCase
         $testEndpoint = 'https://test-endpoint.com';
 
         $output = self::runFunctionSnippet('set_client_endpoint', [
-          self::$projectId,
-          $testEndpoint,
+            self::$projectId,
+            $testEndpoint,
         ]);
 
         $this->assertStringContainsString(sprintf('API endpoint: %s', $testEndpoint), $output);
