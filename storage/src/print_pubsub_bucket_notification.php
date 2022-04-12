@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,36 +23,52 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_download_file]
-# [START storage_stream_file_download]
+# [START storage_print_pubsub_bucket_notification]
+
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Download an object from Cloud Storage and save it as a local file.
+ * Lists notification configurations for a bucket.
+ * This sample is used on this page:
+ *   https://cloud.google.com/storage/docs/reporting-changes
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $objectName The name of your Cloud Storage object.
- * @param string $destination The local destination to save the object.
+ * @param string $notificationId The ID of the notification.
  */
-function download_object($bucketName, $objectName, $destination)
-{
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $destination = '/path/to/your/file';
+function print_pubsub_bucket_notification(
+    string $bucketName,
+    string $notificationId
+): void {
+    // $bucketName = 'your-bucket';
+    // $notificationId = 'your-notification-id';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $object = $bucket->object($objectName);
-    $object->downloadToFile($destination);
+    $notification = $bucket->notification($notificationId);
+    $notificationInfo = $notification->info();
+
     printf(
-        'Downloaded gs://%s/%s to %s' . PHP_EOL,
-        $bucketName,
-        $objectName,
-        basename($destination)
+        <<<EOF
+Notification ID: %s
+Topic Name: %s
+Event Types: %s
+Custom Attributes: %s
+Payload Format: %s
+Blob Name Prefix: %s
+Etag: %s
+Self Link: %s
+EOF . PHP_EOL,
+        $notification->id(),
+        $notificationInfo['topic'],
+        $notificationInfo['event_types'] ?? '',
+        $notificationInfo['custom_attributes'] ?? '',
+        $notificationInfo['payload_format'],
+        $notificationInfo['blob_name_prefix'] ?? '',
+        $notificationInfo['etag'],
+        $notificationInfo['selfLink']
     );
 }
-# [END storage_stream_file_download]
-# [END storage_download_file]
+# [END storage_print_pubsub_bucket_notification]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

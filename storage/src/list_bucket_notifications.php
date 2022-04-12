@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,36 +23,35 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_download_file]
-# [START storage_stream_file_download]
+# [START storage_list_bucket_notifications]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Download an object from Cloud Storage and save it as a local file.
+ * Lists notification configurations for a bucket.
+ * This sample is used on this page:
+ *   https://cloud.google.com/storage/docs/reporting-changes
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $objectName The name of your Cloud Storage object.
- * @param string $destination The local destination to save the object.
  */
-function download_object($bucketName, $objectName, $destination)
-{
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $destination = '/path/to/your/file';
+function list_bucket_notifications(
+    string $bucketName
+): void {
+    // $bucketName = 'your-bucket';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $object = $bucket->object($objectName);
-    $object->downloadToFile($destination);
+    $notifications = $bucket->notifications();
+
+    foreach ($notifications as $notification) {
+        printf('Found notification with id %s' . PHP_EOL, $notification->id());
+    }
     printf(
-        'Downloaded gs://%s/%s to %s' . PHP_EOL,
+        'Listed %s notifications of storage bucket %s.' . PHP_EOL,
+        iterator_count($notifications),
         $bucketName,
-        $objectName,
-        basename($destination)
     );
 }
-# [END storage_stream_file_download]
-# [END storage_download_file]
+# [END storage_list_bucket_notifications]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
