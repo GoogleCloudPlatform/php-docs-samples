@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MarkTaskDoneCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('done')
             ->setDescription('Mark a task as done')

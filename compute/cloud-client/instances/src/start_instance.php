@@ -40,7 +40,7 @@ function start_instance(
     string $projectId,
     string $zone,
     string $instanceName
-) {
+): void {
     // Start the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->start($instanceName, $projectId, $zone);

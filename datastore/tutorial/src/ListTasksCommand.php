@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListTasksCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('list-tasks')
             ->setDescription(
@@ -53,10 +53,10 @@ class ListTasksCommand extends Command
         } else {
             $datastore = build_datastore_service_with_namespace();
         }
+        /** @var Entity[] $result */
         $result = list_tasks($datastore);
         $table = new Table($output);
         $table->setHeaders(array('ID', 'Description', 'Status', 'Created'));
-        /* @var Entity $task */
         foreach ($result as $index => $task) {
             $done = $task['done'] ? 'done' : 'created';
             $table->setRow(

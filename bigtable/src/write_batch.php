@@ -49,10 +49,10 @@ function write_batch(
     $columnFamilyId = 'stats_summary';
     $mutations = [
         (new Mutations())
-            ->upsert($columnFamilyId, 'connected_wifi', 1, $timestampMicros)
+            ->upsert($columnFamilyId, 'connected_wifi', '1', $timestampMicros)
             ->upsert($columnFamilyId, 'os_build', '12155.0.0-rc1', $timestampMicros),
         (new Mutations())
-            ->upsert($columnFamilyId, 'connected_wifi', 1, $timestampMicros)
+            ->upsert($columnFamilyId, 'connected_wifi', '1', $timestampMicros)
             ->upsert($columnFamilyId, 'os_build', '12145.0.0-rc6', $timestampMicros)];
 
     $table->mutateRows([

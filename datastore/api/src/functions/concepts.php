@@ -21,6 +21,7 @@ use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\EntityIterator;
+use Google\Cloud\Datastore\EntityInterface;
 use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\Query;
 
@@ -29,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @return DatastoreClient
  */
-function initialize_client(): void
+function initialize_client(): DatastoreClient
 {
     $datastore = new DatastoreClient();
     return $datastore;
@@ -41,9 +42,10 @@ function initialize_client(): void
  * @param DatastoreClient $datastore
  * @return Entity
  */
-function basic_entity(DatastoreClient $datastore): void
+function basic_entity(DatastoreClient $datastore): Entity
 {
     // [START datastore_basic_entity]
+    /** @var Entity */
     $task = $datastore->entity('Task', [
         'category' => 'Personal',
         'done' => false,
@@ -60,10 +62,11 @@ function basic_entity(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Entity
  */
-function upsert(DatastoreClient $datastore): void
+function upsert(DatastoreClient $datastore): Entity
 {
     // [START datastore_upsert]
     $key = $datastore->key('Task', 'sampleTask');
+    /** @var Entity */
     $task = $datastore->entity($key, [
         'category' => 'Personal',
         'done' => false,
@@ -83,9 +86,10 @@ function upsert(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Entity
  */
-function insert(DatastoreClient $datastore): void
+function insert(DatastoreClient $datastore): Entity
 {
     // [START datastore_insert]
+    /** @var Entity */
     $task = $datastore->entity('Task', [
         'category' => 'Personal',
         'done' => false,
@@ -101,12 +105,13 @@ function insert(DatastoreClient $datastore): void
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
- * @return Entity|null
+ * @return Entity
  */
-function lookup(DatastoreClient $datastore): void
+function lookup(DatastoreClient $datastore): Entity
 {
     // [START datastore_lookup]
     $key = $datastore->key('Task', 'sampleTask');
+    /** @var Entity */
     $task = $datastore->lookup($key);
     // [END datastore_lookup]
     return $task;
@@ -116,13 +121,14 @@ function lookup(DatastoreClient $datastore): void
  * Update a Datastore entity in a transaction.
  *
  * @param DatastoreClient $datastore
- * @return Entity|null
+ * @return Entity
  */
-function update(DatastoreClient $datastore): void
+function update(DatastoreClient $datastore): Entity
 {
     // [START datastore_update]
     $transaction = $datastore->transaction();
     $key = $datastore->key('Task', 'sampleTask');
+    /** @var Entity */
     $task = $transaction->lookup($key);
     $task['priority'] = 5;
     $transaction->update($task);
@@ -148,7 +154,7 @@ function delete(DatastoreClient $datastore, Key $taskKey): void
  * Upsert multiple Datastore entities.
  *
  * @param DatastoreClient $datastore
- * @param array <Entity> $tasks
+ * @param array<Entity> $tasks
  */
 function batch_upsert(DatastoreClient $datastore, array $tasks): void
 {
@@ -161,10 +167,10 @@ function batch_upsert(DatastoreClient $datastore, array $tasks): void
  * Lookup multiple entities.
  *
  * @param DatastoreClient $datastore
- * @param array <Key> $keys
- * @return array <Entity>
+ * @param array<Key> $keys
+ * @return array<Entity>
  */
-function batch_lookup(DatastoreClient $datastore, array $keys): void
+function batch_lookup(DatastoreClient $datastore, array $keys): array
 {
     // [START datastore_batch_lookup]
     $result = $datastore->lookupBatch($keys);
@@ -196,7 +202,7 @@ function batch_delete(DatastoreClient $datastore, array $keys): void
  * @param DatastoreClient $datastore
  * @return Key
  */
-function named_key(DatastoreClient $datastore): void
+function named_key(DatastoreClient $datastore): Key
 {
     // [START datastore_named_key]
     $taskKey = $datastore->key('Task', 'sampleTask');
@@ -210,7 +216,7 @@ function named_key(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Key
  */
-function incomplete_key(DatastoreClient $datastore): void
+function incomplete_key(DatastoreClient $datastore): Key
 {
     // [START datastore_incomplete_key]
     $taskKey = $datastore->key('Task');
@@ -224,7 +230,7 @@ function incomplete_key(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Key
  */
-function key_with_parent(DatastoreClient $datastore): void
+function key_with_parent(DatastoreClient $datastore): Key
 {
     // [START datastore_key_with_parent]
     $taskKey = $datastore->key('TaskList', 'default')
@@ -239,7 +245,7 @@ function key_with_parent(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Key
  */
-function key_with_multilevel_parent(DatastoreClient $datastore): void
+function key_with_multilevel_parent(DatastoreClient $datastore): Key
 {
     // [START datastore_key_with_multilevel_parent]
     $taskKey = $datastore->key('User', 'alice')
@@ -256,9 +262,10 @@ function key_with_multilevel_parent(DatastoreClient $datastore): void
  * @param Key $key
  * @return Entity
  */
-function properties(DatastoreClient $datastore, Key $key): void
+function properties(DatastoreClient $datastore, Key $key): Entity
 {
     // [START datastore_properties]
+    /** @var Entity */
     $task = $datastore->entity(
         $key,
         [
@@ -282,9 +289,10 @@ function properties(DatastoreClient $datastore, Key $key): void
  * @param Key $key
  * @return Entity
  */
-function array_value(DatastoreClient $datastore, Key $key): void
+function array_value(DatastoreClient $datastore, Key $key): Entity
 {
     // [START datastore_array_value]
+    /** @var Entity */
     $task = $datastore->entity(
         $key,
         [
@@ -302,7 +310,7 @@ function array_value(DatastoreClient $datastore, Key $key): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function basic_query(DatastoreClient $datastore): void
+function basic_query(DatastoreClient $datastore): Query
 {
     // [START datastore_basic_query]
     $query = $datastore->query()
@@ -318,9 +326,9 @@ function basic_query(DatastoreClient $datastore): void
  * Run a given query.
  *
  * @param DatastoreClient $datastore
- * @return EntityIterator<Entity>
+ * @return EntityIterator<EntityInterface>
  */
-function run_query(DatastoreClient $datastore, Query $query): void
+function run_query(DatastoreClient $datastore, Query $query): EntityIterator
 {
     // [START datastore_run_query]
     $result = $datastore->runQuery($query);
@@ -334,7 +342,7 @@ function run_query(DatastoreClient $datastore, Query $query): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function property_filter(DatastoreClient $datastore): void
+function property_filter(DatastoreClient $datastore): Query
 {
     // [START datastore_property_filter]
     $query = $datastore->query()
@@ -350,7 +358,7 @@ function property_filter(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function composite_filter(DatastoreClient $datastore): void
+function composite_filter(DatastoreClient $datastore): Query
 {
     // [START datastore_composite_filter]
     $query = $datastore->query()
@@ -367,7 +375,7 @@ function composite_filter(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function key_filter(DatastoreClient $datastore): void
+function key_filter(DatastoreClient $datastore): Query
 {
     // [START datastore_key_filter]
     $query = $datastore->query()
@@ -383,7 +391,7 @@ function key_filter(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function ascending_sort(DatastoreClient $datastore): void
+function ascending_sort(DatastoreClient $datastore): Query
 {
     // [START datastore_ascending_sort]
     $query = $datastore->query()
@@ -399,7 +407,7 @@ function ascending_sort(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function descending_sort(DatastoreClient $datastore): void
+function descending_sort(DatastoreClient $datastore): Query
 {
     // [START datastore_descending_sort]
     $query = $datastore->query()
@@ -415,7 +423,7 @@ function descending_sort(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function multi_sort(DatastoreClient $datastore): void
+function multi_sort(DatastoreClient $datastore): Query
 {
     // [START datastore_multi_sort]
     $query = $datastore->query()
@@ -432,7 +440,7 @@ function multi_sort(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function ancestor_query(DatastoreClient $datastore): void
+function ancestor_query(DatastoreClient $datastore): Query
 {
     // [START datastore_ancestor_query]
     $ancestorKey = $datastore->key('TaskList', 'default');
@@ -450,7 +458,7 @@ function ancestor_query(DatastoreClient $datastore): void
  * @param Key $lastSeenKey
  * @return Query
  */
-function kindless_query(DatastoreClient $datastore, Key $lastSeenKey): void
+function kindless_query(DatastoreClient $datastore, Key $lastSeenKey): Query
 {
     // [START datastore_kindless_query]
     $query = $datastore->query()
@@ -465,7 +473,7 @@ function kindless_query(DatastoreClient $datastore, Key $lastSeenKey): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function keys_only_query(DatastoreClient $datastore): void
+function keys_only_query(DatastoreClient $datastore): Query
 {
     // [START datastore_keys_only_query]
     $query = $datastore->query()
@@ -480,7 +488,7 @@ function keys_only_query(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function projection_query(DatastoreClient $datastore): void
+function projection_query(DatastoreClient $datastore): Query
 {
     // [START datastore_projection_query]
     $query = $datastore->query()
@@ -495,15 +503,15 @@ function projection_query(DatastoreClient $datastore): void
  *
  * @param DatastoreClient $datastore
  * @param Query $query
- * @return array
+ * @return array<mixed>
  */
-function run_projection_query(DatastoreClient $datastore, Query $query): void
+function run_projection_query(DatastoreClient $datastore, Query $query): array
 {
     // [START datastore_run_query_projection]
     $priorities = array();
     $percentCompletes = array();
+    /** @var Entity[] */
     $result = $datastore->runQuery($query);
-    /* @var Entity $task */
     foreach ($result as $task) {
         $priorities[] = $task['priority'];
         $percentCompletes[] = $task['percent_complete'];
@@ -518,7 +526,7 @@ function run_projection_query(DatastoreClient $datastore, Query $query): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function distinct_on(DatastoreClient $datastore): void
+function distinct_on(DatastoreClient $datastore): Query
 {
     // [START datastore_distinct_on_query]
     $query = $datastore->query()
@@ -537,7 +545,7 @@ function distinct_on(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function array_value_inequality_range(DatastoreClient $datastore): void
+function array_value_inequality_range(DatastoreClient $datastore): Query
 {
     // [START datastore_array_value_inequality_range]
     $query = $datastore->query()
@@ -554,7 +562,7 @@ function array_value_inequality_range(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function array_value_equality(DatastoreClient $datastore): void
+function array_value_equality(DatastoreClient $datastore): Query
 {
     // [START datastore_array_value_equality]
     $query = $datastore->query()
@@ -571,7 +579,7 @@ function array_value_equality(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function limit(DatastoreClient $datastore): void
+function limit(DatastoreClient $datastore): Query
 {
     // [START datastore_limit]
     $query = $datastore->query()
@@ -586,20 +594,20 @@ function limit(DatastoreClient $datastore): void
  * Fetch a query cursor.
  *
  * @param DatastoreClient $datastore
- * @param string $pageSize
+ * @param int $pageSize
  * @param string $pageCursor
- * @return array
+ * @return array{nextPageCursor:string|null,entities:Entity[]}
  */
-function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = ''): void
+function cursor_paging(DatastoreClient $datastore, int $pageSize, $pageCursor = ''): array
 {
     $query = $datastore->query()
         ->kind('Task')
         ->limit($pageSize)
         ->start($pageCursor);
+    /** @var Entity[] */
     $result = $datastore->runQuery($query);
     $nextPageCursor = '';
     $entities = [];
-    /* @var Entity $entity */
     foreach ($result as $entity) {
         $nextPageCursor = $entity->cursor();
         $entities[] = $entity;
@@ -617,7 +625,7 @@ function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = ''):
  * @param DatastoreClient $datastore
  * @return Query
  */
-function inequality_range(DatastoreClient $datastore): void
+function inequality_range(DatastoreClient $datastore): Query
 {
     // [START datastore_inequality_range]
     $query = $datastore->query()
@@ -634,7 +642,7 @@ function inequality_range(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function inequality_invalid(DatastoreClient $datastore): void
+function inequality_invalid(DatastoreClient $datastore): Query
 {
     // [START datastore_inequality_invalid]
     $query = $datastore->query()
@@ -652,7 +660,7 @@ function inequality_invalid(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function equal_and_inequality_range(DatastoreClient $datastore): void
+function equal_and_inequality_range(DatastoreClient $datastore): Query
 {
     // [START datastore_equal_and_inequality_range]
     $query = $datastore->query()
@@ -671,7 +679,7 @@ function equal_and_inequality_range(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function inequality_sort(DatastoreClient $datastore): void
+function inequality_sort(DatastoreClient $datastore): Query
 {
     // [START datastore_inequality_sort]
     $query = $datastore->query()
@@ -689,7 +697,7 @@ function inequality_sort(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function inequality_sort_invalid_not_same(DatastoreClient $datastore): void
+function inequality_sort_invalid_not_same(DatastoreClient $datastore): Query
 {
     // [START datastore_inequality_sort_invalid_not_same]
     $query = $datastore->query()
@@ -706,7 +714,7 @@ function inequality_sort_invalid_not_same(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function inequality_sort_invalid_not_first(DatastoreClient $datastore): void
+function inequality_sort_invalid_not_first(DatastoreClient $datastore): Query
 {
     // [START datastore_inequality_sort_invalid_not_first]
     $query = $datastore->query()
@@ -724,7 +732,7 @@ function inequality_sort_invalid_not_first(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Query
  */
-function unindexed_property_query(DatastoreClient $datastore): void
+function unindexed_property_query(DatastoreClient $datastore): Query
 {
     // [START datastore_unindexed_property_query]
     $query = $datastore->query()
@@ -740,9 +748,10 @@ function unindexed_property_query(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Entity
  */
-function exploding_properties(DatastoreClient $datastore): void
+function exploding_properties(DatastoreClient $datastore): Entity
 {
     // [START datastore_exploding_properties]
+    /** @var Entity */
     $task = $datastore->entity(
         $datastore->key('Task'),
         [
@@ -762,14 +771,14 @@ function exploding_properties(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @param Key $fromKey
  * @param Key $toKey
- * @param $amount
+ * @param int $amount
  */
 function transfer_funds(
     DatastoreClient $datastore,
     Key $fromKey,
     Key $toKey,
-    $amount
-) {
+    int $amount
+): void {
     $transaction = $datastore->transaction();
     // The option 'sort' is important here, otherwise the order of the result
     // might be different from the order of the keys.
@@ -797,7 +806,7 @@ function transactional_retry(
     DatastoreClient $datastore,
     Key $fromKey,
     Key $toKey
-) {
+): void {
     // [START datastore_transactional_retry]
     $retries = 5;
     for ($i = 0; $i < $retries; $i++) {
@@ -837,7 +846,7 @@ function get_or_create(DatastoreClient $datastore, Entity $task): void
  * @param DatastoreClient $datastore
  * @return array<Entity>
  */
-function get_task_list_entities(DatastoreClient $datastore): void
+function get_task_list_entities(DatastoreClient $datastore): array
 {
     // [START datastore_transactional_single_entity_group_read_only]
     $transaction = $datastore->readOnlyTransaction();
@@ -845,9 +854,9 @@ function get_task_list_entities(DatastoreClient $datastore): void
     $query = $datastore->query()
         ->kind('Task')
         ->hasAncestor($taskListKey);
+    /** @var Entity[] */
     $result = $transaction->runQuery($query);
     $taskListEntities = [];
-    /* @var Entity $task */
     foreach ($result as $task) {
         $taskListEntities[] = $task;
     }
@@ -859,9 +868,9 @@ function get_task_list_entities(DatastoreClient $datastore): void
  * Create and run a query with readConsistency option.
  *
  * @param DatastoreClient $datastore
- * @return EntityIterator<Entity>
+ * @return EntityIterator<EntityInterface>
  */
-function eventual_consistent_query(DatastoreClient $datastore): void
+function eventual_consistent_query(DatastoreClient $datastore): EntityIterator
 {
     // [START datastore_eventual_consistent_query]
     $query = $datastore->query()
@@ -878,11 +887,12 @@ function eventual_consistent_query(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return Entity
  */
-function entity_with_parent(DatastoreClient $datastore): void
+function entity_with_parent(DatastoreClient $datastore): Entity
 {
     // [START datastore_entity_with_parent]
     $parentKey = $datastore->key('TaskList', 'default');
     $key = $datastore->key('Task')->ancestorKey($parentKey);
+    /** @var Entity */
     $task = $datastore->entity(
         $key,
         [
@@ -904,7 +914,7 @@ function entity_with_parent(DatastoreClient $datastore): void
  * @param string $end an ending namespace (exclusive)
  * @return array<string> namespaces returned from the query.
  */
-function namespace_run_query(DatastoreClient $datastore, $start, $end): void
+function namespace_run_query(DatastoreClient $datastore, $start, $end): array
 {
     // [START datastore_namespace_run_query]
     $query = $datastore->query()
@@ -928,7 +938,7 @@ function namespace_run_query(DatastoreClient $datastore, $start, $end): void
  * @param DatastoreClient $datastore
  * @return array<string> kinds returned from the query
  */
-function kind_run_query(DatastoreClient $datastore): void
+function kind_run_query(DatastoreClient $datastore): array
 {
     // [START datastore_kind_run_query]
     $query = $datastore->query()
@@ -950,7 +960,7 @@ function kind_run_query(DatastoreClient $datastore): void
  * @param DatastoreClient $datastore
  * @return array<string>
  */
-function property_run_query(DatastoreClient $datastore): void
+function property_run_query(DatastoreClient $datastore): array
 {
     // [START datastore_property_run_query]
     $query = $datastore->query()
@@ -973,23 +983,22 @@ function property_run_query(DatastoreClient $datastore): void
  * Create and run a property query with a kind.
  *
  * @param DatastoreClient $datastore
- * @return array<string => string>
+ * @return array<string, string>
  */
-function property_by_kind_run_query(DatastoreClient $datastore): void
+function property_by_kind_run_query(DatastoreClient $datastore): array
 {
     // [START datastore_property_by_kind_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
     $query = $datastore->query()
         ->kind('__property__')
         ->hasAncestor($ancestorKey);
+    /** @var Entity[] */
     $result = $datastore->runQuery($query);
-    /* @var array<string => string> $properties */
     $properties = [];
-    /* @var Entity $entity */
     foreach ($result as $entity) {
-        $propertyName = $entity->key()->path()[1]['name'];
+        $propertyName = (string) $entity->key()->path()[1]['name'];
         $propertyType = $entity['property_representation'];
-        $properties[$propertyName] = $propertyType;
+        $properties[$propertyName] = (string) $propertyType;
     }
     // Example values of $properties: ['description' => ['STRING']]
     // [END datastore_property_by_kind_run_query]
@@ -1000,9 +1009,9 @@ function property_by_kind_run_query(DatastoreClient $datastore): void
  * Create and run a property query with property filtering.
  *
  * @param DatastoreClient $datastore
- * @return array
+ * @return array<string>
  */
-function property_filtering_run_query(DatastoreClient $datastore): void
+function property_filtering_run_query(DatastoreClient $datastore): array
 {
     // [START datastore_property_filtering_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
@@ -1011,10 +1020,10 @@ function property_filtering_run_query(DatastoreClient $datastore): void
     $query = $datastore->query()
         ->kind('__property__')
         ->filter('__key__', '>=', $startKey);
+    /** @var Entity[] */
     $result = $datastore->runQuery($query);
-    /* @var array<string> $properties */
+    /** @var array<string> */
     $properties = [];
-    /* @var Entity $entity */
     foreach ($result as $entity) {
         $kind = $entity->key()->path()[0]['name'];
         $propertyName = $entity->key()->path()[1]['name'];

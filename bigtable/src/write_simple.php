@@ -49,7 +49,7 @@ function write_simple(
     $timestampMicros = time() * 1000 * 1000;
     $columnFamilyId = 'stats_summary';
     $mutations = (new Mutations())
-    ->upsert($columnFamilyId, 'connected_cell', 1, $timestampMicros)
+    ->upsert($columnFamilyId, 'connected_cell', '1', $timestampMicros)
     ->upsert($columnFamilyId, 'connected_wifi', DataUtil::intToByteString(1), $timestampMicros)
     ->upsert($columnFamilyId, 'os_build', 'PQ2A.190405.003', $timestampMicros);
 

@@ -27,11 +27,11 @@ use TypeError;
 class DBInitializer
 {
     /**
-     *  @param $username string username of the database user
-     *  @param $password string password of the database user
-     *  @param $dbName string name of the target database
-     *  @param $dbHost string IP address or domain of the target database
-     *  @param $connConfig array driver-specific options for PDO
+     *  @param string $username username of the database user
+     *  @param string $password password of the database user
+     *  @param string $dbName name of the target database
+     *  @param string $dbHost IP address or domain of the target database
+     *  @param array<mixed> $connConfig driver-specific options for PDO
      */
     public static function initTcpDatabaseConnection(
         string $username,

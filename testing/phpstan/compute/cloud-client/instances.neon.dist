@@ -1,0 +1,6 @@
+parameters:
+    level: 7
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+    - '#expects Google\\Protobuf\\Internal\\RepeatedField&#'
+    - '#Google\\Cloud\\Compute\\V1\\Gapic\\ProjectsGapicClient::setUsageExportBucket\(\) expects Google\\Cloud\\Compute\\V1\\UsageExportLocation#'

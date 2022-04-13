@@ -68,7 +68,7 @@ $container['db'] = function () {
             $connConfig
         );
     } else {
-        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME') ?: '';
         $socketDir = getenv('DB_SOCKET_DIR') ?: '/tmp/cloudsql';
         return DBInitializer::initUnixDatabaseConnection(
             $username,

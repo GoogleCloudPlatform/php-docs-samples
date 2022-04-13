@@ -28,11 +28,11 @@ class DBInitializer
 {
 
     /**
-     *  @param $username string username of the database user
-     *  @param $password string password of the database user
-     *  @param $dbName string name of the target database
-     *  @param $dbHost string IP address or domain of the target database
-     *  @param $connConfig array driver-specific options for PDO
+     *  @param string $username username of the database user
+     *  @param string $password password of the database user
+     *  @param string $dbName name of the target database
+     *  @param string $dbHost IP address or domain of the target database
+     *  @param array<mixed> $connConfig driver-specific options for PDO
      */
     public static function initTcpDatabaseConnection(
         string $username,
@@ -85,12 +85,12 @@ class DBInitializer
     }
 
     /**
-     *  @param $username string username of the database user
-     *  @param $password string password of the database user
-     *  @param $dbName string name of the target database
-     *  @param $connectionName string Cloud SQL instance name
-     *  @param $socketDir string Full path to unix socket
-     *  @param $conn_config array driver-specific options for PDO
+     *  @param string $username username of the database user
+     *  @param string $password password of the database user
+     *  @param string $dbName name of the target database
+     *  @param string $connectionName Cloud SQL instance name
+     *  @param string $socketDir Full path to unix socket
+     *  @param array<mixed> $connConfig driver-specific options for PDO
      */
     public static function initUnixDatabaseConnection(
         string $username,
@@ -98,7 +98,7 @@ class DBInitializer
         string $dbName,
         string $connectionName,
         string $socketDir,
-        array $conn_config
+        array $connConfig
     ): PDO {
         try {
             # [START cloud_sql_mysql_pdo_create_socket]
@@ -117,7 +117,7 @@ class DBInitializer
             );
 
             // Connect to the database.
-            $conn = new PDO($dsn, $username, $password, $conn_config);
+            $conn = new PDO($dsn, $username, $password, $connConfig);
             # [END cloud_sql_mysql_pdo_create_socket]
         } catch (TypeError $e) {
             throw new RuntimeException(

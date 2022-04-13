@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CreateTaskCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('new')
             ->setDescription('Adds a task with a description')

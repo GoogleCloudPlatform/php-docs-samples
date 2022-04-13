@@ -44,6 +44,7 @@ function list_tables(
 
     printf('Listing Tables:' . PHP_EOL);
     $tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
+    $tables = iterator_to_array($tables);
     if (empty($tables)) {
         print('No table exists.' . PHP_EOL);
         return;

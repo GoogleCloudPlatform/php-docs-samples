@@ -40,7 +40,7 @@ function reset_instance(
     string $projectId,
     string $zone,
     string $instanceName
-) {
+): void {
     // Stop the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->reset($instanceName, $projectId, $zone);

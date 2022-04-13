@@ -47,7 +47,7 @@ function start_instance_with_encryption_key(
     string $zone,
     string $instanceName,
     string $key
-) {
+): void {
     // Initiate the InstancesClient.
     $instancesClient = new InstancesClient();
 
@@ -59,9 +59,12 @@ function start_instance_with_encryption_key(
     $customerEncryptionKey = (new CustomerEncryptionKey())
         ->setRawKey($key);
 
+    /** @var \Google\Cloud\Compute\V1\AttachedDisk */
+    $disk = $instanceData->getDisks()[0];
+
     // Prepare the information about disk encryption.
     $diskData = (new CustomerEncryptionKeyProtectedDisk())
-        ->setSource($instanceData->getDisks()[0]->getSource())
+        ->setSource($disk->getSource())
         ->setDiskEncryptionKey($customerEncryptionKey);
 
     // Set request with one disk.

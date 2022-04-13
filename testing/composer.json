@@ -8,6 +8,7 @@
         "google/cloud-tools": "dev-main",
         "guzzlehttp/guzzle": "^7.0",
         "phpunit/phpunit": "^7|^8",
+        "phpstan/phpstan": "^1.5.4",
         "friendsofphp/php-cs-fixer": "^3.0",
         "composer/semver": "^3.2"
     }

@@ -62,7 +62,7 @@ function filter_limit_row_regex(
 /**
  * @param array<mixed> $row
  */
-function print_row(int $key, array $row): void
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

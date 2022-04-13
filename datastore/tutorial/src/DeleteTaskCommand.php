@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DeleteTaskCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('delete')
             ->setDescription('Delete a task')
