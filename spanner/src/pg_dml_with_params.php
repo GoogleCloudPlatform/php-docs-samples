@@ -23,32 +23,38 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_create_storing_index]
+// [START spanner_postgresql_dml_with_parameters]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
+use Google\Cloud\Spanner\Transaction;
 
 /**
- * Create a new storing index in a Spanner PostgreSQL database.
+ * Execute a batch of DML statements on a Spanner PostgreSQL database
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_index_create_sorting(string $instanceId, string $databaseId): void
+function pg_dml_with_params(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $operation = $database->updateDdl(
-        'CREATE INDEX SingersBySingerName ON Singers(FirstName) INCLUDE(LastName, SingerInfo)'
-    );
+    $database->runTransaction(function (Transaction $t) {
+        $count = $t->executeUpdate('INSERT INTO Singers (SingerId, "FirstName", "LastName")'
+            . ' VALUES ($1, $2, $3)',
+            [
+                'parameters' => [
+                    'p1' => 3,
+                    'p2' => 'Alice',
+                    'p3' => 'Henderson'
+                ]
+            ]);
+        $t->commit();
 
-    print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->pollUntilComplete();
-
-    print('Added the SingersBySingerName index.' . PHP_EOL);
+        printf('Inserted %s singer(s).' . PHP_EOL, $count);
+    });
 }
-// [END spanner_postgresql_create_storing_index]
+// [END spanner_postgresql_dml_with_parameters]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

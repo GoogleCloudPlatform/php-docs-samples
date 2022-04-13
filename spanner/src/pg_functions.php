@@ -23,31 +23,32 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_partitioned_dml]
+// [START spanner_postgresql_functions]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Execute Partitioned DML on a Spanner PostgreSQL database.
- * See also https://cloud.google.com/spanner/docs/dml-partitioned.
+ * Call a server side function on a Spanner PostgreSQL database
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_partitioned_dml(string $instanceId, string $databaseId): void
+function pg_functions(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // Spanner PostgreSQL has the same transaction limits as normal Spanner. This includes a
-    // maximum of 20,000 mutations in a single read/write transaction. Large update operations can
-    // be executed using Partitioned DML. This is also supported on Spanner PostgreSQL.
-    // See https://cloud.google.com/spanner/docs/dml-partitioned for more information.
-    $count = $database->executePartitionedUpdate('DELETE FROM Singers WHERE "FirstName" IS NOT NULL');
+    // Use the PostgreSQL `to_timestamp` function to convert a number of
+    // seconds since epoch to a timestamp.
+    // 1284352323 seconds = Monday, September 13, 2010 4:32:03 AM.
+    $results = $database->execute('SELECT to_timestamp(1284352323) AS time');
 
-    printf('Deleted %s rows.' . PHP_EOL, $count);
+    $row = $results->rows()->current();
+    $time = $row['time'];
+
+    printf('1284352323 seconds after epoch is %s' . PHP_EOL, $time);
 }
-// [END spanner_postgresql_partitioned_dml]
+// [END spanner_postgresql_functions]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

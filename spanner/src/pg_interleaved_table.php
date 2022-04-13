@@ -23,39 +23,48 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_create_postgres_database]
+// [START spanner_postgresql_interleaved_table]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Creates a database that uses Postgres dialect
+ * Create an interleaved table on a Spanner PostgreSQL database.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
+ * @param string $tableName The parent table to create. Defaults to 'Singers'
  */
-function pg_spanner_create_database(string $instanceId, string $databaseId): void
+function pg_interleaved_table(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    if (!$instance->exists()) {
-        throw new \LogicException("Instance $instanceId does not exist");
-    }
+    // The Spanner PostgreSQL dialect extends the PostgreSQL dialect with certain Spanner
+    // specific features, such as interleaved tables.
+    // See https://cloud.google.com/spanner/docs/postgresql/data-definition-language#create_table
+    // for the full CREATE TABLE syntax.
 
-    $operation = $instance->createDatabase($databaseId, [
-        'databaseDialect' => DatabaseDialect::POSTGRESQL
-    ]);
+    $parentTableQuery = sprintf('CREATE TABLE %s (
+        SingerId  bigint NOT NULL PRIMARY KEY,
+        FirstName varchar(1024) NOT NULL,
+        LastName  varchar(1024) NOT NULL
+    )', $tableName);
+
+    $childTableQuery = sprintf('CREATE TABLE Albums (
+        SingerId bigint NOT NULL,
+        AlbumId  bigint NOT NULL,
+        Title    varchar(1024) NOT NULL,
+        PRIMARY KEY (SingerId, AlbumId)
+    ) INTERLEAVE IN PARENT %s ON DELETE CASCADE', $tableName);
+
+    $operation = $database->updateDdlBatch([$parentTableQuery, $childTableQuery]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    $database = $instance->database($databaseId);
-    $dialect = DatabaseDialect::name($database->info()['databaseDialect']);
-
-    printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
-        $databaseId, $dialect, $instanceId);
+    printf('Created interleaved table hierarchy using PostgreSQL dialect' . PHP_EOL);
 }
-// [END spanner_create_postgres_database]
+// [END spanner_postgresql_interleaved_table]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

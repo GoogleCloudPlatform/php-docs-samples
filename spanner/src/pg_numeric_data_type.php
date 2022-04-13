@@ -34,7 +34,7 @@ use Google\Cloud\Spanner\Database;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_numeric_data_type(string $instanceId, string $databaseId): void
+function pg_numeric_data_type(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -23,32 +23,38 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_add_column]
+// [START spanner_postgresql_cast_data_type]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Add a column to a table present in a PG Spanner database.
+ * Cast values from one data type to another in a Spanner PostgreSQL SQL statement
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_add_column(string $instanceId, string $databaseId): void
+function pg_cast_data_type(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $operation = $database->updateDdl(
-        'ALTER TABLE Singers ADD COLUMN Rating DOUBLE PRECISION'
-    );
+    $sql = "select 1::varchar as str, '2'::int as int, 3::decimal as dec, " .
+    "'4'::bytea as bytes, 5::float as float, 'true'::bool as bool, " .
+    "'2022-03-03T00:00:00UTC'::timestamptz as timestamp";
 
-    print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->pollUntilComplete();
+    $results = $database->execute($sql);
 
-    print('Added column Rating on table Singers' . PHP_EOL);
+    foreach ($results as $row) {
+        printf('String: %s' . PHP_EOL, $row['str']);
+        printf('Int: %d' . PHP_EOL, $row['int']);
+        printf('Decimal: %s' . PHP_EOL, $row['dec']);
+        printf('Bytes: %s' . PHP_EOL, $row['bytes']);
+        printf('Float: %f' . PHP_EOL, $row['float']);
+        printf('Bool: %s' . PHP_EOL, $row['bool']);
+        printf('Timestamp: %s' . PHP_EOL, (string) $row['timestamp']);
+    }
 }
-// [END spanner_postgresql_add_column]
+// [END spanner_postgresql_cast_data_type]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

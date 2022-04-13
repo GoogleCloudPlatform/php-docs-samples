@@ -23,43 +23,39 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_information_schema]
+// [START spanner_postgresql_query_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Query the information schema metadata in a Spanner PostgreSQL database
+ * Execute a query with parameters on a Spanner PostgreSQL database.
+ * The PostgreSQL dialect uses positional parameters, as
+ * opposed to the named parameters of Cloud Spanner.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_information_schema(string $instanceId, string $databaseId): void
+function pg_query_parameter(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // The Spanner INFORMATION_SCHEMA tables can be used to query the metadata of tables and
-    // columns of PostgreSQL databases. The returned results will include additional PostgreSQL
-    // metadata columns.
+    printf('Listing all singers with a last name that starts with \'A\'' . PHP_EOL);
 
-    // Get all the user tables in the database. PostgreSQL uses the `public` schema for user
-    // tables. The table_catalog is equal to the database name.
+    $results = $database->execute('SELECT SingerId, "FirstName", "LastName"' .
+        ' FROM Singers' .
+        ' WHERE "LastName" LIKE $1',
+    [
+        'parameters' => [
+            'p1' => 'A%'
+        ]
+    ]);
 
-    $results = $database->execute('SELECT table_catalog, table_schema, table_name,'
-        . ' user_defined_type_catalog,'
-        . ' user_defined_type_schema,'
-        . ' user_defined_type_name'
-        . ' FROM INFORMATION_SCHEMA.tables'
-        . ' WHERE table_schema=\'public\'');
-
-    printf('Details fetched.' . PHP_EOL);
     foreach ($results as $row) {
-        foreach ($row as $key => $val) {
-            printf('%s: %s' . PHP_EOL, $key, $val);
-        }
+        printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['singerid'], $row['FirstName'], $row['LastName']);
     }
 }
-// [END spanner_postgresql_information_schema]
+// [END spanner_postgresql_query_parameter]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

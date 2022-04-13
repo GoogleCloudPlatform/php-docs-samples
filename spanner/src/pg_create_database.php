@@ -23,26 +23,39 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_create_clients]
+// [START spanner_create_postgres_database]
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Create an instance client and a database client
+ * Creates a database that uses Postgres dialect
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_connect_to_db(string $instanceId, string $databaseId): void
+function pg_create_database(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
-
-    // Instance Admin Client
     $instance = $spanner->instance($instanceId);
 
-    // Spanner Database Client
+    if (!$instance->exists()) {
+        throw new \LogicException("Instance $instanceId does not exist");
+    }
+
+    $operation = $instance->createDatabase($databaseId, [
+        'databaseDialect' => DatabaseDialect::POSTGRESQL
+    ]);
+
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
     $database = $instance->database($databaseId);
+    $dialect = DatabaseDialect::name($database->info()['databaseDialect']);
+
+    printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
+        $databaseId, $dialect, $instanceId);
 }
-// [END spanner_postgresql_create_clients]
+// [END spanner_create_postgres_database]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

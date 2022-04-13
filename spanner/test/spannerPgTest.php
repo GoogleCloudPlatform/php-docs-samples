@@ -65,7 +65,7 @@ class spannerPgTest extends TestCase
 
     public function testCreateDatabase()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_create_database');
+        $output = $this->runFunctionSnippet('pg_create_database');
         self::$lastUpdateDataTimestamp = time();
         $expected = sprintf('Created database %s with dialect POSTGRESQL on instance %s',
             self::$databaseId, self::$instanceId);
@@ -78,7 +78,7 @@ class spannerPgTest extends TestCase
      */
     public function testCastDataType()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_cast_data_type');
+        $output = $this->runFunctionSnippet('pg_cast_data_type');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('String: 1', $output);
         $this->assertStringContainsString('Int: 2', $output);
@@ -94,7 +94,7 @@ class spannerPgTest extends TestCase
      */
     public function testFunctions()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_functions');
+        $output = $this->runFunctionSnippet('pg_functions');
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString('1284352323 seconds after epoch is 2010-09-13T04:32:03.000000Z', $output);
@@ -105,7 +105,7 @@ class spannerPgTest extends TestCase
      */
     public function testCreateTableCaseSensitivity()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_case_sensitivity');
+        $output = $this->runFunctionSnippet('pg_case_sensitivity');
         self::$lastUpdateDataTimestamp = time();
         $expected = sprintf('Created Singers table in database %s on instance %s',
             self::$databaseId, self::$instanceId);
@@ -118,7 +118,7 @@ class spannerPgTest extends TestCase
      */
     public function testInformationSchema()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_information_schema');
+        $output = $this->runFunctionSnippet('pg_information_schema');
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString(sprintf('table_catalog: %s', self::$databaseId), $output);
@@ -131,7 +131,7 @@ class spannerPgTest extends TestCase
      */
     public function testDmlWithParams()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_dml_with_params');
+        $output = $this->runFunctionSnippet('pg_dml_with_params');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('Inserted 1 singer(s).', $output);
     }
@@ -141,7 +141,7 @@ class spannerPgTest extends TestCase
      */
     public function testBatchDml()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_batch_dml');
+        $output = $this->runFunctionSnippet('pg_batch_dml');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('Inserted 2 singers using Batch DML.', $output);
     }
@@ -151,7 +151,7 @@ class spannerPgTest extends TestCase
      */
     public function testQueryParameter()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_query_parameter');
+        $output = $this->runFunctionSnippet('pg_query_parameter');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('SingerId: 2, Firstname: Bruce, LastName: Allison', $output);
     }
@@ -165,7 +165,7 @@ class spannerPgTest extends TestCase
         $results = $db->execute('SELECT count(*) FROM Singers WHERE "FirstName" IS NOT NULL');
         $count = $results->rows()->current()['count'];
 
-        $output = $this->runFunctionSnippet('pg_spanner_partitioned_dml');
+        $output = $this->runFunctionSnippet('pg_partitioned_dml');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString(sprintf('Deleted %s rows.', $count), $output);
     }
@@ -175,7 +175,7 @@ class spannerPgTest extends TestCase
      */
     public function testPgAddColumn()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_add_column');
+        $output = $this->runFunctionSnippet('pg_add_column');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('Added column Rating on table Singers', $output);
     }
@@ -187,7 +187,7 @@ class spannerPgTest extends TestCase
     {
         $tableName = 'Singers' . time() . rand();
 
-        $output = $this->runFunctionSnippet('pg_spanner_interleaved_table', [
+        $output = $this->runFunctionSnippet('pg_interleaved_table', [
             self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
@@ -200,7 +200,7 @@ class spannerPgTest extends TestCase
      */
     public function testNumericDataType()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_numeric_data_type');
+        $output = $this->runFunctionSnippet('pg_numeric_data_type');
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString('Inserted 1 venue(s).', $output);
@@ -215,7 +215,7 @@ class spannerPgTest extends TestCase
     {
         $tableName = 'Singers' . time() . rand();
 
-        $output = $this->runFunctionSnippet('pg_spanner_order_nulls', [
+        $output = $this->runFunctionSnippet('pg_order_nulls', [
             self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
@@ -241,7 +241,7 @@ class spannerPgTest extends TestCase
 
     public function testIndexCreateSorting()
     {
-        $output = $this->runFunctionSnippet('pg_spanner_index_create_sorting');
+        $output = $this->runFunctionSnippet('pg_index_create_sorting');
         $this->assertStringContainsString('Added the SingersBySingerName index.', $output);
     }
 

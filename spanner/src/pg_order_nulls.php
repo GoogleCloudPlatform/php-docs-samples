@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $tableName The table to create. Defaults to 'Singers'
  */
-function pg_spanner_order_nulls(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
+function pg_order_nulls(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

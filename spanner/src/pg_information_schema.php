@@ -23,38 +23,43 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_cast_data_type]
+// [START spanner_postgresql_information_schema]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Cast values from one data type to another in a Spanner PostgreSQL SQL statement
+ * Query the information schema metadata in a Spanner PostgreSQL database
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_cast_data_type(string $instanceId, string $databaseId): void
+function pg_information_schema(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $sql = "select 1::varchar as str, '2'::int as int, 3::decimal as dec, " .
-    "'4'::bytea as bytes, 5::float as float, 'true'::bool as bool, " .
-    "'2022-03-03T00:00:00UTC'::timestamptz as timestamp";
+    // The Spanner INFORMATION_SCHEMA tables can be used to query the metadata of tables and
+    // columns of PostgreSQL databases. The returned results will include additional PostgreSQL
+    // metadata columns.
 
-    $results = $database->execute($sql);
+    // Get all the user tables in the database. PostgreSQL uses the `public` schema for user
+    // tables. The table_catalog is equal to the database name.
 
+    $results = $database->execute('SELECT table_catalog, table_schema, table_name,'
+        . ' user_defined_type_catalog,'
+        . ' user_defined_type_schema,'
+        . ' user_defined_type_name'
+        . ' FROM INFORMATION_SCHEMA.tables'
+        . ' WHERE table_schema=\'public\'');
+
+    printf('Details fetched.' . PHP_EOL);
     foreach ($results as $row) {
-        printf('String: %s' . PHP_EOL, $row['str']);
-        printf('Int: %d' . PHP_EOL, $row['int']);
-        printf('Decimal: %s' . PHP_EOL, $row['dec']);
-        printf('Bytes: %s' . PHP_EOL, $row['bytes']);
-        printf('Float: %f' . PHP_EOL, $row['float']);
-        printf('Bool: %s' . PHP_EOL, $row['bool']);
-        printf('Timestamp: %s' . PHP_EOL, (string) $row['timestamp']);
+        foreach ($row as $key => $val) {
+            printf('%s: %s' . PHP_EOL, $key, $val);
+        }
     }
 }
-// [END spanner_postgresql_cast_data_type]
+// [END spanner_postgresql_information_schema]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

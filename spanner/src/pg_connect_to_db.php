@@ -23,32 +23,26 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_functions]
+// [START spanner_postgresql_create_clients]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Call a server side function on a Spanner PostgreSQL database
+ * Create an instance client and a database client
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_functions(string $instanceId, string $databaseId): void
+function pg_connect_to_db(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
+
+    // Instance Admin Client
     $instance = $spanner->instance($instanceId);
+
+    // Spanner Database Client
     $database = $instance->database($databaseId);
-
-    // Use the PostgreSQL `to_timestamp` function to convert a number of
-    // seconds since epoch to a timestamp.
-    // 1284352323 seconds = Monday, September 13, 2010 4:32:03 AM.
-    $results = $database->execute('SELECT to_timestamp(1284352323) AS time');
-
-    $row = $results->rows()->current();
-    $time = $row['time'];
-
-    printf('1284352323 seconds after epoch is %s' . PHP_EOL, $time);
 }
-// [END spanner_postgresql_functions]
+// [END spanner_postgresql_create_clients]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

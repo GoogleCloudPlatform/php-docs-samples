@@ -23,41 +23,32 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_case_sensitivity]
+// [START spanner_postgresql_add_column]
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Create a table with case-sensitive and case-folded columns for
- * a Spanner PostgreSQL database
+ * Add a column to a table present in a PG Spanner database.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_case_sensitivity(string $instanceId, string $databaseId): void
+function pg_add_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        'CREATE TABLE Singers (
-            -- SingerId will be folded to "singerid"
-            SingerId  bigint NOT NULL PRIMARY KEY,
-            -- FirstName and LastName are double-quoted and will therefore retain their
-            -- mixed case and are case-sensitive. This means that any statement that
-            -- references any of these columns must use double quotes.
-            "FirstName" varchar(1024) NOT NULL,
-            "LastName"  varchar(1024) NOT NULL
-        )'
+        'ALTER TABLE Singers ADD COLUMN Rating DOUBLE PRECISION'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created Singers table in database %s on instance %s' . PHP_EOL,
-        $databaseId, $instanceId);
+    print('Added column Rating on table Singers' . PHP_EOL);
 }
-// [END spanner_postgresql_case_sensitivity]
+// [END spanner_postgresql_add_column]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

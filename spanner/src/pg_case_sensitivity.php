@@ -23,48 +23,41 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_interleaved_table]
+// [START spanner_postgresql_case_sensitivity]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Create an interleaved table on a Spanner PostgreSQL database.
+ * Create a table with case-sensitive and case-folded columns for
+ * a Spanner PostgreSQL database
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $tableName The parent table to create. Defaults to 'Singers'
  */
-function pg_spanner_interleaved_table(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
+function pg_case_sensitivity(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // The Spanner PostgreSQL dialect extends the PostgreSQL dialect with certain Spanner
-    // specific features, such as interleaved tables.
-    // See https://cloud.google.com/spanner/docs/postgresql/data-definition-language#create_table
-    // for the full CREATE TABLE syntax.
-
-    $parentTableQuery = sprintf('CREATE TABLE %s (
-        SingerId  bigint NOT NULL PRIMARY KEY,
-        FirstName varchar(1024) NOT NULL,
-        LastName  varchar(1024) NOT NULL
-    )', $tableName);
-
-    $childTableQuery = sprintf('CREATE TABLE Albums (
-        SingerId bigint NOT NULL,
-        AlbumId  bigint NOT NULL,
-        Title    varchar(1024) NOT NULL,
-        PRIMARY KEY (SingerId, AlbumId)
-    ) INTERLEAVE IN PARENT %s ON DELETE CASCADE', $tableName);
-
-    $operation = $database->updateDdlBatch([$parentTableQuery, $childTableQuery]);
+    $operation = $database->updateDdl(
+        'CREATE TABLE Singers (
+            -- SingerId will be folded to "singerid"
+            SingerId  bigint NOT NULL PRIMARY KEY,
+            -- FirstName and LastName are double-quoted and will therefore retain their
+            -- mixed case and are case-sensitive. This means that any statement that
+            -- references any of these columns must use double quotes.
+            "FirstName" varchar(1024) NOT NULL,
+            "LastName"  varchar(1024) NOT NULL
+        )'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created interleaved table hierarchy using PostgreSQL dialect' . PHP_EOL);
+    printf('Created Singers table in database %s on instance %s' . PHP_EOL,
+        $databaseId, $instanceId);
 }
-// [END spanner_postgresql_interleaved_table]
+// [END spanner_postgresql_case_sensitivity]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

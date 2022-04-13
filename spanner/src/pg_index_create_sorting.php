@@ -23,39 +23,32 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_query_parameter]
+// [START spanner_postgresql_create_storing_index]
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
- * Execute a query with parameters on a Spanner PostgreSQL database.
- * The PostgreSQL dialect uses positional parameters, as
- * opposed to the named parameters of Cloud Spanner.
+ * Create a new storing index in a Spanner PostgreSQL database.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_spanner_query_parameter(string $instanceId, string $databaseId): void
+function pg_index_create_sorting(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    printf('Listing all singers with a last name that starts with \'A\'' . PHP_EOL);
+    $operation = $database->updateDdl(
+        'CREATE INDEX SingersBySingerName ON Singers(FirstName) INCLUDE(LastName, SingerInfo)'
+    );
 
-    $results = $database->execute('SELECT SingerId, "FirstName", "LastName"' .
-        ' FROM Singers' .
-        ' WHERE "LastName" LIKE $1',
-    [
-        'parameters' => [
-            'p1' => 'A%'
-        ]
-    ]);
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
 
-    foreach ($results as $row) {
-        printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['singerid'], $row['FirstName'], $row['LastName']);
-    }
+    print('Added the SingersBySingerName index.' . PHP_EOL);
 }
-// [END spanner_postgresql_query_parameter]
+// [END spanner_postgresql_create_storing_index]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
