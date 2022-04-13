@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Storage;
 
 # [START storage_download_file]
+# [START storage_stream_file_download]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -43,9 +44,14 @@ function download_object($bucketName, $objectName, $destination)
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->downloadToFile($destination);
-    printf('Downloaded gs://%s/%s to %s' . PHP_EOL,
-        $bucketName, $objectName, basename($destination));
+    printf(
+        'Downloaded gs://%s/%s to %s' . PHP_EOL,
+        $bucketName,
+        $objectName,
+        basename($destination)
+    );
 }
+# [END storage_stream_file_download]
 # [END storage_download_file]
 
 // The following 2 lines are only needed to run the samples

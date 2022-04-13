@@ -100,4 +100,70 @@ Deleted allAuthenticatedUsers from $objectUrl ACL
 EOF;
         $this->assertEquals($output, $outputString);
     }
+
+    public function testPrintFileAclForUser()
+    {
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
+
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $object = $bucket->object($objectName);
+        $acl = $object->acl();
+
+        $output = self::runFunctionSnippet('add_object_acl', [
+            self::$bucketName,
+            $objectName,
+            'allAuthenticatedUsers',
+            'READER',
+        ]);
+
+        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
+        $this->assertArrayHasKey('role', $aclInfo);
+        $this->assertEquals('READER', $aclInfo['role']);
+
+        $output .= self::runFunctionSnippet('print_file_acl_for_user', [
+            self::$bucketName,
+            $objectName,
+            'allAuthenticatedUsers',
+        ]);
+
+        $objectUrl = sprintf('gs://%s/%s', self::$bucketName, $objectName);
+        $outputString = <<<EOF
+Added allAuthenticatedUsers (READER) to $objectUrl ACL
+allAuthenticatedUsers: READER
+
+EOF;
+        $this->assertEquals($output, $outputString);
+    }
+
+    public function testPrintBucketAclForUser()
+    {
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT');
+
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $object = $bucket->object($objectName);
+        $acl = $object->acl();
+
+        $output = self::runFunctionSnippet('add_bucket_acl', [
+            self::$bucketName,
+            'allAuthenticatedUsers',
+            'READER',
+        ]);
+
+        $aclInfo = $acl->get(['entity' => 'allAuthenticatedUsers']);
+        $this->assertArrayHasKey('role', $aclInfo);
+        $this->assertEquals('READER', $aclInfo['role']);
+
+        $output .= self::runFunctionSnippet('print_bucket_acl_for_user', [
+            self::$bucketName,
+            'allAuthenticatedUsers',
+        ]);
+
+        $bucketUrl = sprintf('gs://%s', self::$bucketName);
+        $outputString = <<<EOF
+Added allAuthenticatedUsers (READER) to $bucketUrl ACL
+allAuthenticatedUsers: READER
+
+EOF;
+        $this->assertEquals($output, $outputString);
+    }
 }

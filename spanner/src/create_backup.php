@@ -64,7 +64,7 @@ function create_backup($instanceId, $databaseId, $backupId, $versionTime)
             'Backup %s of size %d bytes was created at %s for version of database at %s' . PHP_EOL,
             basename($info['name']), $info['sizeBytes'], $info['createTime'], $info['versionTime']);
     } else {
-        print('Backup is not ready!' . PHP_EOL);
+        printf('Unexpected state: %s' . PHP_EOL, $backup->state());
     }
 }
 // [END spanner_create_backup]
