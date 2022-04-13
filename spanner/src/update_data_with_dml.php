@@ -44,13 +44,13 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_dml($instanceId, $databaseId): void
+function update_data_with_dml(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         $rowCount = $t->executeUpdate(
             'UPDATE Albums '
             . 'SET MarketingBudget = MarketingBudget * 2 '

@@ -84,7 +84,7 @@ function list_sinks($projectId): void
  * Update a log sink.
  *
  * @param string $projectId
- * @param string sinkName
+ * @param string $sinkName
  * @param string $filterString
  */
 function update_sink($projectId, $sinkName, $filterString): void

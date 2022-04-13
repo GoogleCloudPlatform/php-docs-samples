@@ -21,6 +21,9 @@ declare(strict_types=1);
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\Digest;
 
+/**
+ * @return \Google\Cloud\Kms\V1\AsymmetricSignResponse
+ */
 function sign_asymmetric_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_quickstart]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\ApiCore\PagedListResponse
+ */
 function quickstart_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1'

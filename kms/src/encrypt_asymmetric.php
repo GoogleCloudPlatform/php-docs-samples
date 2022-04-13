@@ -25,7 +25,7 @@ function encrypt_asymmetric_sample(
     string $keyId = 'my-key',
     string $versionId = '123',
     string $plaintext = '...'
-) {
+): void {
     // PHP has limited support for asymmetric encryption operations.
     // Specifically, openssl_public_encrypt() does not allow customizing
     // algorithms or padding. Thus, it is not currently possible to use PHP

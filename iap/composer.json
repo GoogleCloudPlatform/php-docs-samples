@@ -1,7 +1,7 @@
 {
     "require": {
         "kelvinmo/simplejwt": "^0.5.1",
-        "google/auth":"^1.8.0",
+        "google/auth":"^1.20.1",
         "guzzlehttp/guzzle": "~7.4.0"
     },
     "autoload": {

@@ -22,13 +22,13 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ImageContext;
 use Google\Cloud\Vision\V1\WebDetectionParams;
 
-// $path = 'path/to/your/image.jpg'
-
 /**
  * Detect web entities on an image and include the image's geo metadata
  * to improve the quality of the detection.
+ *
+ * @param string $path Path to your image (e.g. 'path/to/your/image.jpg')
  */
-function detect_web_with_geo_metadata($path): void
+function detect_web_with_geo_metadata(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -39,11 +39,11 @@ function detect_web_with_geo_metadata($path): void
     $imageContext-> setWebDetectionParams($params);
 
     # annotate the image
-    $image = file_get_contents($path);
+    $image = (string) file_get_contents($path);
     $response = $imageAnnotator->webDetection($image, ['imageContext' => $imageContext]);
     $web = $response->getWebDetection();
 
-    if ($web && $web->getWebEntities()) {
+    if ($web) {
         printf('%d web entities found:' . PHP_EOL,
             count($web->getWebEntities()));
         foreach ($web->getWebEntities() as $entity) {

@@ -50,7 +50,7 @@ function query_data_with_index(
     $databaseId,
     $startTitle = 'Aardvark',
     $endTitle = 'Goo'
-) {
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

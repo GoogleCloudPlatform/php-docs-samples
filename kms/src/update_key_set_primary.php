@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_update_key_set_primary]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\CryptoKey
+ */
 function update_key_set_primary_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

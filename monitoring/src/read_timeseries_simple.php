@@ -37,7 +37,7 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_simple($projectId, $minutesAgo = 20): void
+function read_timeseries_simple(string $projectId, int $minutesAgo = 20): void
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,

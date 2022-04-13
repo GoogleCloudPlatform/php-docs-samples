@@ -30,7 +30,9 @@ list($_, $audioFile) = $argv;
 /** Uncomment and populate these variables in your code */
 // $audioFile = 'path to an audio file';
 
-$audioFileResource = fopen($audioFile, 'r');
-$base64Audio = base64_encode(stream_get_contents($audioFileResource));
+if (!$audioFileResource = fopen($audioFile, 'r')) {
+    throw new InvalidArgumentException('unable to open file for reading');
+}
+$base64Audio = base64_encode((string) stream_get_contents($audioFileResource));
 print($base64Audio);
 # [end base64_audio]

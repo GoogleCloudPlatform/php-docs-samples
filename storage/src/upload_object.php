@@ -41,7 +41,9 @@ function upload_object($bucketName, $objectName, $source): void
     // $source = '/path/to/your/file';
 
     $storage = new StorageClient();
-    $file = fopen($source, 'r');
+    if (!$file = fopen($source, 'r')) {
+        throw new \InvalidArgumentException('Unable to open file for reading');
+    }
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->upload($file, [
         'name' => $objectName

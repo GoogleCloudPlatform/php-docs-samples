@@ -26,7 +26,7 @@ function verify_asymmetric_rsa_sample(
     string $versionId = '123',
     string $message = '...',
     string $signature = '...'
-) {
+): void {
     // PHP has limited support for asymmetric encryption operations.
     // Specifically, openssl_public_encrypt() does not allow customizing
     // algorithms or padding. Thus, it is not currently possible to use PHP

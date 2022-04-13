@@ -44,7 +44,7 @@ use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 $client = new TextToSpeechClient();
 
 // get ssml from file
-$ssml = file_get_contents($path);
+$ssml = (string) file_get_contents($path);
 $input_text = (new SynthesisInput())
     ->setSsml($ssml);
 

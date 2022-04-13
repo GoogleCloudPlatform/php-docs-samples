@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_sign_mac]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\MacSignResponse
+ */
 function sign_mac_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

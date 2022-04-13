@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_get_key_labels]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\CryptoKey
+ */
 function get_key_labels_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

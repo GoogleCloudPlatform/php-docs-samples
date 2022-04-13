@@ -29,7 +29,7 @@ function create_key_symmetric_encrypt_decrypt_sample(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $id = 'my-symmetric-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

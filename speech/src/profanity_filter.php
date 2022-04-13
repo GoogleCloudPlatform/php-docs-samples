@@ -37,7 +37,7 @@ $languageCode = 'en-US';
 $profanityFilter = true;
 
 // get contents of a file into a string
-$content = file_get_contents($audioFile);
+$content = (string) file_get_contents($audioFile);
 
 // set string as audio content
 $audio = (new RecognitionAudio())

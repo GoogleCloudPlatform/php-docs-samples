@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_destroy_key_version]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\CryptoKeyVersion
+ */
 function destroy_key_version_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

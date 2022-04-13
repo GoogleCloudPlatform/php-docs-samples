@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_verify_mac]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\MacVerifyResponse
+ */
 function verify_mac_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

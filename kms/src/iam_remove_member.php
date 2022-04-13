@@ -28,7 +28,7 @@ function iam_remove_member_sample(
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key',
     string $member = 'user:foo@example.com'
-) {
+): Policy {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

@@ -1,0 +1,8 @@
+parameters:
+    level: 7
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+    - '#expects Google\\Protobuf\\Internal\\RepeatedField&#'
+    - '#Google\\Protobuf\\Internal\\RepeatedField does not accept string#'
+    - '#Cannot assign new offset to Google\\Protobuf\\Internal\\RepeatedField#'
+

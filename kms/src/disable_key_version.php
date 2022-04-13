@@ -29,7 +29,7 @@ function disable_key_version_sample(
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key',
     string $versionId = '123'
-) {
+): CryptoKeyVersion {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

@@ -22,7 +22,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // [END vision_face_detection_tutorial_imports]
 
-function detect_face($path, $outFile = null): void
+function detect_face(string $path, string $outFile = null): void
 {
     // [START vision_face_detection_tutorial_client]
     $imageAnnotator = new ImageAnnotatorClient();
@@ -31,7 +31,7 @@ function detect_face($path, $outFile = null): void
     // [START vision_face_detection_tutorial_send_request]
     # annotate the image
     // $path = 'path/to/your/image.jpg'
-    $image = file_get_contents($path);
+    $image = (string) file_get_contents($path);
     $response = $imageAnnotator->faceDetection($image);
     $faces = $response->getFaceAnnotations();
     // [END vision_face_detection_tutorial_send_request]
@@ -64,7 +64,7 @@ function detect_face($path, $outFile = null): void
 
     # [START vision_face_detection_tutorial_process_response]
     # draw box around faces
-    if ($faces && $outFile) {
+    if (count($faces) && $outFile) {
         $imageCreateFunc = [
             'png' => 'imagecreatefrompng',
             'gd' => 'imagecreatefromgd',

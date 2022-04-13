@@ -22,12 +22,12 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // $path = 'path/to/your/image.jpg'
 
-function detect_document_text($path): void
+function detect_document_text(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
     # annotate the image
-    $image = file_get_contents($path);
+    $image = (string) file_get_contents($path);
     $response = $imageAnnotator->documentTextDetection($image);
     $annotation = $response->getFullTextAnnotation();
 

@@ -22,12 +22,12 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // $path = 'path/to/your/image.jpg'
 
-function detect_logo($path): void
+function detect_logo(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
     # annotate the image
-    $image = file_get_contents($path);
+    $image = (string) file_get_contents($path);
     $response = $imageAnnotator->logoDetection($image);
     $logos = $response->getLogoAnnotations();
 

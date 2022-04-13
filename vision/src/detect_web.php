@@ -20,14 +20,15 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'path/to/your/image.jpg'
-
-function detect_web($path): void
+/**
+ * @param string $path Path to your image (e.g. 'path/to/your/image.jpg')
+ */
+function detect_web(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
     # annotate the image
-    $image = file_get_contents($path);
+    $image = (string) file_get_contents($path);
     $response = $imageAnnotator->webDetection($image);
     $web = $response->getWebDetection();
 

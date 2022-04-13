@@ -20,9 +20,10 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'gs://path/to/your/image.jpg'
-
-function detect_object_gcs($path): void
+/**
+ * @param string $path (example: 'gs://path/to/your/image.jpg')
+ */
+function detect_object_gcs(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 

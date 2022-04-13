@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_get_public_key]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\PublicKey
+ */
 function get_public_key_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

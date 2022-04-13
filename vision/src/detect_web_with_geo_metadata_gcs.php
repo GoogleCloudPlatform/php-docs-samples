@@ -22,13 +22,13 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ImageContext;
 use Google\Cloud\Vision\V1\WebDetectionParams;
 
-// $path = 'gs://path/to/your/image.jpg'
-
 /**
  * Detect web entities on an image and include the image's geo metadata
  * to improve the quality of the detection.
+ *
+ * @param string $path Path to your image (e.g. 'gs://path/to/your/image.jpg')
  */
-function detect_web_with_geo_metadata_gcs($path): void
+function detect_web_with_geo_metadata_gcs(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 

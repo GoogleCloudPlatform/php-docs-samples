@@ -20,6 +20,9 @@ declare(strict_types=1);
 // [START kms_decrypt_symmetric]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Kms\V1\DecryptResponse
+ */
 function decrypt_symmetric_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

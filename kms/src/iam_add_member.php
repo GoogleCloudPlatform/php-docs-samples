@@ -21,6 +21,9 @@ declare(strict_types=1);
 use Google\Cloud\Iam\V1\Binding;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
+/**
+ * @return \Google\Cloud\Iam\V1\Policy
+ */
 function iam_add_member_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',

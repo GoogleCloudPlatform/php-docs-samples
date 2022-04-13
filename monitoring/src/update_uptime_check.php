@@ -33,8 +33,12 @@ use Google\Protobuf\FieldMask;
  * update_uptime_checks($projectId);
  * ```
  */
-function update_uptime_checks($projectId, $configName, $newDisplayName = null, $newHttpCheckPath = null): void
-{
+function update_uptime_checks(
+    string $projectId,
+    string $configName,
+    string $newDisplayName = null,
+    string $newHttpCheckPath = null
+): void {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
@@ -46,11 +50,13 @@ function update_uptime_checks($projectId, $configName, $newDisplayName = null, $
         $uptimeCheck->setDisplayName($newDisplayName);
     }
     if ($newHttpCheckPath) {
-        $fieldMask->getPaths()[] = 'http_check.path';
+        $paths = $fieldMask->getPaths()[] = 'http_check.path';
         $uptimeCheck->getHttpCheck()->setPath($newHttpCheckPath);
     }
 
-    $uptimeCheckClient->updateUptimeCheckConfig($uptimeCheck, $fieldMask);
+    $uptimeCheckClient->updateUptimeCheckConfig($uptimeCheck, [
+        'updateMask' => $fieldMask
+    ]);
 
     print($uptimeCheck->serializeToString() . PHP_EOL);
 }

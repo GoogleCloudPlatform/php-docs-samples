@@ -42,14 +42,15 @@ function execute_sample(string $file, string $namespace, ?array $argv): void
     require_once $autoloadFile;
 
     // If any parameters are typehinted as "array", explode user input on ","
+    $validArrayTypes = ['array', 'array<string>', 'string[]'];
     $parameterReflections = $functionReflection->getParameters();
     foreach (array_values($argv) as $i => $val) {
         $parameterReflection = $parameterReflections[$i];
-        if (
-            $parameterReflection->hasType()
-            && 'array' === $parameterReflection->getType()->getName()
-        ) {
-            $argv[$i] = explode(',', $argv[$i]);
+        if ($parameterReflection->hasType()) {
+            $parameterType = $parameterReflection->getType()->getName();
+            if (in_array($parameterType, $validArrayTypes)) {
+                $argv[$i] = explode(',', $argv[$i]);
+            }
         }
     }
 

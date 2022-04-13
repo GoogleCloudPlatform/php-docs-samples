@@ -25,7 +25,7 @@ function create_key_ring_sample(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $id = 'my-key-ring'
-) {
+): KeyRing {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

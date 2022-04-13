@@ -29,10 +29,11 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\InputConfig;
 use Google\Cloud\Vision\V1\OutputConfig;
 
-// $path = 'gs://path/to/your/document.pdf'
-// $output = 'gs://path/to/store/results/'
-
-function detect_pdf_gcs($path, $output): void
+/**
+ * @param string $path (example: 'gs://path/to/your/document.pdf')
+ * @param string $output (example: 'gs://path/to/store/results/')
+ */
+function detect_pdf_gcs(string $path, string $output): void
 {
     # select ocr feature
     $feature = (new Feature())

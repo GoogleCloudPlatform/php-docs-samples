@@ -49,7 +49,7 @@ function update_data_with_dml_structs($instanceId, $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         $nameValue = (new StructValue)
             ->add('FirstName', 'Timothy')
             ->add('LastName', 'Campbell');

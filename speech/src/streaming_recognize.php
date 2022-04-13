@@ -61,7 +61,7 @@ try {
     $strm->write($strmReq);
 
     $strmReq = new StreamingRecognizeRequest();
-    $content = file_get_contents($audioFile);
+    $content = (string) file_get_contents($audioFile);
     $strmReq->setAudioContent($content);
     $strm->write($strmReq);
 

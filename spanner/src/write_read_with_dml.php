@@ -46,7 +46,7 @@ function write_read_with_dml($instanceId, $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         $rowCount = $t->executeUpdate(
             'INSERT Singers (SingerId, FirstName, LastName) '
             . " VALUES (11, 'Timothy', 'Campbell')");

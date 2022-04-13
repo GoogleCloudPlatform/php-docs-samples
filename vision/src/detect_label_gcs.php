@@ -22,7 +22,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // $path = 'gs://path/to/your/image.jpg'
 
-function detect_label_gcs($path): void
+function detect_label_gcs(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -30,7 +30,7 @@ function detect_label_gcs($path): void
     $response = $imageAnnotator->labelDetection($path);
     $labels = $response->getLabelAnnotations();
 
-    if ($labels) {
+    if (count($labels)) {
         print('Labels:' . PHP_EOL);
         foreach ($labels as $label) {
             print($label->getDescription() . PHP_EOL);

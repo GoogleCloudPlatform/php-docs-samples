@@ -45,7 +45,7 @@ $sampleRateHertz = 32000;
 $languageCode = 'en-US';
 
 // get contents of a file into a string
-$content = file_get_contents($audioFile);
+$content = (string) file_get_contents($audioFile);
 
 // set string as audio content
 $audio = (new RecognitionAudio())

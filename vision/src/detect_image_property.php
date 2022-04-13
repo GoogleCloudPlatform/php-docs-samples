@@ -22,12 +22,12 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 // $path = 'path/to/your/image.jpg'
 
-function detect_image_property($path): void
+function detect_image_property(string $path): void
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
     # annotate the image
-    $image = file_get_contents($path);
+    $image = (string) file_get_contents($path);
     $response = $imageAnnotator->imagePropertiesDetection($image);
     $props = $response->getImagePropertiesAnnotation();
 

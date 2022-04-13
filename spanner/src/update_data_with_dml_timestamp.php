@@ -46,7 +46,7 @@ function update_data_with_dml_timestamp($instanceId, $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         $rowCount = $t->executeUpdate(
             'UPDATE Albums '
             . 'SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() WHERE SingerId = 1');
