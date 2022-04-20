@@ -22,21 +22,9 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 3 || count($argv) > 6) {
-    return print("Usage: php create_inspect_template.php CALLING_PROJECT TEMPLATE [DISPLAY_NAME] [DESCRIPTION] [MAX_FINDINGS]\n");
-}
-list($_, $callingProjectId, $templateId, $displayName, $description) = $argv;
-$displayName = isset($argv[3]) ? $argv[3] : '';
-$description = isset($argv[4]) ? $argv[4] : '';
-$maxFindings = isset($argv[5]) ? (int) $argv[5] : 0;
+namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_create_inspect_template]
-/**
- * Create a new DLP inspection configuration template.
- */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -44,53 +32,67 @@ use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
-/** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $templateId = 'The name of the template to be created';
-// $displayName = ''; // (Optional) The human-readable name to give the template
-// $description = ''; // (Optional) A description for the trigger to be created
-// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+/**
+ * Create a new DLP inspection configuration template.
+ *
+ * @param string $callingProjectId project ID to run the API call under
+ * @param string $templateId       name of the template to be created
+ * @param string $displayName      (Optional) The human-readable name to give the template
+ * @param string $description      (Optional) A description for the trigger to be created
+ * @param int    $maxFindings      (Optional) The maximum number of findings to report per request (0 = server maximum)
+ */
+function create_inspect_template(
+    string $callingProjectId,
+    string $templateId,
+    string $displayName = '',
+    string $description = '',
+    int $maxFindings = 0
+): void {
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
+    // ----- Construct inspection config -----
+    // The infoTypes of information to match
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
-// ----- Construct inspection config -----
-// The infoTypes of information to match
-$personNameInfoType = (new InfoType())
-    ->setName('PERSON_NAME');
-$phoneNumberInfoType = (new InfoType())
-    ->setName('PHONE_NUMBER');
-$infoTypes = [$personNameInfoType, $phoneNumberInfoType];
+    // Whether to include the matching string in the response
+    $includeQuote = true;
 
-// Whether to include the matching string in the response
-$includeQuote = true;
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-// The minimum likelihood required before returning a match
-$minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+    // Specify finding limits
+    $limits = (new FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
-// Specify finding limits
-$limits = (new FindingLimits())
-    ->setMaxFindingsPerRequest($maxFindings);
+    // Create the configuration object
+    $inspectConfig = (new InspectConfig())
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits)
+        ->setInfoTypes($infoTypes)
+        ->setIncludeQuote($includeQuote);
 
-// Create the configuration object
-$inspectConfig = (new InspectConfig())
-    ->setMinLikelihood($minLikelihood)
-    ->setLimits($limits)
-    ->setInfoTypes($infoTypes)
-    ->setIncludeQuote($includeQuote);
+    // Construct inspection template
+    $inspectTemplate = (new InspectTemplate())
+        ->setInspectConfig($inspectConfig)
+        ->setDisplayName($displayName)
+        ->setDescription($description);
 
-// Construct inspection template
-$inspectTemplate = (new InspectTemplate())
-    ->setInspectConfig($inspectConfig)
-    ->setDisplayName($displayName)
-    ->setDescription($description);
+    // Run request
+    $parent = "projects/$callingProjectId/locations/global";
+    $template = $dlp->createInspectTemplate($parent, $inspectTemplate, [
+        'templateId' => $templateId
+    ]);
 
-// Run request
-$parent = "projects/$callingProjectId/locations/global";
-$template = $dlp->createInspectTemplate($parent, $inspectTemplate, [
-    'templateId' => $templateId
-]);
-
-// Print results
-printf('Successfully created template %s' . PHP_EOL, $template->getName());
+    // Print results
+    printf('Successfully created template %s' . PHP_EOL, $template->getName());
+}
 // [END dlp_create_inspect_template]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
