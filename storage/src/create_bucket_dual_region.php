@@ -44,7 +44,7 @@ function create_bucket_dual_region($bucketName, $location1, $location2)
         'location' => "${location1}+${location2}",
     ]);
 
-    printf("Created dual-region bucket '%s' in %s+%s", $bucket->name(), $location1, $location2);
+    printf("Created dual-region bucket '%s' in '%s+%s'", $bucket->name(), $location1, $location2);
 }
 # [END storage_create_bucket_dual_region]
 
