@@ -674,8 +674,8 @@ class storageTest extends TestCase
 
     public function testCreateBucketDualRegion()
     {
-        $location1 = 'US-EAST-1';
-        $location2 = 'US-WEST-1';
+        $location1 = 'US-EAST1';
+        $location2 = 'US-WEST1';
 
         $bucketName = uniqid('samples-create-bucket-dual-region-');
         $output = self::runFunctionSnippet('create_bucket_dual_region', [
