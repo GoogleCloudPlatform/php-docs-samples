@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,35 +23,30 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_create_bucket_turbo_replication]
+# [START storage_create_bucket_dual_region]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a Cloud Storage Bucket with Turbo Replication set to `ASYNC_TURBO`.
- * The bucket must be a dual-region bucket for this setting to take effect.
+ * Create a new bucket with a custom default storage class and location.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $location The Dual-Region location where you want your bucket to reside (e.g. "US-CENTRAL1+US-WEST1").
-                                           Read more at https://cloud.google.com/storage/docs/locations#location-dr
+ * @param string $location1 First location for the bucket's regions. Case-insensitive.
+ * @param string $location2 Second location for the bucket's regions. Case-insensitive.
  */
-function create_bucket_turbo_replication($bucketName, $location = 'nam4')
+function create_bucket_dual_region($bucketName, $location1, $location2)
 {
     // $bucketName = 'my-bucket';
+    // $location1 = 'US-EAST1';
+    // $location2 = 'US-WEST1';
 
     $storage = new StorageClient();
-    $rpo = 'ASYNC_TURBO';
-
-    // providing a location which is a dual-region location
-    // makes sure the locationType is set to 'dual-region' implicitly
-    // we can pass 'locationType' => 'dual-region'
-    // to make it explicit
     $bucket = $storage->createBucket($bucketName, [
-        'location' => $location,
-        'rpo' => $rpo
+        'location' => "${location1}+${location2}",
     ]);
-    printf('Bucket with Turbo Replication set to \'ASYNC_TURBO\' created: %s' . PHP_EOL, $bucket->name());
+
+    printf("Created dual-region bucket '%s' in '%s+%s'", $bucket->name(), $location1, $location2);
 }
-# [END storage_create_bucket_turbo_replication]
+# [END storage_create_bucket_dual_region]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
