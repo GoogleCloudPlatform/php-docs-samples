@@ -79,7 +79,7 @@ function update_cluster_autoscale_config(
         } else {
             $error = $operationResponse->getError();
             printf('Cluster failed to update.' . PHP_EOL);
-            var_dump($error);
+            // var_dump($error);
             // handleError($error)
         }
     } catch (ApiException $e) {

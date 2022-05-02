@@ -39,14 +39,12 @@ use Google\Cloud\Bigtable\Admin\V2\StorageType;
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $clusterId The ID of the cluster to be updated
- * @param int $newNumNodes The number of serve nodes the cluster should have
  * @param string $locationId The Bigtable region ID where you want your cluster to reside
  */
 function create_cluster_autoscale_config(
     string $projectId,
     string $instanceId,
     string $clusterId,
-    int $newNumNodes,
     string $locationId = 'us-east1-b'
 ): void {
     $autoscaling_limits = new AutoscalingLimits([
@@ -91,7 +89,8 @@ function create_cluster_autoscale_config(
     }
 
     $cluster = new Cluster();
-    $cluster->setServeNodes($newNumNodes);
+// $cluster->setServeNodes($newNumNodes);
+
     $cluster->setDefaultStorageType($storage_type);
     $cluster->setLocation(
         $instanceAdminClient->locationName(
