@@ -52,7 +52,7 @@ function disable_cluster_autoscale_config(
         ]
     );
     $updateMask = new FieldMask([
-        'paths' => ['serveNodes'],
+        'paths' => ['serve_nodes'],
     ]);
     try {
         $operationResponse = $instanceAdminClient->partialUpdateCluster($cluster, $updateMask);
