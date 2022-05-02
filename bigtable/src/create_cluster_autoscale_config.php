@@ -89,7 +89,10 @@ function create_cluster_autoscale_config(
     }
 
     $cluster = new Cluster();
-// $cluster->setServeNodes($newNumNodes);
+    // if both serve nodes and autoscaling are set
+    // the server will silently ignore the serve nodes
+    // and use auto scaling functionality
+    // $cluster->setServeNodes($newNumNodes);
 
     $cluster->setDefaultStorageType($storage_type);
     $cluster->setLocation(
