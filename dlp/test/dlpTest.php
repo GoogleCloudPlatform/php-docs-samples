@@ -31,7 +31,7 @@ class dlpTest extends TestCase
 
     public function testInspectImageFile()
     {
-        $output = $this->runSnippet('inspect_image_file', [
+        $output = $this->runFunctionSnippet('inspect_image_file', [
             self::$projectId,
             __DIR__ . '/data/test.png'
         ]);
@@ -41,7 +41,7 @@ class dlpTest extends TestCase
 
     public function testInspectTextFile()
     {
-        $output = $this->runSnippet('inspect_text_file', [
+        $output = $this->runFunctionSnippet('inspect_text_file', [
             self::$projectId,
             __DIR__ . '/data/test.txt'
         ]);
@@ -51,7 +51,7 @@ class dlpTest extends TestCase
 
     public function testInspectString()
     {
-        $output = $this->runSnippet('inspect_string', [
+        $output = $this->runFunctionSnippet('inspect_string', [
             self::$projectId,
             'My name is Gary Smith and my email is gary@example.com'
         ]);
@@ -62,13 +62,13 @@ class dlpTest extends TestCase
     public function testListInfoTypes()
     {
         // list all info types
-        $output = $this->runSnippet('list_info_types');
+        $output = $this->runFunctionSnippet('list_info_types');
 
         $this->assertStringContainsString('US_DEA_NUMBER', $output);
         $this->assertStringContainsString('AMERICAN_BANKERS_CUSIP_ID', $output);
 
         // list info types with a filter
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'list_info_types',
             ['supported_by=RISK_ANALYSIS']
         );
@@ -81,7 +81,7 @@ class dlpTest extends TestCase
         $imagePath = __DIR__ . '/data/test.png';
         $outputPath = __DIR__ . '/data/redact.output.png';
 
-        $output = $this->runSnippet('redact_image', [
+        $output = $this->runFunctionSnippet('redact_image', [
             self::$projectId,
             $imagePath,
             $outputPath,
@@ -95,7 +95,7 @@ class dlpTest extends TestCase
     public function testDeidentifyMask()
     {
         $numberToMask = 5;
-        $output = $this->runSnippet('deidentify_mask', [
+        $output = $this->runFunctionSnippet('deidentify_mask', [
             self::$projectId,
             'My SSN is 372819127.',
             $numberToMask,
@@ -114,7 +114,7 @@ class dlpTest extends TestCase
         $upperBoundDays = 5;
         $contextField = 'name';
 
-        $output = $this->runSnippet('deidentify_dates', [
+        $output = $this->runFunctionSnippet('deidentify_dates', [
             self::$projectId,
             $inputCsv,
             $outputCsv,
@@ -146,7 +146,7 @@ class dlpTest extends TestCase
         $string = 'My SSN is 372819127.';
         $surrogateType = 'SSN_TOKEN';
 
-        $deidOutput = $this->runSnippet('deidentify_fpe', [
+        $deidOutput = $this->runFunctionSnippet('deidentify_fpe', [
             self::$projectId,
             $string,
             $keyName,
@@ -155,7 +155,7 @@ class dlpTest extends TestCase
         ]);
         $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
 
-        $reidOutput = $this->runSnippet('reidentify_fpe', [
+        $reidOutput = $this->runFunctionSnippet('reidentify_fpe', [
             self::$projectId,
             $deidOutput,
             $keyName,
@@ -179,7 +179,7 @@ class dlpTest extends TestCase
         $scanPeriod = 1;
         $autoPopulateTimespan = true;
 
-        $output = $this->runSnippet('create_trigger', [
+        $output = $this->runFunctionSnippet('create_trigger', [
             self::$projectId,
             $bucketName,
             $triggerId,
@@ -191,13 +191,13 @@ class dlpTest extends TestCase
         $fullTriggerId = sprintf('projects/%s/locations/global/jobTriggers/%s', self::$projectId, $triggerId);
         $this->assertStringContainsString('Successfully created trigger ' . $fullTriggerId, $output);
 
-        $output = $this->runSnippet('list_triggers', [self::$projectId]);
+        $output = $this->runFunctionSnippet('list_triggers', [self::$projectId]);
         $this->assertStringContainsString('Trigger ' . $fullTriggerId, $output);
         $this->assertStringContainsString('Display Name: ' . $displayName, $output);
         $this->assertStringContainsString('Description: ' . $description, $output);
         $this->assertStringContainsString('Auto-populates timespan config: yes', $output);
 
-        $output = $this->runSnippet('delete_trigger', [
+        $output = $this->runFunctionSnippet('delete_trigger', [
             self::$projectId,
             $triggerId
         ]);
@@ -211,7 +211,7 @@ class dlpTest extends TestCase
         $templateId = uniqid('my-php-test-inspect-template-');
         $fullTemplateId = sprintf('projects/%s/locations/global/inspectTemplates/%s', self::$projectId, $templateId);
 
-        $output = $this->runSnippet('create_inspect_template', [
+        $output = $this->runFunctionSnippet('create_inspect_template', [
             self::$projectId,
             $templateId,
             $displayName,
@@ -219,12 +219,12 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('Successfully created template ' . $fullTemplateId, $output);
 
-        $output = $this->runSnippet('list_inspect_templates', [self::$projectId]);
+        $output = $this->runFunctionSnippet('list_inspect_templates', [self::$projectId]);
         $this->assertStringContainsString('Template ' . $fullTemplateId, $output);
         $this->assertStringContainsString('Display Name: ' . $displayName, $output);
         $this->assertStringContainsString('Description: ' . $description, $output);
 
-        $output = $this->runSnippet('delete_inspect_template', [
+        $output = $this->runFunctionSnippet('delete_inspect_template', [
             self::$projectId,
             $templateId
         ]);
@@ -243,7 +243,7 @@ class dlpTest extends TestCase
         );
         $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
 
-        $output = $this->runSnippet('list_jobs', [
+        $output = $this->runFunctionSnippet('list_jobs', [
             self::$projectId,
             $filter,
         ]);
@@ -252,7 +252,7 @@ class dlpTest extends TestCase
         preg_match($jobIdRegex, $output, $jobIds);
         $jobId = $jobIds[0];
 
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'delete_job',
             [$jobId]
         );
