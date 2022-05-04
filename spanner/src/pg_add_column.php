@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_add_column]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
  * Add a column to a table present in a PG Spanner database.

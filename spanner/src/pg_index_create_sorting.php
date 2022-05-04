@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_create_storing_index]
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
 
 /**
  * Create a new storing index in a Spanner PostgreSQL database.
