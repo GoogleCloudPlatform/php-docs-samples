@@ -22,32 +22,32 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return print("Usage: php delete_trigger.php CALLING_PROJECT_ID TRIGGER_ID\n");
-}
-list($_, $callingProjectId, $triggerId) = $argv;
+namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_delete_trigger]
-/**
- * Delete a Data Loss Prevention API job trigger.
- */
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $triggerId = 'The name of the trigger to be deleted.';
+/**
+ * Delete a Data Loss Prevention API job trigger.
+ *
+ * @param string $callingProjectId  The project ID to run the API call under
+ * @param string $triggerId         The name of the trigger to be deleted.
+ */
+function delete_trigger(string $callingProjectId, string $triggerId): void
+{
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
+    // Run request
+    // The Parent project ID is automatically extracted from this parameter
+    $triggerName = "projects/$callingProjectId/locations/global/jobTriggers/$triggerId";
+    $response = $dlp->deleteJobTrigger($triggerName);
 
-// Run request
-// The Parent project ID is automatically extracted from this parameter
-$triggerName = "projects/$callingProjectId/locations/global/jobTriggers/$triggerId";
-$response = $dlp->deleteJobTrigger($triggerName);
-
-// Print the results
-printf('Successfully deleted trigger %s' . PHP_EOL, $triggerName);
+    // Print the results
+    printf('Successfully deleted trigger %s' . PHP_EOL, $triggerName);
+}
 # [END dlp_delete_trigger]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

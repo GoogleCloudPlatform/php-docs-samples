@@ -29,6 +29,7 @@ FunctionsFramework::cloudEvent('helloGCS', 'helloGCS');
 
 function helloGCS(CloudEventInterface $cloudevent)
 {
+    // This function supports all Cloud Storage event types.
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     $data = $cloudevent->getData();
     fwrite($log, 'Event: ' . $cloudevent->getId() . PHP_EOL);

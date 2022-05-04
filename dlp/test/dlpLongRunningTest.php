@@ -54,7 +54,7 @@ class dlpLongRunningTest extends TestCase
         $kind = 'Person';
         $namespace = 'DLP';
 
-        $output = $this->runSnippet('inspect_datastore', [
+        $output = $this->runFunctionSnippet('inspect_datastore', [
             self::$projectId,
             self::$projectId,
             self::$topic->name(),
@@ -67,7 +67,7 @@ class dlpLongRunningTest extends TestCase
 
     public function testInspectBigquery()
     {
-        $output = $this->runSnippet('inspect_bigquery', [
+        $output = $this->runFunctionSnippet('inspect_bigquery', [
             self::$projectId,
             self::$projectId,
             self::$topic->name(),
@@ -83,7 +83,7 @@ class dlpLongRunningTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $objectName = 'dlp/harmful.csv';
 
-        $output = $this->runSnippet('inspect_gcs', [
+        $output = $this->runFunctionSnippet('inspect_gcs', [
             self::$projectId,
             self::$topic->name(),
             self::$subscription->name(),
@@ -97,7 +97,7 @@ class dlpLongRunningTest extends TestCase
     {
         $columnName = 'Age';
 
-        $output = $this->runSnippet('numerical_stats', [
+        $output = $this->runFunctionSnippet('numerical_stats', [
             self::$projectId, // calling project
             self::$projectId, // data project
             self::$topic->name(),
@@ -115,7 +115,7 @@ class dlpLongRunningTest extends TestCase
     {
         $columnName = 'Gender';
 
-        $output = $this->runSnippet('categorical_stats', [
+        $output = $this->runFunctionSnippet('categorical_stats', [
             self::$projectId, // calling project
             self::$projectId, // data project
             self::$topic->name(),
@@ -134,7 +134,7 @@ class dlpLongRunningTest extends TestCase
     {
         $quasiIds = 'Age,Gender';
 
-        $output = $this->runSnippet('k_anonymity', [
+        $output = $this->runFunctionSnippet('k_anonymity', [
             self::$projectId, // calling project
             self::$projectId, // data project
             self::$topic->name(),
@@ -152,7 +152,7 @@ class dlpLongRunningTest extends TestCase
         $sensitiveAttribute = 'Name';
         $quasiIds = 'Age,Gender';
 
-        $output = $this->runSnippet('l_diversity', [
+        $output = $this->runFunctionSnippet('l_diversity', [
             self::$projectId, // calling project
             self::$projectId, // data project
             self::$topic->name(),
@@ -173,7 +173,7 @@ class dlpLongRunningTest extends TestCase
         $quasiIds = 'Age,Gender';
         $infoTypes = 'AGE,GENDER';
 
-        $output = $this->runSnippet('k_map', [
+        $output = $this->runFunctionSnippet('k_map', [
             self::$projectId,
             self::$projectId,
             self::$topic->name(),

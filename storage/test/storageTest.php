@@ -672,6 +672,27 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Created bucket', $output);
     }
 
+    public function testCreateBucketDualRegion()
+    {
+        $location1 = 'US-EAST1';
+        $location2 = 'US-WEST1';
+
+        $bucketName = uniqid('samples-create-bucket-dual-region-');
+        $output = self::runFunctionSnippet('create_bucket_dual_region', [
+            $bucketName,
+            $location1,
+            $location2
+        ]);
+
+        $bucket = self::$storage->bucket($bucketName);
+        $exists = $bucket->exists();
+        $bucket->delete();
+
+        $this->assertTrue($exists);
+        $this->assertStringContainsString('Created dual-region bucket', $output);
+        $this->assertStringContainsString("${location1}+${location2}", $output);
+    }
+
     public function testObjectCsekToCmek()
     {
         $objectName = uniqid('samples-object-csek-to-cmek-');
@@ -802,6 +823,20 @@ class storageTest extends TestCase
         );
 
         $this->assertFileExists($downloadTo);
+    }
+
+    public function testSetClientEndpoint()
+    {
+        $testEndpoint = 'https://test-endpoint.com';
+
+        $output = self::runFunctionSnippet('set_client_endpoint', [
+            self::$projectId,
+            $testEndpoint,
+        ]);
+
+        $this->assertStringContainsString(sprintf('API endpoint: %s', $testEndpoint), $output);
+        $this->assertStringContainsString(sprintf('Base URI: %s/storage/v1/', $testEndpoint), $output);
+        $this->assertStringContainsString('Storage Client initialized.', $output);
     }
 
     private function keyName()

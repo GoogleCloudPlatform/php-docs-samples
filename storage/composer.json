@@ -4,6 +4,7 @@
         "paragonie/random_compat": "^9.0.0"
     },
     "require-dev": {
+        "google/cloud-pubsub": "^1.31",
         "guzzlehttp/guzzle": "^7.0"
     }
 }
