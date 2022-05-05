@@ -26,6 +26,8 @@ namespace Google\Cloud\Samples\Bigtable;
 // [START bigtable_api_cluster_disable_autoscaling]
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
+
 
 use Google\Protobuf\FieldMask;
 
@@ -45,14 +47,13 @@ function disable_cluster_autoscale_config(
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
-    $cluster = $instanceAdminClient->getCluster(
-        $clusterName,
-        [
-            'serveNodes' => $newNumNodes,
-        ]
-    );
+    $cluster = $instanceAdminClient->getCluster($clusterName);
+
+    $cluster->setServeNodes($newNumNodes);
+    $cluster->setClusterConfig(new ClusterConfig());
+
     $updateMask = new FieldMask([
-        'paths' => ['serve_nodes'],
+        'paths' => ['serve_nodes', 'cluster_config'],
     ]);
     try {
         $operationResponse = $instanceAdminClient->partialUpdateCluster($cluster, $updateMask);
@@ -62,7 +63,8 @@ function disable_cluster_autoscale_config(
             printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
         } else {
             $error = $operationResponse->getError();
-            printf('Cluster %s could not be updated.' . PHP_EOL, $clusterId);
+            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->message);
+            var_dump($error->code);
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

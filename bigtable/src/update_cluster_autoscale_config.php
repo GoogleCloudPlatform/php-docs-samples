@@ -30,6 +30,7 @@ use Google\Cloud\Bigtable\Admin\V2\AutoscalingTargets;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterAutoscalingConfig;
 use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
+use Google\Protobuf\FieldMask;
 
 /**
  * Update autoscale configurations for an existing given Bigtable cluster
@@ -37,50 +38,54 @@ use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $clusterId The ID of the cluster to be updated
- * @param int $newNumNodes The number of serve nodes the cluster should have
  */
 function update_cluster_autoscale_config(
     string $projectId,
     string $instanceId,
-    string $clusterId,
-    int $newNumNodes
+    string $clusterId
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
+    $cluster = $instanceAdminClient->getCluster($clusterName);
+
+    $autoscaling_limits = new AutoscalingLimits([
+        'min_serve_nodes' => 2,
+        'max_serve_nodes' => 5,
+    ]);
+    $autoscaling_targets = new AutoscalingTargets([
+        'cpu_utilization_percent' => 20,
+    ]);
+    $cluster_autoscale_config = new ClusterAutoscalingConfig([
+        'autoscaling_limits' => $autoscaling_limits,
+        'autoscaling_targets' => $autoscaling_targets,
+    ]);
+    $cluster_config = new ClusterConfig([
+        'cluster_autoscaling_config' => $cluster_autoscale_config,
+    ]);
+
+    // Since autoscale config are present,
+    // the number of static serve nodes doesnt matter
+    $cluster->setClusterConfig($cluster_config);
+
+    $updateMask = new FieldMask([
+        'paths' => [
+          // 'serve_nodes',
+          'cluster_config'
+        ],
+    ]);
 
     try {
-        $autoscaling_limits = new AutoscalingLimits([
-            'min_serve_nodes' => 2,
-            'max_serve_nodes' => 5,
-        ]);
-        $autoscaling_targets = new AutoscalingTargets([
-            'cpu_utilization_percent' => 10,
-        ]);
-        $cluster_autoscale_config = new ClusterAutoscalingConfig([
-            'autoscaling_limits' => $autoscaling_limits,
-            'autoscaling_targets' => $autoscaling_targets,
-        ]);
-        $cluster_config = new ClusterConfig([
-            'cluster_autoscaling_config' => $cluster_autoscale_config,
-        ]);
-
-        $operationResponse = $instanceAdminClient->updateCluster(
-            $clusterName,
-            $newNumNodes,
-            [
-                'clusterConfig' => $cluster_config,
-            ]
-        );
+        $operationResponse = $instanceAdminClient->partialUpdateCluster($cluster, $updateMask);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedCluster = $operationResponse->getResult();
-            printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
+            printf('Cluster %s updated with autoscale config.' . PHP_EOL, $clusterId);
         } else {
             $error = $operationResponse->getError();
-            printf('Cluster failed to update.' . PHP_EOL);
-            // var_dump($error);
-            // handleError($error)
+            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->message);
+            var_dump($error->code);
+            // handleError($error);
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
