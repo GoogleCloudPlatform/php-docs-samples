@@ -30,7 +30,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * Create a new storing index in a Spanner PostgreSQL database.
  * The PostgreSQL dialect uses INCLUDE keyword, as
  * opposed to the STORING keyword of Cloud Spanner.
- * 
+ *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */

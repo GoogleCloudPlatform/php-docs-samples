@@ -106,7 +106,7 @@ class spannerPgTest extends TestCase
      */
     public function testCreateTableCaseSensitivity()
     {
-        $tableName = 'Singers' . time() .rand();
+        $tableName = 'Singers' . time() . rand();
         $output = $this->runFunctionSnippet('pg_case_sensitivity', [
             self::$instanceId, self::$databaseId, $tableName
         ]);
