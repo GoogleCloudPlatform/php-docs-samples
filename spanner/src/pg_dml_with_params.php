@@ -40,7 +40,8 @@ function pg_dml_with_params(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
 
     $database->runTransaction(function (Transaction $t) {
-        $count = $t->executeUpdate('INSERT INTO Singers (SingerId, FirstName, LastName)'
+        $count = $t->executeUpdate(
+            'INSERT INTO Singers (SingerId, FirstName, LastName)'
             . ' VALUES ($1, $2, $3), ($4, $5, $6)',
             [
                 'parameters' => [
@@ -51,7 +52,8 @@ function pg_dml_with_params(string $instanceId, string $databaseId): void
                     'p5' => 'Bruce',
                     'p6' => 'Allison',
                 ]
-            ]);
+            ]
+        );
         $t->commit();
 
         printf('Inserted %s singer(s).' . PHP_EOL, $count);

@@ -42,14 +42,16 @@ function pg_query_parameter(string $instanceId, string $databaseId): void
 
     printf('Listing all singers with a last name that starts with \'A\'' . PHP_EOL);
 
-    $results = $database->execute('SELECT SingerId, FirstName, LastName' .
+    $results = $database->execute(
+        'SELECT SingerId, FirstName, LastName' .
         ' FROM Singers' .
         ' WHERE LastName LIKE $1',
-    [
+        [
         'parameters' => [
             'p1' => 'A%'
         ]
-    ]);
+    ]
+    );
 
     foreach ($results as $row) {
         printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['singerid'], $row['firstname'], $row['lastname']);

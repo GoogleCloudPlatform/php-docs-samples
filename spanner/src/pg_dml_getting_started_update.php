@@ -28,7 +28,7 @@ use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Transaction;
 
 /**
- * 
+ *
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
@@ -52,7 +52,7 @@ function pg_dml_getting_started_update(string $instanceId, string $databaseId): 
 
         // Transaction will only be committed if this condition still holds at the time of
         // commit. Otherwise it will be aborted.
-        if( $budgetAlbum2 > $transfer) {
+        if ($budgetAlbum2 > $transfer) {
             $sql = 'SELECT marketingbudget as "MarketingBudget" from Albums WHERE '
             . 'SingerId = 1 and AlbumId = 1';
             $result = $t->execute($sql);

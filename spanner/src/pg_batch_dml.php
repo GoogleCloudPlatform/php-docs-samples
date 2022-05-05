@@ -43,7 +43,7 @@ function pg_batch_dml(string $instanceId, string $databaseId): void
     $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName)'
     . ' VALUES ($1, $2, $3)';
 
-    $database->runTransaction(function (Transaction $t) use($sql){
+    $database->runTransaction(function (Transaction $t) use ($sql) {
         $result = $t->executeUpdateBatch([
             [
                 'sql' => $sql,

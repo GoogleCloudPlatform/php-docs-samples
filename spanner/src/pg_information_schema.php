@@ -38,7 +38,8 @@ function pg_information_schema(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $operation = $database->updateDdl('
+    $operation = $database->updateDdl(
+        '
         CREATE TABLE Venues (
             VenueId  bigint NOT NULL PRIMARY KEY,
             Name     varchar(1024) NOT NULL,
