@@ -233,6 +233,78 @@ final class BigtableTest extends TestCase
         }
     }
 
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testManageAutoscalingCluster()
+    {
+        // Create a new cluster as last cluster in an instance cannot be deleted
+        $clusterId = uniqid(self::CLUSTER_ID_PREFIX);
+        $numNodes = 2;
+
+        $content = self::runFunctionSnippet('create_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            $clusterId,
+            'us-east1-c'
+        ]);
+
+        $clusterName = self::$instanceAdminClient->clusterName(
+            self::$projectId,
+            self::$instanceId,
+            $clusterId
+        );
+        $this->checkCluster($clusterName);
+
+        // Disable autoscale config in cluster
+        $content .= self::runFunctionSnippet('disable_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            $clusterId,
+            $numNodes
+        ]);
+
+        // Update autoscale config in cluster
+        $content .= self::runFunctionSnippet('update_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            $clusterId
+        ]);
+
+        $content .= self::runFunctionSnippet('delete_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            $clusterId
+        ]);
+
+        // $this->assertStringContainsString('Found notification with id 1', $output);
+        $this->assertStringContainsString(sprintf(
+          'Cluster created: %s',
+          $clusterId,
+        ), $content);
+        $this->assertStringContainsString(sprintf(
+            'Cluster updated with the new num of nodes: %s.',
+            $numNodes,
+        ), $content);
+        $this->assertStringContainsString(sprintf(
+            'Cluster %s updated with autoscale config.',
+            $clusterId,
+        ), $content);
+        $this->assertStringContainsString(sprintf(
+            'Cluster %s deleted.',
+            $clusterId,
+        ), $content);
+
+        try {
+            self::$instanceAdminClient->getCluster($clusterName);
+            $this->fail(sprintf('Cluster %s still exists after deleted in test', $clusterName));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            }
+        }
+    }
+
     public function testCreateDevInstance()
     {
         $instanceId = uniqid(self::INSTANCE_ID_PREFIX);
