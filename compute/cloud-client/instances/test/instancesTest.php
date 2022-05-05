@@ -184,6 +184,13 @@ class instancesTest extends TestCase
             'instanceName' => self::$instanceName
         ]);
         $this->assertStringContainsString('Deleted instance ' . self::$instanceName, $output);
+
+        $output = $this->runFunctionSnippet('delete_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName
+        ]);
+        $this->assertStringContainsString('Deleted instance ' . self::$encInstanceName, $output);
     }
 
     public function testSetUsageExportBucketDefaultPrefix()
