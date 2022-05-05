@@ -33,7 +33,7 @@ use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
 use Google\Protobuf\FieldMask;
 
 /**
- * Update autoscale configurations for an existing given Bigtable cluster
+ * Updates autoscale configurations for an existing given Bigtable cluster
  *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
@@ -63,12 +63,12 @@ function update_cluster_autoscale_config(
         'cluster_autoscaling_config' => $cluster_autoscale_config,
     ]);
 
-    // Since autoscale config are present,
-    // the number of static serve nodes doesnt matter
     $cluster->setClusterConfig($cluster_config);
 
     $updateMask = new FieldMask([
         'paths' => [
+          // if both serve nodes and autoscaling are set
+          // the server will silently ignore the serve nodes
           // 'serve_nodes',
           'cluster_config'
         ],

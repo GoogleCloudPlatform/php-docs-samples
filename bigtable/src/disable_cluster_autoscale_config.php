@@ -28,7 +28,6 @@ use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
 
-
 use Google\Protobuf\FieldMask;
 
 /**
@@ -48,10 +47,10 @@ function disable_cluster_autoscale_config(
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
     $cluster = $instanceAdminClient->getCluster($clusterName);
-
+    // static serve node is required to disable auto scale config
     $cluster->setServeNodes($newNumNodes);
+    // clearing the autoscale config
     $cluster->setClusterConfig(new ClusterConfig());
-
     $updateMask = new FieldMask([
         'paths' => ['serve_nodes', 'cluster_config'],
     ]);
