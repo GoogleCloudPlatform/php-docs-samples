@@ -28,24 +28,26 @@ use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Create a new storing index in a Spanner PostgreSQL database.
- *
+ * The PostgreSQL dialect uses INCLUDE keyword, as
+ * opposed to the STORING keyword of Cloud Spanner.
+ * 
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_index_create_sorting(string $instanceId, string $databaseId): void
+function pg_create_storing_index(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        'CREATE INDEX SingersBySingerName ON Singers(FirstName) INCLUDE(LastName, SingerInfo)'
+        'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle) INCLUDE (MarketingBudget)'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    print('Added the SingersBySingerName index.' . PHP_EOL);
+    print('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
 }
 // [END spanner_postgresql_create_storing_index]
 

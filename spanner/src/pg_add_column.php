@@ -39,13 +39,13 @@ function pg_add_column(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        'ALTER TABLE Singers ADD COLUMN Rating DOUBLE PRECISION'
+        'ALTER TABLE Albums ADD COLUMN MarketingBudget bigint'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    print('Added column Rating on table Singers' . PHP_EOL);
+    print('Added column MarketingBudget on table Albums' . PHP_EOL);
 }
 // [END spanner_postgresql_add_column]
 

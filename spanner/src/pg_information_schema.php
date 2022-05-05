@@ -38,6 +38,18 @@ function pg_information_schema(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
+    $operation = $database->updateDdl('
+        CREATE TABLE Venues (
+            VenueId  bigint NOT NULL PRIMARY KEY,
+            Name     varchar(1024) NOT NULL,
+            Revenues numeric,
+            Picture  bytea
+        )'
+    );
+
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
     // The Spanner INFORMATION_SCHEMA tables can be used to query the metadata of tables and
     // columns of PostgreSQL databases. The returned results will include additional PostgreSQL
     // metadata columns.

@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -86,7 +87,7 @@ class spannerPgTest extends TestCase
         $this->assertStringContainsString('Bytes: NA==', $output);
         $this->assertStringContainsString(sprintf('Float: %d', 5), $output);
         $this->assertStringContainsString('Bool: 1', $output);
-        $this->assertStringContainsString('Timestamp: 2022-03-03T00:00:00.000000Z', $output);
+        $this->assertStringContainsString('Timestamp: 2021-11-03T09:35:01.000000Z', $output);
     }
 
     /*
@@ -105,10 +106,13 @@ class spannerPgTest extends TestCase
      */
     public function testCreateTableCaseSensitivity()
     {
-        $output = $this->runFunctionSnippet('pg_case_sensitivity');
+        $tableName = 'Singers' . time() .rand();
+        $output = $this->runFunctionSnippet('pg_case_sensitivity', [
+            self::$instanceId, self::$databaseId, $tableName
+        ]);
         self::$lastUpdateDataTimestamp = time();
-        $expected = sprintf('Created Singers table in database %s on instance %s',
-            self::$databaseId, self::$instanceId);
+        $expected = sprintf('Created %s table in database %s on instance %s',
+            $tableName, self::$databaseId, self::$instanceId);
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -123,7 +127,7 @@ class spannerPgTest extends TestCase
 
         $this->assertStringContainsString(sprintf('table_catalog: %s', self::$databaseId), $output);
         $this->assertStringContainsString('table_schema: public', $output);
-        $this->assertStringContainsString('table_name: singers', $output);
+        $this->assertStringContainsString('table_name: venues', $output);
     }
 
     /**
@@ -133,7 +137,7 @@ class spannerPgTest extends TestCase
     {
         $output = $this->runFunctionSnippet('pg_dml_with_params');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertStringContainsString('Inserted 1 singer(s).', $output);
+        $this->assertStringContainsString('Inserted 2 singer(s).', $output);
     }
 
     /**
@@ -141,6 +145,11 @@ class spannerPgTest extends TestCase
      */
     public function testBatchDml()
     {
+        // delete anything in singers table before running the sample
+        // to avoid collision of IDs
+        $database = self::$instance->database(self::$databaseId);
+        $database->executePartitionedUpdate('DELETE FROM Singers WHERE singerid IS NOT NULL');
+
         $output = $this->runFunctionSnippet('pg_batch_dml');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('Inserted 2 singers using Batch DML.', $output);
@@ -157,38 +166,61 @@ class spannerPgTest extends TestCase
     }
 
     /**
-     * @depends testBatchDml
+     * @depends testCreateDatabase
      */
     public function testPartitionedDml()
     {
+        // setup some data
         $db = self::$instance->database(self::$databaseId);
-        $results = $db->execute('SELECT count(*) FROM Singers WHERE "FirstName" IS NOT NULL');
-        $count = $results->rows()->current()['count'];
+        $op = $db->updateDdl('
+        CREATE TABLE users (
+            id  bigint NOT NULL PRIMARY KEY,
+            name     varchar(1024) NOT NULL,
+            active boolean
+        )');
+        $op->pollUntilComplete();
+
+        $db->runTransaction(function (Transaction $t) {
+            $t->executeUpdate('INSERT INTO users (id, name, active)'
+                . ' VALUES ($1, $2, $3), ($4, $5, $6)',
+                [
+                    'parameters' => [
+                        'p1' => 1,
+                        'p2' => 'Alice',
+                        'p3' => true,
+                        'p4' => 2,
+                        'p5' => 'Bruce',
+                        'p6' => false,
+                    ]
+                ]);
+            $t->commit();
+        });
 
         $output = $this->runFunctionSnippet('pg_partitioned_dml');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertStringContainsString(sprintf('Deleted %s rows.', $count), $output);
+        $this->assertStringContainsString('Deleted 1 inactive user(s).', $output);
     }
 
     /**
-     * @depends testCreateTableCaseSensitivity
+     * @depends testCreateDatabase
      */
-    public function testPgAddColumn()
+    public function testAddColumn()
     {
         $output = $this->runFunctionSnippet('pg_add_column');
         self::$lastUpdateDataTimestamp = time();
-        $this->assertStringContainsString('Added column Rating on table Singers', $output);
+        $this->assertStringContainsString('Added column MarketingBudget on table Albums', $output);
     }
 
     /**
-     * @depends testBatchDml
+     * @depends testCreateDatabase
      */
     public function testInterleavedTable()
     {
-        $tableName = 'Singers' . time() . rand();
+        $parentTable = 'Singers' . time() . rand();
+        $childTable = 'Albumbs' . time() . rand();
 
         $output = $this->runFunctionSnippet('pg_interleaved_table', [
-            self::$instanceId, self::$databaseId, $tableName
+            self::$instanceId, self::$databaseId, $parentTable, $childTable
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -200,7 +232,10 @@ class spannerPgTest extends TestCase
      */
     public function testNumericDataType()
     {
-        $output = $this->runFunctionSnippet('pg_numeric_data_type');
+        $tableName = 'Venues' . time() . rand();
+        $output = $this->runFunctionSnippet('pg_numeric_data_type', [
+            self::$instanceId, self::$databaseId, $tableName
+        ]);
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString('Inserted 1 venue(s).', $output);
@@ -241,8 +276,39 @@ class spannerPgTest extends TestCase
 
     public function testIndexCreateSorting()
     {
-        $output = $this->runFunctionSnippet('pg_index_create_sorting');
-        $this->assertStringContainsString('Added the SingersBySingerName index.', $output);
+        $output = $this->runFunctionSnippet('pg_create_storing_index');
+        $this->assertStringContainsString('Added the AlbumsByAlbumTitle index.', $output);
+    }
+
+    public function testDmlGettingStartedUpdate()
+    {
+        // setup with some data
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->executeUpdateBatch([
+                [
+                    'sql' => 'INSERT INTO Albums (SingerId, AlbumId, MarketingBudget) VALUES($1, $2, $3)',
+                    'parameters' => [
+                        'p1' => 1,
+                        'p2' => 1,
+                        'p3' => 0
+                    ]
+                ],
+                [
+                    'sql' => 'INSERT INTO Albums (SingerId, AlbumId, MarketingBudget) VALUES($1, $2, $3)',
+                    'parameters' => [
+                        'p1' => 2,
+                        'p2' => 2,
+                        'p3' => 200001
+                    ]
+                ]
+            ]);
+
+            $t->commit();
+        });
+
+        $output = $this->runFunctionSnippet('pg_dml_getting_started_update');
+        $this->assertStringContainsString('Marketing budget updated.', $output);
     }
 
     public static function tearDownAfterClass(): void

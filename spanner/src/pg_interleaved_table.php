@@ -31,9 +31,10 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $tableName The parent table to create. Defaults to 'Singers'
+ * @param string $parentTable The parent table to create. Defaults to 'Singers'
+ * @param string $childTable The child table to create. Defaults to 'Albums'
  */
-function pg_interleaved_table(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
+function pg_interleaved_table(string $instanceId, string $databaseId, string $parentTable = 'Singers', string $childTable = 'Albums'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -48,14 +49,14 @@ function pg_interleaved_table(string $instanceId, string $databaseId, string $ta
         SingerId  bigint NOT NULL PRIMARY KEY,
         FirstName varchar(1024) NOT NULL,
         LastName  varchar(1024) NOT NULL
-    )', $tableName);
+    )', $parentTable);
 
-    $childTableQuery = sprintf('CREATE TABLE Albums (
+    $childTableQuery = sprintf('CREATE TABLE %s (
         SingerId bigint NOT NULL,
         AlbumId  bigint NOT NULL,
         Title    varchar(1024) NOT NULL,
         PRIMARY KEY (SingerId, AlbumId)
-    ) INTERLEAVE IN PARENT %s ON DELETE CASCADE', $tableName);
+    ) INTERLEAVE IN PARENT %s ON DELETE CASCADE', $childTable, $parentTable);
 
     $operation = $database->updateDdlBatch([$parentTableQuery, $childTableQuery]);
 

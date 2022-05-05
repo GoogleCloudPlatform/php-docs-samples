@@ -40,11 +40,13 @@ function pg_batch_dml(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $batchDmlResult = $database->runTransaction(function (Transaction $t) {
+    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName)'
+    . ' VALUES ($1, $2, $3)';
+
+    $database->runTransaction(function (Transaction $t) use($sql){
         $result = $t->executeUpdateBatch([
             [
-                'sql' => 'INSERT INTO Singers (SingerId, "FirstName", "LastName")'
-                    . ' VALUES ($1, $2, $3)',
+                'sql' => $sql,
                 'parameters' => [
                     'p1' => 1,
                     'p2' => 'Alice',
@@ -57,14 +59,13 @@ function pg_batch_dml(string $instanceId, string $databaseId): void
                 ]
             ],
             [
-                'sql' => 'INSERT INTO Singers (SingerId, "FirstName", "LastName")'
-                    . ' VALUES ($1, $2, $3)',
+                'sql' => $sql,
                 'parameters' => [
                     'p1' => 2,
                     'p2' => 'Bruce',
                     'p3' => 'Allison',
                 ],
-                // you can omit types when the value isn't null
+                // you can omit types(provided the value isn't null)
             ]
         ]);
         $t->commit();

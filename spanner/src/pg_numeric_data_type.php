@@ -33,8 +33,9 @@ use Google\Cloud\Spanner\Database;
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
+ * @param string $tableName The table name in which the numeric column will reside.
  */
-function pg_numeric_data_type(string $instanceId, string $databaseId): void
+function pg_numeric_data_type(string $instanceId, string $databaseId, string $tableName = 'Venues'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -44,20 +45,21 @@ function pg_numeric_data_type(string $instanceId, string $databaseId): void
     // created with the PostgreSQL dialect, the data type that is used will be the PostgreSQL
     // NUMERIC data type.
     $operation = $database->updateDdl(
-        'CREATE TABLE Venues (
+        sprintf('CREATE TABLE %s (
             VenueId  bigint NOT NULL PRIMARY KEY,
             Name     varchar(1024) NOT NULL,
             Revenues numeric
-        )'
+        )', $tableName)
     );
 
     print('Creating the table...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
-        $count = $t->executeUpdate('INSERT INTO Venues (VenueId, Name, Revenues)'
-            . ' VALUES ($1, $2, $3)',
-            [
+    $sql = sprintf('INSERT INTO %s (VenueId, Name, Revenues)'
+    . ' VALUES ($1, $2, $3)', $tableName);
+
+    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+        $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 1,
                     'p2' => 'Venue 1',
@@ -69,10 +71,8 @@ function pg_numeric_data_type(string $instanceId, string $databaseId): void
         printf('Inserted %d venue(s).' . PHP_EOL, $count);
     });
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
-        $count = $t->executeUpdate('INSERT INTO Venues (VenueId, Name, Revenues)'
-            . ' VALUES ($1, $2, $3)',
-            [
+    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+        $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 2,
                     'p2' => 'Venue 2',
@@ -88,10 +88,8 @@ function pg_numeric_data_type(string $instanceId, string $databaseId): void
         printf('Inserted %d venue(s) with NULL revenue.' . PHP_EOL, $count);
     });
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
-        $count = $t->executeUpdate('INSERT INTO Venues (VenueId, Name, Revenues)'
-            . ' VALUES ($1, $2, $3)',
-            [
+    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+        $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 3,
                     'p2' => 'Venue 4',

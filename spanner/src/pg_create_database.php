@@ -42,6 +42,8 @@ function pg_create_database(string $instanceId, string $databaseId): void
         throw new \LogicException("Instance $instanceId does not exist");
     }
 
+    // A DB with PostgreSQL dialect does not support extra DDL statements in the
+    // `createDatabase` call.
     $operation = $instance->createDatabase($databaseId, [
         'databaseDialect' => DatabaseDialect::POSTGRESQL
     ]);
@@ -51,9 +53,27 @@ function pg_create_database(string $instanceId, string $databaseId): void
 
     $database = $instance->database($databaseId);
     $dialect = DatabaseDialect::name($database->info()['databaseDialect']);
-
+    
     printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
         $databaseId, $dialect, $instanceId);
+
+    $table1Query = 'CREATE TABLE Singers (
+        SingerId   bigint NOT NULL PRIMARY KEY,
+        FirstName  varchar(1024),
+        LastName   varchar(1024),
+        SingerInfo bytea
+    )';
+
+    $table2Query = 'CREATE TABLE Albums (
+        AlbumId      bigint NOT NULL,
+        SingerId     bigint NOT NULL REFERENCES Singers (SingerId),
+        AlbumTitle   text,
+        PRIMARY KEY(SingerId, AlbumId)
+    )';
+
+    // You can execute the DDL queries in a call to updateDdl/updateDdlBatch
+    $operation = $database->updateDdlBatch([$table1Query, $table2Query]);
+    $operation->pollUntilComplete();
 }
 // [END spanner_create_postgres_database]
 

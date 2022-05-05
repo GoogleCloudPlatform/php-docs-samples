@@ -32,15 +32,16 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
+ * @param string $tableName The name of the table to create, defaults to Singers.
  */
-function pg_case_sensitivity(string $instanceId, string $databaseId): void
+function pg_case_sensitivity(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        'CREATE TABLE Singers (
+        sprintf('CREATE TABLE %s (
             -- SingerId will be folded to "singerid"
             SingerId  bigint NOT NULL PRIMARY KEY,
             -- FirstName and LastName are double-quoted and will therefore retain their
@@ -48,14 +49,14 @@ function pg_case_sensitivity(string $instanceId, string $databaseId): void
             -- references any of these columns must use double quotes.
             "FirstName" varchar(1024) NOT NULL,
             "LastName"  varchar(1024) NOT NULL
-        )'
+        )', $tableName)
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created Singers table in database %s on instance %s' . PHP_EOL,
-        $databaseId, $instanceId);
+    printf('Created %s table in database %s on instance %s' . PHP_EOL,
+        $tableName, $databaseId, $instanceId);
 }
 // [END spanner_postgresql_case_sensitivity]
 

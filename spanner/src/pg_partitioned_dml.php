@@ -43,9 +43,9 @@ function pg_partitioned_dml(string $instanceId, string $databaseId): void
     // maximum of 20,000 mutations in a single read/write transaction. Large update operations can
     // be executed using Partitioned DML. This is also supported on Spanner PostgreSQL.
     // See https://cloud.google.com/spanner/docs/dml-partitioned for more information.
-    $count = $database->executePartitionedUpdate('DELETE FROM Singers WHERE "FirstName" IS NOT NULL');
+    $count = $database->executePartitionedUpdate('DELETE FROM users WHERE active = false');
 
-    printf('Deleted %s rows.' . PHP_EOL, $count);
+    printf('Deleted %s inactive user(s).' . PHP_EOL, $count);
 }
 // [END spanner_postgresql_partitioned_dml]
 
