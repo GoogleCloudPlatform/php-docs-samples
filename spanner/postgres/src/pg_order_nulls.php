@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
 // [START spanner_postgresql_order_nulls]
 use Google\Cloud\Spanner\SpannerClient;
@@ -96,5 +96,5 @@ function print_results($results): void
 // [END spanner_postgresql_order_nulls]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

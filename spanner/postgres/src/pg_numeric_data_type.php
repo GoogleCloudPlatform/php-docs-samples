@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
 // [START spanner_postgresql_numeric_data_type]
 use Google\Cloud\Spanner\SpannerClient;
@@ -104,5 +104,5 @@ function pg_numeric_data_type(string $instanceId, string $databaseId, string $ta
 // [END spanner_postgresql_numeric_data_type]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

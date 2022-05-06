@@ -21,34 +21,29 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_partitioned_dml]
+// [START spanner_postgresql_create_clients]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Execute Partitioned DML on a Spanner PostgreSQL database.
- * See also https://cloud.google.com/spanner/docs/dml-partitioned.
+ * Create an instance client and a database client
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_partitioned_dml(string $instanceId, string $databaseId): void
+function pg_connect_to_db(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
+
+    // Instance Admin Client
     $instance = $spanner->instance($instanceId);
+
+    // Spanner Database Client
     $database = $instance->database($databaseId);
-
-    // Spanner PostgreSQL has the same transaction limits as normal Spanner. This includes a
-    // maximum of 20,000 mutations in a single read/write transaction. Large update operations can
-    // be executed using Partitioned DML. This is also supported on Spanner PostgreSQL.
-    // See https://cloud.google.com/spanner/docs/dml-partitioned for more information.
-    $count = $database->executePartitionedUpdate('DELETE FROM users WHERE active = false');
-
-    printf('Deleted %s inactive user(s).' . PHP_EOL, $count);
 }
-// [END spanner_postgresql_partitioned_dml]
+// [END spanner_postgresql_create_clients]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

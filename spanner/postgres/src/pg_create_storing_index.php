@@ -21,29 +21,36 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_create_clients]
+// [START spanner_postgresql_create_storing_index]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Create an instance client and a database client
+ * Create a new storing index in a Spanner PostgreSQL database.
+ * The PostgreSQL dialect uses INCLUDE keyword, as
+ * opposed to the STORING keyword of Cloud Spanner.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_connect_to_db(string $instanceId, string $databaseId): void
+function pg_create_storing_index(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
-
-    // Instance Admin Client
     $instance = $spanner->instance($instanceId);
-
-    // Spanner Database Client
     $database = $instance->database($databaseId);
+
+    $operation = $database->updateDdl(
+        'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle) INCLUDE (MarketingBudget)'
+    );
+
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
+    print('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
 }
-// [END spanner_postgresql_create_clients]
+// [END spanner_postgresql_create_storing_index]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

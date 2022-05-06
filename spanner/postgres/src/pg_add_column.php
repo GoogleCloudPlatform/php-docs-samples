@@ -21,45 +21,34 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_case_sensitivity]
+// [START spanner_postgresql_add_column]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Create a table with case-sensitive and case-folded columns for
- * a Spanner PostgreSQL database
+ * Add a column to a table present in a PG Spanner database.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $tableName The name of the table to create, defaults to Singers.
  */
-function pg_case_sensitivity(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
+function pg_add_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        sprintf('CREATE TABLE %s (
-            -- SingerId will be folded to "singerid"
-            SingerId  bigint NOT NULL PRIMARY KEY,
-            -- FirstName and LastName are double-quoted and will therefore retain their
-            -- mixed case and are case-sensitive. This means that any statement that
-            -- references any of these columns must use double quotes.
-            "FirstName" varchar(1024) NOT NULL,
-            "LastName"  varchar(1024) NOT NULL
-        )', $tableName)
+        'ALTER TABLE Albums ADD COLUMN MarketingBudget bigint'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created %s table in database %s on instance %s' . PHP_EOL,
-        $tableName, $databaseId, $instanceId);
+    print('Added column MarketingBudget on table Albums' . PHP_EOL);
 }
-// [END spanner_postgresql_case_sensitivity]
+// [END spanner_postgresql_add_column]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

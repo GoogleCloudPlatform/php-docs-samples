@@ -21,44 +21,35 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_query_parameter]
+// [START spanner_postgresql_functions]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Execute a query with parameters on a Spanner PostgreSQL database.
- * The PostgreSQL dialect uses positional parameters, as
- * opposed to the named parameters of Cloud Spanner.
+ * Call a server side function on a Spanner PostgreSQL database
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_query_parameter(string $instanceId, string $databaseId): void
+function pg_functions(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    printf('Listing all singers with a last name that starts with \'A\'' . PHP_EOL);
+    // Use the PostgreSQL `to_timestamp` function to convert a number of
+    // seconds since epoch to a timestamp.
+    // 1284352323 seconds = Monday, September 13, 2010 4:32:03 AM.
+    $results = $database->execute('SELECT to_timestamp(1284352323) AS time');
 
-    $results = $database->execute(
-        'SELECT SingerId, FirstName, LastName' .
-        ' FROM Singers' .
-        ' WHERE LastName LIKE $1',
-        [
-        'parameters' => [
-            'p1' => 'A%'
-        ]
-    ]
-    );
+    $row = $results->rows()->current();
+    $time = $row['time'];
 
-    foreach ($results as $row) {
-        printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['singerid'], $row['firstname'], $row['lastname']);
-    }
+    printf('1284352323 seconds after epoch is %s' . PHP_EOL, $time);
 }
-// [END spanner_postgresql_query_parameter]
+// [END spanner_postgresql_functions]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

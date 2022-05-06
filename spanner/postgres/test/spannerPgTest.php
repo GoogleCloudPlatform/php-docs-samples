@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;

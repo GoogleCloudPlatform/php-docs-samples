@@ -21,36 +21,34 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_create_storing_index]
+// [START spanner_postgresql_partitioned_dml]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Create a new storing index in a Spanner PostgreSQL database.
- * The PostgreSQL dialect uses INCLUDE keyword, as
- * opposed to the STORING keyword of Cloud Spanner.
+ * Execute Partitioned DML on a Spanner PostgreSQL database.
+ * See also https://cloud.google.com/spanner/docs/dml-partitioned.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_create_storing_index(string $instanceId, string $databaseId): void
+function pg_partitioned_dml(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $operation = $database->updateDdl(
-        'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle) INCLUDE (MarketingBudget)'
-    );
+    // Spanner PostgreSQL has the same transaction limits as normal Spanner. This includes a
+    // maximum of 20,000 mutations in a single read/write transaction. Large update operations can
+    // be executed using Partitioned DML. This is also supported on Spanner PostgreSQL.
+    // See https://cloud.google.com/spanner/docs/dml-partitioned for more information.
+    $count = $database->executePartitionedUpdate('DELETE FROM users WHERE active = false');
 
-    print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->pollUntilComplete();
-
-    print('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
+    printf('Deleted %s inactive user(s).' . PHP_EOL, $count);
 }
-// [END spanner_postgresql_create_storing_index]
+// [END spanner_postgresql_partitioned_dml]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

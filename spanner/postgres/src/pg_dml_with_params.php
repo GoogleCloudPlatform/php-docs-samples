@@ -21,12 +21,11 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_batch_dml]
+// [START spanner_postgresql_dml_with_parameters]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Transaction;
-use Google\Cloud\Spanner\Database;
 
 /**
  * Execute a batch of DML statements on a Spanner PostgreSQL database
@@ -34,51 +33,34 @@ use Google\Cloud\Spanner\Database;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_batch_dml(string $instanceId, string $databaseId): void
+function pg_dml_with_params(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName)'
-    . ' VALUES ($1, $2, $3)';
-
-    $database->runTransaction(function (Transaction $t) use ($sql) {
-        $result = $t->executeUpdateBatch([
+    $database->runTransaction(function (Transaction $t) {
+        $count = $t->executeUpdate(
+            'INSERT INTO Singers (SingerId, FirstName, LastName)'
+            . ' VALUES ($1, $2, $3), ($4, $5, $6)',
             [
-                'sql' => $sql,
                 'parameters' => [
                     'p1' => 1,
                     'p2' => 'Alice',
                     'p3' => 'Henderson',
-                ],
-                'types' => [
-                    'p1' => Database::TYPE_INT64,
-                    'p2' => Database::TYPE_STRING,
-                    'p3' => Database::TYPE_STRING,
+                    'p4' => 2,
+                    'p5' => 'Bruce',
+                    'p6' => 'Allison',
                 ]
-            ],
-            [
-                'sql' => $sql,
-                'parameters' => [
-                    'p1' => 2,
-                    'p2' => 'Bruce',
-                    'p3' => 'Allison',
-                ],
-                // you can omit types(provided the value isn't null)
             ]
-        ]);
+        );
         $t->commit();
 
-        if ($result->error()) {
-            printf('An error occurred: %s' . PHP_EOL, $result->error()['status']['message']);
-        } else {
-            printf('Inserted %s singers using Batch DML.' . PHP_EOL, count($result->rowCounts()));
-        }
+        printf('Inserted %s singer(s).' . PHP_EOL, $count);
     });
 }
-// [END spanner_postgresql_batch_dml]
+// [END spanner_postgresql_dml_with_parameters]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

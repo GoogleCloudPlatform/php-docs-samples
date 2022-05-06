@@ -21,7 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
 // [START spanner_postgresql_information_schema]
 use Google\Cloud\Spanner\SpannerClient;
@@ -75,5 +75,5 @@ function pg_information_schema(string $instanceId, string $databaseId): void
 // [END spanner_postgresql_information_schema]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

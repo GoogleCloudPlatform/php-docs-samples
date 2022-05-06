@@ -21,41 +21,44 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner\Postgres;
 
-// [START spanner_postgresql_cast_data_type]
+// [START spanner_postgresql_query_parameter]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Cast values from one data type to another in a Spanner PostgreSQL SQL statement
+ * Execute a query with parameters on a Spanner PostgreSQL database.
+ * The PostgreSQL dialect uses positional parameters, as
+ * opposed to the named parameters of Cloud Spanner.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_cast_data_type(string $instanceId, string $databaseId): void
+function pg_query_parameter(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $sql = "select 1::varchar as str, '2'::int as int, 3::decimal as dec, " .
-    "'4'::bytea as bytes, 5::float as float, 'true'::bool as bool, " .
-    "'2021-11-03T09:35:01UTC'::timestamptz as timestamp";
+    printf('Listing all singers with a last name that starts with \'A\'' . PHP_EOL);
 
-    $results = $database->execute($sql);
+    $results = $database->execute(
+        'SELECT SingerId, FirstName, LastName' .
+        ' FROM Singers' .
+        ' WHERE LastName LIKE $1',
+        [
+        'parameters' => [
+            'p1' => 'A%'
+        ]
+    ]
+    );
 
     foreach ($results as $row) {
-        printf('String: %s' . PHP_EOL, $row['str']);
-        printf('Int: %d' . PHP_EOL, $row['int']);
-        printf('Decimal: %s' . PHP_EOL, $row['dec']);
-        printf('Bytes: %s' . PHP_EOL, $row['bytes']);
-        printf('Float: %f' . PHP_EOL, $row['float']);
-        printf('Bool: %s' . PHP_EOL, $row['bool']);
-        printf('Timestamp: %s' . PHP_EOL, (string) $row['timestamp']);
+        printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['singerid'], $row['firstname'], $row['lastname']);
     }
 }
-// [END spanner_postgresql_cast_data_type]
+// [END spanner_postgresql_query_parameter]
 
 // The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
