@@ -21,14 +21,15 @@ use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @retryAttempts 3
+ * @retryAttempts 5
+ * @retryDelayMethod exponentialBackoff
  */
 class spannerBackupTest extends TestCase
 {
@@ -36,7 +37,7 @@ class spannerBackupTest extends TestCase
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    use RetryTrait, EventuallyConsistentTestTrait;
+    use RetryTrait, EventuallyConsistentTestTrait, ExponentialBackoffTrait;
 
     /** @var string instanceId */
     protected static $instanceId;
