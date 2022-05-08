@@ -109,16 +109,12 @@ class spannerTest extends TestCase
             'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
 
-        self::$multiInstanceId = 'test-' . time() . rand() . 'm';
+        self::$multiInstanceId = 'kokoro-multi-instance';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
         self::$defaultLeader = 'us-central1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
-
-        $config = $spanner->instanceConfiguration(self::$instanceConfig);
-        $operation = self::$multiInstance->create($config);
-        $operation->pollUntilComplete();
     }
 
     public function testCreateInstance()
@@ -899,6 +895,5 @@ class spannerTest extends TestCase
         $database->drop();
         self::$instance->delete();
         self::$lowCostInstance->delete();
-        self::$multiInstance->delete();
     }
 }

@@ -62,10 +62,8 @@ class spannerPgTest extends TestCase
             'projectId' => self::$projectId
         ]);
 
-        self::$instanceId = 'php-test-' . time() . rand();
+        self::$instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
         self::$databaseId = 'php-test-' . time() . rand();
-        $instanceRegion = 'regional-us-west2';
-        self::createInstance($spanner, self::$instanceId, $instanceRegion);
         self::$instance = $spanner->instance(self::$instanceId);
     }
 
@@ -323,27 +321,6 @@ class spannerPgTest extends TestCase
             $database = self::$instance->database(self::$databaseId);
             $database->drop();
         }
-        self::$instance->delete();
-    }
-
-    private static function createInstance($spannerClient, $instanceId, $region)
-    {
-        $instanceConfig = $spannerClient->instanceConfiguration(
-            $region
-        );
-
-        $operation = $spannerClient->createInstance(
-            $instanceConfig,
-            $instanceId,
-            [
-                'displayName' => 'This is a display name.',
-                'nodeCount' => 1,
-                'labels' => [
-                    'cloud_spanner_samples' => true,
-                ]
-            ]
-        );
-        $operation->pollUntilComplete();
     }
 
     private function runFunctionSnippet($sampleName, $params = [])
