@@ -52,7 +52,7 @@ class IntegrationTest extends TestCase
         $dbUser = $this->requireEnv('POSTGRES_USER');
         $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
-        $instanceUnixSocket = "${socketDir}/${connection}";
+        $instanceUnixSocket = "${socketDir}/${connectionName}";
 
         $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection(
             $dbUser,
