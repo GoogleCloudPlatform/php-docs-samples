@@ -31,29 +31,33 @@ use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
 use Google\Protobuf\FieldMask;
 
 /**
- * Disables autoscaling config in an existing Bigtable cluster
+ * Disables autoscaling config in an existing Bigtable cluster.
  *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $clusterId The ID of the cluster to be updated
- * @param int $newNumNodes The number of serve nodes the cluster should have
+ * @param int $newNumNodes The fixed number of serve nodes the cluster should have
  */
 function disable_cluster_autoscale_config(
     string $projectId,
     string $instanceId,
     string $clusterId,
-    int $newNumNodes
+    int $newNumNodes = 1
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
     $cluster = $instanceAdminClient->getCluster($clusterName);
+
     // static serve node is required to disable auto scale config
     $cluster->setServeNodes($newNumNodes);
     // clearing the autoscale config
+
     $cluster->setClusterConfig(new ClusterConfig());
+
     $updateMask = new FieldMask([
         'paths' => ['serve_nodes', 'cluster_config'],
     ]);
+
     try {
         $operationResponse = $instanceAdminClient->partialUpdateCluster($cluster, $updateMask);
         $operationResponse->pollUntilComplete();
@@ -62,8 +66,7 @@ function disable_cluster_autoscale_config(
             printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
         } else {
             $error = $operationResponse->getError();
-            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->message);
-            var_dump($error->code);
+            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->getMessage());
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

@@ -33,7 +33,7 @@ use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
 use Google\Protobuf\FieldMask;
 
 /**
- * Updates autoscale configurations for an existing given Bigtable cluster
+ * Updates autoscale configurations for an existing Bigtable cluster.
  *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
@@ -67,8 +67,8 @@ function update_cluster_autoscale_config(
 
     $updateMask = new FieldMask([
         'paths' => [
-          // if both serve nodes and autoscaling are set
-          // the server will silently ignore the serve nodes
+          // if both serve nodes and autoscaling configs are set
+          // the server will silently ignore the `serve_nodes` agument
           // 'serve_nodes',
           'cluster_config'
         ],
@@ -83,9 +83,7 @@ function update_cluster_autoscale_config(
             printf('Cluster %s updated with autoscale config.' . PHP_EOL, $clusterId);
         } else {
             $error = $operationResponse->getError();
-            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->message);
-            var_dump($error->code);
-            // handleError($error);
+            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->getMessage());
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

@@ -33,11 +33,11 @@ use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
 use Google\Cloud\Bigtable\Admin\V2\StorageType;
 
 /**
- * Creates a new autoscaling cluster in an existing Bigtable instance
+ * Creates a new autoscaling cluster in an existing Bigtable instance.
  *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
- * @param string $clusterId The ID of the cluster to be updated
+ * @param string $clusterId The ID of the cluster to be created
  * @param string $locationId The Bigtable region ID where you want your cluster to reside
  */
 function create_cluster_autoscale_config(
@@ -47,23 +47,26 @@ function create_cluster_autoscale_config(
     string $locationId = 'us-east1-b'
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
-    $autoscaling_limits = new AutoscalingLimits([
+    $autoscalingLimits = new AutoscalingLimits([
         'min_serve_nodes' => 2,
         'max_serve_nodes' => 5,
     ]);
-    $autoscaling_targets = new AutoscalingTargets([
+    $autoscalingTargets = new AutoscalingTargets([
         'cpu_utilization_percent' => 10,
     ]);
-    $cluster_autoscale_config = new ClusterAutoscalingConfig([
-        'autoscaling_limits' => $autoscaling_limits,
-        'autoscaling_targets' => $autoscaling_targets,
+    $clusterAutoscaleConfig = new ClusterAutoscalingConfig([
+        'autoscaling_limits' => $autoscalingLimits,
+        'autoscaling_targets' => $autoscalingTargets,
     ]);
-    $cluster_config = new ClusterConfig([
-        'cluster_autoscaling_config' => $cluster_autoscale_config,
+
+    $clusterConfig = new ClusterConfig([
+        'cluster_autoscaling_config' => $clusterAutoscaleConfig,
     ]);
+
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
     printf('Adding Cluster to Instance %s' . PHP_EOL, $instanceId);
     $cluster = new Cluster();
+
     // if both serve nodes and autoscaling are set
     // the server will silently ignore the serve nodes
     // and use auto scaling functionality
@@ -75,7 +78,7 @@ function create_cluster_autoscale_config(
             $locationId
         )
     );
-    $cluster->setClusterConfig($cluster_config);
+    $cluster->setClusterConfig($clusterConfig);
     $operationResponse = $instanceAdminClient->createCluster($instanceName, $clusterId, $cluster);
 
     $operationResponse->pollUntilComplete();
