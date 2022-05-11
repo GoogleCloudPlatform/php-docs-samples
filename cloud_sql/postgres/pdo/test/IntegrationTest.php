@@ -18,7 +18,8 @@
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres\Tests;
 
-use Google\Cloud\Samples\CloudSQL\Postgres\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseTcp;
+use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseUnix;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
@@ -51,13 +52,13 @@ class IntegrationTest extends TestCase
         $dbUser = $this->requireEnv('POSTGRES_USER');
         $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+        $instanceUnixSocket = "${socketDir}/${connection}";
 
-        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
+        $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection(
             $dbUser,
             $dbPass,
             $dbName,
-            $connectionName,
-            $socketDir,
+            $instanceUnixSocket,
             $connConfig
         ));
         $this->assertIsArray($votes->listVotes());
@@ -70,16 +71,16 @@ class IntegrationTest extends TestCase
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
 
-        $dbHost = $this->requireEnv('POSTGRES_HOST');
+        $instanceHost = $this->requireEnv('POSTGRES_HOST');
         $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
         $dbName = $this->requireEnv('POSTGRES_DATABASE');
         $dbUser = $this->requireEnv('POSTGRES_USER');
 
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
+        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection(
             $dbUser,
             $dbPass,
             $dbName,
-            $dbHost,
+            $instanceHost,
             $connConfig
         ));
         $this->assertIsArray($votes->listVotes());

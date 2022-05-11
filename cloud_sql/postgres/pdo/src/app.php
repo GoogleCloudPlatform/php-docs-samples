@@ -17,7 +17,8 @@
 
 declare(strict_types=1);
 
-use Google\Cloud\Samples\CloudSQL\Postgres\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseTcp;
+use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseUnix;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 use Pimple\Container;
 use Pimple\Psr11\Container as Psr11Container;
@@ -45,6 +46,10 @@ $container['db'] = function () {
     ];
     # [END cloud_sql_postgres_pdo_timeout]
 
+    // Note: Saving credentials in environment variables is convenient, but not
+    // secure - consider a more secure solution such as
+    // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+    // keep secrets safe.
     $username = getenv('DB_USER');
     $password = getenv('DB_PASS');
     $dbName = getenv('DB_NAME');
@@ -59,23 +64,21 @@ $container['db'] = function () {
         throw new RuntimeException('Must supply $DB_NAME environment variables');
     }
 
-    if ($dbHost = getenv('DB_HOST')) {
-        return DBInitializer::initTcpDatabaseConnection(
+    if ($instanceHost = getenv('INSTANCE_HOST')) {
+        return DatabaseTcp::initTcpDatabaseConnection(
             $username,
             $password,
             $dbName,
-            $dbHost,
+            $instanceHost,
             $connConfig
         );
     } else {
-        $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
-        $socketDir = getenv('DB_SOCKET_DIR') ?: '/tmp/cloudsql';
-        return DBInitializer::initUnixDatabaseConnection(
+        $instanceUnixSocket = getenv('INSTANCE_UNIX_SOCKET');
+        return DatabaseUnix::initUnixDatabaseConnection(
             $username,
             $password,
             $dbName,
-            $connectionName,
-            $socketDir,
+            $instanceUnixSocket,
             $connConfig
         );
     }
