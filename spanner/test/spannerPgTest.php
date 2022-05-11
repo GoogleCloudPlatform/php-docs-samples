@@ -27,7 +27,7 @@ use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @retryAttempts 5
+ * @retryAttempts 3
  * @retryDelayMethod exponentialBackoff
  */
 class spannerPgTest extends TestCase
@@ -36,7 +36,7 @@ class spannerPgTest extends TestCase
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    use RetryTrait, EventuallyConsistentTestTrait, ExponentialBackoffTrait;
+    use RetryTrait, EventuallyConsistentTestTrait;
 
     /** @var string instanceId */
     protected static $instanceId;

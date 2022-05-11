@@ -40,8 +40,7 @@ function pg_batch_dml(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName)'
-    . ' VALUES ($1, $2, $3)';
+    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) VALUES ($1, $2, $3)';
 
     $database->runTransaction(function (Transaction $t) use ($sql) {
         $result = $t->executeUpdateBatch([

@@ -58,12 +58,15 @@ function pg_information_schema(string $instanceId, string $databaseId): void
     // Get all the user tables in the database. PostgreSQL uses the `public` schema for user
     // tables. The table_catalog is equal to the database name.
 
-    $results = $database->execute('SELECT table_catalog, table_schema, table_name,'
-        . ' user_defined_type_catalog,'
-        . ' user_defined_type_schema,'
-        . ' user_defined_type_name'
-        . ' FROM INFORMATION_SCHEMA.tables'
-        . ' WHERE table_schema=\'public\'');
+    $results = $database->execute(
+        '
+        SELECT table_catalog, table_schema, table_name,
+            user_defined_type_catalog,
+            user_defined_type_schema,
+            user_defined_type_name
+        FROM INFORMATION_SCHEMA.tables
+        WHERE table_schema=\'public\'
+        ');
 
     printf('Details fetched.' . PHP_EOL);
     foreach ($results as $row) {

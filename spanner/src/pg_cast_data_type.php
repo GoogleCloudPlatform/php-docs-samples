@@ -38,9 +38,9 @@ function pg_cast_data_type(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $sql = "select 1::varchar as str, '2'::int as int, 3::decimal as dec, " .
-    "'4'::bytea as bytes, 5::float as float, 'true'::bool as bool, " .
-    "'2021-11-03T09:35:01UTC'::timestamptz as timestamp";
+    $sql = "select 1::varchar as str, '2'::int as int, 3::decimal as dec,
+            '4'::bytea as bytes, 5::float as float, 'true'::bool as bool,
+            '2021-11-03T09:35:01UTC'::timestamptz as timestamp";
 
     $results = $database->execute($sql);
 

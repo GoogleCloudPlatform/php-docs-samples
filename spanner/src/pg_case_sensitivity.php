@@ -41,15 +41,17 @@ function pg_case_sensitivity(string $instanceId, string $databaseId, string $tab
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        sprintf('CREATE TABLE %s (
-            -- SingerId will be folded to "singerid"
-            SingerId  bigint NOT NULL PRIMARY KEY,
-            -- FirstName and LastName are double-quoted and will therefore retain their
-            -- mixed case and are case-sensitive. This means that any statement that
-            -- references any of these columns must use double quotes.
-            "FirstName" varchar(1024) NOT NULL,
-            "LastName"  varchar(1024) NOT NULL
-        )', $tableName)
+        sprintf(
+            '
+            CREATE TABLE %s (
+                -- SingerId will be folded to "singerid"
+                SingerId  bigint NOT NULL PRIMARY KEY,
+                -- FirstName and LastName are double-quoted and will therefore retain their
+                -- mixed case and are case-sensitive. This means that any statement that
+                -- references any of these columns must use double quotes.
+                "FirstName" varchar(1024) NOT NULL,
+                "LastName"  varchar(1024) NOT NULL
+            )', $tableName)
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);

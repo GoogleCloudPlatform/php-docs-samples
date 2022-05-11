@@ -28,7 +28,7 @@ use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @retryAttempts 5
+ * @retryAttempts 3
  * @retryDelayMethod exponentialBackoff
  */
 class spannerBackupTest extends TestCase
@@ -37,7 +37,7 @@ class spannerBackupTest extends TestCase
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    use RetryTrait, EventuallyConsistentTestTrait, ExponentialBackoffTrait;
+    use RetryTrait, EventuallyConsistentTestTrait;
 
     /** @var string instanceId */
     protected static $instanceId;
