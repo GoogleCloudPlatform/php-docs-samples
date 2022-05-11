@@ -17,6 +17,7 @@ final class BigtableTest extends TestCase
     const SERVICE_ACCOUNT_ID_PREFIX = 'php-sa-';    // Shortened due to length constraint b/w 6 and 30.
 
     private static $clusterId;
+    private static $autoscalingClusterId;
     private static $appProfileId;
     private static $serviceAccountId;
     private static $serviceAccountEmail;
@@ -36,6 +37,7 @@ final class BigtableTest extends TestCase
     {
         self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
         self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
+        self::$autoscalingClusterId = uniqid(self::CLUSTER_ID_PREFIX);
         self::$appProfileId = uniqid(self::APP_PROFILE_ID_PREFIX);
 
         $content = self::runFunctionSnippet('create_production_instance', [
@@ -236,73 +238,66 @@ final class BigtableTest extends TestCase
     /**
      * @depends testCreateProductionInstance
      */
-    public function testManageAutoscalingCluster()
+    public function testCreateClusterWithAutoscaling()
     {
-        // Create a new cluster as last cluster in an instance cannot be deleted
-        $clusterId = uniqid(self::CLUSTER_ID_PREFIX);
-        $numNodes = 2;
-
         $content = self::runFunctionSnippet('create_cluster_autoscale_config', [
-            self::$projectId,
-            self::$instanceId,
-            $clusterId,
-            'us-east1-c'
+          self::$projectId,
+          self::$instanceId,
+          self::$autoscalingClusterId,
+          'us-east1-c'
         ]);
 
+        // get the cluster name created with above id
         $clusterName = self::$instanceAdminClient->clusterName(
+          self::$projectId,
+          self::$instanceId,
+          self::$autoscalingClusterId,
+        );
+
+        $this->checkCluster($clusterName);
+        $this->assertStringContainsString(sprintf(
+          'Cluster created: %s',
+          self::$autoscalingClusterId,
+        ), $content);
+    }
+
+    /**
+     * @depends testCreateClusterWithAutoscaling
+     */
+    public function testUpdateClusterWithAutoscaling()
+    {
+        // Update autoscale config in cluster
+        $content = self::runFunctionSnippet('update_cluster_autoscale_config', [
             self::$projectId,
             self::$instanceId,
-            $clusterId
-        );
-        $this->checkCluster($clusterName);
+            self::$autoscalingClusterId,
+        ]);
+
+        $this->assertStringContainsString(sprintf(
+            'Cluster %s updated with autoscale config.',
+            self::$autoscalingClusterId,
+        ), $content);
+    }
+
+    /**
+     * @depends testCreateClusterWithAutoscaling
+     */
+    public function testDisableAutoscalingInCluster()
+    {
+        $numNodes = 2;
 
         // Disable autoscale config in cluster
-        $content .= self::runFunctionSnippet('disable_cluster_autoscale_config', [
+        $content = self::runFunctionSnippet('disable_cluster_autoscale_config', [
             self::$projectId,
             self::$instanceId,
-            $clusterId,
+            self::$autoscalingClusterId,
             $numNodes
         ]);
 
-        // Update autoscale config in cluster
-        $content .= self::runFunctionSnippet('update_cluster_autoscale_config', [
-            self::$projectId,
-            self::$instanceId,
-            $clusterId
-        ]);
-
-        $content .= self::runFunctionSnippet('delete_cluster', [
-            self::$projectId,
-            self::$instanceId,
-            $clusterId
-        ]);
-
-        // $this->assertStringContainsString('Found notification with id 1', $output);
-        $this->assertStringContainsString(sprintf(
-          'Cluster created: %s',
-          $clusterId,
-        ), $content);
         $this->assertStringContainsString(sprintf(
             'Cluster updated with the new num of nodes: %s.',
             $numNodes,
         ), $content);
-        $this->assertStringContainsString(sprintf(
-            'Cluster %s updated with autoscale config.',
-            $clusterId,
-        ), $content);
-        $this->assertStringContainsString(sprintf(
-            'Cluster %s deleted.',
-            $clusterId,
-        ), $content);
-
-        try {
-            self::$instanceAdminClient->getCluster($clusterName);
-            $this->fail(sprintf('Cluster %s still exists after deleted in test', $clusterName));
-        } catch (ApiException $e) {
-            if ($e->getStatus() === 'NOT_FOUND') {
-                $this->assertTrue(true);
-            }
-        }
     }
 
     public function testCreateDevInstance()
@@ -839,5 +834,11 @@ final class BigtableTest extends TestCase
             $projectId,
             $instanceId
         ]);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        $clusterName = self::$instanceAdminClient->clusterName(self::$projectId, self::$instanceId, self::$autoscalingClusterId);
+        self::$instanceAdminClient->deleteCluster($clusterName);
     }
 }
