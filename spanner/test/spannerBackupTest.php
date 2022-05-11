@@ -23,7 +23,6 @@ use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 

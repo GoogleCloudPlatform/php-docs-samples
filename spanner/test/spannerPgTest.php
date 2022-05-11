@@ -22,7 +22,6 @@ use Google\Cloud\Spanner\Instance;
 use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 

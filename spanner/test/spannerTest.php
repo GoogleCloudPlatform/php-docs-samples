@@ -17,12 +17,10 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExponentialBackoffTrait;
 use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
