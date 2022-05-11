@@ -48,22 +48,22 @@ function update_cluster_autoscale_config(
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
     $cluster = $instanceAdminClient->getCluster($clusterName);
 
-    $autoscaling_limits = new AutoscalingLimits([
+    $autoscalingLimits = new AutoscalingLimits([
         'min_serve_nodes' => 2,
         'max_serve_nodes' => 5,
     ]);
-    $autoscaling_targets = new AutoscalingTargets([
+    $autoscalingTargets = new AutoscalingTargets([
         'cpu_utilization_percent' => 20,
     ]);
-    $cluster_autoscale_config = new ClusterAutoscalingConfig([
-        'autoscaling_limits' => $autoscaling_limits,
-        'autoscaling_targets' => $autoscaling_targets,
+    $clusterAutoscaleConfig = new ClusterAutoscalingConfig([
+        'autoscaling_limits' => $autoscalingLimits,
+        'autoscaling_targets' => $autoscalingTargets,
     ]);
-    $cluster_config = new ClusterConfig([
-        'cluster_autoscaling_config' => $cluster_autoscale_config,
+    $clusterConfig = new ClusterConfig([
+        'cluster_autoscaling_config' => $clusterAutoscaleConfig,
     ]);
 
-    $cluster->setClusterConfig($cluster_config);
+    $cluster->setClusterConfig($clusterConfig);
 
     $updateMask = new FieldMask([
         'paths' => [
