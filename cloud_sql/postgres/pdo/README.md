@@ -33,7 +33,8 @@ Windows proxy requires a TCP connection.
 NOTE: this option is currently only supported on Linux and macOS. Windows users
 should use the TCP option.
 
-To use a Unix socket, you'll need to create a directory for running the proxy:
+To use a Unix socket, you'll need to create a directory and give access to the
+user running the proxy:
 
 ```bash
 sudo mkdir /cloudsql
