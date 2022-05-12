@@ -30,17 +30,6 @@ class DatabaseTcp
     public static function initTcpDatabaseConnection(): PDO
     {
         try {
-            # [START_EXCLUDE]
-            # [START cloud_sql_postgres_pdo_timeout]
-            // Here we set the connection timeout to five seconds and ask PDO to
-            // throw an exception if any errors occur.
-            $connConfig = [
-                PDO::ATTR_TIMEOUT => 5,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ];
-            # [END cloud_sql_postgres_pdo_timeout]
-            # [END_EXCLUDE]
-
             // Note: Saving credentials in environment variables is convenient, but not
             // secure - consider a more secure solution such as
             // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
@@ -54,7 +43,21 @@ class DatabaseTcp
             $dsn = sprintf('pgsql:dbname=%s;host=%s', $dbName, $instanceHost);
 
             // Connect to the database
-            $conn = new PDO($dsn, $username, $password, $connConfig);
+            $conn = new PDO(
+                $dsn,
+                $username,
+                $password,
+                # [START_EXCLUDE]
+                # [START cloud_sql_postgres_pdo_timeout]
+                // Here we set the connection timeout to five seconds and ask PDO to
+                // throw an exception if any errors occur.
+                [
+                    PDO::ATTR_TIMEOUT => 5,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ]
+                # [END cloud_sql_postgres_pdo_timeout]
+                # [END_EXCLUDE]
+            );
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(

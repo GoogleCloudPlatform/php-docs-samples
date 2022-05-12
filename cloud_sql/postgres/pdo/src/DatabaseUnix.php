@@ -30,15 +30,6 @@ class DatabaseUnix
     public static function initUnixDatabaseConnection(): PDO
     {
         try {
-            # [START_EXCLUDE]
-            // Here we set the connection timeout to five seconds and ask PDO to
-            // throw an exception if any errors occur.
-            $connConfig = [
-                PDO::ATTR_TIMEOUT => 5,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ];
-            # [END_EXCLUDE]
-
             // Note: Saving credentials in environment variables is convenient, but not
             // secure - consider a more secure solution such as
             // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
@@ -56,7 +47,19 @@ class DatabaseUnix
             );
 
             // Connect to the database.
-            $conn = new PDO($dsn, $username, $password, $connConfig);
+            $conn = new PDO(
+                $dsn,
+                $username,
+                $password,
+                # [START_EXCLUDE]
+                // Here we set the connection timeout to five seconds and ask PDO to
+                // throw an exception if any errors occur.
+                [
+                    PDO::ATTR_TIMEOUT => 5,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ]
+                # [END_EXCLUDE]
+            );
         } catch (TypeError $e) {
             throw new RuntimeException(
                 sprintf(
