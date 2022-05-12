@@ -23,7 +23,6 @@ use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseUnix;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 class IntegrationTest extends TestCase
@@ -45,7 +44,9 @@ class IntegrationTest extends TestCase
         $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
         $dbName = $this->requireEnv('POSTGRES_DATABASE');
         $dbUser = $this->requireEnv('POSTGRES_USER');
-        $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
+        $connectionName = $this->requireEnv(
+            'CLOUDSQL_CONNECTION_NAME_POSTGRES'
+        );
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
         $instanceUnixSocket = "${socketDir}/${connectionName}";
 

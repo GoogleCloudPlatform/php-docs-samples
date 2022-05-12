@@ -27,7 +27,7 @@ use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
 // Create and set the dependency injection container.
-$container = new Container;
+$container = new Container();
 AppFactory::setContainer(new Psr11Container($container));
 
 // add the votes manager to the container.
@@ -37,15 +37,20 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
-
     if (getenv('DB_USER') !== true) {
-        throw new RuntimeException('Must supply $DB_USER environment variables');
+        throw new RuntimeException(
+            'Must supply $DB_USER environment variables'
+        );
     }
     if (getenv('DB_PASS') !== true) {
-        throw new RuntimeException('Must supply $DB_PASS environment variables');
+        throw new RuntimeException(
+            'Must supply $DB_PASS environment variables'
+        );
     }
     if (getenv('DB_NAME') !== true) {
-        throw new RuntimeException('Must supply $DB_NAME environment variables');
+        throw new RuntimeException(
+            'Must supply $DB_NAME environment variables'
+        );
     }
 
     if ($instanceHost = getenv('INSTANCE_HOST')) {
@@ -53,8 +58,10 @@ $container['db'] = function () {
     } elseif ($instanceUnixSocket = getenv('INSTANCE_UNIX_SOCKET')) {
         return DatabaseUnix::initUnixDatabaseConnection();
     } else {
-        throw new RuntimeException('Missing database connection type. ' .
-            'Please define INSTANCE_HOST or INSTANCE_UNIX_SOCKET');
+        throw new RuntimeException(
+            'Missing database connection type. ' .
+                'Please define INSTANCE_HOST or INSTANCE_UNIX_SOCKET'
+        );
     }
 };
 
