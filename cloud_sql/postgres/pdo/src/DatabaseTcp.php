@@ -28,37 +28,27 @@ use TypeError;
 class DatabaseTcp
 {
 
-    /**
-     *  @param $instanceHost string IP address or domain of the target cloudsql instance
-     *  @param $connConfig array driver-specific options for PDO
-     */
-    public static function initTcpDatabaseConnection(
-        string $instanceHost,
-        array $connConfig
-    ): PDO {
+    public static function initTcpDatabaseConnection(): PDO {
         try {
-            // $username = 'your_db_user';
-            // $password = 'yoursupersecretpassword';
-            // $dbName = 'your_db_name';
-            // $instanceHost = '127.0.0.1';
-
+            # [START_EXCLUDE]
+            # [START cloud_sql_postgres_pdo_timeout]
+            // Here we set the connection timeout to five seconds and ask PDO to
+            // throw an exception if any errors occur.
+            $connConfig = [
+                PDO::ATTR_TIMEOUT => 5,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ];
+            # [END cloud_sql_postgres_pdo_timeout]
+            # [END_EXCLUDE]
+            
             // Note: Saving credentials in environment variables is convenient, but not
             // secure - consider a more secure solution such as
             // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
             // keep secrets safe.
-            $username = getenv('DB_USER');
-            $password = getenv('DB_PASS');
-            $dbName = getenv('DB_NAME');
-
-            if (empty($username = getenv('DB_USER'))) {
-                throw new RuntimeException('Must supply $DB_USER environment variables');
-            }
-            if (empty($password = getenv('DB_PASS'))) {
-                throw new RuntimeException('Must supply $DB_PASS environment variables');
-            }
-            if (empty($dbName = getenv('DB_NAME'))) {
-                throw new RuntimeException('Must supply $DB_NAME environment variables');
-            }
+            $username = getenv('DB_USER'); // e.g. 'your_db_user'
+            $password = getenv('DB_PASS'); // e.g. 'your_db_password'
+            $dbName = getenv('DB_NAME'); // e.g. 'your_db_name'
+            $instanceHost =  getenv('INSTANCE_HOST'); // e.g. '127.0.0.1' ('172.17.0.1' for GAE Flex)
 
             // Connect using TCP
             $dsn = sprintf('pgsql:dbname=%s;host=%s', $dbName, $instanceHost);

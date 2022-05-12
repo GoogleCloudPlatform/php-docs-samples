@@ -28,39 +28,26 @@ use TypeError;
 class DatabaseUnix
 {
 
-    /**
-     *  @param $instanceUnixSocket string '/cloudsql/' and the cloudsql instance connection name
-     *  @param $connConfig array driver-specific options for PDO
-     */
-    public static function initUnixDatabaseConnection(
-        string $instanceUnixSocket,
-        array $connConfig
-    ): PDO {
+    public static function initUnixDatabaseConnection(): PDO {
         try {
-
-            // $username = 'your_db_user';
-            // $password = 'yoursupersecretpassword';
-            // $dbName = 'your_db_name';
-            // $instanceUnixSocket = '/cloudsql/project:region:instance';
+            # [START_EXCLUDE]
+            // Here we set the connection timeout to five seconds and ask PDO to
+            // throw an exception if any errors occur.
+            $connConfig = [
+                PDO::ATTR_TIMEOUT => 5,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ];
+            # [END_EXCLUDE]
 
             // Note: Saving credentials in environment variables is convenient, but not
             // secure - consider a more secure solution such as
             // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
             // keep secrets safe.
-            $username = getenv('DB_USER');
-            $password = getenv('DB_PASS');
-            $dbName = getenv('DB_NAME');
-
-            if (empty($username = getenv('DB_USER'))) {
-                throw new RuntimeException('Must supply $DB_USER environment variables');
-            }
-            if (empty($password = getenv('DB_PASS'))) {
-                throw new RuntimeException('Must supply $DB_PASS environment variables');
-            }
-            if (empty($dbName = getenv('DB_NAME'))) {
-                throw new RuntimeException('Must supply $DB_NAME environment variables');
-            }
-
+            $username = getenv('DB_USER'); // e.g. 'your_db_user'
+            $password = getenv('DB_PASS'); // e.g. 'your_db_password'
+            $dbName = getenv('DB_NAME'); // e.g. 'your_db_name'
+            $instanceUnixSocket = getenv('INSTANCE_UNIX_SOCKET'); // e.g. '/cloudsql/project:region:instance'
+            
             // Connect using UNIX sockets
             $dsn = sprintf(
                 'pgsql:dbname=%s;host=%s',

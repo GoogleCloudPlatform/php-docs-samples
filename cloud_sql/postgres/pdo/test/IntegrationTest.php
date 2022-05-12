@@ -42,11 +42,6 @@ class IntegrationTest extends TestCase
 
     public function testUnixConnection()
     {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
         $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
         $dbName = $this->requireEnv('POSTGRES_DATABASE');
         $dbUser = $this->requireEnv('POSTGRES_USER');
@@ -54,35 +49,40 @@ class IntegrationTest extends TestCase
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
         $instanceUnixSocket = "${socketDir}/${connectionName}";
 
-        $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $instanceUnixSocket,
-            $connConfig
-        ));
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+        putenv("INSTANCE_UNIX_SOCKET=$instanceUnixSocket");
+
+        $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
+
+        // Unset environment variables after test run.
+        putenv('DB_PASS');
+        putenv('DB_NAME');
+        putenv('DB_USER');
+        putenv('INSTANCE_UNIX_SOCKET');
     }
 
     public function testTcpConnection()
     {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
         $instanceHost = $this->requireEnv('POSTGRES_HOST');
         $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
         $dbName = $this->requireEnv('POSTGRES_DATABASE');
         $dbUser = $this->requireEnv('POSTGRES_USER');
 
-        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $instanceHost,
-            $connConfig
-        ));
+        putenv("INSTANCE_HOST=$instanceHost");
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+
+        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
+
+        // Unset environment variables after test run.
+        putenv('INSTANCE_HOST');
+        putenv('DB_PASS');
+        putenv('DB_NAME');
+        putenv('DB_USER');
     }
 }

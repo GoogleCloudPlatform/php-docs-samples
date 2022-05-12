@@ -37,26 +37,24 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
-    # [START cloud_sql_postgres_pdo_timeout]
-    // Here we set the connection timeout to five seconds and ask PDO to
-    // throw an exception if any errors occur.
-    $connConfig = [
-        PDO::ATTR_TIMEOUT => 5,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ];
-    # [END cloud_sql_postgres_pdo_timeout]
+
+    if (getenv('DB_USER') !== true) {
+        throw new RuntimeException('Must supply $DB_USER environment variables');
+    }
+    if (getenv('DB_PASS') !== true) {
+        throw new RuntimeException('Must supply $DB_PASS environment variables');
+    }
+    if (getenv('DB_NAME') !== true) {
+        throw new RuntimeException('Must supply $DB_NAME environment variables');
+    }
 
     if ($instanceHost = getenv('INSTANCE_HOST')) {
-        return DatabaseTcp::initTcpDatabaseConnection(
-            $instanceHost,
-            $connConfig
-        );
+        return DatabaseTcp::initTcpDatabaseConnection();
+    } elseif ($instanceUnixSocket = getenv('INSTANCE_UNIX_SOCKET')) {
+        return DatabaseUnix::initUnixDatabaseConnection();
     } else {
-        $instanceUnixSocket = getenv('INSTANCE_UNIX_SOCKET');
-        return DatabaseUnix::initUnixDatabaseConnection(
-            $instanceUnixSocket,
-            $connConfig
-        );
+        throw new RuntimeException('Missing database connection type. ' .
+            'Please define INSTANCE_HOST or INSTANCE_UNIX_SOCKET');
     }
 };
 
