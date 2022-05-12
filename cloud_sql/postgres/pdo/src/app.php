@@ -46,38 +46,14 @@ $container['db'] = function () {
     ];
     # [END cloud_sql_postgres_pdo_timeout]
 
-    // Note: Saving credentials in environment variables is convenient, but not
-    // secure - consider a more secure solution such as
-    // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
-    // keep secrets safe.
-    $username = getenv('DB_USER');
-    $password = getenv('DB_PASS');
-    $dbName = getenv('DB_NAME');
-
-    if (empty($username = getenv('DB_USER'))) {
-        throw new RuntimeException('Must supply $DB_USER environment variables');
-    }
-    if (empty($password = getenv('DB_PASS'))) {
-        throw new RuntimeException('Must supply $DB_PASS environment variables');
-    }
-    if (empty($dbName = getenv('DB_NAME'))) {
-        throw new RuntimeException('Must supply $DB_NAME environment variables');
-    }
-
     if ($instanceHost = getenv('INSTANCE_HOST')) {
         return DatabaseTcp::initTcpDatabaseConnection(
-            $username,
-            $password,
-            $dbName,
             $instanceHost,
             $connConfig
         );
     } else {
         $instanceUnixSocket = getenv('INSTANCE_UNIX_SOCKET');
         return DatabaseUnix::initUnixDatabaseConnection(
-            $username,
-            $password,
-            $dbName,
             $instanceUnixSocket,
             $connConfig
         );

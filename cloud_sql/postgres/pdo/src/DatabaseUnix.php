@@ -29,16 +29,10 @@ class DatabaseUnix
 {
 
     /**
-     *  @param $username string username of the database user
-     *  @param $password string password of the database user
-     *  @param $dbName string name of the target database
      *  @param $instanceUnixSocket string '/cloudsql/' and the cloudsql instance connection name
      *  @param $connConfig array driver-specific options for PDO
      */
     public static function initUnixDatabaseConnection(
-        string $username,
-        string $password,
-        string $dbName,
         string $instanceUnixSocket,
         array $connConfig
     ): PDO {
@@ -48,6 +42,24 @@ class DatabaseUnix
             // $password = 'yoursupersecretpassword';
             // $dbName = 'your_db_name';
             // $instanceUnixSocket = '/cloudsql/project:region:instance';
+
+            // Note: Saving credentials in environment variables is convenient, but not
+            // secure - consider a more secure solution such as
+            // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+            // keep secrets safe.
+            $username = getenv('DB_USER');
+            $password = getenv('DB_PASS');
+            $dbName = getenv('DB_NAME');
+
+            if (empty($username = getenv('DB_USER'))) {
+                throw new RuntimeException('Must supply $DB_USER environment variables');
+            }
+            if (empty($password = getenv('DB_PASS'))) {
+                throw new RuntimeException('Must supply $DB_PASS environment variables');
+            }
+            if (empty($dbName = getenv('DB_NAME'))) {
+                throw new RuntimeException('Must supply $DB_NAME environment variables');
+            }
 
             // Connect using UNIX sockets
             $dsn = sprintf(

@@ -29,16 +29,10 @@ class DatabaseTcp
 {
 
     /**
-     *  @param $username string username of the database user
-     *  @param $password string password of the database user
-     *  @param $dbName string name of the target database
      *  @param $instanceHost string IP address or domain of the target cloudsql instance
      *  @param $connConfig array driver-specific options for PDO
      */
     public static function initTcpDatabaseConnection(
-        string $username,
-        string $password,
-        string $dbName,
         string $instanceHost,
         array $connConfig
     ): PDO {
@@ -47,6 +41,24 @@ class DatabaseTcp
             // $password = 'yoursupersecretpassword';
             // $dbName = 'your_db_name';
             // $instanceHost = '127.0.0.1';
+
+            // Note: Saving credentials in environment variables is convenient, but not
+            // secure - consider a more secure solution such as
+            // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+            // keep secrets safe.
+            $username = getenv('DB_USER');
+            $password = getenv('DB_PASS');
+            $dbName = getenv('DB_NAME');
+
+            if (empty($username = getenv('DB_USER'))) {
+                throw new RuntimeException('Must supply $DB_USER environment variables');
+            }
+            if (empty($password = getenv('DB_PASS'))) {
+                throw new RuntimeException('Must supply $DB_PASS environment variables');
+            }
+            if (empty($dbName = getenv('DB_NAME'))) {
+                throw new RuntimeException('Must supply $DB_NAME environment variables');
+            }
 
             // Connect using TCP
             $dsn = sprintf('pgsql:dbname=%s;host=%s', $dbName, $instanceHost);
