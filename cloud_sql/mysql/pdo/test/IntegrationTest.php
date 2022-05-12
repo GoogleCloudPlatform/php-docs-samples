@@ -18,11 +18,11 @@
 
 namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 
-use Google\Cloud\Samples\CloudSQL\MySQL\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\MySQL\DatabaseTcp;
+use Google\Cloud\Samples\CloudSQL\MySQL\DatabaseUnix;
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 class IntegrationTest extends TestCase
@@ -42,47 +42,47 @@ class IntegrationTest extends TestCase
 
     public function testUnixConnection()
     {
-        $conn_config = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
         $dbPass = $this->requireEnv('MYSQL_PASSWORD');
         $dbName = $this->requireEnv('MYSQL_DATABASE');
         $dbUser = $this->requireEnv('MYSQL_USER');
         $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+        $instanceUnixSocket = "${socketDir}/${connectionName}";
 
-        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $connectionName,
-            $socketDir,
-            $conn_config
-        ));
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+        putenv("INSTANCE_UNIX_SOCKET=$instanceUnixSocket");
+
+        $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
+
+        // Unset environment variables after test run.
+        putenv('DB_PASS');
+        putenv('DB_NAME');
+        putenv('DB_USER');
+        putenv('INSTANCE_UNIX_SOCKET');
     }
 
     public function testTcpConnection()
     {
-        $conn_config = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbHost = $this->requireEnv('MYSQL_HOST');
+        $instanceHost = $this->requireEnv('MYSQL_HOST');
         $dbPass = $this->requireEnv('MYSQL_PASSWORD');
         $dbName = $this->requireEnv('MYSQL_DATABASE');
         $dbUser = $this->requireEnv('MYSQL_USER');
 
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $dbHost,
-            $conn_config
-        ));
+        putenv("INSTANCE_HOST=$instanceHost");
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+
+        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
+
+        // Unset environment variables after test run.
+        putenv('INSTANCE_HOST');
+        putenv('DB_PASS');
+        putenv('DB_NAME');
+        putenv('DB_USER');
     }
 }
