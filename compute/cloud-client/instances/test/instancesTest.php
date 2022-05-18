@@ -26,7 +26,9 @@ class instancesTest extends TestCase
     use TestTrait;
 
     private static $instanceName;
+    private static $instanceExists = false;
     private static $encInstanceName;
+    private static $encInstanceExists = false;
     private static $encKey;
     private static $bucketName;
     private static $bucket;
@@ -54,6 +56,24 @@ class instancesTest extends TestCase
     {
         // Remove the bucket
         self::$bucket->delete();
+
+        // Make sure we delete any instances created in the process of testing - we don't care about response
+        // because if everything went fine they should already be deleted
+        if (self::$instanceExists) {
+            self::runFunctionSnippet('delete_instance', [
+                'projectId' => self::$projectId,
+                'zone' => self::DEFAULT_ZONE,
+                'instanceName' => self::$instanceName
+            ]);
+        }
+
+        if (self::$encInstanceExists) {
+            self::runFunctionSnippet('delete_instance', [
+                'projectId' => self::$projectId,
+                'zone' => self::DEFAULT_ZONE,
+                'instanceName' => self::$encInstanceName
+            ]);
+        }
     }
 
     public function testCreateInstance()
@@ -64,6 +84,7 @@ class instancesTest extends TestCase
             'instanceName' => self::$instanceName
         ]);
         $this->assertStringContainsString('Created instance ' . self::$instanceName, $output);
+        self::$instanceExists = true;
     }
 
     public function testCreateInstanceWithEncryptionKey()
@@ -75,6 +96,7 @@ class instancesTest extends TestCase
             'key' => self::$encKey
         ]);
         $this->assertStringContainsString('Created instance ' . self::$encInstanceName, $output);
+        self::$encInstanceExists = true;
     }
 
     /**
@@ -174,7 +196,33 @@ class instancesTest extends TestCase
     }
 
     /**
-     * @depends testResetInstance
+     * @depends testCreateInstance
+     */
+    public function testSuspendInstance()
+    {
+        $output = $this->runFunctionSnippet('suspend_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' suspended successfully', $output);
+    }
+
+    /**
+     * @depends testSuspendInstance
+     */
+    public function testResumeInstance()
+    {
+        $output = $this->runFunctionSnippet('resume_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' resumed successfully', $output);
+    }
+
+    /**
+     * @depends testResumeInstance
      */
     public function testDeleteInstance()
     {
@@ -184,13 +232,21 @@ class instancesTest extends TestCase
             'instanceName' => self::$instanceName
         ]);
         $this->assertStringContainsString('Deleted instance ' . self::$instanceName, $output);
+        self::$instanceExists = false;
+    }
 
+    /**
+     * @depends testResumeInstance
+     */
+    public function testDeleteWithEncryptionKeyInstance()
+    {
         $output = $this->runFunctionSnippet('delete_instance', [
             'projectId' => self::$projectId,
             'zone' => self::DEFAULT_ZONE,
             'instanceName' => self::$encInstanceName
         ]);
         $this->assertStringContainsString('Deleted instance ' . self::$encInstanceName, $output);
+        self::$encInstanceExists = false;
     }
 
     public function testSetUsageExportBucketDefaultPrefix()
