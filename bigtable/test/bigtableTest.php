@@ -835,10 +835,4 @@ final class BigtableTest extends TestCase
             $instanceId
         ]);
     }
-
-    public static function tearDownAfterClass(): void
-    {
-        $autoscalingClusterName = self::$instanceAdminClient->clusterName(self::$projectId, self::$instanceId, self::$autoscalingClusterId);
-        self::$instanceAdminClient->deleteCluster($autoscalingClusterName);
-    }
 }
