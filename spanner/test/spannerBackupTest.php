@@ -21,7 +21,6 @@ use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -29,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
  */
 class spannerBackupTest extends TestCase
 {
@@ -161,6 +161,23 @@ class spannerBackupTest extends TestCase
 
         $this->assertStringContainsString(basename($backup->name()), $output);
         $this->assertStringContainsString($databaseId2, $output);
+    }
+
+    /**
+     * @depends testCreateBackup
+     */
+    public function testCopyBackup()
+    {
+        $newBackupId = 'copy-' . self::$backupId . '-' . time();
+
+        $output = $this->runFunctionSnippet('copy_backup', [
+            $newBackupId,
+            self::$instanceId,
+            self::$backupId
+        ]);
+
+        $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
+        $this->assertRegExp(sprintf($regex, $newBackupId, self::$backupId), $output);
     }
 
     /**
