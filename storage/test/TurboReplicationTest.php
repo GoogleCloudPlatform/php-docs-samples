@@ -89,7 +89,7 @@ class TurboReplicationTest extends TestCase
 
         $this->assertEquals(
             sprintf(
-                'Recovery point objective (RPO) has been set to DEFAULT for %s.' . PHP_EOL,
+                'The replication behavior or recovery point objective (RPO) has been set to DEFAULT for %s.' . PHP_EOL,
                 self::$bucketName
             ),
             $output
@@ -108,7 +108,7 @@ class TurboReplicationTest extends TestCase
 
         $this->assertEquals(
             sprintf(
-                'Recovery point objective (RPO) has been set to ASYNC_TURBO for %s.' . PHP_EOL,
+                'The replication behavior or recovery point objective (RPO) has been set to ASYNC_TURBO for %s.' . PHP_EOL,
                 self::$bucketName
             ),
             $output
