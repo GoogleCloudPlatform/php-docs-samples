@@ -45,7 +45,7 @@ function set_rpo_async_turbo($bucketName)
     ]);
 
     printf(
-        'The replication behavior or recovery point objective (RPO) has has been set to ASYNC_TURBO for %s.' . PHP_EOL,
+        'The replication behavior or recovery point objective (RPO) has been set to ASYNC_TURBO for %s.' . PHP_EOL,
         $bucketName
     );
 }
