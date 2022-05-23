@@ -36,16 +36,16 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
-    if (getenv('DB_USER') !== true) {
+    if (getenv('DB_USER') === false) {
         throw new RuntimeException('Must supply $DB_USER environment variable');
     }
-    if (getenv('DB_PASS') !== true) {
+    if (getenv('DB_PASS') === false) {
         throw new RuntimeException('Must supply $DB_PASS environment variable');
     }
-    if (getenv('DB_NAME') !== true) {
+    if (getenv('DB_NAME') === false) {
         throw new RuntimeException('Must supply $DB_NAME environment variable');
     }
-    if (getenv('INSTANCE_HOST') !== true) {
+    if (getenv('INSTANCE_HOST') === false) {
         throw new RuntimeException(
             'Must supply $INSTANCE_HOST environment variable'
         );
