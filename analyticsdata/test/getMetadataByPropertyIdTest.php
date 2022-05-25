@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class getMetadataByPropertyIdTests extends TestCase
+class getMetadataByPropertyIdTest extends TestCase
 {
     use TestTrait;
 

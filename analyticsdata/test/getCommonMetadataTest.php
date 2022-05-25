@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class getCommonMetadataTests extends TestCase
+class getCommonMetadataTest extends TestCase
 {
     use TestTrait;
 
