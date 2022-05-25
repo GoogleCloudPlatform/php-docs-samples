@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runReportWithOrderingTests extends TestCase
+class runReportWithOrderingTest extends TestCase
 {
     use TestTrait;
 

@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runReportWithPropertyQuotaTests extends TestCase
+class runReportWithPropertyQuotaTest extends TestCase
 {
     use TestTrait;
 

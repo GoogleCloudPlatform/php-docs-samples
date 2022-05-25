@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runReportWithPaginationTests extends TestCase
+class runReportWithPaginationTest extends TestCase
 {
     use TestTrait;
 
