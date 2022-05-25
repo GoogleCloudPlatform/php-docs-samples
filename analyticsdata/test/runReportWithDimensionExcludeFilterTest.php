@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runReportWithDimensionExcludeFilterTests extends TestCase
+class runReportWithDimensionExcludeFilterTest extends TestCase
 {
     use TestTrait;
 
