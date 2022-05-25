@@ -86,4 +86,4 @@ foreach ($response->getRows() as $row) {
         . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
     // [END analyticsdata_run_report_response]
 }
-// [END analytics_data_run_report]
+// [END analyticsdata_run_report]
