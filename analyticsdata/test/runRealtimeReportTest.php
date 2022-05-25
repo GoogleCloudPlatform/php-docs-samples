@@ -18,14 +18,14 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runRealtimeReportWithMultipleDimensions extends TestCase
+class runRealtimeReportTest extends TestCase
 {
     use TestTrait;
 
-    public function testrunRealtimeReportWithMultipleDimensions()
+    public function testrunRealtimeReport()
     {
-        $file = sys_get_temp_dir() . '/analyticsdata_run_realtime_report_with_multiple_dimensions';
-        $contents = file_get_contents(__DIR__ . '/../run_realtime_report_with_multiple_dimensions.php');
+        $file = sys_get_temp_dir() . '/analyticsdata_run_realtime_report';
+        $contents = file_get_contents(__DIR__ . '/../run_realtime_report.php');
         $test_property_id = self::$GA_TEST_PROPERTY_ID || '222596558';
         $contents = str_replace(
             ['YOUR-GA4-PROPERTY-ID', '__DIR__'],
@@ -34,7 +34,7 @@ class runRealtimeReportWithMultipleDimensions extends TestCase
         );
         file_put_contents($file, $contents);
 
-        // Invoke run_realtime_report_with_multiple_dimensions.php
+        // Invoke run_realtime_report.php
         $output = $this->runSnippet($file);
 
         $this->assertRegExp('/Report result/', $output);
