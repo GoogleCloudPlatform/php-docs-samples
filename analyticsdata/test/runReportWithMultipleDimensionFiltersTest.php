@@ -18,14 +18,14 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class quickstartTest extends TestCase
+class runReportWithMultipleDimensionFiltersTest extends TestCase
 {
     use TestTrait;
 
-    public function testQuickstart()
+    public function testrunRealtimeReport()
     {
-        $file = sys_get_temp_dir() . '/analyticsdata_quickstart.php';
-        $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+        $file = sys_get_temp_dir() . '/analyticsdata_run_report_with_multiple_dimension_filters';
+        $contents = file_get_contents(__DIR__ . '/../run_report_with_multiple_dimension_filters.php');
         $test_property_id = self::$GA_TEST_PROPERTY_ID || '222596558';
         $contents = str_replace(
             ['YOUR-GA4-PROPERTY-ID', '__DIR__'],
@@ -34,7 +34,7 @@ class quickstartTest extends TestCase
         );
         file_put_contents($file, $contents);
 
-        // Invoke quickstart.php
+        // Invoke run_realtime_report_with_multiple_dimension_filters.php
         $output = $this->runSnippet($file);
 
         $this->assertRegExp('/Report result/', $output);
