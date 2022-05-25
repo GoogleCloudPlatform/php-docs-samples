@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runBatchReportTests extends TestCase
+class runBatchReportTest extends TestCase
 {
     use TestTrait;
 

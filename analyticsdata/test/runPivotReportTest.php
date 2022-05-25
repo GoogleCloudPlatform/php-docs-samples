@@ -18,7 +18,7 @@
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runPivotReportTests extends TestCase
+class runPivotReportTest extends TestCase
 {
     use TestTrait;
 
