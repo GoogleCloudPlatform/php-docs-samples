@@ -15,20 +15,6 @@
  * limitations under the License.
  */
 
-/**
- * For instructions on how to run the samples:
- *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
- */
-
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php synthesize_text_file.php FILE\n");
-}
-list($_, $path) = $argv;
-
 // [START tts_synthesize_text_file]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
@@ -37,31 +23,38 @@ use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
-/** Uncomment and populate these variables in your code */
-// $path = 'The text file to be synthesized. (e.g., hello.txt)';
+/**
+ * @param string $path The text file to be synthesized. (e.g., hello.txt)
+ */
+function synthesize_text_file(string $path)
+{
+    // create client object
+    $client = new TextToSpeechClient();
 
-// create client object
-$client = new TextToSpeechClient();
+    // get text from file
+    $text = file_get_contents($path);
+    $input_text = (new SynthesisInput())
+        ->setText($text);
 
-// get text from file
-$text = file_get_contents($path);
-$input_text = (new SynthesisInput())
-    ->setText($text);
+    // note: the voice can also be specified by name
+    // names of voices can be retrieved with $client->listVoices()
+    $voice = (new VoiceSelectionParams())
+        ->setLanguageCode('en-US')
+        ->setSsmlGender(SsmlVoiceGender::FEMALE);
 
-// note: the voice can also be specified by name
-// names of voices can be retrieved with $client->listVoices()
-$voice = (new VoiceSelectionParams())
-    ->setLanguageCode('en-US')
-    ->setSsmlGender(SsmlVoiceGender::FEMALE);
+    $audioConfig = (new AudioConfig())
+        ->setAudioEncoding(AudioEncoding::MP3);
 
-$audioConfig = (new AudioConfig())
-    ->setAudioEncoding(AudioEncoding::MP3);
+    $response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
+    $audioContent = $response->getAudioContent();
 
-$response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
-$audioContent = $response->getAudioContent();
+    file_put_contents('output.mp3', $audioContent);
+    print('Audio content written to "output.mp3"' . PHP_EOL);
 
-file_put_contents('output.mp3', $audioContent);
-print('Audio content written to "output.mp3"' . PHP_EOL);
-
-$client->close();
+    $client->close();
+}
 // [END tts_synthesize_text_file]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
