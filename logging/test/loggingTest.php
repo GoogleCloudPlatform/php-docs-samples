@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Logging\Tests;
 
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -29,10 +28,8 @@ use PHPUnit\Framework\TestCase;
 class loggingTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
 
-    private static $commandFile = __DIR__ . '/../logging.php';
     protected static $sinkName;
     protected static $loggerName = 'my_test_logger';
 
@@ -49,11 +46,12 @@ class loggingTest extends TestCase
 
     public function testCreateSink()
     {
-        $output = $this->runCommand('create-sink', [
+        $loggerFullName = sprintf('projects/%s/logs/%s', self::$projectId, self::$loggerName);
+        $output = $this->runFunctionSnippet('create_sink', [
             'project' => self::$projectId,
-            '--logger' => self::$loggerName,
-            '--bucket' => self::$projectId . '/logging',
-            '--sink' => self::$sinkName,
+            'sinkName' => self::$sinkName,
+            'destination' => self::$projectId . '/logging',
+            'filterString' => sprintf('logName = "%s"', $loggerFullName),
         ]);
         $this->assertEquals(
             sprintf("Created a sink '%s'.\n", self::$sinkName),
@@ -66,7 +64,7 @@ class loggingTest extends TestCase
      */
     public function testListSinks()
     {
-        $output = $this->runCommand('list-sinks', [
+        $output = $this->runFunctionSnippet('list_sinks', [
             'project' => self::$projectId,
         ]);
         $this->assertStringContainsString('name:' . self::$sinkName, $output);
@@ -77,10 +75,11 @@ class loggingTest extends TestCase
      */
     public function testUpdateSink()
     {
-        $output = $this->runCommand('update-sink', [
+        $loggerFullName = sprintf('projects/%s/logs/updated-logger', self::$projectId);
+        $output = $this->runFunctionSnippet('update_sink', [
             'project' => self::$projectId,
-            '--sink' => self::$sinkName,
-            '--logger' => 'updated-logger',
+            'sinkName' => self::$sinkName,
+            'filterString' => sprintf('logName = "%s"', $loggerFullName),
         ]);
         $this->assertEquals(
             sprintf("Updated a sink '%s'.\n", self::$sinkName),
@@ -105,10 +104,10 @@ class loggingTest extends TestCase
      */
     public function testUpdateSinkWithFilter()
     {
-        $output = $this->runCommand('update-sink', [
+        $output = $this->runFunctionSnippet('update_sink', [
             'project' => self::$projectId,
-            '--sink' => self::$sinkName,
-            '--filter' => 'severity >= INFO',
+            'sinkName' => self::$sinkName,
+            'filterString' => 'severity >= INFO',
         ]);
         $this->assertEquals(
             sprintf("Updated a sink '%s'.\n", self::$sinkName),
@@ -126,9 +125,9 @@ class loggingTest extends TestCase
      */
     public function testDeleteSink()
     {
-        $output = $this->runCommand('delete-sink', [
+        $output = $this->runFunctionSnippet('delete_sink', [
             'project' => self::$projectId,
-            '--sink' => self::$sinkName,
+            'sinkName' => self::$sinkName,
         ]);
         $this->assertEquals(
             sprintf("Deleted a sink '%s'.\n", self::$sinkName),
@@ -139,10 +138,10 @@ class loggingTest extends TestCase
     public function testWriteAndList()
     {
         $message = sprintf('Test Message %s', uniqid());
-        $output = $this->runCommand('write', [
+        $output = $this->runFunctionSnippet('write', [
             'project' => self::$projectId,
             'message' => $message,
-            '--logger' => self::$loggerName,
+            'loggerName' => self::$loggerName,
         ]);
         $this->assertEquals(
             sprintf("Wrote a log to a logger '%s'.\n", self::$loggerName),
@@ -151,9 +150,9 @@ class loggingTest extends TestCase
 
         $loggerName = self::$loggerName;
         $this->runEventuallyConsistentTest(function () use ($loggerName, $message) {
-            $output = $this->runCommand('list-entries', [
+            $output = $this->runFunctionSnippet('list_entries', [
                 'project' => self::$projectId,
-                '--logger' => $loggerName,
+                'loggerName' => $loggerName,
             ]);
             $this->assertStringContainsString($message, $output);
         }, $retries = 10);
@@ -164,9 +163,9 @@ class loggingTest extends TestCase
      */
     public function testDeleteLogger()
     {
-        $output = $this->runCommand('delete-logger', [
+        $output = $this->runFunctionSnippet('delete_logger', [
             'project' => self::$projectId,
-            '--logger' => self::$loggerName,
+            'loggerName' => self::$loggerName,
         ]);
         $this->assertEquals(
             sprintf("Deleted a logger '%s'.\n", self::$loggerName),
@@ -177,11 +176,11 @@ class loggingTest extends TestCase
     public function testWritePsr()
     {
         $message = 'Test Message';
-        $output = $this->runCommand('write-psr', [
+        $output = $this->runFunctionSnippet('write_with_psr_logger', [
             'project' => self::$projectId,
             'message' => $message,
-            '--logger' => self::$loggerName,
-            '--level' => 'emergency',
+            'loggerName' => self::$loggerName,
+            'level' => 'emergency',
         ]);
         $this->assertEquals(
             sprintf("Wrote to PSR logger '%s' at level 'emergency'.\n", self::$loggerName),
@@ -192,11 +191,11 @@ class loggingTest extends TestCase
     public function testWriteMonolog()
     {
         $message = 'Test Message';
-        $output = $this->runCommand('write-monolog', [
+        $output = $this->runFunctionSnippet('write_with_monolog_logger', [
             'project' => self::$projectId,
             'message' => $message,
-            '--logger' => self::$loggerName,
-            '--level' => 'emergency',
+            'loggerName' => self::$loggerName,
+            'level' => 'emergency',
         ]);
         $this->assertEquals(
             sprintf("Wrote to monolog logger '%s' at level 'emergency'.\n", self::$loggerName),
