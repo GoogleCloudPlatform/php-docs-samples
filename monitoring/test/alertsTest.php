@@ -124,8 +124,8 @@ class alertsTest extends TestCase
 
         $output = $this->runFunctionSnippet('alert_replace_channels', [
             'projectId' => self::$projectId,
-            'policy_id' => self::$policyId,
-            'channel_id' => [$channelId1, $channelId2]
+            'alertPolicyId' => self::$policyId,
+            'channelIds' => [$channelId1, $channelId2]
         ]);
         $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
@@ -144,8 +144,8 @@ class alertsTest extends TestCase
 
         $output = $this->runFunctionSnippet('alert_replace_channels', [
             'projectId' => self::$projectId,
-            'policy_id' => self::$policyId,
-            'channel_id' => self::$channelId,
+            'alertPolicyId' => self::$policyId,
+            'channelIds' => [self::$channelId],
         ]);
         $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
@@ -227,7 +227,7 @@ class alertsTest extends TestCase
 
         $output = $this->runFunctionSnippet('alert_delete_channel', [
             'projectId' => self::$projectId,
-            'channel_id' => self::$channelId,
+            'channelId' => self::$channelId,
         ]);
         $this->assertStringContainsString('Deleted notification channel', $output);
         $this->assertStringContainsString(self::$channelId, $output);
