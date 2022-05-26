@@ -53,7 +53,7 @@ class videoTest extends TestCase
     {
         $output = $this->runFunctionSnippet(
             'analyze_labels_file',
-            ['uri' => __DIR__ . '/data/cat_shortened.mp4', 'pollingIntervalSeconds' => 10]
+            ['path' => __DIR__ . '/data/cat_shortened.mp4', 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('cat', $output);
         $this->assertStringContainsString('Video label description:', $output);
@@ -110,7 +110,7 @@ class videoTest extends TestCase
     {
         $output = $this->runFunctionSnippet(
             'analyze_text_detection_file',
-            ['uri' => __DIR__ . '/data/googlework_short.mp4', 'pollingIntervalSeconds' => 10]
+            ['path' => __DIR__ . '/data/googlework_short.mp4', 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('GOOGLE', $output);
         $this->assertStringContainsString('Video text description:', $output);
@@ -132,7 +132,7 @@ class videoTest extends TestCase
     {
         $output = $this->runFunctionSnippet(
             'analyze_object_tracking_file',
-            ['uri' => __DIR__ . '/data/googlework_short.mp4', 'pollingIntervalSeconds' => 10]
+            ['path' => __DIR__ . '/data/googlework_short.mp4', 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('/m/01g317', $output);
         $this->assertStringContainsString('person', $output);
