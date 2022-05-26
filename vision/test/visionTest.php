@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
 
