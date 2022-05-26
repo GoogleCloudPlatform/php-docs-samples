@@ -269,7 +269,7 @@ class visionTest extends TestCase
 
         $source = 'gs://' . $bucketName . '/vision/HodgeConj.pdf';
         $destination = 'gs://' . $bucketName . '/OCR_PDF_TEST_OUTPUT/';
-        $output = $this->runFunctionSnippet('detect_pdf', [
+        $output = $this->runFunctionSnippet('detect_pdf_gcs', [
             'path' => $source,
             'output' => $destination,
         ]);
