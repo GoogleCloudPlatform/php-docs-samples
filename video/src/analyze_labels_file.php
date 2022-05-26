@@ -16,77 +16,77 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 2 || count($argv) > 3) {
-    return print("Usage: php analyze_labels_file.php PATH\n");
-}
-list($_, $path) = $argv;
-$options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
-
 // [START video_analyze_labels]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
-/** Uncomment and populate these variables in your code */
-// $path = 'File path to a video file to analyze';
-// $options = [];
+/**
+ * @param string $path    File path to a video file to analyze
+ * @param int $pollingIntervalSeconds
+ */
+function analyze_labels_file(string $path, int $pollingIntervalSeconds = 0)
+{
+    # Instantiate a client.
+    $video = new VideoIntelligenceServiceClient();
 
-# Instantiate a client.
-$video = new VideoIntelligenceServiceClient();
+    # Read the local video file
+    $inputContent = file_get_contents($path);
 
-# Read the local video file
-$inputContent = file_get_contents($path);
+    # Execute a request.
+    $features = [Feature::LABEL_DETECTION];
+    $operation = $video->annotateVideo([
+        'inputContent' => $inputContent,
+        'features' => $features,
+    ]);
 
-# Execute a request.
-$features = [Feature::LABEL_DETECTION];
-$operation = $video->annotateVideo([
-    'inputContent' => $inputContent,
-    'features' => $features,
-]);
+    # Wait for the request to complete.
+    $operation->pollUntilComplete([
+        'pollingIntervalSeconds' => $pollingIntervalSeconds
+    ]);
 
-# Wait for the request to complete.
-$operation->pollUntilComplete($options);
+    # Print the results.
+    if ($operation->operationSucceeded()) {
+        $results = $operation->getResult()->getAnnotationResults()[0];
 
-# Print the results.
-if ($operation->operationSucceeded()) {
-    $results = $operation->getResult()->getAnnotationResults()[0];
-
-    # Process video/segment level label annotations
-    foreach ($results->getSegmentLabelAnnotations() as $label) {
-        printf('Video label description: %s' . PHP_EOL, $label->getEntity()->getDescription());
-        foreach ($label->getCategoryEntities() as $categoryEntity) {
-            printf('  Category: %s' . PHP_EOL, $categoryEntity->getDescription());
+        # Process video/segment level label annotations
+        foreach ($results->getSegmentLabelAnnotations() as $label) {
+            printf('Video label description: %s' . PHP_EOL, $label->getEntity()->getDescription());
+            foreach ($label->getCategoryEntities() as $categoryEntity) {
+                printf('  Category: %s' . PHP_EOL, $categoryEntity->getDescription());
+            }
+            foreach ($label->getSegments() as $segment) {
+                $start = $segment->getSegment()->getStartTimeOffset();
+                $end = $segment->getSegment()->getEndTimeOffset();
+                printf('  Segment: %ss to %ss' . PHP_EOL,
+                    $start->getSeconds() + $start->getNanos() / 1000000000.0,
+                    $end->getSeconds() + $end->getNanos() / 1000000000.0);
+                printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
+            }
         }
-        foreach ($label->getSegments() as $segment) {
-            $start = $segment->getSegment()->getStartTimeOffset();
-            $end = $segment->getSegment()->getEndTimeOffset();
-            printf('  Segment: %ss to %ss' . PHP_EOL,
-                $start->getSeconds() + $start->getNanos() / 1000000000.0,
-                $end->getSeconds() + $end->getNanos() / 1000000000.0);
-            printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
+        print(PHP_EOL);
+
+        # Process shot level label annotations
+        foreach ($results->getShotLabelAnnotations() as $label) {
+            printf('Shot label description: %s' . PHP_EOL, $label->getEntity()->getDescription());
+            foreach ($label->getCategoryEntities() as $categoryEntity) {
+                printf('  Category: %s' . PHP_EOL, $categoryEntity->getDescription());
+            }
+            foreach ($label->getSegments() as $shot) {
+                $start = $shot->getSegment()->getStartTimeOffset();
+                $end = $shot->getSegment()->getEndTimeOffset();
+                printf('  Shot: %ss to %ss' . PHP_EOL,
+                    $start->getSeconds() + $start->getNanos() / 1000000000.0,
+                    $end->getSeconds() + $end->getNanos() / 1000000000.0);
+                printf('  Confidence: %f' . PHP_EOL, $shot->getConfidence());
+            }
         }
+        print(PHP_EOL);
+    } else {
+        print_r($operation->getError());
     }
-    print(PHP_EOL);
-
-    # Process shot level label annotations
-    foreach ($results->getShotLabelAnnotations() as $label) {
-        printf('Shot label description: %s' . PHP_EOL, $label->getEntity()->getDescription());
-        foreach ($label->getCategoryEntities() as $categoryEntity) {
-            printf('  Category: %s' . PHP_EOL, $categoryEntity->getDescription());
-        }
-        foreach ($label->getSegments() as $shot) {
-            $start = $shot->getSegment()->getStartTimeOffset();
-            $end = $shot->getSegment()->getEndTimeOffset();
-            printf('  Shot: %ss to %ss' . PHP_EOL,
-                $start->getSeconds() + $start->getNanos() / 1000000000.0,
-                $end->getSeconds() + $end->getNanos() / 1000000000.0);
-            printf('  Confidence: %f' . PHP_EOL, $shot->getConfidence());
-        }
-    }
-    print(PHP_EOL);
-} else {
-    print_r($operation->getError());
 }
 // [END video_analyze_labels]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
