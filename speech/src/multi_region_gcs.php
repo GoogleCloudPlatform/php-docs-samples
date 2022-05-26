@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Speech;
+
 # [START speech_transcribe_with_multi_region_gcs]
 # Imports the Google Cloud client library
 use Google\Cloud\Speech\V1\SpeechClient;

@@ -21,13 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php transcribe_auto_punctiation.php AUDIO_FILE\n");
-}
-list($_, $audioFile) = $argv;
+namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_auto_punctuation]
 use Google\Cloud\Speech\V1\SpeechClient;

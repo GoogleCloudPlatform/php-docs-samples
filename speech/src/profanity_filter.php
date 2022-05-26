@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+namespace Google\Cloud\Samples\Speech;
+
 # [START speech_profanity_filter]
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;

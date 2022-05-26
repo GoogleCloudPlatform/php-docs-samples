@@ -21,6 +21,8 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
+namespace Google\Cloud\Samples\Speech;
+
 # [START speech_transcribe_streaming]
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionConfig;

@@ -21,6 +21,8 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
+namespace Google\Cloud\Samples\Speech;
+
 # [START base64_audio]
 /**
  * @param string $audioFile path to an audio file
