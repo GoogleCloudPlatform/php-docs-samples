@@ -21,6 +21,8 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
  */
 
+namespace Google\Cloud\Samples\TextToSpeech;
+
 // [START tts_synthesize_ssml_file]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;

@@ -21,6 +21,8 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
  */
 
+namespace Google\Cloud\Samples\TextToSpeech;
+
 // [START tts_list_voices]
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 

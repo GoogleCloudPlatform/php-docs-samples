@@ -21,6 +21,8 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
  */
 
+namespace Google\Cloud\Samples\TextToSpeech;
+
 // [START tts_synthesize_text]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
@@ -28,7 +30,6 @@ use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
 use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
-
 
 /**
  * @param string $text Text to synthesize
