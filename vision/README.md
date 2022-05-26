@@ -36,10 +36,6 @@ This simple command-line application demonstrates how to invoke
     Usage: php src/detext_face.php PATH
 
     $ php src/detect_face.php 'path/to/your/image.jpg'
-    Findings:
-      Quote: bob@example.com
-      Info type: EMAIL_ADDRESS
-      Likelihood: LIKELY
     ```
 ## The client library
 
