@@ -23,8 +23,8 @@
 # [START auth_api_explicit]
 namespace Google\Cloud\Samples\Auth;
 
-use Google_Client;
-use Google_Service_Storage;
+use Google\Client;
+use Google\Service\Storage;
 
 /**
  * Authenticate to a cloud API using a service account explicitly.
@@ -34,11 +34,11 @@ use Google_Service_Storage;
  */
 function auth_api_explicit($projectId, $serviceAccountPath)
 {
-    $client = new Google_Client();
+    $client = new Client();
     $client->setAuthConfig($serviceAccountPath);
     $client->addScope('https://www.googleapis.com/auth/cloud-platform');
 
-    $storage = new Google_Service_Storage($client);
+    $storage = new Storage($client);
 
     # Make an authenticated API request (listing storage buckets)
     $buckets = $storage->buckets->listBuckets($projectId);
