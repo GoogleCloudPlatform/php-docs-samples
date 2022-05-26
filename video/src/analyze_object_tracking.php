@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\VideoIntelligence;
+
 // [START video_object_tracking_gcs]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;

@@ -22,6 +22,8 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/video/README.md
  */
 
+ namespace Google\Cloud\Samples\VideoIntelligence;
+
 // [START video_analyze_explicit_content]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
