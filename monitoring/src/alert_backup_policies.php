@@ -59,3 +59,7 @@ function alert_backup_policies($projectId)
     print('Backed up alert policies and notification channels to backup.json.');
 }
 // [END monitoring_alert_backup_policies]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

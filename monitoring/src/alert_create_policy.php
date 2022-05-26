@@ -60,3 +60,7 @@ function alert_create_policy($projectId)
     printf('Created alert policy %s' . PHP_EOL, $policy->getName());
 }
 # [END monitoring_alert_create_policy]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
