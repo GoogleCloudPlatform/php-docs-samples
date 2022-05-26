@@ -21,16 +21,18 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
  */
 
-if (count($argv) != 2) {
-    return print("Usage: php base64_encode_audio.php AUDIO_FILE\n");
-}
-list($_, $audioFile) = $argv;
-
 # [START base64_audio]
-/** Uncomment and populate these variables in your code */
-// $audioFile = 'path to an audio file';
+/**
+ * @param string $audioFile path to an audio file
+ */
+function base64_encode_audio(string $audioFile)
+{
+    $audioFileResource = fopen($audioFile, 'r');
+    $base64Audio = base64_encode(stream_get_contents($audioFileResource));
+    print($base64Audio);
+}
+# [END base64_audio]
 
-$audioFileResource = fopen($audioFile, 'r');
-$base64Audio = base64_encode(stream_get_contents($audioFileResource));
-print($base64Audio);
-# [end base64_audio]
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
