@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Monitoring;
 // [START monitoring_read_timeseries_fields]
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
 use Google\Cloud\Monitoring\V3\TimeInterval;
-use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
 use Google\Protobuf\Timestamp;
 
 /**
@@ -55,7 +55,7 @@ function read_timeseries_fields($projectId, $minutesAgo = 20)
     $interval->setStartTime($startTime);
     $interval->setEndTime($endTime);
 
-    $view = ListTimeSeriesRequest_TimeSeriesView::HEADERS;
+    $view = TimeSeriesView::HEADERS;
 
     $result = $metrics->listTimeSeries(
         $projectName,
