@@ -35,7 +35,7 @@ use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
  * @param string $path Path to file to synthesize
  * @param string $effectsProfileId Audio Profile ID
  */
-function synthesize_text_audio_profile_file(string $path, string $effectsProfileId)
+function synthesize_text_effects_profile_file(string $path, string $effectsProfileId)
 {
     // create client object
     $client = new TextToSpeechClient();
