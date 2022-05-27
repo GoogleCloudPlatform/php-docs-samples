@@ -33,7 +33,7 @@ function profanity_filter_gcs(string $uri)
 
     // set string as audio content
     $audio = (new RecognitionAudio())
-        ->setUri($audioFile);
+        ->setUri($uri);
 
     // set config
     $config = (new RecognitionConfig())

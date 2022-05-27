@@ -24,14 +24,15 @@ use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-function multi_region_gcs()
+/**
+ * @param string $uri The Cloud Storage object to transcribe
+ *                    e.x. gs://cloud-samples-data/speech/brooklyn_bridge.raw
+ */
+function multi_region_gcs(string $uri)
 {
-    # The name of the audio file to transcribe
-    $gcsURI = 'gs://cloud-samples-data/speech/brooklyn_bridge.raw';
-
     # set string as audio content
     $audio = (new RecognitionAudio())
-        ->setUri($gcsURI);
+        ->setUri($uri);
 
     # The audio file's encoding, sample rate and language
     $config = new RecognitionConfig([
