@@ -25,6 +25,9 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class IntegrationTest extends TestCase
 {
     use TestTrait;
@@ -79,11 +82,5 @@ class IntegrationTest extends TestCase
 
         $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
-
-        // Unset environment variables after test run.
-        putenv('INSTANCE_HOST');
-        putenv('DB_PASS');
-        putenv('DB_NAME');
-        putenv('DB_USER');
     }
 }
