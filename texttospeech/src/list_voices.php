@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\TextToSpeech;
 // [START tts_list_voices]
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
-function list_voices()
+function list_voices(): void
 {
     // create client object
     $client = new TextToSpeechClient();

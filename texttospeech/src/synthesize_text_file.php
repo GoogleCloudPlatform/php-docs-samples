@@ -34,7 +34,7 @@ use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 /**
  * @param string $path The text file to be synthesized. (e.g., hello.txt)
  */
-function synthesize_text_file(string $path)
+function synthesize_text_file(string $path): void
 {
     // create client object
     $client = new TextToSpeechClient();

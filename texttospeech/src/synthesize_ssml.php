@@ -34,7 +34,7 @@ use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 /**
  * @param string $ssml SSML to synthesize
  */
-function synthesize_ssml(string $ssml)
+function synthesize_ssml(string $ssml): void
 {
     // create client object
     $client = new TextToSpeechClient();
