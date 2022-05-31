@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\VideoIntelligence;
+
 // [START video_analyze_labels]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
