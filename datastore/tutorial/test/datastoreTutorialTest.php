@@ -19,11 +19,13 @@ namespace Google\Cloud\Samples\Datastore\Tasks;
 
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class datastoreTutorialTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
+    use TestTrait;
 
     /** @var $retryCount int */
     protected static $retryCount = 5;
@@ -32,13 +34,13 @@ class datastoreTutorialTest extends TestCase
 
     public function testAddTask()
     {
-        $output = $this->runSnippetTest('add_task', [
+        $output = $this->runFunctionSnippet('add_task', [
             'projectId' => self::$projectId,
             'description' => 'buy milk',
         ]);
         $this->assertStringContainsString('Created new task with ID', $output);
 
-        preg_match('Created new task with ID (\d+).', $output, $matches);
+        preg_match('/Created new task with ID (\d+)./', $output, $matches);
         self::$taskId = $matches[1];
     }
 
@@ -48,8 +50,8 @@ class datastoreTutorialTest extends TestCase
     public function testListTasks()
     {
         $expected = sprintf('ID: %d
-    Description: buy milk
-    Status: created', self::$taskId);
+  Description: buy milk
+  Status: created', self::$taskId);
         $this->runEventuallyConsistentTest(function () use ($expected) {
             $output = $this->runFunctionSnippet('list_tasks', [self::$projectId]);
             $this->assertStringContainsString($expected, $output);
@@ -61,7 +63,7 @@ class datastoreTutorialTest extends TestCase
      */
     public function testMarkDone()
     {
-        $output = $this->runSnippetTest('mark_done', [
+        $output = $this->runFunctionSnippet('mark_done', [
             'projectId' => self::$projectId,
             'taskId' => self::$taskId,
         ]);
@@ -95,8 +97,8 @@ class datastoreTutorialTest extends TestCase
     public function tearDown(): void
     {
         if (!empty(self::$taskId)) {
-            $datastore = new DatastoreClient(['projectId' => $projectId]);
-            $taskKey = $datastore->key('Task', $taskId);
+            $datastore = new DatastoreClient(['projectId' => self::$projectId]);
+            $taskKey = $datastore->key('Task', self::$taskId);
             $datastore->delete($taskKey);
         }
     }
