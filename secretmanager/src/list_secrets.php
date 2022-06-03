@@ -23,28 +23,28 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s PROJECT_ID\n", basename(__FILE__));
-}
-list($_, $projectId) = $argv;
-
 // [START secretmanager_list_secrets]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
+/**
+ * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ */
+function list_secrets(string $projectId): void
+{
+    // Create the Secret Manager client.
+    $client = new SecretManagerServiceClient();
 
-// Create the Secret Manager client.
-$client = new SecretManagerServiceClient();
+    // Build the resource name of the parent secret.
+    $parent = $client->projectName($projectId);
 
-// Build the resource name of the parent secret.
-$parent = $client->projectName($projectId);
-
-// List all secrets.
-foreach ($client->listSecrets($parent) as $secret) {
-    printf('Found secret %s', $secret->getName());
+    // List all secrets.
+    foreach ($client->listSecrets($parent) as $secret) {
+        printf('Found secret %s', $secret->getName());
+    }
 }
 // [END secretmanager_list_secrets]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
