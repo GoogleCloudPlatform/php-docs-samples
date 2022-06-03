@@ -60,7 +60,7 @@ $container['db'] = function () {
     } else {
         throw new RuntimeException(
             'Missing database connection type. ' .
-                'Please define INSTANCE_HOST or INSTANCE_UNIX_SOCKET'
+                'Please define $INSTANCE_HOST or $INSTANCE_UNIX_SOCKET'
         );
     }
 };
