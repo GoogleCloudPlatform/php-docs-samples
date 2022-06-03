@@ -23,6 +23,8 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\SecretManager;
+
 // [START secretmanager_access_secret_version]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
