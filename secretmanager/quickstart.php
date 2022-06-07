@@ -33,8 +33,8 @@ use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 
 /** Uncomment and populate these variables in your code */
-// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project')
-// $secretId = 'YOUR_SECRET_ID' (e.g. 'my-secret')
+// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
+// $secretId = 'YOUR_SECRET_ID' (e.g. 'my-secret');
 
 // Create the Secret Manager client.
 $client = new SecretManagerServiceClient();
