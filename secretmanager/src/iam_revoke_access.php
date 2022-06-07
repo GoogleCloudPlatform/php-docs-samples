@@ -34,7 +34,7 @@ use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
  * @param string $member Your member (e.g. 'user:foo@example.com')
  */
-function iam_revoke_access(string $projectId, string $secretId, string $versionId): void
+function iam_revoke_access(string $projectId, string $secretId, string $member): void
 {
     // Create the Secret Manager client.
     $client = new SecretManagerServiceClient();

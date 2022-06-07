@@ -35,7 +35,7 @@ use Google\Protobuf\FieldMask;
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
  */
-function get_secret(string $projectId, string $secretId): void
+function update_secret(string $projectId, string $secretId): void
 {
     // Create the Secret Manager client.
     $client = new SecretManagerServiceClient();
