@@ -17,13 +17,15 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_enable_key_version]
 use Google\Cloud\Kms\V1\CryptoKeyVersion;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionState;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Protobuf\FieldMask;
 
-function enable_key_version_sample(
+function enable_key_version(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -48,16 +50,11 @@ function enable_key_version_sample(
     // Call the API.
     $enabledVersion = $client->updateCryptoKeyVersion($keyVersion, $updateMask);
     printf('Enabled key version: %s' . PHP_EOL, $enabledVersion->getName());
+
     return $enabledVersion;
 }
 // [END kms_enable_key_version]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId) = $argv;
-    enable_key_version_sample($projectId, $locationId, $keyRingId, $keyId, $versionId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

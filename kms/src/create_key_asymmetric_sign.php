@@ -17,6 +17,8 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_create_key_asymmetric_sign]
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
@@ -25,7 +27,7 @@ use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Protobuf\Duration;
 
-function create_key_asymmetric_sign_sample(
+function create_key_asymmetric_sign(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -52,16 +54,12 @@ function create_key_asymmetric_sign_sample(
     // Call the API.
     $createdKey = $client->createCryptoKey($keyRingName, $id, $key);
     printf('Created asymmetric signing key: %s' . PHP_EOL, $createdKey->getName());
+
     return $createdKey;
 }
 // [END kms_create_key_asymmetric_sign]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID ID\n", basename(__FILE__));
-    }
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
 
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $id) = $argv;
-    create_key_asymmetric_sign_sample($projectId, $locationId, $keyRingId, $id);
-}
