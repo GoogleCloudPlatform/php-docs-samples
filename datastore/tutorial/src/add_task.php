@@ -24,8 +24,8 @@ use Google\Cloud\Datastore\DatastoreClient;
 /**
  * Create a new task with a given description.
  *
- * @param string $description
  * @param string $projectId The Google Cloud project ID.
+ * @param string $description
  */
 function add_task(string $projectId, string $description)
 {
