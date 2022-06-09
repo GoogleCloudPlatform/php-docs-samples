@@ -31,7 +31,7 @@ use Google\Cloud\Language\V1\LanguageServiceClient;
 /**
  * @param string $text The text to analyze
  */
-function analyze_sentiment(string $uri): void
+function analyze_sentiment(string $text): void
 {
     $languageServiceClient = new LanguageServiceClient();
     try {

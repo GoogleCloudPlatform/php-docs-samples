@@ -32,7 +32,7 @@ use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 /**
  * @param string $text The text to analyze
  */
-function analyze_syntax(string $test): void
+function analyze_syntax(string $text): void
 {
     // Create the Natural Language client
     $languageServiceClient = new LanguageServiceClient();
