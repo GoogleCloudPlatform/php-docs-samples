@@ -36,30 +36,27 @@ function analyze_entities(string $text): void
 {
     // Create the Natural Language client
     $languageServiceClient = new LanguageServiceClient();
-    try {
-        // Create a new Document, add text as content and set type to PLAIN_TEXT
-        $document = (new Document())
-            ->setContent($text)
-            ->setType(Type::PLAIN_TEXT);
 
-        // Call the analyzeEntities function
-        $response = $languageServiceClient->analyzeEntities($document, []);
-        $entities = $response->getEntities();
-        // Print out information about each entity
-        foreach ($entities as $entity) {
-            printf('Name: %s' . PHP_EOL, $entity->getName());
-            printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
-            printf('Salience: %s' . PHP_EOL, $entity->getSalience());
-            if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
-                printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
-            }
-            if ($entity->getMetadata()->offsetExists('mid')) {
-                printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
-            }
-            printf(PHP_EOL);
+    // Create a new Document, add text as content and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setContent($text)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeEntities function
+    $response = $languageServiceClient->analyzeEntities($document, []);
+    $entities = $response->getEntities();
+    // Print out information about each entity
+    foreach ($entities as $entity) {
+        printf('Name: %s' . PHP_EOL, $entity->getName());
+        printf('Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
+        printf('Salience: %s' . PHP_EOL, $entity->getSalience());
+        if ($entity->getMetadata()->offsetExists('wikipedia_url')) {
+            printf('Wikipedia URL: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('wikipedia_url'));
         }
-    } finally {
-        $languageServiceClient->close();
+        if ($entity->getMetadata()->offsetExists('mid')) {
+            printf('Knowledge Graph MID: %s' . PHP_EOL, $entity->getMetadata()->offsetGet('mid'));
+        }
+        printf(PHP_EOL);
     }
 }
 # [END language_entities_text]

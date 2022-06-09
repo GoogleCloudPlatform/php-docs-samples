@@ -37,23 +37,19 @@ function analyze_syntax(string $text): void
     // Create the Natural Language client
     $languageServiceClient = new LanguageServiceClient();
 
-    try {
-        // Create a new Document, add text as content and set type to PLAIN_TEXT
-        $document = (new Document())
-            ->setContent($text)
-            ->setType(Type::PLAIN_TEXT);
+    // Create a new Document, add text as content and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setContent($text)
+        ->setType(Type::PLAIN_TEXT);
 
-        // Call the analyzeEntities function
-        $response = $languageServiceClient->analyzeSyntax($document, []);
-        $tokens = $response->getTokens();
-        // Print out information about each entity
-        foreach ($tokens as $token) {
-            printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
-            printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
-            print(PHP_EOL);
-        }
-    } finally {
-        $languageServiceClient->close();
+    // Call the analyzeEntities function
+    $response = $languageServiceClient->analyzeSyntax($document, []);
+    $tokens = $response->getTokens();
+    // Print out information about each entity
+    foreach ($tokens as $token) {
+        printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
+        printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
+        print(PHP_EOL);
     }
 }
 # [END language_syntax_text]

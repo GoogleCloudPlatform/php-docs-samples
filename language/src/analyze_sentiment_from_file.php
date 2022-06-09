@@ -34,33 +34,30 @@ use Google\Cloud\Language\V1\LanguageServiceClient;
 function analyze_sentiment_from_file(string $uri): void
 {
     $languageServiceClient = new LanguageServiceClient();
-    try {
-        // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
-        $document = (new Document())
-            ->setGcsContentUri($uri)
-            ->setType(Type::PLAIN_TEXT);
 
-        // Call the analyzeSentiment function
-        $response = $languageServiceClient->analyzeSentiment($document);
-        $document_sentiment = $response->getDocumentSentiment();
-        // Print document information
-        printf('Document Sentiment:' . PHP_EOL);
-        printf('  Magnitude: %s' . PHP_EOL, $document_sentiment->getMagnitude());
-        printf('  Score: %s' . PHP_EOL, $document_sentiment->getScore());
-        printf(PHP_EOL);
-        $sentences = $response->getSentences();
-        foreach ($sentences as $sentence) {
-            printf('Sentence: %s' . PHP_EOL, $sentence->getText()->getContent());
-            printf('Sentence Sentiment:' . PHP_EOL);
-            $sentiment = $sentence->getSentiment();
-            if ($sentiment) {
-                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
-                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
-            }
-            print(PHP_EOL);
+    // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setGcsContentUri($uri)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeSentiment function
+    $response = $languageServiceClient->analyzeSentiment($document);
+    $document_sentiment = $response->getDocumentSentiment();
+    // Print document information
+    printf('Document Sentiment:' . PHP_EOL);
+    printf('  Magnitude: %s' . PHP_EOL, $document_sentiment->getMagnitude());
+    printf('  Score: %s' . PHP_EOL, $document_sentiment->getScore());
+    printf(PHP_EOL);
+    $sentences = $response->getSentences();
+    foreach ($sentences as $sentence) {
+        printf('Sentence: %s' . PHP_EOL, $sentence->getText()->getContent());
+        printf('Sentence Sentiment:' . PHP_EOL);
+        $sentiment = $sentence->getSentiment();
+        if ($sentiment) {
+            printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+            printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
         }
-    } finally {
-        $languageServiceClient->close();
+        print(PHP_EOL);
     }
 }
 # [END language_sentiment_gcs]

@@ -35,29 +35,26 @@ use Google\Cloud\Language\V1\Entity\Type as EntityType;
 function analyze_entity_sentiment(string $text): void
 {
     $languageServiceClient = new LanguageServiceClient();
-    try {
-        // Create a new Document, add text as content and set type to PLAIN_TEXT
-        $document = (new Document())
-            ->setContent($text)
-            ->setType(Type::PLAIN_TEXT);
 
-        // Call the analyzeEntitySentiment function
-        $response = $languageServiceClient->analyzeEntitySentiment($document);
-        $entities = $response->getEntities();
-        // Print out information about each entity
-        foreach ($entities as $entity) {
-            printf('Entity Name: %s' . PHP_EOL, $entity->getName());
-            printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
-            printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
-            $sentiment = $entity->getSentiment();
-            if ($sentiment) {
-                printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
-                printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
-            }
-            print(PHP_EOL);
+    // Create a new Document, add text as content and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setContent($text)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeEntitySentiment function
+    $response = $languageServiceClient->analyzeEntitySentiment($document);
+    $entities = $response->getEntities();
+    // Print out information about each entity
+    foreach ($entities as $entity) {
+        printf('Entity Name: %s' . PHP_EOL, $entity->getName());
+        printf('Entity Type: %s' . PHP_EOL, EntityType::name($entity->getType()));
+        printf('Entity Salience: %s' . PHP_EOL, $entity->getSalience());
+        $sentiment = $entity->getSentiment();
+        if ($sentiment) {
+            printf('Entity Magnitude: %s' . PHP_EOL, $sentiment->getMagnitude());
+            printf('Entity Score: %s' . PHP_EOL, $sentiment->getScore());
         }
-    } finally {
-        $languageServiceClient->close();
+        print(PHP_EOL);
     }
 }
 # [END language_entity_sentiment_text]

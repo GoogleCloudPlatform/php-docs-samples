@@ -34,23 +34,20 @@ use Google\Cloud\Language\V1\LanguageServiceClient;
 function classify_text_from_file(string $uri): void
 {
     $languageServiceClient = new LanguageServiceClient();
-    try {
-        // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
-        $document = (new Document())
-            ->setGcsContentUri($uri)
-            ->setType(Type::PLAIN_TEXT);
 
-        // Call the analyzeSentiment function
-        $response = $languageServiceClient->classifyText($document);
-        $categories = $response->getCategories();
-        // Print document information
-        foreach ($categories as $category) {
-            printf('Category Name: %s' . PHP_EOL, $category->getName());
-            printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
-            print(PHP_EOL);
-        }
-    } finally {
-        $languageServiceClient->close();
+    // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
+    $document = (new Document())
+        ->setGcsContentUri($uri)
+        ->setType(Type::PLAIN_TEXT);
+
+    // Call the analyzeSentiment function
+    $response = $languageServiceClient->classifyText($document);
+    $categories = $response->getCategories();
+    // Print document information
+    foreach ($categories as $category) {
+        printf('Category Name: %s' . PHP_EOL, $category->getName());
+        printf('Confidence: %s' . PHP_EOL, $category->getConfidence());
+        print(PHP_EOL);
     }
 }
 # [END language_classify_gcs]
