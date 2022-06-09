@@ -21,13 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s TEXT\n", __FILE__);
-}
-list($_, $text) = $argv;
+namespace Google\Cloud\Samples\Language;
 
 # [START language_syntax_text]
 use Google\Cloud\Language\V1\Document;
@@ -35,28 +29,35 @@ use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 
-/** Uncomment and populate these variables in your code */
-// $text = 'The text to analyze.';
+/**
+ * @param string $text The text to analyze
+ */
+function analyze_syntax(string $test): void
+{
+    // Create the Natural Language client
+    $languageServiceClient = new LanguageServiceClient();
 
-// Create the Natural Language client
-$languageServiceClient = new LanguageServiceClient();
+    try {
+        // Create a new Document, add text as content and set type to PLAIN_TEXT
+        $document = (new Document())
+            ->setContent($text)
+            ->setType(Type::PLAIN_TEXT);
 
-try {
-    // Create a new Document, add text as content and set type to PLAIN_TEXT
-    $document = (new Document())
-        ->setContent($text)
-        ->setType(Type::PLAIN_TEXT);
-
-    // Call the analyzeEntities function
-    $response = $languageServiceClient->analyzeSyntax($document, []);
-    $tokens = $response->getTokens();
-    // Print out information about each entity
-    foreach ($tokens as $token) {
-        printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
-        printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
-        print(PHP_EOL);
+        // Call the analyzeEntities function
+        $response = $languageServiceClient->analyzeSyntax($document, []);
+        $tokens = $response->getTokens();
+        // Print out information about each entity
+        foreach ($tokens as $token) {
+            printf('Token text: %s' . PHP_EOL, $token->getText()->getContent());
+            printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
+            print(PHP_EOL);
+        }
+    } finally {
+        $languageServiceClient->close();
     }
-} finally {
-    $languageServiceClient->close();
 }
 # [END language_syntax_text]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
