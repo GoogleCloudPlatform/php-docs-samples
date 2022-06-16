@@ -43,7 +43,7 @@ function upload_object_stream($bucketName, $objectName, $source)
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $writeStream = new WriteStream(null, [
-        'chunkSize' => 1024*256, // 256KB
+        'chunkSize' => 1024 * 256, // 256KB
     ]);
     $uploader = $bucket->getStreamableUploader($writeStream, [
         'name' => $objectName

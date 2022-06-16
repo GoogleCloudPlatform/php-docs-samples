@@ -209,9 +209,11 @@ EOF;
     {
         $objectName = 'test-object-stream-' . time();
         $bucket = self::$storage->bucket(self::$bucketName);
-        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~'. rand();
+        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+
         //make contents larger than atleast one chunk size
-        $contents = str_repeat($contents, 1024*256);
+        $contents = str_repeat($contents, 1024 * 256);
+
         $object = $bucket->object($objectName);
 
         $uploadFrom = tempnam(sys_get_temp_dir(), '/teststream');
