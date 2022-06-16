@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Language\Tests;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,9 +26,6 @@ use PHPUnit\Framework\TestCase;
 class languageTest extends TestCase
 {
     use TestTrait;
-    use ExecuteCommandTrait;
-
-    private static $commandFile = __DIR__ . '/../language.php';
 
     public function gcsFile()
     {
@@ -41,7 +37,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeAll()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_all',
             ['Barack Obama lives in Washington D.C.']
         );
@@ -74,7 +70,7 @@ class languageTest extends TestCase
 
     public function testAnalzeAllFromFile()
     {
-        $output = $this->runSnippet('analyze_all_from_file', [$this->gcsFile()]);
+        $output = $this->runFunctionSnippet('analyze_all_from_file', [$this->gcsFile()]);
 
         $this->assertStringContainsString('Name: Barack Obama', $output);
         $this->assertStringContainsString('Type: PERSON', $output);
@@ -105,7 +101,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeEntities()
     {
-        $output = $this->runSnippet('analyze_entities', [
+        $output = $this->runFunctionSnippet('analyze_entities', [
             'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertStringContainsString('Name: Barack Obama', $output);
@@ -118,7 +114,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeEntitiesFromFile()
     {
-        $output = $this->runSnippet('analyze_entities_from_file', [
+        $output = $this->runFunctionSnippet('analyze_entities_from_file', [
             $this->gcsFile()
         ]);
         $this->assertStringContainsString('Name: Barack Obama', $output);
@@ -131,7 +127,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeSentiment()
     {
-        $output = $this->runSnippet('analyze_sentiment', [
+        $output = $this->runFunctionSnippet('analyze_sentiment', [
             'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertStringContainsString('Document Sentiment:', $output);
@@ -145,7 +141,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeSentimentFromFile()
     {
-        $output = $this->runSnippet('analyze_sentiment_from_file', [
+        $output = $this->runFunctionSnippet('analyze_sentiment_from_file', [
             $this->gcsFile()
         ]);
         $this->assertStringContainsString('Document Sentiment:', $output);
@@ -159,7 +155,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeSyntax()
     {
-        $output = $this->runSnippet('analyze_syntax', [
+        $output = $this->runFunctionSnippet('analyze_syntax', [
             'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertStringContainsString('Token text: Barack', $output);
@@ -178,7 +174,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeSyntaxFromFile()
     {
-        $output = $this->runSnippet('analyze_syntax_from_file', [
+        $output = $this->runFunctionSnippet('analyze_syntax_from_file', [
             $this->gcsFile()
         ]);
         $this->assertStringContainsString('Token text: Barack', $output);
@@ -197,7 +193,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeEntitySentiment()
     {
-        $output = $this->runSnippet('analyze_entity_sentiment', [
+        $output = $this->runFunctionSnippet('analyze_entity_sentiment', [
             'Barack Obama lives in Washington D.C.'
         ]);
         $this->assertStringContainsString('Entity Name: Barack Obama', $output);
@@ -211,7 +207,7 @@ class languageTest extends TestCase
 
     public function testAnalyzeEntitySentimentFromFile()
     {
-        $output = $this->runSnippet('analyze_entity_sentiment_from_file', [
+        $output = $this->runFunctionSnippet('analyze_entity_sentiment_from_file', [
             $this->gcsFile()
         ]);
         $this->assertStringContainsString('Entity Name: Barack Obama', $output);
@@ -225,7 +221,7 @@ class languageTest extends TestCase
 
     public function testClassifyText()
     {
-        $output = $this->runSnippet('classify_text', [
+        $output = $this->runFunctionSnippet('classify_text', [
             'The first two gubernatorial elections since President '
                 . 'Donald Trump took office went in favor of Democratic '
                 . 'candidates in Virginia and New Jersey.'
@@ -236,7 +232,7 @@ class languageTest extends TestCase
 
     public function testClassifyTextFromFile()
     {
-        $output = $this->runSnippet('classify_text_from_file', [
+        $output = $this->runFunctionSnippet('classify_text_from_file', [
             $this->gcsFile()
         ]);
         $this->assertStringContainsString('Category Name: /News/Politics', $output);
