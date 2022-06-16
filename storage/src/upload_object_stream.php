@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,31 +23,42 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_upload_file]
+# [START storage_stream_file_upload]
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Storage\WriteStream;
 
 /**
- * Upload a file.
+ * Upload a chunked file stream.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your Cloud Storage object.
  * @param string $source The path to the file to upload.
  */
-function upload_object($bucketName, $objectName, $source)
+function upload_object_stream($bucketName, $objectName, $source)
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
     // $source = '/path/to/your/file';
 
     $storage = new StorageClient();
-    $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);
-    $object = $bucket->upload($file, [
+    $writeStream = new WriteStream(null, [
+        'chunkSize' => 1024*256, // 256KB
+    ]);
+    $uploader = $bucket->getStreamableUploader($writeStream, [
         'name' => $objectName
     ]);
+    $writeStream->setUploader($uploader);
+    $file = fopen($source, 'r');
+    while (($line = stream_get_line($file, 1024 * 256)) !== false) {
+        $writeStream->write($line);
+    }
+    $writeStream->close();
+    fclose($file);
+
     printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
 }
-# [END storage_upload_file]
+# [END storage_stream_file_upload]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

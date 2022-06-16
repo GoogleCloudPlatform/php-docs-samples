@@ -205,6 +205,39 @@ EOF;
         $this->assertStringContainsString($contents, $output);
     }
 
+    public function testUploadAndDownloadObjectStream()
+    {
+        $objectName = 'test-object-stream-' . time();
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~'. rand();
+        //make contents larger than atleast one chunk size
+        $contents = str_repeat($contents, 1024*256);
+        $object = $bucket->object($objectName);
+
+        $uploadFrom = tempnam(sys_get_temp_dir(), '/teststream');
+        $basename = basename($uploadFrom);
+        file_put_contents($uploadFrom, $contents);
+        $downloadTo = tempnam(sys_get_temp_dir(), '/teststream');
+        $downloadToBasename = basename($downloadTo);
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('upload_object_stream', [
+            self::$bucketName,
+            $objectName,
+            $uploadFrom,
+        ]);
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('download_object_into_memory', [
+            self::$bucketName,
+            $objectName
+        ]);
+        $this->assertStringContainsString($contents, $output);
+    }
+
     public function testDownloadByteRange()
     {
         $objectName = 'test-object-download-byte-range-' . time();
