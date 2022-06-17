@@ -30,6 +30,7 @@ class ObjectsTest extends TestCase
 
     private static $bucketName;
     private static $storage;
+    private static $contents;
 
     public static function setUpBeforeClass(): void
     {
@@ -38,6 +39,7 @@ class ObjectsTest extends TestCase
             self::requireEnv('GOOGLE_STORAGE_BUCKET')
         );
         self::$storage = new StorageClient();
+        self::$contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
     }
 
     public function testListObjects()
@@ -184,7 +186,6 @@ EOF;
     {
         $objectName = 'test-object-' . time();
         $bucket = self::$storage->bucket(self::$bucketName);
-        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
         $object = $bucket->object($objectName);
 
         $this->assertFalse($object->exists());
@@ -192,7 +193,7 @@ EOF;
         $output = self::runFunctionSnippet('upload_object_from_memory', [
             self::$bucketName,
             $objectName,
-            $contents,
+            self::$contents,
         ]);
 
         $object->reload();
@@ -200,17 +201,16 @@ EOF;
 
         $output = self::runFunctionSnippet('download_object_into_memory', [
             self::$bucketName,
-            $objectName
+            $objectName,
         ]);
-        $this->assertStringContainsString($contents, $output);
+        $this->assertStringContainsString(self::$contents, $output);
     }
 
     public function testUploadAndDownloadObjectStream()
     {
         $objectName = 'test-object-stream-' . time();
-        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
-        //make contents larger than atleast one chunk size
-        $contents = str_repeat($contents, 1024 * 256);
+        // contents larger than atleast one chunk size
+        $contents = str_repeat(self::$contents, 1024 * 10);
         $bucket = self::$storage->bucket(self::$bucketName);
         $object = $bucket->object($objectName);
         $this->assertFalse($object->exists());
@@ -226,7 +226,7 @@ EOF;
 
         $output = self::runFunctionSnippet('download_object_into_memory', [
             self::$bucketName,
-            $objectName
+            $objectName,
         ]);
         $this->assertStringContainsString($contents, $output);
     }
@@ -235,19 +235,18 @@ EOF;
     {
         $objectName = 'test-object-download-byte-range-' . time();
         $bucket = self::$storage->bucket(self::$bucketName);
-        $contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
         $object = $bucket->object($objectName);
         $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
         $downloadToBasename = basename($downloadTo);
         $startPos = 1;
-        $endPos = strlen($contents) - 2;
+        $endPos = strlen(self::$contents) - 2;
 
         $this->assertFalse($object->exists());
 
         $output = self::runFunctionSnippet('upload_object_from_memory', [
             self::$bucketName,
             $objectName,
-            $contents
+            self::$contents,
         ]);
 
         $object->reload();
@@ -262,7 +261,7 @@ EOF;
         ]);
 
         $this->assertTrue(file_exists($downloadTo));
-        $expectedContents = substr($contents, $startPos, $endPos - $startPos + 1);
+        $expectedContents = substr(self::$contents, $startPos, $endPos - $startPos + 1);
         $this->assertEquals($expectedContents, file_get_contents($downloadTo));
         $this->assertStringContainsString(
             sprintf(
