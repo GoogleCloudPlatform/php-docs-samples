@@ -34,7 +34,7 @@ use Google\Cloud\Storage\WriteStream;
  * @param string $objectName The name of your Cloud Storage object.
  * @param string $contents The contents to upload via stream chunks.
  */
-function upload_object_stream($bucketName, $objectName, $contents)
+function upload_object_stream(string $bucketName, string $objectName, string $contents): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
@@ -46,7 +46,7 @@ function upload_object_stream($bucketName, $objectName, $contents)
         'chunkSize' => 1024 * 256, // 256KB
     ]);
     $uploader = $bucket->getStreamableUploader($writeStream, [
-        'name' => $objectName
+        'name' => $objectName,
     ]);
     $writeStream->setUploader($uploader);
     $stream = fopen('data://text/plain,' . $contents, 'r');
@@ -59,6 +59,6 @@ function upload_object_stream($bucketName, $objectName, $contents)
 }
 # [END storage_stream_file_upload]
 
-// The following 2 lines are only needed to run the samples
+// The following 2 lines are only needed to run the samples from the CLI
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
