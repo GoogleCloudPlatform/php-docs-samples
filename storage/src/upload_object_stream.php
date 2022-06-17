@@ -32,13 +32,13 @@ use Google\Cloud\Storage\WriteStream;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your Cloud Storage object.
- * @param string $source The path to the file to upload.
+ * @param string $contents The contents to upload via stream chunks.
  */
-function upload_object_stream($bucketName, $objectName, $source)
+function upload_object_stream($bucketName, $objectName, $contents)
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
-    // $source = '/path/to/your/file';
+    // $contents = 'these are my contents';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -49,14 +49,13 @@ function upload_object_stream($bucketName, $objectName, $source)
         'name' => $objectName
     ]);
     $writeStream->setUploader($uploader);
-    $file = fopen($source, 'r');
-    while (($line = stream_get_line($file, 1024 * 256)) !== false) {
+    $stream = fopen('data://text/plain,' . $contents, 'r');
+    while (($line = stream_get_line($stream, 1024 * 256)) !== false) {
         $writeStream->write($line);
     }
     $writeStream->close();
-    fclose($file);
 
-    printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
+    printf('Uploaded %s to gs://%s/%s' . PHP_EOL, $contents, $bucketName, $objectName);
 }
 # [END storage_stream_file_upload]
 
