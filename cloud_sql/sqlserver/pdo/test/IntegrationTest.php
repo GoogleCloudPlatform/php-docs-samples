@@ -18,13 +18,15 @@
 
 namespace Google\Cloud\Samples\CloudSQL\SQLServer\Tests;
 
-use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\SQLServer\DatabaseTcp;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class IntegrationTest extends TestCase
 {
     use TestTrait;
@@ -32,7 +34,9 @@ class IntegrationTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_SQLSERVER');
+        $connectionName = self::requireEnv(
+            'CLOUDSQL_CONNECTION_NAME_SQLSERVER'
+        );
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
         $port = '1433';
 
@@ -41,23 +45,17 @@ class IntegrationTest extends TestCase
 
     public function testTcpConnection()
     {
-        $conn_config = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbHost = $this->requireEnv('SQLSERVER_HOST');
+        $instanceHost = $this->requireEnv('SQLSERVER_HOST');
         $dbPass = $this->requireEnv('SQLSERVER_PASSWORD');
         $dbName = $this->requireEnv('SQLSERVER_DATABASE');
         $dbUser = $this->requireEnv('SQLSERVER_USER');
 
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $dbHost,
-            $conn_config
-        ));
+        putenv("INSTANCE_HOST=$instanceHost");
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+
+        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
     }
 }
