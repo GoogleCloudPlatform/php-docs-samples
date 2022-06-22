@@ -23,33 +23,27 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_set_rpo_async_turbo]
+# [START storage_get_rpo]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Set the bucket's Turbo Replication(rpo) setting to `ASYNC_TURBO`.
- * The bucket must be a dual-region bucket.
+ * Get the bucket's recovery point objective (RPO) setting.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function set_turbo_replication_async_turbo($bucketName)
+function get_rpo($bucketName)
 {
     // $bucketName = 'my-bucket';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $rpo = 'ASYNC_TURBO';
-
-    $bucket->update([
-        'rpo' => $rpo
-    ]);
 
     printf(
-        'Turbo Replication has been set to ASYNC_TURBO for %s.' . PHP_EOL,
-        $bucketName
+        'The bucket\'s RPO value is: %s.' . PHP_EOL,
+        $bucket->info()['rpo']
     );
 }
-# [END storage_set_rpo_async_turbo]
+# [END storage_get_rpo]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
