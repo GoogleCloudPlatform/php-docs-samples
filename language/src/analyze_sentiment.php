@@ -21,24 +21,20 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s TEXT\n", __FILE__);
-}
-list($_, $text) = $argv;
+namespace Google\Cloud\Samples\Language;
 
 # [START language_sentiment_text]
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
 use Google\Cloud\Language\V1\LanguageServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $text = 'The text to analyze.';
+/**
+ * @param string $text The text to analyze
+ */
+function analyze_sentiment(string $text): void
+{
+    $languageServiceClient = new LanguageServiceClient();
 
-$languageServiceClient = new LanguageServiceClient();
-try {
     // Create a new Document, add text as content and set type to PLAIN_TEXT
     $document = (new Document())
         ->setContent($text)
@@ -63,7 +59,9 @@ try {
         }
         print(PHP_EOL);
     }
-} finally {
-    $languageServiceClient->close();
 }
 # [END language_sentiment_text]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
