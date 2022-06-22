@@ -28,7 +28,7 @@ Instructions are provided below for using the proxy with a TCP connection or a
 Unix domain socket. On Linux or macOS, you can use either option, but the
 Windows proxy requires a TCP connection.
 
-### Unix Socket mode
+### Launch proxy with Unix Domain Socket
 
 NOTE: this option is currently only supported on Linux and macOS. Windows users
 should use the TCP option.
@@ -37,22 +37,16 @@ To use a Unix socket, you'll need to create a directory and give access to the
 user running the proxy:
 
 ```bash
-sudo mkdir /path/to/the/new/directory
-sudo chown -R $USER /path/to/the/new/directory
+sudo mkdir /cloudsql
+sudo chown -R $USER /cloudsql
 ```
 
-You'll also need to initialize an environment variable pointing to the directory
-you just created:
-
-```bash
-export DB_SOCKET_DIR=/path/to/the/new/directory
-```
-
-Use these terminal commands to initialize other environment variables as well:
+Use these terminal commands to initialize environment variables:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_CONNECTION_NAME='<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_UNIX_SOCKET='/cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
@@ -66,22 +60,22 @@ safe.
 Then use the following command to launch the proxy in the background:
 
 ```bash
-./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+./cloud_sql_proxy -dir=/cloudsql --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
-### TCP mode
+### Launch proxy with TCP
 
 To run the sample locally with a TCP connection, set environment variables and
 launch the proxy as shown below.
 
-#### Linux / macOS
+#### Linux / Mac OS
 
 Use these terminal commands to initialize environment variables:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
-export DB_HOST='127.0.0.1'
+export INSTANCE_CONNECTION_NAME='<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_HOST='127.0.0.1'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
@@ -104,7 +98,7 @@ Use these PowerShell commands to initialize environment variables:
 
 ```bash
 $env:GOOGLE_APPLICATION_CREDENTIALS="<CREDENTIALS_JSON_FILE>"
-$env:DB_HOST="127.0.0.1"
+$env:INSTANCE_HOST="127.0.0.1"
 $env:DB_USER="<DB_USER_NAME>"
 $env:DB_PASS="<DB_PASSWORD>"
 $env:DB_NAME="<DB_NAME>
@@ -141,7 +135,7 @@ To run on App Engine Standard, create an App Engine project by following the
 setup for these
 [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
-First, update `app.standard.yaml` with the correct values to pass the
+First, update [app.standard.yaml](app.standard.yaml) with the correct values to pass the
 environment variables into the runtime.
 
 Next, the following command will deploy the application to your Google Cloud
@@ -156,17 +150,21 @@ To run on App Engine Flex, create an App Engine project by following the setup
 for these
 [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
-First, update `app.flex.yaml` with the correct values to pass the environment
+First, update [app.flex.yaml](app.flex.yaml) with the correct values to pass the environment
 variables into the runtime.
 
 To use a TCP connection instead of a Unix socket to connect your sample to your
-Cloud SQL instance on App Engine, make sure to uncomment the `DB_HOST`
+Cloud SQL instance on App Engine, make sure to uncomment the `INSTANCE_HOST`
 field under `env_variables`. Also make sure to remove the uncommented
 `beta_settings` and `cloud_sql_instances` fields and replace them with the
 commented `beta_settings` and `cloud_sql_instances` fields.
 
-Then, make sure that the service account
-`service-{PROJECT_NUMBER}>@gae-api-prod.google.com.iam.gserviceaccount.com` has
+Then, make sure that the App Engine default service account
+`<PROJECT-ID>@appspot.gserviceaccount.com` has
+the IAM role `Cloud SQL Client`.
+
+Also, make sure that the Cloud Build service account
+`cloudbuild@<PROJECT-ID>.iam.gserviceaccount.com` has
 the IAM role `Cloud SQL Client`.
 
 Next, the following command will deploy the application to your Google Cloud
