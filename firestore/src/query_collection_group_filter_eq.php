@@ -27,6 +27,8 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 /**
  * Query collection group for documents.
+ * Users need to enable single-field index before querying
+ * @see https://firebase.google.com/docs/firestore/query-data/index-overview#automatic_indexing
  *
  * @param string $projectId The Google Cloud Project ID
  */

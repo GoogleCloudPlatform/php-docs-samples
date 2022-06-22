@@ -22,7 +22,9 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit tests for Turbo Replication(RPO)
+ * Unit tests to manage a bucket's recovery point objective (RPO). An RPO value set to `DEFAULT`
+ * indicates the default replication behavior is applied to the bucket.
+ * An RPO value set to `ASYNC_TURBO` indicates turbo replication is applied to the bucket.
  */
 class TurboReplicationTest extends TestCase
 {
@@ -52,7 +54,7 @@ class TurboReplicationTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Bucket with Turbo Replication set to \'ASYNC_TURBO\' created: %s',
+                'Bucket with recovery point objective (RPO) set to \'ASYNC_TURBO\' created: %s',
                 self::$bucketName
             ),
             $output
@@ -63,9 +65,9 @@ class TurboReplicationTest extends TestCase
     }
 
     /** @depends testCreateBucketWithTurboReplication */
-    public function testGetTurboReplicationStatus()
+    public function testGetRpo()
     {
-        $output = self::runFunctionSnippet('get_turbo_replication_status', [
+        $output = self::runFunctionSnippet('get_rpo', [
             self::$bucketName,
         ]);
 
@@ -79,15 +81,15 @@ class TurboReplicationTest extends TestCase
     }
 
     /** @depends testCreateBucketWithTurboReplication */
-    public function testSetTurboReplicationStatusDefault()
+    public function testSetRpoDefault()
     {
-        $output = self::runFunctionSnippet('set_turbo_replication_default', [
+        $output = self::runFunctionSnippet('set_rpo_default', [
             self::$bucketName,
         ]);
 
         $this->assertEquals(
             sprintf(
-                'Turbo Replication has been set to DEFAULT for %s.' . PHP_EOL,
+                'The replication behavior or recovery point objective (RPO) has been set to DEFAULT for %s.' . PHP_EOL,
                 self::$bucketName
             ),
             $output
@@ -98,15 +100,15 @@ class TurboReplicationTest extends TestCase
     }
 
     /** @depends testCreateBucketWithTurboReplication */
-    public function testSetTurboReplicationStatusAsyncTurbo()
+    public function testSetRpoAsyncTurbo()
     {
-        $output = self::runFunctionSnippet('set_turbo_replication_async_turbo', [
+        $output = self::runFunctionSnippet('set_rpo_async_turbo', [
             self::$bucketName,
         ]);
 
         $this->assertEquals(
             sprintf(
-                'Turbo Replication has been set to ASYNC_TURBO for %s.' . PHP_EOL,
+                'The replication behavior or recovery point objective (RPO) has been set to ASYNC_TURBO for %s.' . PHP_EOL,
                 self::$bucketName
             ),
             $output
