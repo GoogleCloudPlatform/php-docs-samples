@@ -18,10 +18,10 @@ To authenticate with Cloud SQL, set the `$GOOGLE_APPLICATION_CREDENTIALS` enviro
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
 ```
 
-To run the Cloud SQL proxy, you need to set the instance connection name. See the instructions [here](https://cloud.google.com/sql/docs/sqlserver/quickstart-proxy-test#get_the_instance_connection_name) for finding the instance connection name.
+To run the Cloud SQL proxy, you need to set the instance connection name. See the instructions [here](https://cloud.google.com/sql/docs/sqlserver/connect-instance-auth-proxy#get-connection-name) for finding the instance connection name.
 
 ```bash
-export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_CONNECTION_NAME='<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 ```
 
 Once the proxy is ready, use one of the following commands to start the proxy in the background.
@@ -39,9 +39,9 @@ $ ./cloud_sql_proxy \
 Set the required environment variables for your connection to Cloud SQL.
 
 ```bash
-export DB_USER='my-db-user'
-export DB_PASS='my-db-pass'
-export DB_NAME='my-db-name'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
 export DB_HOST='127.0.0.1'
 ```
 
@@ -59,11 +59,17 @@ Navigate towards http://localhost:8080 to verify your application is running cor
 
 To run on App Engine Flex, create an App Engine project by following the setup for these [instructions](https://cloud.google.com/appengine/docs/standard/php7/quickstart#before-you-begin).
 
-First, update `app.yaml` with the correct values to pass the environment variables into the runtime.
+First, update [app.yaml](app.yaml) with the correct values to pass the environment variables into the runtime.
 
 In order to use the `sqlsrv` extension, you will need to build a [custom runtime](https://cloud.google.com/appengine/docs/flexible/custom-runtimes/quickstart). The `Dockerfile` in this sample contains a simple example of a custom PHP 7.2 runtime based off of the default App Engine Flex image with the `pdo_sqlsrv` extension installed.
 
-Then, make sure that the service account `service-{PROJECT_NUMBER}>@gae-api-prod.google.com.iam.gserviceaccount.com` has the IAM role `Cloud SQL Client`.
+Then, make sure that the App Engine default service account
+`<PROJECT-ID>@appspot.gserviceaccount.com` has
+the IAM role `Cloud SQL Client`.
+
+Also, make sure that the Cloud Build service account
+`cloudbuild@<PROJECT-ID>.iam.gserviceaccount.com` has
+the IAM role `Cloud SQL Client`.
 
 Next, the following command will deploy the application to your Google Cloud project:
 
