@@ -54,7 +54,7 @@ $secret = (new Secret())
   ->setVersionAliases(['test' => '1']);
 
 $updateMask = (new FieldMask())
-  ->setPaths(['versionaliases']);
+  ->setPaths(['version_aliases']);
 
 $response = $client->updateSecret($secret, $updateMask);
 
