@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\PubSub;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Creates a Pub/Sub push subscription.
+ * Creates a Pub/Sub BigQuery subscription.
  *
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
