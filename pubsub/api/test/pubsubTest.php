@@ -249,6 +249,30 @@ class PubSubTest extends TestCase
         $this->assertRegExp(sprintf('/%s/', $subscription), $output);
     }
 
+    public function testCreateAndDeleteBigQuerySubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $table = $this->requireEnv('GOOGLE_BIGQUERY_TABLE');
+        $output = $this->runFunctionSnippet('create_bigquery_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $table,
+        ]);
+
+        $this->assertRegExp('/Subscription created:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertRegExp('/Subscription deleted:/', $output);
+        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+    }
+
     public function testCreateAndDetachSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
