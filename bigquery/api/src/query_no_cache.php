@@ -56,4 +56,4 @@ foreach ($queryResults as $row) {
     }
 }
 printf('Found %s row(s)' . PHP_EOL, $i);
-# [START bigquery_query_no_cache]
+# [END bigquery_query_no_cache]

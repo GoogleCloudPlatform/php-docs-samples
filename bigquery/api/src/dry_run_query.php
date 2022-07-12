@@ -51,4 +51,4 @@ $queryJob = $bigQuery->startJob($jobConfig);
 $info = $queryJob->info();
 
 printf('This query will process %s bytes' . PHP_EOL, $info['statistics']['totalBytesProcessed']);
-# [START bigquery_query_dry_run]
+# [END bigquery_query_dry_run]
