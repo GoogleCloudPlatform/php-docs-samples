@@ -25,7 +25,7 @@
     </logging>
     <filter>
         <whitelist>
-	         <directory suffix=".php">./snippets</directory>
+	         <directory suffix=".php">./src</directory>
            <exclude>
               <directory>./vendor</directory>
             </exclude>
