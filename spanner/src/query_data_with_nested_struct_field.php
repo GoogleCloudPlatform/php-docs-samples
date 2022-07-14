@@ -47,9 +47,9 @@ function query_data_with_nested_struct_field($instanceId, $databaseId)
     $database = $instance->database($databaseId);
 
     $nameType = new ArrayType(
-       (new StructType)
-            ->add('FirstName', Database::TYPE_STRING)
-            ->add('LastName', Database::TYPE_STRING)
+        (new StructType)
+             ->add('FirstName', Database::TYPE_STRING)
+             ->add('LastName', Database::TYPE_STRING)
     );
     $songInfoType = (new StructType)
         ->add('SongName', Database::TYPE_STRING)
