@@ -253,7 +253,7 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
-        $table = $this->requireEnv('GOOGLE_BIGQUERY_TABLE');
+        $table = $this->requireEnv('GOOGLE_PUBSUB_BIGQUERY_TABLE');
         $output = $this->runFunctionSnippet('create_bigquery_subscription', [
             self::$projectId,
             $topic,

@@ -102,6 +102,7 @@ export REDIS_PORT=
 # PubSub
 export GOOGLE_PUBSUB_SUBSCRIPTION=php-example-subscription
 export GOOGLE_PUBSUB_TOPIC=php-example-topic
+export GOOGLE_PUBSUB_BIGQUERY_TABLE=$GOOGLE_PROJECT_ID.pubsub_test_dataset.pubsub_test_table
 
 # Security Center
 export GOOGLE_ORGANIZATION_ID=
