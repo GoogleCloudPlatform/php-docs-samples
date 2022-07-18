@@ -38,8 +38,7 @@ class DeployTest extends TestCase
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $this->fail($e->getResponse()->getBody());
         }
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
+        $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
         $contents = $resp->getBody()->getContents();
         $this->assertStringContainsString(
             sprintf('Bucket: %s', $projectId),

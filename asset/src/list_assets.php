@@ -31,11 +31,10 @@ function list_assets(string $projectId, array $assetTypes = [], int $pageSize = 
     $client = new AssetServiceClient();
 
     // Run request
-    $response = $client->listAssets(
-      "projects/$projectId", [
+    $response = $client->listAssets("projects/$projectId", [
         'assetTypes' => $assetTypes,
         'pageSize' => $pageSize,
-      ]);
+    ]);
 
     // Print the asset names in the result
     foreach ($response->getPage() as $asset) {
