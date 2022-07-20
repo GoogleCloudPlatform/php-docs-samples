@@ -3,7 +3,7 @@
         "php": "^7.2|^7.3|^7.4|^8.0"
     },
     "require-dev": {
-        "bshaffer/phpunit-retry-annotations": "^0.2.0",
+        "bshaffer/phpunit-retry-annotations": "^0.3.0",
         "google/auth": "^1.12",
         "google/cloud-tools": "dev-main",
         "guzzlehttp/guzzle": "^7.0",
