@@ -288,7 +288,8 @@ class secretmanagerTest extends TestCase
         $this->assertStringContainsString('Updated secret', $output);
     }
 }
-public function testUpdateSecretWithAlias()
+
+    public function testUpdateSecretWithAlias()
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
