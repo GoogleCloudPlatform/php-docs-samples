@@ -158,7 +158,9 @@ class secretmanagerTest extends TestCase
         $output = $this->runFunctionSnippet('create_secret_with_user_managed_replication', [
             $name['project'],
             $name['secret'],
-            array('us-east1', 'us-east4', 'us-west1'),
+            'us-east1',
+            'us-east4',
+            'us-west1',
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
