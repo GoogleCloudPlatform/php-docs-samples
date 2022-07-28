@@ -38,6 +38,7 @@ class secretmanagerTest extends TestCase
     private static $testSecretToDelete;
     private static $testSecretWithVersions;
     private static $testSecretToCreateName;
+    private static $testUmmrSecretToCreateName;
     private static $testSecretVersion;
     private static $testSecretVersionToDestroy;
     private static $testSecretVersionToDisable;

@@ -25,6 +25,13 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
+// Import the Secret Manager client library.
+use Google\Cloud\SecretManager\V1\Replication;
+use Google\Cloud\SecretManager\V1\Replication\Automatic;
+use Google\Cloud\SecretManager\V1\Replication\UserManaged;
+use Google\Cloud\SecretManager\V1\Replication\UserManaged\Replica;
+use Google\Cloud\SecretManager\V1\Secret;
+use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -40,7 +47,7 @@ function create_secret_with_user_managed_replication(string $projectId, string $
     $parent = $client->projectName($projectId);
 
     $replicas = array();
-    foreach($locations as $location) {
+    foreach ($locations as $location) {
         $replica = new Replica();
         $replica->setLocation($location);
         array_push($replicas, $replica);
