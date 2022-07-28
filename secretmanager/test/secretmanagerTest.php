@@ -53,6 +53,7 @@ class secretmanagerTest extends TestCase
         self::$testSecretToDelete = self::createSecret();
         self::$testSecretWithVersions = self::createSecret();
         self::$testSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testUmmrSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -67,6 +68,7 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretToDelete->getName());
         self::deleteSecret(self::$testSecretWithVersions->getName());
         self::deleteSecret(self::$testSecretToCreateName);
+        self::deleteSecret(self::$testUmmrSecretToCreateName);
     }
 
     private static function randomSecretId(): string
@@ -143,6 +145,19 @@ class secretmanagerTest extends TestCase
         $output = $this->runFunctionSnippet('create_secret', [
             $name['project'],
             $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithUserManagedReplication()
+    {
+        $name = self::$client->parseName(self::$testUmmrSecretToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_user_managed_replication', [
+            $name['project'],
+            $name['secret'],
+            array('us-east1', 'us-east4', 'us-west1'),
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
