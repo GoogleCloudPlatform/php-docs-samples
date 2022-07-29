@@ -30,21 +30,25 @@ use Google\Cloud\Storage\StorageClient;
  * Create a new bucket with a custom default storage class and location.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $location1 First location for the bucket's regions. Case-insensitive.
- * @param string $location2 Second location for the bucket's regions. Case-insensitive.
+ * @param string $location Location for the bucket's regions. Case-insensitive.
+ * @param string $region1 First region for the bucket's regions. Case-insensitive.
+ * @param string $region2 Second region for the bucket's regions. Case-insensitive.
  */
-function create_bucket_dual_region($bucketName, $location1, $location2)
+function create_bucket_dual_region($bucketName, $location, $region1, $region2)
 {
     // $bucketName = 'my-bucket';
-    // $location1 = 'US-EAST1';
-    // $location2 = 'US-WEST1';
+    // $location = 'US';
+    // $region1 = 'US-EAST1';
+    // $region2 = 'US-WEST1';
 
     $storage = new StorageClient();
     $bucket = $storage->createBucket($bucketName, [
-        'location' => "${location1}+${location2}",
+        'location' => $location,
+        'customPlacementConfig' => [
+            'dataLocations' => [$region1, $region2],
+        ],
     ]);
-
-    printf("Created dual-region bucket '%s' in '%s+%s'", $bucket->name(), $location1, $location2);
+    printf("Bucket '%s' created in '%s' and '%s'", $bucket->name(), $region1, $region2);
 }
 # [END storage_create_bucket_dual_region]
 
