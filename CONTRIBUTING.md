@@ -83,7 +83,12 @@ Use `phpunit -v` to get a more detailed output if there are errors.
 
 ## Style
 
-Samples in this repository follow the [PSR2][psr2] and [PSR4][psr4]
+The [Google Cloud Samples Style Guide][style-guide] is considered the primary
+guidelines for all Google Cloud samples. 
+
+[style-guide]: https://googlecloudplatform.github.io/samples-style-guide/
+
+Samples in this repository also follow the [PSR2][psr2] and [PSR4][psr4]
 recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer].
 
 Install that by running
