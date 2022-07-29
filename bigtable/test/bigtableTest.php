@@ -10,12 +10,13 @@ final class BigtableTest extends TestCase
 {
     use BigtableTestTrait;
 
-    const INSTANCE_ID_PREFIX = 'php-instance-';
-    const CLUSTER_ID_PREFIX = 'php-cluster-';
-    const TABLE_ID_PREFIX = 'php-table-';
-    const APP_PROFILE_ID_PREFIX = 'php-app-profile-';
-    const SERVICE_ACCOUNT_ID_PREFIX = 'php-sa-';    // Shortened due to length constraint b/w 6 and 30.
+    public const CLUSTER_ID_PREFIX = 'php-cluster-';
+    public const INSTANCE_ID_PREFIX = 'php-instance-';
+    public const TABLE_ID_PREFIX = 'php-table-';
+    public const APP_PROFILE_ID_PREFIX = 'php-app-profile-';
+    public const SERVICE_ACCOUNT_ID_PREFIX = 'php-sa-';    // Shortened due to length constraint b/w 6 and 30.
 
+    private static $autoscalingClusterId;
     private static $clusterId;
     private static $appProfileId;
     private static $serviceAccountId;
@@ -34,8 +35,9 @@ final class BigtableTest extends TestCase
 
     public function testCreateProductionInstance()
     {
-        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
+        self::$autoscalingClusterId = uniqid(self::CLUSTER_ID_PREFIX);
         self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
+        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
         self::$appProfileId = uniqid(self::APP_PROFILE_ID_PREFIX);
 
         $content = self::runFunctionSnippet('create_production_instance', [
@@ -231,6 +233,71 @@ final class BigtableTest extends TestCase
                 $this->assertTrue(true);
             }
         }
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testCreateClusterWithAutoscaling()
+    {
+        $content = self::runFunctionSnippet('create_cluster_autoscale_config', [
+          self::$projectId,
+          self::$instanceId,
+          self::$autoscalingClusterId,
+          'us-east1-c'
+        ]);
+
+        // get the cluster name created with above id
+        $clusterName = self::$instanceAdminClient->clusterName(
+            self::$projectId,
+            self::$instanceId,
+            self::$autoscalingClusterId,
+        );
+
+        $this->checkCluster($clusterName);
+        $this->assertStringContainsString(sprintf(
+            'Cluster created: %s',
+            self::$autoscalingClusterId,
+        ), $content);
+    }
+
+    /**
+     * @depends testCreateClusterWithAutoscaling
+     */
+    public function testUpdateClusterWithAutoscaling()
+    {
+        // Update autoscale config in cluster
+        $content = self::runFunctionSnippet('update_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            self::$autoscalingClusterId,
+        ]);
+
+        $this->assertStringContainsString(sprintf(
+            'Cluster %s updated with autoscale config.',
+            self::$autoscalingClusterId,
+        ), $content);
+    }
+
+    /**
+     * @depends testCreateClusterWithAutoscaling
+     */
+    public function testDisableAutoscalingInCluster()
+    {
+        $numNodes = 2;
+
+        // Disable autoscale config in cluster
+        $content = self::runFunctionSnippet('disable_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            self::$autoscalingClusterId,
+            $numNodes
+        ]);
+
+        $this->assertStringContainsString(sprintf(
+            'Cluster updated with the new num of nodes: %s.',
+            $numNodes,
+        ), $content);
     }
 
     public function testCreateDevInstance()
