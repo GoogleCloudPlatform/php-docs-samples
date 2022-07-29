@@ -48,7 +48,7 @@ function list_devices_for_gateway(
 
     // Call the API
     $devices = $deviceManager->listDevices($registryName,
-      ['gatewayListOptions' => $gatewayListOptions]
+        ['gatewayListOptions' => $gatewayListOptions]
     );
 
     // Print the result
