@@ -45,11 +45,9 @@ function create_secret_with_user_managed_replication(string $projectId, string $
     // Build the resource name of the parent project.
     $parent = $client->projectName($projectId);
 
-    $replicas = array();
+    $replicas = [];
     foreach ($locations as $location) {
-        $replica = new Replica();
-        $replica->setLocation($location);
-        array_push($replicas, $replica);
+        $replicas[] = new Replica(['location' => $location]);
     }
 
     $secret = new Secret([
