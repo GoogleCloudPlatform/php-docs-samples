@@ -1,7 +1,7 @@
 {
     "require": {
         "google/cloud-functions-framework": "^0.7.1",
-        "google/cloud-firestore": "^1.18",
+        "google/cloud-firestore": "^1.25",
         "grpc/grpc": "^v1.27.0"
     },
     "scripts": {

@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_get_key_labels]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function get_key_labels_sample(
+function get_key_labels(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -44,12 +46,6 @@ function get_key_labels_sample(
 }
 // [END kms_get_key_labels]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId) = $argv;
-    get_key_labels_sample($projectId, $locationId, $keyRingId, $keyId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_encrypt_symmetric]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function encrypt_symmetric_sample(
+function encrypt_symmetric(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -36,16 +38,11 @@ function encrypt_symmetric_sample(
     // Call the API.
     $encryptResponse = $client->encrypt($keyName, $plaintext);
     printf('Ciphertext: %s' . PHP_EOL, $encryptResponse->getCiphertext());
+
     return $encryptResponse;
 }
 // [END kms_encrypt_symmetric]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID PLAINTEXT\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $plaintext) = $argv;
-    encrypt_symmetric_sample($projectId, $locationId, $keyRingId, $keyId, $plaintext);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
