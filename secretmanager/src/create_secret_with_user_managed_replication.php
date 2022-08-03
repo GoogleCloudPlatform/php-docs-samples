@@ -52,11 +52,11 @@ function create_secret_with_user_managed_replication(string $projectId, string $
 
     $secret = new Secret([
         'replication' => new Replication([
-            'user_managed' => new UserManaged(),
+            'user_managed' => new UserManaged([
+                'replicas' => $replicas
+            ]),
         ]),
     ]);
-
-    $secret->getReplication()->getUserManaged()->setReplicas($replicas);
 
     // Create the secret.
     $secret = $client->createSecret($parent, $secretId, $secret);
