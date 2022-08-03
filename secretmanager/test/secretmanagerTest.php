@@ -115,7 +115,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersion->getName());
 
-        $output = $this->runSnippet('access_secret_version', [
+        $output = $this->runFunctionSnippet('access_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -128,7 +128,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
-        $output = $this->runSnippet('add_secret_version', [
+        $output = $this->runFunctionSnippet('add_secret_version', [
             $name['project'],
             $name['secret'],
         ]);
@@ -140,7 +140,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretToCreateName);
 
-        $output = $this->runSnippet('create_secret', [
+        $output = $this->runFunctionSnippet('create_secret', [
             $name['project'],
             $name['secret'],
         ]);
@@ -152,7 +152,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretToDelete->getName());
 
-        $output = $this->runSnippet('delete_secret', [
+        $output = $this->runFunctionSnippet('delete_secret', [
             $name['project'],
             $name['secret'],
         ]);
@@ -164,7 +164,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersionToDestroy->getName());
 
-        $output = $this->runSnippet('destroy_secret_version', [
+        $output = $this->runFunctionSnippet('destroy_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -177,7 +177,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersionToDisable->getName());
 
-        $output = $this->runSnippet('disable_secret_version', [
+        $output = $this->runFunctionSnippet('disable_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -190,7 +190,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersionToEnable->getName());
 
-        $output = $this->runSnippet('enable_secret_version', [
+        $output = $this->runFunctionSnippet('enable_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -203,7 +203,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersion->getName());
 
-        $output = $this->runSnippet('get_secret_version', [
+        $output = $this->runFunctionSnippet('get_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -217,7 +217,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('get_secret', [
+        $output = $this->runFunctionSnippet('get_secret', [
             $name['project'],
             $name['secret'],
         ]);
@@ -230,7 +230,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('iam_grant_access', [
+        $output = $this->runFunctionSnippet('iam_grant_access', [
             $name['project'],
             $name['secret'],
             self::$iamUser,
@@ -243,7 +243,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('iam_revoke_access', [
+        $output = $this->runFunctionSnippet('iam_revoke_access', [
             $name['project'],
             $name['secret'],
             self::$iamUser,
@@ -256,7 +256,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
-        $output = $this->runSnippet('list_secret_versions', [
+        $output = $this->runFunctionSnippet('list_secret_versions', [
             $name['project'],
             $name['secret'],
         ]);
@@ -268,7 +268,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('list_secrets', [
+        $output = $this->runFunctionSnippet('list_secrets', [
             $name['project'],
         ]);
 
@@ -280,7 +280,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('update_secret', [
+        $output = $this->runFunctionSnippet('update_secret', [
             $name['project'],
             $name['secret'],
         ]);
