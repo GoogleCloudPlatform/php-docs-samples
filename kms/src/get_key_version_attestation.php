@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Kms;
 
+use Exception;
 // [START kms_get_key_version_attestation]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
