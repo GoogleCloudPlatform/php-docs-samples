@@ -53,7 +53,7 @@ composer install
 ```
 
 ### Environment variables
-Some tests require specific environment variables to run. They will skip the tests
+Some tests require specific environment variables to run. PHPUnit will skip the tests
 if these environment variables are not found. Run `phpunit -v` for a message detailing
 which environment variables are missing. Then you can set those environent variables
 to run against any sample project as follows:
@@ -63,13 +63,14 @@ export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
 export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
 ```
 
-If you have access to the Google Cloud kokoro project, you can decrypt the
+If you have access to the Google Cloud Kokoro project, decrypt the
 `.kokoro/secrets.sh.enc` file and load those environment variables. Follow
 the instructions in [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh).
 
 If your tests require new environment variables, you can set them up in
-`.kokoro/secrets.sh.enc`. For instructions on managing those variables,
-view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more information.
+`.kokoro/secrets.sh.enc` so they pass on Kokoro. For instructions on managing those
+variables, view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more
+information.
 
 ### Run the tests
 
