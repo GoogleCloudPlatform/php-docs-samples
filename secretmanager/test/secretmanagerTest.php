@@ -316,4 +316,3 @@ class secretmanagerTest extends TestCase
         $this->assertStringContainsString('Updated secret', $output);
     }
 }
-
