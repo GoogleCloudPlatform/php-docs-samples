@@ -306,7 +306,7 @@ class secretmanagerTest extends TestCase
 
     public function testUpdateSecretWithAlias()
     {
-        $name = self::$client->parseName(self::$testSecret->getName());
+        $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
         $output = $this->runFunctionSnippet('update_secret_with_alias', [
             $name['project'],
