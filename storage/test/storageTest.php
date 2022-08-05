@@ -699,7 +699,6 @@ class storageTest extends TestCase
         $this->assertStringContainsString($region1, $output);
         $this->assertStringContainsString($region2, $output);
 
-
         $this->assertEquals($location, $info['location']);
         $this->assertEquals($locationType, $info['locationType']);
         $this->assertArrayHasKey('customPlacementConfig', $info);
