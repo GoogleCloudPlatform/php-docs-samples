@@ -677,6 +677,7 @@ class storageTest extends TestCase
         $location = 'US';
         $region1 = 'US-EAST1';
         $region2 = 'US-WEST1';
+        $locationType = 'dual-region';
 
         $bucketName = uniqid('samples-create-bucket-dual-region-');
         $output = self::runFunctionSnippet('create_bucket_dual_region', [
@@ -692,16 +693,15 @@ class storageTest extends TestCase
         $bucket->delete();
 
         $this->assertTrue($exists);
-        $this->assertEquals(
-            sprintf(
-                "Bucket '%s' created in '%s' and '%s'",
-                $bucketName,
-                $region1,
-                $region2
-            ),
-            $output
-        );
+        $this->assertStringContainsString($bucketName, $output);
+        $this->assertStringContainsString($location, $output);
+        $this->assertStringContainsString($locationType, $output);
+        $this->assertStringContainsString($region1, $output);
+        $this->assertStringContainsString($region2, $output);
+
+
         $this->assertEquals($location, $info['location']);
+        $this->assertEquals($locationType, $info['locationType']);
         $this->assertArrayHasKey('customPlacementConfig', $info);
         $this->assertArrayHasKey('dataLocations', $info['customPlacementConfig']);
         $this->assertContains($region1, $info['customPlacementConfig']['dataLocations']);

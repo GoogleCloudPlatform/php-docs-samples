@@ -48,7 +48,13 @@ function create_bucket_dual_region($bucketName, $location, $region1, $region2)
             'dataLocations' => [$region1, $region2],
         ],
     ]);
-    printf("Bucket '%s' created in '%s' and '%s'", $bucket->name(), $region1, $region2);
+
+    $info = $bucket->info();
+
+    printf("Created '%s':", $bucket->name());
+    printf("- location: '%s'", $info['location']);
+    printf("- locationType: '%s'", $info['locationType']);
+    printf("- customPlacementConfig: '%s'" . PHP_EOL, print_r($info['customPlacementConfig'], true));
 }
 # [END storage_create_bucket_dual_region]
 
