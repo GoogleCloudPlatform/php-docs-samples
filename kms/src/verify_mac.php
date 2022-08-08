@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_verify_mac]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function verify_mac_sample(
+function verify_mac(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -39,16 +41,11 @@ function verify_mac_sample(
     $verifyMacResponse = $client->macVerify($keyVersionName, $data, $signature);
 
     printf('Signature verified: %s' . PHP_EOL, $verifyMacResponse->getSuccess());
+
     return $verifyMacResponse;
 }
 // [END kms_verify_mac]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID DATA\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $data) = $argv;
-    verify_mac_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $data);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

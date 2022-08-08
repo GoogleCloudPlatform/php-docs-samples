@@ -55,7 +55,7 @@ function execute_sample(string $file, string $namespace, ?array $argv)
     }
 
     // Run the function
-    call_user_func_array($functionName, $argv);
+    return call_user_func_array($functionName, $argv);
 }
 
 function get_usage(string $file, ReflectionFunction $functionReflection)
