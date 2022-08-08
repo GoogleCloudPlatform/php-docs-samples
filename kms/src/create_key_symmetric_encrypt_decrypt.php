@@ -17,6 +17,8 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_create_key_symmetric_encrypt_decrypt]
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
@@ -24,7 +26,7 @@ use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function create_key_symmetric_encrypt_decrypt_sample(
+function create_key_symmetric_encrypt_decrypt(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -46,16 +48,11 @@ function create_key_symmetric_encrypt_decrypt_sample(
     // Call the API.
     $createdKey = $client->createCryptoKey($keyRingName, $id, $key);
     printf('Created symmetric key: %s' . PHP_EOL, $createdKey->getName());
+
     return $createdKey;
 }
 // [END kms_create_key_symmetric_encrypt_decrypt]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $id) = $argv;
-    create_key_symmetric_encrypt_decrypt_sample($projectId, $locationId, $keyRingId, $id);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

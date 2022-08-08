@@ -674,23 +674,37 @@ class storageTest extends TestCase
 
     public function testCreateBucketDualRegion()
     {
-        $location1 = 'US-EAST1';
-        $location2 = 'US-WEST1';
+        $location = 'US';
+        $region1 = 'US-EAST1';
+        $region2 = 'US-WEST1';
+        $locationType = 'dual-region';
 
         $bucketName = uniqid('samples-create-bucket-dual-region-');
         $output = self::runFunctionSnippet('create_bucket_dual_region', [
             $bucketName,
-            $location1,
-            $location2
+            $location,
+            $region1,
+            $region2
         ]);
 
         $bucket = self::$storage->bucket($bucketName);
+        $info = $bucket->reload();
         $exists = $bucket->exists();
         $bucket->delete();
 
         $this->assertTrue($exists);
-        $this->assertStringContainsString('Created dual-region bucket', $output);
-        $this->assertStringContainsString("${location1}+${location2}", $output);
+        $this->assertStringContainsString($bucketName, $output);
+        $this->assertStringContainsString($location, $output);
+        $this->assertStringContainsString($locationType, $output);
+        $this->assertStringContainsString($region1, $output);
+        $this->assertStringContainsString($region2, $output);
+
+        $this->assertEquals($location, $info['location']);
+        $this->assertEquals($locationType, $info['locationType']);
+        $this->assertArrayHasKey('customPlacementConfig', $info);
+        $this->assertArrayHasKey('dataLocations', $info['customPlacementConfig']);
+        $this->assertContains($region1, $info['customPlacementConfig']['dataLocations']);
+        $this->assertContains($region2, $info['customPlacementConfig']['dataLocations']);
     }
 
     public function testObjectCsekToCmek()

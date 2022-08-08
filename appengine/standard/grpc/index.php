@@ -8,7 +8,7 @@ $routes = [
 ];
 
 // Keeping things fast for a small number of routes.
-$regex = '/\/(' . join($routes, '|') . ')\.php/';
+$regex = sprintf('/\/(%s)\.php/', implode('|', $routes));
 if (preg_match($regex, $_SERVER['REQUEST_URI'], $matches)) {
     $file_path = __DIR__ . $matches[0];
     if (file_exists($file_path)) {

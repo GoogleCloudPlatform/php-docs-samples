@@ -77,8 +77,8 @@ trait BigtableTestTrait
 
         $columns = $columns ?: ['stats_summary'];
         $table = (new Table())->setColumnFamilies(array_combine(
-                $columns,
-                array_fill(0, count($columns), new ColumnFamily)
+            $columns,
+            array_fill(0, count($columns), new ColumnFamily)
         ));
 
         self::$tableAdminClient->createtable(
