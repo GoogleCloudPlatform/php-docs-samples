@@ -17,12 +17,14 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_iam_remove_member]
 use Google\Cloud\Iam\V1\Binding;
 use Google\Cloud\Iam\V1\Policy;
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function iam_remove_member_sample(
+function iam_remove_member(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -67,16 +69,11 @@ function iam_remove_member_sample(
     // Save the updated IAM policy.
     $updatedPolicy = $client->setIamPolicy($resourceName, $newPolicy);
     printf('Removed %s' . PHP_EOL, $member);
+
     return $updatedPolicy;
 }
 // [END kms_iam_remove_member]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID MEMBER\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $member) = $argv;
-    iam_remove_member_sample($projectId, $locationId, $keyRingId, $keyId, $member);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
