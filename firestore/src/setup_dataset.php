@@ -38,7 +38,7 @@ function setup_dataset(string $projectId): void
     ]);
     # [START fs_add_data_1]
     # [START firestore_setup_dataset_pt1]
-    $docRef = $db->collection('samples/php/users')->document('lovelace');
+    $docRef = $db->collection('samples/php/users')->document('alovelace');
     $docRef->set([
         'first' => 'Ada',
         'last' => 'Lovelace',

@@ -188,8 +188,7 @@ if ($client->getAccessToken()) {
     $new_instance->setMachineType($machineType);
     $new_instance->setNetworkInterfaces(array($googleNetworkInterfaceObj));
 
-    $insertInstance = $computeService->instances->insert(DEFAULT_PROJECT,
-    $zone, $new_instance);
+    $insertInstance = $computeService->instances->insert(DEFAULT_PROJECT, $zone, $new_instance);
     $insertInstanceMarkup = generateMarkup('Insert Instance', $insertInstance);
 
     /**
