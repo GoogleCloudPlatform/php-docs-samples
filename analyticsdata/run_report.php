@@ -43,6 +43,7 @@ use Google\Analytcs\Data\V1beta\MetricHeader;
 use Google\Analytics\Data\V1beta\MetricType;
 
 function runReport(){
+    // [START analyticsdata_run_report]
     /**
      * TODO(developer): Replace this variable with your Google Analytics 4
      *   property ID before running the sample.
@@ -56,7 +57,6 @@ function runReport(){
 
     // [END analyticsdata_initialize]
 
-    // [START analyticsdata_run_report]
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $property_id,
