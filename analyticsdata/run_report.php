@@ -37,53 +37,74 @@ require 'vendor/autoload.php';
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
+use Google\Analytics\Data\V1beta\DimensionHeader;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytcs\Data\V1beta\MetricHeader;
+use Google\Analytics\Data\V1beta\MetricType;
 
-/**
- * TODO(developer): Replace this variable with your Google Analytics 4
- *   property ID before running the sample.
- */
-$property_id = 'YOUR-GA4-PROPERTY-ID';
+function runReport(){
+    /**
+     * TODO(developer): Replace this variable with your Google Analytics 4
+     *   property ID before running the sample.
+     */
+    $property_id = 'YOUR-GA4-PROPERTY-ID';
 
-// [START analyticsdata_initialize]
-//Imports the Google Analytics Data API client library.'
+    // [START analyticsdata_initialize]
+    //Imports the Google Analytics Data API client library.'
 
-$client = new BetaAnalyticsDataClient();
+    $client = new BetaAnalyticsDataClient();
 
-// [END analyticsdata_initialize]
+    // [END analyticsdata_initialize]
 
-// [START analyticsdata_run_report]
-// Make an API call.
-$response = $client->runReport([
-    'property' => 'properties/' . $property_id,
-    'dateRanges' => [
-        new DateRange([
-            'start_date' => '2020-03-31',
-            'end_date' => 'today',
-        ]),
-    ],
-    'dimensions' => [new Dimension(
-        [
-            'name' => 'city',
+    // [START analyticsdata_run_report]
+    // Make an API call.
+    $response = $client->runReport([
+        'property' => 'properties/' . $property_id,
+        'dateRanges' => [
+            new DateRange([
+                'start_date' => '2020-09-01',
+                'end_date' => '2020-09-15',
+            ]),
+        ],
+        'dimensions' => [new Dimension(
+            [
+                'name' => 'country',
+            ]
+        ),
+        ],
+        'metrics' => [new Metric(
+            [
+                'name' => 'activeUsers',
+            ]
+        )
         ]
-    ),
-    ],
-    'metrics' => [new Metric(
-        [
-            'name' => 'activeUsers',
-        ]
-    )
-    ]
-]);
-// [END analyticsdata_run_report]
+    ]);
 
-// [START analyticsdata_run_report_response]
-// Print results of an API call.
-print 'Report result: ' . PHP_EOL;
+    printRunReportResponse($response);
 
-foreach ($response->getRows() as $row) {
-    print $row->getDimensionValues()[0]->getValue()
+}
+
+// Print results of a runReport call.
+function printRunReportResponse($response)
+{
+    // [START analyticsdata_print_run_report_response_header]
+    printf("%s rows received%s",$response->getRowCount(),PHP_EOL);
+    foreach ($response->getDimensionHeaders() as $dimensionHeader) {
+        printf("Dimension header name: %s%s", $dimensionHeader->getName(), PHP_EOL);
+    }
+    foreach($response->getMetricHeaders() as $metricHeader) {
+        printf("Metric header name: %s (%s)%s", $metricHeader->getName(), MetricType::name($metricHeader->getType()), PHP_EOL);
+    }
+    // [END analyticsdata_print_run_report_response_header]
+
+    // [START analyticsdata_print_run_report_response_rows]
+    print 'Report result: ' . PHP_EOL;
+
+    foreach ($response->getRows() as $row) {
+        print $row->getDimensionValues()[0]->getValue()
         . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
-    // [END analyticsdata_run_report_response]
+    }
+    // [END analyticsdata_print_run_report_response_rows]
 }
 // [END analyticsdata_run_report]
+runReport();

@@ -22,7 +22,7 @@ class runReportTest extends TestCase
 {
     use TestTrait;
 
-    public function testrunReport()
+    public function testRunReport()
     {
         $file = sys_get_temp_dir() . '/analyticsdata_run_report';
         $contents = file_get_contents(__DIR__ . '/../run_report.php');
