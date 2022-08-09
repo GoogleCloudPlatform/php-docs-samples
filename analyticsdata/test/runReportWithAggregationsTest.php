@@ -22,7 +22,7 @@ class runReportWithAggregationsTest extends TestCase
 {
     use TestTrait;
 
-    public function testrunReportWithAggregations()
+    public function testRunReportWithAggregations()
     {
         $file = sys_get_temp_dir() . '/analyticsdata_run_report_with_aggregations';
         $contents = file_get_contents(__DIR__ . '/../run_report_with_aggregations.php');

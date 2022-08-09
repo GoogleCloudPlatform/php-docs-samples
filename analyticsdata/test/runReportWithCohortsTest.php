@@ -22,7 +22,7 @@ class runReportWithCohortsTest extends TestCase
 {
     use TestTrait;
 
-    public function testrunReportWithCohorts()
+    public function testRunReportWithCohorts()
     {
         $file = sys_get_temp_dir() . '/analyticsdata_run_report_with_cohorts';
         $contents = file_get_contents(__DIR__ . '/../run_report_with_cohorts.php');
