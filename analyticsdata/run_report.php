@@ -93,7 +93,8 @@ function printRunReportResponse($response)
         printf("Dimension header name: %s%s", $dimensionHeader->getName(), PHP_EOL);
     }
     foreach($response->getMetricHeaders() as $metricHeader) {
-        printf("Metric header name: %s (%s)%s", $metricHeader->getName(), MetricType::name($metricHeader->getType()), PHP_EOL);
+        printf("Metric header name: %s (%s)%s", $metricHeader->getName(),
+            MetricType::name($metricHeader->getType()), PHP_EOL);
     }
     // [END analyticsdata_print_run_report_response_header]
 
