@@ -56,18 +56,36 @@ $client = new BetaAnalyticsDataClient();
 // Make an API call.
 $response = $client->runReport([
     'property' => 'properties/' . $property_id,
+    'dimensions' => [new Dimension(
+        [
+            'name' => 'cohort',
+        ]
+    ),
+    new Dimension(
+        [
+            'name' => 'cohortNthWeek',
+        ]
+    ),
+    ],
+    'metrics' => [new Metric(
+        [
+            'name' => 'cohortActiveUsers',
+            'expression' => 'cohortActiveUsers/cohortTotalUsers'
+        ]
+        ),
+        new Metric(
+            [
+                'name' => 'cohortRetentionRate',
+            ]
+        )
+        ],
     'dateRanges' => [
         new DateRange([
             'start_date' => '2020-03-31',
             'end_date' => 'today',
         ]),
     ],
-    'dimensions' => [new Dimension(
-        [
-            'name' => 'city',
-        ]
-    ),
-    ],
+
     'metrics' => [new Metric(
         [
             'name' => 'activeUsers',
