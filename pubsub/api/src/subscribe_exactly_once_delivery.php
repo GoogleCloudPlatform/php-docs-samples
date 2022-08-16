@@ -49,7 +49,7 @@ function subscribe_exactly_once_delivery(
         // Passing the `returnFailures` flag retries any temporary failures received
         // while acking the msg and also returns any permanently failed msgs.
         // Passing this flag on a subscription with exactly once delivery disabled
-        // will have no effect.
+        // will always return an empty array.
         $failedMsgs = $subscription->acknowledge($message, ['returnFailures' => true]);
 
         if (empty($failedMsgs)) {
