@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
 
 """Google Analytics Data API sample application demonstrating the creation
 of a basic report.
@@ -42,7 +42,8 @@ use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytcs\Data\V1beta\MetricHeader;
 use Google\Analytics\Data\V1beta\MetricType;
 
-function runReport(){
+function runReport()
+{
     /**
      * TODO(developer): Replace this variable with your Google Analytics 4
      *   property ID before running the sample.
@@ -80,20 +81,23 @@ function runReport(){
     ]);
 
     printRunReportResponse($response);
-
 }
 
 // Print results of a runReport call.
 function printRunReportResponse($response)
 {
     // [START analyticsdata_print_run_report_response_header]
-    printf("%s rows received%s",$response->getRowCount(),PHP_EOL);
+    printf("%s rows received%s", $response->getRowCount(), PHP_EOL);
     foreach ($response->getDimensionHeaders() as $dimensionHeader) {
         printf("Dimension header name: %s%s", $dimensionHeader->getName(), PHP_EOL);
     }
-    foreach($response->getMetricHeaders() as $metricHeader) {
-        printf("Metric header name: %s (%s)%s", $metricHeader->getName(),
-            MetricType::name($metricHeader->getType()), PHP_EOL);
+    foreach ($response->getMetricHeaders() as $metricHeader) {
+        printf(
+            "Metric header name: %s (%s)%s",
+            $metricHeader->getName(),
+            MetricType::name($metricHeader->getType()),
+            PHP_EOL
+        );
     }
     // [END analyticsdata_print_run_report_response_header]
 
