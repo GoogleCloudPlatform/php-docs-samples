@@ -31,6 +31,13 @@ class PubSubTest extends TestCase
     use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
 
+    private static $eodSubscriptionId;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$eodSubscriptionId = 'test-eod-subscription-' . rand();
+    }
+
     public function testSubscriptionPolicy()
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
@@ -225,6 +232,20 @@ class PubSubTest extends TestCase
         ), $output);
     }
 
+    public function testCreateSubscriptionWithExactlyOnceDelivery()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = self::$eodSubscriptionId;
+
+        $output = $this->runFunctionSnippet('create_subscription_with_exactly_once_delivery', [
+            self::$projectId,
+            $topic,
+            $subscription
+        ]);
+
+        $this->assertStringContainsString('Subscription created with exactly once delivery status: true', $output);
+    }
+
     public function testCreateAndDeletePushSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
@@ -355,5 +376,37 @@ class PubSubTest extends TestCase
 
         shell_exec('kill -9 ' . $pid);
         putenv('IS_BATCH_DAEMON_RUNNING=');
+    }
+
+    /**
+     * @depends testCreateSubscriptionWithExactlyOnceDelivery
+     */
+    public function testSubscribeExactlyOnceDelivery()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = self::$eodSubscriptionId;
+
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->runEventuallyConsistentTest(function () use ($subscription) {
+            $output = $this->runFunctionSnippet('subscribe_exactly_once_delivery', [
+                self::$projectId,
+                $subscription,
+            ]);
+
+            // delete the subscription
+            $this->runFunctionSnippet('delete_subscription', [
+                self::$projectId,
+                $subscription,
+            ]);
+
+            // There should be at least one acked message
+            // pulled from the subscription.
+            $this->assertRegExp('/Acknowledged message:/', $output);
+        });
     }
 }
