@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-pubsub": "^1.31",
+        "google/cloud-pubsub": "^1.39",
         "wikimedia/avro": "^1.9"
     }
 }
