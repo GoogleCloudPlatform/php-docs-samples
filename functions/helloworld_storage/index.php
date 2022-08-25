@@ -42,5 +42,5 @@ function helloGCS(CloudEventInterface $cloudevent)
     fwrite($log, 'Updated: ' . $data['updated'] . PHP_EOL);
 }
 
-// [START functions_cloudevent_storage]
+// [END functions_cloudevent_storage]
 // [END functions_helloworld_storage]
