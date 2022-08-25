@@ -17,8 +17,10 @@
 
 namespace Google\Cloud\Samples\Analytics\Data\Tests;
 
+use Google\ApiCore\ValidationException;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 
 class analyticsDataTest extends TestCase
 {
@@ -30,5 +32,22 @@ class analyticsDataTest extends TestCase
         $output = $this->runFunctionSnippet('run_report', [$propertyId]);
 
         $this->assertRegExp('/Report result/', $output);
+    }
+
+    public function testClientFromJsonCredentials()
+    {
+        $jsonCredentials = self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
+        $this->runFunctionSnippet('client_from_json_credentials', [$jsonCredentials]);
+
+        $client = $this->getLastReturnedSnippetValue();
+
+        $this->assertInstanceOf(BetaAnalyticsDataClient::class, $client);
+
+        try {
+            $this->runFunctionSnippet('client_from_json_credentials', ['does-not-exist.json']);
+            $this->fail('Non-existant json credentials should throw exception');
+        } catch (ValidationException $ex) {
+            $this->assertStringContainsString('does-not-exist.json', $ex->getMessage());
+        }
     }
 }
