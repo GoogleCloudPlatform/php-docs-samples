@@ -15,20 +15,11 @@
  * limitations under the License.
  */
 
-/*
-
-"""Google Analytics Data API sample application demonstrating the creation
-of a basic report.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
-for more information.
-"""
-
-Before you start the application, please review the comments starting with
-"TODO(developer)" and update the code to use the correct values.
-
-Usage:
-  composer update
-  php run_report.php
+/**
+ * Google Analytics Data API sample application demonstrating the creation
+ * of a basic report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
+ * for more information.
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
