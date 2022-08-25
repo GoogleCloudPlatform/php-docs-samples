@@ -33,7 +33,7 @@ accept your pull requests.
 
 ## Writing a new sample
 
-Write samples according to the [sample style guide](https://googlecloudplatform.github.io/samples-style-guide/)
+Write samples according to the [sample style guide](https://googlecloudplatform.github.io/samples-style-guide/).
 
 ## Testing your code changes.
 
