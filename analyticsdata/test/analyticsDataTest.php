@@ -15,27 +15,19 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Analytics\Data\Tests;
+
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
-class runReportTest extends TestCase
+class analyticsDataTest extends TestCase
 {
     use TestTrait;
 
     public function testRunReport()
     {
-        $file = sys_get_temp_dir() . '/analyticsdata_run_report';
-        $contents = file_get_contents(__DIR__ . '/../run_report.php');
-        $test_property_id = self::$GA_TEST_PROPERTY_ID || '222596558';
-        $contents = str_replace(
-            ['YOUR-GA4-PROPERTY-ID', '__DIR__'],
-            [$test_property_id, sprintf('"%s/.."', __DIR__)],
-            $contents
-        );
-        file_put_contents($file, $contents);
-
-        // Invoke run_report.php
-        $output = $this->runSnippet($file);
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report', [$propertyId]);
 
         $this->assertRegExp('/Report result/', $output);
     }

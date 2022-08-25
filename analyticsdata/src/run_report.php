@@ -31,58 +31,49 @@ Usage:
   php run_report.php
  */
 
-// [START analyticsdata_run_report]
-require 'vendor/autoload.php';
+namespace Google\Cloud\Samples\Analytics\Data;
 
+// [START analyticsdata_run_report]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportResponse;
 
-function runReport()
+function run_report(string $propertyId)
 {
-    /**
-     * TODO(developer): Replace this variable with your Google Analytics 4
-     *   property ID before running the sample.
-     */
-    $property_id = 'YOUR-GA4-PROPERTY-ID';
-
     // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
-
     $client = new BetaAnalyticsDataClient();
 
     // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
-        'property' => 'properties/' . $property_id,
+        'property' => 'properties/' . $propertyId,
         'dateRanges' => [
             new DateRange([
                 'start_date' => '2020-09-01',
                 'end_date' => '2020-09-15',
             ]),
         ],
-        'dimensions' => [new Dimension(
-            [
+        'dimensions' => [
+            new Dimension([
                 'name' => 'country',
-            ]
-        ),
+            ]),
         ],
-        'metrics' => [new Metric(
-            [
+        'metrics' => [
+            new Metric([
                 'name' => 'activeUsers',
-            ]
-        )
-        ]
+            ]),
+        ],
     ]);
 
     printRunReportResponse($response);
 }
 
 // Print results of a runReport call.
-function printRunReportResponse($response)
+function printRunReportResponse(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -109,4 +100,7 @@ function printRunReportResponse($response)
     // [END analyticsdata_print_run_report_response_rows]
 }
 // [END analyticsdata_run_report]
-runReport();
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
