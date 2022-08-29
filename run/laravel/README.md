@@ -4,6 +4,11 @@
 
 This sample shows you how to deploy Laravel on Cloud Run, connecting to a Cloud SQL database, and using Secret Manager for credential management.
 
+The deployed example will be a simple CRUD application listing products, and a customised Laravel welcome page showing the deployment information. 
+
+![Laravel Demo Screenshot](laravel-demo-screenshot.png)
+
+
 ## Objectives
 
 In this tutorial, you will:
