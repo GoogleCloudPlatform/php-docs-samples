@@ -1,7 +1,5 @@
 # Laravel on Cloud Run
 
-**This tutorial is in preview and is subject to change**. 
-
 This sample shows you how to deploy Laravel on Cloud Run, connecting to a Cloud SQL database, and using Secret Manager for credential management.
 
 The deployed example will be a simple CRUD application listing products, and a customised Laravel welcome page showing the deployment information. 
@@ -59,12 +57,6 @@ This tutorial uses the following billable components of Google Cloud:
     ```bash
     git clone https://github.com/GoogleCloudPlatform/php-docs-samples.git
     cd php-docs-samples/run/laravel/
-
-    # **PREVIEW**: Clone the fork and checkout the branch
-    git clone https://github.com/glasnt/php-docs-samples.git
-    cd php-docs-samples
-    git checkout run/laravel
-    cd run/laravel/
     ```
 
 ## Confirm your PHP setup
@@ -107,7 +99,7 @@ This tutorial uses the following billable components of Google Cloud:
 
 ## Preparing backing services
 
-**PREVIEW**: There are many variables in this tutorial. Set these early to help with copying code snippets: 
+There are many variables in this tutorial. Set these early to help with copying code snippets: 
 
 ```
 export PROJECT_ID=$(gcloud config get-value project)
@@ -175,15 +167,16 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 ### Configuring the Laravel Application
 
-**PREVIEW**: replace `${}` with your values, don't use the literals.
-Get these values with e.g. `echo ${DATABASE_NAME}`
 
 * Copy the `.env.example` file into `.env`
     ```bash
     cp .env.example .env
     ```
 
-* Update the values in `.env` with your values: 
+* Update the values in `.env` with your values. 
+    
+    ⚠️ Replace `${}` with your values, don't use the literals.
+Get these values with e.g. `echo ${DATABASE_NAME}`
     * DB_CONNECTION: `mysql`
     * DB_SOCKET:  `/cloudsql/${PROJECT_ID}:${REGION}:${INSTANCE_NAME}`
     * DB_DATABASE: `${DATABASE_NAME}`
