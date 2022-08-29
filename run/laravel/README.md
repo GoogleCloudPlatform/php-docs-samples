@@ -92,6 +92,14 @@ This tutorial uses the following billable components of Google Cloud:
     ```
 
 
+* Install the Node dependencies: 
+
+    ```bash
+    npm install
+    ```
+
+
+
 ## Preparing backing services
 
 **PREVIEW**: There are many variables in this tutorial. Set these early to help with copying code snippets: 
@@ -234,8 +242,8 @@ The configuration is similar to the deployment to Cloud Run, requiring the datab
 
 * Confirm the application of database migrations by clicking the "See logs for this execution" link. 
 
- * You should see "INFO Running migrations." with multiple items labelled "DONE". 
- * You will also see "Container called exit(0).", where `0` is the exit code for success.
+  * You should see "INFO Running migrations." with multiple items labelled "DONE". 
+  * You should also see "Container called exit(0).", where `0` is the exit code for success.
 
 ### Upload static assets
 
@@ -251,7 +259,7 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
 * Confirm the output of this operation
 
- * You should see vite returning "N modules transformed", and gsutil returning "Operation completed over N objects"
+   * You should see vite returning "N modules transformed", and gsutil returning "Operation completed over N objects"
 
 ### Deploy the service to Cloud Run
 
@@ -273,13 +281,13 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
 1. Confirm the information in the lower right of the Laravel welcome screen. 
 
-* You should see a variation of "Laravel v9.26.1 (PHP v8.1.9)" (the exact version of Laravel and PHP may change)
-* You should see the a variation of "Service: laravel. Revision laravel-00001-vid." (the revision name ends in three random characters, which will differ for every deployment)
-* You should see "Project: PROJECT_ID. Region REGION."
+   * You should see a variation of "Laravel v9.26.1 (PHP v8.1.9)" (the exact version of Laravel and PHP may change)
+   * You should see the a variation of "Service: laravel. Revision laravel-00001-vid." (the revision name ends in three random characters, which will differ for every deployment)
+   * You should see "Project: PROJECT_ID. Region REGION."
 
 1. Click on the "demo products" link, and create some entries. 
 
-* You should be able to see a styled page, confirming static assets are being served. 
+   * You should be able to see a styled page, confirming static assets are being served. 
 You should be able to write entries to the database, and read them back again, confirming database connectivity. 
 
 ## Updating the application
