@@ -17,7 +17,7 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'name' =>  ucwords(fake()->safeColorName() . ' ' . fake()->word()),
+            'name' => ucwords(fake()->safeColorName() . ' ' . fake()->word()),
             'description' => fake()->sentence()
         ];
     }

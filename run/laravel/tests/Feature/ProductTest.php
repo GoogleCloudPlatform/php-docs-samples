@@ -25,8 +25,8 @@ class ProductTest extends TestCase
     public function test_create_product()
     {
         $response = $this->followingRedirects()->post('/products', [
-            'name' => "Test Product",
-            'description' => "Test Description"
+            'name' => 'Test Product',
+            'description' => 'Test Description'
         ]);
 
         $response->assertSuccessful();

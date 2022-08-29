@@ -14,7 +14,7 @@ if (!function_exists('request_metadata')) {
     function request_metadata($metadataKey)
     {
         if (!GCECredentials::onGce()) {
-            return "Unknown";
+            return 'Unknown';
         }
 
         $metadata = new Google\Cloud\Core\Compute\Metadata();
