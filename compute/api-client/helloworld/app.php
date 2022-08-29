@@ -374,7 +374,7 @@ if ($client->getAccessToken()) {
         } else {
             print "<a class='logout' href='?logout'>Logout</a>";
         }
-      ?>
+?>
     </div>
   </body>
 </html>
