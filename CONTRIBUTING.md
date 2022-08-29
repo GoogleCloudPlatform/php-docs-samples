@@ -91,13 +91,9 @@ Use `phpunit -v` to get a more detailed output if there are errors.
 
 ## Style
 
-The [Google Cloud Samples Style Guide][style-guide] is considered the primary
-guidelines for all Google Cloud samples. 
-
-[style-guide]: https://googlecloudplatform.github.io/samples-style-guide/
-
-Samples in this repository also follow the [PSR2][psr2] and [PSR4][psr4]
-recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer].
+Samples in this repository follow the [PSR2][psr2] and [PSR4][psr4]
+recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer], using
+the config in [.php-cs-fixer.dist.php](.php-cs-fixer.dist.php).
 
 Install that by running
 
@@ -108,8 +104,8 @@ composer global require friendsofphp/php-cs-fixer
 Then to fix your directory or file run 
 
 ```
-php-cs-fixer fix .
-php-cs-fixer fix path/to/file
+php-cs-fixer fix . --config .php-cs-fixer.dist.php
+php-cs-fixer fix path/to/file --config .php-cs-fixer.dist.php
 ```
 
 The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp) are an example of snippets following the latest style guidelines.
