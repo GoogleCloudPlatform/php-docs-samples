@@ -17,11 +17,11 @@ use App\Http\Controllers\ProductController;
 
 
 Route::get('/', function () {
-    /** 
-     * Populate useful information from the running service. 
+    /**
+     * Populate useful information from the running service.
      */
 
-    // [START cloudrun_laravel_display_metadata] 
+    // [START cloudrun_laravel_display_metadata]
     $long_region = explode("/", request_metadata("instance/region"));
 
     $view_variables = [
@@ -32,7 +32,7 @@ Route::get('/', function () {
     ];
 
     return view('welcome', $view_variables);
-    // [END cloudrun_laravel_display_metadata] 
+    // [END cloudrun_laravel_display_metadata]
 });
 
 

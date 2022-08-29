@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-
     use RefreshDatabase;
     public function test_product_index()
     {
@@ -23,7 +22,7 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_create_product() 
+    public function test_create_product()
     {
         $response = $this->followingRedirects()->post('/products', [
             'name' => "Test Product",
@@ -33,18 +32,13 @@ class ProductTest extends TestCase
         $response->assertSuccessful();
 
         $this->assertDatabaseCount('products', 1);
- 
-
     }
 
-    public function test_database_seed() 
+    public function test_database_seed()
     {
         $this->artisan('db:seed');
 
         $response = $this->get('/products');
         $response->assertStatus(200);
-
-        
-
     }
 }
