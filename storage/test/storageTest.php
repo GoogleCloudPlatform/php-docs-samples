@@ -757,6 +757,58 @@ class storageTest extends TestCase
         );
     }
 
+    public function testCreateBucketWithAutoclass()
+    {
+        $bucketName = uniqid('samples-create-autoclass-');
+
+        $output = self::runFunctionSnippet('create_bucket_autoclass', [
+            $bucketName,
+        ]);
+        $output .= self::runFunctionSnippet('get_bucket_autoclass', [
+            $bucketName,
+        ]);
+        $bucket = self::$storage->bucket($bucketName);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf('Created bucket %s in %s with autoclass enabled', $bucketName, 'ASIA'),
+            $output
+        );
+        $this->assertStringContainsString(
+            sprintf('Bucket %s has autoclass enabled: %s', $bucketName, true),
+            $output
+        );
+    }
+
+    public function testSetBucketWithAutoclass()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'));
+        $info = $bucket->reload();
+        $this->assertFalse($info['autoclass']['enabled']);
+
+        $output = self::runFunctionSnippet('set_bucket_autoclass', [
+            $bucket->name(),
+            true
+        ]);
+        $output .= self::runFunctionSnippet('get_bucket_autoclass', [
+          $bucket->name(),
+        ]);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Updated bucket %s with autoclass enabled',
+                $bucket->name(),
+                true
+            ),
+            $output
+        );
+        $this->assertStringContainsString(
+            sprintf('Bucket %s has autoclass enabled: %s', $bucket->name(), true),
+            $output
+        );
+    }
+
     public function testDeleteFileArchivedGeneration()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-delete-file-archived-generation-'), [
