@@ -49,25 +49,25 @@ function pg_jsonb_update_data(
         ],
         [
             'VenueId' => 4,
-            'VenueDetails' => json_encode([
-                [
-                    'name' => null,
-                    'available' => true
-                ],
+            'VenueDetails' => '[
+                {
+                    "name": null,
+                    "available": true
+                },' .
                 // PG JSONB sorts first by key length and then lexicographically with
                 // equivalent key length and takes the last value in the case of duplicate keys
-                [
-                    'name' => 'room 2',
-                    'available' => false,
-                    'name' => 'room 3'
-                ],
-                [
-                    'main hall' => [
-                        'description' => 'this is the biggest space',
-                        'size' => 200
-                    ]
-                ]
-            ])
+                '{
+                    "name": "room 2",
+                    "available": false,
+                    "name": "room 3"
+                },
+                {
+                    "main hall": {
+                        "description": "this is the biggest space",
+                        "size": 200
+                    }
+                }
+            ]'
         ],
         [
             'VenueId' => 42,
