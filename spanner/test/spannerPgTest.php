@@ -22,20 +22,15 @@ use Google\Cloud\Spanner\Instance;
 use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @retryAttempts 3
- * @retryDelayMethod exponentialBackoff
- */
 class spannerPgTest extends TestCase
 {
     use TestTrait {
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    use RetryTrait, EventuallyConsistentTestTrait;
+    use EventuallyConsistentTestTrait;
 
     /** @var string instanceId */
     protected static $instanceId;
@@ -285,6 +280,19 @@ class spannerPgTest extends TestCase
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString(sprintf('Inserted/updated 3 rows in table %s', self::$jsonbTable), $output);
+    }
+
+    /**
+     * @depends testJsonbUpdateData
+     */
+    public function testJsonbQueryParam()
+    {
+        $output = $this->runFunctionSnippet('pg_jsonb_query_parameter', [
+            self::$instanceId, self::$databaseId, self::$jsonbTable
+        ]);
+        self::$lastUpdateDataTimestamp = time();
+
+        $this->assertEquals('VenueId: 1, VenueDetails: {"open": true, "rating": 9}' . PHP_EOL, $output);
     }
 
     /**
