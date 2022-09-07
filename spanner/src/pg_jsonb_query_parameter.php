@@ -35,8 +35,11 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $tableName The table from which the data needs to be queried.
  */
-function pg_jsonb_query_parameter(string $instanceId, string $databaseId, string $tableName = 'Venues'): void
-{
+function pg_jsonb_query_parameter(
+    string $instanceId,
+    string $databaseId,
+    string $tableName = 'Venues'
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
