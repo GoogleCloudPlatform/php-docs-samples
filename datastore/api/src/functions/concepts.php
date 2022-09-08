@@ -324,20 +324,20 @@ function basic_query(DatastoreClient $datastore)
 function basic_gql_query(DatastoreClient $datastore)
 {
     // [START datastore_basic_gql_query]
-    $query = $datastore->gqlQuery(<<<EOF
+    $gql = <<<EOF
 SELECT * from Task
 where
     done = @a
     AND priority >= @b
 order by
     priority desc
-EOF,
-        [
-            'bindings' => [
-                'a' => false,
-                'b' => 4,
-            ],
-        ]);
+EOF;
+    $query = $datastore->gqlQuery($gql, [
+                  'bindings' => [
+                      'a' => false,
+                      'b' => 4,
+                  ],
+              ]);
     // [END datastore_basic_gql_query]
     return $query;
 }
@@ -346,6 +346,7 @@ EOF,
  * Run a given query.
  *
  * @param DatastoreClient $datastore
+ * @param Query|GqlQuery $query
  * @return EntityIterator<Entity>
  */
 function run_query(DatastoreClient $datastore, $query)
