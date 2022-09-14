@@ -37,7 +37,8 @@ function create_bucket_autoclass($bucketName)
     // $bucketName = 'my-bucket';
 
     $storage = new StorageClient();
-    $location = 'ASIA';
+    $location = 'US';
+
     $bucket = $storage->createBucket($bucketName, [
         'autoclass' => [
             'enabled' => true,

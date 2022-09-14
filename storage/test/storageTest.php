@@ -771,7 +771,11 @@ class storageTest extends TestCase
         $bucket->delete();
 
         $this->assertStringContainsString(
-            sprintf('Created bucket %s in %s with autoclass enabled', $bucketName, 'ASIA'),
+            sprintf(
+                'Created bucket %s in %s with autoclass enabled',
+                $bucketName,
+                'US'
+            ),
             $output
         );
         $this->assertStringContainsString(
