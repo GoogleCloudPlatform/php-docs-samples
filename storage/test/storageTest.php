@@ -788,7 +788,7 @@ class storageTest extends TestCase
     {
         $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'));
         $info = $bucket->reload();
-        $this->assertFalse($info['autoclass']['enabled']);
+        $this->assertArrayNotHasKey('autoclass', $info);
 
         $output = self::runFunctionSnippet('set_bucket_autoclass', [
             $bucket->name(),
