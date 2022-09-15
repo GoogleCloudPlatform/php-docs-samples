@@ -25,6 +25,7 @@ namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_create_bigquery_subscription]
 use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\PubSub\V1\BigQueryConfig;
 
 /**
  * Creates a Pub/Sub BigQuery subscription.
@@ -41,8 +42,9 @@ function create_bigquery_subscription($projectId, $topicName, $subscriptionName,
     ]);
     $topic = $pubsub->topic($topicName);
     $subscription = $topic->subscription($subscriptionName);
+    $config = new BigQueryConfig(['table' => $table]);
     $subscription->create([
-        'bigqueryConfig' => ['table' => $table]
+        'bigqueryConfig' => $config
     ]);
 
     printf('Subscription created: %s' . PHP_EOL, $subscription->name());
