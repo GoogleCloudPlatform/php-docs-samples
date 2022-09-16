@@ -333,11 +333,11 @@ order by
     priority desc
 EOF;
     $query = $datastore->gqlQuery($gql, [
-                  'bindings' => [
-                      'a' => false,
-                      'b' => 4,
-                  ],
-              ]);
+        'bindings' => [
+            'a' => false,
+            'b' => 4,
+        ],
+    ]);
     // [END datastore_basic_gql_query]
     return $query;
 }
