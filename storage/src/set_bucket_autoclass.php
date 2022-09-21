@@ -24,30 +24,33 @@
 namespace Google\Cloud\Samples\Storage;
 
 # [START storage_set_autoclass]
-
 use Google\Cloud\Storage\StorageClient;
 
 /**
  * Updates an existing bucket with provided autoclass toggle.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param bool $toggle If true, enables Autoclass. If false, disables Autoclas.
+ * @param bool $autoclassStatus If true, enables Autoclass. Disables otherwise.
  */
-function set_bucket_autoclass($bucketName, $toggle)
+function set_bucket_autoclass(string $bucketName, bool $autoclassStatus): void
 {
     // $bucketName = 'my-bucket';
-    // $toggle = false;
+    // $autoclassStatus = false;
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
     $bucket->update([
         'autoclass' => [
-            'enabled' => true,
+            'enabled' => $autoclassStatus,
         ],
     ]);
 
-    printf('Updated bucket %s with autoclass enabled' . PHP_EOL, $bucketName);
+    printf(
+        'Updated bucket %s with autoclass set to %s.' . PHP_EOL,
+        $bucketName,
+        $autoclassStatus ? 'true' : 'false'
+    );
 }
 # [END storage_set_autoclass]
 

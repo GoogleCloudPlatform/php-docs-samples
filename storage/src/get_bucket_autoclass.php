@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Storage;
 
 # [START storage_get_autoclass]
-
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -32,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function get_bucket_autoclass($bucketName)
+function get_bucket_autoclass(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 
@@ -48,10 +47,7 @@ function get_bucket_autoclass($bucketName)
         );
         printf('Bucket %s has autoclass toggle time: %s' . PHP_EOL,
             $bucketName,
-            \DateTimeImmutable::createFromFormat(
-                \DateTime::RFC3339,
-                strtotime($info['autoclass']['toggleTime'])
-            )
+            $info['autoclass']['toggleTime']
         );
     }
 }

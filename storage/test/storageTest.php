@@ -757,27 +757,21 @@ class storageTest extends TestCase
         );
     }
 
-    public function testCreateBucketWithAutoclass()
+    public function testGetBucketWithAutoclass()
     {
-        $bucketName = uniqid('samples-create-autoclass-');
+        $bucketName = uniqid('samples-get-autoclass-');
+        $bucket = self::$storage->createBucket($bucketName, [
+            'autoclass' => [
+                'enabled' => true,
+            ],
+            'location' => 'US',
+        ]);
 
-        $output = self::runFunctionSnippet('create_bucket_autoclass', [
+        $output = self::runFunctionSnippet('get_bucket_autoclass', [
             $bucketName,
         ]);
-        $output .= self::runFunctionSnippet('get_bucket_autoclass', [
-            $bucketName,
-        ]);
-        $bucket = self::$storage->bucket($bucketName);
         $bucket->delete();
 
-        $this->assertStringContainsString(
-            sprintf(
-                'Created bucket %s in %s with autoclass enabled',
-                $bucketName,
-                'US'
-            ),
-            $output
-        );
         $this->assertStringContainsString(
             sprintf('Bucket %s has autoclass enabled: %s', $bucketName, true),
             $output
@@ -786,29 +780,27 @@ class storageTest extends TestCase
 
     public function testSetBucketWithAutoclass()
     {
-        $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'));
+        $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'), [
+            'autoclass' => [
+                'enabled' => true,
+            ],
+            'location' => 'US',
+        ]);
         $info = $bucket->reload();
-        $this->assertArrayNotHasKey('autoclass', $info);
+        $this->assertArrayHasKey('autoclass', $info);
+        $this->assertTrue($info['autoclass']['enabled']);
 
         $output = self::runFunctionSnippet('set_bucket_autoclass', [
             $bucket->name(),
-            true
-        ]);
-        $output .= self::runFunctionSnippet('get_bucket_autoclass', [
-          $bucket->name(),
+            false
         ]);
         $bucket->delete();
 
         $this->assertStringContainsString(
             sprintf(
-                'Updated bucket %s with autoclass enabled',
+                'Updated bucket %s with autoclass set to false.',
                 $bucket->name(),
-                true
             ),
-            $output
-        );
-        $this->assertStringContainsString(
-            sprintf('Bucket %s has autoclass enabled: %s', $bucket->name(), true),
             $output
         );
     }
