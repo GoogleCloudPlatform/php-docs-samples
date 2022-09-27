@@ -112,7 +112,6 @@ class storageTest extends TestCase
     public function testListBuckets()
     {
         $output = $this->runFunctionSnippet('list_buckets');
-
         $this->assertStringContainsString('Bucket:', $output);
     }
 
@@ -131,6 +130,11 @@ class storageTest extends TestCase
         $output = $this->runFunctionSnippet('get_bucket_metadata', [$bucketName]);
 
         $this->assertStringContainsString('Bucket Metadata:', $output);
+
+        $output = $this->runFunctionSnippet('get_bucket_class_and_location', [$bucketName]);
+
+        $bucketInfo = $bucket->info();
+        $this->assertStringContainsString("Bucket: $bucketName, storage class: " . $bucketInfo['storageClass'] . ', location: ' . $bucketInfo['location'], $output);
 
         $output = $this->runFunctionSnippet('delete_bucket', [$bucketName]);
 
