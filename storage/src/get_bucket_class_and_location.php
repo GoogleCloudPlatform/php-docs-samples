@@ -39,7 +39,7 @@ function get_bucket_class_and_location($bucketName)
     $bucket = $storage->bucket($bucketName);
 
     $info = $bucket->info();
-    printf('Bucket: %s, storage class: %s, location: %s' . PHP_EOL, $info['name'], $info['storageClass'],$info['location']);
+    printf('Bucket: %s, storage class: %s, location: %s' . PHP_EOL, $info['name'], $info['storageClass'], $info['location']);
 }
 # [END storage_get_bucket_class_and_location]
 
