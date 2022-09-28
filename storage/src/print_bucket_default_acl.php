@@ -27,11 +27,11 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Print all entities and roles for a bucket's Default ACL.
+ * Print the default object ACL for a bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function print_bucket_default_acl($bucketName)
+function print_bucket_default_acl(string $bucketName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
