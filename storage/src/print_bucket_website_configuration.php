@@ -30,7 +30,6 @@ use Google\Cloud\Storage\StorageClient;
  * Print the bucket's website configuration.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $entity The entity for which to query access controls.
  */
 function print_bucket_website_configuration($bucketName)
 {
