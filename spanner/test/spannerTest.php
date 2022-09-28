@@ -929,13 +929,13 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateDatabase
      */
-    public function testAddAndDropDatabaseRole()
+    public function testAddDropDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('add_and_drop_database_role');
-        $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
-        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
-        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
-        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent' . PHP_EOL, $output);
+        $output = $this->runFunctionSnippet('add_drop_database_role');
+        $this->assertStringContainsString('Waiting for create role and grant operation to complete... ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete... ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent ' . PHP_EOL, $output);
     }
 
     private function testGetInstanceConfig()
