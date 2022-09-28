@@ -33,19 +33,18 @@ use Google\Cloud\Storage\StorageClient;
  */
 function print_bucket_website_configuration($bucketName)
 {
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $info = $bucket->info();
 
-    if(!array_key_exists('website', $info)) {
-      printf('Bucket website configuration not set' . PHP_EOL);
+    if (!array_key_exists('website', $info)) {
+        printf('Bucket website configuration not set' . PHP_EOL);
     } else {
-      printf(
-        'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
-        $info['website']['mainPageSuffix'],
-        $info['website']['notFoundPage'],
-      );
+        printf(
+          'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+          $info['website']['mainPageSuffix'],
+          $info['website']['notFoundPage'],
+        );
     }
 }
 # [END storage_print_bucket_website_configuration]

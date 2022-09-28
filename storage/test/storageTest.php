@@ -474,7 +474,7 @@ class storageTest extends TestCase
             'name' => 'test.html'
         ]);
 
-        $output = self::runFunctionSnippet('print_bucket_website_configuration',[
+        $output = self::runFunctionSnippet('print_bucket_website_configuration', [
             $bucket->name(),
         ]);
 
@@ -502,7 +502,7 @@ class storageTest extends TestCase
 
         $info = $bucket->reload();
 
-        $output = self::runFunctionSnippet('print_bucket_website_configuration',[
+        $output = self::runFunctionSnippet('print_bucket_website_configuration', [
           $bucket->name(),
         ]);
 
@@ -517,7 +517,7 @@ class storageTest extends TestCase
 
         $obj->delete();
         $bucket->delete();
-      }
+    }
 
     public function testGetServiceAccount()
     {
