@@ -31,7 +31,8 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function get_bucket_class_and_location(string $bucketName): void {
+function get_bucket_class_and_location(string $bucketName): void
+{
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
