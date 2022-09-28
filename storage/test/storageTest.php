@@ -444,8 +444,29 @@ class storageTest extends TestCase
             $objectName,
             $this->keyName()
         ));
+
+        return $objectName;
     }
 
+    /** @depends testUploadWithKmsKey */
+    public function testObjectGetKmsKey(string $objectName) {
+        $kmsEncryptedBucketName = self::$bucketName . '-kms-encrypted';
+        $bucket = self::$storage->bucket($kmsEncryptedBucketName);
+        $objectInfo = $bucket->object($objectName)->info();
+
+        $output = $this->runFunctionSnippet('object_get_kms_key', [
+          $kmsEncryptedBucketName,
+          $objectName,
+        ]);
+
+        $this->assertEquals(
+          sprintf(
+            'The KMS key of the object is %s' . PHP_EOL,
+            $objectInfo['kmsKeyName'],
+          ),
+          $output,
+        );
+    }
     public function testBucketVersioning()
     {
         $output = self::runFunctionSnippet('enable_versioning', [
