@@ -42,32 +42,32 @@ function add_and_drop_database_role($instanceId, $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $role_parent = 'new_parent';
-    $role_child = 'new_child';
+    $roleParent = 'new_parent';
+    $roleChild = 'new_child';
 
     $operation = $database->updateDdlBatch([
-        'CREATE ROLE ' . $role_parent,
-        'GRANT SELECT ON TABLE Singers TO ROLE ' . $role_parent,
-        'CREATE ROLE ' . $role_child,
-        'GRANT ROLE ' . $role_parent . ' TO ROLE ' . $role_child
+        sprintf('CREATE ROLE %s', $roleParent),
+        sprintf('GRANT SELECT ON TABLE Singers TO ROLE %s', $roleParent),
+        sprintf('CREATE ROLE %s', $roleChild),
+        sprintf('GRANT ROLE %s TO ROLE %s', $roleParent, $roleChild)
     ]);
 
     print('Waiting for create role and grant operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created roles ' . $role_parent . ' and ' . $role_child . ' and granted privileges' . PHP_EOL);
+    printf(sprintf('Created roles  %s and %s and granted privileges %s', $roleParent, $roleChild, PHP_EOL));
 
     $operation = $database->updateDdlBatch([
-        'REVOKE ROLE ' . $role_parent . ' FROM ROLE ' . $role_child,
-        'DROP ROLE ' . $role_child,
-        'REVOKE SELECT ON TABLE Singers FROM ROLE ' . $role_parent,
-        'DROP ROLE ' . $role_parent
+        sprintf('REVOKE ROLE %s FROM ROLE %s', $roleParent, $roleChild),
+        sprintf('DROP ROLE %s', $roleChild),
+        sprintf('REVOKE SELECT ON TABLE Singers FROM ROLE %s', $roleParent),
+        sprintf('DROP ROLE %s', $roleParent)
     ]);
 
-    print('Waiting for revoke role and drop role operation to complete...' . PHP_EOL);
+    print(sprintf('Waiting for revoke role and drop role operation to complete... %s', PHP_EOL));
     $operation->pollUntilComplete();
 
-    printf('Revoked privileges and dropped roles ' . $role_child . ' and ' . $role_parent . PHP_EOL);
+    printf(sprintf('Revoked privileges and dropped roles %s and %s %s', $roleChild, $roleParent, PHP_EOL));
 }
 // [END spanner_add_and_drop_database_role]
 

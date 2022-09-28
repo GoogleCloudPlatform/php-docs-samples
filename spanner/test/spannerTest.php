@@ -926,6 +926,18 @@ class spannerTest extends TestCase
         $this->assertStringContainsString($expectedOutput, $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testAddAndDropDatabaseRole()
+    {
+        $output = $this->runFunctionSnippet('add_and_drop_database_role');
+        $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
+        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
+        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent' . PHP_EOL, $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
@@ -1005,18 +1017,6 @@ class spannerTest extends TestCase
             $sampleName,
             array_values($params) ?: [self::$instanceId, self::$databaseId]
         );
-    }
-
-    /**
-     * @depends testCreateDatabase
-     */
-    public function testAddAndDropDatabaseRole()
-    {
-        $output = $this->runFunctionSnippet('add_and_drop_database_role');
-        $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
-        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
-        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
-        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent' . PHP_EOL, $output);
     }
 
     public static function tearDownAfterClass(): void
