@@ -489,7 +489,6 @@ class storageTest extends TestCase
             $obj->name(),
         ]);
 
-
         $this->assertEquals(
           sprintf(
             'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
