@@ -131,16 +131,28 @@ class storageTest extends TestCase
 
         $this->assertStringContainsString('Bucket Metadata:', $output);
 
-        $output = $this->runFunctionSnippet('get_bucket_class_and_location', [$bucketName]);
-
-        $bucketInfo = $bucket->info();
-        $this->assertStringContainsString("Bucket: $bucketName, storage class: " . $bucketInfo['storageClass'] . ', location: ' . $bucketInfo['location'], $output);
-
         $output = $this->runFunctionSnippet('delete_bucket', [$bucketName]);
 
         $this->assertFalse($bucket->exists());
 
         $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
+    }
+
+    public function testGetBucketClassAndLocation()
+    {
+        $output = $this->runFunctionSnippet(
+          'get_bucket_class_and_location',
+          [self::$tempBucket->name()],
+        );
+
+        $bucketInfo = self::$tempBucket->info();
+
+        $this->assertStringContainsString(sprintf(
+          'Bucket: %s, storage class: %s, location: %s' . PHP_EOL,
+          $bucketInfo['name'],
+          $bucketInfo['storageClass'],
+          $bucketInfo['location'],
+        ), $output);
     }
 
     public function testBucketDefaultAcl()
