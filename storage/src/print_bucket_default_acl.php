@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Print all entities and roles for a bucket's ACL.
+ * Print all entities and roles for a bucket's Default ACL.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
