@@ -64,17 +64,17 @@ class storageTest extends TestCase
 
     public function testPrintDefaultBucketAcl()
     {
-      $output = $this->runFunctionSnippet('print_bucket_default_acl', [
-        self::$tempBucket->name(),
-      ]);
+        $output = $this->runFunctionSnippet('print_bucket_default_acl', [
+          self::$tempBucket->name(),
+        ]);
 
-      $defaultAcl = self::$tempBucket->defaultAcl()->get();
-      foreach ($defaultAcl as $item) {
-          $this->assertStringContainsString(
-            sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
-            $output,
-          );
-      }
+        $defaultAcl = self::$tempBucket->defaultAcl()->get();
+        foreach ($defaultAcl as $item) {
+            $this->assertStringContainsString(
+              sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
+              $output,
+            );
+        }
     }
 
     /**
