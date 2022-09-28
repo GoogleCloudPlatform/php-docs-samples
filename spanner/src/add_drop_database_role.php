@@ -30,13 +30,13 @@ use Google\Cloud\Spanner\SpannerClient;
  * Adds and drops roles to the Singers table in the example database.
  * Example:
  * ```
- * add_and_drop_database_role($instanceId, $databaseId);
+ * add_drop_database_role($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_and_drop_database_role($instanceId, $databaseId)
+function add_drop_database_role(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -52,10 +52,10 @@ function add_and_drop_database_role($instanceId, $databaseId)
         sprintf('GRANT ROLE %s TO ROLE %s', $roleParent, $roleChild)
     ]);
 
-    print('Waiting for create role and grant operation to complete...' . PHP_EOL);
+    printf('Waiting for create role and grant operation to complete... %s', PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf(sprintf('Created roles  %s and %s and granted privileges %s', $roleParent, $roleChild, PHP_EOL));
+    printf('Created roles %s and %s and granted privileges %s', $roleParent, $roleChild, PHP_EOL);
 
     $operation = $database->updateDdlBatch([
         sprintf('REVOKE ROLE %s FROM ROLE %s', $roleParent, $roleChild),
@@ -64,10 +64,10 @@ function add_and_drop_database_role($instanceId, $databaseId)
         sprintf('DROP ROLE %s', $roleParent)
     ]);
 
-    print(sprintf('Waiting for revoke role and drop role operation to complete... %s', PHP_EOL));
+    printf('Waiting for revoke role and drop role operation to complete... %s', PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf(sprintf('Revoked privileges and dropped roles %s and %s %s', $roleChild, $roleParent, PHP_EOL));
+    printf('Revoked privileges and dropped roles %s and %s %s', $roleChild, $roleParent, PHP_EOL);
 }
 // [END spanner_add_and_drop_database_role]
 
