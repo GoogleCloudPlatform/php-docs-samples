@@ -814,6 +814,16 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent ' . PHP_EOL, $output);
     }
 
+    /**
+     * @depends testAddColumn
+     */
+    public function testSpannerDmlBatchUpdate()
+    {
+        $output = $this->runFunctionSnippet('dml_batch_update_request_priority');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertStringContainsString('Executed 2 SQL statements using Batch DML with PRIORITY_LOW.', $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
