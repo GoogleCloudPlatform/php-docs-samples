@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your object in the bucket.
  */
-function object_get_kms_key(string $bucketName,string $objectName): void
+function object_get_kms_key(string $bucketName, string $objectName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);

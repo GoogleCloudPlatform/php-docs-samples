@@ -449,7 +449,8 @@ class storageTest extends TestCase
     }
 
     /** @depends testUploadWithKmsKey */
-    public function testObjectGetKmsKey(string $objectName) {
+    public function testObjectGetKmsKey(string $objectName)
+    {
         $kmsEncryptedBucketName = self::$bucketName . '-kms-encrypted';
         $bucket = self::$storage->bucket($kmsEncryptedBucketName);
         $objectInfo = $bucket->object($objectName)->info();
