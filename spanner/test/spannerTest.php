@@ -802,6 +802,16 @@ class spannerTest extends TestCase
         });
     }
 
+    /**
+     * @depends testAddColumn
+     */
+    public function testSpannerDmlBatchUpdateRequestPriority()
+    {
+        $output = $this->runFunctionSnippet('dml_batch_update_request_priority');
+        self::$lastUpdateDataTimestamp = time();
+        $this->assertStringContainsString('Executed 2 SQL statements using Batch DML with PRIORITY_LOW.', $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
