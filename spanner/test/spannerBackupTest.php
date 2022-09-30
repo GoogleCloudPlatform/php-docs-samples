@@ -72,6 +72,9 @@ class spannerBackupTest extends TestCase
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
+        if ('true' !== getenv('GOOGLE_SPANNER_RUN_BACKUP_TESTS')) {
+            self::markTestSkipped('Skipping backup tests.');
+        }
         self::$instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
