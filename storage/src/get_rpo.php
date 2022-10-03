@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
  */
-function get_rpo($bucketName)
+function get_rpo(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 

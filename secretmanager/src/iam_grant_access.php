@@ -23,12 +23,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID SECRET_ID MEMBER\n", basename(__FILE__));
-}
-list($_, $projectId, $secretId, $member) = $argv;
+namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_iam_grant_access]
 // Import the Secret Manager client library.
@@ -37,31 +32,38 @@ use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 // Import the Secret Manager IAM library.
 use Google\Cloud\Iam\V1\Binding;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
-// $secretId = 'YOUR_SECRET_ID' (e.g. 'my-secret');
-// $member = 'YOUR_MEMBER' (e.g. 'user:foo@example.com');
+/**
+ * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ * @param string $secretId  Your secret ID (e.g. 'my-secret')
+ * @param string $member Your member (e.g. 'user:foo@example.com')
+ */
+function iam_grant_access(string $projectId, string $secretId, string $member): void
+{
+    // Create the Secret Manager client.
+    $client = new SecretManagerServiceClient();
 
-// Create the Secret Manager client.
-$client = new SecretManagerServiceClient();
+    // Build the resource name of the secret.
+    $name = $client->secretName($projectId, $secretId);
 
-// Build the resource name of the secret.
-$name = $client->secretName($projectId, $secretId);
+    // Get the current IAM policy.
+    $policy = $client->getIamPolicy($name);
 
-// Get the current IAM policy.
-$policy = $client->getIamPolicy($name);
+    // Update the bindings to include the new member.
+    $bindings = $policy->getBindings();
+    $bindings[] = new Binding([
+        'members' => [$member],
+        'role' => 'roles/secretmanager.secretAccessor',
+    ]);
+    $policy->setBindings($bindings);
 
-// Update the bindings to include the new member.
-$bindings = $policy->getBindings();
-$bindings[] = new Binding([
-    'members' => [$member],
-    'role' => 'roles/secretmanager.secretAccessor',
-]);
-$policy->setBindings($bindings);
+    // Save the updated policy to the server.
+    $client->setIamPolicy($name, $policy);
 
-// Save the updated policy to the server.
-$client->setIamPolicy($name, $policy);
-
-// Print out a success message.
-printf('Updated IAM policy for %s', $secretId);
+    // Print out a success message.
+    printf('Updated IAM policy for %s', $secretId);
+}
 // [END secretmanager_iam_grant_access]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
