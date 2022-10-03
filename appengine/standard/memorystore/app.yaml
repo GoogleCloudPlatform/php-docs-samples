@@ -1,7 +1,7 @@
 # This app.yaml is for deploying to instances of Cloud SQL running MySQL.
 # See app-postgres.yaml for running Cloud SQL with PostgreSQL.
 
-runtime: php74
+runtime: php81
 
 # [START gae_memorystore_app_yaml]
 # update with Redis instance host IP, port

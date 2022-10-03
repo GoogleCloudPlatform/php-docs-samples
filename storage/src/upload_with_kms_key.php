@@ -36,7 +36,7 @@ use Google\Cloud\Storage\StorageClient;
  *     Key names are provided in the following format:
  *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  */
-function upload_with_kms_key($bucketName, $objectName, $source, $kmsKeyName)
+function upload_with_kms_key(string $bucketName, string $objectName, string $source, string $kmsKeyName): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';

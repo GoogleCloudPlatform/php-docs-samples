@@ -49,7 +49,7 @@ $app->get('/', function (Request $request, Response $response) use ($container) 
         <input type="submit" />
     </form>
 EOF
-);
+    );
     if ($content) {
         $response->getBody()->write(
             "<p><strong>Your content:</strong><p><p>$escapedContent</p>"

@@ -38,7 +38,7 @@ use Google\Cloud\Storage\StorageClient;
  *     Key names are provided in the following format:
  *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  */
-function object_csek_to_cmek($bucketName, $objectName, $decryptionKey, $kmsKeyName)
+function object_csek_to_cmek(string $bucketName, string $objectName, string $decryptionKey, string $kmsKeyName): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
