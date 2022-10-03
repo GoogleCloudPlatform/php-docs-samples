@@ -87,6 +87,9 @@ class spannerTest extends TestCase
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
 
+    /** @var string $baseConfigId */
+    protected static $baseConfigId;
+
     /** @var string $customInstanceConfigId */
     protected static $customInstanceConfigId;
 
@@ -121,6 +124,7 @@ class spannerTest extends TestCase
         self::$defaultLeader = 'us-central1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
+        $baseConfigId = 'nam11';
         self::$customInstanceConfigId = 'custom-' . time() . rand();
         self::$customInstanceConfig = $spanner->instanceConfiguration(self::$customInstanceConfigId);
     }
@@ -146,7 +150,8 @@ class spannerTest extends TestCase
     public function testCreateInstanceConfig()
     {
         $output = $this->runFunctionSnippet('create_instance_config', [
-            'instance_config_id' => self::$customInstanceConfigId
+            'user_config_id' => self::$customInstanceConfigId,
+            'base_config_id' => self::$baseConfigId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);

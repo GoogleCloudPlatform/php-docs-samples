@@ -34,19 +34,19 @@ use Google\Cloud\Spanner\SpannerClient;
  * create_instance_config($instanceConfigId);
  * ```
  *
- * @param string $instanceConfigId The customer managed instance configuration id. The id must start with 'custom-'.
+ * @param string $userConfigId The customer managed instance configuration id. The id must start with 'custom-'.
+ * @param string $baseConfigId Base configuration ID to be used for creation, e.g. nam11.
  */
-function create_instance_config($instanceConfigId)
+function create_instance_config($userConfigId, $baseConfigId)
 {
     $spanner = new SpannerClient();
 
     // Get a Google Managed instance configuration to use as the base for our custom instance configuration.
-    // TODO: Update to an actual instance config.
     $baseInstanceConfig = $spanner->instanceConfiguration(
-        'base-config'
+        $baseConfigId
     );
 
-    $instanceConfiguration = $spanner->instanceConfiguration($instanceConfigId);
+    $instanceConfiguration = $spanner->instanceConfiguration($userConfigId);
     $operation = $instanceConfiguration->create(
         $baseInstanceConfig,
         array_merge(
@@ -65,7 +65,7 @@ function create_instance_config($instanceConfigId)
         [
             'displayName' => 'This is a display name',
             'labels' => [
-                'cloud_spanner_samples' => true,
+                'php_cloud_spanner_samples' => true,
             ]
         ]
     );
@@ -73,7 +73,7 @@ function create_instance_config($instanceConfigId)
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created instance configuration %s' . PHP_EOL, $instanceConfigId);
+    printf('Created instance configuration %s' . PHP_EOL, $userConfigId);
 }
 // [END spanner_create_instance_config]
 
