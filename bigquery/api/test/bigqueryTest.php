@@ -287,6 +287,32 @@ class FunctionsTest extends TestCase
         $this->assertStringContainsString('Found 1 row(s)', $output);
     }
 
+    public function testDryRunQuery()
+    {
+        $tableId = $this->createTempTable();
+        $query = sprintf(
+            'SELECT * FROM `%s.%s` LIMIT 1',
+            self::$datasetId,
+            $tableId
+        );
+
+        $output = $this->runSnippet('dry_run_query', [$query]);
+        $this->assertStringContainsString('This query will process 126 bytes', $output);
+    }
+
+    public function testQueryNoCache()
+    {
+        $tableId = $this->createTempTable();
+        $query = sprintf(
+            'SELECT * FROM `%s.%s` LIMIT 1',
+            self::$datasetId,
+            $tableId
+        );
+
+        $output = $this->runSnippet('query_no_cache', [$query]);
+        $this->assertStringContainsString('Found 1 row(s)', $output);
+    }
+
     public function testQueryLegacy()
     {
         $output = $this->runSnippet('query_legacy');

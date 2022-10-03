@@ -36,9 +36,9 @@ class videoTest extends TestCase
 
     public function testAnalyzeLabels()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_labels_gcs',
-            [$this->gcsUri(), 10]
+            ['uri' => $this->gcsUri(), 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('cat', $output);
         $this->assertStringContainsString('Video label description', $output);
@@ -51,9 +51,9 @@ class videoTest extends TestCase
 
     public function testAnalyzeLabelsFile()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_labels_file',
-            [__DIR__ . '/data/cat_shortened.mp4', 10]
+            ['path' => __DIR__ . '/data/cat_shortened.mp4', 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('cat', $output);
         $this->assertStringContainsString('Video label description:', $output);
@@ -66,18 +66,18 @@ class videoTest extends TestCase
 
     public function testAnalyzeExplicitContent()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_explicit_content',
-            [$this->gcsUri(), 10]
+            ['uri' => $this->gcsUri(), 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('pornography:', $output);
     }
 
     public function testAnalyzeShots()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_shots',
-            [$this->gcsUri(), 10]
+            ['uri' => $this->gcsUri(), 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('Shot:', $output);
         $this->assertStringContainsString(' to ', $output);
@@ -85,9 +85,9 @@ class videoTest extends TestCase
 
     public function testTranscription()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_transcription',
-            [$this->gcsUriTwo(), 10]
+            ['uri' => $this->gcsUriTwo(), 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('Transcript:', $output);
         $this->assertStringContainsString('Paris', $output);
@@ -96,9 +96,9 @@ class videoTest extends TestCase
 
     public function testAnalyzeTextDetection()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_text_detection',
-            [$this->gcsUriTwo(), 10]
+            ['uri' => $this->gcsUriTwo(), 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('GOOGLE', $output);
         $this->assertStringContainsString('Video text description:', $output);
@@ -108,9 +108,9 @@ class videoTest extends TestCase
 
     public function testAnalyzeTextDetectionFile()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_text_detection_file',
-            [__DIR__ . '/data/googlework_short.mp4', 10]
+            ['path' => __DIR__ . '/data/googlework_short.mp4', 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('GOOGLE', $output);
         $this->assertStringContainsString('Video text description:', $output);
@@ -120,9 +120,9 @@ class videoTest extends TestCase
 
     public function testObjectTracking()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_object_tracking',
-            [$this->gcsUriTwo(), 10]
+            ['uri' => $this->gcsUriTwo(), 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('/m/01g317', $output);
         $this->assertStringContainsString('person', $output);
@@ -130,9 +130,9 @@ class videoTest extends TestCase
 
     public function testObjectTrackingFile()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'analyze_object_tracking_file',
-            [__DIR__ . '/data/googlework_short.mp4', 10]
+            ['path' => __DIR__ . '/data/googlework_short.mp4', 'pollingIntervalSeconds' => 10]
         );
         $this->assertStringContainsString('/m/01g317', $output);
         $this->assertStringContainsString('person', $output);

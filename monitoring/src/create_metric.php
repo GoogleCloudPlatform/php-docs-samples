@@ -26,10 +26,7 @@ namespace Google\Cloud\Samples\Monitoring;
 // [START monitoring_create_metric]
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
 use Google\Api\LabelDescriptor;
-use Google\Api\LabelDescriptor_ValueType;
 use Google\Api\MetricDescriptor;
-use Google\Api\MetricDescriptor_MetricKind;
-use Google\Api\MetricDescriptor_ValueType;
 
 /**
  * Create a new metric in Stackdriver Monitoring.
@@ -52,12 +49,12 @@ function create_metric($projectId)
     $descriptor->setDescription('Daily sales records from all branch stores.');
     $descriptor->setDisplayName('Daily Sales');
     $descriptor->setType('custom.googleapis.com/stores/daily_sales');
-    $descriptor->setMetricKind(MetricDescriptor_MetricKind::GAUGE);
-    $descriptor->setValueType(MetricDescriptor_ValueType::DOUBLE);
+    $descriptor->setMetricKind(MetricDescriptor\MetricKind::GAUGE);
+    $descriptor->setValueType(MetricDescriptor\ValueType::DOUBLE);
     $descriptor->setUnit('{USD}');
     $label = new LabelDescriptor();
     $label->setKey('store_id');
-    $label->setValueType(LabelDescriptor_ValueType::STRING);
+    $label->setValueType(LabelDescriptor\ValueType::STRING);
     $label->setDescription('The ID of the store.');
     $labels = [$label];
     $descriptor->setLabels($labels);

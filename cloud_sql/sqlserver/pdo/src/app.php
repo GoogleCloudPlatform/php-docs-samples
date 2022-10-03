@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-use Google\Cloud\Samples\CloudSQL\SQLServer\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\SQLServer\DatabaseTcp;
 use Google\Cloud\Samples\CloudSQL\SQLServer\Votes;
 use Pimple\Container;
 use Pimple\Psr11\Container as Psr11Container;
@@ -26,7 +26,7 @@ use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
 // Create and set the dependency injection container.
-$container = new Container;
+$container = new Container();
 AppFactory::setContainer(new Psr11Container($container));
 
 // add the votes manager to the container.
@@ -36,40 +36,22 @@ $container['votes'] = function (Container $container) {
 
 // Setup the database connection in the container.
 $container['db'] = function () {
-    # [START cloud_sql_sqlserver_pdo_timeout]
-    // Here we set the connection timeout to five seconds and ask PDO to
-    // throw an exception if any errors occur.
-    $connConfig = [
-        PDO::ATTR_TIMEOUT => 5,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ];
-    # [END cloud_sql_sqlserver_pdo_timeout]
-
-    $username = getenv('DB_USER');
-    $password = getenv('DB_PASS');
-    $dbName = getenv('DB_NAME');
-    $dbHost = getenv('DB_HOST');
-
-    if (empty($username = getenv('DB_USER'))) {
-        throw new RuntimeException('Must supply $DB_USER environment variables');
+    if (getenv('DB_USER') === false) {
+        throw new RuntimeException('Must supply $DB_USER environment variable');
     }
-    if (empty($password = getenv('DB_PASS'))) {
-        throw new RuntimeException('Must supply $DB_PASS environment variables');
+    if (getenv('DB_PASS') === false) {
+        throw new RuntimeException('Must supply $DB_PASS environment variable');
     }
-    if (empty($dbName = getenv('DB_NAME'))) {
-        throw new RuntimeException('Must supply $DB_NAME environment variables');
+    if (getenv('DB_NAME') === false) {
+        throw new RuntimeException('Must supply $DB_NAME environment variable');
     }
-    if (empty($dbHost = getenv('DB_HOST'))) {
-        throw new RuntimeException('Must supply $DB_HOST environment variables');
+    if (getenv('INSTANCE_HOST') === false) {
+        throw new RuntimeException(
+            'Must supply $INSTANCE_HOST environment variable'
+        );
     }
 
-    return DBInitializer::initTcpDatabaseConnection(
-        $username,
-        $password,
-        $dbName,
-        $dbHost,
-        $connConfig
-    );
+    return DatabaseTcp::initTcpDatabaseConnection();
 };
 
 // Configure the templating engine.

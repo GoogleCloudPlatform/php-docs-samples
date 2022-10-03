@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $location The Dual-Region location where you want your bucket to reside (e.g. "US-CENTRAL1+US-WEST1").
                                            Read more at https://cloud.google.com/storage/docs/locations#location-dr
  */
-function create_bucket_turbo_replication($bucketName, $location = 'nam4')
+function create_bucket_turbo_replication(string $bucketName, string $location = 'nam4'): void
 {
     // $bucketName = 'my-bucket';
 

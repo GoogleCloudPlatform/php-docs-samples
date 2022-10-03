@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The name of your Cloud Storage object.
  * @param string $entity The entity for which to update access controls.
  */
-function delete_object_acl($bucketName, $objectName, $entity)
+function delete_object_acl(string $bucketName, string $objectName, string $entity): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';

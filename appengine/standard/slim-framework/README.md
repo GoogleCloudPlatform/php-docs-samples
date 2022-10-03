@@ -29,7 +29,7 @@ in your browser.
 
 The application consists of three components:
 
- 1. An [`app.yaml`](app.yaml) which sets your application runtime to be `php74`.
+ 1. An [`app.yaml`](app.yaml) which sets your application runtime to be `php81`.
  2. A [`composer.json`](composer.json) which declares your application's dependencies.
  3. An [`index.php`](index.php) which handles all the requests which get routed to your app.
 
