@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The name of your Cloud Storage object.
  * @param string $source The path to the file to upload.
  */
-function upload_object($bucketName, $objectName, $source)
+function upload_object(string $bucketName, string $objectName, string $source): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';

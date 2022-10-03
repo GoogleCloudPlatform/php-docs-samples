@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function bucket_delete_default_kms_key($bucketName)
+function bucket_delete_default_kms_key(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 
