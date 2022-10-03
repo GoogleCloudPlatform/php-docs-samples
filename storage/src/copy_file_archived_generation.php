@@ -39,8 +39,7 @@ function copy_file_archived_generation(
   string $objectToCopy,
   string $generationToCopy,
   string $newObjectName,
-): void
-{
+): void {
     // $bucketName = 'my-bucket';
     // $objectToCopy = 'my-object';
     // $generationToCopy = 1579287380533984;
