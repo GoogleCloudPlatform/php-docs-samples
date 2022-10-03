@@ -943,9 +943,8 @@ class spannerTest extends TestCase
      */
     public function testReadWriteRetry()
     {
-        $this->runFunctionSnippet('update_data');
         $output = $this->runFunctionSnippet('read_write_retry');
-        $this->assertStringContainsString('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
+        $this->assertStringContainsString('Setting second album\'s budget as the first album\'s budget.', $output);
         $this->assertStringContainsString('Transaction complete.', $output);
     }
 

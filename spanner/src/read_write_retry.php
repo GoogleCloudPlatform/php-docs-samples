@@ -26,15 +26,10 @@ namespace Google\Cloud\Samples\Spanner;
 // [START spanner_read_write_retry]
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Transaction;
-use UnexpectedValueException;
 
 /**
  * Performs a read-write transaction to update two sample records in the
  * database. if the transaction fails, it will retry for exactly $maxRetries times.
- *
- * This will transfer 200,000 from the `MarketingBudget` field for the second
- * Album to the first Album. If the `MarketingBudget` for the second Album is
- * too low, it will raise an exception.
  *
  * Before running this sample, you will need to run the `update_data` sample
  * to populate the fields.
@@ -51,11 +46,9 @@ function read_write_retry(string $instanceId, string $databaseId): void
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    // Variable to set max number of retries in the event of AbortedException
     $maxRetries = 5;
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
-        $transferAmount = 200000;
 
         // Read the second album's budget.
         $secondAlbumKey = [2, 2];
@@ -69,43 +62,19 @@ function read_write_retry(string $instanceId, string $databaseId): void
 
         $firstRow = $secondAlbumResult->rows()->current();
         $secondAlbumBudget = $firstRow['MarketingBudget'];
-        if ($secondAlbumBudget < $transferAmount) {
-            // Throwing an exception will automatically roll back the transaction.
-            throw new UnexpectedValueException(
-                'The second album\'s budget is lower than the transfer amount: ' . $transferAmount
-            );
-        }
 
-        $firstAlbumKey = [1, 1];
-        $firstAlbumKeySet = $spanner->keySet(['keys' => [$firstAlbumKey]]);
-        $firstAlbumResult = $t->read(
-            'Albums',
-            $firstAlbumKeySet,
-            ['MarketingBudget'],
-            ['limit' => 1]
-        );
+        printf('Setting second album\'s budget as the first album\'s budget.' . PHP_EOL);
 
-        // Read the first album's budget.
-        $firstRow = $firstAlbumResult->rows()->current();
-        $firstAlbumBudget = $firstRow['MarketingBudget'];
-
-        // Update the budgets.
-        $secondAlbumBudget -= $transferAmount;
-        $firstAlbumBudget += $transferAmount;
-        printf('Setting first album\'s budget to %s and the second album\'s ' .
-            'budget to %s.' . PHP_EOL, $firstAlbumBudget, $secondAlbumBudget);
-
-        // Update the rows.
+        // Update the row.
         $t->updateBatch('Albums', [
-            ['SingerId' => 1, 'AlbumId' => 1, 'MarketingBudget' => $firstAlbumBudget],
-            ['SingerId' => 2, 'AlbumId' => 2, 'MarketingBudget' => $secondAlbumBudget],
+            ['SingerId' => 1, 'AlbumId' => 1, 'MarketingBudget' => $secondAlbumBudget],
         ]);
 
         // Commit the transaction!
         $t->commit();
 
         print('Transaction complete.' . PHP_EOL);
-    }, array('maxRetries' => $maxRetries));
+    }, ['maxRetries' => $maxRetries]);
 }
 // [END spanner_read_write_retry]
 
