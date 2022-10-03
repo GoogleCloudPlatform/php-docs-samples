@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2020 Google Inc.
  *
@@ -39,42 +40,49 @@ use Google\Cloud\Storage\StorageClient;
  * To see how to express a condition in CEL, visit:
  * @see https://cloud.google.com/storage/docs/access-control/iam#conditions.
  */
-function add_bucket_conditional_iam_binding($bucketName, $role, array $members, $title, $description, $expression)
+function add_bucket_conditional_iam_binding(
+  string $bucketName,
+  string $role,
+  array $members,
+  string $title,
+  string $description,
+  string $expression
+): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $members = ['group:example@google.com'];
-    // $title = 'Title';
-    // $description = 'Condition Description';
-    // $expression = 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")';
+  // $bucketName = 'my-bucket';
+  // $role = 'roles/storage.objectViewer';
+  // $members = ['group:example@google.com'];
+  // $title = 'Title';
+  // $description = 'Condition Description';
+  // $expression = 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")';
 
-    $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
+  $storage = new StorageClient();
+  $bucket = $storage->bucket($bucketName);
 
-    $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
+  $policy = $bucket->iam()->policy(['requestedPolicyVersion' => 3]);
 
-    $policy['version'] = 3;
+  $policy['version'] = 3;
 
-    $policy['bindings'][] = [
-        'role' => $role,
-        'members' => $members,
-        'condition' => [
-            'title' => $title,
-            'description' => $description,
-            'expression' => $expression,
-        ],
-    ];
+  $policy['bindings'][] = [
+    'role' => $role,
+    'members' => $members,
+    'condition' => [
+      'title' => $title,
+      'description' => $description,
+      'expression' => $expression,
+    ],
+  ];
 
-    $bucket->iam()->setPolicy($policy);
+  $bucket->iam()->setPolicy($policy);
 
-    printf('Added the following member(s) with role %s to %s:' . PHP_EOL, $role, $bucketName);
-    foreach ($members as $member) {
-        printf('    %s' . PHP_EOL, $member);
-    }
-    printf('with condition:' . PHP_EOL);
-    printf('    Title: %s' . PHP_EOL, $title);
-    printf('    Description: %s' . PHP_EOL, $description);
-    printf('    Expression: %s' . PHP_EOL, $expression);
+  printf('Added the following member(s) with role %s to %s:' . PHP_EOL, $role, $bucketName);
+  foreach ($members as $member) {
+    printf('    %s' . PHP_EOL, $member);
+  }
+  printf('with condition:' . PHP_EOL);
+  printf('    Title: %s' . PHP_EOL, $title);
+  printf('    Description: %s' . PHP_EOL, $description);
+  printf('    Expression: %s' . PHP_EOL, $expression);
 }
 # [END storage_add_bucket_conditional_iam_binding]
 

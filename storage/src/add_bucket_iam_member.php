@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $role The role to which the given member should be added.
  * @param string[] $members The member(s) to be added to the role.
  */
-function add_bucket_iam_member($bucketName, $role, array $members)
+function add_bucket_iam_member(string $bucketName, string $role, array $members): void
 {
     // $bucketName = 'my-bucket';
     // $role = 'roles/storage.objectViewer';
