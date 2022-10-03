@@ -48,12 +48,12 @@ function add_bucket_conditional_iam_binding(
   string $description,
   string $expression
 ): void {
-  // $bucketName = 'my-bucket';
-  // $role = 'roles/storage.objectViewer';
-  // $members = ['group:example@google.com'];
-  // $title = 'Title';
-  // $description = 'Condition Description';
-  // $expression = 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")';
+    // $bucketName = 'my-bucket';
+    // $role = 'roles/storage.objectViewer';
+    // $members = ['group:example@google.com'];
+    // $title = 'Title';
+    // $description = 'Condition Description';
+    // $expression = 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")';
 
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -76,7 +76,7 @@ function add_bucket_conditional_iam_binding(
 
     printf('Added the following member(s) with role %s to %s:' . PHP_EOL, $role, $bucketName);
     foreach ($members as $member) {
-      printf('    %s' . PHP_EOL, $member);
+        printf('    %s' . PHP_EOL, $member);
     }
     printf('with condition:' . PHP_EOL);
     printf('    Title: %s' . PHP_EOL, $title);
