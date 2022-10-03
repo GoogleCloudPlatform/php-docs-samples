@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param $instanceId The Spanner instance ID.
  */
-function list_databases($instanceId)
+function list_databases($instanceId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

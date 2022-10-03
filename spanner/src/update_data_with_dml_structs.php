@@ -43,13 +43,13 @@ use Google\Cloud\Spanner\StructValue;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_dml_structs($instanceId, $databaseId)
+function update_data_with_dml_structs(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t): void use ($spanner): void {
         $nameValue = (new StructValue)
             ->add('FirstName', 'Timothy')
             ->add('LastName', 'Campbell');

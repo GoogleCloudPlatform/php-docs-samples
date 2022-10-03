@@ -58,7 +58,7 @@ function pg_numeric_data_type(string $instanceId, string $databaseId, string $ta
     $sql = sprintf('INSERT INTO %s (VenueId, Name, Revenues)'
     . ' VALUES ($1, $2, $3)', $tableName);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+    $database->runTransaction(function (Transaction $t): void use ($spanner, $sql): void {
         $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 1,
@@ -71,7 +71,7 @@ function pg_numeric_data_type(string $instanceId, string $databaseId, string $ta
         printf('Inserted %d venue(s).' . PHP_EOL, $count);
     });
 
-    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+    $database->runTransaction(function (Transaction $t): void use ($spanner, $sql): void {
         $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 2,
@@ -88,7 +88,7 @@ function pg_numeric_data_type(string $instanceId, string $databaseId, string $ta
         printf('Inserted %d venue(s) with NULL revenue.' . PHP_EOL, $count);
     });
 
-    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+    $database->runTransaction(function (Transaction $t): void use ($spanner, $sql): void {
         $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 3,

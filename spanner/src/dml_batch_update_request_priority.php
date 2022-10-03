@@ -51,7 +51,7 @@ function dml_batch_update_request_priority(string $instanceId, string $databaseI
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $batchDmlResult = $database->runTransaction(function (Transaction $t) {
+    $batchDmlResult = $database->runTransaction(function (Transaction $t): void {
         // Variable to define the Priority of this operation
         // For more information read [
         // the upstream documentation](https://cloud.google.com/spanner/docs/reference/rest/v1/RequestOptions)

@@ -39,7 +39,7 @@ function pg_dml_with_params(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) {
+    $database->runTransaction(function (Transaction $t): void {
         $count = $t->executeUpdate(
             'INSERT INTO Singers (SingerId, FirstName, LastName)'
             . ' VALUES ($1, $2, $3), ($4, $5, $6)',

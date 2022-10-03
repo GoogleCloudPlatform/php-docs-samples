@@ -45,13 +45,13 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function write_data_with_dml_transaction($instanceId, $databaseId)
+function write_data_with_dml_transaction(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t): void use ($spanner): void {
         // Transfer marketing budget from one album to another. We do it in a transaction to
         // ensure that the transfer is atomic.
         $transferAmount = 200000;

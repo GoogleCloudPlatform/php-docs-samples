@@ -41,7 +41,7 @@ function pg_dml_getting_started_update(string $instanceId, string $databaseId): 
 
     // Transfer marketing budget from one album to another. We do it in a transaction to
     // ensure that the transfer is atomic.
-    $database->runTransaction(function (Transaction $t) {
+    $database->runTransaction(function (Transaction $t): void {
         $sql = 'SELECT marketingbudget as "MarketingBudget" from Albums WHERE '
         . 'SingerId = 2 and AlbumId = 2';
 
