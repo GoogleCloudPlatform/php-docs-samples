@@ -39,7 +39,7 @@ use Google\Cloud\Storage\StorageClient;
  * To see how to express a condition in CEL, visit:
  * @see https://cloud.google.com/storage/docs/access-control/iam#conditions.
  */
-function add_bucket_conditional_iam_binding($bucketName, $role, array $members, $title, $description, $expression)
+function add_bucket_conditional_iam_binding(string $bucketName, string $role, array $members, string $title, string $description, string $expression): void
 {
     // $bucketName = 'my-bucket';
     // $role = 'roles/storage.objectViewer';

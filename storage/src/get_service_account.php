@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
  */
-function get_service_account($projectId)
+function get_service_account(string $projectId): void
 {
     // $projectId = 'my-project-id';
 

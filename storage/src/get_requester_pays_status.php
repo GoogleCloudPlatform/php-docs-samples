@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function get_requester_pays_status($bucketName)
+function get_requester_pays_status(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 

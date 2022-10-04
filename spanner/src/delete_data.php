@@ -35,7 +35,7 @@ use Google\Cloud\Core\Exception\GoogleException;
  * @param string $databaseId The Spanner database ID.
  * @throws GoogleException
  */
-function delete_data($instanceId, $databaseId)
+function delete_data(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

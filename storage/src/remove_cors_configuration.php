@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function remove_cors_configuration($bucketName)
+function remove_cors_configuration(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 

@@ -38,11 +38,11 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $newBase64EncryptionKey The new base64 encoded encryption key.
  */
 function rotate_encryption_key(
-    $bucketName,
-    $objectName,
-    $oldBase64EncryptionKey,
-    $newBase64EncryptionKey
-) {
+    string $bucketName,
+    string $objectName,
+    string $oldBase64EncryptionKey,
+    string $newBase64EncryptionKey
+): void {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
     // $oldbase64EncryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';

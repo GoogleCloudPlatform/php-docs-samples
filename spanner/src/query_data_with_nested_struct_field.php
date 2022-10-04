@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\ArrayType;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_nested_struct_field($instanceId, $databaseId)
+function query_data_with_nested_struct_field(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

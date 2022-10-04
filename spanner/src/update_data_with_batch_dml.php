@@ -44,7 +44,7 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_batch_dml($instanceId, $databaseId)
+function update_data_with_batch_dml(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

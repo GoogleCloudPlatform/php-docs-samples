@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  *     Key names are provided in the following format:
  *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  */
-function enable_default_kms_key($bucketName, $kmsKeyName)
+function enable_default_kms_key(string $bucketName, string $kmsKeyName): void
 {
     // $bucketName = 'my-bucket';
     // $kmsKeyName = "";

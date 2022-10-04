@@ -38,7 +38,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $description The description of the condition.
  * @param string $expression Te condition specified in CEL expression language.
  */
-function remove_bucket_conditional_iam_binding($bucketName, $role, $title, $description, $expression)
+function remove_bucket_conditional_iam_binding(string $bucketName, string $role, string $title, string $description, string $expression): void
 {
     // $bucketName = 'my-bucket';
     // $role = 'roles/storage.objectViewer';

@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $generationToCopy The generation of the object to copy.
  * @param string $newObjectName The name of the target object.
  */
-function copy_file_archived_generation($bucketName, $objectToCopy, $generationToCopy, $newObjectName)
+function copy_file_archived_generation(string $bucketName, string $objectToCopy, string $generationToCopy, string $newObjectName): void
 {
     // $bucketName = 'my-bucket';
     // $objectToCopy = 'my-object';

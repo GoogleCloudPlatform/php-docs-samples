@@ -46,7 +46,7 @@ use UnexpectedValueException;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function read_write_transaction($instanceId, $databaseId)
+function read_write_transaction(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

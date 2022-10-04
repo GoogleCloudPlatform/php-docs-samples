@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $entity The entity for which to update access controls.
  */
-function get_bucket_acl_for_entity($bucketName, $entity)
+function get_bucket_acl_for_entity(string $bucketName, string $entity): void
 {
     // $bucketName = 'my-bucket';
     // $entity = 'user-example@domain.com';

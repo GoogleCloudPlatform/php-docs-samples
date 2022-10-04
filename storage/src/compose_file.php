@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $secondObjectName The name of the second GCS object to compose.
  * @param string $targetObjectName The name of the object to be created.
  */
-function compose_file($bucketName, $firstObjectName, $secondObjectName, $targetObjectName)
+function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName): void
 {
     // $bucketName = 'my-bucket';
     // $firstObjectName = 'my-object-1';

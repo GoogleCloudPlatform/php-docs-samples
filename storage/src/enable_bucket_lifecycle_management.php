@@ -32,7 +32,7 @@ use Google\Cloud\Storage\Bucket;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function enable_bucket_lifecycle_management($bucketName)
+function enable_bucket_lifecycle_management(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 

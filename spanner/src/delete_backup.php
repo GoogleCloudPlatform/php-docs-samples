@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $backupId The Spanner backup ID.
  */
-function delete_backup($instanceId, $backupId)
+function delete_backup(string $instanceId, string $backupId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -22,6 +22,7 @@ use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\EntityIterator;
 use Google\Cloud\Datastore\Key;
+use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
 /**
@@ -315,15 +316,45 @@ function basic_query(DatastoreClient $datastore)
 }
 
 /**
+ * Create a basic Datastore Gql query.
+ *
+ * @param DatastoreClient $datastore
+ * @return GqlQuery
+ */
+function basic_gql_query(DatastoreClient $datastore)
+{
+    // [START datastore_basic_gql_query]
+    $gql = <<<EOF
+SELECT * from Task
+where
+    done = @a
+    AND priority >= @b
+order by
+    priority desc
+EOF;
+    $query = $datastore->gqlQuery($gql, [
+        'bindings' => [
+            'a' => false,
+            'b' => 4,
+        ],
+    ]);
+    // [END datastore_basic_gql_query]
+    return $query;
+}
+
+/**
  * Run a given query.
  *
  * @param DatastoreClient $datastore
+ * @param Query|GqlQuery $query
  * @return EntityIterator<Entity>
  */
-function run_query(DatastoreClient $datastore, Query $query)
+function run_query(DatastoreClient $datastore, $query)
 {
     // [START datastore_run_query]
+    // [START datastore_run_gql_query]
     $result = $datastore->runQuery($query);
+    // [END datastore_run_gql_query]
     // [END datastore_run_query]
     return $result;
 }

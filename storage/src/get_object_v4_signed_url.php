@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $objectName The name of your Cloud Storage object.
  */
-function get_object_v4_signed_url($bucketName, $objectName)
+function get_object_v4_signed_url(string $bucketName, string $objectName): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';

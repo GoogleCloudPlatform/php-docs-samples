@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function get_bucket_labels($bucketName)
+function get_bucket_labels(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 

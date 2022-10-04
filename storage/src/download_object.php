@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $objectName The name of your Cloud Storage object.
  * @param string $destination The local destination to save the object.
  */
-function download_object($bucketName, $objectName, $destination)
+function download_object(string $bucketName, string $objectName, string $destination): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';
