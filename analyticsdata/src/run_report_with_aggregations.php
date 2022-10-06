@@ -15,27 +15,20 @@
  * limitations under the License.
  */
 
-/* 
+/**
+* Google Analytics Data API sample application demonstrating the usage of
+* metric aggregations in a report.
+* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
+* for more information.
 
-"""Google Analytics Data API sample application demonstrating the usage of
-metric aggregations in a report.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
-for more information.
-"""
+* Usage:
+*   composer update
+*   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
+*/
 
-Before you start the application, please review the comments starting with
-"TODO(developer)" and update the code to use the correct values.
-
-Usage:
-  composer update
-  php run_report_with_aggregations.php
- */
+namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_aggregations]
-require 'vendor/autoload.php';
-
-require 'vendor/autoload.php';
-
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
@@ -45,19 +38,11 @@ use Google\Analytcs\Data\V1beta\MetricHeader;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\MetricAggregation;
 
-function runReportWithAggregations(){
-    // [START analyticsdata_run_report_with_aggregations]
-    /**
-     * TODO(developer): Replace this variable with your Google Analytics 4
-     *   property ID before running the sample.
-     */
-    $property_id = 'YOUR-GA4-PROPERTY-ID';
-
+function runReportWithAggregations()
+{
     // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
-
+    // mports the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-
     // [END analyticsdata_initialize]
 
     // Make an API call.
@@ -113,3 +98,7 @@ function printRunReportResponse($response)
     // [END analyticsdata_print_run_report_response_rows]
 }
 // [END analyticsdata_run_report_with_aggregations]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
