@@ -36,7 +36,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param int $maxAgeSeconds The maximum amount of time the browser can make
  *     requests before it must repeat preflighted requests.
  */
-function cors_configuration($bucketName, $method, $origin, $responseHeader, $maxAgeSeconds)
+function cors_configuration(string $bucketName, string $method, string $origin, string $responseHeader, int $maxAgeSeconds): void
 {
     // $bucketName = 'my-bucket';
     // $method = 'GET';

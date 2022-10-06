@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $region1 First region for the bucket's regions. Case-insensitive.
  * @param string $region2 Second region for the bucket's regions. Case-insensitive.
  */
-function create_bucket_dual_region($bucketName, $location, $region1, $region2)
+function create_bucket_dual_region(string $bucketName, string $location, string $region1, string $region2): void
 {
     // $bucketName = 'my-bucket';
     // $location = 'US';
