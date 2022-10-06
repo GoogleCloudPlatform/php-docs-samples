@@ -47,7 +47,7 @@ function runReportWithAggregations(string $propertyId)
 
     // Make an API call.
     $response = $client->runReport([
-        'property' => 'properties/' . $property_id,
+        'property' => 'properties/' . $propertyId,
         'dimensions' => [new Dimension(
             [
                 'name' => 'country',
