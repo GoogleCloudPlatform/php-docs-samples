@@ -16,7 +16,7 @@
 /cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
-/iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-samples-reviewers
+/iot/                     @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-samples-reviewers
 /storage/                 @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/php-samples-reviewers
 /spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
 
@@ -27,7 +27,7 @@
 /eventarc/                @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
 
 # Functions samples owned by the Firebase team
-/functions/firebase_analytics   @schandel @samtstern
+/functions/firebase_analytics   @schandel 
 
 
 # Brent is taking ownership of these samples as they are not supported by the ML team
