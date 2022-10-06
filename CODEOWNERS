@@ -17,7 +17,7 @@
 /datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-samples-reviewers
-/storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-samples-reviewers
+/storage/                 @GoogleCloudPlatform/cloud-storage-dpe @GoogleCloudPlatform/php-samples-reviewers
 /spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
 
 # Serverless, Orchestration, DevOps
