@@ -61,7 +61,7 @@ $rows = [
 $insertResponse = $table->insertRows($rows);
 
 if ($insertResponse->isSuccessful()) {
-    printf('Rows successfully inserted into table without insert id\'s');
+    printf('Rows successfully inserted into table without insert ids');
 } else {
     foreach ($insertResponse->failedRows() as $row) {
         foreach ($row['errors'] as $error) {

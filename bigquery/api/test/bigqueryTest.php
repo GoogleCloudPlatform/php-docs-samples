@@ -286,7 +286,7 @@ class FunctionsTest extends TestCase
         ]);
 
         $tempTable = self::$dataset->table($tempTableId);
-        $expectedOutput = sprintf('Rows successfully inserted into table without insert id\'s');
+        $expectedOutput = sprintf('Rows successfully inserted into table without insert ids');
         $this->assertStringContainsString($expectedOutput, $output);
         $this->verifyTable($tempTable, 'Yash Sahu', 2);
     }
