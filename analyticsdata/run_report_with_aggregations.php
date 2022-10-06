@@ -79,10 +79,10 @@ function runReportWithAggregations(){
                 'end_date' => 'today',
             ]),
         ],
-        'metricAggregations' => [new MetricAggregation([
-            'TOTAL', 'MAXIMUM', 'MINIMUM'
-        ])
-
+        'metricAggregations' => [
+		MetricAggregation::TOTAL,
+		MetricAggregation::MAXIMUM,
+		MetricAggregation::MINIMUM
         ]
     ]);
 
