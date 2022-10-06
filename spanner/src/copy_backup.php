@@ -39,7 +39,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $sourceInstanceId The Spanner instance ID of the source backup.
  * @param string $sourceBackupId The Spanner backup ID of the source.
  */
-function copy_backup($destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId)
+function copy_backup(string $destInstanceId, string $destBackupId, string $sourceInstanceId, string $sourceBackupId): void
 {
     $spanner = new SpannerClient();
 

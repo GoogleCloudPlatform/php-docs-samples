@@ -31,7 +31,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceConfig The name of the instance configuration.
  */
-function get_instance_config($instanceConfig)
+function get_instance_config(string $instanceConfig): void
 {
     $spanner = new SpannerClient();
     $config = $spanner->instanceConfiguration($instanceConfig);

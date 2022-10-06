@@ -38,7 +38,7 @@ use Google\Cloud\Spanner\StructValue;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_struct($instanceId, $databaseId)
+function query_data_with_struct(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
