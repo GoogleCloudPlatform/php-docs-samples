@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function enable_uniform_bucket_level_access($bucketName)
+function enable_uniform_bucket_level_access(string $bucketName): void
 {
     // $bucketName = 'my-bucket';
 

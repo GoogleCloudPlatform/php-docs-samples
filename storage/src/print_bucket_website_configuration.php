@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,24 +23,31 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_delete_bucket]
+# [START storage_print_bucket_website_configuration]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Delete a Cloud Storage Bucket.
+ * Print the website configuration for a Cloud Storage bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function delete_bucket(string $bucketName): void
+function print_bucket_website_configuration(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $bucket->delete();
-    printf('Bucket deleted: %s' . PHP_EOL, $bucket->name());
+    $info = $bucket->info();
+
+    if (!array_key_exists('website', $info)) {
+        printf('Bucket website configuration not set' . PHP_EOL);
+    } else {
+        printf(
+          'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+          $info['website']['mainPageSuffix'],
+          $info['website']['notFoundPage'],
+        );
+    }
 }
-# [END storage_delete_bucket]
+# [END storage_print_bucket_website_configuration]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
