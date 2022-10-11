@@ -50,7 +50,7 @@ class analyticsDataTest extends TestCase
             $this->assertStringContainsString('does-not-exist.json', $ex->getMessage());
         }
     }
-    
+
     public function testRunReportWithAggregations()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
@@ -58,5 +58,5 @@ class analyticsDataTest extends TestCase
 
         $this->assertRegExp('/Report result/', $output);
     }
-    
+
 }
