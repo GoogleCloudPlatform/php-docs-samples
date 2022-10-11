@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceId The Spanner instance ID.
  */
-function list_backups($instanceId)
+function list_backups(string $instanceId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

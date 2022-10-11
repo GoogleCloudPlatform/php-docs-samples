@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,24 +23,25 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_delete_bucket]
+# [START storage_print_bucket_default_acl]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Delete a Cloud Storage Bucket.
+ * Print the default object ACL for a bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  */
-function delete_bucket(string $bucketName): void
+function print_bucket_default_acl(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
-    $bucket->delete();
-    printf('Bucket deleted: %s' . PHP_EOL, $bucket->name());
+    $defaultAcl = $bucket->defaultAcl()->get();
+
+    foreach ($defaultAcl as $item) {
+        printf('%s: %s' . PHP_EOL, $item['entity'], $item['role']);
+    }
 }
-# [END storage_delete_bucket]
+# [END storage_print_bucket_default_acl]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
