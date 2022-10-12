@@ -58,5 +58,4 @@ class analyticsDataTest extends TestCase
 
         $this->assertRegExp('/Report result/', $output);
     }
-
 }
