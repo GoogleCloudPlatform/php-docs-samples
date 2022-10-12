@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google LLC.
+ * Copyright 2022 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,22 +24,53 @@
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID\n", __FILE__);
+if (count($argv) != 4) {
+    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID\n", __FILE__);
 }
-list($_, $projectId, $datasetId) = $argv;
+list($_, $projectId, $datasetId, $tableId) = $argv;
 
-# [START bigquery_create_dataset]
+# [START bigquery_add_column_load_append]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'The Google project ID';
 // $datasetId = 'The BigQuery dataset ID';
+// $tableId = 'Table ID of the table in dataset';
 
 $bigQuery = new BigQueryClient([
     'projectId' => $projectId,
 ]);
-$dataset = $bigQuery->createDataset($datasetId);
-printf('Created dataset %s' . PHP_EOL, $datasetId);
-# [END bigquery_create_dataset]
-return $dataset;
+$dataset = $bigQuery->dataset($datasetId);
+$table = $dataset->table($tableId);
+// In this example, the existing table contains only the 'Name' and 'Title'.
+// A new column 'Description' gets added after load job.
+
+$schema = [
+  'fields' => [
+      ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+      ['name' => 'title', 'type' => 'string', 'mode' => 'nullable'],
+      ['name' => 'description', 'type' => 'string', 'mode' => 'nullable']
+  ]
+];
+// $options = [
+//   'schema' => $schema,
+//   'writeDisposition' => 'WRITE_APPEND',
+//   'schemaUpdateOptions' => ['ALLOW_FIELD_ADDITION']
+// ];
+
+$loadConfig = $table->load(fopen('../test/data/test_data_extra_column.csv', 'r'), )
+->destinationTable($table)->schema($schema)
+->schemaUpdateOptions(['ALLOW_FIELD_ADDITION'])
+->sourceFormat('CSV')
+->writeDisposition('WRITE_APPEND');
+
+$job = $bigQuery->runJob($loadConfig);
+
+if ($job->isComplete()) {
+    $tableInfo = $table->info();
+    var_dump($tableInfo);
+}
+
+$a = 6;
+# [END bigquery_add_column_load_append]
+return $a;
