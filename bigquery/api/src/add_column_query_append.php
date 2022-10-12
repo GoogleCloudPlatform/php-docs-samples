@@ -29,7 +29,7 @@ if (count($argv) != 4) {
 }
 list($_, $projectId, $datasetId, $tableId) = $argv;
 
-# [START bigquery_add_column_load_append]
+# [START bigquery_add_column_query_append]
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /** Uncomment and populate these variables in your code */
@@ -42,29 +42,21 @@ $bigQuery = new BigQueryClient([
 ]);
 $dataset = $bigQuery->dataset($datasetId);
 $table = $dataset->table($tableId);
+
 // In this example, the existing table contains only the 'Name' and 'Title'.
-// A new column 'Description' gets added after load job.
+// A new column 'Description' gets added after the query job.
 
-$schema = [
-  'fields' => [
-      ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
-      ['name' => 'title', 'type' => 'string', 'mode' => 'nullable'],
-      ['name' => 'description', 'type' => 'string', 'mode' => 'nullable']
-  ]
-];
-
-$source = __DIR__ . '/../test/data/test_data_extra_column.csv';
+// Define query
+$query = sprintf("SELECT \"John\" as name, \"Unknown\" as title, \"Dummy person\" as description;");
 
 // Set job configs
-$loadConfig = $table->load(fopen($source, 'r'));
-$loadConfig->destinationTable($table);
-$loadConfig->schema($schema);
-$loadConfig->schemaUpdateOptions(['ALLOW_FIELD_ADDITION']);
-$loadConfig->sourceFormat('CSV');
-$loadConfig->writeDisposition('WRITE_APPEND');
+$queryJobConfig = $bigQuery->query($query);
+$queryJobConfig->destinationTable($table);
+$queryJobConfig->schemaUpdateOptions(['ALLOW_FIELD_ADDITION']);
+$queryJobConfig->writeDisposition('WRITE_APPEND');
 
-// Run the job with load config
-$job = $bigQuery->runJob($loadConfig);
+// Run query with query job configuration
+$bigQuery->runQuery($queryJobConfig);
 
 // Print all the columns
 $columns = $table->info()['schema']['fields'];
@@ -72,4 +64,5 @@ printf('The columns in the table are ');
 foreach ($columns as $column) {
   printf("%s ", $column['name']);
 }
-# [END bigquery_add_column_load_append]
+
+# [END bigquery_add_column_query_append]

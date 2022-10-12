@@ -329,11 +329,21 @@ class FunctionsTest extends TestCase
           $tableId
         ]);
 
-        $expectedOutput = sprintf('New column added');
-        $this->assertStringContainsString($expectedOutput, $output);
+        $this->assertStringContainsString('name', $output);
+        $this->assertStringContainsString('title', $output);
+        $this->assertStringContainsString('description', $output);
+    }
 
-        $table = self::$dataset->table($tableId);
-        $this->verifyTable($table, 'Sundays are sleep days', 4);
+    public function testAddColumnQueryAppend()
+    {
+        $tableId = $this->createTempTable();
+        $output = $this->runSnippet('add_column_query_append',[
+          self::$datasetId,
+          $tableId
+        ]);
+        $this->assertStringContainsString('name', $output);
+        $this->assertStringContainsString('title', $output);
+        $this->assertStringContainsString('description', $output);
     }
 
     private function runSnippet($sampleName, $params = [])
