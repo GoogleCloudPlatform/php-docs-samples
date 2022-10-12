@@ -321,6 +321,21 @@ class FunctionsTest extends TestCase
         $this->assertStringContainsString('Found 42 row(s)', $output);
     }
 
+    public function testAddColumnLoadAppend()
+    {
+        $tableId = $this->createTempTable();
+        $output = $this->runSnippet('add_column_load_append',[
+          self::$datasetId,
+          $tableId
+        ]);
+
+        $expectedOutput = sprintf('New column added');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $table = self::$dataset->table($tableId);
+        $this->verifyTable($table, 'Sundays are sleep days', 4);
+    }
+
     private function runSnippet($sampleName, $params = [])
     {
         $argv = array_merge([0, self::$projectId], $params);

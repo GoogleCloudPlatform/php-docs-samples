@@ -52,25 +52,16 @@ $schema = [
       ['name' => 'description', 'type' => 'string', 'mode' => 'nullable']
   ]
 ];
-// $options = [
-//   'schema' => $schema,
-//   'writeDisposition' => 'WRITE_APPEND',
-//   'schemaUpdateOptions' => ['ALLOW_FIELD_ADDITION']
-// ];
 
-$loadConfig = $table->load(fopen('../test/data/test_data_extra_column.csv', 'r'), )
-->destinationTable($table)->schema($schema)
+$source = __DIR__ . '/../test/data/test_data_extra_column.csv';
+
+$loadConfig = $table->load(fopen($source, 'r'))
+->destinationTable($table)
+->schema($schema)
 ->schemaUpdateOptions(['ALLOW_FIELD_ADDITION'])
 ->sourceFormat('CSV')
 ->writeDisposition('WRITE_APPEND');
 
 $job = $bigQuery->runJob($loadConfig);
-
-if ($job->isComplete()) {
-    $tableInfo = $table->info();
-    var_dump($tableInfo);
-}
-
-$a = 6;
+printf('New column added');
 # [END bigquery_add_column_load_append]
-return $a;
