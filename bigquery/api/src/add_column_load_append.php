@@ -70,6 +70,6 @@ $job = $bigQuery->runJob($loadConfig);
 $columns = $table->info()['schema']['fields'];
 printf('The columns in the table are ');
 foreach ($columns as $column) {
-  printf("%s ", $column['name']);
+    printf('%s ', $column['name']);
 }
 # [END bigquery_add_column_load_append]

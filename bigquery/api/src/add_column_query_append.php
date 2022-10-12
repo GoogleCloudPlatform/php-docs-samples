@@ -47,7 +47,7 @@ $table = $dataset->table($tableId);
 // A new column 'Description' gets added after the query job.
 
 // Define query
-$query = sprintf("SELECT \"John\" as name, \"Unknown\" as title, \"Dummy person\" as description;");
+$query = sprintf('SELECT "John" as name, "Unknown" as title, "Dummy person" as description;');
 
 // Set job configs
 $queryJobConfig = $bigQuery->query($query);
@@ -62,7 +62,6 @@ $bigQuery->runQuery($queryJobConfig);
 $columns = $table->info()['schema']['fields'];
 printf('The columns in the table are ');
 foreach ($columns as $column) {
-  printf("%s ", $column['name']);
+    printf('%s ', $column['name']);
 }
-
 # [END bigquery_add_column_query_append]

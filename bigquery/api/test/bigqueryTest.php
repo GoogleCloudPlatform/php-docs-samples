@@ -324,7 +324,7 @@ class FunctionsTest extends TestCase
     public function testAddColumnLoadAppend()
     {
         $tableId = $this->createTempTable();
-        $output = $this->runSnippet('add_column_load_append',[
+        $output = $this->runSnippet('add_column_load_append', [
           self::$datasetId,
           $tableId
         ]);
@@ -337,7 +337,7 @@ class FunctionsTest extends TestCase
     public function testAddColumnQueryAppend()
     {
         $tableId = $this->createTempTable();
-        $output = $this->runSnippet('add_column_query_append',[
+        $output = $this->runSnippet('add_column_query_append', [
           self::$datasetId,
           $tableId
         ]);
