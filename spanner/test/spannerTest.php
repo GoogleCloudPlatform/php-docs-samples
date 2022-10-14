@@ -124,7 +124,7 @@ class spannerTest extends TestCase
         self::$defaultLeader = 'us-central1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
-        $baseConfigId = 'nam11';
+        self::$baseConfigId = 'nam7';
         self::$customInstanceConfigId = 'custom-' . time() . rand();
         self::$customInstanceConfig = $spanner->instanceConfiguration(self::$customInstanceConfigId);
     }
@@ -150,10 +150,9 @@ class spannerTest extends TestCase
     public function testCreateInstanceConfig()
     {
         $output = $this->runFunctionSnippet('create_instance_config', [
-            'user_config_id' => self::$customInstanceConfigId,
-            'base_config_id' => self::$baseConfigId
+            self::$customInstanceConfigId, self::$baseConfigId
         ]);
-        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+
         $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
     }
 
@@ -163,9 +162,9 @@ class spannerTest extends TestCase
     public function testUpdateInstanceConfig()
     {
         $output = $this->runFunctionSnippet('update_instance_config', [
-            'instance_config_id' => self::$customInstanceConfigId
+            self::$customInstanceConfigId
         ]);
-        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+
         $this->assertStringContainsString(sprintf('Updated instance configuration %s', self::$customInstanceConfigId), $output);
     }
 
@@ -175,7 +174,7 @@ class spannerTest extends TestCase
     public function testDeleteInstanceConfig()
     {
         $output = $this->runFunctionSnippet('delete_instance_config', [
-            'instance_config_id' => self::$customInstanceConfigId
+            self::$customInstanceConfigId
         ]);
         $this->assertStringContainsString(sprintf('Deleted instance configuration %s', self::$customInstanceConfigId), $output);
     }
@@ -186,9 +185,9 @@ class spannerTest extends TestCase
     public function testListInstanceConfigOperations()
     {
         $output = $this->runFunctionSnippet('list_instance_config_operations', [
-            'instance_config_id' => self::$customInstanceConfigId
+            self::$customInstanceConfigId
         ]);
-        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+
         $this->assertStringContainsString(
             sprintf(
                 'Instance config operation for %s of type %s has status done.',
@@ -196,6 +195,7 @@ class spannerTest extends TestCase
                 'type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata'
             ),
             $output);
+
         $this->assertStringContainsString(
             sprintf(
                 'Instance config operation for %s of type %s has status done.',
