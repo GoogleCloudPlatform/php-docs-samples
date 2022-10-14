@@ -35,7 +35,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $base64EncryptionKey The base64 encoded encryption key. Should
  *     be the same key originally used to encrypt the object.
  */
-function download_encrypted_object($bucketName, $objectName, $destination, $base64EncryptionKey)
+function download_encrypted_object(string $bucketName, string $objectName, string $destination, string $base64EncryptionKey): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';

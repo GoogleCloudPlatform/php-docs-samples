@@ -34,7 +34,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $newBucketName the destination bucket name.
  * @param string $newObjectName the destination object name.
  */
-function move_object($bucketName, $objectName, $newBucketName, $newObjectName)
+function move_object(string $bucketName, string $objectName, string $newBucketName, string $newObjectName): void
 {
     // $bucketName = 'my-bucket';
     // $objectName = 'my-object';

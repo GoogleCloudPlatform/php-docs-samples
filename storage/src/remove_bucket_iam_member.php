@@ -33,7 +33,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $role The role from which the specified member should be removed.
  * @param string $member The member to be removed from the specified role.
  */
-function remove_bucket_iam_member($bucketName, $role, $member)
+function remove_bucket_iam_member(string $bucketName, string $role, string $member): void
 {
     // $bucketName = 'my-bucket';
     // $role = 'roles/storage.objectViewer';
