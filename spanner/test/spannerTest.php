@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-use Google\Cloud\Spanner\Admin\Instance\V1\CreateInstanceConfigMetadata;
 use Google\Cloud\Spanner\InstanceConfiguration;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
