@@ -19,6 +19,7 @@
 declare(strict_types=1);
 
 // [START functions_storage_unit_test]
+// [START functions_cloudevent_storage_unit_test]
 
 namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
 
@@ -89,4 +90,5 @@ class SampleUnitTest extends TestCase
     }
 }
 
+// [END functions_cloudevent_storage_unit_test]
 // [END functions_storage_unit_test]

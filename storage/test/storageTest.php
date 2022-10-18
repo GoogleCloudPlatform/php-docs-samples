@@ -62,6 +62,21 @@ class storageTest extends TestCase
         $this->assertRegExp('/: OWNER/', $output);
     }
 
+    public function testPrintDefaultBucketAcl()
+    {
+        $output = $this->runFunctionSnippet('print_bucket_default_acl', [
+          self::$tempBucket->name(),
+        ]);
+
+        $defaultAcl = self::$tempBucket->defaultAcl()->get();
+        foreach ($defaultAcl as $item) {
+            $this->assertStringContainsString(
+              sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
+              $output,
+            );
+        }
+    }
+
     /**
      * @return void
      */
@@ -474,28 +489,48 @@ class storageTest extends TestCase
             'name' => 'test.html'
         ]);
 
+        $output = self::runFunctionSnippet('print_bucket_website_configuration', [
+            $bucket->name(),
+        ]);
+
+        $this->assertEquals(
+          sprintf('Bucket website configuration not set' . PHP_EOL),
+          $output,
+        );
+
         $output = self::runFunctionSnippet('define_bucket_website_configuration', [
             $bucket->name(),
             $obj->name(),
             $obj->name(),
         ]);
 
-        $info = $bucket->reload();
-        $obj->delete();
-        $bucket->delete();
-
         $this->assertEquals(
-            sprintf(
-                'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
-                $bucket->name(),
-                $obj->name(),
-                $obj->name(),
-            ),
-            $output
+          sprintf(
+            'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
+            $bucket->name(),
+            $obj->name(),
+            $obj->name(),
+          ),
+          $output
         );
 
-        $this->assertEquals($obj->name(), $info['website']['mainPageSuffix']);
-        $this->assertEquals($obj->name(), $info['website']['notFoundPage']);
+        $info = $bucket->reload();
+
+        $output = self::runFunctionSnippet('print_bucket_website_configuration', [
+          $bucket->name(),
+        ]);
+
+        $this->assertEquals(
+          sprintf(
+            'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+            $info['website']['mainPageSuffix'],
+            $info['website']['notFoundPage'],
+          ),
+          $output,
+        );
+
+        $obj->delete();
+        $bucket->delete();
     }
 
     public function testGetServiceAccount()
