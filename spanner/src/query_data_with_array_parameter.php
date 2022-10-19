@@ -38,7 +38,7 @@ use Google\Cloud\Spanner\Date;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_array_parameter($instanceId, $databaseId)
+function query_data_with_array_parameter(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

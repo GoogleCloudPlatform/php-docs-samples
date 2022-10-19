@@ -32,7 +32,7 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $bucketName The name of your Cloud Storage bucket.
  * @param string $labelName The name of the label to remove.
  */
-function remove_bucket_label($bucketName, $labelName)
+function remove_bucket_label(string $bucketName, string $labelName): void
 {
     // $bucketName = 'my-bucket';
     // $labelName = 'label-key-to-remove';

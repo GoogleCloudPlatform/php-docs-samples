@@ -31,7 +31,7 @@ use Google\Cloud\Storage\StorageClient;
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
  */
-function list_hmac_keys($projectId)
+function list_hmac_keys(string $projectId): void
 {
     // $projectId = 'my-project-id';
 

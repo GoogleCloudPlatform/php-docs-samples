@@ -37,7 +37,7 @@ use Google\Cloud\Spanner\Database;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_client_with_query_options($instanceId, $databaseId)
+function create_client_with_query_options(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient([
         'queryOptions' => [

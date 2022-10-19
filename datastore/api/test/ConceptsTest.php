@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Datastore;
 use Iterator;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
+use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
@@ -400,6 +401,37 @@ class ConceptsTest extends TestCase
         self::$datastore->upsertBatch([$entity1, $entity2]);
         $query = basic_query(self::$datastore);
         $this->assertInstanceOf(Query::class, $query);
+
+        $this->runEventuallyConsistentTest(
+            function () use ($key1, $key2, $query) {
+                $result = run_query(self::$datastore, $query);
+                $num = 0;
+                $entities = [];
+                /* @var Entity $e */
+                foreach ($result as $e) {
+                    $entities[] = $e;
+                    $num += 1;
+                }
+                self::assertEquals(2, $num);
+                $this->assertTrue($entities[0]->key()->path() == $key2->path());
+                $this->assertTrue($entities[1]->key()->path() == $key1->path());
+            });
+    }
+
+    public function testRunGqlQuery()
+    {
+        $key1 = self::$datastore->key('Task', generateRandomString());
+        $key2 = self::$datastore->key('Task', generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity2 = self::$datastore->entity($key2);
+        $entity1['priority'] = 4;
+        $entity1['done'] = false;
+        $entity2['priority'] = 5;
+        $entity2['done'] = false;
+        self::$keys = [$key1, $key2];
+        self::$datastore->upsertBatch([$entity1, $entity2]);
+        $query = basic_gql_query(self::$datastore);
+        $this->assertInstanceOf(GqlQuery::class, $query);
 
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $query) {
