@@ -36,7 +36,7 @@ use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\MetricAggregation;
 
-function runReportWithAggregations(string $propertyId)
+function run_report_with_aggregations(string $propertyId)
 {
     // [START analyticsdata_initialize]
     // mports the Google Analytics Data API client library.
