@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
 
 """Google Analytics Data API sample application demonstrating the usage of
 cohort specification in a report.
@@ -27,7 +27,7 @@ Usage:
   composer update
   php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
  */
- 
+
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_cohorts]
@@ -36,59 +36,58 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\Cohort;
 use Google\Analytics\Data\V1beta\CohortSpec;
 
 function run_report_with_cohorts(string $propertyId)
 {
-// [START analyticsdata_initialize]
-//Imports the Google Analytics Data API client library.'
+    // [START analyticsdata_initialize]
+    //Imports the Google Analytics Data API client library.'
 
-$client = new BetaAnalyticsDataClient();
+    $client = new BetaAnalyticsDataClient();
 
-// [END analyticsdata_initialize]
+    // [END analyticsdata_initialize]
 
-// [START analyticsdata_run_report]
-// Make an API call.
-$response = $client->runReport([
-    'property' => 'properties/' . $property_id,
-    'dimensions' => [new Dimension(
-        [
-            'name' => 'cohort',
-        ]
-    ),
-    new Dimension(
-        [
-            'name' => 'cohortNthWeek',
-        ]
-    ),
-    ],
-    'metrics' => [new Metric(
-        [
-            'name' => 'cohortActiveUsers',
-            'expression' => 'cohortActiveUsers/cohortTotalUsers'
-        ]
-        ),
-        new Metric(
+    // [START analyticsdata_run_report]
+    // Make an API call.
+    $response = $client->runReport([
+        'property' => 'properties/' . $property_id,
+        'dimensions' => [new Dimension(
             [
-                'name' => 'cohortRetentionRate',
+                'name' => 'cohort',
             ]
-        )
+        ),
+        new Dimension(
+            [
+                'name' => 'cohortNthWeek',
+            ]
+        ),
         ],
-    'dateRanges' => [
-        new DateRange([
-            'start_date' => '2020-03-31',
-            'end_date' => 'today',
-        ]),
-    ],
-    'cohortSpec' => [
-    new CohortSpec([
-    
-    ]),
-    ],
+        'metrics' => [new Metric(
+            [
+                'name' => 'cohortActiveUsers',
+                'expression' => 'cohortActiveUsers/cohortTotalUsers'
+            ]
+        ),
+            new Metric(
+                [
+                    'name' => 'cohortRetentionRate',
+                ]
+            )
+            ],
+        'dateRanges' => [
+            new DateRange([
+                'start_date' => '2020-03-31',
+                'end_date' => 'today',
+            ]),
+        ],
+        'cohortSpec' => [
+        new CohortSpec([
 
-]);
-printRunReportResponse($response);
+    ]),
+        ],
+
+    ]);
+    printRunReportResponse($response);
 }
 
 // Print results of a runReport call.
