@@ -15,18 +15,15 @@
  * limitations under the License.
  */
 
-/*
-
-"""Google Analytics Data API sample application demonstrating the usage of
-date ranges in a report.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.date_ranges
-for more information.
-"""
-
-Usage:
-  composer update
-  php run_report_with_date_ranges.php YOUR-GA4-PROPERTY-ID
- */
+/**
+* Google Analytics Data API sample application demonstrating the usage of
+* date ranges in a report.
+* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.date_ranges
+* for more information.
+* Usage:
+*   composer update
+*   php run_report_with_date_ranges.php YOUR-GA4-PROPERTY-ID
+*/
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -35,7 +32,12 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportResponse;
 
+/**
+* @param string $propertyID Your GA-4 Property ID
+*/
 function run_report_with_date_ranges(string $propertyId)
 {
     // [START analyticsdata_initialize]
@@ -73,11 +75,14 @@ function run_report_with_date_ranges(string $propertyId)
         ]
     ]);
 
-    printRunReportResponse($response);
+    printRunReportResponseWithDateRanges($response);
 }
 
-// Print results of a runReport call.
-function printRunReportResponse(RunReportResponse $response)
+/**
+ * Print results of a runReport call.
+ * @param RunReportResponse $response
+ */
+function printRunReportResponseWithDateRanges(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
