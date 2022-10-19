@@ -51,10 +51,10 @@ class analyticsDataTest extends TestCase
         }
     }
 
-    public function testRunReportWithAggregations()
+    public function testRunReportWithCohorts()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
-        $output = $this->runFunctionSnippet('run_report_with_aggregations', [$propertyId]);
+        $output = $this->runFunctionSnippet('run_report_with_cohorts', [$propertyId]);
 
         $this->assertRegExp('/Report result/', $output);
     }

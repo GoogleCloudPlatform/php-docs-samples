@@ -15,61 +15,80 @@
  * limitations under the License.
  */
 
-/**
-* Google Analytics Data API sample application demonstrating the usage of
-* metric aggregations in a report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
-* for more information.
+/* 
 
-* Usage:
-*   composer update
-*   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
-*/
+"""Google Analytics Data API sample application demonstrating the usage of
+cohort specification in a report.
+See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.cohort_spec
+for more information.
+"""
 
+Usage:
+  composer update
+  php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
+ */
+ 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report_with_aggregations]
+// [START analyticsdata_run_report_with_cohorts]
+
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\MetricAggregation;
+use Google\Analytics\Data\V1beta\Cohort;
+use Google\Analytics\Data\V1beta\CohortSpec;
 
-function runReportWithAggregations(string $propertyId)
+function run_report_with_cohorts(string $propertyId)
 {
-    // [START analyticsdata_initialize]
-    // mports the Google Analytics Data API client library.
-    $client = new BetaAnalyticsDataClient();
-    // [END analyticsdata_initialize]
+// [START analyticsdata_initialize]
+//Imports the Google Analytics Data API client library.'
 
-    // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'country',
-            ]
-        )],
-        'metrics' => [new Metric(
-            [
-                'name' => 'sessions',
-            ]
-        )],
-        'dateRanges' => [
-            new DateRange([
-                'start_date' => '365daysAgo',
-                'end_date' => 'today',
-            ]),
-        ],
-        'metricAggregations' => [
-    MetricAggregation::TOTAL,
-    MetricAggregation::MAXIMUM,
-    MetricAggregation::MINIMUM
+$client = new BetaAnalyticsDataClient();
+
+// [END analyticsdata_initialize]
+
+// [START analyticsdata_run_report]
+// Make an API call.
+$response = $client->runReport([
+    'property' => 'properties/' . $property_id,
+    'dimensions' => [new Dimension(
+        [
+            'name' => 'cohort',
         ]
-    ]);
+    ),
+    new Dimension(
+        [
+            'name' => 'cohortNthWeek',
+        ]
+    ),
+    ],
+    'metrics' => [new Metric(
+        [
+            'name' => 'cohortActiveUsers',
+            'expression' => 'cohortActiveUsers/cohortTotalUsers'
+        ]
+        ),
+        new Metric(
+            [
+                'name' => 'cohortRetentionRate',
+            ]
+        )
+        ],
+    'dateRanges' => [
+        new DateRange([
+            'start_date' => '2020-03-31',
+            'end_date' => 'today',
+        ]),
+    ],
+    'cohortSpec' => [
+    new CohortSpec([
+    
+    ]),
+    ],
 
-    printRunReportResponse($response);
+]);
+printRunReportResponse($response);
 }
 
 // Print results of a runReport call.
@@ -94,7 +113,7 @@ function printRunReportResponse($response)
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report_with_aggregations]
+// [END analyticsdata_run_report_with_cohorts]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
