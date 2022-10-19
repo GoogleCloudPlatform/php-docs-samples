@@ -15,42 +15,40 @@
  * limitations under the License.
  */
 
-/*
-
-"""Google Analytics Data API sample application demonstrating the usage of
-cohort specification in a report.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.cohort_spec
-for more information.
-"""
-
-Usage:
-  composer update
-  php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
- */
+/**
+* Google Analytics Data API sample application demonstrating the usage of
+* cohort specification in a report.
+* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.cohort_spec
+* for more information.
+* Usage:
+*   composer update
+*   php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
+*/
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_cohorts]
-
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\CohortSpec;
+use Google\Analytics\Data\V1beta\RunReportResponse;
 
+/**
+* @param string $propertyID Your GA-4 Property ID
+*/
 function run_report_with_cohorts(string $propertyId)
 {
     // [START analyticsdata_initialize]
     //Imports the Google Analytics Data API client library.'
-
     $client = new BetaAnalyticsDataClient();
-
     // [END analyticsdata_initialize]
 
-    // [START analyticsdata_run_report]
     // Make an API call.
     $response = $client->runReport([
-        'property' => 'properties/' . $property_id,
+        'property' => 'properties/' . $propertyId,
         'dimensions' => [new Dimension(
             [
                 'name' => 'cohort',
@@ -87,11 +85,14 @@ function run_report_with_cohorts(string $propertyId)
         ],
 
     ]);
-    printRunReportResponse($response);
+    printRunReportResponseWithCohorts($response);
 }
 
-// Print results of a runReport call.
-function printRunReportResponse($response)
+/**
+ * Print results of a runReport call.
+ * @param RunReportResponse $response
+ */
+function printRunReportResponseWithCohorts($response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
