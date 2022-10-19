@@ -47,7 +47,6 @@ function run_report_with_date_ranges(string $propertyId)
 
     // [END analyticsdata_initialize]
 
-    // [START analyticsdata_run_report]
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,

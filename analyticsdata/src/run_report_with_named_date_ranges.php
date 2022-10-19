@@ -42,12 +42,9 @@ function run_report_with_named_date_ranges(string $propertyId)
 {
     // [START analyticsdata_initialize]
     //Imports the Google Analytics Data API client library.'
-
     $client = new BetaAnalyticsDataClient();
-
     // [END analyticsdata_initialize]
 
-    // [START analyticsdata_run_report]
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
