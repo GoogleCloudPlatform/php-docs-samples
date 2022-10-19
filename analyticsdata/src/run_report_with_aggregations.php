@@ -20,7 +20,6 @@
 * metric aggregations in a report.
 * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
 * for more information.
-
 * Usage:
 *   composer update
 *   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
@@ -35,7 +34,11 @@ use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\MetricAggregation;
+use Google\Analytics\Data\V1beta\RunReportResponse;
 
+/**
+* @param string $propertyID Your GA-4 Property ID
+*/
 function run_report_with_aggregations(string $propertyId)
 {
     // [START analyticsdata_initialize]
@@ -72,7 +75,10 @@ function run_report_with_aggregations(string $propertyId)
     printRunReportResponseWithAggregations($response);
 }
 
-// Print results of a runReport call.
+/**
+ * Print results of a runReport call.
+ * @param RunReportResponse $response
+ */
 function printRunReportResponseWithAggregations($response)
 {
     // [START analyticsdata_print_run_report_response_header]
