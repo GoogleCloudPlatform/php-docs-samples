@@ -73,7 +73,7 @@ function run_report_with_aggregations(string $propertyId)
 }
 
 // Print results of a runReport call.
-function printRunReportResponseAggregations($response)
+function printRunReportResponseWithAggregations($response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
