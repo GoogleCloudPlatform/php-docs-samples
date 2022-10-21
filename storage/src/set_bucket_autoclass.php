@@ -29,14 +29,11 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Updates an existing bucket with provided autoclass toggle.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket (e.g. 'my-bucket').
  * @param bool $autoclassStatus If true, enables Autoclass. Disables otherwise.
  */
 function set_bucket_autoclass(string $bucketName, bool $autoclassStatus): void
 {
-    // $bucketName = 'my-bucket';
-    // $autoclassStatus = false;
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
