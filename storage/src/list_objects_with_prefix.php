@@ -34,9 +34,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function list_objects_with_prefix(string $bucketName, string $directoryPrefix): void
 {
-    // $bucketName = 'my-bucket';
-    // $directoryPrefix = 'myDirectory/';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $options = ['prefix' => $directoryPrefix];

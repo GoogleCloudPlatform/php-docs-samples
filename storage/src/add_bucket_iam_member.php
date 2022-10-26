@@ -35,10 +35,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function add_bucket_iam_member(string $bucketName, string $role, array $members): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $members = ['group:example@google.com'];
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

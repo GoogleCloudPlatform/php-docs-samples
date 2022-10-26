@@ -36,11 +36,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function create_bucket_dual_region(string $bucketName, string $location, string $region1, string $region2): void
 {
-    // $bucketName = 'my-bucket';
-    // $location = 'US';
-    // $region1 = 'US-EAST1';
-    // $region2 = 'US-WEST1';
-
     $storage = new StorageClient();
     $bucket = $storage->createBucket($bucketName, [
         'location' => $location,

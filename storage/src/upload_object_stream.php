@@ -36,10 +36,6 @@ use Google\Cloud\Storage\WriteStream;
  */
 function upload_object_stream(string $bucketName, string $objectName, string $contents): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $contents = 'these are my contents';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $writeStream = new WriteStream(null, [

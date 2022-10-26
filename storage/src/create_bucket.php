@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function create_bucket(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
 
     $bucket = $storage->createBucket($bucketName);

@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function change_default_storage_class(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

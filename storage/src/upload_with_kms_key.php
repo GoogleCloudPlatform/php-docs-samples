@@ -38,11 +38,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function upload_with_kms_key(string $bucketName, string $objectName, string $source, string $kmsKeyName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $source = '/path/to/your/file';
-    // $kmsKeyName = "";
-
     $storage = new StorageClient();
     $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);

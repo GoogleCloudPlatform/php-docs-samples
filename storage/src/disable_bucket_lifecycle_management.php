@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function disable_bucket_lifecycle_management(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
 
     $bucket = $storage->bucket($bucketName);

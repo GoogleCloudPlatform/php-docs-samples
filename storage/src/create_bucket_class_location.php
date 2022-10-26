@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function create_bucket_class_location(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $storageClass = 'COLDLINE';
     $location = 'ASIA';

@@ -39,9 +39,6 @@ function print_pubsub_bucket_notification(
     string $bucketName,
     string $notificationId
 ): void {
-    // $bucketName = 'your-bucket';
-    // $notificationId = 'your-notification-id';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notification = $bucket->notification($notificationId);

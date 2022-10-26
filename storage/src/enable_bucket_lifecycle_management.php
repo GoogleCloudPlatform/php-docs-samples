@@ -34,8 +34,6 @@ use Google\Cloud\Storage\Bucket;
  */
 function enable_bucket_lifecycle_management(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

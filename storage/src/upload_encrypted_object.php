@@ -36,11 +36,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function upload_encrypted_object(string $bucketName, string $objectName, string $source, string $base64EncryptionKey): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $source = '/path/to/your/file';
-    // $base64EncryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';
-
     $storage = new StorageClient();
     $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);

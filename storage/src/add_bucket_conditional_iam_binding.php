@@ -41,13 +41,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function add_bucket_conditional_iam_binding(string $bucketName, string $role, array $members, string $title, string $description, string $expression): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $members = ['group:example@google.com'];
-    // $title = 'Title';
-    // $description = 'Condition Description';
-    // $expression = 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

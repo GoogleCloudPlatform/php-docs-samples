@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function disable_uniform_bucket_level_access(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([

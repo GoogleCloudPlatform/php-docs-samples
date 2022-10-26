@@ -35,10 +35,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function remove_bucket_iam_member(string $bucketName, string $role, string $member): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $member = 'group:example@google.com';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $iam = $bucket->iam();

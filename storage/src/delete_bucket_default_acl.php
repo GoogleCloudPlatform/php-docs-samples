@@ -34,9 +34,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function delete_bucket_default_acl(string $bucketName, string $entity): void
 {
-    // $bucketName = 'my-bucket';
-    // $entity = 'user-example@domain.com';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();

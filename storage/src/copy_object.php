@@ -36,11 +36,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function copy_object(string $bucketName, string $objectName, string $newBucketName, string $newObjectName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $newBucketName = 'my-other-bucket';
-    // $newObjectName = 'my-other-object';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

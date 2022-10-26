@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function get_bucket_labels(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $info = $bucket->info();

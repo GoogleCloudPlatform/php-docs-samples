@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function get_service_account(string $projectId): void
 {
-    // $projectId = 'my-project-id';
-
     $storage = new StorageClient([
         'projectId' => $projectId,
     ]);

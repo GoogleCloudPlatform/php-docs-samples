@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function set_rpo_default(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $rpo = 'DEFAULT';

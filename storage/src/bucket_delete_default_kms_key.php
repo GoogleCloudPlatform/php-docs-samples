@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function bucket_delete_default_kms_key(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

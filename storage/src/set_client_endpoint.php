@@ -36,9 +36,6 @@ function set_client_endpoint(
     string $projectId,
     string $endpoint
 ): void {
-    // $projectId = 'my-project-id';
-    // $endpoint = 'https://storage.googleapis.com';
-
     $storage = new StorageClient([
         'projectId' => $projectId,
         'apiEndpoint' => $endpoint,

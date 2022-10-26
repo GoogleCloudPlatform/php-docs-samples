@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function list_file_archived_generations(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

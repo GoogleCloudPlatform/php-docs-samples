@@ -36,11 +36,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function download_file_requester_pays(string $projectId, string $bucketName, string $objectName, string $destination): void
 {
-    // $projectId = 'my-project-id';
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $destination = '/path/to/your/file';
-
     $storage = new StorageClient([
         'projectId' => $projectId
     ]);

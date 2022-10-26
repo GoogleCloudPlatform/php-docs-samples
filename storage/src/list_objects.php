@@ -33,8 +33,6 @@ use Google\Cloud\Storage\StorageClient;
  */
 function list_objects(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     foreach ($bucket->objects() as $object) {
