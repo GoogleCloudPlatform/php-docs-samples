@@ -29,14 +29,11 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Print an entity's role for a bucket's default ACL.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $entity The entity for which to update access controls.
+ * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $entity The entity for which to update access controls. (e.g. 'user-example@domain.com')
  */
 function get_bucket_default_acl_for_entity(string $bucketName, string $entity): void
 {
-    // $bucketName = 'my-bucket';
-    // $entity = 'user-example@domain.com';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();

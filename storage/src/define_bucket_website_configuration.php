@@ -29,18 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Update the given bucket's website configuration.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $indexPageObject the name of an object in the bucket to use as
+ * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $indexPageObject the name of an object in the bucket to use as (e.g. 'index.html')
  *     an index page for a static website bucket.
- * @param string $notFoundPageObject the name of an object in the bucket to use
+ * @param string $notFoundPageObject the name of an object in the bucket to use (e.g. '404.html')
  *     as the 404 Not Found page.
  */
 function define_bucket_website_configuration(string $bucketName, string $indexPageObject, string $notFoundPageObject): void
 {
-    // $bucketName = 'my-bucket';
-    // $indexPageObject = 'index.html';
-    // $notFoundPageObject = '404.html';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

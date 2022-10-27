@@ -30,12 +30,10 @@ use Google\Cloud\Storage\StorageClient;
  * Set the bucket's Turbo Replication(rpo) setting to `ASYNC_TURBO`.
  * The bucket must be a dual-region bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $bucketName the name of your Cloud Storage bucket. (e.g. 'my-bucket')
  */
 function set_rpo_async_turbo(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $rpo = 'ASYNC_TURBO';

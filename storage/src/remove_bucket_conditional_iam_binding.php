@@ -32,20 +32,14 @@ use Google\Cloud\Storage\StorageClient;
  * To see how to express a condition in CEL, visit:
  * @see https://cloud.google.com/storage/docs/access-control/iam#conditions.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $role the role that will be given to members in this binding.
- * @param string $title The title of the condition.
- * @param string $description The description of the condition.
- * @param string $expression Te condition specified in CEL expression language.
+ * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $role the role that will be given to members in this binding. (e.g. 'roles/storage.objectViewer')
+ * @param string $title The title of the condition. (e.g. 'Title')
+ * @param string $description The description of the condition. (e.g. 'Condition Description')
+ * @param string $expression Te condition specified in CEL expression language. (e.g. 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")')
  */
 function remove_bucket_conditional_iam_binding(string $bucketName, string $role, string $title, string $description, string $expression): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $title = 'Title';
-    // $description = 'Condition Description';
-    // $expression = 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

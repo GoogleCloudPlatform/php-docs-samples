@@ -31,13 +31,11 @@ use Google\Cloud\Storage\StorageClient;
  * This sample is used on this page:
  *   https://cloud.google.com/storage/docs/reporting-changes
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'your-bucket')
  */
 function list_bucket_notifications(
     string $bucketName
 ): void {
-    // $bucketName = 'your-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notifications = $bucket->notifications();

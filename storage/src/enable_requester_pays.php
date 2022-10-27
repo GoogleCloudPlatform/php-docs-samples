@@ -29,12 +29,10 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enable a bucket's requesterpays metadata.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
  */
 function enable_requester_pays(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([

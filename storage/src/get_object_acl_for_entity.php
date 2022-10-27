@@ -29,16 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Print an entity's role for an object's ACL.
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $objectName The name of your Cloud Storage object.
- * @param string $entity The entity for which to update access controls.
+ * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $objectName The name of your Cloud Storage object. (e.g. 'my-object')
+ * @param string $entity The entity for which to update access controls. (e.g. 'user-example@domain.com')
  */
 function get_object_acl_for_entity(string $bucketName, string $objectName, string $entity): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $entity = 'user-example@domain.com';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
