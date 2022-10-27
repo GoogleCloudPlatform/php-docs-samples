@@ -33,6 +33,8 @@ use Google\Cloud\Storage\StorageClient;
  */
 function list_hmac_keys(string $projectId): void
 {
+    // $projectId = 'my-project-id';
+
     $storage = new StorageClient();
     // By default hmacKeys will use the projectId used by StorageClient() to list HMAC Keys.
     $hmacKeys = $storage->hmacKeys(['projectId' => $projectId]);

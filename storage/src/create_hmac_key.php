@@ -34,6 +34,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function create_hmac_key(string $projectId, string $serviceAccountEmail): void
 {
+    // $projectId = 'my-project-id';
+    // $serviceAccountEmail = 'service-account@iam.gserviceaccount.com';
+
     $storage = new StorageClient();
     // By default createHmacKey will use the projectId used by StorageClient().
     $hmacKeyCreated = $storage->createHmacKey($serviceAccountEmail, ['projectId' => $projectId]);

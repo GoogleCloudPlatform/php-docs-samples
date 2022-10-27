@@ -33,6 +33,8 @@ use Google\Cloud\Storage\StorageClient;
  */
 function delete_bucket(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->delete();

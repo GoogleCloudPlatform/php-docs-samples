@@ -40,6 +40,11 @@ use Google\Cloud\Storage\StorageClient;
  */
 function object_csek_to_cmek(string $bucketName, string $objectName, string $decryptionKey, string $kmsKeyName): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $decryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';
+    // $kmsKeyName = "";
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

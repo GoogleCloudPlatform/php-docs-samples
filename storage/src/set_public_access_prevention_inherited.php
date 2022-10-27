@@ -33,6 +33,8 @@ use Google\Cloud\Storage\StorageClient;
  */
 function set_public_access_prevention_inherited(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

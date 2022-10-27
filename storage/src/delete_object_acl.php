@@ -35,6 +35,10 @@ use Google\Cloud\Storage\StorageClient;
  */
 function delete_object_acl(string $bucketName, string $objectName, string $entity): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

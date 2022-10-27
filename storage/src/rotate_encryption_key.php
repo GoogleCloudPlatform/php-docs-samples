@@ -43,6 +43,11 @@ function rotate_encryption_key(
     string $oldBase64EncryptionKey,
     string $newBase64EncryptionKey
 ): void {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $oldbase64EncryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';
+    // $newBase64EncryptionKey = '0mMWhFvQOdS4AmxRpo8SJxXn5MjFhbz7DkKBUdUIef8=';
+
     $storage = new StorageClient();
     $object = $storage->bucket($bucketName)->object($objectName);
 

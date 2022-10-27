@@ -34,6 +34,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function set_retention_policy(string $bucketName, int $retentionPeriod): void
 {
+    // $bucketName = 'my-bucket';
+    // $retentionPeriod = 3600;
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([

@@ -37,6 +37,10 @@ use Google\Cloud\Storage\StorageClient;
  */
 function define_bucket_website_configuration(string $bucketName, string $indexPageObject, string $notFoundPageObject): void
 {
+    // $bucketName = 'my-bucket';
+    // $indexPageObject = 'index.html';
+    // $notFoundPageObject = '404.html';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

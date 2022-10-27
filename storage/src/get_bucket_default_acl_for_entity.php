@@ -34,6 +34,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function get_bucket_default_acl_for_entity(string $bucketName, string $entity): void
 {
+    // $bucketName = 'my-bucket';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();

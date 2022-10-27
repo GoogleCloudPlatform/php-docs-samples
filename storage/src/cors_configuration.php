@@ -38,6 +38,12 @@ use Google\Cloud\Storage\StorageClient;
  */
 function cors_configuration(string $bucketName, string $method, string $origin, string $responseHeader, int $maxAgeSeconds): void
 {
+    // $bucketName = 'my-bucket';
+    // $method = 'GET';
+    // $origin = 'http://example.appspot.com';
+    // $responseHeader = 'Content-Type';
+    // $maxAgeSeconds = 3600;
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

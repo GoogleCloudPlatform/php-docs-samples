@@ -36,6 +36,9 @@ function download_object_into_memory(
     string $bucketName,
     string $objectName
 ): void {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

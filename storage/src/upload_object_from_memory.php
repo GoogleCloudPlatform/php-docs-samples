@@ -38,6 +38,10 @@ function upload_object_from_memory(
     string $objectName,
     string $contents
 ): void {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $contents = 'these are my contents';
+
     $storage = new StorageClient();
     $stream = fopen('data://text/plain,' . $contents, 'r');
     $bucket = $storage->bucket($bucketName);

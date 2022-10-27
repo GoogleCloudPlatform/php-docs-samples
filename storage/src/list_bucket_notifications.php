@@ -36,6 +36,8 @@ use Google\Cloud\Storage\StorageClient;
 function list_bucket_notifications(
     string $bucketName
 ): void {
+    // $bucketName = 'your-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notifications = $bucket->notifications();

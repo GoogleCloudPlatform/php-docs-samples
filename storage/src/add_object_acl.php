@@ -36,6 +36,11 @@ use Google\Cloud\Storage\StorageClient;
  */
 function add_object_acl(string $bucketName, string $objectName, string $entity, string $role): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $entity = 'user-example@domain.com';
+    // $role = 'OWNER';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

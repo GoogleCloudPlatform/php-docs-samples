@@ -36,6 +36,11 @@ use Google\Cloud\Storage\StorageClient;
  */
 function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName): void
 {
+    // $bucketName = 'my-bucket';
+    // $firstObjectName = 'my-object-1';
+    // $secondObjectName = 'my-object-2';
+    // $targetObjectName = 'composed-my-object-1-my-object-2';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

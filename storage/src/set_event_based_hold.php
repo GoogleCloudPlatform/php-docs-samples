@@ -34,6 +34,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function set_event_based_hold(string $bucketName, string $objectName): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

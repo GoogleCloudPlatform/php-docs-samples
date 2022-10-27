@@ -33,6 +33,8 @@ use Google\Cloud\Storage\StorageClient;
  */
 function get_bucket_default_acl(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();

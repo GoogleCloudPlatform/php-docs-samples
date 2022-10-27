@@ -35,6 +35,10 @@ use Google\Cloud\Storage\StorageClient;
  */
 function download_public_file(string $bucketName, string $objectName, string $destination): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $destination = '/home/admin/downloads/my-object';
+
     // create a storage client without authentication
     $storage = new StorageClient([
     ]);

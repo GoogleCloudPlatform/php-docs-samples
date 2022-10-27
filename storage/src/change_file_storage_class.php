@@ -35,6 +35,10 @@ use Google\Cloud\Storage\StorageClient;
  */
 function change_file_storage_class(string $bucketName, string $objectName, string $storageClass): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $storageClass = 'COLDLINE';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

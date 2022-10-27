@@ -36,6 +36,8 @@ use Google\Cloud\Storage\StorageClient;
  */
 function create_bucket_turbo_replication(string $bucketName, string $location = 'nam4'): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $rpo = 'ASYNC_TURBO';
 

@@ -36,6 +36,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function enable_default_kms_key(string $bucketName, string $kmsKeyName): void
 {
+    // $bucketName = 'my-bucket';
+    // $kmsKeyName = "";
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update([

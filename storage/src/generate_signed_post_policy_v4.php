@@ -34,6 +34,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function generate_signed_post_policy_v4(string $bucketName, string $objectName): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

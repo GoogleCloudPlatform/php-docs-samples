@@ -33,6 +33,8 @@ use Google\Cloud\Storage\StorageClient;
  */
 function set_bucket_public_iam(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

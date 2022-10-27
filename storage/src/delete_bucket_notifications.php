@@ -38,6 +38,9 @@ function delete_bucket_notifications(
     string $bucketName,
     string $notificationId
 ): void {
+    // $bucketName = 'your-bucket';
+    // $notificationId = 'your-notification-id';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notification = $bucket->notification($notificationId);

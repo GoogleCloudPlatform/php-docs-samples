@@ -38,6 +38,10 @@ function print_file_acl_for_user(
     string $objectName,
     string $entity
 ): void {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

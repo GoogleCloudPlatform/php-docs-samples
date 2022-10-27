@@ -36,6 +36,10 @@ use Google\Cloud\Storage\StorageClient;
  */
 function download_object(string $bucketName, string $objectName, string $destination): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $destination = '/path/to/your/file';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

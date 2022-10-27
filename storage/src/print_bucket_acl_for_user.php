@@ -36,6 +36,9 @@ function print_bucket_acl_for_user(
     string $bucketName,
     string $entity
 ): void {
+    // $bucketName = 'my-bucket';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->acl();

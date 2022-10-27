@@ -38,6 +38,9 @@ function create_bucket_notifications(
     string $bucketName,
     string $topicName
 ): void {
+    // $bucketName = 'my-bucket';
+    // $topicName = 'my-topic';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notification = $bucket->createNotification($topicName);

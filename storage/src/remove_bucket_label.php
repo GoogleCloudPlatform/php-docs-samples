@@ -34,6 +34,9 @@ use Google\Cloud\Storage\StorageClient;
  */
 function remove_bucket_label(string $bucketName, string $labelName): void
 {
+    // $bucketName = 'my-bucket';
+    // $labelName = 'label-key-to-remove';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $labels = [$labelName => null];
