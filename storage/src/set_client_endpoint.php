@@ -29,13 +29,16 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Sets a custom endpoint for storage client.
  *
- * @param string $projectId The ID of your Google Cloud Platform project. (e.g. 'my-project-id')
- * @param string $endpoint The endpoint for storage client to target. (e.g. 'https://storage.googleapis.com')
+ * @param string $projectId The ID of your Google Cloud Platform project.
+ * @param string $endpoint The endpoint for storage client to target.
  */
 function set_client_endpoint(
     string $projectId,
     string $endpoint
 ): void {
+    // $projectId = 'my-project-id';
+    // $endpoint = 'https://storage.googleapis.com';
+
     $storage = new StorageClient([
         'projectId' => $projectId,
         'apiEndpoint' => $endpoint,

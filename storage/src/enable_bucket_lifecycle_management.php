@@ -30,10 +30,12 @@ use Google\Cloud\Storage\Bucket;
 /**
  * Enable bucket lifecycle management.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function enable_bucket_lifecycle_management(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

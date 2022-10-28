@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Get bucket metadata.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function get_bucket_metadata(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $info = $bucket->info();

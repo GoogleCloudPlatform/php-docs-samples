@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enables a default event-based hold for a bucket.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function enable_default_event_based_hold(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->update(['defaultEventBasedHold' => true]);

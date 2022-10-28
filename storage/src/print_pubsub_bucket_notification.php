@@ -32,13 +32,16 @@ use Google\Cloud\Storage\StorageClient;
  * This sample is used on this page:
  *   https://cloud.google.com/storage/docs/reporting-changes
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'your-bucket')
- * @param string $notificationId The ID of the notification. (e.g. 'your-notification-id')
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $notificationId The ID of the notification.
  */
 function print_pubsub_bucket_notification(
     string $bucketName,
     string $notificationId
 ): void {
+    // $bucketName = 'your-bucket';
+    // $notificationId = 'your-notification-id';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notification = $bucket->notification($notificationId);

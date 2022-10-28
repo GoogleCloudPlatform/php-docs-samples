@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * View Bucket IAM members for a given Cloud Storage bucket.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function view_bucket_iam_members(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

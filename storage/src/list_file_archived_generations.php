@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * List objects in a specified bucket with all archived generations.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function list_file_archived_generations(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

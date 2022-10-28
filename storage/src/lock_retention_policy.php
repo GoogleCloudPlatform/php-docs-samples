@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Locks a bucket's retention policy.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
+ * @param string $bucketName The name of your Cloud Storage bucket.
  */
 function lock_retention_policy(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucket->reload();

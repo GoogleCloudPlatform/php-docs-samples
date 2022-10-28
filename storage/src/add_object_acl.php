@@ -29,13 +29,18 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Add an entity and role to an object's ACL.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
- * @param string $objectName The name of your Cloud Storage object. (e.g. 'my-object')
- * @param string $entity The entity for which to update access controls. (e.g. 'user-example@domain.com')
- * @param string $role The permissions to add for the specified entity. (e.g. 'OWNER')
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $objectName The name of your Cloud Storage object.
+ * @param string $entity The entity for which to update access controls.
+ * @param string $role The permissions to add for the specified entity.
  */
 function add_object_acl(string $bucketName, string $objectName, string $entity, string $role): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $entity = 'user-example@domain.com';
+    // $role = 'OWNER';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

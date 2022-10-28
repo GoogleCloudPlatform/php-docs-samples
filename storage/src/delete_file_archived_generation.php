@@ -29,12 +29,16 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Delete an archived generation of the given object.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
- * @param string $objectName The name of your Cloud Storage object. (e.g. 'my-object')
- * @param string $generationToDelete the generation of the object to delete. (e.g. 1579287380533984)
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $objectName The name of your Cloud Storage object.
+ * @param string $generationToDelete the generation of the object to delete.
  */
 function delete_file_archived_generation(string $bucketName, string $objectName, string $generationToDelete): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $generationToDelete = 1579287380533984;
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

@@ -29,11 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Set a metadata key and value on the specified object.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
- * @param string $objectName The name of your Cloud Storage object. (e.g. 'my-object')
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $objectName The name of your Cloud Storage object.
  */
 function set_metadata(string $bucketName, string $objectName): void
 {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

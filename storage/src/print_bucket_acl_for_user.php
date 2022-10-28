@@ -29,13 +29,16 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Print an entity role for a bucket ACL.
  *
- * @param string $bucketName The name of your Cloud Storage bucket. (e.g. 'my-bucket')
- * @param string $entity The entity for which to query access controls. (e.g. 'user-example@domain.com')
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ * @param string $entity The entity for which to query access controls.
  */
 function print_bucket_acl_for_user(
     string $bucketName,
     string $entity
 ): void {
+    // $bucketName = 'my-bucket';
+    // $entity = 'user-example@domain.com';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->acl();
