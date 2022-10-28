@@ -30,13 +30,12 @@ use Google\Cloud\Storage\StorageClient;
  * Generate a v4 signed URL for downloading an object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ * (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ * (e.g. 'my-object')
  */
 function get_object_v4_signed_url(string $bucketName, string $objectName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

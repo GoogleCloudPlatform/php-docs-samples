@@ -31,13 +31,12 @@ use Google\Cloud\Storage\StorageClient;
  * The bucket must be a dual-region bucket for this setting to take effect.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ * (e.g. 'my-bucket')
  * @param string $location The Dual-Region location where you want your bucket to reside (e.g. "US-CENTRAL1+US-WEST1").
                                            Read more at https://cloud.google.com/storage/docs/locations#location-dr
  */
 function create_bucket_turbo_replication(string $bucketName, string $location = 'nam4'): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $rpo = 'ASYNC_TURBO';
 

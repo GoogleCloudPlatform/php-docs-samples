@@ -30,13 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Delete an HMAC key.
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
- * @param string $accessId Access ID for an HMAC key.
+ * (e.g. 'my-project-id')
+ * @param string $accessId Access ID for an HMAC key. (e.g. 'GOOG0234230X00')
  */
 function delete_hmac_key(string $projectId, string $accessId): void
 {
-    // $projectId = 'my-project-id';
-    // $accessId = 'GOOG0234230X00';
-
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().
     $hmacKey = $storage->hmacKey($accessId, $projectId);

@@ -30,13 +30,12 @@ use Google\Cloud\Storage\StorageClient;
  * Print all entities and roles for an object's ACL.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ * (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ * (e.g. 'my-object')
  */
 function get_object_acl(string $bucketName, string $objectName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
