@@ -30,14 +30,10 @@ use Google\Cloud\Storage\StorageClient;
  * Download a byte range from Cloud Storage and save it as a local file.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
- * (e.g. 'my-object')
  * @param int $startByte The starting byte at which to begin the download.
- * (e.g. 1)
- * @param int $endByte The ending byte at which to end the download. (e.g. 5)
+ * @param int $endByte The ending byte at which to end the download.
  * @param string $destination The local destination to save the object.
- * (e.g. '/path/to/your/file')
  */
 function download_byte_range(
     string $bucketName,
@@ -46,6 +42,12 @@ function download_byte_range(
     int $endByte,
     string $destination
 ): void {
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $startByte = 1;
+    // $endByte = 5;
+    // $destination = '/path/to/your/file';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

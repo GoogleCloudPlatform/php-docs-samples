@@ -30,10 +30,11 @@ use Google\Cloud\Storage\StorageClient;
  * Set the bucket Public Access Prevention to enforced.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
- * (e.g. 'my-bucket')
  */
 function set_public_access_prevention_enforced(string $bucketName): void
 {
+    // $bucketName = 'my-bucket';
+
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

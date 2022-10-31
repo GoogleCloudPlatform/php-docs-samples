@@ -30,16 +30,17 @@ use Google\Cloud\Storage\StorageClient;
  * Download file using specified project as requester
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
- * (e.g. 'my-project-id')
  * @param string $bucketName The name of your Cloud Storage bucket.
- * (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
- * (e.g. 'my-object')
  * @param string $destination The local destination to save the object.
- * (e.g. '/path/to/your/file')
  */
 function download_file_requester_pays(string $projectId, string $bucketName, string $objectName, string $destination): void
 {
+    // $projectId = 'my-project-id';
+    // $bucketName = 'my-bucket';
+    // $objectName = 'my-object';
+    // $destination = '/path/to/your/file';
+
     $storage = new StorageClient([
         'projectId' => $projectId
     ]);
