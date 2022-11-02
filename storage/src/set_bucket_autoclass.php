@@ -29,6 +29,9 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Updates an existing bucket with provided autoclass toggle.
  *
+ * Note: Only patch requests that disable autoclass are currently supported.
+ * To enable autoclass, it must be set at bucket creation time.
+ *
  * @param string $bucketName The name of your Cloud Storage bucket (e.g. 'my-bucket').
  * @param bool $autoclassStatus If true, enables Autoclass. Disables otherwise.
  */
