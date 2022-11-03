@@ -269,7 +269,8 @@ class FunctionsTest extends TestCase
             FROM `publicdata.samples.shakespeare` GROUP BY corpus LIMIT 10';
 
         $output = $this->runSnippet('run_query', [$query]);
-        // This is sufficient
+        $this->assertStringContainsString('hamlet', $output);
+        $this->assertStringContainsString('kinglear', $output);
         $this->assertStringContainsString('Found 10 row(s)', $output);
     }
 
