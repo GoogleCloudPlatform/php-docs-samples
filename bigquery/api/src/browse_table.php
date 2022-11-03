@@ -27,9 +27,9 @@ namespace Google\Cloud\Samples\BigQuery;
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
- * Browse the given table for data
+ * Browses the given table for data
  *
- * @param string $projectId The name of your Google Cloud Project.
+ * @param string $projectId The project Id of your Google Cloud Project.
  * @param string $datasetId The BigQuery dataset ID.
  * @param string $tableId The BigQuery table ID.
  * @param int $startIndex Zero-based index of the starting row.
