@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,33 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
  */
 
-namespace Google\Cloud\Samples\Storage;
+namespace Google\Cloud\Samples\Spanner;
 
-# [START storage_delete_file]
-use Google\Cloud\Storage\StorageClient;
+// [START spanner_delete_instance_config]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Delete an object.
+ * Deletes a customer managed instance configuration.
+ * Example:
+ * ```
+ * delete_instance_config($instanceConfigId);
+ * ```
  *
- * @param string $bucketName The name of your Cloud Storage bucket.
- *        (e.g. 'my-bucket')
- * @param string $objectName The name of your Cloud Storage object.
- *        (e.g. 'my-object')
+ * @param string $instanceConfigId The customer managed instance configuration id. The id must start with 'custom-'.
  */
-function delete_object(string $bucketName, string $objectName): void
+function delete_instance_config($instanceConfigId)
 {
-    $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
-    $object = $bucket->object($objectName);
-    $object->delete();
-    printf('Deleted gs://%s/%s' . PHP_EOL, $bucketName, $objectName);
+    $spanner = new SpannerClient();
+    $instanceConfiguration = $spanner->instanceConfiguration($instanceConfigId);
+
+    $instanceConfiguration->delete();
+
+    printf('Deleted instance configuration %s' . PHP_EOL, $instanceConfigId);
 }
-# [END storage_delete_file]
+// [END spanner_delete_instance_config]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
