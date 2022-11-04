@@ -34,7 +34,15 @@ use Google\Cloud\Spanner\SpannerClient;
  */
 function delete_dml_returning(string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
+    $spanner = new SpannerClient([
+      'projectId' => 'appdev-soda-spanner-staging',
+      'quotaProject' => 'yashsahu-dev-test',
+      'apiEndPoint' => 'staging-wrenchworks.sandbox.googleapis.com'
+    ]);
+    // $spanner = new SpannerClient([
+    //   'quotaProject' => 'yashsahu-dev-test',
+    //   'projectId' => 'appdev-soda-spanner-staging'
+    // ]);
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
@@ -42,11 +50,10 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning sql delete query
     $result = $transaction->execute(
-        'DELETE FROM Singers WHERE FirstName = @firstName '
-        . 'THEN RETURN SingerId, LastName',
+        'DELETE FROM Singers WHERE FirstName = @firstName THEN RETURN SingerId, LastName',
         [
           'parameters' => [
-            'firstName' => 'Melissa',
+            'firstName' => 'Alice',
           ]
         ]
     );

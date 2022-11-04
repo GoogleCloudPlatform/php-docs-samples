@@ -34,22 +34,26 @@ use Google\Cloud\Spanner\SpannerClient;
  */
 function insert_dml_returning(string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
+    $spanner = new SpannerClient([
+      'quotaProject' => 'yashsahu-dev-test',
+      'projectId' => 'appdev-soda-spanner-staging',
+      'apiEndPoint' => 'staging-wrenchworks.sandbox.googleapis.com'
+    ]);
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     // DML returning sql insert query
-    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
+    $sql = "INSERT INTO Singers (SingerId, FirstName, LastName) "
     . "VALUES (12, 'Melissa', 'Garcia'), "
     . "(13, 'Russell', 'Morales'), "
     . "(14, 'Jacqueline', 'Long'), "
     . "(15, 'Dylan', 'Shaw') "
-    . 'THEN RETURN *';
+    . "THEN RETURN *";
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
-    $rows = $result->rows()->current();
-    var_dump($rows);
+    $row = $result->rows()->current();
+    var_dump($row);
 }
 // [END spanner_insert_dml_returning]
 
