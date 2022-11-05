@@ -95,16 +95,9 @@ class spannerTest extends TestCase
 
         $spanner = new SpannerClient([
             'projectId' => self::$projectId,
-            'quotaProject' => 'yashsahu-dev-test',
-            'apiEndPoint' => 'staging-wrenchworks.sandbox.googleapis.com'
         ]);
-        // $spanner = new SpannerClient([
-        //   'quotaProject' => 'yashsahu-dev-test',
-        //   'projectId' => 'appdev-soda-spanner-staging'
-        // ]);
 
-        // self::$instanceId = 'test-' . time() . rand();
-        self::$instanceId = 'a0-yashsahu';
+        self::$instanceId = 'test-' . time() . rand();
         self::$lowCostInstanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
         self::$encryptedDatabaseId = 'en-test-' . time() . rand();
@@ -127,20 +120,18 @@ class spannerTest extends TestCase
         $output = $this->runFunctionSnippet('create_instance', [
             'instance_id' => self::$instanceId
         ]);
-        // $data = self::$instance->info();
-        // var_dump($data);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
-        $this->assertStringContainsString('Created instance a0-yashsahu-', $output);
+        $this->assertStringContainsString('Created instance test-', $output);
     }
 
-    // public function testCreateInstanceWithProcessingUnits()
-    // {
-    //     $output = $this->runFunctionSnippet('create_instance_with_processing_units', [
-    //         'instance_id' => self::$lowCostInstanceId
-    //     ]);
-    //     $this->assertStringContainsString('Waiting for operation to complete...', $output);
-    //     $this->assertStringContainsString('Created instance test-', $output);
-    // }
+    public function testCreateInstanceWithProcessingUnits()
+    {
+        $output = $this->runFunctionSnippet('create_instance_with_processing_units', [
+            'instance_id' => self::$lowCostInstanceId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance test-', $output);
+    }
 
     /**
      * @depends testCreateInstance
@@ -155,16 +146,16 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateInstance
      */
-    // public function testCreateDatabaseWithEncryptionKey()
-    // {
-    //     $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
-    //         self::$instanceId,
-    //         self::$encryptedDatabaseId,
-    //         self::$kmsKeyName,
-    //     ]);
-    //     $this->assertStringContainsString('Waiting for operation to complete...', $output);
-    //     $this->assertStringContainsString('Created database en-test-', $output);
-    // }
+    public function testCreateDatabaseWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
+            self::$instanceId,
+            self::$encryptedDatabaseId,
+            self::$kmsKeyName,
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database en-test-', $output);
+    }
 
     /**
      * @depends testCreateDatabase
@@ -180,15 +171,15 @@ class spannerTest extends TestCase
      */
     public function testDmlReturning()
     {
-        // $output = $this->runFunctionSnippet('insert_dml_returning');
-        // $this->assertStringContainsString('Melissa', $output);
-        // $this->assertStringContainsString('Russell', $output);
-        // $this->assertStringContainsString('Jacqueline', $output);
-        // $this->assertStringContainsString('Dylan', $output);
+        $output = $this->runFunctionSnippet('insert_dml_returning');
+        $this->assertStringContainsString('Melissa', $output);
+        $this->assertStringContainsString('Russell', $output);
+        $this->assertStringContainsString('Jacqueline', $output);
+        $this->assertStringContainsString('Dylan', $output);
 
-        // $output = $this->runFunctionSnippet('update_dml_returning');
-        // $this->assertStringContainsString('Missing', $output);
-        // $this->assertStringContainsString('Garcia', $output);
+        $output = $this->runFunctionSnippet('update_dml_returning');
+        $this->assertStringContainsString('Missing', $output);
+        $this->assertStringContainsString('Garcia', $output);
 
         $output = $this->runFunctionSnippet('delete_dml_returning');
         $this->assertStringContainsString('Garcia', $output);
@@ -872,15 +863,15 @@ class spannerTest extends TestCase
         $this->assertStringContainsString(self::$instanceConfig, $output);
     }
 
-    // private function testCreateDatabaseWithDefaultLeader()
-    // {
-    //     $output = $this->runFunctionSnippet('create_database_with_default_leader', [
-    //         'instance_id' => self::$multiInstanceId,
-    //         'database_id' => self::$multiDatabaseId,
-    //         'defaultLeader' => self::$defaultLeader
-    //     ]);
-    //     $this->assertStringContainsString(self::$defaultLeader, $output);
-    // }
+    private function testCreateDatabaseWithDefaultLeader()
+    {
+        $output = $this->runFunctionSnippet('create_database_with_default_leader', [
+            'instance_id' => self::$multiInstanceId,
+            'database_id' => self::$multiDatabaseId,
+            'defaultLeader' => self::$defaultLeader
+        ]);
+        $this->assertStringContainsString(self::$defaultLeader, $output);
+    }
 
     /**
      * @depends testCreateDatabaseWithDefaultLeader
@@ -941,13 +932,13 @@ class spannerTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        // if (self::$instance->exists()) {// Clean up database
-        //     $database = self::$instance->database(self::$databaseId);
-        //     $database->drop();
-        // }
-        // $database = self::$multiInstance->database(self::$databaseId);
-        // $database->drop();
-        // self::$instance->delete();
-        // self::$lowCostInstance->delete();
+        if (self::$instance->exists()) {// Clean up database
+            $database = self::$instance->database(self::$databaseId);
+            $database->drop();
+        }
+        $database = self::$multiInstance->database(self::$databaseId);
+        $database->drop();
+        self::$instance->delete();
+        self::$lowCostInstance->delete();
     }
 }

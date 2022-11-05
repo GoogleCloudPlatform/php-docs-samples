@@ -34,11 +34,7 @@ use Google\Cloud\Spanner\SpannerClient;
  */
 function pg_update_dml_returning(string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient([
-      'quotaProject' => 'yashsahu-dev-test',
-      'projectId' => 'appdev-soda-spanner-staging',
-      'apiEndPoint' => 'staging-wrenchworks.sandbox.googleapis.com'
-    ]);
+    $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 

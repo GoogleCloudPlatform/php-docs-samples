@@ -38,15 +38,7 @@ use Google\Cloud\Spanner\SpannerClient;
  */
 function create_database(string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient([
-      'projectId' => 'appdev-soda-spanner-staging',
-      'quotaProject' => 'yashsahu-dev-test',
-      'apiEndPoint' => 'staging-wrenchworks.sandbox.googleapis.com'
-    ]);
-    // $spanner = new SpannerClient([
-    //   'quotaProject' => 'yashsahu-dev-test',
-    //   'projectId' => 'appdev-soda-spanner-staging'
-    // ]);
+    $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
 
     if (!$instance->exists()) {

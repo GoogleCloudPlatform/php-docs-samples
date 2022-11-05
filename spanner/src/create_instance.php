@@ -37,15 +37,7 @@ use Google\Cloud\Spanner\SpannerClient;
  */
 function create_instance(string $instanceId): void
 {
-    $spanner = new SpannerClient([
-      'projectId' => 'appdev-soda-spanner-staging',
-      'quotaProject' => 'yashsahu-dev-test',
-      'apiEndPoint' => 'staging-wrenchworks.sandbox.googleapis.com'
-    ]);
-    // $spanner = new SpannerClient([
-    //   'quotaProject' => 'yashsahu-dev-test',
-    //   'projectId' => 'appdev-soda-spanner-staging'
-    // ]);
+    $spanner = new SpannerClient();
     $instanceConfig = $spanner->instanceConfiguration(
         'regional-us-central1'
     );
