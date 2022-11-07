@@ -15,37 +15,42 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 4 || count($argv) > 4) {
-    return printf("Usage: php %s TEXT TARGET_LANGUAGE PROJECT_ID\n", __FILE__);
-}
-list($_, $text, $targetLanguage, $projectId) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_translate_text]
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-$translationServiceClient = new TranslationServiceClient();
+/**
+ * @param string $text           The text to translate.
+ * @param string $targetLanguage Language to translate to.
+ * @param string $projectId      Your Google Cloud project ID.
+ */
+function v3_batch_translate_text_with_model(
+    string $text,
+    string $targetLanguage,
+    string $projectId
+): void {
+    $translationServiceClient = new TranslationServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $text = 'Hello, world!';
-// $targetLanguage = 'fr';
-// $projectId = '[Google Cloud Project ID]';
-$contents = [$text];
-$formattedParent = $translationServiceClient->locationName($projectId, 'global');
+    $contents = [$text];
+    $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
-try {
-    $response = $translationServiceClient->translateText(
-        $contents,
-        $targetLanguage,
-        $formattedParent
-    );
-    // Display the translation for each input text provided
-    foreach ($response->getTranslations() as $translation) {
-        printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
+    try {
+        $response = $translationServiceClient->translateText(
+            $contents,
+            $targetLanguage,
+            $formattedParent
+        );
+        // Display the translation for each input text provided
+        foreach ($response->getTranslations() as $translation) {
+            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
+        }
+    } finally {
+        $translationServiceClient->close();
     }
-} finally {
-    $translationServiceClient->close();
 }
-
 // [END translate_v3_translate_text]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
