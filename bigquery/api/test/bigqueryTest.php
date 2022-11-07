@@ -266,7 +266,10 @@ class FunctionsTest extends TestCase
     public function testRunQuery()
     {
         $query = 'SELECT corpus, COUNT(*) as unique_words
-            FROM `publicdata.samples.shakespeare` GROUP BY corpus LIMIT 10';
+            FROM `publicdata.samples.shakespeare`
+            GROUP BY corpus
+            ORDER BY unique_words DESC
+            LIMIT 10';
 
         $output = $this->runSnippet('run_query', [$query]);
         $this->assertStringContainsString('hamlet', $output);
@@ -336,6 +339,31 @@ class FunctionsTest extends TestCase
         $this->assertStringContainsString('tempest', $output);
         $this->assertStringContainsString('kinghenryviii', $output);
         $this->assertStringContainsString('Found 42 row(s)', $output);
+    }
+
+    public function testAddColumnLoadAppend()
+    {
+        $tableId = $this->createTempTable();
+        $output = $this->runSnippet('add_column_load_append', [
+          self::$datasetId,
+          $tableId
+        ]);
+
+        $this->assertStringContainsString('name', $output);
+        $this->assertStringContainsString('title', $output);
+        $this->assertStringContainsString('description', $output);
+    }
+
+    public function testAddColumnQueryAppend()
+    {
+        $tableId = $this->createTempTable();
+        $output = $this->runSnippet('add_column_query_append', [
+          self::$datasetId,
+          $tableId
+        ]);
+        $this->assertStringContainsString('name', $output);
+        $this->assertStringContainsString('title', $output);
+        $this->assertStringContainsString('description', $output);
     }
 
     private function runSnippet($sampleName, $params = [])
