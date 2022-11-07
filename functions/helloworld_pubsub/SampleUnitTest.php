@@ -18,6 +18,7 @@
 
 declare(strict_types=1);
 
+// [START functions_cloudevent_pubsub_unit_test]
 // [START functions_pubsub_unit_test]
 
 namespace Google\Cloud\Samples\Functions\HelloworldPubsub\Test;
@@ -82,4 +83,5 @@ class SampleUnitTest extends TestCase
     }
 }
 
+// [END functions_cloudevent_pubsub_unit_test]
 // [END functions_pubsub_unit_test]
