@@ -30,11 +30,10 @@ use Google\Cloud\Storage\StorageClient;
  * Set the bucket's replication behavior or recovery point objective (RPO) to `DEFAULT`.
  *
  * @param string $bucketName the name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
 function set_rpo_default(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $rpo = 'DEFAULT';

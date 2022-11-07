@@ -30,13 +30,12 @@ use Google\Cloud\Storage\StorageClient;
  * Releases an event-based hold for an object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  */
 function release_event_based_hold(string $bucketName, string $objectName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
