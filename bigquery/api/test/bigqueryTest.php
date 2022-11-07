@@ -266,7 +266,10 @@ class FunctionsTest extends TestCase
     public function testRunQuery()
     {
         $query = 'SELECT corpus, COUNT(*) as unique_words
-            FROM `publicdata.samples.shakespeare` GROUP BY corpus LIMIT 10';
+            FROM `publicdata.samples.shakespeare`
+            GROUP BY corpus
+            ORDER BY unique_words DESC
+            LIMIT 10';
 
         $output = $this->runSnippet('run_query', [$query]);
         $this->assertStringContainsString('hamlet', $output);
