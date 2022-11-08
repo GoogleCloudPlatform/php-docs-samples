@@ -34,7 +34,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $targetLanguage    Language to translate to.
  * @param string $sourceLanguage    Language of the source.
  */
-function v3_batch_translate_text_with_glossary_and_model(
+function v3_batch_translate_text_with_glossary(
     string $inputUri,
     string $outputUri,
     string $projectId,

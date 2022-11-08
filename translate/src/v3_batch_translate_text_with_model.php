@@ -29,18 +29,18 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $outputUri     Path to store results (e.g. "gs://YOUR_BUCKET_ID/results/").
  * @param string $projectId     Your Google Cloud project ID.
  * @param string $location      Project location (e.g. us-central1)
- * @param string $modelId       Your model ID.
  * @param string $targetLanguage    Language to translate to.
  * @param string $sourceLanguage    Language of the source.
+ * @param string $modelId       Your model ID.
  */
 function v3_batch_translate_text_with_model(
     string $inputUri,
     string $outputUri,
     string $projectId,
     string $location,
-    string $modelId,
     string $targetLanguage,
-    string $sourceLanguage
+    string $sourceLanguage,
+    string $modelId
 ): void {
     $translationServiceClient = new TranslationServiceClient();
 

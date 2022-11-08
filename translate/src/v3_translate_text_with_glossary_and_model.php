@@ -30,7 +30,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $projectId     Your Google Cloud project ID.
  * @param string $location      Project location (e.g. us-central1)
  */
-function v3_batch_translate_text_with_glossary_and_model(
+function v3_translate_text_with_glossary_and_model(
     string $modelId,
     string $glossaryId,
     string $text,

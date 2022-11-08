@@ -28,7 +28,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $projectId     Your Google Cloud project ID.
  * @param string $glossaryId    Your glossary ID.
  */
-function v3_batch_translate_text_with_glossary_and_model(
+function v3_translate_text_with_glossary(
     string $text,
     string $targetLanguage,
     string $sourceLanguage,

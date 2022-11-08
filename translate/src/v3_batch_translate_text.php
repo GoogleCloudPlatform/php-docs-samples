@@ -42,7 +42,7 @@ function v3_batch_translate_text(
 ): void {
     $translationServiceClient = new TranslationServiceClient();
 
-    $targetLanguageCodes = [$targetLang];
+    $targetLanguageCodes = [$targetLanguage];
     $gcsSource = (new GcsSource())
         ->setInputUri($inputUri);
 
@@ -61,7 +61,7 @@ function v3_batch_translate_text(
     try {
         $operationResponse = $translationServiceClient->batchTranslateText(
             $formattedParent,
-            $sourceLang,
+            $sourceLanguage,
             $targetLanguageCodes,
             $inputConfigs,
             $outputConfig

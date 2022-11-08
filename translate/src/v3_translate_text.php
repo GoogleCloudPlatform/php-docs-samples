@@ -25,7 +25,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
  * @param string $targetLanguage Language to translate to.
  * @param string $projectId      Your Google Cloud project ID.
  */
-function v3_batch_translate_text_with_model(
+function v3_translate_text(
     string $text,
     string $targetLanguage,
     string $projectId

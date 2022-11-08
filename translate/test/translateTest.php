@@ -111,11 +111,13 @@ class translateTest extends TestCase
         $option1 = 'Zdravo svet';
         $option2 = 'Pozdrav svijetu';
         $option3 = 'Zdravo svijete';
+        $option4 = 'Здраво Свете';
         $this->assertThat($output,
             $this->logicalOr(
                 $this->stringContains($option1),
                 $this->stringContains($option2),
-                $this->stringContains($option3)
+                $this->stringContains($option3),
+                $this->stringContains($option4),
             )
         );
     }
@@ -169,8 +171,8 @@ class translateTest extends TestCase
             'v3_translate_text_with_glossary',
             [
                 'account',
-                'en',
                 'ja',
+                'en',
                 self::$projectId,
                 $glossaryId
             ]
@@ -304,8 +306,8 @@ class translateTest extends TestCase
                 $outputUri,
                 self::$projectId,
                 'us-central1',
-                'en',
-                'es'
+                'es',
+                'en'
             ]
         );
         $this->assertStringContainsString('Total Characters: 13', $output);
@@ -374,8 +376,8 @@ class translateTest extends TestCase
                 self::$projectId,
                 'us-central1',
                 $glossaryId,
-                'ja',
-                'en'
+                'en',
+                'ja'
             ]
         );
         $this->runFunctionSnippet(
