@@ -17,29 +17,24 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START write_with_psr_logger]
+// [START logging_update_sink]
 use Google\Cloud\Logging\LoggingClient;
-use Psr\Log\LogLevel;
 
 /**
- * Write a log message via the Stackdriver Logging API.
+ * Update a log sink.
  *
- * @param string $projectId The Google project ID.
- * @param string $loggerName The name of the logger.
- * @param string $message The log message.
+ * @param string $projectId
+ * @param string sinkName
+ * @param string $filterString
  */
-function write_with_psr_logger(
-    string $projectId,
-    string $loggerName,
-    string $message,
-    string $level = LogLevel::WARNING
-) {
+function update_sink($projectId, $sinkName, $filterString)
+{
     $logging = new LoggingClient(['projectId' => $projectId]);
-    $logger = $logging->psrLogger($loggerName);
-    $logger->log($level, $message);
-    printf("Wrote to PSR logger '%s' at level '%s'." . PHP_EOL, $loggerName, $level);
+    $sink = $logging->sink($sinkName);
+    $sink->update(['filter' => $filterString]);
+    printf("Updated a sink '%s'." . PHP_EOL, $sinkName);
 }
-// [END write_with_psr_logger]
+// [END logging_update_sink]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

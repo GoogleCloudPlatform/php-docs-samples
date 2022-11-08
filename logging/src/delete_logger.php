@@ -17,29 +17,22 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START write_with_psr_logger]
+// [START logging_delete_log]
 use Google\Cloud\Logging\LoggingClient;
-use Psr\Log\LogLevel;
 
-/**
- * Write a log message via the Stackdriver Logging API.
+/** Delete a logger and all its entries.
  *
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
- * @param string $message The log message.
  */
-function write_with_psr_logger(
-    string $projectId,
-    string $loggerName,
-    string $message,
-    string $level = LogLevel::WARNING
-) {
+function delete_logger($projectId, $loggerName)
+{
     $logging = new LoggingClient(['projectId' => $projectId]);
-    $logger = $logging->psrLogger($loggerName);
-    $logger->log($level, $message);
-    printf("Wrote to PSR logger '%s' at level '%s'." . PHP_EOL, $loggerName, $level);
+    $logger = $logging->logger($loggerName);
+    $logger->delete();
+    printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
 }
-// [END write_with_psr_logger]
+// [END logging_delete_log]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
