@@ -376,8 +376,8 @@ class translateTest extends TestCase
                 self::$projectId,
                 'us-central1',
                 $glossaryId,
+                'ja',
                 'en',
-                'ja'
             ]
         );
         $this->runFunctionSnippet(
