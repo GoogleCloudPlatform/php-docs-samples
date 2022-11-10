@@ -40,8 +40,8 @@ function object_get_kms_key(string $bucketName, string $objectName): void
     $info = $object->info();
 
     printf(
-      'The KMS key of the object is %s' . PHP_EOL,
-      $info['kmsKeyName'],
+        'The KMS key of the object is %s' . PHP_EOL,
+        $info['kmsKeyName'],
     );
 }
 # [END storage_object_get_kms_key]

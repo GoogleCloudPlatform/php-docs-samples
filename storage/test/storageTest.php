@@ -461,11 +461,11 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf(
-            'The KMS key of the object is %s' . PHP_EOL,
-            $objectInfo['kmsKeyName'],
-          ),
-          $output,
+            sprintf(
+                'The KMS key of the object is %s' . PHP_EOL,
+                $objectInfo['kmsKeyName'],
+            ),
+            $output,
         );
     }
     public function testBucketVersioning()
