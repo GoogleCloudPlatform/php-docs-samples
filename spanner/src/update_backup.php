@@ -36,7 +36,7 @@ use DateTime;
  * @param string $instanceId The Spanner instance ID.
  * @param string $backupId The Spanner backup ID.
  */
-function update_backup($instanceId, $backupId)
+function update_backup(string $instanceId, string $backupId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

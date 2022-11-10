@@ -37,13 +37,11 @@ function query_order_with_filter(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_range_order_by_query]
     # [START firestore_query_order_with_filter]
     $query = $citiesRef
         ->where('population', '>', 2500000)
         ->orderBy('population');
     # [END firestore_query_order_with_filter]
-    # [END fs_range_order_by_query]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by range with order by query' . PHP_EOL, $document->id());

@@ -38,13 +38,11 @@ function query_filter_compound_multi_eq_lt(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_composite_index_chained_query]
     # [START firestore_query_filter_compound_multi_eq_lt]
     $chainedQuery = $citiesRef
         ->where('state', '=', 'CA')
         ->where('population', '<', 1000000);
     # [END firestore_query_filter_compound_multi_eq_lt]
-    # [END fs_composite_index_chained_query]
     foreach ($chainedQuery->documents() as $document) {
         printf('Document %s returned by query state=CA and population<1000000' . PHP_EOL, $document->id());
     }
