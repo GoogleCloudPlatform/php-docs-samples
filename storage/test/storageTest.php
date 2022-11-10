@@ -127,7 +127,6 @@ class storageTest extends TestCase
     public function testListBuckets()
     {
         $output = $this->runFunctionSnippet('list_buckets');
-
         $this->assertStringContainsString('Bucket:', $output);
     }
 
@@ -152,6 +151,23 @@ class storageTest extends TestCase
         $this->assertFalse($bucket->exists());
 
         $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
+    }
+
+    public function testGetBucketClassAndLocation()
+    {
+        $output = $this->runFunctionSnippet(
+            'get_bucket_class_and_location',
+            [self::$tempBucket->name()],
+        );
+
+        $bucketInfo = self::$tempBucket->info();
+
+        $this->assertStringContainsString(sprintf(
+            'Bucket: %s, storage class: %s, location: %s' . PHP_EOL,
+            $bucketInfo['name'],
+            $bucketInfo['storageClass'],
+            $bucketInfo['location'],
+        ), $output);
     }
 
     public function testBucketDefaultAcl()
