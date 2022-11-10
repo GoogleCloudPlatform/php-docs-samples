@@ -32,14 +32,14 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $projectId The project Id of your Google Cloud Project.
  * @param string $datasetId The BigQuery dataset ID.
  */
-function create_dataset(string $projectId, string $datasetId): void {
-
-  $bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-  ]);
-  $dataset = $bigQuery->createDataset($datasetId);
-  printf('Created dataset %s' . PHP_EOL, $datasetId);
+function create_dataset(string $projectId, string $datasetId): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->createDataset($datasetId);
+    printf('Created dataset %s' . PHP_EOL, $datasetId);
 }
-  # [END bigquery_create_dataset]
-  require_once __DIR__ . '/../../../testing/sample_helpers.php';
+# [END bigquery_create_dataset]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

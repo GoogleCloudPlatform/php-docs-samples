@@ -34,8 +34,12 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $tableId The BigQuery table ID.
  * @param int $startIndex Zero-based index of the starting row.
  */
-function browse_table(string $projectId, string $datasetId, string $tableId, int $startIndex = 0): void
-{
+function browse_table(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    int $startIndex = 0
+): void {
     // Query options
     $maxResults = 10;
     $options = [

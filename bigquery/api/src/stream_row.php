@@ -23,45 +23,49 @@
 
 namespace Google\Cloud\Samples\BigQuery;
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 4 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [DATA]\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId) = $argv;
-$data = isset($argv[4]) ? json_decode($argv[4], true) : ['field1' => 'value1'];
-
 # [START bigquery_table_insert_rows]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId   = 'The BigQuery table ID';
-// $data = [
-//     "field1" => "value1",
-//     "field2" => "value2",
-// ];
+/**
+ * Stream data into bigquery
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ * @param array $data, Json encoded data For eg,
+ *    $data = json_encode([
+ *       "field1" => "value1",
+ *       "field2" => "value2",
+ *    ]);
+ */
+function stream_row(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    string $data
+): void {
+    // instantiate the bigquery table service
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
 
-// instantiate the bigquery table service
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-
-$insertResponse = $table->insertRows([
-    ['data' => $data],
-    // additional rows can go here
-]);
-if ($insertResponse->isSuccessful()) {
-    print('Data streamed into BigQuery successfully' . PHP_EOL);
-} else {
-    foreach ($insertResponse->failedRows() as $row) {
-        foreach ($row['errors'] as $error) {
-            printf('%s: %s' . PHP_EOL, $error['reason'], $error['message']);
+    $data = json_decode($data, true);
+    $insertResponse = $table->insertRows([
+      ['data' => $data],
+      // additional rows can go here
+    ]);
+    if ($insertResponse->isSuccessful()) {
+        print('Data streamed into BigQuery successfully' . PHP_EOL);
+    } else {
+        foreach ($insertResponse->failedRows() as $row) {
+            foreach ($row['errors'] as $error) {
+                printf('%s: %s' . PHP_EOL, $error['reason'], $error['message']);
+            }
         }
     }
 }
 # [END bigquery_table_insert_rows]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
