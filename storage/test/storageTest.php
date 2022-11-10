@@ -141,17 +141,17 @@ class storageTest extends TestCase
     public function testGetBucketClassAndLocation()
     {
         $output = $this->runFunctionSnippet(
-          'get_bucket_class_and_location',
-          [self::$tempBucket->name()],
+            'get_bucket_class_and_location',
+            [self::$tempBucket->name()],
         );
 
         $bucketInfo = self::$tempBucket->info();
 
         $this->assertStringContainsString(sprintf(
-          'Bucket: %s, storage class: %s, location: %s' . PHP_EOL,
-          $bucketInfo['name'],
-          $bucketInfo['storageClass'],
-          $bucketInfo['location'],
+            'Bucket: %s, storage class: %s, location: %s' . PHP_EOL,
+            $bucketInfo['name'],
+            $bucketInfo['storageClass'],
+            $bucketInfo['location'],
         ), $output);
     }
 
