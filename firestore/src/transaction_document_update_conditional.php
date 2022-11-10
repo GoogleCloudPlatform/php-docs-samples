@@ -37,7 +37,6 @@ function transaction_document_update_conditional(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_return_info_transaction]
     # [START firestore_transaction_document_update_conditional]
     $cityRef = $db->collection('samples/php/cities')->document('SF');
     $transactionResult = $db->runTransaction(function (Transaction $transaction) use ($cityRef) {
@@ -59,7 +58,6 @@ function transaction_document_update_conditional(string $projectId): void
         printf('Sorry! Population is too big.' . PHP_EOL);
     }
     # [END firestore_transaction_document_update_conditional]
-    # [END fs_return_info_transaction]
 }
 
 // The following 2 lines are only needed to run the samples

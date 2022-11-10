@@ -30,20 +30,18 @@ use Google\Cloud\Storage\StorageClient;
  * Update the CORS configuration of a bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $method The HTTP method for the CORS config.
+ *        (e.g. 'my-bucket')
+ * @param string $method The HTTP method for the CORS config. (e.g. 'GET')
  * @param string $origin The origin from which the CORS config will allow requests.
+ *        (e.g. 'http://example.appspot.com')
  * @param string $responseHeader The response header to share across origins.
+ *        (e.g. 'Content-Type')
  * @param int $maxAgeSeconds The maximum amount of time the browser can make
+ *        (e.g. 3600)
  *     requests before it must repeat preflighted requests.
  */
-function cors_configuration($bucketName, $method, $origin, $responseHeader, $maxAgeSeconds)
+function cors_configuration(string $bucketName, string $method, string $origin, string $responseHeader, int $maxAgeSeconds): void
 {
-    // $bucketName = 'my-bucket';
-    // $method = 'GET';
-    // $origin = 'http://example.appspot.com';
-    // $responseHeader = 'Content-Type';
-    // $maxAgeSeconds = 3600;
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
