@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Retrive the KMS key of an object
+ * Retrieve the KMS key of an object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  *        (e.g. 'my-bucket')
