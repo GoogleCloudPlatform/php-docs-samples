@@ -57,7 +57,7 @@ function import_from_storage_csv_autodetect(
         print('Waiting for job to complete' . PHP_EOL);
         $job->reload();
         if (!$job->isComplete()) {
-            throw new Exception('Job has not yet completed', 500);
+            throw new \Exception('Job has not yet completed', 500);
         }
     });
     // check if the job has errors

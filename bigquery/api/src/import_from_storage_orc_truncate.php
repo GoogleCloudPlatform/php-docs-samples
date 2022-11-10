@@ -56,7 +56,7 @@ function import_from_storage_orc_truncate(
         print('Waiting for job to complete' . PHP_EOL);
         $job->reload();
         if (!$job->isComplete()) {
-            throw new Exception('Job has not yet completed', 500);
+            throw new \Exception('Job has not yet completed', 500);
         }
     });
 

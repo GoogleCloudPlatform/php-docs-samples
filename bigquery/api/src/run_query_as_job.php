@@ -47,7 +47,7 @@ function run_query_as_job(string $projectId, string $query): void
         print('Waiting for job to complete' . PHP_EOL);
         $job->reload();
         if (!$job->isComplete()) {
-            throw new Exception('Job has not yet completed', 500);
+            throw new \Exception('Job has not yet completed', 500);
         }
     });
     $queryResults = $job->queryResults();
