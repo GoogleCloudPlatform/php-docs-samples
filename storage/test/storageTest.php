@@ -71,8 +71,8 @@ class storageTest extends TestCase
         $defaultAcl = self::$tempBucket->defaultAcl()->get();
         foreach ($defaultAcl as $item) {
             $this->assertStringContainsString(
-              sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
-              $output,
+                sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
+                $output,
             );
         }
     }
@@ -487,8 +487,8 @@ class storageTest extends TestCase
         $objectInfo = $bucket->object($objectName)->info();
 
         $output = $this->runFunctionSnippet('object_get_kms_key', [
-          $kmsEncryptedBucketName,
-          $objectName,
+            $kmsEncryptedBucketName,
+            $objectName,
         ]);
 
         $this->assertEquals(
@@ -532,8 +532,8 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf('Bucket website configuration not set' . PHP_EOL),
-          $output,
+            sprintf('Bucket website configuration not set' . PHP_EOL),
+            $output,
         );
 
         $output = self::runFunctionSnippet('define_bucket_website_configuration', [
@@ -543,13 +543,13 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf(
-            'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
-            $bucket->name(),
-            $obj->name(),
-            $obj->name(),
-          ),
-          $output
+            sprintf(
+                'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
+                $bucket->name(),
+                $obj->name(),
+                $obj->name(),
+            ),
+            $output
         );
 
         $info = $bucket->reload();
@@ -559,12 +559,12 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf(
-            'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
-            $info['website']['mainPageSuffix'],
-            $info['website']['notFoundPage'],
-          ),
-          $output,
+            sprintf(
+                'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+                $info['website']['mainPageSuffix'],
+                $info['website']['notFoundPage'],
+            ),
+            $output,
         );
 
         $obj->delete();
