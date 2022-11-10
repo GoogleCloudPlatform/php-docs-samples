@@ -30,7 +30,9 @@ use Google\Cloud\Storage\StorageClient;
  * Retrive the KMS key of an object
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your object in the bucket.
+ *        (e.g. 'my-object')
  */
 function object_get_kms_key(string $bucketName, string $objectName): void
 {
