@@ -35,34 +35,38 @@ use Google\Cloud\Core\ExponentialBackoff;
  * @param string $tableId The BigQuery table ID.
  * @param string $source The path to the CSV source file to import.
  */
-function import_from_local_csv(string $projectId, string $datasetId, string $tableId, string $source): void {
+function import_from_local_csv(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    string $source
+): void {
+    // instantiate the bigquery table service
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    // create the import job
+    $loadConfig = $table->load(fopen($source, 'r'))->sourceFormat('CSV');
 
-  // instantiate the bigquery table service
-  $bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-  ]);
-  $dataset = $bigQuery->dataset($datasetId);
-  $table = $dataset->table($tableId);
-  // create the import job
-  $loadConfig = $table->load(fopen($source, 'r'))->sourceFormat('CSV');
-
-  $job = $table->runJob($loadConfig);
-  // poll the job until it is complete
-  $backoff = new ExponentialBackoff(10);
-  $backoff->execute(function () use ($job) {
-    printf('Waiting for job to complete' . PHP_EOL);
-    $job->reload();
-    if (!$job->isComplete()) {
-      throw new Exception('Job has not yet completed', 500);
+    $job = $table->runJob($loadConfig);
+    // poll the job until it is complete
+    $backoff = new ExponentialBackoff(10);
+    $backoff->execute(function () use ($job) {
+        printf('Waiting for job to complete' . PHP_EOL);
+        $job->reload();
+        if (!$job->isComplete()) {
+            throw new Exception('Job has not yet completed', 500);
+        }
+    });
+    // check if the job has errors
+    if (isset($job->info()['status']['errorResult'])) {
+        $error = $job->info()['status']['errorResult']['message'];
+        printf('Error running job: %s' . PHP_EOL, $error);
+    } else {
+        print('Data imported successfully' . PHP_EOL);
     }
-  });
-  // check if the job has errors
-  if (isset($job->info()['status']['errorResult'])) {
-    $error = $job->info()['status']['errorResult']['message'];
-    printf('Error running job: %s' . PHP_EOL, $error);
-  } else {
-    print('Data imported successfully' . PHP_EOL);
-  }
 }
 # [END bigquery_load_from_file]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

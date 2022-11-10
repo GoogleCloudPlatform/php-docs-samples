@@ -34,21 +34,25 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $tableId The BigQuery table ID.
  * @param string $bucketName Bucket name in Google Cloud Storage
  */
-function extract_table(string $projectId, string $datasetId, string $tableId, string $bucketName): void {
-
-  $bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-  ]);
-  $dataset = $bigQuery->dataset($datasetId);
-  $table = $dataset->table($tableId);
-  $destinationUri = "gs://{$bucketName}/{$tableId}.json";
-  // Define the format to use. If the format is not specified, 'CSV' will be used.
-  $format = 'NEWLINE_DELIMITED_JSON';
-  // Create the extract job
-  $extractConfig = $table->extract($destinationUri)->destinationFormat($format);
-  // Run the job
-  $job = $table->runJob($extractConfig);  // Waits for the job to complete
-  printf('Exported %s to %s' . PHP_EOL, $table->id(), $destinationUri);
+function extract_table(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    string $bucketName
+): void {
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    $destinationUri = "gs://{$bucketName}/{$tableId}.json";
+    // Define the format to use. If the format is not specified, 'CSV' will be used.
+    $format = 'NEWLINE_DELIMITED_JSON';
+    // Create the extract job
+    $extractConfig = $table->extract($destinationUri)->destinationFormat($format);
+    // Run the job
+    $job = $table->runJob($extractConfig);  // Waits for the job to complete
+    printf('Exported %s to %s' . PHP_EOL, $table->id(), $destinationUri);
 }
 # [END bigquery_extract_table]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

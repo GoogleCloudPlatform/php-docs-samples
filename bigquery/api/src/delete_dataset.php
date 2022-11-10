@@ -32,14 +32,14 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $projectId The project Id of your Google Cloud Project.
  * @param string $datasetId The BigQuery dataset ID.
  */
-function delete_dataset(string $projectId, string $datasetId): void {
-
-  $bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-  ]);
-  $dataset = $bigQuery->dataset($datasetId);
-  $table = $dataset->delete();
-  printf('Deleted dataset %s' . PHP_EOL, $datasetId);
+function delete_dataset(string $projectId, string $datasetId): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->delete();
+    printf('Deleted dataset %s' . PHP_EOL, $datasetId);
 }
 # [END bigquery_delete_dataset]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

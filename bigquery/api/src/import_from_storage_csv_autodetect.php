@@ -28,40 +28,45 @@ use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
 /**
- * Imports data to the given table from csv file present in GCS
+ * Imports data to the given table from csv file present in GCS by auto
+ * detecting options and schema.
  *
  * @param string $projectId The project Id of your Google Cloud Project.
  * @param string $datasetId The BigQuery dataset ID.
  * @param string $tableId The BigQuery table ID.
  */
-function import_from_storage_csv_autodetect(string $projectId, string $datasetId, string $tableId = 'us_states'): void {
-  // instantiate the bigquery table service
-  $bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-  ]);
-  $dataset = $bigQuery->dataset($datasetId);
-  $table = $dataset->table($tableId);
+function import_from_storage_csv_autodetect(
+    string $projectId,
+    string $datasetId,
+    string $tableId = 'us_states'
+): void {
+    // instantiate the bigquery table service
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
 
-  // create the import job
-  $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv';
-  $loadConfig = $table->loadFromStorage($gcsUri)->autodetect(true)->skipLeadingRows(1);
-  $job = $table->runJob($loadConfig);
-  // poll the job until it is complete
-  $backoff = new ExponentialBackoff(10);
-  $backoff->execute(function () use ($job) {
-    print('Waiting for job to complete' . PHP_EOL);
-    $job->reload();
-    if (!$job->isComplete()) {
-      throw new Exception('Job has not yet completed', 500);
+    // create the import job
+    $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv';
+    $loadConfig = $table->loadFromStorage($gcsUri)->autodetect(true)->skipLeadingRows(1);
+    $job = $table->runJob($loadConfig);
+    // poll the job until it is complete
+    $backoff = new ExponentialBackoff(10);
+    $backoff->execute(function () use ($job) {
+        print('Waiting for job to complete' . PHP_EOL);
+        $job->reload();
+        if (!$job->isComplete()) {
+            throw new Exception('Job has not yet completed', 500);
+        }
+    });
+    // check if the job has errors
+    if (isset($job->info()['status']['errorResult'])) {
+        $error = $job->info()['status']['errorResult']['message'];
+        printf('Error running job: %s' . PHP_EOL, $error);
+    } else {
+        print('Data imported successfully' . PHP_EOL);
     }
-  });
-  // check if the job has errors
-  if (isset($job->info()['status']['errorResult'])) {
-    $error = $job->info()['status']['errorResult']['message'];
-    printf('Error running job: %s' . PHP_EOL, $error);
-  } else {
-    print('Data imported successfully' . PHP_EOL);
-  }
 }
 # [END bigquery_load_table_gcs_csv_autodetect]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

@@ -33,16 +33,16 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $datasetId The BigQuery dataset ID.
  * @param string $tableId The BigQuery table ID.
  */
-function delete_table(string $projectId, string $datasetId, string $tableId): void {
-
-  $bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-  ]);
-  $dataset = $bigQuery->dataset($datasetId);
-  $table = $dataset->table($tableId);
-  $table->delete();
-  printf('Deleted table %s.%s' . PHP_EOL, $datasetId, $tableId);
+function delete_table(string $projectId, string $datasetId, string $tableId): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    $table->delete();
+    printf('Deleted table %s.%s' . PHP_EOL, $datasetId, $tableId);
 }
-  # [END bigquery_delete_table]
-  require_once __DIR__ . '/../../../testing/sample_helpers.php';
-  \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
+# [END bigquery_delete_table]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
