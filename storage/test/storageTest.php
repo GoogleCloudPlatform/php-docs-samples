@@ -71,8 +71,8 @@ class storageTest extends TestCase
         $defaultAcl = self::$tempBucket->defaultAcl()->get();
         foreach ($defaultAcl as $item) {
             $this->assertStringContainsString(
-              sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
-              $output,
+                sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
+                $output,
             );
         }
     }
@@ -127,7 +127,6 @@ class storageTest extends TestCase
     public function testListBuckets()
     {
         $output = $this->runFunctionSnippet('list_buckets');
-
         $this->assertStringContainsString('Bucket:', $output);
     }
 
@@ -152,6 +151,23 @@ class storageTest extends TestCase
         $this->assertFalse($bucket->exists());
 
         $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
+    }
+
+    public function testGetBucketClassAndLocation()
+    {
+        $output = $this->runFunctionSnippet(
+            'get_bucket_class_and_location',
+            [self::$tempBucket->name()],
+        );
+
+        $bucketInfo = self::$tempBucket->info();
+
+        $this->assertStringContainsString(sprintf(
+            'Bucket: %s, storage class: %s, location: %s' . PHP_EOL,
+            $bucketInfo['name'],
+            $bucketInfo['storageClass'],
+            $bucketInfo['location'],
+        ), $output);
     }
 
     public function testBucketDefaultAcl()
@@ -459,8 +475,30 @@ class storageTest extends TestCase
             $objectName,
             $this->keyName()
         ));
+
+        return $objectName;
     }
 
+    /** @depends testUploadWithKmsKey */
+    public function testObjectGetKmsKey(string $objectName)
+    {
+        $kmsEncryptedBucketName = self::$bucketName . '-kms-encrypted';
+        $bucket = self::$storage->bucket($kmsEncryptedBucketName);
+        $objectInfo = $bucket->object($objectName)->info();
+
+        $output = $this->runFunctionSnippet('object_get_kms_key', [
+            $kmsEncryptedBucketName,
+            $objectName,
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'The KMS key of the object is %s' . PHP_EOL,
+                $objectInfo['kmsKeyName'],
+            ),
+            $output,
+        );
+    }
     public function testBucketVersioning()
     {
         $output = self::runFunctionSnippet('enable_versioning', [
@@ -494,8 +532,8 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf('Bucket website configuration not set' . PHP_EOL),
-          $output,
+            sprintf('Bucket website configuration not set' . PHP_EOL),
+            $output,
         );
 
         $output = self::runFunctionSnippet('define_bucket_website_configuration', [
@@ -505,13 +543,13 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf(
-            'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
-            $bucket->name(),
-            $obj->name(),
-            $obj->name(),
-          ),
-          $output
+            sprintf(
+                'Static website bucket %s is set up to use %s as the index page and %s as the 404 page.',
+                $bucket->name(),
+                $obj->name(),
+                $obj->name(),
+            ),
+            $output
         );
 
         $info = $bucket->reload();
@@ -521,12 +559,12 @@ class storageTest extends TestCase
         ]);
 
         $this->assertEquals(
-          sprintf(
-            'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
-            $info['website']['mainPageSuffix'],
-            $info['website']['notFoundPage'],
-          ),
-          $output,
+            sprintf(
+                'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+                $info['website']['mainPageSuffix'],
+                $info['website']['notFoundPage'],
+            ),
+            $output,
         );
 
         $obj->delete();
