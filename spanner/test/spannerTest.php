@@ -169,14 +169,20 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateDatabase
      */
-    public function testDmlReturning()
+    public function testDmlReturningInsert()
     {
         $output = $this->runFunctionSnippet('insert_dml_returning');
         $this->assertStringContainsString('Melissa', $output);
         $this->assertStringContainsString('Russell', $output);
         $this->assertStringContainsString('Jacqueline', $output);
         $this->assertStringContainsString('Dylan', $output);
+    }
 
+    /**
+     * @depends testDmlReturningInsert
+     */
+    public function testDmlReturningUpdate()
+    {
         $output = $this->runFunctionSnippet('update_dml_returning');
         $this->assertStringContainsString('Melissa', $output);
         $this->assertStringContainsString('Missing', $output);
@@ -185,6 +191,14 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('12', $output);
     }
 
+    /**
+     * @depends testDmlReturningUpdate
+     */
+    public function testDmlReturningDelete()
+    {
+        $output = $this->runFunctionSnippet('delete_dml_returning');
+        $this->assertStringContainsString('12', $output);
+    }
 
     /**
      * @depends testInsertData

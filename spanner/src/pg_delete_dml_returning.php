@@ -42,7 +42,7 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql delete query
     $result = $transaction->execute(
-        'DELETE FROM Singers WHERE FirstName = @firstName '
+        'DELETE FROM singers WHERE firstname = @firstName '
         . 'RETURNING *',
         [
           'parameters' => [
@@ -53,9 +53,9 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
     foreach ($result->rows() as $row) {
         printf(
             'Row (%s, %s, %s) deleted\n',
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            $row['singerid'],
+            $row['firstname'],
+            $row['lastname']
         );
     }
     $transaction->commit();

@@ -40,7 +40,7 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
 
     // DML returning postgresql insert query
-    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
+    $sql = 'INSERT INTO singers (singerid, firstname, lastname) '
       . "VALUES (16, 'Melissa', 'Garcia'), "
       . "(17, 'Russell', 'Morales'), "
       . "(18, 'Jacqueline', 'Long'), "
@@ -52,9 +52,9 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
     foreach ($result->rows() as $row) {
         printf(
             'Row (%s, %s, %s) inserted\n',
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            $row['singerid'],
+            $row['firstname'],
+            $row['lastname']
         );
     }
     $transaction->commit();

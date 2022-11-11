@@ -42,7 +42,7 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql update query
     $result = $transaction->execute(
-        'UPDATE Singers SET LastName = @lastName WHERE SingerId = @singerId RETURNING *',
+        'UPDATE singers SET p3 = @lastName WHERE singerid = @singerId RETURNING *',
         [
           'parameters' => [
             'lastName' => 'Missing',
@@ -52,11 +52,11 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row with SingerId %s updated to (%s, %s, %s)\n',
-            $row['SingerId'],
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            'Row with singerid %s updated to (%s, %s, %s)\n',
+            $row['singerid'],
+            $row['singerid'],
+            $row['firstname'],
+            $row['lastname']
         );
     }
     $transaction->commit();
