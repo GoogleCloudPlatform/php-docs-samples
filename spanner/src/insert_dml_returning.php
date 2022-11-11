@@ -48,11 +48,17 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
-    $rows = $result->rows()->current();
-    var_dump($rows);
+    foreach ($result->rows() as $row) {
+        printf(
+            'Row (%s, %s, %s) inserted\n',
+            $row['SingerId'],
+            $row['FirstName'],
+            $row['LastName']
+        );
+    }
+    $transaction->commit();
 }
 // [END spanner_insert_dml_returning]
-
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -178,31 +178,13 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Dylan', $output);
 
         $output = $this->runFunctionSnippet('update_dml_returning');
+        $this->assertStringContainsString('Melissa', $output);
         $this->assertStringContainsString('Missing', $output);
-        $this->assertStringContainsString('Garcia', $output);
 
         $output = $this->runFunctionSnippet('delete_dml_returning');
         $this->assertStringContainsString('Garcia', $output);
     }
 
-    /**
-     * @depends testCreateDatabase
-     */
-    public function testPgDmlReturning()
-    {
-        $output = $this->runFunctionSnippet('pg_insert_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
-        $this->assertStringContainsString('Russell', $output);
-        $this->assertStringContainsString('Jacqueline', $output);
-        $this->assertStringContainsString('Dylan', $output);
-
-        $output = $this->runFunctionSnippet('pg_update_dml_returning');
-        $this->assertStringContainsString('Missing', $output);
-        $this->assertStringContainsString('Garcia', $output);
-
-        $output = $this->runFunctionSnippet('pg_delete_dml_returning');
-        $this->assertStringContainsString('Garcia', $output);
-    }
 
     /**
      * @depends testInsertData

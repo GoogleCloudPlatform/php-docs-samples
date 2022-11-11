@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2022 Google LLC
  *
@@ -40,16 +41,23 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql insert query
     $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
-    . "VALUES (16, 'Melissa', 'Garcia'), "
-    . "(17, 'Russell', 'Morales'), "
-    . "(18, 'Jacqueline', 'Long'), "
-    . "(19, 'Dylan', 'Shaw') "
-    . 'RETURNING *';
+      . "VALUES (16, 'Melissa', 'Garcia'), "
+      . "(17, 'Russell', 'Morales'), "
+      . "(18, 'Jacqueline', 'Long'), "
+      . "(19, 'Dylan', 'Shaw') "
+      . 'RETURNING *';
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
-    $rows = $result->rows()->current();
-    var_dump($rows);
+    foreach ($result->rows() as $row) {
+        printf(
+            'Row (%s, %s, %s) inserted\n',
+            $row['SingerId'],
+            $row['FirstName'],
+            $row['LastName']
+        );
+    }
+    $transaction->commit();
 }
 // [END spanner_postgresql_insert_dml_returning]
 

@@ -50,8 +50,16 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
           ]
         ]
     );
-    $rows = $result->rows()->current();
-    var_dump($rows);
+    foreach ($result->rows() as $row) {
+        printf(
+            'Row with SingerId %s updated to (%s, %s, %s)\n',
+            $row['SingerId'],
+            $row['SingerId'],
+            $row['FirstName'],
+            $row['LastName']
+        );
+    }
+    $transaction->commit();
 }
 // [END spanner_postgresql_update_dml_returning]
 
