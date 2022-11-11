@@ -182,7 +182,7 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Missing', $output);
 
         $output = $this->runFunctionSnippet('delete_dml_returning');
-        $this->assertStringContainsString('Garcia', $output);
+        $this->assertStringContainsString('12', $output);
     }
 
 

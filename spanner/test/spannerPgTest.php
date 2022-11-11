@@ -92,7 +92,7 @@ class spannerPgTest extends TestCase
         $this->assertStringContainsString('Missing', $output);
 
         $output = $this->runFunctionSnippet('pg_delete_dml_returning');
-        $this->assertStringContainsString('Garcia', $output);
+        $this->assertStringContainsString('16', $output);
     }
 
     /*
