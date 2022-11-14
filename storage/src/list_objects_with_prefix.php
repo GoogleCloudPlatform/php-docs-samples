@@ -30,13 +30,12 @@ use Google\Cloud\Storage\StorageClient;
  * List Cloud Storage bucket objects with specified prefix.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $directoryPrefix the prefix to use in the list objects API call.
+ *        (e.g. 'myDirectory/')
  */
 function list_objects_with_prefix(string $bucketName, string $directoryPrefix): void
 {
-    // $bucketName = 'my-bucket';
-    // $directoryPrefix = 'myDirectory/';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $options = ['prefix' => $directoryPrefix];
