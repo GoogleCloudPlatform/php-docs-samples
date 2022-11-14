@@ -51,7 +51,7 @@ function table_insert_rows_explicit_none_insert_ids(
     string $rowData2
 ): void {
     $bigQuery = new BigQueryClient([
-      'projectId' => $projectId,
+        'projectId' => $projectId,
     ]);
     $dataset = $bigQuery->dataset($datasetId);
     $table = $dataset->table($tableId);
@@ -60,8 +60,8 @@ function table_insert_rows_explicit_none_insert_ids(
     $rowData2 = json_decode($rowData2, true);
     // Omitting insert Id's in following rows.
     $rows = [
-      ['data' => $rowData1],
-      ['data' => $rowData2]
+        ['data' => $rowData1],
+        ['data' => $rowData2]
     ];
     $insertResponse = $table->insertRows($rows);
 
