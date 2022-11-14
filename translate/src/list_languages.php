@@ -21,25 +21,26 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/translate/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) > 2) {
-    return printf("Usage: php %s [TARGET_LANGUAGE]\n", __FILE__);
-}
-$targetLanguage = isset($argv[1]) ? $argv[1] : 'en';
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_list_language_names]
 use Google\Cloud\Translate\TranslateClient;
 
-/** Uncomment and populate these variables in your code */
-// $targetLanguage = 'en'; // Language to print the language names in
-
-$translate = new TranslateClient();
-$result = $translate->localizedLanguages([
-    'target' => $targetLanguage,
-]);
-foreach ($result as $lang) {
-    printf('%s: %s' . PHP_EOL, $lang['code'], $lang['name']);
+/**
+ * @param string $targetLanguage Language to print the language names in
+ */
+function list_languages(string $targetLanguage = 'en'): void
+{
+    $translate = new TranslateClient();
+    $result = $translate->localizedLanguages([
+        'target' => $targetLanguage,
+    ]);
+    foreach ($result as $lang) {
+        printf('%s: %s' . PHP_EOL, $lang['code'], $lang['name']);
+    }
 }
 // [END translate_list_language_names]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
