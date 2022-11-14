@@ -288,7 +288,7 @@ class FunctionsTest extends TestCase
     {
         $tempTableId = $this->createTempEmptyTable();
 
-        $output = $this->runSnippet('table_insert_rows_explicit_none_insert_ids', [
+        $output = $this->runFunctionSnippet('table_insert_rows_explicit_none_insert_ids', [
             self::$datasetId,
             $tempTableId,
             json_encode(['name' => 'Yash Sahu', 'title' => 'Noogler dev']),
