@@ -21,52 +21,60 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 6) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID ROW_DATA_1 ROW_DATA_2\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId, $rowData1, $rowData2) = $argv;
-$rowData1 = json_decode($rowData1, true);
-$rowData2 = json_decode($rowData2, true);
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_table_insert_rows_explicit_none_insert_ids]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId = 'The BigQuery table ID';
-// $rowData1 = [
-//     "field1" => "value1",
-//     "field2" => "value2"
-// ];
-// $rowData2 = [
-//     "field1" => "value1",
-//     "field2" => "value2"
-// ];
+/**
+ * Insert rows into the given table with explicitly giving row ids.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ * @param string $rowData1 Json encoded data to insert.
+ * @param string $rowData2 Json encoded data to insert. For eg,
+ *  $rowData1 = json_encode([
+ *      "field1" => "value1",
+ *      "field2" => "value2"
+ *  ]);
+ *  $rowData2 = json_encode([
+ *      "field1" => "value1",
+ *      "field2" => "value2"
+ *  ]);
+ */
+function table_insert_rows_explicit_none_insert_ids(
+  string $projectId,
+  string $datasetId,
+  string $tableId,
+  string $rowData1,
+  string $rowData2
+): void {
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
+    $rowData1 = json_decode($rowData1, true);
+    $rowData2 = json_decode($rowData2, true);
+    // Omitting insert Id's in following rows.
+    $rows = [
+      ['data' => $rowData1],
+      ['data' => $rowData2]
+    ];
+    $insertResponse = $table->insertRows($rows);
 
-// Omitting insert Id's in following rows.
-$rows = [
-  ['data' => $rowData1],
-  ['data' => $rowData2]
-];
-$insertResponse = $table->insertRows($rows);
-
-if ($insertResponse->isSuccessful()) {
-    printf('Rows successfully inserted into table without insert ids');
-} else {
-    foreach ($insertResponse->failedRows() as $row) {
-        foreach ($row['errors'] as $error) {
-            printf('%s: %s' . PHP_EOL, $error['reason'], $error['message']);
+    if ($insertResponse->isSuccessful()) {
+        printf('Rows successfully inserted into table without insert ids' . PHP_EOL);
+    } else {
+        foreach ($insertResponse->failedRows() as $row) {
+            foreach ($row['errors'] as $error) {
+                printf('%s: %s' . PHP_EOL, $error['reason'], $error['message']);
+            }
         }
     }
 }
 # [END bigquery_table_insert_rows_explicit_none_insert_ids]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
