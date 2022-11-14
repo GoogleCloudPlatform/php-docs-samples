@@ -52,7 +52,7 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) deleted\n',
+            'Row (%s, %s, %s) deleted\n' . PHP_EOL,
             $row['SingerId'],
             $row['FirstName'],
             $row['LastName']

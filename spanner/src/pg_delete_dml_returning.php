@@ -52,7 +52,7 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) deleted\n',
+            'Row (%s, %s, %s) deleted\n' . PHP_EOL,
             $row['singerid'],
             $row['firstname'],
             $row['lastname']

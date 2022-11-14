@@ -52,7 +52,7 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row with singerid %s updated to (%s, %s, %s)\n',
+            'Row with singerid %s updated to (%s, %s, %s)\n' . PHP_EOL,
             $row['singerid'],
             $row['singerid'],
             $row['firstname'],

@@ -51,7 +51,7 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
     $result = $transaction->execute($sql);
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) inserted\n',
+            'Row (%s, %s, %s) inserted\n' . PHP_EOL,
             $row['singerid'],
             $row['firstname'],
             $row['lastname']

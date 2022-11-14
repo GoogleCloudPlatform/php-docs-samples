@@ -52,7 +52,7 @@ function update_dml_returning(string $instanceId, string $databaseId): void
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row with SingerId %s updated to (%s, %s, %s)\n',
+            'Row with SingerId %s updated to (%s, %s, %s)\n' . PHP_EOL,
             $row['SingerId'],
             $row['SingerId'],
             $row['FirstName'],
