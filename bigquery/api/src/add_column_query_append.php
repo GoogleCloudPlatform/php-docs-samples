@@ -21,47 +21,51 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_add_column_query_append]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId = 'Table ID of the table in dataset';
+/**
+ * Append a column using a query job.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ */
+function add_column_query_append(
+    string $projectId,
+    string $datasetId,
+    string $tableId
+): void {
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
+    // In this example, the existing table contains only the 'Name' and 'Title'.
+    // A new column 'Description' gets added after the query job.
 
-// In this example, the existing table contains only the 'Name' and 'Title'.
-// A new column 'Description' gets added after the query job.
+    // Define query
+    $query = sprintf('SELECT "John" as name, "Unknown" as title, "Dummy person" as description;');
 
-// Define query
-$query = sprintf('SELECT "John" as name, "Unknown" as title, "Dummy person" as description;');
+    // Set job configs
+    $queryJobConfig = $bigQuery->query($query);
+    $queryJobConfig->destinationTable($table);
+    $queryJobConfig->schemaUpdateOptions(['ALLOW_FIELD_ADDITION']);
+    $queryJobConfig->writeDisposition('WRITE_APPEND');
 
-// Set job configs
-$queryJobConfig = $bigQuery->query($query);
-$queryJobConfig->destinationTable($table);
-$queryJobConfig->schemaUpdateOptions(['ALLOW_FIELD_ADDITION']);
-$queryJobConfig->writeDisposition('WRITE_APPEND');
+    // Run query with query job configuration
+    $bigQuery->runQuery($queryJobConfig);
 
-// Run query with query job configuration
-$bigQuery->runQuery($queryJobConfig);
-
-// Print all the columns
-$columns = $table->info()['schema']['fields'];
-printf('The columns in the table are ');
-foreach ($columns as $column) {
-    printf('%s ', $column['name']);
+    // Print all the columns
+    $columns = $table->info()['schema']['fields'];
+    printf('The columns in the table are ');
+    foreach ($columns as $column) {
+        printf('%s ', $column['name']);
+    }
 }
 # [END bigquery_add_column_query_append]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
