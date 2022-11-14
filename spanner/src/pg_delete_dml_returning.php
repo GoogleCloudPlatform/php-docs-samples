@@ -42,11 +42,11 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql delete query
     $result = $transaction->execute(
-        'DELETE FROM singers WHERE firstname = @firstName '
+        'DELETE FROM singers WHERE firstname = $1 '
         . 'RETURNING *',
         [
           'parameters' => [
-            'firstName' => 'Melissa',
+            'p1' => "Melissa",
           ]
         ]
     );

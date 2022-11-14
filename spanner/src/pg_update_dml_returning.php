@@ -42,11 +42,11 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql update query
     $result = $transaction->execute(
-        'UPDATE singers SET lastname = @lastName WHERE singerid = @singerId RETURNING *',
+        'UPDATE singers SET lastname = $1 WHERE singerid = $2 RETURNING *',
         [
           'parameters' => [
-            'lastName' => 'Missing',
-            'singerId' => 16,
+            'p1' => 'Missing',
+            'p2' => 16,
           ]
         ]
     );
