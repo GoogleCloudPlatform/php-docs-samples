@@ -21,40 +21,46 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 4 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [FIELDS]\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId) = $argv;
-$fields = isset($argv[4]) ? json_decode($argv[4]) : [['name' => 'field1', 'type' => 'string']];
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_create_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId = 'The BigQuery table ID';
-// $fields = [
-//    [
-//        'name' => 'field1',
-//        'type' => 'string',
-//        'mode' => 'required'
-//    ],
-//    [
-//        'name' => 'field2',
-//        'type' => 'integer'
-//    ],
-//];
+/**
+ * Creates a table with the given ID and Schema
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ * @param string $fields Json Encoded string of schema of the table. For eg,
+ *    $fields = json_encode([
+ *     [
+ *         'name' => 'field1',
+ *         'type' => 'string',
+ *         'mode' => 'required'
+ *     ],
+ *     [
+ *         'name' => 'field2',
+ *         'type' => 'integer'
+ *     ],
+ *    ]);
+ */
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$schema = ['fields' => $fields];
-$table = $dataset->createTable($tableId, ['schema' => $schema]);
-printf('Created table %s' . PHP_EOL, $tableId);
+function create_table(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    string $fields
+): void {
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $fields = json_decode($fields);
+    $schema = ['fields' => $fields];
+    $table = $dataset->createTable($tableId, ['schema' => $schema]);
+    printf('Created table %s' . PHP_EOL, $tableId);
+}
 # [END bigquery_create_table]
-return $table;
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -21,34 +21,35 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID SQL_QUERY\n", __FILE__);
-}
-list($_, $projectId, $query) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_query_dry_run]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`';
+/**
+ * Dry runs the given query
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $query The query to be run. For eg: $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`'
+ */
+function dry_run_query(string $projectId, string $query): void
+{
+    // Construct a BigQuery client object.
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
 
-// Construct a BigQuery client object.
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
+    // Set job configs
+    $jobConfig = $bigQuery->query($query);
+    $jobConfig->useQueryCache(false);
+    $jobConfig->dryRun(true);
 
-// Set job configs
-$jobConfig = $bigQuery->query($query);
-$jobConfig->useQueryCache(false);
-$jobConfig->dryRun(true);
+    // Extract query results
+    $queryJob = $bigQuery->startJob($jobConfig);
+    $info = $queryJob->info();
 
-// Extract query results
-$queryJob = $bigQuery->startJob($jobConfig);
-$info = $queryJob->info();
-
-printf('This query will process %s bytes' . PHP_EOL, $info['statistics']['totalBytesProcessed']);
+    printf('This query will process %s bytes' . PHP_EOL, $info['statistics']['totalBytesProcessed']);
+}
 # [END bigquery_query_dry_run]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

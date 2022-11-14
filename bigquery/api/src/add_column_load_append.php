@@ -21,55 +21,59 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_add_column_load_append]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId = 'Table ID of the table in dataset';
+/**
+ * Append a column using a load job.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ */
+function add_column_load_append(
+    string $projectId,
+    string $datasetId,
+    string $tableId
+): void {
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    // In this example, the existing table contains only the 'Name' and 'Title'.
+    // A new column 'Description' gets added after load job.
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-// In this example, the existing table contains only the 'Name' and 'Title'.
-// A new column 'Description' gets added after load job.
+    $schema = [
+      'fields' => [
+        ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+        ['name' => 'title', 'type' => 'string', 'mode' => 'nullable'],
+        ['name' => 'description', 'type' => 'string', 'mode' => 'nullable']
+        ]
+      ];
 
-$schema = [
-  'fields' => [
-      ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
-      ['name' => 'title', 'type' => 'string', 'mode' => 'nullable'],
-      ['name' => 'description', 'type' => 'string', 'mode' => 'nullable']
-  ]
-];
+    $source = __DIR__ . '/../test/data/test_data_extra_column.csv';
 
-$source = __DIR__ . '/../test/data/test_data_extra_column.csv';
+    // Set job configs
+    $loadConfig = $table->load(fopen($source, 'r'));
+    $loadConfig->destinationTable($table);
+    $loadConfig->schema($schema);
+    $loadConfig->schemaUpdateOptions(['ALLOW_FIELD_ADDITION']);
+    $loadConfig->sourceFormat('CSV');
+    $loadConfig->writeDisposition('WRITE_APPEND');
 
-// Set job configs
-$loadConfig = $table->load(fopen($source, 'r'));
-$loadConfig->destinationTable($table);
-$loadConfig->schema($schema);
-$loadConfig->schemaUpdateOptions(['ALLOW_FIELD_ADDITION']);
-$loadConfig->sourceFormat('CSV');
-$loadConfig->writeDisposition('WRITE_APPEND');
+    // Run the job with load config
+    $job = $bigQuery->runJob($loadConfig);
 
-// Run the job with load config
-$job = $bigQuery->runJob($loadConfig);
-
-// Print all the columns
-$columns = $table->info()['schema']['fields'];
-printf('The columns in the table are ');
-foreach ($columns as $column) {
-    printf('%s ', $column['name']);
+    // Print all the columns
+    $columns = $table->info()['schema']['fields'];
+    printf('The columns in the table are ');
+    foreach ($columns as $column) {
+        printf('%s ', $column['name']);
+    }
 }
 # [END bigquery_add_column_load_append]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

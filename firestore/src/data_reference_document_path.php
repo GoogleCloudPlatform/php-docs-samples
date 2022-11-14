@@ -36,11 +36,9 @@ function data_reference_document_path(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_document_path_ref]
     # [START firestore_data_reference_document_path]
     $document = $db->document('users/alovelace');
     # [END firestore_data_reference_document_path]
-    # [END fs_document_path_ref]
     printf('Retrieved document from path: %s' . PHP_EOL, $document->name());
 }
 
