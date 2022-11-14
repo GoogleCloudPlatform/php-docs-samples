@@ -44,10 +44,10 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
     $result = $transaction->execute(
         'UPDATE singers SET lastname = $1 WHERE singerid = $2 RETURNING *',
         [
-          'parameters' => [
-            'p1' => 'Missing',
-            'p2' => 16,
-          ]
+            'parameters' => [
+              'p1' => 'Missing',
+              'p2' => 16,
+            ]
         ]
     );
     foreach ($result->rows() as $row) {

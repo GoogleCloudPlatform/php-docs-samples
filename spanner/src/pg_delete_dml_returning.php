@@ -45,9 +45,9 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
         'DELETE FROM singers WHERE firstname = $1 '
         . 'RETURNING *',
         [
-          'parameters' => [
-            'p1' => "Melissa",
-          ]
+            'parameters' => [
+              'p1' => 'Melissa',
+            ]
         ]
     );
     foreach ($result->rows() as $row) {

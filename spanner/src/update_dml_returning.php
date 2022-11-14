@@ -44,10 +44,10 @@ function update_dml_returning(string $instanceId, string $databaseId): void
     $result = $transaction->execute(
         'UPDATE Singers SET LastName = @lastName WHERE SingerId = @singerId THEN RETURN *',
         [
-          'parameters' => [
-            'lastName' => 'Missing',
-            'singerId' => 12,
-          ]
+            'parameters' => [
+              'lastName' => 'Missing',
+              'singerId' => 12,
+            ]
         ]
     );
     foreach ($result->rows() as $row) {

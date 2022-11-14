@@ -45,9 +45,9 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
         'DELETE FROM Singers WHERE FirstName = @firstName '
         . 'THEN RETURN *',
         [
-          'parameters' => [
-            'firstName' => 'Melissa',
-          ]
+            'parameters' => [
+              'firstName' => 'Melissa',
+            ]
         ]
     );
     foreach ($result->rows() as $row) {
