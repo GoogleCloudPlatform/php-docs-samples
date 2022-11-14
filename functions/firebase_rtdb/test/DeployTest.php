@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Google\Cloud\Samples\Functions\FirebaseRTDB\Test;
 
@@ -73,7 +73,7 @@ class DeployTest extends TestCase
 
         return self::$fn->deploy([
             '--trigger-resource' => $resource,
-            '--trigger-event' => $event
+            '--trigger-event' => $event,
         ], '');
     }
 
@@ -83,7 +83,7 @@ class DeployTest extends TestCase
         return [
             [
                 'data' => $data,
-                'expected' => json_encode($data)
+                'expected' => json_encode($data),
             ],
         ];
     }
@@ -124,12 +124,12 @@ class DeployTest extends TestCase
     private function updateRTDB(string $path, array $data): void
     {
         $client = new Client([
-            'base_uri' => sprintf('https://%s.firebaseio.com', self::$projectId)
+            'base_uri' => sprintf('https://%s.firebaseio.com', self::$projectId),
         ]);
 
         $url = '/' . $path . '.json';
         $url_response = $client->put($url, [
-            'json' => $data
+            'json' => $data,
         ]);
     }
 }
