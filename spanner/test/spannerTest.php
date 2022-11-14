@@ -167,37 +167,6 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testCreateDatabase
-     */
-    public function testDmlReturningInsert()
-    {
-        $output = $this->runFunctionSnippet('insert_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
-        $this->assertStringContainsString('Russell', $output);
-        $this->assertStringContainsString('Jacqueline', $output);
-        $this->assertStringContainsString('Dylan', $output);
-    }
-
-    /**
-     * @depends testDmlReturningInsert
-     */
-    public function testDmlReturningUpdate()
-    {
-        $output = $this->runFunctionSnippet('update_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
-        $this->assertStringContainsString('Missing', $output);
-    }
-
-    /**
-     * @depends testDmlReturningUpdate
-     */
-    public function testDmlReturningDelete()
-    {
-        $output = $this->runFunctionSnippet('delete_dml_returning');
-        $this->assertStringContainsString('12', $output);
-    }
-
-    /**
      * @depends testInsertData
      */
     public function testQueryData()
@@ -840,6 +809,37 @@ class spannerTest extends TestCase
     {
         $output = $this->runFunctionSnippet('dml_batch_update_request_priority');
         $this->assertStringContainsString('Executed 2 SQL statements using Batch DML with PRIORITY_LOW.', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testDmlReturningInsert()
+    {
+        $output = $this->runFunctionSnippet('insert_dml_returning');
+        $this->assertStringContainsString('Melissa', $output);
+        $this->assertStringContainsString('Russell', $output);
+        $this->assertStringContainsString('Jacqueline', $output);
+        $this->assertStringContainsString('Dylan', $output);
+    }
+
+    /**
+     * @depends testDmlReturningInsert
+     */
+    public function testDmlReturningUpdate()
+    {
+        $output = $this->runFunctionSnippet('update_dml_returning');
+        $this->assertStringContainsString('Melissa', $output);
+        $this->assertStringContainsString('Missing', $output);
+    }
+
+    /**
+     * @depends testDmlReturningUpdate
+     */
+    public function testDmlReturningDelete()
+    {
+        $output = $this->runFunctionSnippet('delete_dml_returning');
+        $this->assertStringContainsString('12', $output);
     }
 
     private function testGetInstanceConfig()

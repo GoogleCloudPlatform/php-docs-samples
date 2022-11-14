@@ -76,37 +76,6 @@ class spannerPgTest extends TestCase
         $this->assertStringContainsString($expected, $output);
     }
 
-    /**
-     * @depends testCreateDatabase
-     */
-    public function testDmlReturningInsert()
-    {
-        $output = $this->runFunctionSnippet('pg_insert_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
-        $this->assertStringContainsString('Russell', $output);
-        $this->assertStringContainsString('Jacqueline', $output);
-        $this->assertStringContainsString('Dylan', $output);
-    }
-
-    /**
-     * @depends testDmlReturningInsert
-     */
-    public function testDmlReturningUpdate()
-    {
-        $output = $this->runFunctionSnippet('pg_update_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
-        $this->assertStringContainsString('Missing', $output);
-    }
-
-    /**
-     * @depends testDmlReturningUpdate
-     */
-    public function testDmlReturningDelete()
-    {
-        $output = $this->runFunctionSnippet('pg_delete_dml_returning');
-        $this->assertStringContainsString('16', $output);
-    }
-
     /*
      * @depends testCreateDatabase
      */
@@ -342,6 +311,37 @@ class spannerPgTest extends TestCase
 
         $output = $this->runFunctionSnippet('pg_dml_getting_started_update');
         $this->assertStringContainsString('Marketing budget updated.', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testDmlReturningInsert()
+    {
+        $output = $this->runFunctionSnippet('pg_insert_dml_returning');
+        $this->assertStringContainsString('Melissa', $output);
+        $this->assertStringContainsString('Russell', $output);
+        $this->assertStringContainsString('Jacqueline', $output);
+        $this->assertStringContainsString('Dylan', $output);
+    }
+
+    /**
+     * @depends testDmlReturningInsert
+     */
+    public function testDmlReturningUpdate()
+    {
+        $output = $this->runFunctionSnippet('pg_update_dml_returning');
+        $this->assertStringContainsString('Melissa', $output);
+        $this->assertStringContainsString('Missing', $output);
+    }
+
+    /**
+     * @depends testDmlReturningUpdate
+     */
+    public function testDmlReturningDelete()
+    {
+        $output = $this->runFunctionSnippet('pg_delete_dml_returning');
+        $this->assertStringContainsString('16', $output);
     }
 
     public static function tearDownAfterClass(): void
