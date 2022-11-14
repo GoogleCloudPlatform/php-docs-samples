@@ -34,21 +34,21 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $tableId The BigQuery table ID.
  * @param string $rowData1 Json encoded data to insert.
  * @param string $rowData2 Json encoded data to insert. For eg,
- *  $rowData1 = json_encode([
- *      "field1" => "value1",
- *      "field2" => "value2"
- *  ]);
- *  $rowData2 = json_encode([
- *      "field1" => "value1",
- *      "field2" => "value2"
- *  ]);
+ *    $rowData1 = json_encode([
+ *        "field1" => "value1",
+ *        "field2" => "value2"
+ *    ]);
+ *    $rowData2 = json_encode([
+ *        "field1" => "value1",
+ *        "field2" => "value2"
+ *    ]);
  */
 function table_insert_rows_explicit_none_insert_ids(
-  string $projectId,
-  string $datasetId,
-  string $tableId,
-  string $rowData1,
-  string $rowData2
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    string $rowData1,
+    string $rowData2
 ): void {
     $bigQuery = new BigQueryClient([
       'projectId' => $projectId,
