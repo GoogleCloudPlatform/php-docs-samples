@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Inserts sample data into the given database using DML returning feature.
+ * Inserts sample data into the given database using DML returning.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
@@ -50,7 +50,7 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
     $result = $transaction->execute($sql);
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) inserted\n' . PHP_EOL,
+            'Row (%s, %s, %s) inserted' . PHP_EOL,
             $row['SingerId'],
             $row['FirstName'],
             $row['LastName']

@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Delete data from the given postgresql database using DML returning feature.
+ * Delete data from the given postgresql database using DML returning.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
@@ -52,7 +52,7 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) deleted\n' . PHP_EOL,
+            'Row (%s, %s, %s) deleted' . PHP_EOL,
             $row['singerid'],
             $row['firstname'],
             $row['lastname']

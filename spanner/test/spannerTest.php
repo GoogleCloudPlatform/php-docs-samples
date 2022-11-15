@@ -888,9 +888,17 @@ class spannerTest extends TestCase
     public function testDmlReturningInsert()
     {
         $output = $this->runFunctionSnippet('insert_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
+
+        $expectedOutput = sprintf('Row (12, Melissa, Garcia) inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Row (13, Russell, Morales) inserted');
         $this->assertStringContainsString('Russell', $output);
+
+        $expectedOutput = sprintf('Row (14, Jacqueline, Long) inserted');
         $this->assertStringContainsString('Jacqueline', $output);
+
+        $expectedOutput = sprintf('Row (15, Dylan, Shaw) inserted');
         $this->assertStringContainsString('Dylan', $output);
     }
 
@@ -900,8 +908,11 @@ class spannerTest extends TestCase
     public function testDmlReturningUpdate()
     {
         $output = $this->runFunctionSnippet('update_dml_returning');
-        $this->assertStringContainsString('Melissa', $output);
-        $this->assertStringContainsString('Missing', $output);
+
+        $expectedOutput = sprintf(
+            'Row with SingerId 12 updated to (12, Melissa, Missing)'
+        );
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
@@ -910,7 +921,9 @@ class spannerTest extends TestCase
     public function testDmlReturningDelete()
     {
         $output = $this->runFunctionSnippet('delete_dml_returning');
-        $this->assertStringContainsString('12', $output);
+
+        $expectedOutput = sprintf('Row (12, Melissa, Missing) deleted');
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     private function testGetInstanceConfig()
