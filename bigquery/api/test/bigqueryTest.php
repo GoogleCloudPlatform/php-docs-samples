@@ -284,6 +284,23 @@ class FunctionsTest extends TestCase
         $this->assertStringContainsString('Found 10 row(s)', $output);
     }
 
+    public function testTableInsertRowsExplicitNoneInsertIds()
+    {
+        $tempTableId = $this->createTempEmptyTable();
+
+        $output = $this->runFunctionSnippet('table_insert_rows_explicit_none_insert_ids', [
+            self::$datasetId,
+            $tempTableId,
+            json_encode(['name' => 'Yash Sahu', 'title' => 'Noogler dev']),
+            json_encode(['name' => 'Friday', 'title' => 'Are the best'])
+        ]);
+
+        $tempTable = self::$dataset->table($tempTableId);
+        $expectedOutput = sprintf('Rows successfully inserted into table without insert ids');
+        $this->assertStringContainsString($expectedOutput, $output);
+        $this->verifyTable($tempTable, 'Yash Sahu', 2);
+    }
+
     public function testRunQueryAsJob()
     {
         $tableId = $this->createTempTable();
