@@ -40,11 +40,11 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning sql insert query
     $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
-    . "VALUES (12, 'Melissa', 'Garcia'), "
-    . "(13, 'Russell', 'Morales'), "
-    . "(14, 'Jacqueline', 'Long'), "
-    . "(15, 'Dylan', 'Shaw') "
-    . 'THEN RETURN *';
+      . "VALUES (12, 'Melissa', 'Garcia'), "
+      . "(13, 'Russell', 'Morales'), "
+      . "(14, 'Jacqueline', 'Long'), "
+      . "(15, 'Dylan', 'Shaw') "
+      . 'THEN RETURN *';
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
