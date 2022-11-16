@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_copy_table]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Copy the contents of table from source table to destination table.
@@ -50,15 +49,11 @@ function copy_table(
     $copyConfig = $sourceTable->copy($destinationTable);
     $job = $sourceTable->runJob($copyConfig);
 
-    // poll the job until it is complete
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($job) {
-        print('Waiting for job to complete' . PHP_EOL);
-        $job->reload();
-        if (!$job->isComplete()) {
-            throw new \Exception('Job has not yet completed', 500);
-        }
-    });
+    // check if the job is complete
+    $job->reload();
+    if (!$job->isComplete()) {
+        throw new \Exception('Job has not yet completed', 500);
+    }
     // check if the job has errors
     if (isset($job->info()['status']['errorResult'])) {
         $error = $job->info()['status']['errorResult']['message'];
