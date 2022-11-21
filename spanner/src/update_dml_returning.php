@@ -42,7 +42,8 @@ function update_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning sql update query
     $result = $transaction->execute(
-        'UPDATE Singers SET LastName = @lastName WHERE SingerId = @singerId THEN RETURN *',
+        'UPDATE Singers SET LastName = @lastName '
+        . 'WHERE SingerId = @singerId THEN RETURN *',
         [
             'parameters' => [
               'lastName' => 'Missing',
