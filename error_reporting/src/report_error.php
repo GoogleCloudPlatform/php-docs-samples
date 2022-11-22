@@ -22,6 +22,7 @@
  */
 
 namespace Google\Cloud\Samples\ErrorReporting;
+
 # [START report_error]
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorContext;
