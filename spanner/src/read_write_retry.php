@@ -46,10 +46,9 @@ function read_write_retry(string $instanceId, string $databaseId): void
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $maxRetries = 5;
+    $maxRetries = 2;
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) 
-    {
+    $database->runTransaction(function (Transaction $t) use ($spanner) {
         // Read the second album's budget.
         $secondAlbumKey = [2, 2];
         $secondAlbumKeySet = $spanner->keySet(['keys' => [$secondAlbumKey]]);
