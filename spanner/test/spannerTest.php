@@ -926,6 +926,28 @@ class spannerTest extends TestCase
         $this->assertStringContainsString($expectedOutput, $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testAddDropDatabaseRole()
+    {
+        $output = $this->runFunctionSnippet('add_drop_database_role');
+        $this->assertStringContainsString('Waiting for create role and grant operation to complete... ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete... ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent ' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testUpdateData
+     */
+    public function testReadWriteRetry()
+    {
+        $output = $this->runFunctionSnippet('read_write_retry');
+        $this->assertStringContainsString('Setting second album\'s budget as the first album\'s budget.', $output);
+        $this->assertStringContainsString('Transaction complete.', $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
