@@ -97,7 +97,7 @@ class videoStitcherTest extends TestCase
         $this->assertStringContainsString('Deleted slate', $output);
     }
 
-    public static function deleteOldSlates(): void
+    private static function deleteOldSlates(): void
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
