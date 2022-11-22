@@ -48,8 +48,8 @@ function read_write_retry(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
     $maxRetries = 5;
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
-
+    $database->runTransaction(function (Transaction $t) use ($spanner) 
+    {
         // Read the second album's budget.
         $secondAlbumKey = [2, 2];
         $secondAlbumKeySet = $spanner->keySet(['keys' => [$secondAlbumKey]]);
@@ -59,7 +59,6 @@ function read_write_retry(string $instanceId, string $databaseId): void
             ['MarketingBudget'],
             ['limit' => 1]
         );
-
         $firstRow = $secondAlbumResult->rows()->current();
         $secondAlbumBudget = $firstRow['MarketingBudget'];
 
