@@ -938,6 +938,16 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent ' . PHP_EOL, $output);
     }
 
+    /**
+     * @depends testUpdateData
+     */
+    public function testReadWriteRetry()
+    {
+        $output = $this->runFunctionSnippet('read_write_retry');
+        $this->assertStringContainsString('Setting second album\'s budget as the first album\'s budget.', $output);
+        $this->assertStringContainsString('Transaction complete.', $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
