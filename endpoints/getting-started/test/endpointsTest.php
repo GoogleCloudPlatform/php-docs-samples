@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Google\Cloud\Samples\Endpoints;
 
 use Google\Cloud\Samples\Appengine\Endpoints\EndpointsCommand;
 use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
-class EndpointsCommandTest extends TestCase
+class endpointsTest extends TestCase
 {
     use TestTrait;
 
@@ -36,67 +37,46 @@ class EndpointsCommandTest extends TestCase
         $this->apiKey = $api_key;
     }
 
-    public function testEndpointsCommandWithNoCredentials()
+    public function testEndpointWithNoCredentials()
     {
-        $command = new EndpointsCommand();
-        $tester = new CommandTester($command);
         $message = <<<EOF
 So if you're lost and on your own
 You can never surrender
 And if your path won't lead you home
 You can never surrender
 EOF;
-        $input = [
+        $output = $this->runFunctionSnippet('make_request', [
             'host' => $this->host,
             'api_key' => $this->apiKey,
-            '--message' => $message,
-        ];
-
-        $result = $tester->execute($input);
-
-        $this->assertEquals(0, $result);
+            'credentials' => '',
+            'message' => $message,
+        ]);
         $jsonFlags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-        $this->assertStringContainsString(json_encode($message, $jsonFlags), $tester->getDisplay());
+        $this->assertStringContainsString(json_encode($message, $jsonFlags), $output);
     }
 
     public function testEndpointsCommandWithApplicationCredentials()
     {
         $creds = $this->requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
-        $command = new EndpointsCommand();
-        $tester = new CommandTester($command);
-        $arguments = [
+
+        $output = $this->runFunctionSnippet('make_request', [
             'host' => $this->host,
             'api_key' => $this->apiKey,
             'credentials' => $creds,
-        ];
-        $options = [];
-
-        $result = $tester->execute($arguments, $options);
-
-        $this->assertEquals(0, $result);
-
-        $credentials = json_decode(file_get_contents($creds), true);
-        $this->assertStringContainsString('123456', $tester->getDisplay());
+        ]);
+        $this->assertStringContainsString('123456', $output);
     }
 
     public function testEndpointsCommandWithClientSecrets()
     {
         $creds = $this->requireEnv('GOOGLE_CLIENT_SECRETS');
-        $command = new EndpointsCommand();
-        $tester = new CommandTester($command);
-        $arguments = [
+        $output = $this->runFunctionSnippet('make_request', [
             'host' => $this->host,
             'api_key' => $this->apiKey,
             'credentials' => $creds
-        ];
-        $options = [];
+        ]);
 
-        $result = $tester->execute($arguments, $options);
-
-        $this->assertEquals(0, $result);
-
-        $credentials = json_decode(file_get_contents($creds), true);
-        $this->assertStringContainsString('id', $tester->getDisplay());
-        $this->assertStringContainsString('email', $tester->getDisplay());
+        $this->assertStringContainsString('id', $output);
+        $this->assertStringContainsString('email', $output);
     }
 }
