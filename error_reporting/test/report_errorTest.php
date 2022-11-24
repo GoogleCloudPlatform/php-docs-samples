@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\ErrorReporting;
 
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 // Load the testing trait
@@ -24,12 +25,14 @@ require_once __DIR__ . '/VerifyReportedErrorTrait.php';
 
 class report_errorTest extends TestCase
 {
+    use TestTrait;
     use VerifyReportedErrorTrait;
 
     public function testReportError()
     {
         $message = sprintf('Test Report Error (%s)', date('Y-m-d H:i:s'));
-        $output = $this->runSnippet('report_error', [
+        $output = $this->runFunctionSnippet('report_error', [
+            self::$projectId,
             $message,
             'unittests@google.com',
         ]);
@@ -39,13 +42,5 @@ class report_errorTest extends TestCase
         );
 
         $this->verifyReportedError(self::$projectId, $message);
-    }
-
-    private function runSnippet($sampleName, $params = [])
-    {
-        $argv = array_merge([0, self::$projectId], $params);
-        ob_start();
-        require __DIR__ . "/../src/$sampleName.php";
-        return ob_get_clean();
     }
 }
