@@ -65,7 +65,7 @@ class visionTest extends TestCase
 
     public function testTextCommandWithImageLackingText()
     {
-        $path = __DIR__ . '/data/faulkner.jpg';
+        $path = __DIR__ . '/data/cat.jpg';
         $output = $this->runFunctionSnippet('detect_text', ['path' => $path]);
         $this->assertStringContainsString('0 texts found', $output);
     }
@@ -74,7 +74,7 @@ class visionTest extends TestCase
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
-        $path = 'gs://' . $bucketName . '/vision/faulkner.jpg';
+        $path = 'gs://' . $bucketName . '/vision/cat.jpg';
         $output = $this->runFunctionSnippet('detect_text_gcs', ['path' => $path]);
         $this->assertStringContainsString('0 texts found', $output);
     }
