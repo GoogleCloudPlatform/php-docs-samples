@@ -23,29 +23,31 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID SECRET_ID\n", basename(__FILE__));
-}
-list($_, $projectId, $secretId) = $argv;
+namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_list_secret_versions]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
-// $secretId = 'YOUR_SECRET_ID' (e.g. 'my-secret');
+/**
+ * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ * @param string $secretId  Your secret ID (e.g. 'my-secret')
+ */
+function list_secret_versions(string $projectId, string $secretId): void
+{
+    // Create the Secret Manager client.
+    $client = new SecretManagerServiceClient();
 
-// Create the Secret Manager client.
-$client = new SecretManagerServiceClient();
+    // Build the resource name of the parent secret.
+    $parent = $client->secretName($projectId, $secretId);
 
-// Build the resource name of the parent secret.
-$parent = $client->secretName($projectId, $secretId);
-
-// List all secret versions.
-foreach ($client->listSecretVersions($parent) as $version) {
-    printf('Found secret version %s', $version->getName());
+    // List all secret versions.
+    foreach ($client->listSecretVersions($parent) as $version) {
+        printf('Found secret version %s', $version->getName());
+    }
 }
 // [END secretmanager_list_secret_versions]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $backupId The Spanner backup ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
-function create_backup_with_encryption_key($instanceId, $databaseId, $backupId, $kmsKeyName)
+function create_backup_with_encryption_key(string $instanceId, string $databaseId, string $backupId, string $kmsKeyName): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -39,14 +39,12 @@ function query_collection_group_filter_eq(string $projectId): void
         'projectId' => $projectId,
     ]);
 
-    # [START fs_collection_group_query]
     # [START firestore_query_collection_group_filter_eq]
     $museums = $db->collectionGroup('landmarks')->where('type', '==', 'museum');
     foreach ($museums->documents() as $document) {
         printf('%s => %s' . PHP_EOL, $document->id(), $document->data()['name']);
     }
     # [END firestore_query_collection_group_filter_eq]
-    # [END fs_collection_group_query]
 }
 
 // The following 2 lines are only needed to run the samples
