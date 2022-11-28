@@ -36,7 +36,6 @@ function data_set_from_map(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_set_document]
     # [START firestore_data_set_from_map]
     $data = [
         'name' => 'Los Angeles',
@@ -45,7 +44,6 @@ function data_set_from_map(string $projectId): void
     ];
     $db->collection('samples/php/cities')->document('LA')->set($data);
     # [END firestore_data_set_from_map]
-    # [END fs_set_document]
     printf('Set data for the LA document in the cities collection.' . PHP_EOL);
 }
 

@@ -30,15 +30,14 @@ use Google\Cloud\Storage\StorageClient;
  * Add an entity and role to a bucket's ACL.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $entity The entity for which to update access controls.
+ *        (e.g. 'user-example@domain.com')
  * @param string $role The permissions to add for the specified entity.
+ *        (e.g. 'OWNER')
  */
-function add_bucket_acl($bucketName, $entity, $role)
+function add_bucket_acl(string $bucketName, string $entity, string $role): void
 {
-    // $bucketName = 'my-bucket';
-    // $entity = 'user-example@domain.com';
-    // $role = 'OWNER';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->acl();

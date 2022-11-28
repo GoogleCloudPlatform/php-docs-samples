@@ -42,7 +42,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_new_column($instanceId, $databaseId)
+function query_data_with_new_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -18,13 +18,16 @@
 
 namespace Google\Cloud\Samples\CloudSQL\Postgres\Tests;
 
-use Google\Cloud\Samples\CloudSQL\Postgres\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseTcp;
+use Google\Cloud\Samples\CloudSQL\Postgres\DatabaseUnix;
 use Google\Cloud\Samples\CloudSQL\Postgres\Votes;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class IntegrationTest extends TestCase
 {
     use TestTrait;
@@ -41,47 +44,43 @@ class IntegrationTest extends TestCase
 
     public function testUnixConnection()
     {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
         $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
         $dbName = $this->requireEnv('POSTGRES_DATABASE');
         $dbUser = $this->requireEnv('POSTGRES_USER');
-        $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_POSTGRES');
+        $connectionName = $this->requireEnv(
+            'CLOUDSQL_CONNECTION_NAME_POSTGRES'
+        );
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+        $instanceUnixSocket = "${socketDir}/${connectionName}";
 
-        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $connectionName,
-            $socketDir,
-            $connConfig
-        ));
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+        putenv("INSTANCE_UNIX_SOCKET=$instanceUnixSocket");
+
+        $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
+
+        // Unset environment variables after test run.
+        putenv('DB_PASS');
+        putenv('DB_NAME');
+        putenv('DB_USER');
+        putenv('INSTANCE_UNIX_SOCKET');
     }
 
     public function testTcpConnection()
     {
-        $connConfig = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbHost = $this->requireEnv('POSTGRES_HOST');
+        $instanceHost = $this->requireEnv('POSTGRES_HOST');
         $dbPass = $this->requireEnv('POSTGRES_PASSWORD');
         $dbName = $this->requireEnv('POSTGRES_DATABASE');
         $dbUser = $this->requireEnv('POSTGRES_USER');
 
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $dbHost,
-            $connConfig
-        ));
+        putenv("INSTANCE_HOST=$instanceHost");
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+
+        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
     }
 }

@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- /**
+
+/**
  * This front controller is called by the App Engine web server to handle all
  * incoming requests. To change this, you will need to modify the "entrypoint"
  * directive in `app.yaml`.

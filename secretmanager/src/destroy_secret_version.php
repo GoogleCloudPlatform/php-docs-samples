@@ -23,31 +23,33 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID SECRET_ID VERSION_ID\n", basename(__FILE__));
-}
-list($_, $projectId, $secretId, $versionId) = $argv;
+namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_destroy_secret_version]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
-// $secretId = 'YOUR_SECRET_ID' (e.g. 'my-secret');
-// $versionId = 'YOUR_VERSION_ID' (e.g. 'latest' or '5');
+/**
+ * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ * @param string $secretId  Your secret ID (e.g. 'my-secret')
+ * @param string $versionId Your version ID (e.g. 'latest' or '5');
+ */
+function destroy_secret_version(string $projectId, string $secretId, string $versionId): void
+{
+    // Create the Secret Manager client.
+    $client = new SecretManagerServiceClient();
 
-// Create the Secret Manager client.
-$client = new SecretManagerServiceClient();
+    // Build the resource name of the secret version.
+    $name = $client->secretVersionName($projectId, $secretId, $versionId);
 
-// Build the resource name of the secret version.
-$name = $client->secretVersionName($projectId, $secretId, $versionId);
+    // Destroy the secret version.
+    $response = $client->destroySecretVersion($name);
 
-// Destroy the secret version.
-$response = $client->destroySecretVersion($name);
-
-// Print a success message.
-printf('Destroyed secret version: %s', $response->getName());
+    // Print a success message.
+    printf('Destroyed secret version: %s', $response->getName());
+}
 // [END secretmanager_destroy_secret_version]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
