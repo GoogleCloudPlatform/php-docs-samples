@@ -176,7 +176,7 @@ class visionTest extends TestCase
         $this->assertStringContainsString('Dog', $output);
     }
 
-    public function testLocalizeObjectCommandGcs()
+    public function testDetectObjectCommandGcs()
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
