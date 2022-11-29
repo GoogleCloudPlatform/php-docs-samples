@@ -21,26 +21,26 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s PROJECT_ID\n", __FILE__);
-}
-
-list($_, $projectId) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_list_datasets]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId  = 'The Google project ID';
-
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$datasets = $bigQuery->datasets();
-foreach ($datasets as $dataset) {
-    print($dataset->id() . PHP_EOL);
+/**
+ * List all datasets in the given project
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ */
+function list_datasets(string $projectId): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $datasets = $bigQuery->datasets();
+    foreach ($datasets as $dataset) {
+        print($dataset->id() . PHP_EOL);
+    }
 }
 # [END bigquery_list_datasets]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

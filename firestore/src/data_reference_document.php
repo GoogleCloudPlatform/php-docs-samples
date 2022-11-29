@@ -36,11 +36,9 @@ function data_reference_document(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_document_ref]
     # [START firestore_data_reference_document]
     $document = $db->collection('samples/php/users')->document('alovelace');
     # [END firestore_data_reference_document]
-    # [END fs_document_ref]
     printf('Retrieved document: %s' . PHP_EOL, $document->name());
 }
 
