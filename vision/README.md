@@ -28,12 +28,12 @@ This simple command-line application demonstrates how to invoke
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 5.  For a basic demonstration of the Cloud Vision API, run `php quickstart.php`.
-5.  Execute the snippets in the [src/](src/) directory by running
+6.  Execute the snippets in the [src/](src/) directory by running
     `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
     are provided:
     ```sh
     $ php src/detext_face.php
-    Usage: php src/detext_face.php PATH
+    Usage: php src/detext_face.php <PATH>
 
     $ php src/detect_face.php 'path/to/your/image.jpg'
     ```

@@ -169,7 +169,7 @@ class visionTest extends TestCase
         $this->assertStringContainsString('Google', $output);
     }
 
-    public function testLocalizeObjectCommand()
+    public function testDetectObjectCommand()
     {
         $path = __DIR__ . '/data/puppies.jpg';
         $output = $this->runFunctionSnippet('detect_object', ['path' => $path]);
