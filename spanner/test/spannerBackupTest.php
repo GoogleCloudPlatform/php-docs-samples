@@ -21,7 +21,6 @@ use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -29,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
  */
 class spannerBackupTest extends TestCase
 {
@@ -71,6 +71,9 @@ class spannerBackupTest extends TestCase
 
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
+        }
+        if ('true' !== getenv('GOOGLE_SPANNER_RUN_BACKUP_TESTS')) {
+            self::markTestSkipped('Skipping backup tests.');
         }
         self::$instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 

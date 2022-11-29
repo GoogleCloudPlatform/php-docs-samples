@@ -27,20 +27,20 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a Cloud Storage Bucket with Turbo Replication set to `ASYNC_TURBO`.
+ * Create a Cloud Storage bucket with the recovery point objective (RPO) set to `ASYNC_TURBO`.
  * The bucket must be a dual-region bucket for this setting to take effect.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
- * @param string $location The Dual Region location where you want your bucket to reside. (Read more at https://cloud.google.com/storage/docs/locations#location-dr)
+ *        (e.g. 'my-bucket')
+ * @param string $location The Dual-Region location where you want your bucket to reside (e.g. "US-CENTRAL1+US-WEST1").
+                                           Read more at https://cloud.google.com/storage/docs/locations#location-dr
  */
-function create_bucket_turbo_replication($bucketName, $location = 'nam4')
+function create_bucket_turbo_replication(string $bucketName, string $location = 'nam4'): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $rpo = 'ASYNC_TURBO';
 
-    // providing a location which is a dual region location
+    // providing a location which is a dual-region location
     // makes sure the locationType is set to 'dual-region' implicitly
     // we can pass 'locationType' => 'dual-region'
     // to make it explicit
@@ -48,7 +48,7 @@ function create_bucket_turbo_replication($bucketName, $location = 'nam4')
         'location' => $location,
         'rpo' => $rpo
     ]);
-    printf('Bucket with Turbo Replication set to \'ASYNC_TURBO\' created: %s' . PHP_EOL, $bucket->name());
+    printf('Bucket with recovery point objective (RPO) set to \'ASYNC_TURBO\' created: %s' . PHP_EOL, $bucket->name());
 }
 # [END storage_create_bucket_turbo_replication]
 

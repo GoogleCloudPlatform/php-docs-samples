@@ -21,18 +21,20 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/translate/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 1) {
-    return printf("Usage: php %s\n", __FILE__);
-}
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_list_codes]
 use Google\Cloud\Translate\TranslateClient;
 
-$translate = new TranslateClient();
-foreach ($translate->languages() as $code) {
-    print("$code\n");
+function list_codes(): void
+{
+    $translate = new TranslateClient();
+    foreach ($translate->languages() as $code) {
+        print("$code\n");
+    }
 }
 // [END translate_list_codes]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

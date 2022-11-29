@@ -23,14 +23,20 @@ use Monolog\Handler\PsrHandler;
 use Monolog\Logger as MonologLogger;
 use Psr\Log\LogLevel;
 
-/** Write a log message via the Stackdriver Logging API.
+/**
+ * Write a log message via the Stackdriver Logging API.
  *
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
  * @param string $message The log message.
+ * @param int    $level
  */
-function write_with_monolog_logger($projectId, $loggerName, $message, $level = LogLevel::WARNING)
-{
+function write_with_monolog_logger(
+    string $projectId,
+    string $loggerName,
+    string $message,
+    string $level = LogLevel::WARNING
+) {
     $logging = new LoggingClient([
         'projectId' => $projectId
     ]);
@@ -49,3 +55,7 @@ function write_with_monolog_logger($projectId, $loggerName, $message, $level = L
     printf("Wrote to monolog logger '%s' at level '%s'." . PHP_EOL, $loggerName, $level);
 }
 // [END write_with_monolog_logger]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

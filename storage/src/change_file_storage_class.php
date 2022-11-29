@@ -30,15 +30,14 @@ use Google\Cloud\Storage\StorageClient;
  * Change the storage class of the given file.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $storageClass The storage class of the new object.
+ *        (e.g. 'COLDLINE')
  */
-function change_file_storage_class($bucketName, $objectName, $storageClass)
+function change_file_storage_class(string $bucketName, string $objectName, string $storageClass): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $storageClass = 'COLDLINE';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

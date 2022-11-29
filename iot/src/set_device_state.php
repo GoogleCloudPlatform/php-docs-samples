@@ -22,7 +22,7 @@ use GuzzleHttp\Client;
 use Firebase\JWT\JWT;
 
 /**
- * Set a device's configuration.
+ * Set a device's state.
  *
  * @param string $registryId IOT Device Registry ID
  * @param string $deviceId IOT Device ID

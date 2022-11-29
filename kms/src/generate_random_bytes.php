@@ -17,11 +17,13 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_generate_random_bytes]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\ProtectionLevel;
 
-function generate_random_bytes_sample(
+function generate_random_bytes(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     int $numBytes = 256
@@ -48,12 +50,6 @@ function generate_random_bytes_sample(
 }
 // [END kms_generate_random_bytes]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID NUM_BYTES\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $numBytes) = $argv;
-    generate_random_bytes_sample($projectId, $locationId, $numBytes);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -1,7 +1,7 @@
 # See https://cloud.google.com/appengine/docs/standard/php/config/appref for a
 # complete list of `app.yaml` directives.
 
-runtime: php74
+runtime: php81
 
 env_variables:
     GOOGLE_STORAGE_BUCKET: ""

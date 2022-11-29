@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_decrypt_asymmetric]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function decrypt_asymmetric_sample(
+function decrypt_asymmetric(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -37,16 +39,11 @@ function decrypt_asymmetric_sample(
     // Call the API.
     $decryptResponse = $client->asymmetricDecrypt($keyVersionName, $ciphertext);
     printf('Plaintext: %s' . PHP_EOL, $decryptResponse->getPlaintext());
+
     return $decryptResponse;
 }
 // [END kms_decrypt_asymmetric]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID CIPHERTEXT\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $ciphertext) = $argv;
-    decrypt_asymmetric_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $ciphertext);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

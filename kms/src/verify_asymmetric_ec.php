@@ -17,10 +17,12 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_verify_asymmetric_signature_ec]
 use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
-function verify_asymmetric_ec_sample(
+function verify_asymmetric_ec(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -42,16 +44,11 @@ function verify_asymmetric_ec_sample(
     // algorithm. The openssl_verify command returns 1 on success, 0 on falure.
     $verified = openssl_verify($message, $signature, $publicKey->getPem(), OPENSSL_ALGO_SHA256) === 1;
     printf('Signature verified: %s', $verified);
+
     return $verified;
 }
 // [END kms_verify_asymmetric_signature_ec]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID MESSAGE SIGNATURE\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $message, $signature) = $argv;
-    verify_asymmetric_ec_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $message, $signature);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
