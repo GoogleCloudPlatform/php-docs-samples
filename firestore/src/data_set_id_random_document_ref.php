@@ -40,13 +40,11 @@ function data_set_id_random_document_ref(string $projectId): void
         'name' => 'Moscow',
         'country' => 'Russia'
     ];
-    # [START fs_add_doc_data_after_auto_id]
     # [START firestore_data_set_id_random_document_ref]
     $addedDocRef = $db->collection('samples/php/cities')->newDocument();
     printf('Added document with ID: %s' . PHP_EOL, $addedDocRef->id());
     $addedDocRef->set($data);
     # [END firestore_data_set_id_random_document_ref]
-    # [END fs_add_doc_data_after_auto_id]
 }
 
 // The following 2 lines are only needed to run the samples

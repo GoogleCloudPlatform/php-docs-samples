@@ -37,11 +37,9 @@ function query_order_multi(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_order_by_state_and_population_query]
     # [START firestore_query_order_multi]
     $query = $citiesRef->orderBy('state')->orderBy('population', 'DESC');
     # [END firestore_query_order_multi]
-    # [END fs_order_by_state_and_population_query]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by order by state and descending population query' . PHP_EOL, $document->id());

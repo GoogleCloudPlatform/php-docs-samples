@@ -36,7 +36,6 @@ function query_filter_eq_boolean(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_create_query_capital]
     # [START firestore_query_filter_eq_boolean]
     $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('capital', '=', true);
@@ -45,7 +44,6 @@ function query_filter_eq_boolean(string $projectId): void
         printf('Document %s returned by query capital=true' . PHP_EOL, $document->id());
     }
     # [END firestore_query_filter_eq_boolean]
-    # [END fs_create_query_capital]
 }
 
 // The following 2 lines are only needed to run the samples

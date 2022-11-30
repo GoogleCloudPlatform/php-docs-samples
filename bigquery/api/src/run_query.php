@@ -21,31 +21,33 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID SQL_QUERY\n", __FILE__);
-}
-list($_, $projectId, $query) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`';
+/**
+ * Run query.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $query Eg: 'SELECT id, view_count FROM
+ *                          `bigquery-public-data.stackoverflow.posts_questions`';
+ */
+function run_query(string $projectId, string $query): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $jobConfig = $bigQuery->query($query);
+    $queryResults = $bigQuery->runQuery($jobConfig);
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$jobConfig = $bigQuery->query($query);
-$queryResults = $bigQuery->runQuery($jobConfig);
-
-$i = 0;
-foreach ($queryResults as $row) {
-    printf('--- Row %s ---' . PHP_EOL, ++$i);
-    foreach ($row as $column => $value) {
-        printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+    $i = 0;
+    foreach ($queryResults as $row) {
+        printf('--- Row %s ---' . PHP_EOL, ++$i);
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+        }
     }
+    printf('Found %s row(s)' . PHP_EOL, $i);
 }
-printf('Found %s row(s)' . PHP_EOL, $i);
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
