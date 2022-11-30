@@ -85,12 +85,19 @@ FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
 if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
 else
+    labels=$(curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels")
+    
     # Check to see if the repo includes the "kokoro:run-all" label
-    if curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels" \
-        | grep -q "kokoro:run-all"; then
+    if  grep -q "kokoro:run-all" <<< $labels; then
         RUN_ALL_TESTS=1
     else
         RUN_ALL_TESTS=0
+    fi
+
+    # Check to see if the repo includes the "spanner:run-backup-tests" label
+    # If we intend to run the backup tests in Spanner, we set the env variable
+    if grep -q "spanner:run-backup-tests" <<< $labels; then
+        export GOOGLE_SPANNER_RUN_BACKUP_TESTS=true
     fi
 
 fi

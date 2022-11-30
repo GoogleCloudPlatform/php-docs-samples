@@ -31,6 +31,10 @@ accept your pull requests.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
+## Writing a new sample
+
+Write samples according to the [sample style guide](https://googlecloudplatform.github.io/samples-style-guide/).
+
 ## Testing your code changes.
 
 ### Install dependencies
@@ -53,20 +57,24 @@ composer install
 ```
 
 ### Environment variables
-Set up [application default credentials](https://cloud.google.com/docs/authentication/getting-started)
-by setting the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path to a service
-account key JSON file.
+Some tests require specific environment variables to run. PHPUnit will skip the tests
+if these environment variables are not found. Run `phpunit -v` for a message detailing
+which environment variables are missing. Then you can set those environent variables
+to run against any sample project as follows:
 
-Then set any environment variables needed by the test. Check the
-`$SAMPLES_DIRECTORY/test` directory to see what specific variables are needed.
 ```
 export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
 export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
 ```
 
+If you have access to the Google Cloud Kokoro project, decrypt the
+`.kokoro/secrets.sh.enc` file and load those environment variables. Follow
+the instructions in [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh).
+
 If your tests require new environment variables, you can set them up in
-[.kokoro/secrets.sh.enc](.kokoro/secrets.sh.enc). For instructions on managing those variables,
-view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more information.
+`.kokoro/secrets.sh.enc` so they pass on Kokoro. For instructions on managing those
+variables, view [.kokoro/secrets-example.sh](.kokoro/secrets-example.sh) for more
+information.
 
 ### Run the tests
 
@@ -83,8 +91,13 @@ Use `phpunit -v` to get a more detailed output if there are errors.
 
 ## Style
 
-Samples in this repository follow the [PSR2][psr2] and [PSR4][psr4]
-recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer].
+The [Google Cloud Samples Style Guide][style-guide] is considered the primary
+guidelines for all Google Cloud samples. 
+
+[style-guide]: https://googlecloudplatform.github.io/samples-style-guide/
+
+Samples in this repository also follow the [PSR2][psr2] and [PSR4][psr4]
+recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer], using the config in [.php-cs-fixer.dist.php](.php-cs-fixer.dist.php)
 
 Install that by running
 
@@ -95,8 +108,8 @@ composer global require friendsofphp/php-cs-fixer
 Then to fix your directory or file run 
 
 ```
-php-cs-fixer fix .
-php-cs-fixer fix path/to/file
+php-cs-fixer fix . --config .php-cs-fixer.dist.php
+php-cs-fixer fix path/to/file --config .php-cs-fixer.dist.php
 ```
 
 The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp) are an example of snippets following the latest style guidelines.

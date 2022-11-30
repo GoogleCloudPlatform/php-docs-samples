@@ -1,0 +1,7 @@
+{
+    "name": "google/video-stitcher-sample",
+    "type": "project",
+    "require": {
+        "google/cloud-video-stitcher": "^0.3.0"
+    }
+}

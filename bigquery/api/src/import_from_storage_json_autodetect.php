@@ -21,48 +21,53 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 3 || count($argv) > 4) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID [TABLE_ID]\n", __FILE__);
-}
+namespace Google\Cloud\Samples\BigQuery;
 
-list($_, $projectId, $datasetId) = $argv;
-$tableId = isset($argv[3]) ? $argv[3] : 'us_states';
 # [START bigquery_load_table_gcs_json_autodetect]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
-/** Uncomment and populate these variables in your code */
-// $projectId  = 'The Google project ID';
-// $datasetId  = 'The BigQuery dataset ID';
-// $tableId    = 'us_states';
+/**
+ * Imports data to the given table from json file present in GCS by auto
+ * detecting options and schema.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ */
+function import_from_storage_json_autodetect(
+    string $projectId,
+    string $datasetId,
+    string $tableId = 'us_states'
+): void {
+    // instantiate the bigquery table service
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
 
-// instantiate the bigquery table service
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-
-// create the import job
-$gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.json';
-$loadConfig = $table->loadFromStorage($gcsUri)->autodetect(true)->sourceFormat('NEWLINE_DELIMITED_JSON');
-$job = $table->runJob($loadConfig);
-// poll the job until it is complete
-$backoff = new ExponentialBackoff(10);
-$backoff->execute(function () use ($job) {
-    print('Waiting for job to complete' . PHP_EOL);
-    $job->reload();
-    if (!$job->isComplete()) {
-        throw new Exception('Job has not yet completed', 500);
+    // create the import job
+    $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.json';
+    $loadConfig = $table->loadFromStorage($gcsUri)->autodetect(true)->sourceFormat('NEWLINE_DELIMITED_JSON');
+    $job = $table->runJob($loadConfig);
+    // poll the job until it is complete
+    $backoff = new ExponentialBackoff(10);
+    $backoff->execute(function () use ($job) {
+        print('Waiting for job to complete' . PHP_EOL);
+        $job->reload();
+        if (!$job->isComplete()) {
+            throw new \Exception('Job has not yet completed', 500);
+        }
+    });
+    // check if the job has errors
+    if (isset($job->info()['status']['errorResult'])) {
+        $error = $job->info()['status']['errorResult']['message'];
+        printf('Error running job: %s' . PHP_EOL, $error);
+    } else {
+        print('Data imported successfully' . PHP_EOL);
     }
-});
-// check if the job has errors
-if (isset($job->info()['status']['errorResult'])) {
-    $error = $job->info()['status']['errorResult']['message'];
-    printf('Error running job: %s' . PHP_EOL, $error);
-} else {
-    print('Data imported successfully' . PHP_EOL);
 }
 # [END bigquery_load_table_gcs_json_autodetect]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

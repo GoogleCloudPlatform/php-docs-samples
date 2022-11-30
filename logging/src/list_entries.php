@@ -17,40 +17,9 @@
 
 namespace Google\Cloud\Samples\Logging;
 
-// [START logging_write_log_entry]
 // [START logging_list_log_entries]
-// [START logging_delete_log]
 use Google\Cloud\Logging\LoggingClient;
 
-// [END logging_write_log_entry]
-// [END logging_list_log_entries]
-// [END logging_delete_log]
-
-// [START logging_write_log_entry]
-/** Write a log message via the Stackdriver Logging API.
- *
- * @param string $projectId The Google project ID.
- * @param string $loggerName The name of the logger.
- * @param string $message The log message.
- */
-function write_log($projectId, $loggerName, $message)
-{
-    $logging = new LoggingClient(['projectId' => $projectId]);
-    $logger = $logging->logger($loggerName, [
-        'resource' => [
-            'type' => 'gcs_bucket',
-            'labels' => [
-                'bucket_name' => 'my_bucket'
-            ]
-        ]
-    ]);
-    $entry = $logger->entry($message);
-    $logger->write($entry);
-    printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
-}
-// [END logging_write_log_entry]
-
-// [START logging_list_log_entries]
 /**
  * Print the timestamp and entry for the project and logger.
  *
@@ -90,17 +59,6 @@ function list_entries($projectId, $loggerName)
 }
 // [END logging_list_log_entries]
 
-// [START logging_delete_log]
-/** Delete a logger and all its entries.
- *
- * @param string $projectId The Google project ID.
- * @param string $loggerName The name of the logger.
- */
-function delete_logger($projectId, $loggerName)
-{
-    $logging = new LoggingClient(['projectId' => $projectId]);
-    $logger = $logging->logger($loggerName);
-    $logger->delete();
-    printf("Deleted a logger '%s'." . PHP_EOL, $loggerName);
-}
-// [END logging_delete_log]
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

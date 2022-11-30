@@ -21,32 +21,36 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s PROJECT_ID\n", __FILE__);
-}
-list($_, $projectId) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 // [START bigquery_query_legacy]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-$query = 'SELECT corpus FROM [bigquery-public-data:samples.shakespeare] GROUP BY corpus';
+/**
+ * Query using legacy sql
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ */
+function query_legacy(string $projectId): void
+{
+    $query = 'SELECT corpus FROM [bigquery-public-data:samples.shakespeare] GROUP BY corpus';
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$jobConfig = $bigQuery->query($query)->useLegacySql(true);
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $jobConfig = $bigQuery->query($query)->useLegacySql(true);
 
-$queryResults = $bigQuery->runQuery($jobConfig);
+    $queryResults = $bigQuery->runQuery($jobConfig);
 
-$i = 0;
-foreach ($queryResults as $row) {
-    printf('--- Row %s ---' . PHP_EOL, ++$i);
-    foreach ($row as $column => $value) {
-        printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+    $i = 0;
+    foreach ($queryResults as $row) {
+        printf('--- Row %s ---' . PHP_EOL, ++$i);
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+        }
     }
+    printf('Found %s row(s)' . PHP_EOL, $i);
 }
-printf('Found %s row(s)' . PHP_EOL, $i);
 // [END bigquery_query_legacy]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -21,34 +21,37 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID SOURCE\n", __FILE__);
-}
-
-list($_, $projectId, $datasetId, $source) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId  = 'The Google project ID';
-// $datasetId  = 'The BigQuery dataset ID';
-// $source     = 'The path to the source file to import';
-
-// instantiate the bigquery client
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-// run a sync query for each line of the import
-$file = fopen($source, 'r');
-while ($line = fgets($file)) {
-    if (0 !== strpos(trim($line), 'INSERT')) {
-        continue;
+/**
+ * Import data using INSERT sql statements from a file
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $source The path to the source file to import.
+ */
+function insert_sql(
+    string $projectId,
+    string $datasetId,
+    string $source
+): void {
+    // instantiate the bigquery client
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    // run a sync query for each line of the import
+    $file = fopen($source, 'r');
+    while ($line = fgets($file)) {
+        if (0 !== strpos(trim($line), 'INSERT')) {
+            continue;
+        }
+        $queryConfig = $bigQuery->query($line)->defaultDataset($dataset);
+        $bigQuery->runQuery($queryConfig);
     }
-    $queryConfig = $bigQuery->query($line)->defaultDataset($dataset);
-    $bigQuery->runQuery($queryConfig);
+    print('Data imported successfully' . PHP_EOL);
 }
-print('Data imported successfully' . PHP_EOL);
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
