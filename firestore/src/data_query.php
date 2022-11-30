@@ -36,7 +36,6 @@ function data_query(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_multiple_docs]
     # [START firestore_data_query]
     $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('capital', '=', true);
@@ -51,7 +50,6 @@ function data_query(string $projectId): void
         }
     }
     # [END firestore_data_query]
-    # [END fs_get_multiple_docs]
 }
 
 // The following 2 lines are only needed to run the samples

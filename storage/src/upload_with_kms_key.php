@@ -30,19 +30,17 @@ use Google\Cloud\Storage\StorageClient;
  * Upload a file using KMS encryption.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $source The path to the file to upload.
+ *        (e.g. '/path/to/your/file')
  * @param string $kmsKeyName The KMS key used to encrypt objects server side.
  *     Key names are provided in the following format:
  *     `projects/<PROJECT>/locations/<LOCATION>/keyRings/<RING_NAME>/cryptoKeys/<KEY_NAME>`.
  */
 function upload_with_kms_key(string $bucketName, string $objectName, string $source, string $kmsKeyName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $source = '/path/to/your/file';
-    // $kmsKeyName = "";
-
     $storage = new StorageClient();
     $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);

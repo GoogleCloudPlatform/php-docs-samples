@@ -36,7 +36,6 @@ function query_filter_eq_string(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_create_query_state]
     # [START firestore_query_filter_eq_string]
     $citiesRef = $db->collection('samples/php/cities');
     $query = $citiesRef->where('state', '=', 'CA');
@@ -45,7 +44,6 @@ function query_filter_eq_string(string $projectId): void
         printf('Document %s returned by query state=CA' . PHP_EOL, $document->id());
     }
     # [END firestore_query_filter_eq_string]
-    # [END fs_create_query_state]
 }
 
 // The following 2 lines are only needed to run the samples

@@ -21,35 +21,39 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 5) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID BUCKET_NAME\n", __FILE__);
-}
-
-list($_, $projectId, $datasetId, $tableId, $bucketName) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_extract_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId  = 'The Google project ID';
-// $datasetId  = 'The BigQuery dataset ID';
-// $tableId    = 'The BigQuery table ID';
-// $bucketName = 'The Cloud Storage bucket Name';
-
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-$destinationUri = "gs://{$bucketName}/{$tableId}.json";
-// Define the format to use. If the format is not specified, 'CSV' will be used.
-$format = 'NEWLINE_DELIMITED_JSON';
-// Create the extract job
-$extractConfig = $table->extract($destinationUri)->destinationFormat($format);
-// Run the job
-$job = $table->runJob($extractConfig);  // Waits for the job to complete
-printf('Exported %s to %s' . PHP_EOL, $table->id(), $destinationUri);
+/**
+ * Extracts the given table as json to given GCS bucket.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ * @param string $bucketName Bucket name in Google Cloud Storage
+ */
+function extract_table(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    string $bucketName
+): void {
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    $destinationUri = "gs://{$bucketName}/{$tableId}.json";
+    // Define the format to use. If the format is not specified, 'CSV' will be used.
+    $format = 'NEWLINE_DELIMITED_JSON';
+    // Create the extract job
+    $extractConfig = $table->extract($destinationUri)->destinationFormat($format);
+    // Run the job
+    $job = $table->runJob($extractConfig);  // Waits for the job to complete
+    printf('Exported %s to %s' . PHP_EOL, $table->id(), $destinationUri);
+}
 # [END bigquery_extract_table]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

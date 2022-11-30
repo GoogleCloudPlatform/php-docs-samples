@@ -21,27 +21,28 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_delete_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId = 'The BigQuery table ID';
-
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-$table->delete();
-printf('Deleted table %s.%s' . PHP_EOL, $datasetId, $tableId);
+/**
+ * Deletes the given table
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ */
+function delete_table(string $projectId, string $datasetId, string $tableId): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    $table->delete();
+    printf('Deleted table %s.%s' . PHP_EOL, $datasetId, $tableId);
+}
 # [END bigquery_delete_table]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

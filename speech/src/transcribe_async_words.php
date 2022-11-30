@@ -21,13 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/speech/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php transcribe_asyc_words.php AUDIO_FILE\n");
-}
-list($_, $audioFile) = $argv;
+namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_async_word_time_offsets_gcs]
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -35,62 +29,69 @@ use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-/** Uncomment and populate these variables in your code */
-// $audioFile = 'path to an audio file';
+/**
+ * @param string $audioFile path to an audio file
+ */
+function transcribe_async_words(string $audioFile)
+{
+    // change these variables if necessary
+    $encoding = AudioEncoding::LINEAR16;
+    $sampleRateHertz = 32000;
+    $languageCode = 'en-US';
 
-// change these variables if necessary
-$encoding = AudioEncoding::LINEAR16;
-$sampleRateHertz = 32000;
-$languageCode = 'en-US';
+    // When true, time offsets for every word will be included in the response.
+    $enableWordTimeOffsets = true;
 
-// When true, time offsets for every word will be included in the response.
-$enableWordTimeOffsets = true;
+    // get contents of a file into a string
+    $content = file_get_contents($audioFile);
 
-// get contents of a file into a string
-$content = file_get_contents($audioFile);
+    // set string as audio content
+    $audio = (new RecognitionAudio())
+        ->setContent($content);
 
-// set string as audio content
-$audio = (new RecognitionAudio())
-    ->setContent($content);
+    // set config
+    $config = (new RecognitionConfig())
+        ->setEncoding($encoding)
+        ->setSampleRateHertz($sampleRateHertz)
+        ->setLanguageCode($languageCode)
+        ->setEnableWordTimeOffsets($enableWordTimeOffsets);
 
-// set config
-$config = (new RecognitionConfig())
-    ->setEncoding($encoding)
-    ->setSampleRateHertz($sampleRateHertz)
-    ->setLanguageCode($languageCode)
-    ->setEnableWordTimeOffsets($enableWordTimeOffsets);
+    // create the speech client
+    $client = new SpeechClient();
 
-// create the speech client
-$client = new SpeechClient();
+    // create the asyncronous recognize operation
+    $operation = $client->longRunningRecognize($config, $audio);
+    $operation->pollUntilComplete();
 
-// create the asyncronous recognize operation
-$operation = $client->longRunningRecognize($config, $audio);
-$operation->pollUntilComplete();
+    if ($operation->operationSucceeded()) {
+        $response = $operation->getResult();
 
-if ($operation->operationSucceeded()) {
-    $response = $operation->getResult();
-
-    // each result is for a consecutive portion of the audio. iterate
-    // through them to get the transcripts for the entire audio file.
-    foreach ($response->getResults() as $result) {
-        $alternatives = $result->getAlternatives();
-        $mostLikely = $alternatives[0];
-        $transcript = $mostLikely->getTranscript();
-        $confidence = $mostLikely->getConfidence();
-        printf('Transcript: %s' . PHP_EOL, $transcript);
-        printf('Confidence: %s' . PHP_EOL, $confidence);
-        foreach ($mostLikely->getWords() as $wordInfo) {
-            $startTime = $wordInfo->getStartTime();
-            $endTime = $wordInfo->getEndTime();
-            printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
-                $wordInfo->getWord(),
-                $startTime->serializeToJsonString(),
-                $endTime->serializeToJsonString());
+        // each result is for a consecutive portion of the audio. iterate
+        // through them to get the transcripts for the entire audio file.
+        foreach ($response->getResults() as $result) {
+            $alternatives = $result->getAlternatives();
+            $mostLikely = $alternatives[0];
+            $transcript = $mostLikely->getTranscript();
+            $confidence = $mostLikely->getConfidence();
+            printf('Transcript: %s' . PHP_EOL, $transcript);
+            printf('Confidence: %s' . PHP_EOL, $confidence);
+            foreach ($mostLikely->getWords() as $wordInfo) {
+                $startTime = $wordInfo->getStartTime();
+                $endTime = $wordInfo->getEndTime();
+                printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
+                    $wordInfo->getWord(),
+                    $startTime->serializeToJsonString(),
+                    $endTime->serializeToJsonString());
+            }
         }
+    } else {
+        print_r($operation->getError());
     }
-} else {
-    print_r($operation->getError());
-}
 
-$client->close();
+    $client->close();
+}
 # [END speech_transcribe_async_word_time_offsets_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

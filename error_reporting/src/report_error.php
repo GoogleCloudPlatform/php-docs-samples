@@ -21,14 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/error_reporting/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 3 || count($argv) > 4) {
-    return printf("Usage: php %s PROJECT_ID ERROR_MESSAGE [USER]\n", basename(__FILE__));
-}
-list($_, $projectId, $message) = $argv;
-$user = isset($argv[3]) ? $argv[3] : '';
+namespace Google\Cloud\Samples\ErrorReporting;
 
 # [START report_error]
 use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
@@ -41,26 +34,31 @@ use Google\Cloud\ErrorReporting\V1beta1\SourceLocation;
  * The ReportedErrorEvent object gives you more control over how the error
  * appears and the details associated with it.
  *
- * Uncomment these line and replace with your project ID, message, and optionally your user.
+ * @param string $projectId Your Google Cloud Project ID.
+ * @param string $message   The error message to report.
+ * @param string $user      Optional user email address
  */
-// $projectId = 'YOUR_PROJECT_ID';
-// $message = 'This is the error message to report!';
-// $user = 'optional@user.com';
+function report_error(string $projectId, string $message, string $user = '')
+{
+    $errors = new ReportErrorsServiceClient();
+    $projectName = $errors->projectName($projectId);
 
-$errors = new ReportErrorsServiceClient();
-$projectName = $errors->projectName($projectId);
+    $location = (new SourceLocation())
+        ->setFunctionName('global');
 
-$location = (new SourceLocation())
-    ->setFunctionName('global');
+    $context = (new ErrorContext())
+        ->setReportLocation($location)
+        ->setUser($user);
 
-$context = (new ErrorContext())
-    ->setReportLocation($location)
-    ->setUser($user);
+    $event = (new ReportedErrorEvent())
+        ->setMessage($message)
+        ->setContext($context);
 
-$event = (new ReportedErrorEvent())
-    ->setMessage($message)
-    ->setContext($context);
-
-$errors->reportErrorEvent($projectName, $event);
+    $errors->reportErrorEvent($projectName, $event);
+    print('Reported an exception to Stackdriver' . PHP_EOL);
+}
 # [END report_error]
-print('Reported an exception to Stackdriver' . PHP_EOL);
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -37,14 +37,12 @@ function query_order_limit_field_valid(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_where_order_by_limit_query]
     # [START firestore_query_order_limit_field_valid]
     $query = $citiesRef
         ->where('population', '>', 2500000)
         ->orderBy('population')
         ->limit(2);
     # [END firestore_query_order_limit_field_valid]
-    # [END fs_where_order_by_limit_query]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by where order by limit query' . PHP_EOL, $document->id());

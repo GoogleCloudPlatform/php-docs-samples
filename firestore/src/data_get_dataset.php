@@ -36,7 +36,6 @@ function data_get_dataset(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_retrieve_create_examples]
     # [START firestore_data_get_dataset]
     $citiesRef = $db->collection('samples/php/cities');
     $citiesRef->document('SF')->set([
@@ -76,7 +75,6 @@ function data_get_dataset(string $projectId): void
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
     # [END firestore_data_get_dataset]
-    # [END fs_retrieve_create_examples]
 }
 
 // The following 2 lines are only needed to run the samples

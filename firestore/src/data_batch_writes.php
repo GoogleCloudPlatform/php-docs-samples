@@ -36,7 +36,6 @@ function data_batch_writes(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_batch_write]
     # [START firestore_data_batch_writes]
     $batch = $db->batch();
 
@@ -59,7 +58,6 @@ function data_batch_writes(string $projectId): void
     # Commit the batch
     $batch->commit();
     # [END firestore_data_batch_writes]
-    # [END fs_batch_write]
     printf('Batch write successfully completed.' . PHP_EOL);
 }
 

@@ -21,22 +21,23 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/translate/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s TEXT\n", __FILE__);
-}
-list($_, $text) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_detect_language]
 use Google\Cloud\Translate\TranslateClient;
 
-/** Uncomment and populate these variables in your code */
-// $text = 'The text whose language to detect.  This will be detected as en.';
-
-$translate = new TranslateClient();
-$result = $translate->detectLanguage($text);
-print("Language code: $result[languageCode]\n");
-print("Confidence: $result[confidence]\n");
+/**
+ * @param string $text The text whose language to detect.  This will be detected as en.
+ */
+function detect_language(string $text): void
+{
+    $translate = new TranslateClient();
+    $result = $translate->detectLanguage($text);
+    print("Language code: $result[languageCode]\n");
+    print("Confidence: $result[confidence]\n");
+}
 // [END translate_detect_language]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

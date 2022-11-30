@@ -21,29 +21,29 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/translate/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 2 || count($argv) > 3) {
-    return printf("Usage: php %s TEXT [TARGET_LANGUAGE]\n", __FILE__);
-}
-list($_, $text) = $argv;
-$targetLanguage = isset($argv[2]) ? $argv[2] : 'en';
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_text_with_model]
 use Google\Cloud\Translate\TranslateClient;
 
-/** Uncomment and populate these variables in your code */
-// $text = 'The text to translate.'
-// $targetLanguage = 'ja';  // Language to translate to
-
-$model = 'nmt';  // "base" for standard edition, "nmt" for premium
-$translate = new TranslateClient();
-$result = $translate->translate($text, [
-    'target' => $targetLanguage,
-    'model' => $model,
-]);
-print("Source language: $result[source]\n");
-print("Translation: $result[text]\n");
-print("Model: $result[model]\n");
+/**
+ * @param string $text The text to translate.
+ * @param string $targetLanguage Language to translate to.
+ */
+function translate_with_model(string $text, string $targetLanguage): void
+{
+    $model = 'nmt';  // "base" for standard edition, "nmt" for premium
+    $translate = new TranslateClient();
+    $result = $translate->translate($text, [
+        'target' => $targetLanguage,
+        'model' => $model,
+    ]);
+    print("Source language: $result[source]\n");
+    print("Translation: $result[text]\n");
+    print("Model: $result[model]\n");
+}
 // [END translate_text_with_model]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -21,44 +21,46 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID SQL_QUERY\n", __FILE__);
-}
-list($_, $projectId, $query) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_query]
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\Core\ExponentialBackoff;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`';
+/**
+ * Run query as job.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $query Eg: 'SELECT id, view_count FROM
+ *                          `bigquery-public-data.stackoverflow.posts_questions`';
+ */
+function run_query_as_job(string $projectId, string $query): void
+{
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $jobConfig = $bigQuery->query($query);
+    $job = $bigQuery->startQuery($jobConfig);
 
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$jobConfig = $bigQuery->query($query);
-$job = $bigQuery->startQuery($jobConfig);
+    $backoff = new ExponentialBackoff(10);
+    $backoff->execute(function () use ($job) {
+        print('Waiting for job to complete' . PHP_EOL);
+        $job->reload();
+        if (!$job->isComplete()) {
+            throw new \Exception('Job has not yet completed', 500);
+        }
+    });
+    $queryResults = $job->queryResults();
 
-$backoff = new ExponentialBackoff(10);
-$backoff->execute(function () use ($job) {
-    print('Waiting for job to complete' . PHP_EOL);
-    $job->reload();
-    if (!$job->isComplete()) {
-        throw new Exception('Job has not yet completed', 500);
+    $i = 0;
+    foreach ($queryResults as $row) {
+        printf('--- Row %s ---' . PHP_EOL, ++$i);
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+        }
     }
-});
-$queryResults = $job->queryResults();
-
-$i = 0;
-foreach ($queryResults as $row) {
-    printf('--- Row %s ---' . PHP_EOL, ++$i);
-    foreach ($row as $column => $value) {
-        printf('%s: %s' . PHP_EOL, $column, json_encode($value));
-    }
+    printf('Found %s row(s)' . PHP_EOL, $i);
 }
-printf('Found %s row(s)' . PHP_EOL, $i);
 # [END bigquery_query]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

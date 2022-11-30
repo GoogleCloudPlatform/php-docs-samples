@@ -36,11 +36,9 @@ function data_reference_collection(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_collection_ref]
     # [START firestore_data_reference_collection]
     $collection = $db->collection('samples/php/users');
     # [END firestore_data_reference_collection]
-    # [END fs_collection_ref]
     printf('Retrieved collection: %s' . PHP_EOL, $collection->name());
 }
 
