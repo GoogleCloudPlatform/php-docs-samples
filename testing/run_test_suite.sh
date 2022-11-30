@@ -86,7 +86,7 @@ if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
 else
     labels=$(curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels")
-    
+
     # Check to see if the repo includes the "kokoro:run-all" label
     if  grep -q "kokoro:run-all" <<< $labels; then
         RUN_ALL_TESTS=1
