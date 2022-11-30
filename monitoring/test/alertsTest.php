@@ -57,8 +57,8 @@ class alertsTest extends TestCase
         );
         $output = $this->runFunctionSnippet('alert_enable_policies', [
             'projectId' => self::$projectId,
-            'filter' => sprintf('name = "%s"', $policyName),
             'enable' => true,
+            'filter' => sprintf('name = "%s"', $policyName),
         ]);
         $this->assertStringContainsString(
             sprintf('Policy %s is already enabled', $policyName),
@@ -77,8 +77,8 @@ class alertsTest extends TestCase
         );
         $output = $this->runFunctionSnippet('alert_enable_policies', [
             'projectId' => self::$projectId,
-            'filter' => sprintf('name = "%s"', $policyName),
             'enable' => false,
+            'filter' => sprintf('name = "%s"', $policyName),
         ]);
         $this->assertStringContainsString(
             sprintf('Disabled %s', $policyName),
