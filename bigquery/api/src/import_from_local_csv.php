@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_load_from_file]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Imports data to the given table from given csv
@@ -51,15 +50,12 @@ function import_from_local_csv(
     $loadConfig = $table->load(fopen($source, 'r'))->sourceFormat('CSV');
 
     $job = $table->runJob($loadConfig);
-    // poll the job until it is complete
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($job) {
-        printf('Waiting for job to complete' . PHP_EOL);
-        $job->reload();
-        if (!$job->isComplete()) {
-            throw new \Exception('Job has not yet completed', 500);
-        }
-    });
+
+    // check if the job is complete
+    $job->reload();
+    if (!$job->isComplete()) {
+        throw new \Exception('Job has not yet completed', 500);
+    }
     // check if the job has errors
     if (isset($job->info()['status']['errorResult'])) {
         $error = $job->info()['status']['errorResult']['message'];

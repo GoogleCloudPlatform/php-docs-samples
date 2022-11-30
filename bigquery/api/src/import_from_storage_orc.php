@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_load_table_gcs_orc]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Import data from storage orc.
@@ -50,15 +49,12 @@ function import_from_storage_orc(
     $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.orc';
     $loadConfig = $table->loadFromStorage($gcsUri)->sourceFormat('ORC');
     $job = $table->runJob($loadConfig);
-    // poll the job until it is complete
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($job) {
-        print('Waiting for job to complete' . PHP_EOL);
-        $job->reload();
-        if (!$job->isComplete()) {
-            throw new \Exception('Job has not yet completed', 500);
-        }
-    });
+
+    // check if the job is complete
+    $job->reload();
+    if (!$job->isComplete()) {
+        throw new \Exception('Job has not yet completed', 500);
+    }
     // check if the job has errors
     if (isset($job->info()['status']['errorResult'])) {
         $error = $job->info()['status']['errorResult']['message'];
