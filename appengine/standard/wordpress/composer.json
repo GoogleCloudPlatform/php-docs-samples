@@ -3,6 +3,6 @@
         "ext-phar": "*",
         "ext-zip": "*",
         "paragonie/random_compat": "^9.0.0",
-        "google/cloud-tools": "dev-master"
+        "google/cloud-tools": "dev-main"
     }
 }
