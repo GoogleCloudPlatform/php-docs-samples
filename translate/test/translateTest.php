@@ -277,7 +277,7 @@ class translateTest extends TestCase
             'v3_get_supported_languages',
             [self::$projectId]
         );
-        $this->assertStringContainsString('zh-CN', $output);
+        $this->assertStringContainsString('zh', $output);
     }
 
     public function testV3DetectLanguage()

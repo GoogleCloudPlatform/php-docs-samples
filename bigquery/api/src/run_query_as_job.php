@@ -18,14 +18,13 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_query]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Run query as job.
@@ -42,14 +41,11 @@ function run_query_as_job(string $projectId, string $query): void
     $jobConfig = $bigQuery->query($query);
     $job = $bigQuery->startQuery($jobConfig);
 
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($job) {
-        print('Waiting for job to complete' . PHP_EOL);
-        $job->reload();
-        if (!$job->isComplete()) {
-            throw new \Exception('Job has not yet completed', 500);
-        }
-    });
+    // check if the job is complete
+    $job->reload();
+    if (!$job->isComplete()) {
+        throw new \Exception('Job has not yet completed', 500);
+    }
     $queryResults = $job->queryResults();
 
     $i = 0;

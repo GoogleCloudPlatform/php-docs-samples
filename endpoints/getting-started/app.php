@@ -34,7 +34,7 @@ $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response) {
     // Simple echo service.
-    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/endpoints/getting-started/README.md';
+    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/endpoints/getting-started/README.md';
 
     $response->getBody()->write(sprintf(
         '<h1>Welcome to the Endpoints getting started tutorial!</h1>' .
