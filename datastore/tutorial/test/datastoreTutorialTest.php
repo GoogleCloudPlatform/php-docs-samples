@@ -32,6 +32,18 @@ class datastoreTutorialTest extends TestCase
 
     private static $taskId;
 
+    public function testDatastoreClient()
+    {
+        require_once __DIR__ . '/../src/datastore_client.php';
+
+        $datastore = build_service(self::$projectId);
+
+        $this->assertInstanceOf(
+            \Google\Cloud\Datastore\DatastoreClient::class,
+            $datastore
+        );
+    }
+
     public function testAddTask()
     {
         $output = $this->runFunctionSnippet('add_task', [
