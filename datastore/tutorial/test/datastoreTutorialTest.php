@@ -103,4 +103,3 @@ class datastoreTutorialTest extends TestCase
         }
     }
 }
-
