@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "google/cloud": "^0.185.0",
+        "google/auth": "^1.24",
         "google/cloud-core": "^1.46",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
