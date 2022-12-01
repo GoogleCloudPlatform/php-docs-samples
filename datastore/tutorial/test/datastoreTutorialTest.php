@@ -68,8 +68,8 @@ class datastoreTutorialTest extends TestCase
             'taskId' => self::$taskId,
         ]);
         $expected = sprintf('ID: %d
-    Description: buy milk
-    Status: done', self::$taskId);
+  Description: buy milk
+  Status: done', self::$taskId);
         $this->runEventuallyConsistentTest(function () use ($expected) {
             $output = $this->runFunctionSnippet('list_tasks', [self::$projectId]);
             $this->assertStringContainsString($expected, $output);
@@ -92,9 +92,11 @@ class datastoreTutorialTest extends TestCase
             $output = $this->runFunctionSnippet('list_tasks', [self::$projectId]);
             $this->assertStringNotContainsString(self::$taskId, $output);
         });
+
+        self::$taskId = null;
     }
 
-    public function tearDown(): void
+    public static function tearDownAfterClass(): void
     {
         if (!empty(self::$taskId)) {
             $datastore = new DatastoreClient(['projectId' => self::$projectId]);
