@@ -20,7 +20,7 @@ these two steps:
 The [`prepend.php`][prepend] file will be executed prior to each request, which
 registers the client library's error handler.
 
-[prepend]: https://github.com/GoogleCloudPlatform/google-cloud-php-errorreporting/blob/master/src/prepend.php
+[prepend]: https://github.com/GoogleCloudPlatform/google-cloud-php-errorreporting/blob/main/src/prepend.php
 
 If you cannot modify your `php.ini`, the `prepend.php` file can be manually
 included to register the error handler:

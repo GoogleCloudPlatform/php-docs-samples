@@ -77,8 +77,8 @@ FAILED_FILE=${TMP_REPORT_DIR}/failed
 FAILED_FLAKY_FILE=${TMP_REPORT_DIR}/failed_flaky
 
 # Determine all files changed on this branch
-# (will be empty if running from "master").
-FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
+# (will be empty if running from "main").
+FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD main))
 
 # If the file RUN_ALL_TESTS is modified, or if we were not triggered from a Pull
 # Request, run the whole test suite.
@@ -86,7 +86,7 @@ if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
 else
     labels=$(curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels")
-    
+
     # Check to see if the repo includes the "kokoro:run-all" label
     if  grep -q "kokoro:run-all" <<< $labels; then
         RUN_ALL_TESTS=1
