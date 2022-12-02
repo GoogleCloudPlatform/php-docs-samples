@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function data_set_id_random_collection(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_add_doc_data_with_auto_id]
     # [START firestore_data_set_id_random_collection]
     $data = [
         'name' => 'Tokyo',
@@ -45,7 +44,6 @@ function data_set_id_random_collection(string $projectId): void
     $addedDocRef = $db->collection('samples/php/cities')->add($data);
     printf('Added document with ID: %s' . PHP_EOL, $addedDocRef->id());
     # [END firestore_data_set_id_random_collection]
-    # [END fs_add_doc_data_with_auto_id]
 }
 
 // The following 2 lines are only needed to run the samples
