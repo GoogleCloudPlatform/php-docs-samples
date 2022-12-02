@@ -47,7 +47,7 @@ Usage: validate_jwt.php $iapJwt $expectedAudience
 
 [iap]: http://cloud.google.com/iap
 [iap-quickstart]: https://cloud.google.com/iap/docs/app-engine-quickstart
-[iap-app-engine]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/iap/app_engine_app
+[iap-app-engine]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/iap/app_engine_app
 [iap-enable]: https://cloud.google.com/iap/docs/app-engine-quickstart#enabling_iap
 [create-service-account]: https://console.cloud.google.com/iam-admin/serviceaccounts?_ga=2.249998854.-1228762175.1480648951
 [iap-manage-access]: https://cloud.google.com/iap/docs/managing-access

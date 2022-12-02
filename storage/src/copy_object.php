@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,17 +30,16 @@ use Google\Cloud\Storage\StorageClient;
  * Copy an object to a new name and/or bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $newBucketName The destination bucket name.
+ *        (e.g. 'my-other-bucket')
  * @param string $newObjectName The destination object name.
+ *        (e.g. 'my-other-object')
  */
 function copy_object(string $bucketName, string $objectName, string $newBucketName, string $newObjectName): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $newBucketName = 'my-other-bucket';
-    // $newObjectName = 'my-other-object';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -37,7 +37,6 @@ function data_set_numeric_increment(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_update_doc_increment]
     # [START firestore_data_set_numeric_increment]
     $cityRef = $db->collection('samples/php/cities')->document('DC');
 
@@ -46,7 +45,6 @@ function data_set_numeric_increment(string $projectId): void
         ['path' => 'regions', 'value' => FieldValue::increment(50)]
     ]);
     # [END firestore_data_set_numeric_increment]
-    # [END fs_update_doc_increment]
     printf('Updated the population of the DC document in the cities collection.' . PHP_EOL);
 }
 

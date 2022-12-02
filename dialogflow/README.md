@@ -14,7 +14,7 @@ API from PHP.
 1. Follow the first 2 steps of [this quickstart](https://cloud.google.com/dialogflow-enterprise/docs/quickstart-api).
 Feel free to stop after you've created an agent.
 
-2. This sample comes with a [sample agent](https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/dialogflow/resources/RoomReservation.zip) which you can use to try the samples with. Follow the instructions on [this page](https://dialogflow.com/docs/best-practices/import-export-for-versions) to import the agent from the [console](https://console.dialogflow.com/api-client).
+2. This sample comes with a [sample agent](https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/dialogflow/resources/RoomReservation.zip) which you can use to try the samples with. Follow the instructions on [this page](https://dialogflow.com/docs/best-practices/import-export-for-versions) to import the agent from the [console](https://console.dialogflow.com/api-client).
 > WARNING: Importing the sample agent will add intents and entities to your Dialogflow agent. You might want to use a different Google Cloud Platform Project, or export your Dialogflow agent before importing the sample agent to save a version of your agent before the sample agent was imported.
 
 3.  Clone the repo and cd into this directory

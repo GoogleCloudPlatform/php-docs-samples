@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function query_filter_dataset(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_query_create_examples]
     # [START firestore_query_filter_dataset]
     $citiesRef = $db->collection('samples/php/cities');
     $citiesRef->document('SF')->set([
@@ -81,7 +80,6 @@ function query_filter_dataset(string $projectId): void
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
     # [END firestore_query_filter_dataset]
-    # [END fs_query_create_examples]
 }
 
 // The following 2 lines are only needed to run the samples
