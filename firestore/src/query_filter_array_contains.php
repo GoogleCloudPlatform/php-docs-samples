@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -37,11 +37,9 @@ function query_filter_array_contains(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_array_membership]
     # [START firestore_query_filter_array_contains]
     $containsQuery = $citiesRef->where('regions', 'array-contains', 'west_coast');
     # [END firestore_query_filter_array_contains]
-    # [END fs_array_membership]
     foreach ($containsQuery->documents() as $document) {
         printf('Document %s returned by query regions array-contains west_coast' . PHP_EOL, $document->id());
     }

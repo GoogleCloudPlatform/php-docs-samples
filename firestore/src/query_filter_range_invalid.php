@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -37,13 +37,11 @@ function query_filter_range_invalid(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_invalid_range_query]
     # [START firestore_query_filter_range_invalid]
     $invalidRangeQuery = $citiesRef
         ->where('state', '>=', 'CA')
         ->where('population', '>', 1000000);
     # [END firestore_query_filter_range_invalid]
-    # [END fs_invalid_range_query]
 
     // This will throw an exception
     $invalidRangeQuery->documents();

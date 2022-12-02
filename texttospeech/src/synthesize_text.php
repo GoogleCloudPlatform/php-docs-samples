@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/texttospeech/README.md
  */
 
 namespace Google\Cloud\Samples\TextToSpeech;

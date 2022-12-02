@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,15 +30,14 @@ use Google\Cloud\Storage\StorageClient;
  * Removes a member / role IAM pair from a given Cloud Storage bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $role The role from which the specified member should be removed.
+ *        (e.g. 'roles/storage.objectViewer')
  * @param string $member The member to be removed from the specified role.
+ *        (e.g. 'group:example@google.com')
  */
 function remove_bucket_iam_member(string $bucketName, string $role, string $member): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $member = 'group:example@google.com';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $iam = $bucket->iam();
