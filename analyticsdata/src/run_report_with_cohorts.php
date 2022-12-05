@@ -34,6 +34,8 @@ use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\CohortSpec;
+use Google\Analytics\Data\V1beta\CohortsRange;
+use Google\Analytics\Data\V1beta\Cohort;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -54,36 +56,45 @@ function run_report_with_cohorts(string $propertyId)
                 'name' => 'cohort',
             ]
         ),
-        new Dimension(
-            [
-                'name' => 'cohortNthWeek',
-            ]
-        ),
+            new Dimension(
+                [
+                    'name' => 'cohortNthWeek',
+                ]
+            ),
         ],
         'metrics' => [new Metric(
             [
                 'name' => 'cohortActiveUsers',
-                'expression' => 'cohortActiveUsers/cohortTotalUsers'
             ]
         ),
             new Metric(
                 [
                     'name' => 'cohortRetentionRate',
+                    'expression' => 'cohortActiveUsers/cohortTotalUsers'
                 ]
             )
+        ],
+
+        'cohortSpec' => new CohortSpec(
+            [
+                'cohorts' => [new Cohort(
+                    [
+                        'dimension' => 'firstSessionDate',
+                        'name' => 'cohort',
+                        'date_range' => new DateRange([
+                        'start_date' => '2021-01-03',
+                        'end_date' => '2021-01-09',
+                        ]),
+                      ],
+                ),
+                ],
+                'cohorts_range' => new CohortsRange([
+                   'start_offset' => '0',
+                   'end_offset' => '4',
+                   'granularity' => '2',
+                ]),
             ],
-        'dateRanges' => [
-            new DateRange([
-                'start_date' => '2020-03-31',
-                'end_date' => 'today',
-            ]),
-        ],
-        'cohortSpec' => [
-        new CohortSpec([
-
-    ]),
-        ],
-
+        ),
     ]);
     printRunReportResponseWithCohorts($response);
 }
