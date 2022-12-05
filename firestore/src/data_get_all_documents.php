@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function data_get_all_documents(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_all_docs]
     # [START firestore_data_get_all_documents]
     $citiesRef = $db->collection('samples/php/cities');
     $documents = $citiesRef->documents();
@@ -50,7 +49,6 @@ function data_get_all_documents(string $projectId): void
         }
     }
     # [END firestore_data_get_all_documents]
-    # [END fs_get_all_docs]
 }
 
 // The following 2 lines are only needed to run the samples

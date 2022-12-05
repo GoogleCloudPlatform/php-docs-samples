@@ -882,6 +882,72 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Executed 2 SQL statements using Batch DML with PRIORITY_LOW.', $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testDmlReturningInsert()
+    {
+        $output = $this->runFunctionSnippet('insert_dml_returning');
+
+        $expectedOutput = sprintf('Row (12, Melissa, Garcia) inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Row (13, Russell, Morales) inserted');
+        $this->assertStringContainsString('Russell', $output);
+
+        $expectedOutput = sprintf('Row (14, Jacqueline, Long) inserted');
+        $this->assertStringContainsString('Jacqueline', $output);
+
+        $expectedOutput = sprintf('Row (15, Dylan, Shaw) inserted');
+        $this->assertStringContainsString('Dylan', $output);
+    }
+
+    /**
+     * @depends testDmlReturningInsert
+     */
+    public function testDmlReturningUpdate()
+    {
+        $output = $this->runFunctionSnippet('update_dml_returning');
+
+        $expectedOutput = sprintf(
+            'Row with SingerId 12 updated to (12, Melissa, Missing)'
+        );
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testDmlReturningUpdate
+     */
+    public function testDmlReturningDelete()
+    {
+        $output = $this->runFunctionSnippet('delete_dml_returning');
+
+        $expectedOutput = sprintf('Row (12, Melissa, Missing) deleted');
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testAddDropDatabaseRole()
+    {
+        $output = $this->runFunctionSnippet('add_drop_database_role');
+        $this->assertStringContainsString('Waiting for create role and grant operation to complete... ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete... ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent ' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testUpdateData
+     */
+    public function testReadWriteRetry()
+    {
+        $output = $this->runFunctionSnippet('read_write_retry');
+        $this->assertStringContainsString('Setting second album\'s budget as the first album\'s budget.', $output);
+        $this->assertStringContainsString('Transaction complete.', $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [

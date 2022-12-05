@@ -20,9 +20,10 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'path/to/your/image.jpg'
-
-function detect_safe_search($path)
+/**
+ * @param string $path Path to the image, e.g. "path/to/your/image.jpg"
+ */
+function detect_safe_search(string $path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -50,3 +51,7 @@ function detect_safe_search($path)
     $imageAnnotator->close();
 }
 // [END vision_safe_search_detection]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
