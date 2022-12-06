@@ -25,4 +25,12 @@ or
 1. Download the json key file of the service account.
 1. Set GOOGLE_APPLICATION_CREDENTIALS environment variable pointing to that file.
 
-Then you can run the command: `php tasks.php`
+Then you can run the code samples:
+
+1.  Execute the snippets in the [src/](src/) directory by running:
+
+    ```text
+    $ php src/SNIPPET_NAME.php
+    ```
+
+    The usage will print for each if no arguments are provided.
