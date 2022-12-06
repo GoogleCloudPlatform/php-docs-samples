@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ class quickstartTest extends TestCase
 
     public function testQuickstart()
     {
+        $testPropertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $file = sys_get_temp_dir() . '/analyticsdata_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
-        $test_property_id = self::$GA_TEST_PROPERTY_ID || '222596558';
         $contents = str_replace(
             ['YOUR-GA4-PROPERTY-ID', '__DIR__'],
-            [$test_property_id, sprintf('"%s/.."', __DIR__)],
+            [$testPropertyId, sprintf('"%s/.."', __DIR__)],
             $contents
         );
         file_put_contents($file, $contents);
@@ -37,6 +37,6 @@ class quickstartTest extends TestCase
         // Invoke quickstart.php
         $output = $this->runSnippet($file);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 }
