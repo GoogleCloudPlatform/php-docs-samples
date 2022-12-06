@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/cloud-monitoring": "^1.0.0"
+        "google/cloud-monitoring": "^1.0.0",
+        "google/gax": "dev-fix-queryparam-serialization as v1.20"
     }
 }

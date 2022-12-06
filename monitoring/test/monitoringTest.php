@@ -72,12 +72,11 @@ class monitoringTest extends TestCase
     public function testGetUptimeCheck()
     {
         $this->runEventuallyConsistentTest(function () {
-            $escapedName = addcslashes(self::$uptimeConfigName, '/');
             $output = $this->runFunctionSnippet('get_uptime_check', [
                 'projectId' => self::$projectId,
                 'configName' => self::$uptimeConfigName,
             ]);
-            $this->assertStringContainsString($escapedName, $output);
+            $this->assertStringContainsString(self::$uptimeConfigName, $output);
         }, self::RETRY_COUNT, true);
     }
 
