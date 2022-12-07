@@ -37,7 +37,7 @@ use Google\Cloud\Video\Stitcher\V1\AkamaiCdnKey;
  * @param string  $cdnKeyId           The ID of the CDN key to be created
  * @param string  $hostname           The hostname of the CDN key
  * @param string  $tokenKey           The base64-encoded string token key for
- * the Akamai CDN edge configuration
+ *                                    the Akamai CDN edge configuration
  */
 function create_cdn_key_akamai(
     string $callingProjectId,
