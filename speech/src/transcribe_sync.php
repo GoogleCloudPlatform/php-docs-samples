@@ -18,16 +18,10 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/speech/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php transcribe_sync.php AUDIO_FILE\n");
-}
-list($_, $audioFile) = $argv;
+namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_sync]
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -35,41 +29,48 @@ use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-/** Uncomment and populate these variables in your code */
-// $audioFile = 'path to an audio file';
+/**
+ * @param string $audioFile path to an audio file
+ */
+function transcribe_sync(string $audioFile)
+{
+    // change these variables if necessary
+    $encoding = AudioEncoding::LINEAR16;
+    $sampleRateHertz = 32000;
+    $languageCode = 'en-US';
 
-// change these variables if necessary
-$encoding = AudioEncoding::LINEAR16;
-$sampleRateHertz = 32000;
-$languageCode = 'en-US';
+    // get contents of a file into a string
+    $content = file_get_contents($audioFile);
 
-// get contents of a file into a string
-$content = file_get_contents($audioFile);
+    // set string as audio content
+    $audio = (new RecognitionAudio())
+        ->setContent($content);
 
-// set string as audio content
-$audio = (new RecognitionAudio())
-    ->setContent($content);
+    // set config
+    $config = (new RecognitionConfig())
+        ->setEncoding($encoding)
+        ->setSampleRateHertz($sampleRateHertz)
+        ->setLanguageCode($languageCode);
 
-// set config
-$config = (new RecognitionConfig())
-    ->setEncoding($encoding)
-    ->setSampleRateHertz($sampleRateHertz)
-    ->setLanguageCode($languageCode);
+    // create the speech client
+    $client = new SpeechClient();
 
-// create the speech client
-$client = new SpeechClient();
-
-try {
-    $response = $client->recognize($config, $audio);
-    foreach ($response->getResults() as $result) {
-        $alternatives = $result->getAlternatives();
-        $mostLikely = $alternatives[0];
-        $transcript = $mostLikely->getTranscript();
-        $confidence = $mostLikely->getConfidence();
-        printf('Transcript: %s' . PHP_EOL, $transcript);
-        printf('Confidence: %s' . PHP_EOL, $confidence);
+    try {
+        $response = $client->recognize($config, $audio);
+        foreach ($response->getResults() as $result) {
+            $alternatives = $result->getAlternatives();
+            $mostLikely = $alternatives[0];
+            $transcript = $mostLikely->getTranscript();
+            $confidence = $mostLikely->getConfidence();
+            printf('Transcript: %s' . PHP_EOL, $transcript);
+            printf('Confidence: %s' . PHP_EOL, $confidence);
+        }
+    } finally {
+        $client->close();
     }
-} finally {
-    $client->close();
 }
 # [END speech_transcribe_sync]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

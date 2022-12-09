@@ -22,20 +22,15 @@ use Google\Cloud\Spanner\Instance;
 use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @retryAttempts 3
- * @retryDelayMethod exponentialBackoff
- */
 class spannerPgTest extends TestCase
 {
     use TestTrait {
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
 
-    use RetryTrait, EventuallyConsistentTestTrait;
+    use EventuallyConsistentTestTrait;
 
     /** @var string instanceId */
     protected static $instanceId;
@@ -48,6 +43,9 @@ class spannerPgTest extends TestCase
 
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
+
+    /** @var $jsonbTable string */
+    protected static $jsonbTable;
 
     public static function setUpBeforeClass(): void
     {
@@ -248,6 +246,58 @@ class spannerPgTest extends TestCase
     /**
      * @depends testCreateDatabase
      */
+    public function testJsonbAddColumn()
+    {
+        self::$jsonbTable = 'Venues' . time() . rand();
+
+        // Create the table for our JSONB tests.
+        $database = self::$instance->database(self::$databaseId);
+        $op = $database->updateDdl(
+            sprintf('CREATE TABLE %s (
+                VenueId  bigint NOT NULL PRIMARY KEY
+            )', self::$jsonbTable)
+        );
+
+        $op->pollUntilComplete();
+
+        // Now run the test
+        $output = $this->runFunctionSnippet('pg_add_jsonb_column', [
+            self::$instanceId, self::$databaseId, self::$jsonbTable
+        ]);
+        self::$lastUpdateDataTimestamp = time();
+
+        $this->assertStringContainsString(sprintf('Added column VenueDetails on table %s.', self::$jsonbTable), $output);
+    }
+
+    /**
+     * @depends testJsonbAddColumn
+     */
+    public function testJsonbUpdateData()
+    {
+        $output = $this->runFunctionSnippet('pg_jsonb_update_data', [
+            self::$instanceId, self::$databaseId, self::$jsonbTable
+        ]);
+        self::$lastUpdateDataTimestamp = time();
+
+        $this->assertStringContainsString(sprintf('Inserted/updated 3 rows in table %s', self::$jsonbTable), $output);
+    }
+
+    /**
+     * @depends testJsonbUpdateData
+     */
+    public function testJsonbQueryParam()
+    {
+        $output = $this->runFunctionSnippet('pg_jsonb_query_parameter', [
+            self::$instanceId, self::$databaseId, self::$jsonbTable
+        ]);
+        self::$lastUpdateDataTimestamp = time();
+
+        $this->assertEquals('VenueId: 1, VenueDetails: {"open": true, "rating": 9}' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
     public function testOrderNulls()
     {
         $tableName = 'Singers' . time() . rand();
@@ -311,6 +361,50 @@ class spannerPgTest extends TestCase
 
         $output = $this->runFunctionSnippet('pg_dml_getting_started_update');
         $this->assertStringContainsString('Marketing budget updated.', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testDmlReturningInsert()
+    {
+        $output = $this->runFunctionSnippet('pg_insert_dml_returning');
+
+        $expectedOutput = sprintf('Row (16, Melissa, Garcia) inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Row (17, Russell, Morales) inserted');
+        $this->assertStringContainsString('Russell', $output);
+
+        $expectedOutput = sprintf('Row (18, Jacqueline, Long) inserted');
+        $this->assertStringContainsString('Jacqueline', $output);
+
+        $expectedOutput = sprintf('Row (19, Dylan, Shaw) inserted');
+        $this->assertStringContainsString('Dylan', $output);
+    }
+
+    /**
+     * @depends testDmlReturningInsert
+     */
+    public function testDmlReturningUpdate()
+    {
+        $output = $this->runFunctionSnippet('pg_update_dml_returning');
+
+        $expectedOutput = sprintf(
+            'Row with singerid 16 updated to (16, Melissa, Missing)'
+        );
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testDmlReturningUpdate
+     */
+    public function testDmlReturningDelete()
+    {
+        $output = $this->runFunctionSnippet('pg_delete_dml_returning');
+
+        $expectedOutput = sprintf('Row (16, Melissa, Missing) deleted');
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     public static function tearDownAfterClass(): void
