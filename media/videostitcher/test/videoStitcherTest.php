@@ -42,20 +42,30 @@ class videoStitcherTest extends TestCase
     private static $slateUri;
     private static $updatedSlateUri;
 
+    private static $slateId;
+    private static $slateName;
+
+    private static $cloudCdnKeyId;
+    private static $cloudCdnKeyName;
+    private static $mediaCdnKeyId;
+    private static $mediaCdnKeyName;
+    private static $akamaiCdnKeyId;
+    private static $akamaiCdnKeyName;
+
     private static $hostname = 'cdn.example.com';
     private static $updatedHostname = 'updated.example.com';
 
-    private static $cloudCdnKeyName = 'cloud-cdn-key';
-    private static $updatedCloudCdnKeyName = 'updated-cloud-cdn-key';
-    private static $mediaCdnKeyName = 'media-cdn-key';
-    private static $updatedMediaCdnKeyName = 'updated-media-cdn-key';
+    private static $cloudCdnPublicKeyName = 'cloud-cdn-key';
+    private static $updatedCloudCdnPublicKeyName = 'updated-cloud-cdn-key';
+    private static $mediaCdnPublicKeyName = 'media-cdn-key';
+    private static $updatedMediaCdnPublicKeyName = 'updated-media-cdn-key';
 
     private static $cloudCdnPrivateKey = 'VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==';
     private static $updatedCloudCdnPrivateKey = 'VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg==';
     private static $mediaCdnPrivateKey = 'MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxzg5MDEyMzQ1Njc4OTAxMjM0NTY3DkwMTIzNA';
     private static $updatedMediaCdnPrivateKey = 'ZZZzNDU2Nzg5MDEyMzQ1Njc4OTAxzg5MDEyMzQ1Njc4OTAxMjM0NTY3DkwMTIZZZ';
-    private static $akamaiKey = 'VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==';
-    private static $updatedAkamaiKey = 'VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg==';
+    private static $akamaiTokenKey = 'VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==';
+    private static $updatedAkamaiTokenKey = 'VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg==';
 
     public static function setUpBeforeClass(): void
     {
@@ -69,166 +79,256 @@ class videoStitcherTest extends TestCase
         self::$updatedSlateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$updatedSlateFileName);
     }
 
-    public function testSlates()
+    public function testCreateSlate()
     {
-        $slateId = sprintf('php-test-slate-%s', time());
+        self::$slateId = sprintf('php-test-slate-%s', time());
         # API returns project number rather than project ID so
         # don't include that in $slateName since we don't have it
-        $slateName = sprintf('/locations/%s/slates/%s', self::$location, $slateId);
+        self::$slateName = sprintf('/locations/%s/slates/%s', self::$location, self::$slateId);
 
         $output = $this->runFunctionSnippet('create_slate', [
             self::$projectId,
             self::$location,
-            $slateId,
+            self::$slateId,
             self::$slateUri
         ]);
-        $this->assertStringContainsString($slateName, $output);
+        $this->assertStringContainsString(self::$slateName, $output);
+    }
 
-        $output = $this->runFunctionSnippet('get_slate', [
-            self::$projectId,
-            self::$location,
-            $slateId
-        ]);
-        $this->assertStringContainsString($slateName, $output);
-
+    /** @depends testCreateSlate */
+    public function testListSlates()
+    {
         $output = $this->runFunctionSnippet('list_slates', [
             self::$projectId,
             self::$location
         ]);
-        $this->assertStringContainsString($slateName, $output);
+        $this->assertStringContainsString(self::$slateName, $output);
+    }
 
+    /** @depends testListSlates */
+    public function testUpdateSlate()
+    {
         $output = $this->runFunctionSnippet('update_slate', [
             self::$projectId,
             self::$location,
-            $slateId,
+            self::$slateId,
             self::$updatedSlateUri
         ]);
-        $this->assertStringContainsString($slateName, $output);
+        $this->assertStringContainsString(self::$slateName, $output);
+    }
 
+    /** @depends testUpdateSlate */
+    public function testGetSlate()
+    {
+        $output = $this->runFunctionSnippet('get_slate', [
+            self::$projectId,
+            self::$location,
+            self::$slateId
+        ]);
+        $this->assertStringContainsString(self::$slateName, $output);
+    }
+
+    /** @depends testGetSlate */
+    public function testDeleteSlate()
+    {
         $output = $this->runFunctionSnippet('delete_slate', [
             self::$projectId,
             self::$location,
-            $slateId
+            self::$slateId
         ]);
         $this->assertStringContainsString('Deleted slate', $output);
     }
 
-    public function testCdnKeys()
+    public function testCreateCloudCdnKey()
     {
-        $cdnKeyId = sprintf('php-test-cloud-cdn-key-%s', time());
+        self::$cloudCdnKeyId = sprintf('php-test-cloud-cdn-key-%s', time());
         # API returns project number rather than project ID so
-        # don't include that in $cdnKeyName since we don't have it
-        $cdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, $cdnKeyId);
-
-        // Test Cloud CDN keys
+        # don't include that in $cloudCdnKeyName since we don't have it
+        self::$cloudCdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, self::$cloudCdnKeyId);
 
         $output = $this->runFunctionSnippet('create_cdn_key', [
             self::$projectId,
             self::$location,
-            $cdnKeyId,
+            self::$cloudCdnKeyId,
             self::$hostname,
-            self::$cloudCdnKeyName,
+            self::$cloudCdnPublicKeyName,
             self::$cloudCdnPrivateKey,
             false
         ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
+        $this->assertStringContainsString(self::$cloudCdnKeyName, $output);
+    }
 
-        $output = $this->runFunctionSnippet('get_cdn_key', [
-            self::$projectId,
-            self::$location,
-            $cdnKeyId
-        ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
-
+    /** @depends testCreateCloudCdnKey */
+    public function testListCloudCdnKeys()
+    {
         $output = $this->runFunctionSnippet('list_cdn_keys', [
             self::$projectId,
             self::$location
         ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
+        $this->assertStringContainsString(self::$cloudCdnKeyName, $output);
+    }
 
+    /** @depends testListCloudCdnKeys */
+    public function testUpdateCloudCdnKey()
+    {
         $output = $this->runFunctionSnippet('update_cdn_key', [
             self::$projectId,
             self::$location,
-            $cdnKeyId,
+            self::$cloudCdnKeyId,
             self::$updatedHostname,
-            self::$updatedCloudCdnKeyName,
+            self::$updatedCloudCdnPublicKeyName,
             self::$updatedCloudCdnPrivateKey,
             false
         ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
+        $this->assertStringContainsString(self::$cloudCdnKeyName, $output);
+    }
 
+    /** @depends testUpdateCloudCdnKey */
+    public function testGetCloudCdnKey()
+    {
+        $output = $this->runFunctionSnippet('get_cdn_key', [
+            self::$projectId,
+            self::$location,
+            self::$cloudCdnKeyId
+        ]);
+        $this->assertStringContainsString(self::$cloudCdnKeyName, $output);
+    }
+
+    /** @depends testGetCloudCdnKey */
+    public function testDeleteCloudCdnKey()
+    {
         $output = $this->runFunctionSnippet('delete_cdn_key', [
             self::$projectId,
             self::$location,
-            $cdnKeyId
+            self::$cloudCdnKeyId
         ]);
         $this->assertStringContainsString('Deleted CDN key', $output);
+    }
 
-        // Test Media CDN keys - create, update, delete only
-
-        $cdnKeyId = sprintf('php-test-media-cdn-key-%s', time());
+    public function testCreateMediaCdnKey()
+    {
+        self::$mediaCdnKeyId = sprintf('php-test-media-cdn-key-%s', time());
         # API returns project number rather than project ID so
-        # don't include that in $cdnKeyName since we don't have it
-        $cdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, $cdnKeyId);
+        # don't include that in $mediaCdnKeyName since we don't have it
+        self::$mediaCdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, self::$mediaCdnKeyId);
 
         $output = $this->runFunctionSnippet('create_cdn_key', [
-                    self::$projectId,
-                    self::$location,
-                    $cdnKeyId,
-                    self::$hostname,
-                    self::$mediaCdnKeyName,
-                    self::$mediaCdnPrivateKey,
-                    true
-                ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
+            self::$projectId,
+            self::$location,
+            self::$mediaCdnKeyId,
+            self::$hostname,
+            self::$mediaCdnPublicKeyName,
+            self::$mediaCdnPrivateKey,
+            true
+        ]);
+        $this->assertStringContainsString(self::$mediaCdnKeyName, $output);
+    }
 
+    /** @depends testCreateMediaCdnKey */
+    public function testListMediaCdnKeys()
+    {
+        $output = $this->runFunctionSnippet('list_cdn_keys', [
+            self::$projectId,
+            self::$location
+        ]);
+        $this->assertStringContainsString(self::$mediaCdnKeyName, $output);
+    }
+
+    /** @depends testListMediaCdnKeys */
+    public function testUpdateMediaCdnKey()
+    {
         $output = $this->runFunctionSnippet('update_cdn_key', [
             self::$projectId,
             self::$location,
-            $cdnKeyId,
+            self::$mediaCdnKeyId,
             self::$updatedHostname,
-            self::$updatedMediaCdnKeyName,
+            self::$updatedMediaCdnPublicKeyName,
             self::$updatedMediaCdnPrivateKey,
             true
         ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
+        $this->assertStringContainsString(self::$mediaCdnKeyName, $output);
+    }
 
+    /** @depends testUpdateMediaCdnKey */
+    public function testGetMediaCdnKey()
+    {
+        $output = $this->runFunctionSnippet('get_cdn_key', [
+            self::$projectId,
+            self::$location,
+            self::$mediaCdnKeyId
+        ]);
+        $this->assertStringContainsString(self::$mediaCdnKeyName, $output);
+    }
+
+    /** @depends testGetMediaCdnKey */
+    public function testDeleteMediaCdnKey()
+    {
         $output = $this->runFunctionSnippet('delete_cdn_key', [
             self::$projectId,
             self::$location,
-            $cdnKeyId
+            self::$mediaCdnKeyId
         ]);
         $this->assertStringContainsString('Deleted CDN key', $output);
+    }
 
-        // Test Akamai CDN keys - create, update, delete only
-
-        $cdnKeyId = sprintf('php-test-akamai-cdn-key-%s', time());
+    public function testCreateAkamaiCdnKey()
+    {
+        self::$akamaiCdnKeyId = sprintf('php-test-akamai-cdn-key-%s', time());
         # API returns project number rather than project ID so
-        # don't include that in $cdnKeyName since we don't have it
-        $cdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, $cdnKeyId);
+        # don't include that in $akamaiCdnKeyName since we don't have it
+        self::$akamaiCdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, self::$akamaiCdnKeyId);
 
         $output = $this->runFunctionSnippet('create_cdn_key_akamai', [
-                    self::$projectId,
-                    self::$location,
-                    $cdnKeyId,
-                    self::$hostname,
-                    self::$akamaiKey
-                ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
-
-        $output = $this->runFunctionSnippet('update_cdn_key_akamai', [
-                    self::$projectId,
-                    self::$location,
-                    $cdnKeyId,
-                    self::$updatedHostname,
-                    self::$updatedAkamaiKey
+            self::$projectId,
+            self::$location,
+            self::$akamaiCdnKeyId,
+            self::$hostname,
+            self::$akamaiTokenKey
         ]);
-        $this->assertStringContainsString($cdnKeyName, $output);
+        $this->assertStringContainsString(self::$akamaiCdnKeyName, $output);
+    }
 
+    /** @depends testCreateAkamaiCdnKey */
+    public function testListAkamaiCdnKeys()
+    {
+        $output = $this->runFunctionSnippet('list_cdn_keys', [
+            self::$projectId,
+            self::$location
+        ]);
+        $this->assertStringContainsString(self::$akamaiCdnKeyName, $output);
+    }
+
+    /** @depends testListAkamaiCdnKeys */
+    public function testUpdateAkamaiCdnKey()
+    {
+        $output = $this->runFunctionSnippet('update_cdn_key_akamai', [
+            self::$projectId,
+            self::$location,
+            self::$akamaiCdnKeyId,
+            self::$updatedHostname,
+            self::$updatedAkamaiTokenKey
+        ]);
+        $this->assertStringContainsString(self::$akamaiCdnKeyName, $output);
+    }
+
+    /** @depends testUpdateAkamaiCdnKey */
+    public function testGetAkamaiCdnKey()
+    {
+        $output = $this->runFunctionSnippet('get_cdn_key', [
+            self::$projectId,
+            self::$location,
+            self::$akamaiCdnKeyId
+        ]);
+        $this->assertStringContainsString(self::$akamaiCdnKeyName, $output);
+    }
+
+    /** @depends testGetAkamaiCdnKey */
+    public function testDeleteAkamaiCdnKey()
+    {
         $output = $this->runFunctionSnippet('delete_cdn_key', [
             self::$projectId,
             self::$location,
-            $cdnKeyId
+            self::$akamaiCdnKeyId
         ]);
         $this->assertStringContainsString('Deleted CDN key', $output);
     }
