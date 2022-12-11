@@ -281,15 +281,13 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
 ### Confirm deployment success
 
-
-
 1. Go to the Service URL to view the website.
 
 1. Confirm the information in the lower right of the Laravel welcome screen. 
 
-   * You should see a variation of "Laravel v9.26.1 (PHP v8.1.9)" (the exact version of Laravel and PHP may change)
+   * You should see a variation of "Laravel v9... (PHP v8...)" (the exact version of Laravel and PHP may change)
    * You should see the a variation of "Service: laravel. Revision laravel-00001-vid." (the revision name ends in three random characters, which will differ for every deployment)
-   * You should see "Project: PROJECT_ID. Region REGION."
+   * You should see "Project: (your project). Region (your region)." 
 
 1. Click on the "demo products" link, and create some entries. 
 
@@ -351,7 +349,6 @@ This tutorial opts to use the user's local machine for compiling and uploading s
 ### Environment information
 
 `routes/web.php` includes code to retrieve the service and revision information from Cloud Run environment variables. The project and region are retrieve from the Cloud Run metadata service, the logic for this operation is stored in `app/Http/helpers.php`. (Look for the `cloudrun_laravel_get_metadata` and `cloudrun_laravel_display_metadata` tags.)
-
 
 ## Learn more
 
