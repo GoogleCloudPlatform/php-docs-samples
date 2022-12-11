@@ -26,30 +26,30 @@ function helloContent(ServerRequestInterface $request): string
     switch ($request->getHeaderLine('content-type')) {
         // '{"name":"John"}'
         case 'application/json':
-            if (!empty($body)) {
-                $json = json_decode($body, true);
-                if (json_last_error() != JSON_ERROR_NONE) {
-                    throw new RuntimeException(sprintf(
-                        'Could not parse body: %s',
-                        json_last_error_msg()
-                    ));
-                }
-                $name = $json['name'] ?? $name;
-            }
-            break;
-            // 'John', stored in a stream
+          if (!empty($body)) {
+              $json = json_decode($body, true);
+              if (json_last_error() != JSON_ERROR_NONE) {
+                  throw new RuntimeException(sprintf(
+                      'Could not parse body: %s',
+                      json_last_error_msg()
+                  ));
+              }
+              $name = $json['name'] ?? $name;
+          }
+          break;
+        // 'John', stored in a stream
         case 'application/octet-stream':
-            $name = $body;
-            break;
-            // 'John'
+          $name = $body;
+          break;
+        // 'John'
         case 'text/plain':
-            $name = $body;
-            break;
-            // 'name=John' in the body of a POST request (not the URL)
+          $name = $body;
+          break;
+        // 'name=John' in the body of a POST request (not the URL)
         case 'application/x-www-form-urlencoded':
-            parse_str($body, $data);
-            $name = $data['name'] ?? $name;
-            break;
+          parse_str($body, $data);
+          $name = $data['name'] ?? $name;
+          break;
     }
 
     return sprintf('Hello %s!', htmlspecialchars($name));
