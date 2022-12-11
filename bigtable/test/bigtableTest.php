@@ -5,10 +5,16 @@ namespace Google\Cloud\Samples\Bigtable\Tests;
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
+/**
+ * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
+ */
 final class BigtableTest extends TestCase
 {
     use BigtableTestTrait;
+    use RetryTrait;
 
     public const CLUSTER_ID_PREFIX = 'php-cluster-';
     public const INSTANCE_ID_PREFIX = 'php-instance-';
