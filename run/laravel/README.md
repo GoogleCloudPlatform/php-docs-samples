@@ -163,7 +163,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 * Determine the registry name for future operations: 
 
     ```bash
-    ${REGION}-docker.pkg.dev/${PROJECT_ID}/containers/
+    export REGISTRY_NAME=${REGION}-docker.pkg.dev/${PROJECT_ID}/containers
     ```
 
 ### Configuring the Laravel Application
@@ -217,7 +217,7 @@ Get these values with e.g. `echo ${DATABASE_NAME}`
 
     ```bash
     gcloud builds submit \
-        --pack image=${REGION}-docker.pkg.dev/${PROJECT_ID}/containers/laravel
+        --pack image=${REGISTRY_NAME}/laravel
     ```
 
 
@@ -227,16 +227,22 @@ With Cloud Run Jobs, you can use the same container from your service to perform
 
 The configuration is similar to the deployment to Cloud Run, requiring the database and secret values. 
 
-* Apply database migrations:
+1. Create a Cloud Run job to apply database migrations:
 
     ```
-    gcloud beta run jobs create migrate --execute-now --wait \
-        --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/containers/laravel \
+    gcloud beta run jobs create migrate \
+        --image=${REGISTRY_NAME}/laravel \
         --region=${REGION} \
         --set-cloudsql-instances ${PROJECT_ID}:${REGION}:${INSTANCE_NAME} \
         --set-secrets /config/.env=laravel_settings:latest \
         --command launcher \
         --args "php artisan migrate"
+    ```
+
+1. Execute the job:
+
+    ```
+    gcloud beta run jobs execute migrate --region ${REGION} --wait
     ```
 
 * Confirm the application of database migrations by clicking the "See logs for this execution" link. 
@@ -266,7 +272,8 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
     ```bash
     gcloud run deploy laravel \
-        --image ${REGION}-docker.pkg.dev/${PROJECT_ID}/containers/laravel \
+        --image ${REGISTRY_NAME}/laravel \
+        --region $REGION \
         --set-cloudsql-instances ${PROJECT_ID}:${REGION}:${INSTANCE_NAME} \
         --set-secrets /config/.env=laravel_settings:latest \
         --allow-unauthenticated
@@ -297,14 +304,14 @@ To make changes: build the container (to capture any new application changes), t
 
     ```bash
     gcloud builds submit \
-        --pack image=us-central1-docker.pkg.dev/${PROJECT_ID}/containers/laravel
+        --pack image=${REGISTRY_NAME}/laravel
     ```
 
 To apply application code changes, update the Cloud Run service with this new container:
 
     ```bash
     gcloud run services update laravel \
-        --image us-central1-docker.pkg.dev/${PROJECT_ID}/containers/laravel \
+        --image ${REGISTRY_NAME}/laravel \
         --region ${REGION}
     ```
 
