@@ -176,14 +176,16 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 * Update the values in `.env` with your values. 
     
-    ⚠️ Replace `${}` with your values, don't use the literals.
-Get these values with e.g. `echo ${DATABASE_NAME}`
+    ⚠️ Replace `${}` with your values, don't use the literals. Get these values with e.g. `echo ${DATABASE_NAME}`
+
     * DB_CONNECTION: `mysql`
     * DB_SOCKET:  `/cloudsql/${PROJECT_ID}:${REGION}:${INSTANCE_NAME}`
     * DB_DATABASE: `${DATABASE_NAME}`
     * DB_USERNAME: `${DATABASE_USERNAME}`
     * DB_PASSWORD: `${DATABASE_PASSWORD}`
     * ASSET_BUCKET: `${ASSET_BUCKET}`
+
+    Note: `ASSET_URL` is generated from `ASSET_BUCKET` and doesn't need to be hardcoded.
 * Update app key: 
     ```bash
     php artisan key:generate
