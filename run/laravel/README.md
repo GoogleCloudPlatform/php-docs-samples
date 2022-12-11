@@ -61,7 +61,7 @@ This tutorial uses the following billable components of Google Cloud:
 
 ## Confirm your PHP setup
 
-* Check you have PHP 8.1 installed (or [install it](https://www.php.net/manual/en/install.php)):
+* Check you have PHP 8.0.2 or higher installed (or [install it](https://www.php.net/manual/en/install.php)):
 
     ```bash
     php --version
