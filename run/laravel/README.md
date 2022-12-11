@@ -230,8 +230,9 @@ The configuration is similar to the deployment to Cloud Run, requiring the datab
 * Apply database migrations:
 
     ```
-    gcloud beta run jobs create migrate-$(date +"%s") --execute-now --wait \
+    gcloud beta run jobs create migrate --execute-now --wait \
         --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/containers/laravel \
+        --region=${REGION} \
         --set-cloudsql-instances ${PROJECT_ID}:${REGION}:${INSTANCE_NAME} \
         --set-secrets /config/.env=laravel_settings:latest \
         --command launcher \
@@ -292,20 +293,37 @@ You should be able to write entries to the database, and read them back again, c
 
 While the initial provisioning and deployment steps were complex, making updates is a simpler process. 
 
-1. Build the container (to capture any new application changes), then update the service to use this new container image:
+To make changes: build the container (to capture any new application changes), then update the service to use this new container image:
 
     ```bash
     gcloud builds submit \
         --pack image=us-central1-docker.pkg.dev/${PROJECT_ID}/containers/laravel
-
-    gcloud run services update laravel \
-        --image us-central1-docker.pkg.dev/${PROJECT_ID}/containers/laravel 
     ```
 
+To apply application code changes, update the Cloud Run service with this new container:
 
-Note: you do not have to re-assert the database or secret settings on future deployments, unless you want to change these values. 
+    ```bash
+    gcloud run services update laravel \
+        --image us-central1-docker.pkg.dev/${PROJECT_ID}/containers/laravel \
+        --region ${REGION}
+    ```
 
-Repeat the Upload Static Assets and Apply Database Migrations steps to update those information stores. 
+    Note: you do not have to re-assert the database or secret settings on future deployments, unless you want to change these values. 
+
+To apply database migrations, run the Cloud Run job using the newly built container:
+
+    ```bash
+    gcloud beta run jobs execute migrate --region ${REGION}
+    ```
+
+    Note: To generate new migrations to apply, you will need to run `php artisan make:migration` in a local development environment.
+
+To update static assets, run the custom npm command from earlier: 
+
+    ```bash
+    npm run update-static
+    ```
+
 
 ## Understanding the Code
 
