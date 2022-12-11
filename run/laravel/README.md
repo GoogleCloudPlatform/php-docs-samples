@@ -103,6 +103,7 @@ There are many variables in this tutorial. Set these early to help with copying 
 
 ```
 export PROJECT_ID=$(gcloud config get-value project)
+export PROJECTNUM=$(gcloud projects describe ${PROJECT_ID} --format='value(projectNumber)')
 export REGION=us-central1
 export INSTANCE_NAME=myinstance
 export DATABASE_NAME=mydatabase
@@ -203,7 +204,6 @@ Get these values with e.g. `echo ${DATABASE_NAME}`
 * Allow Cloud Run access to the secret: 
 
     ```bash
-    export PROJECTNUM=$(gcloud projects describe ${PROJECT_ID} --format='value(projectNumber)')
     gcloud secrets add-iam-policy-binding laravel_settings \
         --member serviceAccount:${PROJECTNUM}-compute@developer.gserviceaccount.com \
         --role roles/secretmanager.secretAccessor
