@@ -20,17 +20,24 @@ Route::get('/', function () {
      * Populate useful information from the running service.
      */
 
+    if (!Google\Auth\Credentials\GCECredentials::onGce()) {
+        return view('welcome', [
+            'service' => 'Unknown',
+            'revision' => 'Unknown',
+            'project' => 'Unknown',
+            'region' => 'Unknown'
+        ];
+    }
     // [START cloudrun_laravel_display_metadata]
-    $long_region = explode('/', request_metadata('instance/region'));
-
-    $view_variables = [
-        'service' => env('K_SERVICE') ?? 'Unknown',
-        'revision' => env('K_REVISION') ?? 'Unknown',
-        'project' => request_metadata('project/project-id'),
-        'region' => end($long_region),
-    ];
-
-    return view('welcome', $view_variables);
+    $metadata = new Google\Cloud\Core\Compute\Metadata();
+    $longRegion = explode('/', $metadata->get('instance/region'));
+    
+    return view('welcome', [
+        'service' => env('K_SERVICE'),
+        'revision' => env('K_REVISION'),
+        'project' => $metadata->get('project/project-id'),
+        'region' => end($longRegion),
+    ]);
     // [END cloudrun_laravel_display_metadata]
 });
 
