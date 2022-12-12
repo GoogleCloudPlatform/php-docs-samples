@@ -61,6 +61,8 @@ This tutorial uses the following billable components of Google Cloud:
 
 ## Confirm your PHP setup
 
+You will need PHP on your local system in order to generate run `php artisan` commands later.
+
 * Check you have PHP 8.0.2 or higher installed (or [install it](https://www.php.net/manual/en/install.php)):
 
     ```bash
@@ -81,6 +83,8 @@ This tutorial uses the following billable components of Google Cloud:
 
 ## Confirm your Node setup
 
+You will need Node on your local system in order to generate static assets later. 
+
 * Check you have node and npm installed (or [install them](https://cloud.google.com/nodejs/docs/setup)):
 
     ```bash
@@ -94,7 +98,6 @@ This tutorial uses the following billable components of Google Cloud:
     ```bash
     npm install
     ```
-
 
 
 ## Preparing backing services
@@ -186,7 +189,8 @@ export ASSET_BUCKET=${PROJECT_ID}-static
     * ASSET_BUCKET: `${ASSET_BUCKET}`
 
     Note: `ASSET_URL` is generated from `ASSET_BUCKET` and doesn't need to be hardcoded.
-* Update app key: 
+
+* Update the `APP_KEY` by generating a new key: 
     ```bash
     php artisan key:generate
     ```
@@ -221,7 +225,6 @@ export ASSET_BUCKET=${PROJECT_ID}-static
     gcloud builds submit \
         --pack image=${REGISTRY_NAME}/laravel
     ```
-
 
 ### Applying database migrations
 
