@@ -350,7 +350,7 @@ This tutorial opts to use the user's local machine for compiling and uploading s
 
 ### Environment information
 
-`routes/web.php` includes code to retrieve the service and revision information from Cloud Run environment variables. The project and region are retrieve from the Cloud Run metadata service, the logic for this operation is stored in `app/Http/helpers.php`. (Look for the `cloudrun_laravel_get_metadata` and `cloudrun_laravel_display_metadata` tags.)
+`routes/web.php` includes code to retrieve the service and revision information from Cloud Run environment variable, and from the\ Cloud Run metadata service (Look for the `cloudrun_laravel_get_metadata` tag.)
 
 ## Learn more
 

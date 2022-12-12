@@ -26,12 +26,12 @@ Route::get('/', function () {
             'revision' => 'Unknown',
             'project' => 'Unknown',
             'region' => 'Unknown'
-        ];
+        ]);
     }
     // [START cloudrun_laravel_display_metadata]
     $metadata = new Google\Cloud\Core\Compute\Metadata();
     $longRegion = explode('/', $metadata->get('instance/region'));
-    
+
     return view('welcome', [
         'service' => env('K_SERVICE'),
         'revision' => env('K_REVISION'),
