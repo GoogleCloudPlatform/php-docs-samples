@@ -19,25 +19,24 @@ namespace Google\Cloud\Samples\Monitoring;
 
 use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
 use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
 
 class alertsTest extends TestCase
 {
-    use ExecuteCommandTrait;
     use TestTrait;
     use RetryTrait;
 
-    private static $commandFile = __DIR__ . '/../alerts.php';
     private static $policyId;
     private static $channelId;
 
     public function testCreatePolicy()
     {
         $regexp = '/^Created alert policy projects\/[\w-]+\/alertPolicies\/(\d+)$/';
-        $output = $this->runAlertCommand('create-policy');
+        $output = $this->runFunctionSnippet('alert_create_policy', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertRegexp($regexp, $output);
 
         // Save the policy ID for later
@@ -56,9 +55,10 @@ class alertsTest extends TestCase
             self::$projectId,
             self::$policyId
         );
-        $output = $this->runAlertCommand('enable-policies', [
-            'filter' => sprintf('name = "%s"', $policyName),
+        $output = $this->runFunctionSnippet('alert_enable_policies', [
+            'projectId' => self::$projectId,
             'enable' => true,
+            'filter' => sprintf('name = "%s"', $policyName),
         ]);
         $this->assertStringContainsString(
             sprintf('Policy %s is already enabled', $policyName),
@@ -75,9 +75,10 @@ class alertsTest extends TestCase
             self::$projectId,
             self::$policyId
         );
-        $output = $this->runAlertCommand('enable-policies', [
-            'filter' => sprintf('name = "%s"', $policyName),
+        $output = $this->runFunctionSnippet('alert_enable_policies', [
+            'projectId' => self::$projectId,
             'enable' => false,
+            'filter' => sprintf('name = "%s"', $policyName),
         ]);
         $this->assertStringContainsString(
             sprintf('Disabled %s', $policyName),
@@ -89,7 +90,9 @@ class alertsTest extends TestCase
     public function testCreateChannel()
     {
         $regexp = '/^Created notification channel projects\/[\w-]+\/notificationChannels\/(\d+)$/';
-        $output = $this->runAlertCommand('create-channel');
+        $output = $this->runFunctionSnippet('alert_create_channel', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertRegexp($regexp, $output);
 
         // Save the channel ID for later
@@ -105,19 +108,24 @@ class alertsTest extends TestCase
         $policyName = $alertClient->alertPolicyName(self::$projectId, self::$policyId);
 
         $regexp = '/^Created notification channel projects\/[\w-]+\/notificationChannels\/(\d+)$/';
-        $output = $this->runAlertCommand('create-channel');
+        $output = $this->runFunctionSnippet('alert_create_channel', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertRegexp($regexp, $output);
         preg_match($regexp, $output, $matches);
         $channelId1 = $matches[1];
 
-        $output = $this->runAlertCommand('create-channel');
+        $output = $this->runFunctionSnippet('alert_create_channel', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertRegexp($regexp, $output);
         preg_match($regexp, $output, $matches);
         $channelId2 = $matches[1];
 
-        $output = $this->runAlertCommand('replace-channels', [
-            'policy_id' => self::$policyId,
-            'channel_id' => [$channelId1, $channelId2]
+        $output = $this->runFunctionSnippet('alert_replace_channels', [
+            'projectId' => self::$projectId,
+            'alertPolicyId' => self::$policyId,
+            'channelIds' => [$channelId1, $channelId2]
         ]);
         $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
@@ -134,9 +142,10 @@ class alertsTest extends TestCase
             $channels[1]
         );
 
-        $output = $this->runAlertCommand('replace-channels', [
-            'policy_id' => self::$policyId,
-            'channel_id' => self::$channelId,
+        $output = $this->runFunctionSnippet('alert_replace_channels', [
+            'projectId' => self::$projectId,
+            'alertPolicyId' => self::$policyId,
+            'channelIds' => [self::$channelId],
         ]);
         $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
@@ -158,7 +167,9 @@ class alertsTest extends TestCase
     public function testListPolciies()
     {
         // backup
-        $output = $this->runAlertCommand('list-policies');
+        $output = $this->runFunctionSnippet('alert_list_policies', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertStringContainsString(self::$policyId, $output);
     }
 
@@ -166,7 +177,9 @@ class alertsTest extends TestCase
     public function testListChannels()
     {
         // backup
-        $output = $this->runAlertCommand('list-channels');
+        $output = $this->runFunctionSnippet('alert_list_channels', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertStringContainsString(self::$channelId, $output);
     }
 
@@ -175,7 +188,9 @@ class alertsTest extends TestCase
      */
     public function testBackupPolicies()
     {
-        $output = $this->runAlertCommand('backup-policies');
+        $output = $this->runFunctionSnippet('alert_backup_policies', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertStringContainsString('Backed up alert policies', $output);
 
         $backupJson = file_get_contents(__DIR__ . '/../backup.json');
@@ -195,7 +210,9 @@ class alertsTest extends TestCase
      */
     public function testRestorePolicies()
     {
-        $output = $this->runAlertCommand('restore-policies');
+        $output = $this->runFunctionSnippet('alert_restore_policies', [
+            'projectId' => self::$projectId,
+        ]);
         $this->assertStringContainsString('Restored alert policies', $output);
     }
 
@@ -208,17 +225,11 @@ class alertsTest extends TestCase
             $alertClient->alertPolicyName(self::$projectId, self::$policyId)
         );
 
-        $output = $this->runAlertCommand('delete-channel', [
-            'channel_id' => self::$channelId,
+        $output = $this->runFunctionSnippet('alert_delete_channel', [
+            'projectId' => self::$projectId,
+            'channelId' => self::$channelId,
         ]);
         $this->assertStringContainsString('Deleted notification channel', $output);
         $this->assertStringContainsString(self::$channelId, $output);
-    }
-
-    public function runAlertCommand($command, $args = [])
-    {
-        return $this->runCommand($command, $args + [
-            'project_id' => self::$projectId
-        ]);
     }
 }
