@@ -41,6 +41,12 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
 * @param string $propertyID Your GA-4 Property ID
+* Runs a report using multiple dimension filters joined as `and_group`
+* expression. The filter selects for when both `browser` is `Chrome` and
+* `countryId` is `US`.
+* This sample uses relative date range values. See
+* https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange
+* for more information.
 */
 function run_report_with_multiple_dimension_filters(string $propertyId)
 {

@@ -45,6 +45,10 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
 * @param string $propertyID Your GA-4 Property ID
+* Runs a report using both metric and dimension filters. A dimension filter
+* limits the report to include only users who made an in-app purchase using
+* Android platform. A metric filter specifies that only users with session
+* counts larger than 1,000 should be included.
 */
 function run_report_with_dimension_and_metric_filters(string $propertyId)
 {

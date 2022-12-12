@@ -40,6 +40,11 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
 * @param string $propertyID Your GA-4 Property ID
+* Runs a report using a dimension filter. The call returns a time series
+* report of `eventCount` when `eventName` is `first_open` for each date.
+* This sample uses relative date range values. See
+* https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange
+* for more information.
 */
 function run_report_with_dimension_filter(string $propertyId)
 {
