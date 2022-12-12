@@ -22,9 +22,7 @@
     </logging>
     <filter>
         <whitelist>
-            <file>alerts.php</file>
             <file>quickstart.php</file>
-            <file>monitoring.php</file>
             <exclude>
               <directory>./vendor</directory>
             </exclude>
