@@ -39,7 +39,9 @@ use Google\Cloud\Video\Stitcher\V1\MediaCdnKey;
  * @param string  $hostname           The hostname of the CDN key
  * @param string  $keyName            The public name of the CDN key
  * @param string  $privateKey         For a Media CDN key, this is a 64-byte Ed25519 private
- *                                    key encoded as a base64-encoded string. For a Cloud CDN key,
+ *                                    key encoded as a base64-encoded string. See
+ *                                    https://cloud.google.com/video-stitcher/docs/how-to/managing-cdn-keys#create-private-key-media-cdn
+ *                                    for more information. For a Cloud CDN key,
  *                                    this is a base64-encoded string secret.
  * @param boolean $isMediaCdn         If true, create a Media CDN key. If false,
  *                                    create a Cloud CDN key.
