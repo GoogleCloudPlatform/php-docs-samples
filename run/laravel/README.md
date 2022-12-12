@@ -61,7 +61,7 @@ This tutorial uses the following billable components of Google Cloud:
 
 ## Confirm your PHP setup
 
-You will need PHP on your local system in order to generate run `php artisan` commands later.
+You will need PHP on your local system in order to run `php artisan` commands later.
 
 * Check you have PHP 8.0.2 or higher installed (or [install it](https://www.php.net/manual/en/install.php)):
 
