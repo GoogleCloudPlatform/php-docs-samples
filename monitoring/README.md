@@ -74,12 +74,12 @@ $ php src/list_resources.php 'your-project-id'
 
 ## The client library
 
-This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+This sample uses the [Cloud Monitoring Client Library for PHP][google-cloud-php-monitoring].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
 
 [php_grpc]: http://cloud.google.com/php/grpc
-[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-monitoring]: https://cloud.google.com/php/docs/reference/cloud-monitoring/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 [google-cloud-sdk]: https://cloud.google.com/sdk/

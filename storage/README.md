@@ -81,11 +81,11 @@ No project ID was provided, and we were unable to detect a default project ID.
 
 ## The client library
 
-This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+This sample uses the [Cloud Storage Client Library for PHP][google-cloud-php-storage].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
 
-[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-storage]: https://cloud.google.com/php/docs/reference/cloud-storage/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 [google-cloud-sdk]: https://cloud.google.com/sdk/
