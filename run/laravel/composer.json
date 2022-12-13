@@ -10,7 +10,7 @@
         "google/cloud-core": "^1.46",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
-        "laravel/sanctum": "^2.14.1",
+        "laravel/sanctum": "^3.0.0",
         "laravel/tinker": "^2.7",
         "vlucas/phpdotenv": "^5.4"
     },
