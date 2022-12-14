@@ -129,7 +129,7 @@ No project ID was provided, and we were unable to detect a default project ID.
 
 ## The client library
 
-This sample uses the [Google Cloud Compute Client Library for PHP][google-cloud-php].
+This sample uses the [Google Cloud Compute Client Library for PHP][google-cloud-php-compute].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and [report issues][google-cloud-php-issues].
 
