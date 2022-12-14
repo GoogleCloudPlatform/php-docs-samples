@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function data_get_sub_collections(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_collections]
     # [START firestore_data_get_sub_collections]
     $cityRef = $db->collection('samples/php/cities')->document('SF');
     $collections = $cityRef->collections();
@@ -44,7 +43,6 @@ function data_get_sub_collections(string $projectId): void
         printf('Found subcollection with id: %s' . PHP_EOL, $collection->id());
     }
     # [END firestore_data_get_sub_collections]
-    # [END fs_get_collections]
 }
 
 // The following 2 lines are only needed to run the samples

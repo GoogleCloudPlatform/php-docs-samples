@@ -18,42 +18,44 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID SQL_QUERY\n", __FILE__);
-}
-list($_, $projectId, $query) = $argv;
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_query_no_cache]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`';
+/**
+ * Query with query catch option enabled.
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $query Eg: 'SELECT id, view_count FROM
+ *                          `bigquery-public-data.stackoverflow.posts_questions`';
+ */
+function query_no_cache(string $projectId, string $query): void
+{
+    // Construct a BigQuery client object.
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
 
-// Construct a BigQuery client object.
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
+    // Set job configs
+    $jobConfig = $bigQuery->query($query);
+    $jobConfig->useQueryCache(false);
 
-// Set job configs
-$jobConfig = $bigQuery->query($query);
-$jobConfig->useQueryCache(false);
+    // Extract query results
+    $queryResults = $bigQuery->runQuery($jobConfig);
 
-// Extract query results
-$queryResults = $bigQuery->runQuery($jobConfig);
-
-$i = 0;
-foreach ($queryResults as $row) {
-    printf('--- Row %s ---' . PHP_EOL, ++$i);
-    foreach ($row as $column => $value) {
-        printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+    $i = 0;
+    foreach ($queryResults as $row) {
+        printf('--- Row %s ---' . PHP_EOL, ++$i);
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, json_encode($value));
+        }
     }
+    printf('Found %s row(s)' . PHP_EOL, $i);
 }
-printf('Found %s row(s)' . PHP_EOL, $i);
 # [END bigquery_query_no_cache]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

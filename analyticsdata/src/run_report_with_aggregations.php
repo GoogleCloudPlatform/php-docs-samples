@@ -44,7 +44,7 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 function run_report_with_aggregations(string $propertyId)
 {
     // [START analyticsdata_initialize]
-    // mports the Google Analytics Data API client library.
+    // Imports the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
     // [END analyticsdata_initialize]
 

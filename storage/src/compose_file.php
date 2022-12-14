@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,17 +30,16 @@ use Google\Cloud\Storage\StorageClient;
  * Compose two objects into a single target object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $firstObjectName The name of the first GCS object to compose.
+ *        (e.g. 'my-object-1')
  * @param string $secondObjectName The name of the second GCS object to compose.
+ *        (e.g. 'my-object-2')
  * @param string $targetObjectName The name of the object to be created.
+ *        (e.g. 'composed-my-object-1-my-object-2')
  */
 function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName): void
 {
-    // $bucketName = 'my-bucket';
-    // $firstObjectName = 'my-object-1';
-    // $secondObjectName = 'my-object-2';
-    // $targetObjectName = 'composed-my-object-1-my-object-2';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

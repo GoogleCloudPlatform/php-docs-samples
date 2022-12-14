@@ -9,6 +9,8 @@
 |                 Sample                  |        Description       |     Deploy    |
 | --------------------------------------- | ------------------------ | ------------- |
 |[Hello World][helloworld]  | Quickstart | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30"/>][run_button_helloworld] |
+|[Laravel][laravel]                        | Deploy Laravel on Cloud Run                | -|
+
 
 For more Cloud Run samples beyond PHP, see the main list in the [Cloud Run Samples repository](https://github.com/GoogleCloudPlatform/cloud-run-samples).
 
@@ -87,4 +89,5 @@ for more information.
 [run_build]: https://cloud.google.com/run/docs/building/containers
 [run_deploy]: https://cloud.google.com/run/docs/deploying
 [helloworld]: helloworld/
+[laravel]: laravel/
 [run_button_helloworld]: https://deploy.cloud.run/?dir=run/helloworld
