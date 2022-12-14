@@ -12,7 +12,7 @@
     }],
   "ignorePaths": [
       "appengine/flexible/",
-      "run/laravel/
+      "run/laravel/"
   ],
   "branchPrefix": "renovate/{{parentDir}}-",
   "prConcurrentLimit": 10,
