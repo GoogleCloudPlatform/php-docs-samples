@@ -104,10 +104,9 @@ function printRunReportResponseWithDimensionFilter(RunReportResponse $response)
     }
     foreach ($response->getMetricHeaders() as $metricHeader) {
         printf(
-            'Metric header name: %s (%s)%s',
+            'Metric header name: %s (%s)' . PHP_EOL,
             $metricHeader->getName(),
-            MetricType::name($metricHeader->getType()),
-            PHP_EOL
+            MetricType::name($metricHeader->getType())
         );
     }
     // [END analyticsdata_print_run_report_response_header]
@@ -116,8 +115,11 @@ function printRunReportResponseWithDimensionFilter(RunReportResponse $response)
     print 'Report result: ' . PHP_EOL;
 
     foreach ($response->getRows() as $row) {
-        print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
