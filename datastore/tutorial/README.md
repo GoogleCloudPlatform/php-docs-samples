@@ -3,8 +3,8 @@
 This code sample is intended to be in the following document:
 https://cloud.google.com/datastore/docs/datastore-api-tutorial
 
-The code is using
-[Google Cloud Client Library for PHP](https://googlecloudplatform.github.io/google-cloud-php/#/).
+The code is using the
+[Datastore Client Library for PHP](https://cloud.google.com/php/docs/reference/cloud-datastore/latest).
 
 To run the sample, do the following first:
 
