@@ -95,7 +95,7 @@ class videoStitcherTest extends TestCase
 
     public function testCreateSlate()
     {
-        self::$slateId = sprintf('php-test-slate-%s', time());
+        self::$slateId = sprintf('php-test-slate-%s-%s', uniqid(), time());
         # API returns project number rather than project ID so
         # don't include that in $slateName since we don't have it
         self::$slateName = sprintf('/locations/%s/slates/%s', self::$location, self::$slateId);
@@ -155,7 +155,7 @@ class videoStitcherTest extends TestCase
 
     public function testCreateCloudCdnKey()
     {
-        self::$cloudCdnKeyId = sprintf('php-test-cloud-cdn-key-%s', time());
+        self::$cloudCdnKeyId = sprintf('php-test-cloud-cdn-key-%s-%s', uniqid(), time());
         # API returns project number rather than project ID so
         # don't include that in $cloudCdnKeyName since we don't have it
         self::$cloudCdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, self::$cloudCdnKeyId);
@@ -221,7 +221,7 @@ class videoStitcherTest extends TestCase
 
     public function testCreateMediaCdnKey()
     {
-        self::$mediaCdnKeyId = sprintf('php-test-media-cdn-key-%s', time());
+        self::$mediaCdnKeyId = sprintf('php-test-media-cdn-key-%s-%s', uniqid(), time());
         # API returns project number rather than project ID so
         # don't include that in $mediaCdnKeyName since we don't have it
         self::$mediaCdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, self::$mediaCdnKeyId);
@@ -287,7 +287,7 @@ class videoStitcherTest extends TestCase
 
     public function testCreateAkamaiCdnKey()
     {
-        self::$akamaiCdnKeyId = sprintf('php-test-akamai-cdn-key-%s', time());
+        self::$akamaiCdnKeyId = sprintf('php-test-akamai-cdn-key-%s-%s', uniqid(), time());
         # API returns project number rather than project ID so
         # don't include that in $akamaiCdnKeyName since we don't have it
         self::$akamaiCdnKeyName = sprintf('/locations/%s/cdnKeys/%s', self::$location, self::$akamaiCdnKeyId);
@@ -438,7 +438,7 @@ class videoStitcherTest extends TestCase
         $slates = $response->iterateAllElements();
 
         $currentTime = time();
-        $oneHourInSecs = 60 * 60 * 1;
+        $oneHourInSecs = 1;//60 * 60 * 1;
 
         foreach ($slates as $slate) {
             $tmp = explode('/', $slate->getName());
