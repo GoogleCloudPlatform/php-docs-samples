@@ -438,7 +438,7 @@ class videoStitcherTest extends TestCase
         $slates = $response->iterateAllElements();
 
         $currentTime = time();
-        $oneHourInSecs = 1;//60 * 60 * 1;
+        $oneHourInSecs = 60 * 60 * 1;
 
         foreach ($slates as $slate) {
             $tmp = explode('/', $slate->getName());
