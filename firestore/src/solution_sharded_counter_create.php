@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function solution_sharded_counter_create(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_initialize_distributed_counter]
     # [START firestore_solution_sharded_counter_create]
     $numShards = 10;
     $ref = $db->collection('samples/php/distributedCounters');
@@ -45,7 +44,6 @@ function solution_sharded_counter_create(string $projectId): void
         $doc->set(['Cnt' => 0]);
     }
     # [END firestore_solution_sharded_counter_create]
-    # [END fs_initialize_distributed_counter]
 }
 
 // The following 2 lines are only needed to run the samples

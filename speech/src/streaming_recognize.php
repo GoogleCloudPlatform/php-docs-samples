@@ -18,16 +18,10 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/speech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/speech/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php streaming_recognize.php AUDIO_FILE\n");
-}
-list($_, $audioFile) = $argv;
+namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_streaming]
 use Google\Cloud\Speech\V1\SpeechClient;
@@ -36,43 +30,50 @@ use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
-/** Uncomment and populate these variables in your code */
-// $audioFile = 'path to an audio file';
+/**
+ * @param string $audioFile path to an audio file
+ */
+function streaming_recognize(string $audioFile)
+{
+    // change these variables if necessary
+    $encoding = AudioEncoding::LINEAR16;
+    $sampleRateHertz = 32000;
+    $languageCode = 'en-US';
 
-// change these variables if necessary
-$encoding = AudioEncoding::LINEAR16;
-$sampleRateHertz = 32000;
-$languageCode = 'en-US';
+    $speechClient = new SpeechClient();
+    try {
+        $config = (new RecognitionConfig())
+            ->setEncoding($encoding)
+            ->setSampleRateHertz($sampleRateHertz)
+            ->setLanguageCode($languageCode);
 
-$speechClient = new SpeechClient();
-try {
-    $config = (new RecognitionConfig())
-        ->setEncoding($encoding)
-        ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode);
+        $strmConfig = new StreamingRecognitionConfig();
+        $strmConfig->setConfig($config);
 
-    $strmConfig = new StreamingRecognitionConfig();
-    $strmConfig->setConfig($config);
+        $strmReq = new StreamingRecognizeRequest();
+        $strmReq->setStreamingConfig($strmConfig);
 
-    $strmReq = new StreamingRecognizeRequest();
-    $strmReq->setStreamingConfig($strmConfig);
+        $strm = $speechClient->streamingRecognize();
+        $strm->write($strmReq);
 
-    $strm = $speechClient->streamingRecognize();
-    $strm->write($strmReq);
+        $strmReq = new StreamingRecognizeRequest();
+        $content = file_get_contents($audioFile);
+        $strmReq->setAudioContent($content);
+        $strm->write($strmReq);
 
-    $strmReq = new StreamingRecognizeRequest();
-    $content = file_get_contents($audioFile);
-    $strmReq->setAudioContent($content);
-    $strm->write($strmReq);
-
-    foreach ($strm->closeWriteAndReadAll() as $response) {
-        foreach ($response->getResults() as $result) {
-            foreach ($result->getAlternatives() as $alt) {
-                printf("Transcription: %s\n", $alt->getTranscript());
+        foreach ($strm->closeWriteAndReadAll() as $response) {
+            foreach ($response->getResults() as $result) {
+                foreach ($result->getAlternatives() as $alt) {
+                    printf("Transcription: %s\n", $alt->getTranscript());
+                }
             }
         }
+    } finally {
+        $speechClient->close();
     }
-} finally {
-    $speechClient->close();
 }
 # [END speech_transcribe_streaming]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
