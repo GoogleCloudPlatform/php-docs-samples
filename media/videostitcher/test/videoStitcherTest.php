@@ -67,6 +67,18 @@ class videoStitcherTest extends TestCase
     private static $akamaiTokenKey = 'VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==';
     private static $updatedAkamaiTokenKey = 'VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg==';
 
+    private static $inputBucketName = 'cloud-samples-data';
+    private static $inputVideoFileName = '/media/hls-vod/manifest.m3u8';
+    private static $vodUri;
+    private static $vodAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&correlator=';
+
+    private static $vodSessionId;
+    private static $vodSessionName;
+    private static $vodAdTagDetailId;
+    private static $vodAdTagDetailName;
+    private static $vodStitchDetailId;
+    private static $vodStitchDetailName;
+
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
@@ -77,6 +89,8 @@ class videoStitcherTest extends TestCase
 
         self::$slateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$slateFileName);
         self::$updatedSlateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$updatedSlateFileName);
+
+        self::$vodUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputVideoFileName);
     }
 
     public function testCreateSlate()
@@ -331,6 +345,89 @@ class videoStitcherTest extends TestCase
             self::$akamaiCdnKeyId
         ]);
         $this->assertStringContainsString('Deleted CDN key', $output);
+    }
+
+    public function testCreateVodSession()
+    {
+        # API returns project number rather than project ID so
+        # don't include that in $vodSessionName since we don't have it
+        self::$vodSessionName = sprintf('/locations/%s/vodSessions/', self::$location);
+
+        $output = $this->runFunctionSnippet('create_vod_session', [
+            self::$projectId,
+            self::$location,
+            self::$vodUri,
+            self::$vodAgTagUri
+        ]);
+        $this->assertStringContainsString(self::$vodSessionName, $output);
+        self::$vodSessionId = explode('/', $output);
+        self::$vodSessionId = trim(self::$vodSessionId[(count(self::$vodSessionId) - 1)]);
+        self::$vodSessionName = sprintf('/locations/%s/vodSessions/%s', self::$location, self::$vodSessionId);
+    }
+
+    /** @depends testCreateVodSession */
+    public function testGetVodSession()
+    {
+        $output = $this->runFunctionSnippet('get_vod_session', [
+            self::$projectId,
+            self::$location,
+            self::$vodSessionId
+        ]);
+        $this->assertStringContainsString(self::$vodSessionName, $output);
+    }
+
+    /** @depends testGetVodSession */
+    public function testListVodAdTagDetails()
+    {
+        self::$vodAdTagDetailName = sprintf('/locations/%s/vodSessions/%s/vodAdTagDetails/', self::$location, self::$vodSessionId);
+        $output = $this->runFunctionSnippet('list_vod_ad_tag_details', [
+            self::$projectId,
+            self::$location,
+            self::$vodSessionId
+        ]);
+        $this->assertStringContainsString(self::$vodAdTagDetailName, $output);
+        self::$vodAdTagDetailId = explode('/', $output);
+        self::$vodAdTagDetailId = trim(self::$vodAdTagDetailId[(count(self::$vodAdTagDetailId) - 1)]);
+        self::$vodAdTagDetailName = sprintf('/locations/%s/vodSessions/%s/vodAdTagDetails/%s', self::$location, self::$vodSessionId, self::$vodAdTagDetailId);
+    }
+
+    /** @depends testListVodAdTagDetails */
+    public function testGetVodAdTagDetail()
+    {
+        $output = $this->runFunctionSnippet('get_vod_ad_tag_detail', [
+            self::$projectId,
+            self::$location,
+            self::$vodSessionId,
+            self::$vodAdTagDetailId
+        ]);
+        $this->assertStringContainsString(self::$vodAdTagDetailName, $output);
+    }
+
+    /** @depends testCreateVodSession */
+    public function testListVodStitchDetails()
+    {
+        self::$vodStitchDetailName = sprintf('/locations/%s/vodSessions/%s/vodStitchDetails/', self::$location, self::$vodSessionId);
+        $output = $this->runFunctionSnippet('list_vod_stitch_details', [
+            self::$projectId,
+            self::$location,
+            self::$vodSessionId
+        ]);
+        $this->assertStringContainsString(self::$vodStitchDetailName, $output);
+        self::$vodStitchDetailId = explode('/', $output);
+        self::$vodStitchDetailId = trim(self::$vodStitchDetailId[(count(self::$vodStitchDetailId) - 1)]);
+        self::$vodStitchDetailName = sprintf('/locations/%s/vodSessions/%s/vodStitchDetails/%s', self::$location, self::$vodSessionId, self::$vodStitchDetailId);
+    }
+
+    /** @depends testListVodStitchDetails */
+    public function testGetVodStitchDetail()
+    {
+        $output = $this->runFunctionSnippet('get_vod_stitch_detail', [
+            self::$projectId,
+            self::$location,
+            self::$vodSessionId,
+            self::$vodStitchDetailId
+        ]);
+        $this->assertStringContainsString(self::$vodStitchDetailName, $output);
     }
 
     private static function deleteOldSlates(): void
