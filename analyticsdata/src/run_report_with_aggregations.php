@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application demonstrating the usage of
-* metric aggregations in a report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the usage of
+ * metric aggregations in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -37,14 +37,14 @@ use Google\Analytics\Data\V1beta\MetricAggregation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report which includes total, maximum and minimum values
-* for each metric.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report which includes total, maximum and minimum values
+ * for each metric.
+ */
 function run_report_with_aggregations(string $propertyId)
 {
     // [START analyticsdata_initialize]
-    // Imports the Google Analytics Data API client library.
+    // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
     // [END analyticsdata_initialize]
 
