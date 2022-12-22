@@ -42,7 +42,9 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 function run_report_with_multiple_metrics(string $propertyId)
 {
     // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
+    //Creates an instance of the Google Analytics Data API client library.
+    $client = new BetaAnalyticsDataClient();
+    // [END analyticsdata_initialize]
 
     $client = new BetaAnalyticsDataClient();
 
