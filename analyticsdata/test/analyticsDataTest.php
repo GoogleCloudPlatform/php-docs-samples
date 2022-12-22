@@ -31,7 +31,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testClientFromJsonCredentials()
@@ -55,7 +55,15 @@ class analyticsDataTest extends TestCase
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_cohorts', [$propertyId]);
+      
+        $this->assertStringContainsString('Report result', $output);
+    }
 
-        $this->assertRegExp('/Report result/', $output);
+    public function testRunReportWithAggregations()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_aggregations', [$propertyId]);
+        
+        $this->assertStringContainsString('Report result', $output);
     }
 }
