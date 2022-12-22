@@ -54,50 +54,32 @@ function run_report_with_cohorts(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(
-            [
+        'dimensions' => [
+            new Dimension(['name' => 'cohort']),
+            new Dimension(['name' => 'cohortNthWeek']),
+        ],
+        'metrics' => [
+            new Metric(['name' => 'cohortActiveUsers']),
+            new Metric([
+                'name' => 'cohortRetentionRate',
+                'expression' => 'cohortActiveUsers/cohortTotalUsers'
+            ])
+        ],
+        'cohortSpec' => new CohortSpec([
+            'cohorts' => [new Cohort([
+                'dimension' => 'firstSessionDate',
                 'name' => 'cohort',
-            ]
-        ),
-            new Dimension(
-                [
-                    'name' => 'cohortNthWeek',
-                ]
-            ),
-        ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'cohortActiveUsers',
-            ]
-        ),
-            new Metric(
-                [
-                    'name' => 'cohortRetentionRate',
-                    'expression' => 'cohortActiveUsers/cohortTotalUsers'
-                ]
-            )
-        ],
-
-        'cohortSpec' => new CohortSpec(
-            [
-                'cohorts' => [new Cohort(
-                    [
-                        'dimension' => 'firstSessionDate',
-                        'name' => 'cohort',
-                        'date_range' => new DateRange([
-                        'start_date' => '2021-01-03',
-                        'end_date' => '2021-01-09',
-                        ]),
-                      ],
-                ),
-                ],
-                'cohorts_range' => new CohortsRange([
-                   'start_offset' => '0',
-                   'end_offset' => '4',
-                   'granularity' => '2',
+                'date_range' => new DateRange([
+                    'start_date' => '2021-01-03',
+                    'end_date' => '2021-01-09',
                 ]),
-            ],
-        ),
+            ])],
+            'cohorts_range' => new CohortsRange([
+                'start_offset' => '0',
+                'end_offset' => '4',
+                'granularity' => '2',
+            ]),
+        ]),
     ]);
     printRunReportResponseWithCohorts($response);
 }
