@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application demonstrating the usage of
-* date ranges in a report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange#FIELDS.name
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_named_date_ranges.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the usage of
+ * date ranges in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange#FIELDS.name
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_named_date_ranges.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -36,13 +36,13 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report using named date ranges.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report using named date ranges.
+ */
 function run_report_with_named_date_ranges(string $propertyId)
 {
     // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
+    // Create and instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
     // [END analyticsdata_initialize]
 
