@@ -37,6 +37,7 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
 * @param string $propertyID Your GA-4 Property ID
+* Runs a report of active users grouped by three dimensions.
 */
 function run_report_with_multiple_dimensions(string $propertyId)
 {
@@ -51,29 +52,17 @@ function run_report_with_multiple_dimensions(string $propertyId)
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
 
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'country',
-            ]),
-            new Dimension(
-                [
-                    'name' => 'region',
-                ]),
-            new Dimension(
-                [
-                    'name' => 'city',
-                ]),
+        'dimensions' => [
+            new Dimension(['name' => 'country']),
+            new Dimension(['name' => 'region']),
+            new Dimension(['name' => 'city']),
         ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ],
-        'dateRanges' => [new DateRange([
-            'start_date' => '7daysAgo',
-            'end_date' => 'today',
-        ])
+        'metrics' => [new Metric(['name' => 'activeUsers'])],
+        'dateRanges' => [
+            new DateRange([
+                'start_date' => '7daysAgo',
+                'end_date' => 'today',
+            ])
         ],
     ]);
 
