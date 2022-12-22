@@ -37,6 +37,7 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
 * @param string $propertyID Your GA-4 Property ID
+* Runs a report using two date ranges.
 */
 function run_report_with_date_ranges(string $propertyId)
 {
@@ -55,23 +56,13 @@ function run_report_with_date_ranges(string $propertyId)
                 'start_date' => '2019-08-01',
                 'end_date' => '2019-08-14',
             ]),
-                    new DateRange([
+            new DateRange([
                 'start_date' => '2020-08-01',
                 'end_date' => '2020-08-14',
             ]),
         ],
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'platform',
-            ]
-        ),
-        ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ]
+        'dimensions' => [new Dimension(['name' => 'platform'])],
+        'metrics' => [new Metric(['name' => 'activeUsers'])],
     ]);
 
     printRunReportResponseWithDateRanges($response);
