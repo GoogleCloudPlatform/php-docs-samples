@@ -67,6 +67,14 @@ class analyticsDataTest extends TestCase
         $this->assertStringContainsString('Report result', $output);
     }
 
+    public function testRunReportWithCohorts()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_cohorts', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
     public function testRunReportWithAggregations()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');

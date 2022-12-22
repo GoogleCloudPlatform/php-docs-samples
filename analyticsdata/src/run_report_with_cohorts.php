@@ -17,61 +17,79 @@
 
 /**
  * Google Analytics Data API sample application demonstrating the usage of
- * metric aggregations in a report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
+ * cohort specification in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.cohort_spec
  * for more information.
  * Usage:
  *   composer update
- *   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
+ *   php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report_with_aggregations]
+// [START analyticsdata_run_report_with_cohorts]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\MetricAggregation;
+use Google\Analytics\Data\V1beta\CohortSpec;
+use Google\Analytics\Data\V1beta\CohortsRange;
+use Google\Analytics\Data\V1beta\Cohort;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
  * @param string $propertyID Your GA-4 Property ID
- * Runs a report which includes total, maximum and minimum values
- * for each metric.
+ * Runs a report on a cohort of users whose first session happened on the
+ * same week. The number of active users and user retention rate is calculated
+ * for the cohort using WEEKLY granularity.
  */
-function run_report_with_aggregations(string $propertyId)
+function run_report_with_cohorts(string $propertyId)
 {
-    // Create an instance of the Google Analytics Data API client library.
+    // Creates an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'country'])],
-        'metrics' => [new Metric(['name' => 'sessions'])],
-        'dateRanges' => [
-            new DateRange([
-                'start_date' => '365daysAgo',
-                'end_date' => 'today',
-            ]),
+        'dimensions' => [
+            new Dimension(['name' => 'cohort']),
+            new Dimension(['name' => 'cohortNthWeek']),
         ],
-        'metricAggregations' => [
-            MetricAggregation::TOTAL,
-            MetricAggregation::MAXIMUM,
-            MetricAggregation::MINIMUM
-        ]
+        'metrics' => [
+            new Metric(['name' => 'cohortActiveUsers']),
+            new Metric([
+                'name' => 'cohortRetentionRate',
+                'expression' => 'cohortActiveUsers/cohortTotalUsers'
+            ])
+        ],
+        'cohortSpec' => new CohortSpec([
+            'cohorts' => [
+                new Cohort([
+                    'dimension' => 'firstSessionDate',
+                    'name' => 'cohort',
+                    'date_range' => new DateRange([
+                        'start_date' => '2021-01-03',
+                        'end_date' => '2021-01-09',
+                    ]),
+                ])
+            ],
+            'cohorts_range' => new CohortsRange([
+                'start_offset' => '0',
+                'end_offset' => '4',
+                'granularity' => '2',
+            ]),
+        ]),
     ]);
 
-    printRunReportResponseWithAggregations($response);
+    printRunReportResponseWithCohorts($response);
 }
 
 /**
  * Print results of a runReport call.
  * @param RunReportResponse $response
  */
-function printRunReportResponseWithAggregations($response)
+function printRunReportResponseWithCohorts($response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -99,7 +117,7 @@ function printRunReportResponseWithAggregations($response)
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report_with_aggregations]
+// [END analyticsdata_run_report_with_cohorts]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
