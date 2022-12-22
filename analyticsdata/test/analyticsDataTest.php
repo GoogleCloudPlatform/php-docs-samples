@@ -55,7 +55,7 @@ class analyticsDataTest extends TestCase
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_cohorts', [$propertyId]);
-      
+
         $this->assertStringContainsString('Report result', $output);
     }
 
