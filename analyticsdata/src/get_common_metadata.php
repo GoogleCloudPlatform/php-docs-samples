@@ -15,75 +15,89 @@
  * limitations under the License.
  */
 
-/* 
+/**
+* Google Analytics Data API sample application retrieving dimension and metrics
+* metadata.
+* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata
+* for more information.
+* Usage:
+*   composer update
+*   php get_common_metadata.php
+*/
 
-"""Google Analytics Data API sample application retrieving dimension and metrics
-metadata.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata
-for more information.
-"""
-
-Before you start the application, please review the comments starting with
-"TODO(developer)" and update the code to use the correct values.
-
-Usage:
-  composer update
-  php get_common_metadata.php
- */
+namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_get_common_metadata]
-require 'vendor/autoload.php';
-
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Metadata;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\MetricAggregation;
+use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * TODO(developer): Replace this variable with your Google Analytics 4
- *   property ID before running the sample.
+* Retrieves dimensions and metrics available for all Google Analytics 4 properties.
+*/
+function get_common_metadata()
+{
+    // [START analyticsdata_initialize]
+    // Imports the Google Analytics Data API client library.
+    $client = new BetaAnalyticsDataClient();
+    // [END analyticsdata_initialize]
+    
+    /*
+    * Set the Property ID to 0 for dimensions and metrics common
+    * to all properties. In this special mode, this method will
+    * not return custom dimensions and metrics.
+    */
+    $propertyId = 0;
+    
+    echo "properties/{$propertyId}/metadata";
+
+    // Make an API call.
+   // $response = $client->getMetadata(
+   //     'name' => 'properties/{$propertyId}/metadata',
+    //);
+
+   // printGetCommonMetadata($response);
+}
+
+/**
+ * Print results of a getMetadata call.
+ * @param Metadata $response
  */
-$property_id = 'YOUR-GA4-PROPERTY-ID';
+function printGetCommonMetadata($response)
+{
+    // [START analyticsdata_print_run_report_response_header]
+    printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
+    foreach ($response->getDimensionHeaders() as $dimensionHeader) {
+        printf('Dimension header name: %s%s', $dimensionHeader->getName(), PHP_EOL);
+    }
+    foreach ($response->getMetricHeaders() as $metricHeader) {
+        printf(
+            'Metric header name: %s (%s)' . PHP_EOL,
+            $metricHeader->getName(),
+            MetricType::name($metricHeader->getType())
+        );
+    }
+    // [END analyticsdata_print_run_report_response_header]
 
-// [START analyticsdata_initialize]
-//Imports the Google Analytics Data API client library.'
+    // [START analyticsdata_print_run_report_response_rows]
+    print 'Report result: ' . PHP_EOL;
 
-$client = new BetaAnalyticsDataClient();
-
-// [END analyticsdata_initialize]
-
-// [START analyticsdata_run_report]
-// Make an API call.
-$response = $client->runReport([
-    'property' => 'properties/' . $property_id,
-    'dateRanges' => [
-        new DateRange([
-            'start_date' => '2020-03-31',
-            'end_date' => 'today',
-        ]),
-    ],
-    'dimensions' => [new Dimension(
-        [
-            'name' => 'city',
-        ]
-    ),
-    ],
-    'metrics' => [new Metric(
-        [
-            'name' => 'activeUsers',
-        ]
-    )
-    ]
-]);
-// [END analyticsdata_run_report]
-
-// [START analyticsdata_run_report_response]
-// Print results of an API call.
-print 'Report result: ' . PHP_EOL;
-
-foreach ($response->getRows() as $row) {
-    print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
-    // [END analyticsdata_run_report_response]
+    foreach ($response->getRows() as $row) {
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
+    }
+    // [END analyticsdata_print_run_report_response_rows]
 }
 // [END analyticsdata_get_common_metadata]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
