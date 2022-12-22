@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-/*
-* Google Analytics Data API sample application demonstrating the creation
-* of a basic report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_multiple_dimensions.php YOUR-GA4-PROPERTY-ID
-*/
+/**
+ * Google Analytics Data API sample application demonstrating the creation
+ * of a basic report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_multiple_dimensions.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -36,9 +36,9 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report of active users grouped by three dimensions.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report of active users grouped by three dimensions.
+ */
 function run_report_with_multiple_dimensions(string $propertyId)
 {
     // [START analyticsdata_initialize]
@@ -49,7 +49,6 @@ function run_report_with_multiple_dimensions(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-
         'dimensions' => [
             new Dimension(['name' => 'country']),
             new Dimension(['name' => 'region']),
