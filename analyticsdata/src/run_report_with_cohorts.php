@@ -74,7 +74,8 @@ function run_report_with_cohorts(string $propertyId)
                         'start_date' => '2021-01-03',
                         'end_date' => '2021-01-09',
                     ]),
-                ])],
+                ])
+            ],
             'cohorts_range' => new CohortsRange([
                 'start_offset' => '0',
                 'end_offset' => '4',
@@ -82,6 +83,7 @@ function run_report_with_cohorts(string $propertyId)
             ]),
         ]),
     ]);
+
     printRunReportResponseWithCohorts($response);
 }
 
