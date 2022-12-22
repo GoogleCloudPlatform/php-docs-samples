@@ -47,7 +47,7 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 function run_report_with_cohorts(string $propertyId)
 {
     // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
+    // Creates an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
     // [END analyticsdata_initialize]
 
@@ -66,14 +66,15 @@ function run_report_with_cohorts(string $propertyId)
             ])
         ],
         'cohortSpec' => new CohortSpec([
-            'cohorts' => [new Cohort([
-                'dimension' => 'firstSessionDate',
-                'name' => 'cohort',
-                'date_range' => new DateRange([
-                    'start_date' => '2021-01-03',
-                    'end_date' => '2021-01-09',
-                ]),
-            ])],
+            'cohorts' => [
+                new Cohort([
+                    'dimension' => 'firstSessionDate',
+                    'name' => 'cohort',
+                    'date_range' => new DateRange([
+                        'start_date' => '2021-01-03',
+                        'end_date' => '2021-01-09',
+                    ]),
+                ])],
             'cohorts_range' => new CohortsRange([
                 'start_offset' => '0',
                 'end_offset' => '4',
