@@ -1,0 +1,19 @@
+.wide {
+    /* col-xs-12 col-sm-12 col-md-12 */
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+.action {
+    /* pt-3 text-center */
+    padding-top: 1rem!important;
+    text-align: center!important;
+}
+
+.col-form-label {
+    font-weight: bold;
+}
+
+.display-data {
+    padding-top: calc(0.375rem + 1px);
+}
