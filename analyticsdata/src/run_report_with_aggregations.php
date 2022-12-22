@@ -51,16 +51,8 @@ function run_report_with_aggregations(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'country',
-            ]
-        )],
-        'metrics' => [new Metric(
-            [
-                'name' => 'sessions',
-            ]
-        )],
+        'dimensions' => [new Dimension(['name' => 'country'])],
+        'metrics' => [new Metric(['name' => 'sessions'])],
         'dateRanges' => [
             new DateRange([
                 'start_date' => '365daysAgo',
