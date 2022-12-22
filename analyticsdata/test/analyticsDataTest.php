@@ -65,7 +65,7 @@ class analyticsDataTest extends TestCase
         $output = $this->runFunctionSnippet('run_report_with_multiple_dimensions', [$propertyId]);
 
         $this->assertStringContainsString('Report result', $output);
-    } 
+    }
 
     public function testRunReportWithAggregations()
     {
