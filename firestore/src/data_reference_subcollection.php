@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function data_reference_subcollection(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_subcollection_ref]
     # [START firestore_data_reference_subcollection]
     $document = $db
         ->collection('rooms')
@@ -44,7 +43,6 @@ function data_reference_subcollection(string $projectId): void
         ->collection('messages')
         ->document('message1');
     # [END firestore_data_reference_subcollection]
-    # [END fs_subcollection_ref]
     printf('Retrieved document from subcollection: %s' . PHP_EOL, $document->name());
 }
 

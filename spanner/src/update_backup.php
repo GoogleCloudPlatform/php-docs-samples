@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,7 +36,7 @@ use DateTime;
  * @param string $instanceId The Spanner instance ID.
  * @param string $backupId The Spanner backup ID.
  */
-function update_backup($instanceId, $backupId)
+function update_backup(string $instanceId, string $backupId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
