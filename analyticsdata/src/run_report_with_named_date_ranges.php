@@ -17,61 +17,60 @@
 
 /**
  * Google Analytics Data API sample application demonstrating the usage of
- * metric aggregations in a report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
+ * date ranges in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange#FIELDS.name
  * for more information.
  * Usage:
  *   composer update
- *   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
+ *   php run_report_with_named_date_ranges.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report_with_aggregations]
+// [START analyticsdata_run_report_with_named_date_ranges]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\MetricAggregation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
  * @param string $propertyID Your GA-4 Property ID
- * Runs a report which includes total, maximum and minimum values
- * for each metric.
+ * Runs a report using named date ranges.
  */
-function run_report_with_aggregations(string $propertyId)
+function run_report_with_named_date_ranges(string $propertyId)
 {
-    // Create an instance of the Google Analytics Data API client library.
+    // Create and instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'country'])],
-        'metrics' => [new Metric(['name' => 'sessions'])],
         'dateRanges' => [
             new DateRange([
-                'start_date' => '365daysAgo',
-                'end_date' => 'today',
+                'start_date' => '2020-01-01',
+                'end_date' => '2020-01-31',
+                'name' => 'year_ago',
+            ]),
+            new DateRange([
+                'start_date' => '2021-01-01',
+                'end_date' => '2021-01-31',
+                'name' => 'current_year',
             ]),
         ],
-        'metricAggregations' => [
-            MetricAggregation::TOTAL,
-            MetricAggregation::MAXIMUM,
-            MetricAggregation::MINIMUM
-        ]
+        'dimensions' => [new Dimension(['name' => 'country'])],
+        'metrics' => [new Metric(['name' => 'sessions'])],
     ]);
 
-    printRunReportResponseWithAggregations($response);
+    printRunReportResponseWithNamedDateRanges($response);
 }
 
 /**
  * Print results of a runReport call.
  * @param RunReportResponse $response
  */
-function printRunReportResponseWithAggregations($response)
+function printRunReportResponseWithNamedDateRanges(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -99,7 +98,7 @@ function printRunReportResponseWithAggregations($response)
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report_with_aggregations]
+// [END analyticsdata_run_report_with_named_date_ranges]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
