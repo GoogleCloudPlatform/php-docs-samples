@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application demonstrating the usage of
-* cohort specification in a report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.cohort_spec
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the usage of
+ * cohort specification in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.cohort_spec
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_cohorts.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -39,11 +39,11 @@ use Google\Analytics\Data\V1beta\Cohort;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report on a cohort of users whose first session happened on the
-* same week. The number of active users and user retention rate is calculated
-* for the cohort using WEEKLY granularity.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report on a cohort of users whose first session happened on the
+ * same week. The number of active users and user retention rate is calculated
+ * for the cohort using WEEKLY granularity.
+ */
 function run_report_with_cohorts(string $propertyId)
 {
     // [START analyticsdata_initialize]
