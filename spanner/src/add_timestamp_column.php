@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,14 +36,14 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_timestamp_column($instanceId, $databaseId)
+function add_timestamp_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)"
+        'ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);

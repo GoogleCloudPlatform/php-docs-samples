@@ -1,0 +1,13 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^1.0.0"
+    },
+    "scripts": {
+        "gcp-build": "cd ext && phpize --clean && phpize && ./configure && make && cp modules/my_custom_extension.so ..",
+        "start": [
+           "@gcp-build",
+           "Composer\\Config::disableProcessTimeout",
+           "FUNCTION_TARGET=helloBuildExtension php -d 'extension=./my_custom_extension.so' -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
+        ]
+    }
+}

@@ -4,15 +4,15 @@
     ":preserveSemverRanges"
   ],
   "packageRules": [{
-    "paths": [
-        "testing/composer.json"
-    ],
-    "excludePackageNames": [
-      "phpunit/phpunit"
-    ]
-  }],
+      "paths": ["testing/composer.json"],
+      "excludePackageNames": ["phpunit/phpunit"]
+    }, {
+      "matchPaths": ["functions/**"],
+      "branchPrefix": "renovate/functions-"
+    }],
   "ignorePaths": [
-      "appengine/flexible/"
+      "appengine/flexible/",
+      "run/laravel/"
   ],
   "branchPrefix": "renovate/{{parentDir}}-",
   "prConcurrentLimit": 10,

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -37,7 +37,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
-function create_database_with_encryption_key($instanceId, $databaseId, $kmsKeyName)
+function create_database_with_encryption_key(string $instanceId, string $databaseId, string $kmsKeyName): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -48,18 +48,18 @@ function create_database_with_encryption_key($instanceId, $databaseId, $kmsKeyNa
 
     $operation = $instance->createDatabase($databaseId, [
         'statements' => [
-            "CREATE TABLE Singers (
+            'CREATE TABLE Singers (
                 SingerId     INT64 NOT NULL,
                 FirstName    STRING(1024),
                 LastName     STRING(1024),
                 SingerInfo   BYTES(MAX)
-            ) PRIMARY KEY (SingerId)",
-            "CREATE TABLE Albums (
+            ) PRIMARY KEY (SingerId)',
+            'CREATE TABLE Albums (
                 SingerId     INT64 NOT NULL,
                 AlbumId      INT64 NOT NULL,
                 AlbumTitle   STRING(MAX)
             ) PRIMARY KEY (SingerId, AlbumId),
-            INTERLEAVE IN PARENT Singers ON DELETE CASCADE"
+            INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
         ],
         'encryptionConfig' => ['kmsKeyName' => $kmsKeyName]
     ]);

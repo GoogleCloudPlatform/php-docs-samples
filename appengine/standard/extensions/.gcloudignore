@@ -1,0 +1,49 @@
+# This file specifies files that are *not* uploaded to Google Cloud Platform
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+#
+# For more information, run:
+#   $ gcloud topic gcloudignore
+#
+.gcloudignore
+# If you would like to upload your .git directory, .gitignore file or files
+# from your .gitignore file, remove the corresponding line
+# below:
+.git
+.gitignore
+
+# PHP Composer dependencies:
+/vendor/
+
+# Files from phpize
+ext/Makefile.global
+ext/acinclude.m4
+ext/aclocal.m4
+ext/autom4te.cache/
+ext/config.guess
+ext/config.h.in
+ext/config.sub
+ext/configure
+ext/configure.ac
+ext/install-sh
+ext/ltmain.sh
+ext/missing
+ext/mkinstalldirs
+ext/run-tests.php
+
+# Files from ./configure
+ext/Makefile
+ext/Makefile.fragments
+ext/Makefile.objects
+ext/config.h
+ext/config.log
+ext/config.nice
+ext/config.status
+ext/libtool
+
+# Files from make
+ext/.libs/
+ext/modules/
+ext/*.la
+ext/*.lo

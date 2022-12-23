@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function write_read_with_dml($instanceId, $databaseId)
+function write_read_with_dml(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -48,12 +48,12 @@ function write_read_with_dml($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "INSERT Singers (SingerId, FirstName, LastName) "
+            'INSERT Singers (SingerId, FirstName, LastName) '
             . " VALUES (11, 'Timothy', 'Campbell')");
 
         printf('Inserted %d row(s).' . PHP_EOL, $rowCount);
 
-        $results = $t->execute("SELECT FirstName, LastName FROM Singers WHERE SingerId = 11");
+        $results = $t->execute('SELECT FirstName, LastName FROM Singers WHERE SingerId = 11');
 
         foreach ($results as $row) {
             printf('%s %s' . PHP_EOL, $row['FirstName'], $row['LastName']);

@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/iap/README.md
  */
 
 # [START iap_validate_jwt]
@@ -91,7 +91,6 @@ function validate_jwt($iapJwt, $expectedAudience)
     // Validate token by checking issuer and audience fields.
     assert($jwt['iss'] == 'https://cloud.google.com/iap');
     assert($jwt['aud'] == $expectedAudience);
-
 
     print('Printing user identity information from ID token payload:');
     printf('sub: %s', $jwt['sub']);

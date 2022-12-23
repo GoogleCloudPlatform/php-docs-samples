@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -37,11 +37,9 @@ function query_filter_in_with_array(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_query_filter_in_array]
     # [START firestore_query_filter_in_with_array]
     $rangeQuery = $citiesRef->where('regions', 'in', [['west_coast'], ['east_coast']]);
     # [END firestore_query_filter_in_with_array]
-    # [END fs_query_filter_in_array]
     foreach ($rangeQuery->documents() as $document) {
         printf('Document %s returned by query regions in [[west_coast], [east_coast]]' . PHP_EOL, $document->id());
     }

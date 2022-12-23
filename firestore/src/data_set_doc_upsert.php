@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,14 +36,12 @@ function data_set_doc_upsert(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_set_document_merge]
     # [START firestore_data_set_doc_upsert]
     $cityRef = $db->collection('samples/php/cities')->document('BJ');
     $cityRef->set([
         'capital' => true
     ], ['merge' => true]);
     # [END firestore_data_set_doc_upsert]
-    # [END fs_set_document_merge]
     printf('Set document data by merging it into the existing BJ document in the cities collection.' . PHP_EOL);
 }
 

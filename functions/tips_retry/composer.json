@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7.1"
+        "google/cloud-functions-framework": "^1.0.0"
     },
     "require-dev": {
         "google/cloud-pubsub": "^1.29",
@@ -9,7 +9,7 @@
     "scripts": {
         "start": [
            "Composer\\Config::disableProcessTimeout",
-           "FUNCTION_TARGET=tipsRetry php -S localhost:${PORT:-8080} vendor/bin/router.php"
+           "FUNCTION_TARGET=tipsRetry php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     }
 }

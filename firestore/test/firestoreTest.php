@@ -74,13 +74,15 @@ class firestoreTest extends TestCase
 
     public function testInitialize()
     {
-        $output = $this->runFirestoreSnippet('setup_client_create', []);
-        $this->assertStringContainsString('Created Cloud Firestore client with default project ID.', $output);
+        $output = self::runFunctionSnippet('setup_client_create', [self::$projectId]);
+        $this->assertStringContainsString('Created Cloud Firestore client with project ID: ', $output);
     }
 
     public function testInitializeProjectId()
     {
-        $output = $this->runFirestoreSnippet('setup_client_create_with_project_id');
+        # The lack of a second parameter implies that a non-empty projectId is
+        # supplied to the snippet's function.
+        $output = $this->runFirestoreSnippet('setup_client_create', [self::$projectId]);
         $this->assertStringContainsString('Created Cloud Firestore client with project ID:', $output);
     }
 
@@ -205,7 +207,6 @@ class firestoreTest extends TestCase
         $this->assertStringContainsString('Document SF returned by query regions array-contains west_coast', $output);
     }
 
-
     /**
      * @depends testQueryCreateExamples
      */
@@ -245,11 +246,11 @@ class firestoreTest extends TestCase
     public function testNotEqQuery()
     {
         $output = $this->runFirestoreSnippet('query_filter_not_eq');
-        $this->assertStringContainsString("Document BJ returned by query state!=false.", $output);
-        $this->assertStringContainsString("Document TOK returned by query state!=false.", $output);
-        $this->assertStringContainsString("Document DC returned by query state!=false.", $output);
-        $this->assertStringNotContainsString("Document LA returned by query state!=false.", $output);
-        $this->assertStringNotContainsString("Document SF returned by query state!=false.", $output);
+        $this->assertStringContainsString('Document BJ returned by query state!=false.', $output);
+        $this->assertStringContainsString('Document TOK returned by query state!=false.', $output);
+        $this->assertStringContainsString('Document DC returned by query state!=false.', $output);
+        $this->assertStringNotContainsString('Document LA returned by query state!=false.', $output);
+        $this->assertStringNotContainsString('Document SF returned by query state!=false.', $output);
     }
 
     /**
@@ -283,7 +284,7 @@ class firestoreTest extends TestCase
             $output = $this->runFirestoreSnippet('query_filter_compound_multi_eq_lt');
             $this->assertStringContainsString('Document SF returned by query state=CA and population<1000000', $output);
         } catch (FailedPreconditionException $e) {
-            $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
+            $this->markTestSkipped('test requires manual creation of index. message: ' . $e->getMessage());
         }
     }
 
@@ -318,7 +319,7 @@ class firestoreTest extends TestCase
             $output = $this->runFirestoreSnippet('query_collection_group_dataset');
             $this->assertStringContainsString('Added example landmarks collections to the cities collection.', $output);
         } catch (FailedPreconditionException $e) {
-            $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
+            $this->markTestSkipped('test requires manual creation of index. message: ' . $e->getMessage());
         }
     }
 
@@ -378,6 +379,22 @@ class firestoreTest extends TestCase
     {
         $output = $this->runFirestoreSnippet('data_get_dataset');
         $this->assertStringContainsString('Added example cities data to the cities collection.', $output);
+    }
+
+    /**
+     * @depends testRetrieveCreateExamples
+     */
+    public function testGetCustomType()
+    {
+        $output = $this->runFirestoreSnippet('data_get_as_custom_type');
+        $this->assertStringContainsString('Document data:', $output);
+        $this->assertStringContainsString('Custom Type data', $output);
+        $this->assertStringContainsString('[name] => San Francisco', $output);
+        $this->assertStringContainsString('[state] => CA', $output);
+        $this->assertStringContainsString('[country] => USA', $output);
+        $this->assertStringContainsString('[capital] => false', $output);
+        $this->assertStringContainsString('[population] => 860000', $output);
+        $this->assertStringContainsString('[regions] =>', $output);
     }
 
     /**
@@ -467,7 +484,7 @@ class firestoreTest extends TestCase
             $this->assertStringContainsString('Document DC returned by order by state and descending population query', $output);
             $this->assertStringContainsString('Document TOK returned by order by state and descending population query', $output);
         } catch (FailedPreconditionException $e) {
-            $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
+            $this->markTestSkipped('test requires manual creation of index. message: ' . $e->getMessage());
         }
     }
 
@@ -650,7 +667,7 @@ class firestoreTest extends TestCase
             $output = $this->runFirestoreSnippet('query_cursor_start_at_field_value_multi');
             $this->assertStringContainsString('Document TOK returned by start at ', $output);
         } catch (FailedPreconditionException $e) {
-            $this->markTestSkipped("test requires manual creation of index. message: " . $e->getMessage());
+            $this->markTestSkipped('test requires manual creation of index. message: ' . $e->getMessage());
         }
     }
 
@@ -691,7 +708,7 @@ class firestoreTest extends TestCase
     {
         if ($args === null) {
             $args = [
-                self::$firestoreProjectId
+                self::$firestoreProjectId,
             ];
         }
 

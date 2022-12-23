@@ -20,9 +20,10 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'gs://path/to/your/image.jpg'
-
-function detect_image_property_gcs($path)
+/**
+ * @param string $path GCS path to the image, e.g. "gs://path/to/your/image.jpg"
+ */
+function detect_image_property_gcs(string $path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -30,15 +31,14 @@ function detect_image_property_gcs($path)
     $response = $imageAnnotator->imagePropertiesDetection($path);
     $props = $response->getImagePropertiesAnnotation();
 
-
     if ($props) {
-        print("Properties:" . PHP_EOL);
+        print('Properties:' . PHP_EOL);
         foreach ($props->getDominantColors()->getColors() as $colorInfo) {
-            printf("Fraction: %s" . PHP_EOL, $colorInfo->getPixelFraction());
+            printf('Fraction: %s' . PHP_EOL, $colorInfo->getPixelFraction());
             $color = $colorInfo->getColor();
-            printf("Red: %s" . PHP_EOL, $color->getRed());
-            printf("Green: %s" . PHP_EOL, $color->getGreen());
-            printf("Blue: %s" . PHP_EOL, $color->getBlue());
+            printf('Red: %s' . PHP_EOL, $color->getRed());
+            printf('Green: %s' . PHP_EOL, $color->getGreen());
+            printf('Blue: %s' . PHP_EOL, $color->getBlue());
             print(PHP_EOL);
         }
     } else {
@@ -48,3 +48,7 @@ function detect_image_property_gcs($path)
     $imageAnnotator->close();
 }
 // [END vision_image_property_detection_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

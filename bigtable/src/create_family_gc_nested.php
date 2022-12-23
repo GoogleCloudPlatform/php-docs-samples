@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -21,8 +18,10 @@ namespace Google\Cloud\Samples\Bigtable;
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
+
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_family_gc_nested]
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
@@ -35,6 +34,7 @@ use Google\Protobuf\Duration;
 
 /**
  * Create a new column family with a nested GC rule
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance where the table resides
  * @param string $tableId The ID of the table in which the rule needs to be created

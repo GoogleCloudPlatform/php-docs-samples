@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -21,8 +18,10 @@ namespace Google\Cloud\Samples\Bigtable;
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
+
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_delete_family]
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
@@ -30,6 +29,7 @@ use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 /**
  * Delete a column family in a table
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table where the column family needs to be deleted

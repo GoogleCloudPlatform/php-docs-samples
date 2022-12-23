@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function solution_sharded_counter_get(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_distributed_counter_value]
     # [START firestore_solution_sharded_counter_get]
     $result = 0;
     $docCollection = $db->collection('samples/php/distributedCounters')->documents();
@@ -44,7 +43,6 @@ function solution_sharded_counter_get(string $projectId): void
         $result += $doc->data()['Cnt'];
     }
     # [END firestore_solution_sharded_counter_get]
-    # [END fs_get_distributed_counter_value]
     printf('The current value of the distributed counter: %d' . PHP_EOL, $result);
 }
 

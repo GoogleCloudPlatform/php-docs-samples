@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/compute/cloud-client/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/compute/cloud-client/README.md
  */
 
 namespace Google\Cloud\Samples\Compute;
@@ -28,10 +28,6 @@ use Google\Cloud\Compute\V1\InstancesClient;
 
 /**
  * List all instances for a particular Cloud project.
- * Example:
- * ```
- * list_all_instances($projectId);
- * ```
  *
  * @param string $projectId Your Google Cloud project ID.
  *

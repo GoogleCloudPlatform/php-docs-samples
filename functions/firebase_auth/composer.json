@@ -1,0 +1,15 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^1.0.0"
+    },
+    "scripts": {
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseAuth php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
+        ]
+    },
+    "require-dev": {
+        "google/auth": "^1.14",
+        "google/cloud-logging": "^1.21"
+    }
+}

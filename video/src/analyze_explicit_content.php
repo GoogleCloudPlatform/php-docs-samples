@@ -19,48 +19,51 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/video/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/video/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 2 || count($argv) > 3) {
-    return print("Usage: php analyze_explicit_content.php URI\n");
-}
-list($_, $uri) = $argv;
-$options = isset($argv[2]) ? ['pollingIntervalSeconds' => $argv[2]] : [];
+namespace Google\Cloud\Samples\VideoIntelligence;
 
 // [START video_analyze_explicit_content]
 use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 use Google\Cloud\VideoIntelligence\V1\Likelihood;
 
-/** Uncomment and populate these variables in your code */
-// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
-// $options = []; // Optional, can be used to increate "pollingIntervalSeconds"
+/**
+ * @param string $uri The cloud storage object to analyze (gs://your-bucket-name/your-object-name)
+ * @param int $pollingIntervalSeconds
+ */
+function analyze_explicit_content(string $uri, int $pollingIntervalSeconds = 0)
+{
+    $video = new VideoIntelligenceServiceClient();
 
-$video = new VideoIntelligenceServiceClient();
+    # Execute a request.
+    $features = [Feature::EXPLICIT_CONTENT_DETECTION];
+    $operation = $video->annotateVideo([
+        'inputUri' => $uri,
+        'features' => $features,
+    ]);
 
-# Execute a request.
-$features = [Feature::EXPLICIT_CONTENT_DETECTION];
-$operation = $video->annotateVideo($features, [
-    'inputUri' => $uri,
-]);
+    # Wait for the request to complete.
+    $operation->pollUntilComplete([
+        'pollingIntervalSeconds' => $pollingIntervalSeconds
+    ]);
 
-# Wait for the request to complete.
-$operation->pollUntilComplete($options);
-
-# Print the result.
-if ($operation->operationSucceeded()) {
-    $results = $operation->getResult()->getAnnotationResults()[0];
-    $explicitAnnotation = $results->getExplicitAnnotation();
-    foreach ($explicitAnnotation->getFrames() as $frame) {
-        $time = $frame->getTimeOffset();
-        printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos()/1000000000.0);
-        printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
+    # Print the result.
+    if ($operation->operationSucceeded()) {
+        $results = $operation->getResult()->getAnnotationResults()[0];
+        $explicitAnnotation = $results->getExplicitAnnotation();
+        foreach ($explicitAnnotation->getFrames() as $frame) {
+            $time = $frame->getTimeOffset();
+            printf('At %ss:' . PHP_EOL, $time->getSeconds() + $time->getNanos() / 1000000000.0);
+            printf('  pornography: ' . Likelihood::name($frame->getPornographyLikelihood()) . PHP_EOL);
+        }
+    } else {
+        print_r($operation->getError());
     }
-} else {
-    print_r($operation->getError());
 }
 // [END video_analyze_explicit_content]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

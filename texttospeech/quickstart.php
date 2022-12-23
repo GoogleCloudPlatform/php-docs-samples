@@ -41,7 +41,7 @@ $voice = (new VoiceSelectionParams())
     ->setSsmlGender(SsmlVoiceGender::FEMALE);
 
 // Effects profile
-$effectsProfileId = "telephony-class-application";
+$effectsProfileId = 'telephony-class-application';
 
 // select the type of audio file you want returned
 $audioConfig = (new AudioConfig())

@@ -1,7 +1,4 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -21,8 +18,10 @@ namespace Google\Cloud\Samples\Bigtable;
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
+
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_dev_instance]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
@@ -34,6 +33,7 @@ use Google\ApiCore\ApiException;
 
 /**
  * Create a development Bigtable instance
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance to be generated
  * @param string $clusterId The ID of the cluster to be generated
@@ -50,7 +50,7 @@ function create_dev_instance(
     $projectName = $instanceAdminClient->projectName($projectId);
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-    printf("Creating a DEVELOPMENT Instance" . PHP_EOL);
+    printf('Creating a DEVELOPMENT Instance' . PHP_EOL);
     // Set options to create an Instance
 
     $storageType = StorageType::HDD;
@@ -78,10 +78,10 @@ function create_dev_instance(
     // Create development instance with given options
     try {
         $instanceAdminClient->getInstance($instanceName);
-        printf("Instance %s already exists." . PHP_EOL, $instanceId);
+        printf('Instance %s already exists.' . PHP_EOL, $instanceId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            printf("Creating a development Instance: %s" . PHP_EOL, $instanceId);
+            printf('Creating a development Instance: %s' . PHP_EOL, $instanceId);
             $operationResponse = $instanceAdminClient->createInstance(
                 $projectName,
                 $instanceId,
@@ -92,7 +92,7 @@ function create_dev_instance(
             if (!$operationResponse->operationSucceeded()) {
                 print('Error: ' . $operationResponse->getError()->getMessage());
             } else {
-                printf("Instance %s created." . PHP_EOL, $instanceId);
+                printf('Instance %s created.' . PHP_EOL, $instanceId);
             }
         } else {
             throw $e;

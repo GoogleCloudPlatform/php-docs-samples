@@ -60,6 +60,11 @@ export POSTGRES_DSN=
 export POSTGRES_DATABASE=
 export POSTGRES_USER=
 export POSTGRES_PASSWORD=
+export SQLSERVER_DSN=
+export SQLSERVER_DATABASE=
+export SQLSERVER_USER=
+export SQLSERVER_PASSWORD=
+export DB_SOCKET_DIR=
 
 # Datastore
 export CLOUD_DATASTORE_NAMESPACE=
@@ -97,6 +102,10 @@ export REDIS_PORT=
 # PubSub
 export GOOGLE_PUBSUB_SUBSCRIPTION=php-example-subscription
 export GOOGLE_PUBSUB_TOPIC=php-example-topic
+# GOOGLE_PUBSUB_BIGQUERY_TABLE excludes project_id
+# for example if table is ${PROJECT_ID}.pubsub_test_dataset.pubsub_test_table
+# the value of GOOGLE_PUBSUB_BIGQUERY_TABLE should be pubsub_test_dataset.pubsub_test_table
+export GOOGLE_PUBSUB_BIGQUERY_TABLE=
 
 # Security Center
 export GOOGLE_ORGANIZATION_ID=

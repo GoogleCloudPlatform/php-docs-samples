@@ -34,7 +34,7 @@ $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response) {
     // Simple echo service.
-    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/endpoints/getting-started/README.md';
+    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/endpoints/getting-started/README.md';
 
     $response->getBody()->write(sprintf(
         '<h1>Welcome to the Endpoints getting started tutorial!</h1>' .
@@ -62,7 +62,6 @@ $app->get('/auth/info/googlejwt', function (Request $request, Response $response
     return $response
         ->withHeader('Content-Type', 'application/json');
 });
-
 
 $app->get('/auth/info/googleidtoken', function (Request $request, Response $response) {
     // Auth info with Google ID token.

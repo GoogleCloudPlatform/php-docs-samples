@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +18,17 @@ namespace Google\Cloud\Samples\Bigtable;
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
+
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_reads_row]
 use Google\Cloud\Bigtable\BigtableClient;
 
 /**
  * Read a row using the row key
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table to read from
@@ -43,7 +43,7 @@ function read_row(
         'projectId' => $projectId,
     ]);
     $table = $dataClient->table($instanceId, $tableId);
-    
+
     $rowkey = 'phone#4c410523#20190501';
     $row = $table->readRow($rowkey);
 

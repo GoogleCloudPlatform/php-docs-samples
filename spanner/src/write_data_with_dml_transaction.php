@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -45,7 +45,7 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function write_data_with_dml_transaction($instanceId, $databaseId)
+function write_data_with_dml_transaction(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -57,7 +57,7 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
         $transferAmount = 200000;
 
         $results = $t->execute(
-            "SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2"
+            'SELECT MarketingBudget from Albums WHERE SingerId = 2 and AlbumId = 2'
         );
         $resultsRow = $results->rows()->current();
         $album2budget = $resultsRow['MarketingBudget'];
@@ -67,7 +67,7 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
         // client library.
         if ($album2budget >= $transferAmount) {
             $results = $t->execute(
-                "SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1"
+                'SELECT MarketingBudget from Albums WHERE SingerId = 1 and AlbumId = 1'
             );
             $resultsRow = $results->rows()->current();
             $album1budget = $resultsRow['MarketingBudget'];
@@ -77,9 +77,9 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
 
             // Update the albums
             $t->executeUpdate(
-                "UPDATE Albums "
-                . "SET MarketingBudget = @AlbumBudget "
-                . "WHERE SingerId = 1 and AlbumId = 1",
+                'UPDATE Albums '
+                . 'SET MarketingBudget = @AlbumBudget '
+                . 'WHERE SingerId = 1 and AlbumId = 1',
                 [
                     'parameters' => [
                         'AlbumBudget' => $album1budget
@@ -87,9 +87,9 @@ function write_data_with_dml_transaction($instanceId, $databaseId)
                 ]
             );
             $t->executeUpdate(
-                "UPDATE Albums "
-                . "SET MarketingBudget = @AlbumBudget "
-                . "WHERE SingerId = 2 and AlbumId = 2",
+                'UPDATE Albums '
+                . 'SET MarketingBudget = @AlbumBudget '
+                . 'WHERE SingerId = 2 and AlbumId = 2',
                 [
                     'parameters' => [
                         'AlbumBudget' => $album2budget

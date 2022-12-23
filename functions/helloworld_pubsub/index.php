@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2021 Google LLC.
  *
@@ -15,11 +16,19 @@
  * limitations under the License.
  */
 
+// [START functions_cloudevent_pubsub]
 // [START functions_helloworld_pubsub]
 
-use Google\CloudFunctions\CloudEvent;
+use CloudEvents\V1\CloudEventInterface;
+use Google\CloudFunctions\FunctionsFramework;
 
-function helloworldPubsub(CloudEvent $event): void
+// Register the function with Functions Framework.
+// This enables omitting the `FUNCTIONS_SIGNATURE_TYPE=cloudevent` environment
+// variable when deploying. The `FUNCTION_TARGET` environment variable should
+// match the first parameter.
+FunctionsFramework::cloudEvent('helloworldPubsub', 'helloworldPubsub');
+
+function helloworldPubsub(CloudEventInterface $event): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 
@@ -30,3 +39,4 @@ function helloworldPubsub(CloudEvent $event): void
     fwrite($log, "Hello, $name!" . PHP_EOL);
 }
 // [END functions_helloworld_pubsub]
+// [END functions_cloudevent_pubsub]

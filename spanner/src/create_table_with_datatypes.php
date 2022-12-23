@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,14 +36,14 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_table_with_datatypes($instanceId, $databaseId)
+function create_table_with_datatypes(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "CREATE TABLE Venues (
+        'CREATE TABLE Venues (
             VenueId		           INT64 NOT NULL,
             VenueName              STRING(100),
             VenueInfo              BYTES(MAX),
@@ -53,7 +53,7 @@ function create_table_with_datatypes($instanceId, $databaseId)
             OutdoorVenue           BOOL,
             PopularityScore        FLOAT64,
             LastUpdateTime TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
-    	) PRIMARY KEY (VenueId)"
+    	) PRIMARY KEY (VenueId)'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);

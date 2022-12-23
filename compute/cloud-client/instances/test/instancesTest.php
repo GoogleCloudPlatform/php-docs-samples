@@ -26,6 +26,10 @@ class instancesTest extends TestCase
     use TestTrait;
 
     private static $instanceName;
+    private static $instanceExists = false;
+    private static $encInstanceName;
+    private static $encInstanceExists = false;
+    private static $encKey;
     private static $bucketName;
     private static $bucket;
 
@@ -34,6 +38,8 @@ class instancesTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$instanceName = sprintf('test-compute-instance-%s', rand());
+        self::$encInstanceName = sprintf('test-compute-instance-customer-encryption-key-%s', rand());
+        self::$encKey = base64_encode(random_bytes(32));
 
         // Generate bucket name
         self::$bucketName = sprintf('test-compute-usage-export-bucket-%s', rand());
@@ -50,6 +56,24 @@ class instancesTest extends TestCase
     {
         // Remove the bucket
         self::$bucket->delete();
+
+        // Make sure we delete any instances created in the process of testing - we don't care about response
+        // because if everything went fine they should already be deleted
+        if (self::$instanceExists) {
+            self::runFunctionSnippet('delete_instance', [
+                'projectId' => self::$projectId,
+                'zone' => self::DEFAULT_ZONE,
+                'instanceName' => self::$instanceName
+            ]);
+        }
+
+        if (self::$encInstanceExists) {
+            self::runFunctionSnippet('delete_instance', [
+                'projectId' => self::$projectId,
+                'zone' => self::DEFAULT_ZONE,
+                'instanceName' => self::$encInstanceName
+            ]);
+        }
     }
 
     public function testCreateInstance()
@@ -60,6 +84,19 @@ class instancesTest extends TestCase
             'instanceName' => self::$instanceName
         ]);
         $this->assertStringContainsString('Created instance ' . self::$instanceName, $output);
+        self::$instanceExists = true;
+    }
+
+    public function testCreateInstanceWithEncryptionKey()
+    {
+        $output = $this->runFunctionSnippet('create_instance_with_encryption_key', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName,
+            'key' => self::$encKey
+        ]);
+        $this->assertStringContainsString('Created instance ' . self::$encInstanceName, $output);
+        self::$encInstanceExists = true;
     }
 
     /**
@@ -69,7 +106,7 @@ class instancesTest extends TestCase
     {
         $output = $this->runFunctionSnippet('list_instances', [
             'projectId' => self::$projectId,
-            'zone' => self::DEFAULT_ZONE,
+            'zone' => self::DEFAULT_ZONE
         ]);
         $this->assertStringContainsString(self::$instanceName, $output);
     }
@@ -88,15 +125,128 @@ class instancesTest extends TestCase
 
     /**
      * @depends testCreateInstance
+     * @depends testListInstances
+     * @depends testListAllInstances
+     */
+    public function testStopInstance()
+    {
+        $output = $this->runFunctionSnippet('stop_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' stopped successfully', $output);
+    }
+
+    /**
+     * @depends testStopInstance
+     */
+    public function testStartInstance()
+    {
+        $output = $this->runFunctionSnippet('start_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' started successfully', $output);
+    }
+
+    /**
+     * @depends testCreateInstanceWithEncryptionKey
+     */
+    public function testStartWithEncryptionKeyInstance()
+    {
+        // Stop instance
+        $output = $this->runFunctionSnippet('stop_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$encInstanceName . ' stopped successfully', $output);
+
+        // Restart instance with customer encryption key
+        $output = $this->runFunctionSnippet('start_instance_with_encryption_key', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName,
+            'key' => self::$encKey
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$encInstanceName . ' started successfully', $output);
+    }
+
+    /**
+     * @depends testStartInstance
+     * @depends testStartWithEncryptionKeyInstance
+     */
+    public function testResetInstance()
+    {
+        $output = $this->runFunctionSnippet('reset_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' reset successfully', $output);
+
+        $output = $this->runFunctionSnippet('reset_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$encInstanceName . ' reset successfully', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
+    public function testSuspendInstance()
+    {
+        $output = $this->runFunctionSnippet('suspend_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' suspended successfully', $output);
+    }
+
+    /**
+     * @depends testSuspendInstance
+     */
+    public function testResumeInstance()
+    {
+        $output = $this->runFunctionSnippet('resume_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$instanceName
+        ]);
+        $this->assertStringContainsString('Instance ' . self::$instanceName . ' resumed successfully', $output);
+    }
+
+    /**
+     * @depends testResumeInstance
      */
     public function testDeleteInstance()
     {
         $output = $this->runFunctionSnippet('delete_instance', [
             'projectId' => self::$projectId,
             'zone' => self::DEFAULT_ZONE,
-            'instanceName' => self::$instanceName,
+            'instanceName' => self::$instanceName
         ]);
         $this->assertStringContainsString('Deleted instance ' . self::$instanceName, $output);
+        self::$instanceExists = false;
+    }
+
+    /**
+     * @depends testResumeInstance
+     */
+    public function testDeleteWithEncryptionKeyInstance()
+    {
+        $output = $this->runFunctionSnippet('delete_instance', [
+            'projectId' => self::$projectId,
+            'zone' => self::DEFAULT_ZONE,
+            'instanceName' => self::$encInstanceName
+        ]);
+        $this->assertStringContainsString('Deleted instance ' . self::$encInstanceName, $output);
+        self::$encInstanceExists = false;
     }
 
     public function testSetUsageExportBucketDefaultPrefix()
@@ -123,12 +273,12 @@ class instancesTest extends TestCase
 
         // Disable usage exports
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
-            'projectId' => self::$projectId,
+            'projectId' => self::$projectId
         ]);
-        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` was disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
-            'projectId' => self::$projectId,
+            'projectId' => self::$projectId
         ]);
         $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
     }
@@ -136,7 +286,7 @@ class instancesTest extends TestCase
     public function testSetUsageExportBucketCustomPrefix()
     {
         // Set custom prefix
-        $customPrefix = "my-custom-prefix";
+        $customPrefix = 'my-custom-prefix';
 
         // Check user value behaviour for setter
         $output = $this->runFunctionSnippet('set_usage_export_bucket', [
@@ -152,7 +302,7 @@ class instancesTest extends TestCase
 
         // Check user value behaviour for getter
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
-            'projectId' => self::$projectId,
+            'projectId' => self::$projectId
         ]);
         $this->assertStringNotContainsString('default value of `usage_gce`', $output);
         $this->assertStringContainsString('project `' . self::$projectId . '`', $output);
@@ -161,13 +311,36 @@ class instancesTest extends TestCase
 
         // Disable usage exports
         $output = $this->runFunctionSnippet('disable_usage_export_bucket', [
-            'projectId' => self::$projectId,
+            'projectId' => self::$projectId
         ]);
-        $this->assertStringContainsString('project `' . self::$projectId . '` disabled', $output);
+        $this->assertStringContainsString('project `' . self::$projectId . '` was disabled', $output);
 
         $output = $this->runFunctionSnippet('get_usage_export_bucket', [
-            'projectId' => self::$projectId,
+            'projectId' => self::$projectId
         ]);
         $this->assertStringContainsString('project `' . self::$projectId . '` is disabled', $output);
+    }
+
+    public function testListAllImages()
+    {
+        $output = $this->runFunctionSnippet('list_all_images', [
+            'projectId' => 'windows-sql-cloud'
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
+    }
+
+    public function testListImagesByPage()
+    {
+        $output = $this->runFunctionSnippet('list_images_by_page', [
+            'projectId' => 'windows-sql-cloud'
+        ]);
+
+        $this->assertStringContainsString('sql-2012-enterprise-windows', $output);
+        $this->assertStringContainsString('Page 2', $output);
+        $arr = explode(PHP_EOL, $output);
+        $this->assertGreaterThanOrEqual(2, count($arr));
     }
 }

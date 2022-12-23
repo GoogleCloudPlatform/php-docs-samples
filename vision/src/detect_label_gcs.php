@@ -20,9 +20,10 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'gs://path/to/your/image.jpg'
-
-function detect_label_gcs($path)
+/**
+ * @param string $path GCS path to the image, e.g. "gs://path/to/your/image.jpg"
+ */
+function detect_label_gcs(string $path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -31,7 +32,7 @@ function detect_label_gcs($path)
     $labels = $response->getLabelAnnotations();
 
     if ($labels) {
-        print("Labels:" . PHP_EOL);
+        print('Labels:' . PHP_EOL);
         foreach ($labels as $label) {
             print($label->getDescription() . PHP_EOL);
         }
@@ -42,3 +43,7 @@ function detect_label_gcs($path)
     $imageAnnotator->close();
 }
 // [END vision_label_detection_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

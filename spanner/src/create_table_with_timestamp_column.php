@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,21 +36,21 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_table_with_timestamp_column($instanceId, $databaseId)
+function create_table_with_timestamp_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $operation = $database->updateDdl(
-        "CREATE TABLE Performances (
+        'CREATE TABLE Performances (
     		SingerId	INT64 NOT NULL,
     		VenueId		INT64 NOT NULL,
     		EventDate	DATE,
     		Revenue		INT64,
     		LastUpdateTime	TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
     	) PRIMARY KEY (SingerId, VenueId, EventDate),
-    	INTERLEAVE IN PARENT Singers on DELETE CASCADE"
+    	INTERLEAVE IN PARENT Singers on DELETE CASCADE'
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);

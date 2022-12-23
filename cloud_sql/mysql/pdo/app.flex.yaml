@@ -19,24 +19,24 @@ env: flex
 # something like https://cloud.google.com/secret-manager/ to help keep secrets
 # secret.
 env_variables:
-  CLOUD_SQL_CONNECTION_NAME: "<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>"
-  DB_USER: my-db-user
-  DB_PASS: my-db-pass
-  DB_NAME: my-db
+  INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
 
   # TCP domain socket setup; uncomment if using a TCP domain socket
-  # DB_HOST: 172.17.0.1
+  # INSTANCE_HOST: 172.17.0.1
 
 
 # Choose to enable either a TCP or Unix domain socket for your database
 # connection:
 # Enable a Unix domain socket:
 beta_settings:
-  cloud_sql_instances: "<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+  cloud_sql_instances: "<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>"
 
 # Enable a TCP domain socket:
 # beta_settings:
-#   cloud_sql_instances: "<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:3306"
+#   cloud_sql_instances: "<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:3306"
 
 runtime_config:
   document_root: .

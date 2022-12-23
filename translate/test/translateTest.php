@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Translate;
 
 use PHPUnit\Framework\TestCase;
@@ -50,7 +49,7 @@ class translateTest extends TestCase
 
     public function testTranslate()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'translate',
             ['Hello.', 'ja']
         );
@@ -62,12 +61,12 @@ class translateTest extends TestCase
     {
         $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
 
-        $this->runSnippet('translate', ['Hello.', 'jp']);
+        $this->runFunctionSnippet('translate', ['Hello.', 'jp']);
     }
 
     public function testTranslateWithModel()
     {
-        $output = $this->runSnippet('translate_with_model', ['Hello.', 'ja']);
+        $output = $this->runFunctionSnippet('translate_with_model', ['Hello.', 'ja']);
         $this->assertStringContainsString('Source language: en', $output);
         $this->assertStringContainsString('Translation:', $output);
         $this->assertStringContainsString('Model: nmt', $output);
@@ -75,33 +74,33 @@ class translateTest extends TestCase
 
     public function testDetectLanguage()
     {
-        $output = $this->runSnippet('detect_language', ['Hello.']);
+        $output = $this->runFunctionSnippet('detect_language', ['Hello.']);
         $this->assertStringContainsString('Language code: en', $output);
         $this->assertStringContainsString('Confidence:', $output);
     }
 
     public function testListCodes()
     {
-        $output = $this->runSnippet('list_codes');
+        $output = $this->runFunctionSnippet('list_codes');
         $this->assertStringContainsString("\nen\n", $output);
         $this->assertStringContainsString("\nja\n", $output);
     }
 
     public function testListLanguagesInEnglish()
     {
-        $output = $this->runSnippet('list_languages', ['en']);
+        $output = $this->runFunctionSnippet('list_languages', ['en']);
         $this->assertStringContainsString('ja: Japanese', $output);
     }
 
     public function testListLanguagesInJapanese()
     {
-        $output = $this->runSnippet('list_languages', ['ja']);
+        $output = $this->runFunctionSnippet('list_languages', ['ja']);
         $this->assertStringContainsString('en: 英語', $output);
     }
 
     public function testV3TranslateText()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_translate_text',
             [
                 'Hello world',
@@ -112,11 +111,13 @@ class translateTest extends TestCase
         $option1 = 'Zdravo svet';
         $option2 = 'Pozdrav svijetu';
         $option3 = 'Zdravo svijete';
+        $option4 = 'Здраво Свете';
         $this->assertThat($output,
             $this->logicalOr(
                 $this->stringContains($option1),
                 $this->stringContains($option2),
-                $this->stringContains($option3)
+                $this->stringContains($option3),
+                $this->stringContains($option4),
             )
         );
     }
@@ -124,7 +125,7 @@ class translateTest extends TestCase
     public function testV3TranslateTextWithGlossaryAndModel()
     {
         $glossaryId = sprintf('please-delete-me-%d', rand());
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_create_glossary',
             [
                 self::$projectId,
@@ -132,7 +133,7 @@ class translateTest extends TestCase
                 'gs://cloud-samples-data/translation/glossary_ja.csv'
             ]
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_translate_text_with_glossary_and_model',
             [
                 'TRL3089491334608715776',
@@ -146,7 +147,7 @@ class translateTest extends TestCase
         );
         $this->assertStringContainsString('欺く', $output);
         $this->assertStringContainsString('やる', $output);
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_delete_glossary',
             [
                 self::$projectId,
@@ -158,7 +159,7 @@ class translateTest extends TestCase
     public function testV3TranslateTextWithGlossary()
     {
         $glossaryId = sprintf('please-delete-me-%d', rand());
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_create_glossary',
             [
                 self::$projectId,
@@ -166,12 +167,12 @@ class translateTest extends TestCase
                 'gs://cloud-samples-data/translation/glossary_ja.csv'
             ]
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_translate_text_with_glossary',
             [
                 'account',
-                'en',
                 'ja',
+                'en',
                 self::$projectId,
                 $glossaryId
             ]
@@ -184,7 +185,7 @@ class translateTest extends TestCase
                 $this->stringContains($option2)
             )
         );
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_delete_glossary',
             [
                 self::$projectId,
@@ -195,7 +196,7 @@ class translateTest extends TestCase
 
     public function testV3TranslateTextWithModel()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_translate_text_with_model',
             [
                 'TRL3089491334608715776',
@@ -212,7 +213,7 @@ class translateTest extends TestCase
     public function testV3CreateListGetDeleteGlossary()
     {
         $glossaryId = sprintf('please-delete-me-%d', rand());
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_create_glossary',
             [
                 self::$projectId,
@@ -226,7 +227,7 @@ class translateTest extends TestCase
             'gs://cloud-samples-data/translation/glossary_ja.csv',
             $output
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_list_glossary',
             [self::$projectId]
         );
@@ -235,7 +236,7 @@ class translateTest extends TestCase
             'gs://cloud-samples-data/translation/glossary_ja.csv',
             $output
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_get_glossary',
             [
                 self::$projectId,
@@ -247,7 +248,7 @@ class translateTest extends TestCase
             'gs://cloud-samples-data/translation/glossary_ja.csv',
             $output
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_delete_glossary',
             [
                 self::$projectId,
@@ -259,7 +260,7 @@ class translateTest extends TestCase
 
     public function testV3ListLanguagesWithTarget()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_get_supported_languages_for_target',
             [
                 'is',
@@ -272,16 +273,16 @@ class translateTest extends TestCase
 
     public function testV3ListLanguages()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_get_supported_languages',
             [self::$projectId]
         );
-        $this->assertStringContainsString('zh-CN', $output);
+        $this->assertStringContainsString('zh', $output);
     }
 
     public function testV3DetectLanguage()
     {
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_detect_language',
             [
                 'Hæ sæta',
@@ -298,15 +299,15 @@ class translateTest extends TestCase
             self::$bucket->name(),
             rand()
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_batch_translate_text',
             [
                 'gs://cloud-samples-data/translation/text.txt',
                 $outputUri,
                 self::$projectId,
                 'us-central1',
-                'en',
-                'es'
+                'es',
+                'en'
             ]
         );
         $this->assertStringContainsString('Total Characters: 13', $output);
@@ -320,7 +321,7 @@ class translateTest extends TestCase
             rand()
         );
         $glossaryId = sprintf('please-delete-me-%d', rand());
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_create_glossary',
             [
                 self::$projectId,
@@ -328,7 +329,7 @@ class translateTest extends TestCase
                 'gs://cloud-samples-data/translation/glossary_ja.csv'
             ]
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_batch_translate_text_with_glossary_and_model',
             [
                 'gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt',
@@ -341,7 +342,7 @@ class translateTest extends TestCase
                 $glossaryId
             ]
         );
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_delete_glossary',
             [
                 self::$projectId,
@@ -359,7 +360,7 @@ class translateTest extends TestCase
             rand()
         );
         $glossaryId = sprintf('please-delete-me-%d', rand());
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_create_glossary',
             [
                 self::$projectId,
@@ -367,7 +368,7 @@ class translateTest extends TestCase
                 'gs://cloud-samples-data/translation/glossary_ja.csv'
             ]
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_batch_translate_text_with_glossary',
             [
                 'gs://cloud-samples-data/translation/text_with_glossary.txt',
@@ -376,10 +377,10 @@ class translateTest extends TestCase
                 'us-central1',
                 $glossaryId,
                 'ja',
-                'en'
+                'en',
             ]
         );
-        $this->runSnippet(
+        $this->runFunctionSnippet(
             'v3_delete_glossary',
             [
                 self::$projectId,
@@ -396,7 +397,7 @@ class translateTest extends TestCase
             self::$bucket->name(),
             rand()
         );
-        $output = $this->runSnippet(
+        $output = $this->runFunctionSnippet(
             'v3_batch_translate_text_with_model',
             [
                 'gs://cloud-samples-data/translation/custom_model_text.txt',

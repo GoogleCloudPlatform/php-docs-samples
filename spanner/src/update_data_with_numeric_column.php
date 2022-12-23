@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_numeric_column($instanceId, $databaseId)
+function update_data_with_numeric_column(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -48,9 +48,9 @@ function update_data_with_numeric_column($instanceId, $databaseId)
 
     $database->transaction(['singleUse' => true])
         ->updateBatch('Venues', [
-            ['VenueId' => 4, 'Revenue' => $spanner->numeric("35000")],
-            ['VenueId' => 19, 'Revenue' => $spanner->numeric("104500")],
-            ['VenueId' => 42, 'Revenue' => $spanner->numeric("99999999999999999999999999999.99")],
+            ['VenueId' => 4, 'Revenue' => $spanner->numeric('35000')],
+            ['VenueId' => 19, 'Revenue' => $spanner->numeric('104500')],
+            ['VenueId' => 42, 'Revenue' => $spanner->numeric('99999999999999999999999999999.99')],
         ])
         ->commit();
 

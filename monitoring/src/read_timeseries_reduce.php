@@ -18,18 +18,16 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_reduce]
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use Google\Cloud\Monitoring\V3\Aggregation_Aligner;
-use Google\Cloud\Monitoring\V3\Aggregation_Reducer;
 use Google\Cloud\Monitoring\V3\Aggregation;
 use Google\Cloud\Monitoring\V3\TimeInterval;
-use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
 use Google\Protobuf\Duration;
 use Google\Protobuf\Timestamp;
 
@@ -63,10 +61,10 @@ function read_timeseries_reduce($projectId, $minutesAgo = 20)
     $alignmentPeriod->setSeconds(600);
     $aggregation = new Aggregation();
     $aggregation->setAlignmentPeriod($alignmentPeriod);
-    $aggregation->setCrossSeriesReducer(Aggregation_Reducer::REDUCE_MEAN);
-    $aggregation->setPerSeriesAligner(Aggregation_Aligner::ALIGN_MEAN);
+    $aggregation->setCrossSeriesReducer(Aggregation\Reducer::REDUCE_MEAN);
+    $aggregation->setPerSeriesAligner(Aggregation\Aligner::ALIGN_MEAN);
 
-    $view = ListTimeSeriesRequest_TimeSeriesView::FULL;
+    $view = TimeSeriesView::FULL;
 
     $result = $metrics->listTimeSeries(
         $projectName,
@@ -87,3 +85,7 @@ function read_timeseries_reduce($projectId, $minutesAgo = 20)
     }
 }
 // [END monitoring_read_timeseries_reduce]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

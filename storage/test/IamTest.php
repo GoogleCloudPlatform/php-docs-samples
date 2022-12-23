@@ -260,4 +260,31 @@ Members:
         }
         $this->assertFalse($foundBinding);
     }
+
+    public function testSetBucketPublicIam()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-public-iam-'));
+
+        $output = self::runFunctionSnippet('set_bucket_public_iam', [
+            $bucket->name(),
+        ]);
+
+        $this->assertEquals(
+            sprintf('Bucket %s is now public', $bucket->name()),
+            $output
+        );
+
+        $policy = $bucket->iam()->policy();
+        $hasBinding = false;
+        foreach ($policy['bindings'] as $binding) {
+            if ($binding['role'] == 'roles/storage.objectViewer' && $binding['members'] = ['allUsers']) {
+                $hasBinding = true;
+                break;
+            }
+        }
+
+        $bucket->delete();
+
+        $this->assertTrue($hasBinding, 'has public viewable iam binding');
+    }
 }

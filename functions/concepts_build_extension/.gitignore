@@ -1,0 +1,35 @@
+# Files from phpize
+ext/Makefile.global
+ext/acinclude.m4
+ext/aclocal.m4
+ext/autom4te.cache/
+ext/config.guess
+ext/config.h.in
+ext/config.sub
+ext/configure
+ext/configure.ac
+ext/install-sh
+ext/ltmain.sh
+ext/missing
+ext/mkinstalldirs
+ext/run-tests.php
+
+# Files from ./configure
+ext/Makefile
+ext/Makefile.fragments
+ext/Makefile.objects
+ext/config.h
+ext/config.log
+ext/config.nice
+ext/config.status
+ext/libtool
+
+# Files from make
+ext/.libs/
+ext/modules/
+ext/my_custom_extension.la
+ext/my_custom_extension.lo
+
+# The custom PHP extension
+my_custom_extension.so
+

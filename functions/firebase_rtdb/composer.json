@@ -1,12 +1,12 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7.1",
+        "google/cloud-functions-framework": "^1.0.0",
         "guzzlehttp/guzzle": "^7.2.0"
     },
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseRTDB php -S localhost:${PORT:-8080} vendor/bin/router.php"
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseRTDB php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     },
     "require-dev": {

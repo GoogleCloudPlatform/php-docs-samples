@@ -30,6 +30,7 @@ class ObjectsTest extends TestCase
 
     private static $bucketName;
     private static $storage;
+    private static $contents;
 
     public static function setUpBeforeClass(): void
     {
@@ -38,6 +39,7 @@ class ObjectsTest extends TestCase
             self::requireEnv('GOOGLE_STORAGE_BUCKET')
         );
         self::$storage = new StorageClient();
+        self::$contents = ' !"#$%&\'()*,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
     }
 
     public function testListObjects()
@@ -167,7 +169,7 @@ EOF;
 
         $this->assertEquals(
             sprintf(
-                "New composite object %s was created by combining %s and %s",
+                'New composite object %s was created by combining %s and %s',
                 $targetName,
                 $object1Name,
                 $object2Name
@@ -178,6 +180,98 @@ EOF;
         $bucket->object($object1Name)->delete();
         $bucket->object($object2Name)->delete();
         $bucket->object($targetName)->delete();
+    }
+
+    public function testUploadAndDownloadObjectFromMemory()
+    {
+        $objectName = 'test-object-' . time();
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $object = $bucket->object($objectName);
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('upload_object_from_memory', [
+            self::$bucketName,
+            $objectName,
+            self::$contents,
+        ]);
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('download_object_into_memory', [
+            self::$bucketName,
+            $objectName,
+        ]);
+        $this->assertStringContainsString(self::$contents, $output);
+    }
+
+    public function testUploadAndDownloadObjectStream()
+    {
+        $objectName = 'test-object-stream-' . time();
+        // contents larger than atleast one chunk size
+        $contents = str_repeat(self::$contents, 1024 * 10);
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $object = $bucket->object($objectName);
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('upload_object_stream', [
+            self::$bucketName,
+            $objectName,
+            $contents,
+        ]);
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('download_object_into_memory', [
+            self::$bucketName,
+            $objectName,
+        ]);
+        $this->assertStringContainsString($contents, $output);
+    }
+
+    public function testDownloadByteRange()
+    {
+        $objectName = 'test-object-download-byte-range-' . time();
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $object = $bucket->object($objectName);
+        $downloadTo = tempnam(sys_get_temp_dir(), '/tests');
+        $downloadToBasename = basename($downloadTo);
+        $startPos = 1;
+        $endPos = strlen(self::$contents) - 2;
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('upload_object_from_memory', [
+            self::$bucketName,
+            $objectName,
+            self::$contents,
+        ]);
+
+        $object->reload();
+        $this->assertTrue($object->exists());
+
+        $output .= self::runFunctionSnippet('download_byte_range', [
+            self::$bucketName,
+            $objectName,
+            $startPos,
+            $endPos,
+            $downloadTo,
+        ]);
+
+        $this->assertTrue(file_exists($downloadTo));
+        $expectedContents = substr(self::$contents, $startPos, $endPos - $startPos + 1);
+        $this->assertEquals($expectedContents, file_get_contents($downloadTo));
+        $this->assertStringContainsString(
+            sprintf(
+                'Downloaded gs://%s/%s to %s',
+                self::$bucketName,
+                $objectName,
+                $downloadToBasename,
+            ),
+            $output
+        );
     }
 
     public function testChangeStorageClass()

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,21 +18,24 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
+
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_column_families]
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 /**
  * List column families of a table
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table for which the families need to be displayed
  */
 function list_column_families(
     string $projectId,
-    string  $instanceId,
+    string $instanceId,
     string $tableId
 ): void {
     $tableAdminClient = new BigtableTableAdminClient();

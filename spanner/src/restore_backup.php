@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,7 +36,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
  */
-function restore_backup($instanceId, $databaseId, $backupId)
+function restore_backup(string $instanceId, string $databaseId, string $backupId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -55,7 +55,7 @@ function restore_backup($instanceId, $databaseId, $backupId)
     $versionTime = $restoreInfo['backupInfo']['versionTime'];
 
     printf(
-        "Database %s restored from backup %s with version time %s" . PHP_EOL,
+        'Database %s restored from backup %s with version time %s' . PHP_EOL,
         $sourceDatabase, $sourceBackup, $versionTime);
 }
 // [END spanner_restore_backup]

@@ -21,7 +21,6 @@ use Google\Cloud\Core\ExponentialBackoff;
 use Google\Cloud\Spanner\Database;
 use Google\Cloud\Spanner\Backup;
 use Google\Cloud\Spanner\SpannerClient;
-use Google\Cloud\Spanner\Instance;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -29,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
  */
 class spannerBackupTest extends TestCase
 {
@@ -72,6 +72,9 @@ class spannerBackupTest extends TestCase
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
+        if ('true' !== getenv('GOOGLE_SPANNER_RUN_BACKUP_TESTS')) {
+            self::markTestSkipped('Skipping backup tests.');
+        }
         self::$instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
@@ -87,7 +90,7 @@ class spannerBackupTest extends TestCase
         self::$instance = $spanner->instance(self::$instanceId);
 
         self::$kmsKeyName =
-            "projects/" . self::$projectId . "/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek";
+            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -129,7 +132,7 @@ class spannerBackupTest extends TestCase
     public function testCreateBackup()
     {
         $database = self::$instance->database(self::$databaseId);
-        $results = $database->execute("SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp");
+        $results = $database->execute('SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MICROSECOND) as Timestamp');
         $row = $results->rows()->current();
         $versionTime = $row['Timestamp'];
 
@@ -161,6 +164,23 @@ class spannerBackupTest extends TestCase
 
         $this->assertStringContainsString(basename($backup->name()), $output);
         $this->assertStringContainsString($databaseId2, $output);
+    }
+
+    /**
+     * @depends testCreateBackup
+     */
+    public function testCopyBackup()
+    {
+        $newBackupId = 'copy-' . self::$backupId . '-' . time();
+
+        $output = $this->runFunctionSnippet('copy_backup', [
+            $newBackupId,
+            self::$instanceId,
+            self::$backupId
+        ]);
+
+        $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
+        $this->assertRegExp(sprintf($regex, $newBackupId, self::$backupId), $output);
     }
 
     /**
@@ -207,7 +227,6 @@ class spannerBackupTest extends TestCase
         $this->assertStringContainsString(self::$backupId, $output);
         $this->assertStringContainsString(self::$databaseId, $output);
     }
-
 
     /**
      * @depends testRestoreBackupWithEncryptionKey

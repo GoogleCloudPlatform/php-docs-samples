@@ -18,12 +18,13 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
 
-# [START fs_initialize_project_id]
+# TODO(craiglabenz): Remove the `firestore_setup_client_create_with_project_id`
+#                    region tag after consolidating to `firestore_setup_client_create`
 # [START firestore_setup_client_create_with_project_id]
 use Google\Cloud\Firestore\FirestoreClient;
 
@@ -41,7 +42,8 @@ function setup_client_create_with_project_id(string $projectId): void
     printf('Created Cloud Firestore client with project ID: %s' . PHP_EOL, $projectId);
 }
 # [END firestore_setup_client_create_with_project_id]
-# [END fs_initialize_project_id]
+# TODO(craiglabenz): Remove the `firestore_setup_client_create_with_project_id`
+#                    region tag after consolidating to `firestore_setup_client_create`
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

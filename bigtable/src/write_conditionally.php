@@ -1,9 +1,6 @@
 <?php
-
-namespace Google\Cloud\Samples\Bigtable;
-
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +18,10 @@ namespace Google\Cloud\Samples\Bigtable;
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
+
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_writes_conditional]
 use Google\Cloud\Bigtable\BigtableClient;
@@ -31,6 +30,7 @@ use Google\Cloud\Bigtable\Mutations;
 
 /**
  * Write data conditionally in a table
+ *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $tableId The ID of the table where the data needs to be written
@@ -49,14 +49,14 @@ function write_conditionally(
     $timestampMicros = time() * 1000 * 1000;
     $columnFamilyId = 'stats_summary';
 
-    $mutations = (new Mutations())->upsert($columnFamilyId, "os_name", "android", $timestampMicros);
+    $mutations = (new Mutations())->upsert($columnFamilyId, 'os_name', 'android', $timestampMicros);
     $predicateFilter = Filter::chain()
     ->addFilter(Filter::family()->exactMatch($columnFamilyId))
     ->addFilter(Filter::qualifier()->exactMatch('os_build'))
     ->addFilter(Filter::value()->regex('PQ2A.*'));
     $options = ['predicateFilter' => $predicateFilter, 'trueMutations' => $mutations];
 
-    $table->checkAndMutateRow("phone#4c410523#20190501", $options);
+    $table->checkAndMutateRow('phone#4c410523#20190501', $options);
 
     printf('Successfully updated row\'s os_name' . PHP_EOL);
 }

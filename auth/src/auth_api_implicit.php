@@ -17,14 +17,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/auth/README.md
  */
 
 # [START auth_api_implicit]
 namespace Google\Cloud\Samples\Auth;
 
-use Google_Client;
-use Google_Service_Storage;
+use Google\Client;
+use Google\Service\Storage;
 
 /**
  * Authenticate to a cloud API using a service account implicitly.
@@ -33,11 +33,11 @@ use Google_Service_Storage;
  */
 function auth_api_implicit($projectId)
 {
-    $client = new Google_Client();
+    $client = new Client();
     $client->useApplicationDefaultCredentials();
     $client->addScope('https://www.googleapis.com/auth/cloud-platform');
 
-    $storage = new Google_Service_Storage($client);
+    $storage = new Storage($client);
 
     # Make an authenticated API request (listing storage buckets)
     $buckets = $storage->buckets->listBuckets($projectId);

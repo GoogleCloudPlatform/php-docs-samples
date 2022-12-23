@@ -18,77 +18,68 @@
 
 namespace Google\Cloud\Samples\CloudSQL\MySQL\Tests;
 
-use Google\Cloud\Samples\CloudSQL\MySQL\DBInitializer;
+use Google\Cloud\Samples\CloudSQL\MySQL\DatabaseTcp;
+use Google\Cloud\Samples\CloudSQL\MySQL\DatabaseUnix;
 use Google\Cloud\Samples\CloudSQL\MySQL\Votes;
 use Google\Cloud\TestUtils\TestTrait;
-use PDO;
+use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class IntegrationTest extends TestCase
 {
     use TestTrait;
-    private static $process;
+    use CloudSqlProxyTrait;
 
     public static function setUpBeforeClass(): void
     {
         $connectionName = self::requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = self::requireEnv('DB_SOCKET_DIR');
-        self::$process = new Process(['cloud_sql_proxy', '-instances=' . $connectionName . '=tcp:3306,' . $connectionName, '-dir', $socketDir]);
-        self::$process->start();
-        self::$process->waitUntil(function ($type, $buffer) {
-            return str_contains($buffer, 'Ready for new connections');
-        });
-    }
+        // '3306' was not working on kokoro we probably just need to update cloud_sql_proxy
+        $port = null;
 
-    public static function tearDownAfterClass(): void
-    {
-        self::$process->stop();
+        self::startCloudSqlProxy($connectionName, $socketDir, $port);
     }
 
     public function testUnixConnection()
     {
-        $conn_config = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
         $dbPass = $this->requireEnv('MYSQL_PASSWORD');
         $dbName = $this->requireEnv('MYSQL_DATABASE');
         $dbUser = $this->requireEnv('MYSQL_USER');
         $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+        $instanceUnixSocket = "${socketDir}/${connectionName}";
 
-        $votes = new Votes(DBInitializer::initUnixDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $connectionName,
-            $socketDir,
-            $conn_config
-        ));
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+        putenv("INSTANCE_UNIX_SOCKET=$instanceUnixSocket");
+
+        $votes = new Votes(DatabaseUnix::initUnixDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
+
+        // Unset environment variables after test run.
+        putenv('DB_PASS');
+        putenv('DB_NAME');
+        putenv('DB_USER');
+        putenv('INSTANCE_UNIX_SOCKET');
     }
 
     public function testTcpConnection()
     {
-        $conn_config = [
-            PDO::ATTR_TIMEOUT => 5,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        $dbHost = $this->requireEnv('MYSQL_HOST');
+        $instanceHost = $this->requireEnv('MYSQL_HOST');
         $dbPass = $this->requireEnv('MYSQL_PASSWORD');
         $dbName = $this->requireEnv('MYSQL_DATABASE');
         $dbUser = $this->requireEnv('MYSQL_USER');
 
-        $votes = new Votes(DBInitializer::initTcpDatabaseConnection(
-            $dbUser,
-            $dbPass,
-            $dbName,
-            $dbHost,
-            $conn_config
-        ));
+        putenv("INSTANCE_HOST=$instanceHost");
+        putenv("DB_PASS=$dbPass");
+        putenv("DB_NAME=$dbName");
+        putenv("DB_USER=$dbUser");
+
+        $votes = new Votes(DatabaseTcp::initTcpDatabaseConnection());
         $this->assertIsArray($votes->listVotes());
     }
 }

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -41,7 +41,7 @@ function query_filter_not_in(string $projectId): void
     $stateQuery = $citiesRef->where(
         'country',
         \Google\Cloud\Firestore\V1\StructuredQuery\FieldFilter\Operator::NOT_IN,
-        ["USA", "Japan"]
+        ['USA', 'Japan']
     );
     # [END firestore_query_filter_not_in]
     foreach ($stateQuery->documents() as $document) {

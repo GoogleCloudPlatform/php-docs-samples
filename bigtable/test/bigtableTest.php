@@ -5,16 +5,29 @@ namespace Google\Cloud\Samples\Bigtable\Tests;
 use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
+/**
+ * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
+ */
 final class BigtableTest extends TestCase
 {
     use BigtableTestTrait;
+    use RetryTrait;
 
-    const INSTANCE_ID_PREFIX = 'php-instance-';
-    const CLUSTER_ID_PREFIX = 'php-cluster-';
-    const TABLE_ID_PREFIX = 'php-table-';
+    public const CLUSTER_ID_PREFIX = 'php-cluster-';
+    public const INSTANCE_ID_PREFIX = 'php-instance-';
+    public const TABLE_ID_PREFIX = 'php-table-';
+    public const APP_PROFILE_ID_PREFIX = 'php-app-profile-';
+    public const SERVICE_ACCOUNT_ID_PREFIX = 'php-sa-';    // Shortened due to length constraint b/w 6 and 30.
 
+    private static $autoscalingClusterId;
     private static $clusterId;
+    private static $appProfileId;
+    private static $serviceAccountId;
+    private static $serviceAccountEmail;
+    private static $policyRole;
 
     public static function setUpBeforeClass(): void
     {
@@ -28,8 +41,10 @@ final class BigtableTest extends TestCase
 
     public function testCreateProductionInstance()
     {
-        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
+        self::$autoscalingClusterId = uniqid(self::CLUSTER_ID_PREFIX);
         self::$clusterId = uniqid(self::CLUSTER_ID_PREFIX);
+        self::$instanceId = uniqid(self::INSTANCE_ID_PREFIX);
+        self::$appProfileId = uniqid(self::APP_PROFILE_ID_PREFIX);
 
         $content = self::runFunctionSnippet('create_production_instance', [
             self::$projectId,
@@ -43,6 +58,147 @@ final class BigtableTest extends TestCase
         );
 
         $this->checkInstance($instanceName);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testGetInstance()
+    {
+        $content = self::runFunctionSnippet('get_instance', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Display Name: ' . self::$instanceId, $array);
+    }
+
+    /**
+     * @depends testGetInstance
+     */
+    public function testUpdateInstance()
+    {
+        $updatedName = uniqid(self::INSTANCE_ID_PREFIX);
+        $content = self::runFunctionSnippet('update_instance', [
+            self::$projectId,
+            self::$instanceId,
+            $updatedName
+        ]);
+
+        $expectedResponse = "Instance updated with the new display name: $updatedName." . PHP_EOL;
+
+        $this->assertSame($expectedResponse, $content);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testCreateAppProfile()
+    {
+        $content = self::runFunctionSnippet('create_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('AppProfile created: ' . $appProfileName, $array);
+
+        $this->checkAppProfile($appProfileName);
+    }
+
+    /**
+     * @depends testCreateAppProfile
+     */
+    public function testGetAppProfile()
+    {
+        $content = self::runFunctionSnippet('get_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('Name: ' . $appProfileName, $array);
+    }
+
+    /**
+     * @depends testGetAppProfile
+     */
+    public function testListAppProfiles()
+    {
+        $content = self::runFunctionSnippet('list_app_profiles', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('Name: ' . $appProfileName, $array);
+    }
+
+    /**
+     * @depends testGetAppProfile
+     */
+    public function testUpdateAppProfile()
+    {
+        $content = self::runFunctionSnippet('update_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(
+            self::$projectId,
+            self::$instanceId,
+            self::$appProfileId
+        );
+
+        $this->assertContains('App profile updated: ' . $appProfileName, $array);
+
+        // let's check if the allow_transactional_writes also changed
+        $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
+
+        $this->assertTrue($appProfile->getSingleClusterRouting()->getAllowTransactionalWrites());
+    }
+
+    /**
+     * @depends testCreateAppProfile
+     */
+    public function testDeleteAppProfile()
+    {
+        $content = self::runFunctionSnippet('delete_app_profile', [
+            self::$projectId,
+            self::$instanceId,
+            self::$appProfileId
+        ]);
+        $array = explode(PHP_EOL, $content);
+
+        $appProfileName = self::$instanceAdminClient->appProfileName(self::$projectId, self::$instanceId, self::$appProfileId);
+
+        $this->assertContains('App Profile ' . self::$appProfileId . ' deleted.', $array);
+
+        // let's check if we can fetch the profile or not
+        try {
+            self::$instanceAdminClient->getAppProfile($appProfileName);
+            $this->fail(sprintf('App Profile %s still exists', self::$appProfileId));
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $this->assertTrue(true);
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -77,12 +233,77 @@ final class BigtableTest extends TestCase
 
         try {
             self::$instanceAdminClient->getCluster($clusterName);
-            $this->fail(sprintf('Cluster %s still exists', $cluster->getName()));
+            $this->fail(sprintf('Cluster %s still exists', $clusterName));
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $this->assertTrue(true);
             }
         }
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testCreateClusterWithAutoscaling()
+    {
+        $content = self::runFunctionSnippet('create_cluster_autoscale_config', [
+          self::$projectId,
+          self::$instanceId,
+          self::$autoscalingClusterId,
+          'us-east1-c'
+        ]);
+
+        // get the cluster name created with above id
+        $clusterName = self::$instanceAdminClient->clusterName(
+            self::$projectId,
+            self::$instanceId,
+            self::$autoscalingClusterId,
+        );
+
+        $this->checkCluster($clusterName);
+        $this->assertStringContainsString(sprintf(
+            'Cluster created: %s',
+            self::$autoscalingClusterId,
+        ), $content);
+    }
+
+    /**
+     * @depends testCreateClusterWithAutoscaling
+     */
+    public function testUpdateClusterWithAutoscaling()
+    {
+        // Update autoscale config in cluster
+        $content = self::runFunctionSnippet('update_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            self::$autoscalingClusterId,
+        ]);
+
+        $this->assertStringContainsString(sprintf(
+            'Cluster %s updated with autoscale config.',
+            self::$autoscalingClusterId,
+        ), $content);
+    }
+
+    /**
+     * @depends testCreateClusterWithAutoscaling
+     */
+    public function testDisableAutoscalingInCluster()
+    {
+        $numNodes = 2;
+
+        // Disable autoscale config in cluster
+        $content = self::runFunctionSnippet('disable_cluster_autoscale_config', [
+            self::$projectId,
+            self::$instanceId,
+            self::$autoscalingClusterId,
+            $numNodes
+        ]);
+
+        $this->assertStringContainsString(sprintf(
+            'Cluster updated with the new num of nodes: %s.',
+            $numNodes,
+        ), $content);
     }
 
     public function testCreateDevInstance()
@@ -114,8 +335,10 @@ final class BigtableTest extends TestCase
 
         $array = explode(PHP_EOL, $content);
 
+        $instanceName = self::$instanceAdminClient->instanceName(self::$projectId, self::$instanceId);
+
         $this->assertContains('Listing Instances:', $array);
-        $this->assertContains(self::$instanceId, $array);
+        $this->assertContains($instanceName, $array);
     }
 
     /**
@@ -179,6 +402,41 @@ final class BigtableTest extends TestCase
 
         $this->assertContains('Listing Clusters:', $array);
         $this->assertContains('projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+    }
+
+    /**
+     * @depends testCreateProductionInstance
+     */
+    public function testGetCluster()
+    {
+        $content = self::runFunctionSnippet('get_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains('Name: projects/' . self::$projectId . '/instances/' . self::$instanceId . '/clusters/' . self::$clusterId, $array);
+    }
+
+    /**
+     * @depends testGetCluster
+     */
+    public function testUpdateCluster()
+    {
+        $newNumNodes = 2;
+
+        $content = self::runFunctionSnippet('update_cluster', [
+            self::$projectId,
+            self::$instanceId,
+            self::$clusterId,
+            $newNumNodes
+        ]);
+
+        $expectedResponse = "Cluster updated with the new num of nodes: $newNumNodes." . PHP_EOL;
+
+        $this->assertSame($expectedResponse, $content);
     }
 
     /**
@@ -422,6 +680,48 @@ final class BigtableTest extends TestCase
     }
 
     /**
+    * @depends testCreateProductionInstance
+    */
+    public function testSetIamPolicy()
+    {
+        self::$policyRole = 'roles/bigtable.user';
+        self::$serviceAccountId = uniqid(self::SERVICE_ACCOUNT_ID_PREFIX);
+        self::$serviceAccountEmail = $this->createServiceAccount(self::$serviceAccountId);
+
+        $user = 'serviceAccount:' . self::$serviceAccountEmail;
+        $content = self::runFunctionSnippet('set_iam_policy', [
+            self::$projectId,
+            self::$instanceId,
+            $user,
+            self::$policyRole
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains(self::$policyRole . ':' . $user, $array);
+    }
+
+    /**
+    * @depends testSetIamPolicy
+    */
+    public function testGetIamPolicy()
+    {
+        $user = 'serviceAccount:' . self::$serviceAccountEmail;
+
+        $content = self::runFunctionSnippet('get_iam_policy', [
+            self::$projectId,
+            self::$instanceId
+        ]);
+
+        $array = explode(PHP_EOL, $content);
+
+        $this->assertContains(self::$policyRole . ':' . $user, $array);
+
+        // cleanup
+        $this->deleteServiceAccount(self::$serviceAccountEmail);
+    }
+
+    /**
      * @depends testCreateProductionInstance
      */
     public function testDeleteInstance()
@@ -500,6 +800,21 @@ final class BigtableTest extends TestCase
         try {
             $table = self::$tableAdminClient->getTable($tableName);
             $this->assertEquals($table->getName(), $tableName);
+        } catch (ApiException $e) {
+            if ($e->getStatus() === 'NOT_FOUND') {
+                $error = json_decode($e->getMessage(), true);
+                $this->fail($error['message']);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    private function checkAppProfile($appProfileName)
+    {
+        try {
+            $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
+            $this->assertEquals($appProfile->getName(), $appProfileName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
                 $error = json_decode($e->getMessage(), true);

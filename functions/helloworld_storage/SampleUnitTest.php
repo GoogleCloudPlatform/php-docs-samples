@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2020 Google LLC.
  *
@@ -18,10 +19,13 @@
 declare(strict_types=1);
 
 // [START functions_storage_unit_test]
+// [START functions_cloudevent_storage_unit_test]
 
 namespace Google\Cloud\Samples\Functions\HelloworldStorage\Test;
 
-use Google\CloudFunctions\CloudEvent;
+use CloudEvents\V1\CloudEventImmutable;
+use CloudEvents\V1\CloudEventInterface;
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,19 +49,18 @@ class SampleUnitTest extends TestCase
     {
         return [
             [
-                'cloudevent' => CloudEvent::fromArray([
-                    'id' => uniqid(),
-                    'source' => 'storage.googleapis.com',
-                    'specversion' => '1.0',
-                    'type' => 'google.cloud.storage.object.v1.finalized',
-                    'data' => [
+                'cloudevent' => new CloudEventImmutable(
+                    uniqId(), // id
+                    'storage.googleapis.com', // source
+                    'google.cloud.storage.object.v1.finalized', // type
+                    [
                         'bucket' => 'some-bucket',
                         'metageneration' => '1',
                         'name' => 'folder/friendly.txt',
                         'timeCreated' => '2020-04-23T07:38:57.230Z',
                         'updated' => '2020-04-23T07:38:57.230Z',
-                    ],
-                ]),
+                    ] // data
+                ),
                 'statusCode' => '200',
             ],
         ];
@@ -66,7 +69,7 @@ class SampleUnitTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testFunction(CloudEvent $cloudevent, string $statusCode): void
+    public function testFunction(CloudEventInterface $cloudevent): void
     {
         // Capture function output by overriding the function's logging behavior.
         // The 'LOGGER_OUTPUT' environment variable must be used in your function:
@@ -87,4 +90,5 @@ class SampleUnitTest extends TestCase
     }
 }
 
+// [END functions_cloudevent_storage_unit_test]
 // [END functions_storage_unit_test]

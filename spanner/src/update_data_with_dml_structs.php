@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -43,7 +43,7 @@ use Google\Cloud\Spanner\StructValue;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_dml_structs($instanceId, $databaseId)
+function update_data_with_dml_structs(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -59,8 +59,8 @@ function update_data_with_dml_structs($instanceId, $databaseId)
 
         $rowCount = $t->executeUpdate(
             "UPDATE Singers SET LastName = 'Grant' "
-             . "WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) "
-             . "= @name",
+             . 'WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) '
+             . '= @name',
             [
                 'parameters' => [
                     'name' => $nameValue

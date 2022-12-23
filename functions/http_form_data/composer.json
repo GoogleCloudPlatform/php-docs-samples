@@ -1,12 +1,12 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7",
-        "guzzlehttp/psr7": "^1.7"
+        "google/cloud-functions-framework": "^1.0",
+        "guzzlehttp/psr7": "^2.0"
     },
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "TMPDIR=./tmp FUNCTION_TARGET=uploadFile php -S localhost:${PORT:-8080} vendor/bin/router.php"
+            "TMPDIR=./tmp FUNCTION_TARGET=uploadFile php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     }
 }
