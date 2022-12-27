@@ -16,15 +16,18 @@
  */
 
 /**
- * Google Analytics Data API sample application demonstrating the creation
- * of a basic report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
+ * Google Analytics Data API sample application demonstrating the usage of
+ * date ranges in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange#FIELDS.name
  * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_named_date_ranges.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report]
+// [START analyticsdata_run_report_with_named_date_ranges]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
@@ -33,44 +36,41 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-*/
-function run_report(string $propertyId)
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report using named date ranges.
+ */
+function run_report_with_named_date_ranges(string $propertyId)
 {
-    // [START analyticsdata_initialize]
+    // Create and instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-
-    // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
         'dateRanges' => [
             new DateRange([
-                'start_date' => '2020-09-01',
-                'end_date' => '2020-09-15',
+                'start_date' => '2020-01-01',
+                'end_date' => '2020-01-31',
+                'name' => 'year_ago',
+            ]),
+            new DateRange([
+                'start_date' => '2021-01-01',
+                'end_date' => '2021-01-31',
+                'name' => 'current_year',
             ]),
         ],
-        'dimensions' => [
-            new Dimension([
-                'name' => 'country',
-            ]),
-        ],
-        'metrics' => [
-            new Metric([
-                'name' => 'activeUsers',
-            ]),
-        ],
+        'dimensions' => [new Dimension(['name' => 'country'])],
+        'metrics' => [new Metric(['name' => 'sessions'])],
     ]);
 
-    printRunReportResponse($response);
+    printRunReportResponseWithNamedDateRanges($response);
 }
 
 /**
  * Print results of a runReport call.
  * @param RunReportResponse $response
  */
-function printRunReportResponse(RunReportResponse $response)
+function printRunReportResponseWithNamedDateRanges(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -79,10 +79,9 @@ function printRunReportResponse(RunReportResponse $response)
     }
     foreach ($response->getMetricHeaders() as $metricHeader) {
         printf(
-            'Metric header name: %s (%s)%s',
+            'Metric header name: %s (%s)' . PHP_EOL,
             $metricHeader->getName(),
-            MetricType::name($metricHeader->getType()),
-            PHP_EOL
+            MetricType::name($metricHeader->getType())
         );
     }
     // [END analyticsdata_print_run_report_response_header]
@@ -91,12 +90,15 @@ function printRunReportResponse(RunReportResponse $response)
     print 'Report result: ' . PHP_EOL;
 
     foreach ($response->getRows() as $row) {
-        print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report]
+// [END analyticsdata_run_report_with_named_date_ranges]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
