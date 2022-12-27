@@ -87,7 +87,6 @@ class videoStitcherTest extends TestCase
     private static $liveAdTagDetailId;
     private static $liveAdTagDetailName;
 
-
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
