@@ -16,32 +16,30 @@
  */
 
 /**
- * Google Analytics Data API sample application demonstrating the usage of
- * metric aggregations in a report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.metric_aggregations
+ * Google Analytics Data API sample application demonstrating the creation
+ * of a basic report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
  * for more information.
  * Usage:
  *   composer update
- *   php run_report_with_aggregations.php YOUR-GA4-PROPERTY-ID
+ *   php run_report_with_multiple_metrics.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report_with_aggregations]
+// [START analyticsdata_run_report_with_multiple_metrics]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\MetricAggregation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
  * @param string $propertyID Your GA-4 Property ID
- * Runs a report which includes total, maximum and minimum values
- * for each metric.
+ * Runs a report of active users grouped by three metrics.
  */
-function run_report_with_aggregations(string $propertyId)
+function run_report_with_multiple_metrics(string $propertyId)
 {
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
@@ -49,29 +47,28 @@ function run_report_with_aggregations(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'country'])],
-        'metrics' => [new Metric(['name' => 'sessions'])],
+        'dimensions' => [new Dimension(['name' => 'date'])],
+        'metrics' => [
+            new Metric(['name' => 'activeUsers']),
+            new Metric(['name' => 'newUsers']),
+            new Metric(['name' => 'totalRevenue'])
+        ],
         'dateRanges' => [
             new DateRange([
-                'start_date' => '365daysAgo',
+                'start_date' => '7daysAgo',
                 'end_date' => 'today',
-            ]),
+            ])
         ],
-        'metricAggregations' => [
-            MetricAggregation::TOTAL,
-            MetricAggregation::MAXIMUM,
-            MetricAggregation::MINIMUM
-        ]
     ]);
 
-    printRunReportResponseWithAggregations($response);
+    printRunReportResponseWithMultipleMetrics($response);
 }
 
 /**
  * Print results of a runReport call.
  * @param RunReportResponse $response
  */
-function printRunReportResponseWithAggregations($response)
+function printRunReportResponseWithMultipleMetrics(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -99,7 +96,7 @@ function printRunReportResponseWithAggregations($response)
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report_with_aggregations]
+// [END analyticsdata_run_report_with_multiple_metrics]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
