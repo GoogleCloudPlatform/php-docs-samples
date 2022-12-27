@@ -512,7 +512,7 @@ class videoStitcherTest extends TestCase
 
         $tmp = explode('/', $playUri);
         array_pop($tmp);
-        $renditionsUri = sprintf("%s/%s", join('/', $tmp), $renditions);
+        $renditionsUri = sprintf('%s/%s', join('/', $tmp), $renditions);
         file_get_contents($renditionsUri);
 
         self::$liveAdTagDetailName = sprintf('/locations/%s/liveSessions/%s/liveAdTagDetails/', self::$location, self::$liveSessionId);
