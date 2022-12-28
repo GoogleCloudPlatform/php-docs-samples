@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application demonstrating the ordering of
-* report rows.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.order_bys
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_ordering.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the ordering of
+ * report rows.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.order_bys
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_ordering.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -33,47 +33,43 @@ use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\OrderBy;
+use Google\Analytics\Data\V1beta\OrderBy\MetricOrderBy;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report of active users grouped by three dimensions, ordered by
-* the total revenue in descending order.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report of active users grouped by three dimensions, ordered by
+ * the total revenue in descending order.
+ */
 function run_report_with_ordering(string $propertyId)
 {
-    // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
-
+    // Create an instance of the Google Analytics Data API client library.'
     $client = new BetaAnalyticsDataClient();
-
-    // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
+        'dimensions' => [new Dimension(['name' => 'date'])],
+        'metrics' => [
+            new Metric(['name' => 'activeUsers']),
+            new Metric(['name' => 'newUsers']),
+            new Metric(['name' => 'totalRevenue']),
+        ],
         'dateRanges' => [
             new DateRange([
-                'start_date' => '2019-08-01',
-                'end_date' => '2019-08-14',
-            ]),
-                    new DateRange([
-                'start_date' => '2020-08-01',
-                'end_date' => '2020-08-14',
+                'start_date' => '7daysAgo',
+                'end_date' => 'today',
             ]),
         ],
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'platform',
-            ]
-        ),
+        'orderBys' => [
+            new OrderBy([
+                'metric' => new MetricOrderBy([
+                    'metric_name' => 'totalRevenue',
+                ]),
+                'desc' => true,
+            ]),
         ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ]
     ]);
 
     printRunReportResponseWithOrdering($response);

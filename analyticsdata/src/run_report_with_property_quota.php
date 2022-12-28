@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application demonstrating the usage of
-* property quota metadata.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.return_property_quota
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_property_quota.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the usage of
+ * property quota metadata.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.return_property_quota
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_property_quota.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -33,46 +33,30 @@ use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\PropertyQuota;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report and prints property quota information.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report and prints property quota information.
+ */
 function run_report_with_property_quota(string $propertyId)
 {
-    // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
-
+    // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-
-    // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
+        'returnPropertyQuota' => true,
+        'dimensions' => [new Dimension(['name' => 'country'])],
+        'metrics' => [new Metric(['name' => 'activeUsers'])],
         'dateRanges' => [
             new DateRange([
-                'start_date' => '2019-08-01',
-                'end_date' => '2019-08-14',
-            ]),
-                    new DateRange([
-                'start_date' => '2020-08-01',
-                'end_date' => '2020-08-14',
+                'start_date' => '7daysAgo',
+                'end_date' => 'today',
             ]),
         ],
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'platform',
-            ]
-        ),
-        ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ]
     ]);
 
     printRunReportResponseWithPropertyQuota($response);
@@ -84,31 +68,14 @@ function run_report_with_property_quota(string $propertyId)
  */
 function printRunReportResponseWithPropertyQuota(RunReportResponse $response)
 {
-    // [START analyticsdata_print_run_report_response_header]
-    printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
-    foreach ($response->getDimensionHeaders() as $dimensionHeader) {
-        printf('Dimension header name: %s%s', $dimensionHeader->getName(), PHP_EOL);
+    // [START analyticsdata_run_report_with_property_quota_print_response]
+    if ($response.hasPropertyQuota()) {
+        echo 'has property quota';
+    } else {
+       echo 'doesnt have it';
     }
-    foreach ($response->getMetricHeaders() as $metricHeader) {
-        printf(
-            'Metric header name: %s (%s)' . PHP_EOL,
-            $metricHeader->getName(),
-            MetricType::name($metricHeader->getType())
-        );
-    }
-    // [END analyticsdata_print_run_report_response_header]
 
-    // [START analyticsdata_print_run_report_response_rows]
-    print 'Report result: ' . PHP_EOL;
-
-    foreach ($response->getRows() as $row) {
-        printf(
-            '%s %s' . PHP_EOL,
-            $row->getDimensionValues()[0]->getValue(),
-            $row->getMetricValues()[0]->getValue()
-        );
-    }
-    // [END analyticsdata_print_run_report_response_rows]
+    // [END analyticsdata_run_report_with_property_quota_print_response]
 }
 // [END analyticsdata_run_report_with_property_quota]
 

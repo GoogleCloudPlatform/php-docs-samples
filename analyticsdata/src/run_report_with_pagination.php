@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application demonstrating the use of
-* pagination to retrieve large result sets.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.offset
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_pagination.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the use of
+ * pagination to retrieve large result sets.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.offset
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_pagination.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -36,44 +36,36 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report several times, each time retrieving a portion of result
-* using pagination.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report several times, each time retrieving a portion of result
+ * using pagination.
+ */
 function run_report_with_pagination(string $propertyId)
 {
-    // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
-
+    // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-
-    // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
         'dateRanges' => [
             new DateRange([
-                'start_date' => '2019-08-01',
-                'end_date' => '2019-08-14',
-            ]),
-                    new DateRange([
-                'start_date' => '2020-08-01',
-                'end_date' => '2020-08-14',
-            ]),
+                'start_date' => '350daysAgo',
+                'end_date' => 'yesterday',
+            ])
         ],
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'platform',
-            ]
-        ),
+        'dimensions' => [
+            new Dimension(['name' => 'firstUserSource']),
+            new Dimension(['name' => 'firstUserMedium']),
+            new Dimension(['name' => 'firstUserCampaignName']),
         ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ]
+        'metrics' => [
+            new Metric(['name' => 'sessions']),
+            new Metric(['name' => 'conversions']),
+            new Metric(['name' => 'totalRevenue']),
+        ],
+        'limit' => 100000,
+        'offset' => 0,
     ]);
 
     printRunReportResponseWithPagination($response);
