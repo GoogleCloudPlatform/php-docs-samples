@@ -51,6 +51,14 @@ class analyticsDataTest extends TestCase
         }
     }
 
+    public function testRunReportWithDimensionExcludeFilter()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_dimension_exclude_filter', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
     public function testRunReportWithDimensionAndMetricFilters()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
@@ -79,6 +87,14 @@ class analyticsDataTest extends TestCase
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_multiple_metrics', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithDimensionInListFilter()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_dimension_in_list_filter', [$propertyId]);
 
         $this->assertStringContainsString('Report result', $output);
     }
