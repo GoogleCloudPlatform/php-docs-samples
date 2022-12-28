@@ -128,7 +128,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_ordering', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testRunReportWithPagination()
@@ -136,7 +136,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_pagination', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testRunReportWithPropertyQuota()
@@ -144,6 +144,6 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_property_quota', [$propertyId]);
 
-        $this->assertRegExp('/Tokens per day quota consumed/', $output);
+        $this->assertStringContainsString('Tokens per day quota consumed', $output);
     }
 }
