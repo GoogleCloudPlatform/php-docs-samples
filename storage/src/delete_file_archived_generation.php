@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,15 +30,14 @@ use Google\Cloud\Storage\StorageClient;
  * Delete an archived generation of the given object.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $generationToDelete the generation of the object to delete.
+ *        (e.g. 1579287380533984)
  */
-function delete_file_archived_generation($bucketName, $objectName, $generationToDelete)
+function delete_file_archived_generation(string $bucketName, string $objectName, string $generationToDelete): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $generationToDelete = 1579287380533984;
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

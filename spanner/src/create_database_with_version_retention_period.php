@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -37,7 +37,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $retentionPeriod The data retention period for the database.
  */
-function create_database_with_version_retention_period($instanceId, $databaseId, $retentionPeriod)
+function create_database_with_version_retention_period(string $instanceId, string $databaseId, string $retentionPeriod): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function setup_dataset_read(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_get_all]
     # [START firestore_setup_dataset_read]
     $usersRef = $db->collection('samples/php/users');
     $snapshot = $usersRef->documents();
@@ -52,7 +51,6 @@ function setup_dataset_read(string $projectId): void
     }
     printf('Retrieved and printed out all documents from the users collection.' . PHP_EOL);
     # [END firestore_setup_dataset_read]
-    # [END fs_get_all]
 }
 
 // The following 2 lines are only needed to run the samples

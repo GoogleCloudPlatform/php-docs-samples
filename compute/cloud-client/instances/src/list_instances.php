@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/compute/cloud-client/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/compute/cloud-client/README.md
  */
 
 namespace Google\Cloud\Samples\Compute;

@@ -15,12 +15,7 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 4 || count($argv) > 4) {
-    return printf("Usage: php %s PROJECT_ID GLOSSARY_ID INPUT_URI\n", __FILE__);
-}
-list($_, $projectId, $glossaryId, $inputUri) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_create_glossary]
 use Google\Cloud\Translate\V3\GcsSource;
@@ -29,57 +24,68 @@ use Google\Cloud\Translate\V3\GlossaryInputConfig;
 use Google\Cloud\Translate\V3\Glossary\LanguageCodesSet;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-$translationServiceClient = new TranslationServiceClient();
+/**
+ * @param string $projectId     Your Google Cloud project ID.
+ * @param string $glossaryId    Your glossary ID.
+ * @param string $inputUri      Path to to source input (e.g. "gs://cloud-samples-data/translation/glossary.csv").
+ */
+function v3_create_glossary(
+    string $projectId,
+    string $glossaryId,
+    string $inputUri
+): void {
+    $translationServiceClient = new TranslationServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[Google Cloud Project ID]';
-// $glossaryId = 'my_glossary_id_123';
-// $inputUri = 'gs://cloud-samples-data/translation/glossary.csv';
-$formattedParent = $translationServiceClient->locationName(
-    $projectId,
-    'us-central1'
-);
-$formattedName = $translationServiceClient->glossaryName(
-    $projectId,
-    'us-central1',
-    $glossaryId
-);
-$languageCodesElement = 'en';
-$languageCodesElement2 = 'ja';
-$languageCodes = [$languageCodesElement, $languageCodesElement2];
-$languageCodesSet = new LanguageCodesSet();
-$languageCodesSet->setLanguageCodes($languageCodes);
-$gcsSource = (new GcsSource())
-    ->setInputUri($inputUri);
-$inputConfig = (new GlossaryInputConfig())
-    ->setGcsSource($gcsSource);
-$glossary = (new Glossary())
-    ->setName($formattedName)
-    ->setLanguageCodesSet($languageCodesSet)
-    ->setInputConfig($inputConfig);
-
-try {
-    $operationResponse = $translationServiceClient->createGlossary(
-        $formattedParent,
-        $glossary
+    $formattedParent = $translationServiceClient->locationName(
+        $projectId,
+        'us-central1'
     );
-    $operationResponse->pollUntilComplete();
-    if ($operationResponse->operationSucceeded()) {
-        $response = $operationResponse->getResult();
-        printf('Created Glossary.' . PHP_EOL);
-        printf('Glossary name: %s' . PHP_EOL, $response->getName());
-        printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
-        printf(
-            'Input URI: %s' . PHP_EOL,
-            $response->getInputConfig()
-                ->getGcsSource()
-                ->getInputUri()
+    $formattedName = $translationServiceClient->glossaryName(
+        $projectId,
+        'us-central1',
+        $glossaryId
+    );
+    $languageCodesElement = 'en';
+    $languageCodesElement2 = 'ja';
+    $languageCodes = [$languageCodesElement, $languageCodesElement2];
+    $languageCodesSet = new LanguageCodesSet();
+    $languageCodesSet->setLanguageCodes($languageCodes);
+    $gcsSource = (new GcsSource())
+        ->setInputUri($inputUri);
+    $inputConfig = (new GlossaryInputConfig())
+        ->setGcsSource($gcsSource);
+    $glossary = (new Glossary())
+        ->setName($formattedName)
+        ->setLanguageCodesSet($languageCodesSet)
+        ->setInputConfig($inputConfig);
+
+    try {
+        $operationResponse = $translationServiceClient->createGlossary(
+            $formattedParent,
+            $glossary
         );
-    } else {
-        $error = $operationResponse->getError();
-        // handleError($error)
+        $operationResponse->pollUntilComplete();
+        if ($operationResponse->operationSucceeded()) {
+            $response = $operationResponse->getResult();
+            printf('Created Glossary.' . PHP_EOL);
+            printf('Glossary name: %s' . PHP_EOL, $response->getName());
+            printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
+            printf(
+                'Input URI: %s' . PHP_EOL,
+                $response->getInputConfig()
+                    ->getGcsSource()
+                    ->getInputUri()
+            );
+        } else {
+            $error = $operationResponse->getError();
+            // handleError($error)
+        }
+    } finally {
+        $translationServiceClient->close();
     }
-} finally {
-    $translationServiceClient->close();
 }
 // [END translate_v3_create_glossary]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

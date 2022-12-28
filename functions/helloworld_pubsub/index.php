@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+// [START functions_cloudevent_pubsub]
 // [START functions_helloworld_pubsub]
 
 use CloudEvents\V1\CloudEventInterface;
@@ -38,3 +39,4 @@ function helloworldPubsub(CloudEventInterface $event): void
     fwrite($log, "Hello, $name!" . PHP_EOL);
 }
 // [END functions_helloworld_pubsub]
+// [END functions_cloudevent_pubsub]
