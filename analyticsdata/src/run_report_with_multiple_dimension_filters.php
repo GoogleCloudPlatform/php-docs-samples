@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*
+/**
  * Google Analytics Data API sample application demonstrating the usage of
  * dimension and metric filters in a report.
  * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
@@ -40,7 +40,7 @@ use Google\Analytics\Data\V1beta\Filter\StringFilter;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
+ * @param string $propertyId Your GA-4 Property ID
  * Runs a report using multiple dimension filters joined as `and_group`
  * expression. The filter selects for when both `browser` is `Chrome` and
  * `countryId` is `US`.
