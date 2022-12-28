@@ -16,14 +16,14 @@
  */
 
 /**
-* Google Analytics Data API sample application retrieving dimension and metrics
-* metadata.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata
-* for more information.
-* Usage:
-*   composer update
-*   php get_common_metadata.php
-*/
+ * Google Analytics Data API sample application retrieving dimension and metrics
+ * metadata.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php get_common_metadata.php
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -42,10 +42,8 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 */
 function get_common_metadata()
 {
-    // [START analyticsdata_initialize]
-    // Imports the Google Analytics Data API client library.
+    // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-    // [END analyticsdata_initialize]
     
     /*
     * Set the Property ID to 0 for dimensions and metrics common
