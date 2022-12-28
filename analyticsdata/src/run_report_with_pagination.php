@@ -27,7 +27,7 @@
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report_with_date_ranges]
+// [START analyticsdata_run_report_with_pagination]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
