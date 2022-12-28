@@ -33,7 +33,7 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
+* @param string $propertyId Your GA-4 Property ID
 */
 function run_report(string $propertyId)
 {

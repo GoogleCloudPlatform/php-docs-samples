@@ -37,7 +37,7 @@ use Google\Analytics\Data\V1beta\MetricAggregation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
+ * @param string $propertyId Your GA-4 Property ID
  * Runs a report which includes total, maximum and minimum values
  * for each metric.
  */

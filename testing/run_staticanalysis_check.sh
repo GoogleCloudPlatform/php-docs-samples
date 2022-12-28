@@ -34,7 +34,7 @@ FAILED_FILE=${TMP_REPORT_DIR}/failed
 for dir in $(find $TEST_DIRECTORIES -type d -name src -not -path '/*'  -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
 do
     if [[ " ${SKIP_DIRS[@]} " =~ " ${dir} " ]]; then
-        echo "Skipping $dir (explicitly flagged to be skipped)"
+        printf "Skipping $dir (explicitly flagged to be skipped)\n"
         continue
     fi
     composer update --working-dir=$dir --ignore-platform-reqs -q

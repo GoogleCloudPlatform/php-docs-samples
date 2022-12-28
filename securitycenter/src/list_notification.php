@@ -17,7 +17,7 @@
 
 // Include Google Cloud dependendencies using Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 1) {
+if (count($argv) < 2) {
     return printf('Usage: php %s ORGANIZATION_ID\n', basename(__FILE__));
 }
 list($_, $organizationId) = $argv;

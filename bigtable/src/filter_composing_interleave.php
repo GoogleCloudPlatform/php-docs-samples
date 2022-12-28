@@ -46,7 +46,7 @@ function filter_composing_interleave(
     $table = $dataClient->table($instanceId, $tableId);
 
     $filter = Filter::interleave()
-        ->addFilter(Filter::value()->exactMatch(unpack('C*', 1)))
+        ->addFilter(Filter::value()->exactMatch('1'))
         ->addFilter(Filter::qualifier()->exactMatch('os_build'));
 
     $rows = $table->readRows([

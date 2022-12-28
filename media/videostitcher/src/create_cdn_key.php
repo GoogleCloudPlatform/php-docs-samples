@@ -45,7 +45,7 @@ use Google\Cloud\Video\Stitcher\V1\MediaCdnKey;
  *                                    https://cloud.google.com/video-stitcher/docs/how-to/managing-cdn-keys#create-private-key-media-cdn
  *                                    for more information. For a Cloud CDN key,
  *                                    this is a base64-encoded string secret.
- * @param boolean $isMediaCdn         If true, create a Media CDN key. If false,
+ * @param bool    $isMediaCdn         If true, create a Media CDN key. If false,
  *                                    create a Cloud CDN key.
  */
 function create_cdn_key(
@@ -55,7 +55,7 @@ function create_cdn_key(
     string $hostname,
     string $keyName,
     string $privateKey,
-    string $isMediaCdn
+    bool $isMediaCdn
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
