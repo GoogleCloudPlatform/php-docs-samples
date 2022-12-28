@@ -33,6 +33,7 @@ use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\RunReportResponse;
+use Google\Analytics\Data\V1beta\PropertyQuota;
 
 /**
  * Runs a report and prints property quota information.
@@ -68,11 +69,39 @@ function printRunReportResponseWithPropertyQuota(RunReportResponse $response)
 {
     // [START analyticsdata_run_report_with_property_quota_print_response]
     if ($response->hasPropertyQuota()) {
-        echo 'has property quota';
-    } else {
-        echo 'doesnt have it';
-    }
+        $propertyQuota = $response->getPropertyQuota();
+        $tokensPerDay = $propertyQuota->getTokensPerDay();
+        $tokensPerHour = $propertyQuota->getTokensPerHour();
+        $concurrentRequests = $propertyQuota->getConcurrentRequests();
+        $serverErrors = $propertyQuota->getServerErrorsPerProjectPerHour();
+        $thresholdedRequests = $propertyQuota->getPotentiallyThresholdedRequestsPerHour();
 
+        printf(
+            'Tokens per day quota consumed: %s, remaining: %s' . PHP_EOL,
+            $tokensPerDay->getConsumed(),
+            $tokensPerDay->getRemaining(),
+         );
+        printf(
+            'Tokens per hour quota consumed: %s, remaining: %s' . PHP_EOL,
+            $tokensPerHour->getConsumed(),
+            $tokensPerHour->getRemaining(),
+         );
+        printf(
+            'Concurrent requests quota consumed: %s, remaining: %s' . PHP_EOL,
+            $concurrentRequests->getConsumed(),
+            $concurrentRequests->getRemaining(),
+         );
+        printf(
+            'Server errors per project per hour quota consumed: %s, remaining: %s' . PHP_EOL,
+            $serverErrors->getConsumed(),
+            $serverErrors->getRemaining(),
+         );
+        printf(
+            'Potentially thresholded requests per hour quota consumed: %s, remaining: %s' . PHP_EOL,
+            $thresholdedRequests->getConsumed(),
+            $thresholdedRequests->getRemaining(),
+         );
+    }
     // [END analyticsdata_run_report_with_property_quota_print_response]
 }
 // [END analyticsdata_run_report_with_property_quota]
