@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function setup_dataset(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_add_data_1]
     # [START firestore_setup_dataset_pt1]
     $docRef = $db->collection('samples/php/users')->document('alovelace');
     $docRef->set([
@@ -46,8 +45,6 @@ function setup_dataset(string $projectId): void
     ]);
     printf('Added data to the lovelace document in the users collection.' . PHP_EOL);
     # [END firestore_setup_dataset_pt1]
-    # [END fs_add_data_1]
-    # [START fs_add_data_2]
     # [START firestore_setup_dataset_pt2]
     $docRef = $db->collection('samples/php/users')->document('aturing');
     $docRef->set([
@@ -58,7 +55,6 @@ function setup_dataset(string $projectId): void
     ]);
     printf('Added data to the aturing document in the users collection.' . PHP_EOL);
     # [END firestore_setup_dataset_pt2]
-    # [END fs_add_data_2]
 }
 
 // The following 2 lines are only needed to run the samples

@@ -31,7 +31,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testClientFromJsonCredentials()
@@ -51,27 +51,51 @@ class analyticsDataTest extends TestCase
         }
     }
 
-    public function testRunReportWithOrdering()
+    public function testRunReportWithMultipleMetrics()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
-        $output = $this->runFunctionSnippet('run_report_with_ordering', [$propertyId]);
+        $output = $this->runFunctionSnippet('run_report_with_multiple_metrics', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
-    public function testRunReportWithPagination()
+    public function testRunReportWithNamedDateRanges()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
-        $output = $this->runFunctionSnippet('run_report_with_pagination', [$propertyId]);
+        $output = $this->runFunctionSnippet('run_report_with_named_date_ranges', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
-    
-    public function testRunReportWithPropertyQuota()
+
+    public function testRunReportWithMultipleDimensions()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
-        $output = $this->runFunctionSnippet('run_report_with_property_quota', [$propertyId]);
+        $output = $this->runFunctionSnippet('run_report_with_multiple_dimensions', [$propertyId]);
 
-        $this->assertRegExp('/Tokens per day quota consumed/', $output);
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithDateRanges()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_date_ranges', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithCohorts()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_cohorts', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithAggregations()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_aggregations', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
     }
 }

@@ -32,6 +32,9 @@ use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
+/**
+ * @param string $propertyId Your GA-4 Property ID
+ */
 function run_report(string $propertyId)
 {
     // Create an instance of the Google Analytics Data API client library.
@@ -61,7 +64,10 @@ function run_report(string $propertyId)
     printRunReportResponse($response);
 }
 
-// Print results of a runReport call.
+/**
+ * Print results of a runReport call.
+ * @param RunReportResponse $response
+ */
 function printRunReportResponse(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
