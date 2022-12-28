@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -37,11 +37,9 @@ function query_filter_in(string $projectId): void
         'projectId' => $projectId,
     ]);
     $citiesRef = $db->collection('samples/php/cities');
-    # [START fs_query_filter_in]
     # [START firestore_query_filter_in]
     $rangeQuery = $citiesRef->where('country', 'in', ['USA', 'Japan']);
     # [END firestore_query_filter_in]
-    # [END fs_query_filter_in]
     foreach ($rangeQuery->documents() as $document) {
         printf('Document %s returned by query country in [USA, Japan]' . PHP_EOL, $document->id());
     }

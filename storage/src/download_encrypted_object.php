@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,18 +30,17 @@ use Google\Cloud\Storage\StorageClient;
  * Download an encrypted file
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $destination The local destination to save the encrypted file.
+ *        (e.g. '/path/to/your/file')
  * @param string $base64EncryptionKey The base64 encoded encryption key. Should
+ *        (e.g. 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=')
  *     be the same key originally used to encrypt the object.
  */
-function download_encrypted_object($bucketName, $objectName, $destination, $base64EncryptionKey)
+function download_encrypted_object(string $bucketName, string $objectName, string $destination, string $base64EncryptionKey): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $destination = '/path/to/your/file';
-    // $base64EncryptionKey = 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);

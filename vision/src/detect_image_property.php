@@ -20,9 +20,10 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'path/to/your/image.jpg'
-
-function detect_image_property($path)
+/**
+ * @param string $path Path to the image, e.g. "path/to/your/image.jpg"
+ */
+function detect_image_property(string $path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -44,3 +45,7 @@ function detect_image_property($path)
     $imageAnnotator->close();
 }
 // [END vision_image_property_detection]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -46,11 +46,11 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $endTitle   The end of the title index.
  */
 function query_data_with_index(
-    $instanceId,
-    $databaseId,
-    $startTitle = 'Aardvark',
-    $endTitle = 'Goo'
-) {
+    string $instanceId,
+    string $databaseId,
+    string $startTitle = 'Aardvark',
+    string $endTitle = 'Goo'
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

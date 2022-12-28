@@ -3,8 +3,8 @@
 This code sample is intended to be in the following document:
 https://cloud.google.com/datastore/docs/datastore-api-tutorial
 
-The code is using
-[Google Cloud Client Library for PHP](https://googlecloudplatform.github.io/google-cloud-php/#/).
+The code is using the
+[Datastore Client Library for PHP](https://cloud.google.com/php/docs/reference/cloud-datastore/latest).
 
 To run the sample, do the following first:
 
@@ -25,4 +25,12 @@ or
 1. Download the json key file of the service account.
 1. Set GOOGLE_APPLICATION_CREDENTIALS environment variable pointing to that file.
 
-Then you can run the command: `php tasks.php`
+Then you can run the code samples:
+
+1.  Execute the snippets in the [src/](src/) directory by running:
+
+    ```text
+    $ php src/SNIPPET_NAME.php
+    ```
+
+    The usage will print for each if no arguments are provided.
