@@ -53,8 +53,7 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
 function run_report_with_dimension_and_metric_filters(string $propertyId)
 {
     // [START analyticsdata_initialize]
-    //Imports the Google Analytics Data API client library.'
-
+    // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
 
     // [END analyticsdata_initialize]
