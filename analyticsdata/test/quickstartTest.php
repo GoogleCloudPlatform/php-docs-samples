@@ -40,4 +40,3 @@ class quickstartTest extends TestCase
         $this->assertStringContainsString('Report result', $output);
     }
 }
-
