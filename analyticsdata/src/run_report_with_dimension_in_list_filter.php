@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*
+/**
  * Google Analytics Data API sample application demonstrating the usage of
  * dimension and metric filters in a report.
  * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
@@ -39,13 +39,13 @@ use Google\Analytics\Data\V1beta\Filter\InListFilter;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
  * Runs a report using a dimension filter with `in_list_filter` expression.
  * The filter selects for when `eventName` is set to one of three event names
  * specified in the query.
  * This sample uses relative date range values. See
  * https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange
  * for more information.
+ * @param string $propertyId Your GA-4 Property ID
  */
 function run_report_with_dimension_in_list_filter(string $propertyId)
 {
@@ -63,17 +63,17 @@ function run_report_with_dimension_in_list_filter(string $propertyId)
             ])
         ],
         'dimension_filter' => new FilterExpression([
-        'filter' => new Filter([
-            'field_name' => 'eventName',
-            'in_list_filter' => new InListFilter([
-                'values' => [
-                    'purchase',
-                    'in_app_purchase',
-                    'app_store_subscription_renew',
-                ],
+            'filter' => new Filter([
+                'field_name' => 'eventName',
+                'in_list_filter' => new InListFilter([
+                    'values' => [
+                        'purchase',
+                        'in_app_purchase',
+                        'app_store_subscription_renew',
+                    ],
+                ]),
             ]),
         ]),
-    ]),
     ]);
 
     printRunReportResponseWithDimensionInListFilter($response);
