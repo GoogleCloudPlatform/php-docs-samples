@@ -57,10 +57,10 @@ function create_live_session(
     $parent = $stitcherClient->locationName($callingProjectId, $location);
     $liveSession = new LiveSession();
     $liveSession->setSourceUri($sourceUri);
-    $liveSession->setAdTagMap(
-        ['default' => (new AdTag())
-            ->setUri($adTagUri)]
-    );
+    $liveSession->setAdTagMap([
+        'default' => (new AdTag())
+            ->setUri($adTagUri)
+    ]);
     $liveSession->setDefaultSlateId($slateId);
 
     // Run live session creation request
