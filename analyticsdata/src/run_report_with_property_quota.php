@@ -37,8 +37,8 @@ use Google\Analytics\Data\V1beta\PropertyQuota;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
  * Runs a report and prints property quota information.
+ * @param string $propertyId Your GA-4 Property ID
  */
 function run_report_with_property_quota(string $propertyId)
 {

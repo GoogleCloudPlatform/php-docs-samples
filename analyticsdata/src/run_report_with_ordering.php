@@ -38,9 +38,9 @@ use Google\Analytics\Data\V1beta\OrderBy\MetricOrderBy;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
  * Runs a report of active users grouped by three dimensions, ordered by
  * the total revenue in descending order.
+ * @param string $propertyId Your GA-4 Property ID
  */
 function run_report_with_ordering(string $propertyId)
 {

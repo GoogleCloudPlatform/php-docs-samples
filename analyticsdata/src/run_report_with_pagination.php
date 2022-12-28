@@ -36,9 +36,9 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
  * Runs a report several times, each time retrieving a portion of result
  * using pagination.
+ * @param string $propertyId Your GA-4 Property ID
  */
 function run_report_with_pagination(string $propertyId)
 {
