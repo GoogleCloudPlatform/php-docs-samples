@@ -15,75 +15,99 @@
  * limitations under the License.
  */
 
-/* 
-
-"""Google Analytics Data API sample application demonstrating the creation of
-a pivot report.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runPivotReport
-for more information.
-"""
-
-Before you start the application, please review the comments starting with
-"TODO(developer)" and update the code to use the correct values.
-
-Usage:
-  composer update
-  php run_pivot_report.php
+/**
+ * Google Analytics Data API sample application demonstrating the creation of
+ * a pivot report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runPivotReport
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_pivot_report.php YOUR-GA4-PROPERTY-ID
  */
 
-// [START analyticsdata_run_pivot_report]
-require 'vendor/autoload.php';
+namespace Google\Cloud\Samples\Analytics\Data;
 
+// [START analyticsdata_run_pivot_report]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\Pivot;
+use Google\Analytics\Data\V1beta\OrderBy;
+use Google\Analytics\Data\V1beta\OrderBy\DimensionOrderBy;
+use Google\Analytics\Data\V1beta\OrderBy\MetricOrderBy;
+use Google\Analytics\Data\V1beta\RunPivotReportResponse;
 
 /**
- * TODO(developer): Replace this variable with your Google Analytics 4
- *   property ID before running the sample.
+ * @param string $propertyId Your GA-4 Property ID
+ * Runs a pivot query to build a report of session counts by country,
+ * pivoted by the browser dimension.
  */
-$property_id = 'YOUR-GA4-PROPERTY-ID';
+function run_pivot_report(string $propertyId)
+{
+    // Create an instance of the Google Analytics Data API client library.
+    $client = new BetaAnalyticsDataClient();
 
-// [START analyticsdata_initialize]
-//Imports the Google Analytics Data API client library.'
+    // Make an API call.
+    $response = $client->runPivotReport([
+        'property' => 'properties/' . $propertyId,
+        'dateRanges' => [new DateRange([
+            'start_date' => '2021-01-01',
+            'end_date' => '2021-01-30',
+            ]),
+        ],
+        'pivots' => [
+            new Pivot([
+                'field_names' => ['country'],
+                'limit' => 250,
+                'order_bys' => [new OrderBy([
+                    'dimension' => new DimensionOrderBy([
+                        'dimension_name' => 'country',
+                    ]),
+                ])],
+            ]),
+            new Pivot([
+                'field_names' => ['browser'],
+                'offset' => 3,
+                'limit' => 3,
+                'order_bys' => [new OrderBy([
+                    'metric' => new MetricOrderBy([
+                        'metric_name' => 'sessions',
+                    ]),
+                    'desc' => true,
+                ])],
+            ]),
+        ],
+        'metrics' => [new Metric(['name' => 'sessions'])],
+        'dimensions' => [
+            new Dimension(['name' => 'country']),
+            new Dimension(['name' => 'browser']),
+        ],
+    ]);
 
-$client = new BetaAnalyticsDataClient();
+    printPivotReportResponse($response);
+}
 
-// [END analyticsdata_initialize]
+/**
+ * Print results of a runPivotReport call.
+ * @param RunPivotReportResponse $response
+ */
+function printPivotReportResponse(RunPivotReportResponse $response)
+{
+    // [START analyticsdata_print_run_pivot_report_response]
+    print 'Report result: ' . PHP_EOL;
 
-// [START analyticsdata_run_report]
-// Make an API call.
-$response = $client->runReport([
-    'property' => 'properties/' . $property_id,
-    'dateRanges' => [
-        new DateRange([
-            'start_date' => '2020-03-31',
-            'end_date' => 'today',
-        ]),
-    ],
-    'dimensions' => [new Dimension(
-        [
-            'name' => 'city',
-        ]
-    ),
-    ],
-    'metrics' => [new Metric(
-        [
-            'name' => 'activeUsers',
-        ]
-    )
-    ]
-]);
-// [END analyticsdata_run_report]
-
-// [START analyticsdata_run_report_response]
-// Print results of an API call.
-print 'Report result: ' . PHP_EOL;
-
-foreach ($response->getRows() as $row) {
-    print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
-    // [END analyticsdata_run_report_response]
+    foreach ($response->getRows() as $row) {
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
+    }
+    // [END analyticsdata_print_run_pivot_report_response]
 }
 // [END analyticsdata_run_pivot_report]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

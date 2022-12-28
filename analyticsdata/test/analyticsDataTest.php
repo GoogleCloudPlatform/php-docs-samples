@@ -31,7 +31,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testClientFromJsonCredentials()
@@ -56,7 +56,8 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_batch_report', [$propertyId]);
 
-        $this->assertRegExp('/Batch report result/', $output);
+        $this->assertStringContainsString('Batch report result', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testRunPivotReport()
@@ -64,6 +65,6 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_pivot_report', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 }
