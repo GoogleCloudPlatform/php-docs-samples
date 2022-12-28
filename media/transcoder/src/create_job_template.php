@@ -40,7 +40,7 @@ use Google\Cloud\Video\Transcoder\V1\VideoStream;
  * @param string $location The location of the job template.
  * @param string $templateId The user-defined template ID.
  */
-function create_job_template($projectId, $location, $templateId): void
+function create_job_template($projectId, $location, $templateId)
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

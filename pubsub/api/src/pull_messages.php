@@ -33,7 +33,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId  The Google project ID.
  * @param string $subscriptionName  The Pub/Sub subscription name.
  */
-function pull_messages($projectId, $subscriptionName): void
+function pull_messages($projectId, $subscriptionName)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

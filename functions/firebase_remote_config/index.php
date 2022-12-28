@@ -19,7 +19,7 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function firebaseRemoteConfig(CloudEvent $cloudevent): void
+function firebaseRemoteConfig(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 

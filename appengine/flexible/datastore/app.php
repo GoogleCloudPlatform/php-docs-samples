@@ -80,7 +80,7 @@ $app->get('/', function (Request $request, Response $response) {
         ->withHeader('Content-Type', 'text/plain');
 });
 
-function get_user_ip(Request $request): void
+function get_user_ip(Request $request)
 {
     $ip = $request->getAttribute('ip_address');
     // Keep only the first two octets of the IP address.

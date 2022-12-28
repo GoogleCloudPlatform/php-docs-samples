@@ -59,7 +59,7 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
  * @param string $taskName provides the identifier of the task.
  * @param string $body The task details from the HTTP request.
  */
-function handle_task($queueName, $taskName, $body = ''): void
+function handle_task($queueName, $taskName, $body = '')
 {
     global $logger;
 

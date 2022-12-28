@@ -31,7 +31,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId
  * @param string $schemaId
  */
-function get_schema($projectId, $schemaId): void
+function get_schema($projectId, $schemaId)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

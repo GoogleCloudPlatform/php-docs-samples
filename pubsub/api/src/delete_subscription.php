@@ -32,7 +32,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId  The Google project ID.
  * @param string $subscriptionName  The Pub/Sub subscription name.
  */
-function delete_subscription($projectId, $subscriptionName): void
+function delete_subscription($projectId, $subscriptionName)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

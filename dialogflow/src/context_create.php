@@ -21,7 +21,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 use Google\Cloud\Dialogflow\V2\ContextsClient;
 use Google\Cloud\Dialogflow\V2\Context;
 
-function context_create($projectId, $contextId, $sessionId, $lifespan = 1): void
+function context_create($projectId, $contextId, $sessionId, $lifespan = 1)
 {
     $contextsClient = new ContextsClient();
 

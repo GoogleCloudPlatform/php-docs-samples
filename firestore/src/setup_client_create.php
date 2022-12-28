@@ -29,7 +29,7 @@ use Google\Cloud\Firestore\FirestoreClient;
 /**
  * Initialize Cloud Firestore with default project ID.
  */
-function setup_client_create(string $projectId = null): void
+function setup_client_create(string $projectId = null)
 {
     // Create the Cloud Firestore client
     if (empty($projectId)) {

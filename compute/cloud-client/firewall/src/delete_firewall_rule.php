@@ -35,7 +35,7 @@ use Google\Cloud\Compute\V1\FirewallsClient;
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  * @throws \Google\ApiCore\ValidationException if local error occurs before remote call.
  */
-function delete_firewall_rule(string $projectId, string $firewallRuleName): void
+function delete_firewall_rule(string $projectId, string $firewallRuleName)
 {
     $firewallsClient = new FirewallsClient();
 

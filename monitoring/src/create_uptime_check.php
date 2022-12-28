@@ -38,7 +38,7 @@ use Google\Api\MonitoredResource;
  * @param string $hostName
  * @param string $displayName
  */
-function create_uptime_check($projectId, $hostName = 'example.com', $displayName = 'New uptime check'): void
+function create_uptime_check($projectId, $hostName = 'example.com', $displayName = 'New uptime check')
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,

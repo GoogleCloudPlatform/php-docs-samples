@@ -35,7 +35,7 @@ use Google\Cloud\Compute\V1\ImagesClient;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_images_by_page(string $projectId, int $pageSize = 10): void
+function list_images_by_page(string $projectId, int $pageSize = 10)
 {
     $imagesClient = new ImagesClient();
     $pageNum = 1;

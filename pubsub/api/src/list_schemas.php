@@ -30,7 +30,7 @@ use Google\Cloud\PubSub\PubSubClient;
  *
  * @param string $projectId
  */
-function list_schemas($projectId): void
+function list_schemas($projectId)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

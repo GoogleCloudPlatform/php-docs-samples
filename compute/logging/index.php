@@ -22,7 +22,7 @@ use Fluent\Logger\FluentLogger;
 
 $GLOBALS['logger'] = new FluentLogger('localhost', '24224');
 
-function fluentd_exception_handler(Exception $e): void
+function fluentd_exception_handler(Exception $e)
 {
     global $logger;
 

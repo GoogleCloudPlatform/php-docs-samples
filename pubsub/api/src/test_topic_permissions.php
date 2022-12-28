@@ -32,7 +32,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
  */
-function test_topic_permissions($projectId, $topicName): void
+function test_topic_permissions($projectId, $topicName)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

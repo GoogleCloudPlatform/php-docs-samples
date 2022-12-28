@@ -35,7 +35,7 @@ use GuzzleHttp\HandlerStack;
  * @param string $projectId           The Google project ID.
  * @param string $serviceAccountPath  Path to service account credentials JSON.
  */
-function auth_http_explicit($projectId, $serviceAccountPath): void
+function auth_http_explicit($projectId, $serviceAccountPath)
 {
     # Construct service account credentials using the service account key file
     # and Google Auth library's ServiceAccountCredentials class.

@@ -20,7 +20,7 @@
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\CloudFunctions\CloudEvent;
 
-function firebaseReactive(CloudEvent $cloudevent): void
+function firebaseReactive(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     $data = $cloudevent->getData();

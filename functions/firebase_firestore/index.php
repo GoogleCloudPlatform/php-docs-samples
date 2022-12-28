@@ -19,7 +19,7 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function firebaseFirestore(CloudEvent $cloudevent): void
+function firebaseFirestore(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 

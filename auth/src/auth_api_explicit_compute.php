@@ -36,7 +36,7 @@ use Google\Service\Storage;
  *
  * @param string $projectId           The Google project ID.
  */
-function auth_api_explicit_compute($projectId): void
+function auth_api_explicit_compute($projectId)
 {
     $gceCredentials = new GCECredentials();
     $middleware = new AuthTokenMiddleware($gceCredentials);

@@ -35,7 +35,7 @@ use Google\Cloud\Monitoring\V3\MetricServiceClient;
  * @param string $projectId Your project ID
  * @param string $metricId  The ID of the Metric Descriptor to delete
  */
-function delete_metric($projectId, $metricId): void
+function delete_metric($projectId, $metricId)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,

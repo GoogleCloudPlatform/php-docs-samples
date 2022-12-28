@@ -29,7 +29,7 @@ use Google\Cloud\Asset\V1\OutputConfig;
  * @param string $dumpFilePath the file path where the assets will be dumped to.
  *        e.g.: gs://[bucket-name]/[asset-file-name].
  */
-function export_assets(string $projectId, string $dumpFilePath): void
+function export_assets(string $projectId, string $dumpFilePath)
 {
     $client = new AssetServiceClient();
 

@@ -35,7 +35,7 @@ use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
  * @param string $projectId Your project ID
  * @param string $configName
  */
-function get_uptime_check($projectId, $configName): void
+function get_uptime_check($projectId, $configName)
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,

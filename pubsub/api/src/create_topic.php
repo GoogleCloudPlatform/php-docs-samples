@@ -32,7 +32,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
  */
-function create_topic($projectId, $topicName): void
+function create_topic($projectId, $topicName)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

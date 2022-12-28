@@ -37,7 +37,7 @@ use Google\Api\MetricDescriptor;
  *
  * @param string $projectId Your project ID
  */
-function create_metric($projectId): void
+function create_metric($projectId)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,

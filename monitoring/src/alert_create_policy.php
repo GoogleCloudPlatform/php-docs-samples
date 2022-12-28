@@ -35,7 +35,7 @@ use Google\Protobuf\Duration;
 /**
  * @param string $projectId Your project ID
  */
-function alert_create_policy($projectId): void
+function alert_create_policy($projectId)
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,

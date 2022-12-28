@@ -34,7 +34,7 @@ use Google\Cloud\Compute\V1\Operation;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function disable_usage_export_bucket(string $projectId): void
+function disable_usage_export_bucket(string $projectId)
 {
     // Disable the usage export location by sending null as usageExportLocationResource.
     $projectsClient = new ProjectsClient();

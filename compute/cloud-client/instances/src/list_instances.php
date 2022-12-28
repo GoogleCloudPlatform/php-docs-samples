@@ -34,7 +34,7 @@ use Google\Cloud\Compute\V1\InstancesClient;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_instances(string $projectId, string $zone): void
+function list_instances(string $projectId, string $zone)
 {
     // List Compute Engine instances using InstancesClient.
     $instancesClient = new InstancesClient();

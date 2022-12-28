@@ -35,7 +35,7 @@ use Google\Protobuf\FieldMask;
  * @param string $filter Only enable/disable alert policies that match a filter.
  *        See https://cloud.google.com/monitoring/api/v3/sorting-and-filtering
  */
-function alert_enable_policies($projectId, $enable = true, $filter = null): void
+function alert_enable_policies($projectId, $enable = true, $filter = null)
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,

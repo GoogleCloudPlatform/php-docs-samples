@@ -23,7 +23,7 @@ use Google\Cloud\Dialogflow\V2\EntityTypesClient;
 /**
 * Delete entity with the given entity type and entity value.
 */
-function entity_delete($projectId, $entityTypeId, $entityValue): void
+function entity_delete($projectId, $entityTypeId, $entityValue)
 {
     $entityTypesClient = new EntityTypesClient();
 

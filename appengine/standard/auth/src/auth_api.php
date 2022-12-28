@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Auth;
 use Google_Client;
 use Google_Service_Storage;
 
-function auth_api($projectId): void
+function auth_api($projectId)
 {
     $client = new Google_Client();
     $client->useApplicationDefaultCredentials();

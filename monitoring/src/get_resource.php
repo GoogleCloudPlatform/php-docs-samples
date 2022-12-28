@@ -35,7 +35,7 @@ use Google\Cloud\Monitoring\V3\MetricServiceClient;
  * @param string $projectId Your project ID
  * @param string $resourceType The resource type of the monitored resource.
  */
-function get_resource($projectId, $resourceType): void
+function get_resource($projectId, $resourceType)
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,

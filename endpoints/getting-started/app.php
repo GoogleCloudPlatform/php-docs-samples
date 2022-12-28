@@ -71,7 +71,7 @@ $app->get('/auth/info/googleidtoken', function (Request $request, Response $resp
         ->withHeader('Content-Type', 'application/json');
 });
 
-function get_user_info(Request $request): void
+function get_user_info(Request $request)
 {
     // Retrieves the authenication information from Google Cloud Endpoints.
     $encoded_info = $request->getHeaderLine('X-Endpoint-API-UserInfo');

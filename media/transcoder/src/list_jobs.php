@@ -33,7 +33,7 @@ use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
  * @param string $projectId The ID of your Google Cloud Platform project.
  * @param string $location The location of the jobs.
  */
-function list_jobs($projectId, $location): void
+function list_jobs($projectId, $location)
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

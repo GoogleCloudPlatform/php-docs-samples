@@ -67,7 +67,7 @@ define('DEFAULT_NETWORK', BASE_URL . DEFAULT_PROJECT .
  * @param string $apiResponse The API response to process.
  * @return string Markup for the specific Google Compute Engine API request.
  */
-function generateMarkup($apiRequestName, $apiResponse): void
+function generateMarkup($apiRequestName, $apiResponse)
 {
     $apiRequestMarkup = '';
     $apiRequestMarkup .= '<header><h2>' . $apiRequestName . '</h2></header>';

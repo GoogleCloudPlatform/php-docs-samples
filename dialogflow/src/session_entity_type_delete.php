@@ -23,7 +23,7 @@ use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
 /**
 * Delete a session entity type with the given display name.
 */
-function session_entity_type_delete($projectId, $displayName, $sessionId): void
+function session_entity_type_delete($projectId, $displayName, $sessionId)
 {
     $sessionEntityTypesClient = new SessionEntityTypesClient();
 

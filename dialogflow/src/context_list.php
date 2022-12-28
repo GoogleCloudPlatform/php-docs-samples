@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\ContextsClient;
 
-function context_list($projectId, $sessionId): void
+function context_list($projectId, $sessionId)
 {
     // get contexts
     $contextsClient = new ContextsClient();

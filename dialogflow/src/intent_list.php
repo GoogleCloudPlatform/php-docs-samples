@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\IntentsClient;
 
-function intent_list($projectId): void
+function intent_list($projectId)
 {
     // get intents
     $intentsClient = new IntentsClient();

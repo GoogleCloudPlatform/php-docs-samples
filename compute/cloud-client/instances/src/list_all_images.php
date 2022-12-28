@@ -33,7 +33,7 @@ use Google\Cloud\Compute\V1\ImagesClient;
  *
  * @throws \Google\ApiCore\ApiException if the remote call fails.
  */
-function list_all_images(string $projectId): void
+function list_all_images(string $projectId)
 {
     $imagesClient = new ImagesClient();
     // Listing only non-deprecated images to reduce the size of the reply.

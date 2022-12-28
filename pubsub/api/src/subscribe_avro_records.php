@@ -31,7 +31,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId
  * @param string $subscriptionId
  */
-function subscribe_avro_records($projectId, $subscriptionId): void
+function subscribe_avro_records($projectId, $subscriptionId)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

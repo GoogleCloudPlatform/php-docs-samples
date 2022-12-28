@@ -34,7 +34,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionName  The Pub/Sub subscription name.
  * @param string $endpoint  The endpoint for the push subscription.
  */
-function create_push_subscription($projectId, $topicName, $subscriptionName, $endpoint): void
+function create_push_subscription($projectId, $topicName, $subscriptionName, $endpoint)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

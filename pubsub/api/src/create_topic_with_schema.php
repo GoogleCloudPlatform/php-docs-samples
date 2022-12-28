@@ -34,7 +34,7 @@ use Google\Cloud\PubSub\Schema;
  * @param string $schemaId
  * @param string $encoding
  */
-function create_topic_with_schema($projectId, $topicId, $schemaId, $encoding): void
+function create_topic_with_schema($projectId, $topicId, $schemaId, $encoding)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,

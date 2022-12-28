@@ -19,7 +19,7 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function firebaseAuth(CloudEvent $cloudevent): void
+function firebaseAuth(CloudEvent $cloudevent)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     $data = $cloudevent->getData();

@@ -43,7 +43,7 @@ use Google\Cloud\Video\Transcoder\V1\VideoStream;
  * @param string $inputUri Uri of the video in the Cloud Storage bucket.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
-function create_job_with_set_number_images_spritesheet($projectId, $location, $inputUri, $outputUri): void
+function create_job_with_set_number_images_spritesheet($projectId, $location, $inputUri, $outputUri)
 {
     // Instantiate a client.
     $transcoderServiceClient = new TranscoderServiceClient();

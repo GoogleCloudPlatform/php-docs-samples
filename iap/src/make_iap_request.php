@@ -34,7 +34,7 @@ use GuzzleHttp\HandlerStack;
  * @param string $url The Identity-Aware Proxy-protected URL to fetch.
  * @param string $clientId The client ID used by Identity-Aware Proxy.
  */
-function make_iap_request($url, $clientId): void
+function make_iap_request($url, $clientId)
 {
     // create middleware, using the client ID as the target audience for IAP
     $middleware = ApplicationDefaultCredentials::getIdTokenMiddleware($clientId);
