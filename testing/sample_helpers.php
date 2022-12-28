@@ -4,7 +4,7 @@ namespace Google\Cloud\Samples;
 
 use ReflectionFunction;
 
-function execute_sample(string $file, string $namespace, ?array $argv): mixed
+function execute_sample(string $file, string $namespace, ?array $argv)
 {
     // Return if sample file is not being executed via CLI
     if (is_null($argv)) {
