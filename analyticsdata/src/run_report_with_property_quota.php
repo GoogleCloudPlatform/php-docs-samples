@@ -69,10 +69,10 @@ function run_report_with_property_quota(string $propertyId)
 function printRunReportResponseWithPropertyQuota(RunReportResponse $response)
 {
     // [START analyticsdata_run_report_with_property_quota_print_response]
-    if ($response.hasPropertyQuota()) {
+    if ($response->hasPropertyQuota()) {
         echo 'has property quota';
     } else {
-       echo 'doesnt have it';
+        echo 'doesnt have it';
     }
 
     // [END analyticsdata_run_report_with_property_quota_print_response]
