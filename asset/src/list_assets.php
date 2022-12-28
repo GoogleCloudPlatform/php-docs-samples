@@ -26,9 +26,9 @@ use Google\Cloud\Asset\V1\AssetServiceClient;
  * @param int      $pageSize   (Optional) Size of one result page.
  */
 function list_assets(
-  string $projectId,
-  array $assetTypes = [],
-  int $pageSize = null
+    string $projectId,
+    array $assetTypes = [],
+    int $pageSize = null
 ): void {
     // Instantiate a client.
     $client = new AssetServiceClient();

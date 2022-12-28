@@ -40,7 +40,7 @@ function delete_instance(
     string $projectId,
     string $zone,
     string $instanceName
-): void {
+) {
     // Delete the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
     $operation = $instancesClient->delete($instanceName, $projectId, $zone);

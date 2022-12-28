@@ -56,7 +56,7 @@ function create_instance(
     string $machineType = 'n1-standard-1',
     string $sourceImage = 'projects/debian-cloud/global/images/family/debian-11',
     string $networkName = 'global/networks/default'
-): void {
+) {
     // Set the machine type using the specified zone.
     $machineTypeFullName = sprintf('zones/%s/machineTypes/%s', $zone, $machineType);
 

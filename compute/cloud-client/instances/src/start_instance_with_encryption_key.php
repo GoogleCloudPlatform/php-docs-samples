@@ -47,7 +47,7 @@ function start_instance_with_encryption_key(
     string $zone,
     string $instanceName,
     string $key
-): void {
+) {
     // Initiate the InstancesClient.
     $instancesClient = new InstancesClient();
 

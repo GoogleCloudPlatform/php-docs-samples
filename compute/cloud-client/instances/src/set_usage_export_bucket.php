@@ -45,7 +45,7 @@ function set_usage_export_bucket(
     string $projectId,
     string $bucketName,
     string $reportNamePrefix = ''
-): void {
+) {
     // Initialize UsageExportLocation object with provided bucket name and no report name prefix.
     $usageExportLocation = new UsageExportLocation(array(
         'bucket_name' => $bucketName,

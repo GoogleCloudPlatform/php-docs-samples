@@ -58,9 +58,6 @@ function read_filter(
 // [END bigtable_reads_filter]
 
 // Helper function for printing the row data
-/**
- * @param array<mixed> $row
- */
 function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);

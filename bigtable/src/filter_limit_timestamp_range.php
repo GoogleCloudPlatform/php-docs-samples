@@ -66,9 +66,6 @@ function filter_limit_timestamp_range(
 // [END bigtable_filters_limit_timestamp_range]
 
 // Helper function for printing the row data
-/**
- * @param array<mixed> $row
- */
 function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
