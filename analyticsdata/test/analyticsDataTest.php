@@ -59,6 +59,30 @@ class analyticsDataTest extends TestCase
         $this->assertStringContainsString('Report result', $output);
     }
 
+    public function testRunReportWithDimensionAndMetricFilters()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_dimension_and_metric_filters', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithDimensionFilter()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_dimension_filter', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithMultipleDimensionFilters()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_multiple_dimension_filters', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
     public function testRunReportWithMultipleMetrics()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
