@@ -32,8 +32,6 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\PropertyQuota;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
