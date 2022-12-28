@@ -54,8 +54,8 @@ function run_report_with_dimension_exclude_filter(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'pageTitle',]),],
-        'metrics' => [new Metric(['name' => 'sessions',])],
+        'dimensions' => [new Dimension(['name' => 'pageTitle'])],
+        'metrics' => [new Metric(['name' => 'sessions'])],
         'dateRanges' => [new DateRange([
                 'start_date' => '7daysAgo',
                 'end_date' => 'yesterday',
@@ -63,14 +63,14 @@ function run_report_with_dimension_exclude_filter(string $propertyId)
         ],
         'dimension_filter' => new FilterExpression([
             'not_expression' => new FilterExpression([
-	        'filter' => new Filter([
-	            'field_name' => 'pageTitle',
-	            'string_filter' => new StringFilter([
-	                'value' => 'My Homepage'
-	            ]),
-	        ]),
-	    ]),
-	]),
+            'filter' => new Filter([
+                'field_name' => 'pageTitle',
+                'string_filter' => new StringFilter([
+                    'value' => 'My Homepage',
+                ]),
+            ]),
+        ]),
+    ]),
     ]);
 
     printRunReportResponseWithDimensionExcludeFilter($response);
