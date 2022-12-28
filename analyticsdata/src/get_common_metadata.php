@@ -38,8 +38,8 @@ use Google\Analytics\Data\V1beta\MetricAggregation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* Retrieves dimensions and metrics available for all Google Analytics 4 properties.
-*/
+ * Retrieves dimensions and metrics available for all Google Analytics 4 properties.
+ */
 function get_common_metadata()
 {
     // Create an instance of the Google Analytics Data API client library.
