@@ -16,14 +16,14 @@
  */
 
 /*
-* Google Analytics Data API sample application demonstrating the usage of
-* dimension and metric filters in a report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_dimension_and_metric_filters.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the usage of
+ * dimension and metric filters in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_dimension_and_metric_filters.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -44,12 +44,12 @@ use Google\Analytics\Data\V1beta\Filter\NumericFilter\Operation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report using both metric and dimension filters. A dimension filter
-* limits the report to include only users who made an in-app purchase using
-* Android platform. A metric filter specifies that only users with session
-* counts larger than 1,000 should be included.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report using both metric and dimension filters. A dimension filter
+ * limits the report to include only users who made an in-app purchase using
+ * Android platform. A metric filter specifies that only users with session
+ * counts larger than 1,000 should be included.
+ */
 function run_report_with_dimension_and_metric_filters(string $propertyId)
 {
     // [START analyticsdata_initialize]
@@ -62,62 +62,49 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'city',
-            ]),
-        ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ],
-        'dateRanges' => [new DateRange(
-        [
+        'dimensions' => [new Dimension(['name' => 'city'])],
+        'metrics' => [new Metric(['name' => 'activeUsers'])],
+        'dateRanges' => [new DateRange([
             'start_date' => '2020-03-31',
             'end_date' => 'today',
-        ])
+            ]),
         ],
-        'metric_filter' => new FilterExpression(
-            'filter' => new Filter(
+        'metric_filter' => new FilterExpression([
+            'filter' => new Filter([
                 'field_name' => 'sessions',
-                'numeric_filter' => new NumericFilter(
+                'numeric_filter' => new NumericFilter([
                     'operation' => Operation::GREATER_THAN,
-                    'value' => new NumericValue(
+                    'value' => new NumericValue([
                         'int64_value' => 1000,
-                    ),
-                ),
-            ),
-        ),
-        'dimension_filter' => new FilterExpression
-        ([
-        'and_group' => new FilterExpressionList(
-            'expressions' => [
-            new FilterExpression(
-                'filter' => new Filter(
-                    'field_name' => 'platform',
-                    'string_filter' => new StringFilter(
-                        'match_type' => MatchType::EXACT,
-                        'value' => 'Android',
-                    )
-                ),
-            ),
-            new FilterExpression(
-                'filter' => new Filter(
-                    'field_name' => 'eventName',
-                    'string_filter' => new StringFilter(
-                        'match_type' => MatchType::EXACT,
-                        'value' => 'in_app_purchase',
-                    )
-                )
-            ),
-            ],
-        ),
+                    ]),
+                ]),
+            ]),
+        ]),
+        'dimension_filter' => new FilterExpression([
+            'and_group' => new FilterExpressionList([
+                'expressions' => [
+                    new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name' => 'platform',
+                            'string_filter' => new StringFilter([
+                                'match_type' => MatchType::EXACT,
+                                'value' => 'Android',
+                            ])
+                        ]),
+                    ]),
+                    new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name' => 'eventName',
+                            'string_filter' => new StringFilter([
+                                'match_type' => MatchType::EXACT,
+                                'value' => 'in_app_purchase',
+                            ])
+                        ])
+                   ]),
+                ],
+            ]),
 
-	 ]
-        ),
+	]),
     ]);
 
     printRunReportResponseWithDimensionAndMetricFilters($response);

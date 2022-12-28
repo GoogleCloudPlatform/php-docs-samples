@@ -16,14 +16,14 @@
  */
 
 /*
-* Google Analytics Data API sample application demonstrating the usage of
-* dimension and metric filters in a report.
-* See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
-* for more information.
-* Usage:
-*   composer update
-*   php run_report_with_multiple_dimension_filters.php YOUR-GA4-PROPERTY-ID
-*/
+ * Google Analytics Data API sample application demonstrating the usage of
+ * dimension and metric filters in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_multiple_dimension_filters.php YOUR-GA4-PROPERTY-ID
+ */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
@@ -40,14 +40,14 @@ use Google\Analytics\Data\V1beta\Filter\StringFilter;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
-* @param string $propertyID Your GA-4 Property ID
-* Runs a report using multiple dimension filters joined as `and_group`
-* expression. The filter selects for when both `browser` is `Chrome` and
-* `countryId` is `US`.
-* This sample uses relative date range values. See
-* https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange
-* for more information.
-*/
+ * @param string $propertyID Your GA-4 Property ID
+ * Runs a report using multiple dimension filters joined as `and_group`
+ * expression. The filter selects for when both `browser` is `Chrome` and
+ * `countryId` is `US`.
+ * This sample uses relative date range values. See
+ * https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange
+ * for more information.
+ */
 function run_report_with_multiple_dimension_filters(string $propertyId)
 {
     // [START analyticsdata_initialize]
@@ -60,49 +60,36 @@ function run_report_with_multiple_dimension_filters(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
-
-        'dimensions' => [new Dimension(
-            [
-                'name' => 'browser',
+        'dimensions' => [new Dimension(['name' => 'browser'])],
+        'metrics' => [new Metric(['name' => 'activeUsers'])],
+        'dateRanges' => [
+            new DateRange([
+                'start_date' => '7daysAgo',
+                'end_date' => 'yesterday',
             ]),
         ],
-        'metrics' => [new Metric(
-            [
-                'name' => 'activeUsers',
-            ]
-        )
-        ],
-        'dateRanges' => [new DateRange(
-        [
-            'start_date' => '7daysAgo',
-            'end_date' => 'yesterday',
-        ])
-        ],
-        'dimension_filter' => new FilterExpression
-        ([
-        'and_group' => new FilterExpressionList(
-            'expressions' => [
-            new FilterExpression(
-                'filter' => new Filter(
-                    'field_name' => 'browser',
-                    'string_filter' => new StringFilter(
-                        'value' => 'Chrome',
-                    )
-                ),
-            ),
-            new FilterExpression(
-                'filter' => new Filter(
-                    'field_name' => 'countryId',
-                    'string_filter' => new StringFilter(
-                        'value' => 'US',
-                    )
-                )
-            ),
-            ],
-        ),
-
-	 ]
-        ),
+        'dimension_filter' => new FilterExpression([
+            'and_group' => new FilterExpressionList([
+                'expressions' => [
+                    new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name' => 'browser',
+                            'string_filter' => new StringFilter([
+                                'value' => 'Chrome',
+                            ])
+                        ]),
+                    ]),
+                    new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name' => 'countryId',
+                            'string_filter' => new StringFilter([
+                                 'value' => 'US',
+                            ])
+                         ]),
+                    ]),
+                ],
+            ]),
+        ]),
     ]);
 
     printRunReportResponseWithMultipleDimensionFilters($response);
