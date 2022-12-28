@@ -51,6 +51,31 @@ class analyticsDataTest extends TestCase
         }
     }
 
+    public function testRunBatchReport()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_batch_report', [$propertyId]);
+
+        $this->assertStringContainsString('Batch report result', $output);
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunPivotReport()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_pivot_report', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithDimensionExcludeFilter()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_dimension_exclude_filter', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
     public function testRunReportWithDimensionAndMetricFilters()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
@@ -79,6 +104,14 @@ class analyticsDataTest extends TestCase
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report_with_multiple_metrics', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithDimensionInListFilter()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_dimension_in_list_filter', [$propertyId]);
 
         $this->assertStringContainsString('Report result', $output);
     }
