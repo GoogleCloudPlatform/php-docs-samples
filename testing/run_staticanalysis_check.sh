@@ -22,7 +22,6 @@ if [ "${TEST_DIRECTORIES}" = "" ]; then
 fi
 
 SKIP_DIRS=(
-  appengine
   dialogflow
   iot
 )
@@ -34,7 +33,7 @@ FAILED_FILE=${TMP_REPORT_DIR}/failed
 for dir in $(find $TEST_DIRECTORIES -type d -name src -not -path '/*'  -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
 do
     if [[ " ${SKIP_DIRS[@]} " =~ " ${dir} " ]]; then
-        printf "Skipping $dir (explicitly flagged to be skipped)\n"
+        printf "Skipping $dir (explicitly flagged to be skipped)\n\n"
         continue
     fi
     composer update --working-dir=$dir --ignore-platform-reqs -q
@@ -43,7 +42,7 @@ do
     if [ -f "testing/phpstan/$dir.neon.dist" ]; then
         neon="testing/phpstan/$dir.neon.dist"
     fi
-    echo "Running phpstan in $dir with config $neon"
+    echo "Running phpstan in \"$dir\" with config \"$neon\""
     testing/vendor/bin/phpstan analyse $dir/src \
         --autoload-file=autoload.php \
         --configuration=$neon
