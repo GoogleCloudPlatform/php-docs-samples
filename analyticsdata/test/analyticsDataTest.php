@@ -51,6 +51,23 @@ class analyticsDataTest extends TestCase
         }
     }
 
+    public function testRunBatchReport()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_batch_report', [$propertyId]);
+
+        $this->assertStringContainsString('Batch report result', $output);
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunPivotReport()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_pivot_report', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
     public function testRunReportWithDimensionExcludeFilter()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
