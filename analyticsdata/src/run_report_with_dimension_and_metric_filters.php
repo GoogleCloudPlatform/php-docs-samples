@@ -104,7 +104,7 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
                 ],
             ]),
 
-	]),
+    ]),
     ]);
 
     printRunReportResponseWithDimensionAndMetricFilters($response);

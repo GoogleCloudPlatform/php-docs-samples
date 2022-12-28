@@ -67,13 +67,13 @@ function run_report_with_dimension_filter(string $propertyId)
             ])
         ],
         'dimension_filter' => new FilterExpression([
-	    'filter' => new Filter([
-	        'field_name' => 'eventName',
-	        'string_filter' => new StringFilter([
-	            'value' => 'first_open'
-	        ]),
-	    ]),
-	]),
+        'filter' => new Filter([
+            'field_name' => 'eventName',
+            'string_filter' => new StringFilter([
+                'value' => 'first_open'
+            ]),
+        ]),
+    ]),
     ]);
 
     printRunReportResponseWithDimensionFilter($response);
