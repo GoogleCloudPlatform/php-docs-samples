@@ -37,8 +37,8 @@ use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyId Your GA-4 Property ID
  * Runs a batch report on a Google Analytics 4 property.
+ * @param string $propertyId Your GA-4 Property ID
  */
 function run_batch_report(string $propertyId)
 {

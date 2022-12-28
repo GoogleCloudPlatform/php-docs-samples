@@ -39,9 +39,9 @@ use Google\Analytics\Data\V1beta\OrderBy\MetricOrderBy;
 use Google\Analytics\Data\V1beta\RunPivotReportResponse;
 
 /**
- * @param string $propertyId Your GA-4 Property ID
  * Runs a pivot query to build a report of session counts by country,
  * pivoted by the browser dimension.
+ * @param string $propertyId Your GA-4 Property ID
  */
 function run_pivot_report(string $propertyId)
 {
