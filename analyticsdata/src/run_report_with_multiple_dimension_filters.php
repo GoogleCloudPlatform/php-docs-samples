@@ -50,11 +50,8 @@ use Google\Analytics\Data\V1beta\RunReportResponse;
  */
 function run_report_with_multiple_dimension_filters(string $propertyId)
 {
-    // [START analyticsdata_initialize]
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-
-    // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
