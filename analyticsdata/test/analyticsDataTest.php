@@ -31,7 +31,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_report', [$propertyId]);
 
-        $this->assertRegExp('/Report result/', $output);
+        $this->assertStringContainsString('Report result', $output);
     }
 
     public function testClientFromJsonCredentials()
@@ -56,7 +56,7 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('get_common_metadata', [$propertyId]);
 
-        $this->assertRegExp('/Dimensions and metrics/', $output);
+        $this->assertStringContainsString('Dimensions and metrics', $output);
     }
 
     public function testGetMetadataByPropertyId()
@@ -64,6 +64,6 @@ class analyticsDataTest extends TestCase
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('get_metadata_by_property_id', [$propertyId]);
 
-        $this->assertRegExp('/Dimensions and metrics/', $output);
+        $this->assertStringContainsString('Dimensions and metrics', $output);
     }
 }

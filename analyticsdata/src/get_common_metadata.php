@@ -36,6 +36,7 @@ use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\MetricAggregation;
 use Google\Analytics\Data\V1beta\RunReportResponse;
+use Google\ApiCore\ApiException;
 
 /**
  * Retrieves dimensions and metrics available for all Google Analytics 4 properties.
@@ -52,14 +53,17 @@ function get_common_metadata()
     */
     $propertyId = 0;
     
-    echo "properties/{$propertyId}/metadata";
+   // echo "properties/{$propertyId}/metadata";
 
     // Make an API call.
-   // $response = $client->getMetadata(
-   //     'name' => 'properties/{$propertyId}/metadata',
-    //);
-
-   // printGetCommonMetadata($response);
+    try {
+        $response = $client->getMetadata('properties/0/metadata');
+    } catch (ApiException $ex) {
+        printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
+    }
+ 
+    print('Dimensions and metrics available for all Google Analytics 4 properties:');
+    printGetCommonMetadata($response);
 }
 
 /**
@@ -68,31 +72,47 @@ function get_common_metadata()
  */
 function printGetCommonMetadata($response)
 {
-    // [START analyticsdata_print_run_report_response_header]
-    printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
-    foreach ($response->getDimensionHeaders() as $dimensionHeader) {
-        printf('Dimension header name: %s%s', $dimensionHeader->getName(), PHP_EOL);
-    }
-    foreach ($response->getMetricHeaders() as $metricHeader) {
+    // [START analyticsdata_print_get_metadata_response]
+    foreach ($response->getDimensions() as $dimension) {
+        print('DIMENSION' . PHP_EOL);
         printf(
-            'Metric header name: %s (%s)' . PHP_EOL,
-            $metricHeader->getName(),
-            MetricType::name($metricHeader->getType())
+            '%s (%s): %s' . PHP_EOL,
+            dimension.getApiName(),
+            dimension.getUiName(),
+            dimension.getDescription(),
         );
+        printf('custom definition: %s%s', dimension.getCustomDefinition(), PHP_EOL);
+        if (!isNull(dimension.getDeprecatedApiNamesList())
+          && !empty(dimension.getDeprecatedApiNamesList())) {
+            printf(
+                'Deprecated API names: %s%s',
+                dimension.getDeprecatedApiNamesList(),
+                PHP_EOL
+            );
+        }
+        print(PHP_EOL);
     }
-    // [END analyticsdata_print_run_report_response_header]
-
-    // [START analyticsdata_print_run_report_response_rows]
-    print 'Report result: ' . PHP_EOL;
-
-    foreach ($response->getRows() as $row) {
+    
+    foreach ($response->getMetrics() as $metric) {
+        print('METRIC' . PHP_EOL);
         printf(
-            '%s %s' . PHP_EOL,
-            $row->getDimensionValues()[0]->getValue(),
-            $row->getMetricValues()[0]->getValue()
+            '%s (%s): %s' . PHP_EOL,
+            metric.getApiName(),
+            metric.getUiName(),
+            metric.getDescription(),
         );
+        printf('custom definition: %s%s', metric.getCustomDefinition(), PHP_EOL);
+        if (!isNull(metric.getDeprecatedApiNamesList())
+          && !empty(metric.getDeprecatedApiNamesList())) {
+            printf(
+                'Deprecated API names: %s%s',
+                metric.getDeprecatedApiNamesList(),
+                PHP_EOL
+            );
+        }
+        print(PHP_EOL);
     }
-    // [END analyticsdata_print_run_report_response_rows]
+    // [END analyticsdata_print_get_metadata_response]
 }
 // [END analyticsdata_get_common_metadata]
 
