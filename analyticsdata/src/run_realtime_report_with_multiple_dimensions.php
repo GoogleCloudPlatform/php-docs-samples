@@ -86,7 +86,7 @@ function printRunRealtimeReportWithMultipleDimensionsResponse(RunRealtimeReportR
     }
     // [END analyticsdata_print_run_realtime_report_response_rows]
 }
-// [END analyticsdata_run__realtime_report_with_multiple_dimensions]
+// [END analyticsdata_run_realtime_report_with_multiple_dimensions]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
