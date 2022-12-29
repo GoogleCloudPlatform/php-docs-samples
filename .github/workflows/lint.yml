@@ -25,8 +25,6 @@ jobs:
       with:
         ref: ${{ github.event.pull_request.head.ref }}
         fetch-depth: 5
-    - run: |
-       git fetch --no-tags --prune --depth=5 origin main
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -38,6 +36,7 @@ jobs:
     - name: Run Script
       run: |
         composer install -d testing/
+        git fetch --no-tags --prune --depth=5 origin main
         bash testing/run_staticanalysis_check.sh
       env:
         PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}
