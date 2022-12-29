@@ -26,7 +26,13 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
-
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+      with:
+        state: open
+    - if: success() && steps.findPr.outputs.number
+      env:
+        PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}
     - name: Run Script
       run: |
         composer install -d testing/

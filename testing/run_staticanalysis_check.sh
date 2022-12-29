@@ -33,7 +33,6 @@ FAILED_FILE=${TMP_REPORT_DIR}/failed
 # Determine all files changed on this branch
 # (will be empty if running from "main").
 FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD main))
-echo $FILES_CHANGED
 
 # If the file RUN_ALL_TESTS is modified, or if we were not triggered from a Pull
 # Request, run the whole test suite.
@@ -57,8 +56,6 @@ do
         if ! grep -q ^$dir <<< "$FILES_CHANGED" ; then
             echo "Skipping tests in $dir (unchanged)"
             continue
-        else
-            echo "Not skipping in $dir"
         fi
     fi
     if [[ " ${SKIP_DIRS[@]} " =~ " ${dir} " ]]; then
