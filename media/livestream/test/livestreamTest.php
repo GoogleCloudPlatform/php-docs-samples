@@ -39,7 +39,6 @@ class livestreamTest extends TestCase
     private static $inputId;
     private static $inputName;
 
-
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
