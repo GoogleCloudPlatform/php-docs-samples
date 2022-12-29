@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -32,12 +32,11 @@ use Google\Cloud\Storage\StorageClient;
  *   https://cloud.google.com/storage/docs/reporting-changes
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'your-bucket')
  */
 function list_bucket_notifications(
     string $bucketName
 ): void {
-    // $bucketName = 'your-bucket';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $notifications = $bucket->notifications();

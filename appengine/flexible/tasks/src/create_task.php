@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/appengine/flexible/tasks/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/appengine/flexible/tasks/README.md
  */
 
 namespace Google\Cloud\Samples\Tasks;
