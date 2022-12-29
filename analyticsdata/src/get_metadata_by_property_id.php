@@ -37,12 +37,12 @@ use Google\ApiCore\ApiException;
  * property, including custom fields.
  * @param string $propertyId Your GA-4 Property ID
  */
-function get_metadata_by_property_id($propertyId)
+function get_metadata_by_property_id(string $propertyId)
 {
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
 
-    $formattedName = 'properties/' . $propertyId . '/metadata';
+    $formattedName = sprintf('properties/%s/metadata', $propertyId);
 
     // Make an API call.
     try {
@@ -53,7 +53,8 @@ function get_metadata_by_property_id($propertyId)
 
     printf(
         'Dimensions and metrics available for Google Analytics 4 property'
-              . ' %s (including custom fields):' . PHP_EOL, $propertyId
+            . ' %s (including custom fields):' . PHP_EOL,
+        $propertyId
     );
     printGetMetadataByPropertyId($response);
 }
@@ -62,7 +63,7 @@ function get_metadata_by_property_id($propertyId)
  * Print results of a getMetadata call.
  * @param Metadata $response
  */
-function printGetMetadataByPropertyId($response)
+function printGetMetadataByPropertyId(Metadata $response)
 {
     // [START analyticsdata_print_get_metadata_response]
     foreach ($response->getDimensions() as $dimension) {
@@ -75,7 +76,7 @@ function printGetMetadataByPropertyId($response)
         );
         printf(
             'custom definition: %s' . PHP_EOL,
-            $dimension->getCustomDefinition()? 'true' : 'false'
+            $dimension->getCustomDefinition() ? 'true' : 'false'
         );
         if ($dimension->getDeprecatedApiNames()->count() > 0) {
             print('Deprecated API names: ');
@@ -97,7 +98,7 @@ function printGetMetadataByPropertyId($response)
         );
         printf(
             'custom definition: %s' . PHP_EOL,
-            $metric->getCustomDefinition()? 'true' : 'false'
+            $metric->getCustomDefinition() ? 'true' : 'false'
         );
         if ($metric->getDeprecatedApiNames()->count() > 0) {
             print('Deprecated API names: ');

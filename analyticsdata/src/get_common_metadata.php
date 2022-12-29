@@ -40,13 +40,13 @@ function get_common_metadata()
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
 
-    /*
-    * Set the Property ID to 0 for dimensions and metrics common
-    * to all properties. In this special mode, this method will
-    * not return custom dimensions and metrics.
-    */
+    /**
+     * Set the Property ID to 0 for dimensions and metrics common
+     * to all properties. In this special mode, this method will
+     * not return custom dimensions and metrics.
+     */
     $propertyId = 0;
-    $formattedName = 'properties/' . $propertyId . '/metadata';
+    $formattedName = sprintf('properties/%s/metadata', $propertyId);
 
     // Make an API call.
     try {
@@ -63,7 +63,7 @@ function get_common_metadata()
  * Print results of a getMetadata call.
  * @param Metadata $response
  */
-function printGetCommonMetadata($response)
+function printGetCommonMetadata(Metadata $response)
 {
     // [START analyticsdata_print_get_metadata_response]
     foreach ($response->getDimensions() as $dimension) {
