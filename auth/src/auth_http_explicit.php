@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/auth/README.md
  */
 
 # [START auth_http_explicit]

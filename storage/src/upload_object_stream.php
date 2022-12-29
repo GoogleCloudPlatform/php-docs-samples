@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -31,15 +31,14 @@ use Google\Cloud\Storage\WriteStream;
  * Upload a chunked file stream.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $contents The contents to upload via stream chunks.
+ *        (e.g. 'these are my contents')
  */
 function upload_object_stream(string $bucketName, string $objectName, string $contents): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $contents = 'these are my contents';
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $writeStream = new WriteStream(null, [

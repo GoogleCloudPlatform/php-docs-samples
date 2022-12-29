@@ -62,6 +62,21 @@ class storageTest extends TestCase
         $this->assertRegExp('/: OWNER/', $output);
     }
 
+    public function testPrintDefaultBucketAcl()
+    {
+        $output = $this->runFunctionSnippet('print_bucket_default_acl', [
+          self::$tempBucket->name(),
+        ]);
+
+        $defaultAcl = self::$tempBucket->defaultAcl()->get();
+        foreach ($defaultAcl as $item) {
+            $this->assertStringContainsString(
+                sprintf('%s: %s' . PHP_EOL, $item['entity'], $item['role']),
+                $output,
+            );
+        }
+    }
+
     /**
      * @return void
      */
@@ -112,7 +127,6 @@ class storageTest extends TestCase
     public function testListBuckets()
     {
         $output = $this->runFunctionSnippet('list_buckets');
-
         $this->assertStringContainsString('Bucket:', $output);
     }
 
@@ -137,6 +151,23 @@ class storageTest extends TestCase
         $this->assertFalse($bucket->exists());
 
         $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
+    }
+
+    public function testGetBucketClassAndLocation()
+    {
+        $output = $this->runFunctionSnippet(
+            'get_bucket_class_and_location',
+            [self::$tempBucket->name()],
+        );
+
+        $bucketInfo = self::$tempBucket->info();
+
+        $this->assertStringContainsString(sprintf(
+            'Bucket: %s, storage class: %s, location: %s' . PHP_EOL,
+            $bucketInfo['name'],
+            $bucketInfo['storageClass'],
+            $bucketInfo['location'],
+        ), $output);
     }
 
     public function testBucketDefaultAcl()
@@ -444,8 +475,30 @@ class storageTest extends TestCase
             $objectName,
             $this->keyName()
         ));
+
+        return $objectName;
     }
 
+    /** @depends testUploadWithKmsKey */
+    public function testObjectGetKmsKey(string $objectName)
+    {
+        $kmsEncryptedBucketName = self::$bucketName . '-kms-encrypted';
+        $bucket = self::$storage->bucket($kmsEncryptedBucketName);
+        $objectInfo = $bucket->object($objectName)->info();
+
+        $output = $this->runFunctionSnippet('object_get_kms_key', [
+            $kmsEncryptedBucketName,
+            $objectName,
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'The KMS key of the object is %s' . PHP_EOL,
+                $objectInfo['kmsKeyName'],
+            ),
+            $output,
+        );
+    }
     public function testBucketVersioning()
     {
         $output = self::runFunctionSnippet('enable_versioning', [
@@ -474,15 +527,20 @@ class storageTest extends TestCase
             'name' => 'test.html'
         ]);
 
+        $output = self::runFunctionSnippet('print_bucket_website_configuration', [
+            $bucket->name(),
+        ]);
+
+        $this->assertEquals(
+            sprintf('Bucket website configuration not set' . PHP_EOL),
+            $output,
+        );
+
         $output = self::runFunctionSnippet('define_bucket_website_configuration', [
             $bucket->name(),
             $obj->name(),
             $obj->name(),
         ]);
-
-        $info = $bucket->reload();
-        $obj->delete();
-        $bucket->delete();
 
         $this->assertEquals(
             sprintf(
@@ -494,8 +552,23 @@ class storageTest extends TestCase
             $output
         );
 
-        $this->assertEquals($obj->name(), $info['website']['mainPageSuffix']);
-        $this->assertEquals($obj->name(), $info['website']['notFoundPage']);
+        $info = $bucket->reload();
+
+        $output = self::runFunctionSnippet('print_bucket_website_configuration', [
+          $bucket->name(),
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+                $info['website']['mainPageSuffix'],
+                $info['website']['notFoundPage'],
+            ),
+            $output,
+        );
+
+        $obj->delete();
+        $bucket->delete();
     }
 
     public function testGetServiceAccount()
@@ -753,6 +826,54 @@ class storageTest extends TestCase
         $this->assertEquals('COLDLINE', $info['storageClass']);
         $this->assertEquals(
             sprintf('Default storage class for bucket %s has been set to %s', $bucket->name(), 'COLDLINE'),
+            $output
+        );
+    }
+
+    public function testGetBucketWithAutoclass()
+    {
+        $bucketName = uniqid('samples-get-autoclass-');
+        $bucket = self::$storage->createBucket($bucketName, [
+            'autoclass' => [
+                'enabled' => true,
+            ],
+            'location' => 'US',
+        ]);
+
+        $output = self::runFunctionSnippet('get_bucket_autoclass', [
+            $bucketName,
+        ]);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf('Bucket %s has autoclass enabled: %s', $bucketName, true),
+            $output
+        );
+    }
+
+    public function testSetBucketWithAutoclass()
+    {
+        $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'), [
+            'autoclass' => [
+                'enabled' => true,
+            ],
+            'location' => 'US',
+        ]);
+        $info = $bucket->reload();
+        $this->assertArrayHasKey('autoclass', $info);
+        $this->assertTrue($info['autoclass']['enabled']);
+
+        $output = self::runFunctionSnippet('set_bucket_autoclass', [
+            $bucket->name(),
+            false
+        ]);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Updated bucket %s with autoclass set to false.',
+                $bucket->name(),
+            ),
             $output
         );
     }

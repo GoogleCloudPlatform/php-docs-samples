@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-# [START creating_psr3_logger_import]
+# [START logging_creating_psr3_logger_import]
 use Google\Cloud\Logging\LoggingClient;
-# [END creating_psr3_logger_import]
+# [END logging_creating_psr3_logger_import]
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Factory\AppFactory;
@@ -58,12 +58,12 @@ $app->get('/', function (Request $request, Response $response) use ($projectId, 
 $app->post('/log', function (Request $request, Response $response) use ($projectId) {
     parse_str((string) $request->getBody(), $postData);
     # [START gae_flex_configure_logging]
-    # [START creating_psr3_logger]
+    # [START logging_creating_psr3_logger]
     $logging = new LoggingClient([
         'projectId' => $projectId
     ]);
     $logger = $logging->psrLogger('app');
-    # [END creating_psr3_logger]
+    # [END logging_creating_psr3_logger]
     $logger->notice($postData['text'] ?? '');
     # [END gae_flex_configure_logging]
     return $response
@@ -73,13 +73,13 @@ $app->post('/log', function (Request $request, Response $response) use ($project
 
 $app->get('/async_log', function (Request $request, Response $response) use ($projectId) {
     $token = $request->getUri()->getQuery('token');
-    # [START enabling_batch]
+    # [START logging_enabling_psr3_batch]
     $logger = LoggingClient::psrBatchLogger('app');
-    # [END enabling_batch]
-    # [START using_the_logger]
+    # [END logging_enabling_psr3_batch]
+    # [START logging_using_psr3_logger]
     $logger->info('Hello World');
     $logger->error('Oh no');
-    # [END using_the_logger]
+    # [END logging_using_psr3_logger]
     $logger->info("Token: $token");
     $response->getBody()->write('Sent some logs');
     return $response;

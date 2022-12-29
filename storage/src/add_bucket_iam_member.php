@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,15 +30,14 @@ use Google\Cloud\Storage\StorageClient;
  * Adds a new member / role IAM pair to a given Cloud Storage bucket.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $role The role to which the given member should be added.
+ *        (e.g. 'roles/storage.objectViewer')
  * @param string[] $members The member(s) to be added to the role.
+ *        (e.g. ['group:example@google.com'])
  */
-function add_bucket_iam_member($bucketName, $role, array $members)
+function add_bucket_iam_member(string $bucketName, string $role, array $members): void
 {
-    // $bucketName = 'my-bucket';
-    // $role = 'roles/storage.objectViewer';
-    // $members = ['group:example@google.com'];
-
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

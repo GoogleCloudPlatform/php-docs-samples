@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,18 +30,17 @@ use Google\Cloud\Storage\StorageClient;
  * Upload an object from memory buffer.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $contents The contents to upload to the file.
+ *        (e.g. 'these are my contents')
  */
 function upload_object_from_memory(
     string $bucketName,
     string $objectName,
     string $contents
 ): void {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $contents = 'these are my contents';
-
     $storage = new StorageClient();
     $stream = fopen('data://text/plain,' . $contents, 'r');
     $bucket = $storage->bucket($bucketName);
