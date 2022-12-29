@@ -78,8 +78,11 @@ function printRunRealtimeReportResponse(RunRealtimeReportResponse $response)
     print 'Report result: ' . PHP_EOL;
 
     foreach ($response->getRows() as $row) {
-        print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
     }
     // [END analyticsdata_print_run_realtime_report_response_rows]
 }
