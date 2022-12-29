@@ -15,75 +15,103 @@
  * limitations under the License.
  */
 
-/* 
-
-"""Google Analytics Data API sample application retrieving dimension and metrics
-metadata.
-See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata
-for more information.
-"""
-
-Before you start the application, please review the comments starting with
-"TODO(developer)" and update the code to use the correct values.
-
-Usage:
-  composer update
-  php get_metadata_by_property_id.php
+/**
+ * Google Analytics Data API sample application retrieving dimension and metrics
+ * metadata.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata
+ * for more information.
+ * Usage:
+ *   composer update
+ *   php get_metadata_by_property_id.php
  */
+
+namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_get_metadata_by_property_id]
-require 'vendor/autoload.php';
-
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
-use Google\Analytics\Data\V1beta\DateRange;
-use Google\Analytics\Data\V1beta\Dimension;
-use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\Metadata;
+use Google\ApiCore\ApiException;
 
 /**
- * TODO(developer): Replace this variable with your Google Analytics 4
- *   property ID before running the sample.
+ * Retrieves dimensions and metrics available for a Google Analytics 4
+ * property, including custom fields.
+ * @param string $propertyId Your GA-4 Property ID
  */
-$property_id = 'YOUR-GA4-PROPERTY-ID';
+function get_metadata_by_property_id($propertyId)
+{
+    // Create an instance of the Google Analytics Data API client library.
+    $client = new BetaAnalyticsDataClient();
 
-// [START analyticsdata_initialize]
-//Imports the Google Analytics Data API client library.'
+    $formattedName = 'properties/' . $propertyId . '/metadata';
 
-$client = new BetaAnalyticsDataClient();
+    // Make an API call.
+    try {
+        $response = $client->getMetadata($formattedName);
+    } catch (ApiException $ex) {
+        printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
+    }
 
-// [END analyticsdata_initialize]
+    printf(
+        'Dimensions and metrics available for Google Analytics 4 property'
+              . ' %s (including custom fields):' . PHP_EOL, $propertyId
+    );
+    printGetMetadataByPropertyId($response);
+}
 
-// [START analyticsdata_run_report]
-// Make an API call.
-$response = $client->runReport([
-    'property' => 'properties/' . $property_id,
-    'dateRanges' => [
-        new DateRange([
-            'start_date' => '2020-03-31',
-            'end_date' => 'today',
-        ]),
-    ],
-    'dimensions' => [new Dimension(
-        [
-            'name' => 'city',
-        ]
-    ),
-    ],
-    'metrics' => [new Metric(
-        [
-            'name' => 'activeUsers',
-        ]
-    )
-    ]
-]);
-// [END analyticsdata_run_report]
+/**
+ * Print results of a getMetadata call.
+ * @param Metadata $response
+ */
+function printGetMetadataByPropertyId($response)
+{
+    // [START analyticsdata_print_get_metadata_response]
+    foreach ($response->getDimensions() as $dimension) {
+        print('DIMENSION' . PHP_EOL);
+        printf(
+            '%s (%s): %s' . PHP_EOL,
+            $dimension->getApiName(),
+            $dimension->getUiName(),
+            $dimension->getDescription(),
+        );
+        printf(
+            'custom definition: %s' . PHP_EOL,
+            $dimension->getCustomDefinition()? 'true' : 'false'
+        );
+        if ($dimension->getDeprecatedApiNames()->count() > 0) {
+            print('Deprecated API names: ');
+            foreach ($dimension->getDeprecatedApiNames() as $name) {
+                print($name . ',');
+            }
+            print(PHP_EOL);
+        }
+        print(PHP_EOL);
+    }
 
-// [START analyticsdata_run_report_response]
-// Print results of an API call.
-print 'Report result: ' . PHP_EOL;
-
-foreach ($response->getRows() as $row) {
-    print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
-    // [END analyticsdata_run_report_response]
+    foreach ($response->getMetrics() as $metric) {
+        print('METRIC' . PHP_EOL);
+        printf(
+            '%s (%s): %s' . PHP_EOL,
+            $metric->getApiName(),
+            $metric->getUiName(),
+            $metric->getDescription(),
+        );
+        printf(
+            'custom definition: %s' . PHP_EOL,
+            $metric->getCustomDefinition()? 'true' : 'false'
+        );
+        if ($metric->getDeprecatedApiNames()->count() > 0) {
+            print('Deprecated API names: ');
+            foreach ($metric->getDeprecatedApiNames() as $name) {
+                print($name . ',');
+            }
+            print(PHP_EOL);
+        }
+        print(PHP_EOL);
+    }
+    // [END analyticsdata_print_get_metadata_response]
 }
 // [END analyticsdata_get_metadata_by_property_id]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
