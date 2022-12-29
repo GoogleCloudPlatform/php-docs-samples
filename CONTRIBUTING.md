@@ -31,6 +31,10 @@ accept your pull requests.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
+## Writing a new sample
+
+Write samples according to the [sample style guide](https://googlecloudplatform.github.io/samples-style-guide/).
+
 ## Testing your code changes.
 
 ### Install dependencies
@@ -93,7 +97,7 @@ guidelines for all Google Cloud samples.
 [style-guide]: https://googlecloudplatform.github.io/samples-style-guide/
 
 Samples in this repository also follow the [PSR2][psr2] and [PSR4][psr4]
-recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer].
+recommendations. This is enforced using [PHP CS Fixer][php-cs-fixer], using the config in [.php-cs-fixer.dist.php](.php-cs-fixer.dist.php)
 
 Install that by running
 
@@ -101,14 +105,14 @@ Install that by running
 composer global require friendsofphp/php-cs-fixer
 ```
 
-Then to fix your directory or file run 
+Then to fix your directory or file run
 
 ```
-php-cs-fixer fix .
-php-cs-fixer fix path/to/file
+php-cs-fixer fix . --config .php-cs-fixer.dist.php
+php-cs-fixer fix path/to/file --config .php-cs-fixer.dist.php
 ```
 
-The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp) are an example of snippets following the latest style guidelines.
+The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/dlp) are an example of snippets following the latest style guidelines.
 
 [psr2]: http://www.php-fig.org/psr/psr-2/
 [psr4]: http://www.php-fig.org/psr/psr-4/

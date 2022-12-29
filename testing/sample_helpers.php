@@ -48,8 +48,9 @@ function execute_sample(string $file, string $namespace, ?array $argv)
         $parameterReflection = $parameterReflections[$i];
         if ($parameterReflection->hasType()) {
             $parameterType = $parameterReflection->getType()->getName();
-            if (in_array($parameterType, $validArrayTypes)) {
-                $argv[$i] = explode(',', $argv[$i]);
+            if (in_array($parameterType, $validArrayTypes) && !is_array($val)) {
+                $key = array_search($val, $argv);
+                $argv[$key] = explode(',', $argv[$key]);
             }
         }
     }

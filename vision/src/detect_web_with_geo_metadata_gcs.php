@@ -22,13 +22,13 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ImageContext;
 use Google\Cloud\Vision\V1\WebDetectionParams;
 
-// $path = 'gs://path/to/your/image.jpg'
-
 /**
  * Detect web entities on an image and include the image's geo metadata
  * to improve the quality of the detection.
+ *
+ * @param string $path GCS path to the image, e.g. "gs://path/to/your/image.jpg"
  */
-function detect_web_with_geo_metadata_gcs($path)
+function detect_web_with_geo_metadata_gcs(string $path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -57,3 +57,7 @@ function detect_web_with_geo_metadata_gcs($path)
     $imageAnnotator->close();
 }
 // [END vision_web_detection_include_geo_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
