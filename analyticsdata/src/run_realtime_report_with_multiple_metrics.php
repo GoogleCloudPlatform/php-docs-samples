@@ -16,61 +16,53 @@
  */
 
 /**
- * Google Analytics Data API sample application demonstrating the creation
- * of a basic report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
+ * Google Analytics Data API sample application demonstrating the creation of
+ * a realtime report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runRealtimeReport
  * for more information.
+ * Usage:
+ *   composer update
+ *   php run__realtime_report_with_multiple_metrics.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report]
+// [START analyticsdata_run_realtime_report_with_multiple_metrics]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
-use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\RunReportResponse;
+use Google\Analytics\Data\V1beta\RunRealtimeReportResponse;
 
 /**
+ * Runs a realtime report on a Google Analytics 4 property.
  * @param string $propertyId Your GA-4 Property ID
  */
-function run_report(string $propertyId)
+function run_realtime_report_with_multiple_metrics(string $propertyId)
 {
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
+    $response = $client->runRealtimeReport([
         'property' => 'properties/' . $propertyId,
-        'dateRanges' => [
-            new DateRange([
-                'start_date' => '2020-09-01',
-                'end_date' => '2020-09-15',
-            ]),
-        ],
-        'dimensions' => [
-            new Dimension([
-                'name' => 'country',
-            ]),
-        ],
+        'dimensions' => [new Dimension(['name' => 'unifiedScreenName'])],
         'metrics' => [
-            new Metric([
-                'name' => 'activeUsers',
-            ]),
+            new Metric(['name' => 'screenPageViews']),
+            new Metric(['name' => 'conversions']),
         ],
     ]);
 
-    printRunReportResponse($response);
+    printRunRealtimeReportWithMultipleMetricsResponse($response);
 }
 
 /**
- * Print results of a runReport call.
- * @param RunReportResponse $response
+ * Print results of a runRealtimeReport call.
+ * @param RunRealtimeReportResponse $response
  */
-function printRunReportResponse(RunReportResponse $response)
+function printRunRealtimeReportWithMultipleMetricsResponse(RunRealtimeReportResponse $response)
 {
-    // [START analyticsdata_print_run_report_response_header]
+    // [START analyticsdata_print_run_realtime_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
     foreach ($response->getDimensionHeaders() as $dimensionHeader) {
         printf('Dimension header name: %s%s', $dimensionHeader->getName(), PHP_EOL);
@@ -83,18 +75,21 @@ function printRunReportResponse(RunReportResponse $response)
             PHP_EOL
         );
     }
-    // [END analyticsdata_print_run_report_response_header]
+    // [END analyticsdata_print_run_realtime_report_response_header]
 
-    // [START analyticsdata_print_run_report_response_rows]
+    // [START analyticsdata_print_run_realtime_report_response_rows]
     print 'Report result: ' . PHP_EOL;
 
     foreach ($response->getRows() as $row) {
-        print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
     }
-    // [END analyticsdata_print_run_report_response_rows]
+    // [END analyticsdata_print_run_realtime_report_response_rows]
 }
-// [END analyticsdata_run_report]
+// [END analyticsdata_run_realtime_report_with_multiple_metrics]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

@@ -68,7 +68,7 @@ class videoStitcherTest extends TestCase
     private static $updatedAkamaiTokenKey = 'VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg==';
 
     private static $inputBucketName = 'cloud-samples-data';
-    private static $inputVideoFileName = '/media/hls-vod/manifest.m3u8';
+    private static $inputVodFileName = '/media/hls-vod/manifest.m3u8';
     private static $vodUri;
     private static $vodAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&correlator=';
 
@@ -78,6 +78,14 @@ class videoStitcherTest extends TestCase
     private static $vodAdTagDetailName;
     private static $vodStitchDetailId;
     private static $vodStitchDetailName;
+
+    private static $inputLiveFileName = '/media/hls-live/manifest.m3u8';
+    private static $liveUri;
+    private static $liveAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=';
+    private static $liveSessionId;
+    private static $liveSessionName;
+    private static $liveAdTagDetailId;
+    private static $liveAdTagDetailName;
 
     public static function setUpBeforeClass(): void
     {
@@ -90,7 +98,9 @@ class videoStitcherTest extends TestCase
         self::$slateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$slateFileName);
         self::$updatedSlateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$updatedSlateFileName);
 
-        self::$vodUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputVideoFileName);
+        self::$vodUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputVodFileName);
+
+        self::$liveUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputLiveFileName);
     }
 
     public function testCreateSlate()
@@ -428,6 +438,104 @@ class videoStitcherTest extends TestCase
             self::$vodStitchDetailId
         ]);
         $this->assertStringContainsString(self::$vodStitchDetailName, $output);
+    }
+
+    public function testCreateLiveSession()
+    {
+        # Create a temporary slate for the live session (required)
+        $tempSlateId = sprintf('php-test-slate-%s-%s', uniqid(), time());
+        $this->runFunctionSnippet('create_slate', [
+            self::$projectId,
+            self::$location,
+            $tempSlateId,
+            self::$slateUri
+        ]);
+
+        # API returns project number rather than project ID so
+        # don't include that in $liveSessionName since we don't have it
+        self::$liveSessionName = sprintf('/locations/%s/liveSessions/', self::$location);
+
+        $output = $this->runFunctionSnippet('create_live_session', [
+            self::$projectId,
+            self::$location,
+            self::$liveUri,
+            self::$liveAgTagUri,
+            $tempSlateId
+        ]);
+        $this->assertStringContainsString(self::$liveSessionName, $output);
+        self::$liveSessionId = explode('/', $output);
+        self::$liveSessionId = trim(self::$liveSessionId[(count(self::$liveSessionId) - 1)]);
+        self::$liveSessionName = sprintf('/locations/%s/liveSessions/%s', self::$location, self::$liveSessionId);
+
+        # Delete the temporary slate
+        $this->runFunctionSnippet('delete_slate', [
+            self::$projectId,
+            self::$location,
+            $tempSlateId
+        ]);
+    }
+
+    /** @depends testCreateLiveSession */
+    public function testGetLiveSession()
+    {
+        $output = $this->runFunctionSnippet('get_live_session', [
+            self::$projectId,
+            self::$location,
+            self::$liveSessionId
+        ]);
+        $this->assertStringContainsString(self::$liveSessionName, $output);
+    }
+
+    /** @depends testGetLiveSession */
+    public function testListLiveAdTagDetails()
+    {
+        # To get ad tag details, you need to curl the main manifest and
+        # a rendition first. This supplies media player information to the API.
+        #
+        # Curl the playUri first. The last line of the response will contain a
+        # renditions location. Curl the live session name with the rendition
+        # location appended.
+
+        $stitcherClient = new VideoStitcherServiceClient();
+        $formattedName = $stitcherClient->liveSessionName(self::$projectId, self::$location, self::$liveSessionId);
+        $session = $stitcherClient->getLiveSession($formattedName);
+        $playUri = $session->getPlayUri();
+
+        $manifest = file_get_contents($playUri);
+        $tmp = explode("\n", trim($manifest));
+        $renditions = $tmp[count($tmp) - 1];
+
+        # playUri will be in the following format:
+        # https://videostitcher.googleapis.com/v1/projects/{project}/locations/{location}/liveSessions/{session-id}/manifest.m3u8?signature=...
+        # Replace manifest.m3u8?signature=... with the renditions location.
+
+        $tmp = explode('/', $playUri);
+        array_pop($tmp);
+        $renditionsUri = sprintf('%s/%s', join('/', $tmp), $renditions);
+        file_get_contents($renditionsUri);
+
+        self::$liveAdTagDetailName = sprintf('/locations/%s/liveSessions/%s/liveAdTagDetails/', self::$location, self::$liveSessionId);
+        $output = $this->runFunctionSnippet('list_live_ad_tag_details', [
+            self::$projectId,
+            self::$location,
+            self::$liveSessionId
+        ]);
+        $this->assertStringContainsString(self::$liveAdTagDetailName, $output);
+        self::$liveAdTagDetailId = explode('/', $output);
+        self::$liveAdTagDetailId = trim(self::$liveAdTagDetailId[(count(self::$liveAdTagDetailId) - 1)]);
+        self::$liveAdTagDetailName = sprintf('/locations/%s/liveSessions/%s/liveAdTagDetails/%s', self::$location, self::$liveSessionId, self::$liveAdTagDetailId);
+    }
+
+    /** @depends testListLiveAdTagDetails */
+    public function testGetLiveAdTagDetail()
+    {
+        $output = $this->runFunctionSnippet('get_live_ad_tag_detail', [
+            self::$projectId,
+            self::$location,
+            self::$liveSessionId,
+            self::$liveAdTagDetailId
+        ]);
+        $this->assertStringContainsString(self::$liveAdTagDetailName, $output);
     }
 
     private static function deleteOldSlates(): void

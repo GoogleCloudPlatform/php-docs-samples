@@ -16,26 +16,37 @@
  */
 
 /**
- * Google Analytics Data API sample application demonstrating the creation
- * of a basic report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
+ * Google Analytics Data API sample application demonstrating the usage of
+ * dimension and metric filters in a report.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.dimension_filter
  * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_dimension_filter.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report]
+// [START analyticsdata_run_report_with_dimension_filter]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\FilterExpression;
+use Google\Analytics\Data\V1beta\Filter;
+use Google\Analytics\Data\V1beta\Filter\StringFilter;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
  * @param string $propertyId Your GA-4 Property ID
+ * Runs a report using a dimension filter. The call returns a time series
+ * report of `eventCount` when `eventName` is `first_open` for each date.
+ * This sample uses relative date range values. See
+ * https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange
+ * for more information.
  */
-function run_report(string $propertyId)
+function run_report_with_dimension_filter(string $propertyId)
 {
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
@@ -43,32 +54,32 @@ function run_report(string $propertyId)
     // Make an API call.
     $response = $client->runReport([
         'property' => 'properties/' . $propertyId,
+        'dimensions' => [new Dimension(['name' => 'date'])],
+        'metrics' => [new Metric(['name' => 'eventCount'])],
         'dateRanges' => [
             new DateRange([
-                'start_date' => '2020-09-01',
-                'end_date' => '2020-09-15',
-            ]),
+                'start_date' => '7daysAgo',
+                'end_date' => 'yesterday',
+            ])
         ],
-        'dimensions' => [
-            new Dimension([
-                'name' => 'country',
+        'dimension_filter' => new FilterExpression([
+            'filter' => new Filter([
+                'field_name' => 'eventName',
+                'string_filter' => new StringFilter([
+                    'value' => 'first_open'
+                ]),
             ]),
-        ],
-        'metrics' => [
-            new Metric([
-                'name' => 'activeUsers',
-            ]),
-        ],
+        ]),
     ]);
 
-    printRunReportResponse($response);
+    printRunReportResponseWithDimensionFilter($response);
 }
 
 /**
  * Print results of a runReport call.
  * @param RunReportResponse $response
  */
-function printRunReportResponse(RunReportResponse $response)
+function printRunReportResponseWithDimensionFilter(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -77,10 +88,9 @@ function printRunReportResponse(RunReportResponse $response)
     }
     foreach ($response->getMetricHeaders() as $metricHeader) {
         printf(
-            'Metric header name: %s (%s)%s',
+            'Metric header name: %s (%s)' . PHP_EOL,
             $metricHeader->getName(),
-            MetricType::name($metricHeader->getType()),
-            PHP_EOL
+            MetricType::name($metricHeader->getType())
         );
     }
     // [END analyticsdata_print_run_report_response_header]
@@ -89,12 +99,15 @@ function printRunReportResponse(RunReportResponse $response)
     print 'Report result: ' . PHP_EOL;
 
     foreach ($response->getRows() as $row) {
-        print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report]
+// [END analyticsdata_run_report_with_dimension_filter]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
