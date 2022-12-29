@@ -158,11 +158,11 @@ No project ID was provided, and we were unable to detect a default project ID.
 
 ## The client library
 
-This sample uses the [Google Cloud Compute Client Library for PHP][google-cloud-php].
+This sample uses the [Google Cloud Compute Client Library for PHP][google-cloud-php-compute].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and [report issues][google-cloud-php-issues].
 
-[google-cloud-php]: https://googleapis.github.io/google-cloud-php/#/docs/google-cloud/v0.152.0/compute/readme
+[google-cloud-php-compute]: https://cloud.google.com/php/docs/reference/cloud-compute/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 [google-cloud-sdk]: https://cloud.google.com/sdk/

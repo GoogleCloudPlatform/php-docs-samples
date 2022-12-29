@@ -1,0 +1,3 @@
+web: pid1 --nginxBinaryPath nginx --nginxConfigPath /layers/google.php.webconfig/webconfig/nginx.conf --serverConfigPath /layers/google.php.webconfig/webconfig/nginxserver.conf --nginxErrLogFilePath /var/log/nginx.log --customAppCmd "php-fpm -R --nodaemonize --fpm-config /layers/google.php.webconfig/webconfig/php-fpm.conf" --pid1LogFilePath /var/log/pid1.log --mimeTypesPath /layers/google.utils.nginx/nginx/conf/mime.types --customAppSocket /layers/google.php.webconfig/webconfig/app.sock
+migrate: php artisan migrate
+static: npm run update-static

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,7 +29,7 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * List all Cloud Storage buckets for the current project.
  */
-function list_buckets()
+function list_buckets(): void
 {
     $storage = new StorageClient();
     foreach ($storage->buckets() as $bucket) {

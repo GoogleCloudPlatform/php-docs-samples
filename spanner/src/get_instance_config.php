@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -31,7 +31,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceConfig The name of the instance configuration.
  */
-function get_instance_config($instanceConfig)
+function get_instance_config(string $instanceConfig): void
 {
     $spanner = new SpannerClient();
     $config = $spanner->instanceConfiguration($instanceConfig);

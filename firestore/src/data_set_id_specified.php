@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -40,11 +40,9 @@ function data_set_id_specified(string $projectId): void
         'name' => 'Phuket',
         'country' => 'Thailand'
     ];
-    # [START fs_set_requires_id]
     # [START firestore_data_set_id_specified]
     $db->collection('samples/php/cities')->document('new-city-id')->set($data);
     # [END firestore_data_set_id_specified]
-    # [END fs_set_requires_id]
     printf('Added document with ID: new-city-id' . PHP_EOL);
 }
 
