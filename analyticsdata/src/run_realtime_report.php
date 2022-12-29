@@ -27,7 +27,7 @@
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run__realtime_report]
+// [START analyticsdata_run_realtime_report]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
@@ -59,7 +59,7 @@ function run_realtime_report(string $propertyId)
  */
 function printRunRealtimeReportResponse(RunRealtimeReportResponse $response)
 {
-    // [START analyticsdata_print_run__realtime_report_response_header]
+    // [START analyticsdata_print_run_realtime_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
     foreach ($response->getDimensionHeaders() as $dimensionHeader) {
         printf('Dimension header name: %s%s', $dimensionHeader->getName(), PHP_EOL);
