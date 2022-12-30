@@ -51,6 +51,22 @@ class analyticsDataTest extends TestCase
         }
     }
 
+    public function testGetCommonMetadata()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('get_common_metadata');
+
+        $this->assertStringContainsString('Dimensions and metrics', $output);
+    }
+
+    public function testGetMetadataByPropertyId()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('get_metadata_by_property_id', [$propertyId]);
+
+        $this->assertStringContainsString('Dimensions and metrics', $output);
+    }
+
     public function testRunRealtimeReport()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
