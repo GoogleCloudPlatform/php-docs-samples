@@ -54,7 +54,7 @@ class analyticsDataTest extends TestCase
     public function testGetCommonMetadata()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
-        $output = $this->runFunctionSnippet('get_common_metadata', [$propertyId]);
+        $output = $this->runFunctionSnippet('get_common_metadata');
 
         $this->assertStringContainsString('Dimensions and metrics', $output);
     }
