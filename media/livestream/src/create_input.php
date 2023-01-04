@@ -44,8 +44,8 @@ function create_input(
     $livestreamClient = new LivestreamServiceClient();
 
     $parent = $livestreamClient->locationName($callingProjectId, $location);
-    $input = new Input();
-    $input->setType(Input\Type::RTMP_PUSH);
+    $input = (new Input())
+        ->setType(Input\Type::RTMP_PUSH);
 
     try {
         // Run the input creation request. The response is a long-running operation ID.
