@@ -46,14 +46,14 @@ function update_input(
     $livestreamClient = new LivestreamServiceClient();
 
     $formattedName = $livestreamClient->inputName($callingProjectId, $location, $inputId);
-    $input = new Input();
-    $input->setName($formattedName);
     $crop = (new PreprocessingConfig\Crop())
         ->setTopPixels(5)
         ->setBottomPixels(5);
     $config = (new PreprocessingConfig())
         ->setCrop($crop);
-    $input->setPreprocessingConfig($config);
+    $input = (new Input())
+        ->setName($formattedName)
+        ->setPreprocessingConfig($config);
 
     $updateMask = new FieldMask([
         'paths' => ['preprocessing_config']
