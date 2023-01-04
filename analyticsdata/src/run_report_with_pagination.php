@@ -16,15 +16,18 @@
  */
 
 /**
- * Google Analytics Data API sample application demonstrating the creation
- * of a basic report.
- * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport
+ * Google Analytics Data API sample application demonstrating the use of
+ * pagination to retrieve large result sets.
+ * See https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport#body.request_body.FIELDS.offset
  * for more information.
+ * Usage:
+ *   composer update
+ *   php run_report_with_pagination.php YOUR-GA4-PROPERTY-ID
  */
 
 namespace Google\Cloud\Samples\Analytics\Data;
 
-// [START analyticsdata_run_report]
+// [START analyticsdata_run_report_with_pagination]
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
@@ -33,9 +36,11 @@ use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
+ * Runs a report several times, each time retrieving a portion of result
+ * using pagination.
  * @param string $propertyId Your GA-4 Property ID
  */
-function run_report(string $propertyId)
+function run_report_with_pagination(string $propertyId)
 {
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
@@ -45,30 +50,32 @@ function run_report(string $propertyId)
         'property' => 'properties/' . $propertyId,
         'dateRanges' => [
             new DateRange([
-                'start_date' => '2020-09-01',
-                'end_date' => '2020-09-15',
-            ]),
+                'start_date' => '350daysAgo',
+                'end_date' => 'yesterday',
+            ])
         ],
         'dimensions' => [
-            new Dimension([
-                'name' => 'country',
-            ]),
+            new Dimension(['name' => 'firstUserSource']),
+            new Dimension(['name' => 'firstUserMedium']),
+            new Dimension(['name' => 'firstUserCampaignName']),
         ],
         'metrics' => [
-            new Metric([
-                'name' => 'activeUsers',
-            ]),
+            new Metric(['name' => 'sessions']),
+            new Metric(['name' => 'conversions']),
+            new Metric(['name' => 'totalRevenue']),
         ],
+        'limit' => 100000,
+        'offset' => 0,
     ]);
 
-    printRunReportResponse($response);
+    printRunReportResponseWithPagination($response);
 }
 
 /**
  * Print results of a runReport call.
  * @param RunReportResponse $response
  */
-function printRunReportResponse(RunReportResponse $response)
+function printRunReportResponseWithPagination(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]
     printf('%s rows received%s', $response->getRowCount(), PHP_EOL);
@@ -77,10 +84,9 @@ function printRunReportResponse(RunReportResponse $response)
     }
     foreach ($response->getMetricHeaders() as $metricHeader) {
         printf(
-            'Metric header name: %s (%s)%s',
+            'Metric header name: %s (%s)' . PHP_EOL,
             $metricHeader->getName(),
-            MetricType::name($metricHeader->getType()),
-            PHP_EOL
+            MetricType::name($metricHeader->getType())
         );
     }
     // [END analyticsdata_print_run_report_response_header]
@@ -89,12 +95,15 @@ function printRunReportResponse(RunReportResponse $response)
     print 'Report result: ' . PHP_EOL;
 
     foreach ($response->getRows() as $row) {
-        print $row->getDimensionValues()[0]->getValue()
-        . ' ' . $row->getMetricValues()[0]->getValue() . PHP_EOL;
+        printf(
+            '%s %s' . PHP_EOL,
+            $row->getDimensionValues()[0]->getValue(),
+            $row->getMetricValues()[0]->getValue()
+        );
     }
     // [END analyticsdata_print_run_report_response_rows]
 }
-// [END analyticsdata_run_report]
+// [END analyticsdata_run_report_with_pagination]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

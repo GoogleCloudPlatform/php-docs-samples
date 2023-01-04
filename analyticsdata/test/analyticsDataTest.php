@@ -51,6 +51,38 @@ class analyticsDataTest extends TestCase
         }
     }
 
+    public function testGetCommonMetadata()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('get_common_metadata');
+
+        $this->assertStringContainsString('Dimensions and metrics', $output);
+    }
+
+    public function testGetMetadataByPropertyId()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('get_metadata_by_property_id', [$propertyId]);
+
+        $this->assertStringContainsString('Dimensions and metrics', $output);
+    }
+
+    public function testRunRealtimeReport()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_realtime_report', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunRealtimeReportWithMultipleDimensions()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_realtime_report_with_multiple_dimensions', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
     public function testRunBatchReport()
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
@@ -64,6 +96,14 @@ class analyticsDataTest extends TestCase
     {
         $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
         $output = $this->runFunctionSnippet('run_pivot_report', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunRunRealtimeReportWithMultipleMetrics()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_realtime_report_with_multiple_metrics', [$propertyId]);
 
         $this->assertStringContainsString('Report result', $output);
     }
@@ -154,5 +194,29 @@ class analyticsDataTest extends TestCase
         $output = $this->runFunctionSnippet('run_report_with_aggregations', [$propertyId]);
 
         $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithOrdering()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_ordering', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithPagination()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_pagination', [$propertyId]);
+
+        $this->assertStringContainsString('Report result', $output);
+    }
+
+    public function testRunReportWithPropertyQuota()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('run_report_with_property_quota', [$propertyId]);
+
+        $this->assertStringContainsString('Tokens per day quota consumed', $output);
     }
 }
