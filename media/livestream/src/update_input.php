@@ -56,7 +56,7 @@ function update_input(
     $input->setPreprocessingConfig($config);
 
     $updateMask = new FieldMask([
-        'paths' => ['preprocessing_configx']
+        'paths' => ['preprocessing_config']
     ]);
 
     try {
