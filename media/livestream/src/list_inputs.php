@@ -41,16 +41,12 @@ function list_inputs(
     $livestreamClient = new LivestreamServiceClient();
     $parent = $livestreamClient->locationName($callingProjectId, $location);
 
-    try {
-        $response = $livestreamClient->listInputs($parent);
-        // Print the input list.
-        $inputs = $response->iterateAllElements();
-        print('Inputs:' . PHP_EOL);
-        foreach ($inputs as $input) {
-            printf('%s' . PHP_EOL, $input->getName());
-        }
-    } finally {
-        $livestreamClient->close();
+    $response = $livestreamClient->listInputs($parent);
+    // Print the input list.
+    $inputs = $response->iterateAllElements();
+    print('Inputs:' . PHP_EOL);
+    foreach ($inputs as $input) {
+        printf('%s' . PHP_EOL, $input->getName());
     }
 }
 // [END livestream_list_inputs]

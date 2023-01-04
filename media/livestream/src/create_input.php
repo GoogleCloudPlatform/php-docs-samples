@@ -47,20 +47,16 @@ function create_input(
     $input = (new Input())
         ->setType(Input\Type::RTMP_PUSH);
 
-    try {
-        // Run the input creation request. The response is a long-running operation ID.
-        $operationResponse = $livestreamClient->createInput($parent, $input, $inputId);
-        $operationResponse->pollUntilComplete();
-        if ($operationResponse->operationSucceeded()) {
-            $result = $operationResponse->getResult();
-            // Print results
-            printf('Input: %s' . PHP_EOL, $result->getName());
-        } else {
-            $error = $operationResponse->getError();
-            // handleError($error)
-        }
-    } finally {
-        $livestreamClient->close();
+    // Run the input creation request. The response is a long-running operation ID.
+    $operationResponse = $livestreamClient->createInput($parent, $input, $inputId);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('Input: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
     }
 }
 // [END livestream_create_input]

@@ -43,19 +43,15 @@ function delete_input(
     $livestreamClient = new LivestreamServiceClient();
     $formattedName = $livestreamClient->inputName($callingProjectId, $location, $inputId);
 
-    try {
-        // Run the input deletion request. The response is a long-running operation ID.
-        $operationResponse = $livestreamClient->deleteInput($formattedName);
-        $operationResponse->pollUntilComplete();
-        if ($operationResponse->operationSucceeded()) {
-            // Print status
-            printf('Deleted input %s' . PHP_EOL, $inputId);
-        } else {
-            $error = $operationResponse->getError();
-            // handleError($error)
-        }
-    } finally {
-        $livestreamClient->close();
+    // Run the input deletion request. The response is a long-running operation ID.
+    $operationResponse = $livestreamClient->deleteInput($formattedName);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        // Print status
+        printf('Deleted input %s' . PHP_EOL, $inputId);
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
     }
 }
 // [END livestream_delete_input]

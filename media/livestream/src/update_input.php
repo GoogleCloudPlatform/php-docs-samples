@@ -59,20 +59,16 @@ function update_input(
         'paths' => ['preprocessing_config']
     ]);
 
-    try {
-        // Run the input update request. The response is a long-running operation ID.
-        $operationResponse = $livestreamClient->updateInput($input, [], $updateMask);
-        $operationResponse->pollUntilComplete();
-        if ($operationResponse->operationSucceeded()) {
-            $result = $operationResponse->getResult();
-            // Print results
-            printf('Updated input: %s' . PHP_EOL, $result->getName());
-        } else {
-            $error = $operationResponse->getError();
-            // handleError($error)
-        }
-    } finally {
-        $livestreamClient->close();
+    // Run the input update request. The response is a long-running operation ID.
+    $operationResponse = $livestreamClient->updateInput($input, [], $updateMask);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('Updated input: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
     }
 }
 // [END livestream_update_input]

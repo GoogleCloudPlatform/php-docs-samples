@@ -43,14 +43,10 @@ function get_input(
     $livestreamClient = new LivestreamServiceClient();
     $formattedName = $livestreamClient->inputName($callingProjectId, $location, $inputId);
 
-    try {
-        // Get the input.
-        $response = $livestreamClient->getInput($formattedName);
-        // Print results
-        printf('Input: %s' . PHP_EOL, $response->getName());
-    } finally {
-        $livestreamClient->close();
-    }
+    // Get the input.
+    $response = $livestreamClient->getInput($formattedName);
+    // Print results
+    printf('Input: %s' . PHP_EOL, $response->getName());
 }
 // [END livestream_get_input]
 
