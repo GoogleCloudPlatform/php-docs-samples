@@ -47,14 +47,14 @@ class servicedirectoryTest extends TestCase
         $namespaceId = uniqid('sd-php-namespace-');
         $namespaceName = sprintf('projects/%s/locations/%s/namespaces/%s', self::$projectId, self::$locationId, $namespaceId);
 
-        $output = $this->runSnippet('create_namespace', [
+        $output = $this->runFunctionSnippet('create_namespace', [
             self::$projectId,
             self::$locationId,
             $namespaceId
         ]);
         $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
 
-        $output = $this->runSnippet('delete_namespace', [
+        $output = $this->runFunctionSnippet('delete_namespace', [
             self::$projectId,
             self::$locationId,
             $namespaceId
@@ -70,13 +70,13 @@ class servicedirectoryTest extends TestCase
         $serviceName = sprintf('%s/services/%s', $namespaceName, $serviceId);
 
         // Setup: create a namespace for the service to live in.
-        $output = $this->runSnippet('create_namespace', [
+        $output = $this->runFunctionSnippet('create_namespace', [
             self::$projectId,
             self::$locationId,
             $namespaceId
         ]);
         $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
-        $output = $this->runSnippet('create_service', [
+        $output = $this->runFunctionSnippet('create_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
@@ -84,7 +84,7 @@ class servicedirectoryTest extends TestCase
         ]);
         $this->assertStringContainsString('Created Service: ' . $serviceName, $output);
 
-        $output = $this->runSnippet('delete_service', [
+        $output = $this->runFunctionSnippet('delete_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
@@ -105,13 +105,13 @@ class servicedirectoryTest extends TestCase
         $port = 8080;
 
         // Setup: create a namespace and service for the service to live in.
-        $output = $this->runSnippet('create_namespace', [
+        $output = $this->runFunctionSnippet('create_namespace', [
             self::$projectId,
             self::$locationId,
             $namespaceId
         ]);
         $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
-        $output = $this->runSnippet('create_service', [
+        $output = $this->runFunctionSnippet('create_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
@@ -119,7 +119,7 @@ class servicedirectoryTest extends TestCase
         ]);
         $this->assertStringContainsString('Created Service: ' . $serviceName, $output);
 
-        $output = $this->runSnippet('create_endpoint', [
+        $output = $this->runFunctionSnippet('create_endpoint', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
@@ -132,7 +132,7 @@ class servicedirectoryTest extends TestCase
         $this->assertStringContainsString('IP: ' . $ip, $output);
         $this->assertStringContainsString('Port: ' . $port, $output);
 
-        $output = $this->runSnippet('delete_endpoint', [
+        $output = $this->runFunctionSnippet('delete_endpoint', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
@@ -154,20 +154,20 @@ class servicedirectoryTest extends TestCase
         $port = 8080;
 
         // Setup: create a namespace, service, and endpoint.
-        $output = $this->runSnippet('create_namespace', [
+        $output = $this->runFunctionSnippet('create_namespace', [
             self::$projectId,
             self::$locationId,
             $namespaceId
         ]);
         $this->assertStringContainsString('Created Namespace: ' . $namespaceName, $output);
-        $output = $this->runSnippet('create_service', [
+        $output = $this->runFunctionSnippet('create_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
             $serviceId
         ]);
         $this->assertStringContainsString('Created Service: ' . $serviceName, $output);
-        $output = $this->runSnippet('create_endpoint', [
+        $output = $this->runFunctionSnippet('create_endpoint', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
@@ -178,7 +178,7 @@ class servicedirectoryTest extends TestCase
         ]);
         $this->assertStringContainsString('Created Endpoint: ' . $endpointName, $output);
 
-        $output = $this->runSnippet('resolve_service', [
+        $output = $this->runFunctionSnippet('resolve_service', [
             self::$projectId,
             self::$locationId,
             $namespaceId,
