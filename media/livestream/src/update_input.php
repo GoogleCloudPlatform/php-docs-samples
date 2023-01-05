@@ -60,7 +60,8 @@ function update_input(
     ]);
 
     // Run the input update request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->updateInput($input, [], $updateMask);
+    $operationResponse = $livestreamClient->updateInput($input, ['updateMask' => $updateMask]);
+
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();

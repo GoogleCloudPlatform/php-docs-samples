@@ -79,6 +79,15 @@ class livestreamTest extends TestCase
             self::$inputId
         ]);
         $this->assertStringContainsString(self::$inputName, $output);
+
+        $livestreamClient = new LivestreamServiceClient();
+        $formattedName = $livestreamClient->inputName(
+            self::$projectId,
+            self::$location,
+            self::$inputId
+        );
+        $input = $livestreamClient->getInput($formattedName);
+        $this->assertTrue($input->getPreprocessingConfig()->hasCrop());
     }
 
     /** @depends testUpdateInput */
