@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\SecurityCenter\Tests;
+
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +37,7 @@ class securityCenterTest extends TestCase
 
     private function deleteConfig(string $configId)
     {
-        $deleteOutput = $this->runSnippet('delete_notification', [
+        $deleteOutput = $this->runFunctionSnippet('delete_notification', [
             self::getOrganizationId(),
             $configId,
         ]);
@@ -45,7 +47,7 @@ class securityCenterTest extends TestCase
 
     public function testCreateNotification()
     {
-        $createOutput = $this->runSnippet('create_notification', [
+        $createOutput = $this->runFunctionSnippet('create_notification', [
             self::getOrganizationId(),
             self::$testNotificationCreate,
             self::$projectId,
@@ -59,7 +61,7 @@ class securityCenterTest extends TestCase
 
     public function testGetNotificationConfig()
     {
-        $createOutput = $this->runSnippet('create_notification', [
+        $createOutput = $this->runFunctionSnippet('create_notification', [
             self::getOrganizationId(),
             self::$testNotificationGet,
             self::$projectId,
@@ -68,7 +70,7 @@ class securityCenterTest extends TestCase
 
         $this->assertStringContainsString('Notification config was created', $createOutput);
 
-        $getOutput = $this->runSnippet('get_notification', [
+        $getOutput = $this->runFunctionSnippet('get_notification', [
             self::getOrganizationId(),
             self::$testNotificationGet
         ]);
@@ -80,7 +82,7 @@ class securityCenterTest extends TestCase
 
     public function testUpdateNotificationConfig()
     {
-        $createOutput = $this->runSnippet('create_notification', [
+        $createOutput = $this->runFunctionSnippet('create_notification', [
             self::getOrganizationId(),
             self::$testNotificationUpdate,
             self::$projectId,
@@ -89,7 +91,7 @@ class securityCenterTest extends TestCase
 
         $this->assertStringContainsString('Notification config was created', $createOutput);
 
-        $getOutput = $this->runSnippet('update_notification', [
+        $getOutput = $this->runFunctionSnippet('update_notification', [
             self::getOrganizationId(),
             self::$testNotificationUpdate,
             self::$projectId,
@@ -103,7 +105,7 @@ class securityCenterTest extends TestCase
 
     public function testListNotificationConfig()
     {
-        $listOutput = $this->runSnippet('list_notification', [
+        $listOutput = $this->runFunctionSnippet('list_notification', [
             self::getOrganizationId(),
         ]);
 
