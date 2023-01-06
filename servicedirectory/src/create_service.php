@@ -16,31 +16,36 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if ($argc != 5) {
-    return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID SERVICE_ID\n", basename(__FILE__));
-}
-list($_, $projectId, $locationId, $namespaceId, $serviceId) = $argv;
+namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_create_service]
 use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 use Google\Cloud\ServiceDirectory\V1beta1\Service;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[YOUR_PROJECT_ID]';
-// $locationId = '[YOUR_GCP_REGION]';
-// $namespaceId = '[YOUR_NAMESPACE_NAME]';
-// $serviceId = '[YOUR_SERVICE_NAME]';
+/**
+ * @param string $projectId Your Cloud project ID
+ * @param string $locationId Your GCP region
+ * @param string $namespaceId Your namespace name
+ * @param string $serviceId Your service name
+ */
+function create_service(
+    string $projectId,
+    string $locationId,
+    string $namespaceId,
+    string $serviceId
+): void {
+    // Instantiate a client.
+    $client = new RegistrationServiceClient();
 
-// Instantiate a client.
-$client = new RegistrationServiceClient();
+    // Run request.
+    $namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
+    $service = $client->createService($namespaceName, $serviceId, new Service());
 
-// Run request.
-$namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
-$service = $client->createService($namespaceName, $serviceId, new Service());
-
-// Print results.
-printf('Created Service: %s' . PHP_EOL, $service->getName());
+    // Print results.
+    printf('Created Service: %s' . PHP_EOL, $service->getName());
+}
 // [END servicedirectory_create_service]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
