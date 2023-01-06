@@ -333,9 +333,9 @@ class livestreamTest extends TestCase
                     // channel may already be stopped
                     if ($e->getStatus() === 'FAILED_PRECONDITION') {
                         printf('FAILED_PRECONDITION for %s.', $channel->getName());
-                        continue;
+                    } else {
+                        throw $e;
                     }
-                    throw $e;
                 }
 
                 try {

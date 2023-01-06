@@ -61,70 +61,61 @@ function create_channel(
     $channelName = $livestreamClient->channelName($callingProjectId, $location, $channelId);
     $inputName = $livestreamClient->inputName($callingProjectId, $location, $inputId);
 
-    $channel =
-        (new Channel())
-            ->setName($channelName)
-            ->setInputAttachments([
-                (new InputAttachment())
-                    ->setKey('my-input')
-                    ->setInput($inputName)
+    $channel = (new Channel())
+        ->setName($channelName)
+        ->setInputAttachments([
+            new InputAttachment([
+                'key' => 'my-input',
+                'input' => $inputName
             ])
-            ->setElementaryStreams([
-                (new ElementaryStream())
-                    ->setKey('es_video')
-                    ->setVideoStream(
-                        (new VideoStream())
-                            ->setH264(
-                                (new VideoStream\H264CodecSettings())
-                                    ->setProfile('high')
-                                    ->setWidthPixels(1280)
-                                    ->setHeightPixels(720)
-                                    ->setBitrateBps(3000000)
-                                    ->setFrameRate(30)
-                            )
-                    ),
-                (new ElementaryStream())
-                    ->setKey('es_audio')
-                    ->setAudioStream(
-                        (new AudioStream())
-                            ->setCodec('aac')
-                            ->setChannelCount(2)
-                            ->setBitrateBps(160000)
-                    )
+        ])
+        ->setElementaryStreams([
+            new ElementaryStream([
+                'key' => 'es_video',
+                'video_stream' => new VideoStream([
+                    'h264' => new VideoStream\H264CodecSettings([
+                        'profile' => 'high',
+                        'width_pixels' => 1280,
+                        'height_pixels' => 720,
+                        'bitrate_bps' => 3000000,
+                        'frame_rate' => 30
+                    ])
+                ]),
+            ]),
+            new ElementaryStream([
+                'key' => 'es_audio',
+                'audio_stream' => new AudioStream([
+                    'codec' => 'aac',
+                    'channel_count' => 2,
+                    'bitrate_bps' => 160000
+                ])
             ])
-            ->setOutput(
-                (new Channel\Output())
-                                ->setUri($outputUri)
-            )
-            ->setMuxStreams([
-            (new MuxStream())
-                ->setKey('mux_video')
-                ->setElementaryStreams(['es_video'])
-                ->setSegmentSettings(
-                    (new SegmentSettings())
-                        ->setSegmentDuration(
-                            (new Duration())
-                                ->setSeconds(2)
-                        )
-                ),
-            (new MuxStream())
-                ->setKey('mux_audio')
-                ->setElementaryStreams(['es_audio'])
-                ->setSegmentSettings(
-                    (new SegmentSettings())
-                        ->setSegmentDuration(
-                            (new Duration())
-                                ->setSeconds(2)
-                        )
-                )
+        ])
+        ->setOutput(new Channel\Output(['uri' => $outputUri]))
+        ->setMuxStreams([
+            new MuxStream([
+                'key' => 'mux_video',
+                'elementary_streams' => ['es_video'],
+                'segment_settings' => new SegmentSettings([
+                    'segment_duration' => new Duration(['seconds' => 2])
+                ])
+            ]),
+            new MuxStream([
+                'key' => 'mux_audio',
+                'elementary_streams' => ['es_audio'],
+                'segment_settings' => new SegmentSettings([
+                    'segment_duration' => new Duration(['seconds' => 2])
+                ])
+            ]),
+        ])
+        ->setManifests([
+            new Manifest([
+                'file_name' => 'manifest.m3u8',
+                'type' => Manifest\ManifestType::HLS,
+                'mux_streams' => ['mux_video', 'mux_audio'],
+                'max_segment_count' => 5
             ])
-            ->setManifests([
-                (new Manifest())
-                    ->setFileName('manifest.m3u8')
-                    ->setType(1)
-                    ->setMuxStreams(['mux_video', 'mux_audio'])
-                    ->setMaxSegmentCount(5)
-            ]);
+        ]);
 
     // Run the channel creation request. The response is a long-running operation ID.
     $operationResponse = $livestreamClient->createChannel($parent, $channel, $channelId);
