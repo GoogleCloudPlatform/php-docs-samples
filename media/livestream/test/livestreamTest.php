@@ -46,6 +46,10 @@ class livestreamTest extends TestCase
     private static $channelName;
     private static $outputUri = 'gs://my-bucket/my-output-folder/';
 
+    private static $eventIdPrefix = 'php-test-event';
+    private static $eventId;
+    private static $eventName;
+
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
@@ -278,6 +282,108 @@ class livestreamTest extends TestCase
         ]);
     }
 
+    /** @depends testDeleteChannelWithBackupInput */
+    public function testCreateChannelEvent()
+    {
+        // Create a test input for the channel
+        self::$inputId = sprintf('%s-%s-%s', self::$inputIdPrefix, uniqid(), time());
+        self::$inputName = sprintf('projects/%s/locations/%s/inputs/%s', self::$projectId, self::$location, self::$inputId);
+
+        $this->runFunctionSnippet('create_input', [
+            self::$projectId,
+            self::$location,
+            self::$inputId
+        ]);
+
+        // Create a test channel for the event
+        self::$channelId = sprintf('%s-%s-%s', self::$channelIdPrefix, uniqid(), time());
+        self::$channelName = sprintf('projects/%s/locations/%s/channels/%s', self::$projectId, self::$location, self::$channelId);
+
+        $this->runFunctionSnippet('create_channel', [
+            self::$projectId,
+            self::$location,
+            self::$channelId,
+            self::$inputId,
+            self::$outputUri
+        ]);
+
+        $this->runFunctionSnippet('start_channel', [
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        ]);
+
+        self::$eventId = sprintf('%s-%s-%s', self::$eventIdPrefix, uniqid(), time());
+        self::$eventName = sprintf('projects/%s/locations/%s/channels/%s/events/%s', self::$projectId, self::$location, self::$channelId, self::$eventId);
+
+        $output = $this->runFunctionSnippet('create_channel_event', [
+            self::$projectId,
+            self::$location,
+            self::$channelId,
+            self::$eventId
+        ]);
+        $this->assertStringContainsString(self::$eventName, $output);
+    }
+
+    /** @depends testCreateChannelEvent */
+    public function testListChannelEvents()
+    {
+        $output = $this->runFunctionSnippet('list_channel_events', [
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        ]);
+        $this->assertStringContainsString(self::$eventName, $output);
+    }
+
+    /** @depends testListChannelEvents */
+    public function testGetChannelEvent()
+    {
+        $output = $this->runFunctionSnippet('get_channel_event', [
+            self::$projectId,
+            self::$location,
+            self::$channelId,
+            self::$eventId
+        ]);
+        $this->assertStringContainsString(self::$eventName, $output);
+    }
+
+    /** @depends testGetChannelEvent */
+    public function testDeleteChannelEvent()
+    {
+        $output = $this->runFunctionSnippet('delete_channel_event', [
+            self::$projectId,
+            self::$location,
+            self::$channelId,
+            self::$eventId
+        ]);
+        $this->assertStringContainsString('Deleted channel event', $output);
+    }
+
+    /** @depends testDeleteChannelEvent */
+    public function testDeleteChannelWithEvents()
+    {
+        $this->runFunctionSnippet('stop_channel', [
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        ]);
+
+        $output = $this->runFunctionSnippet('delete_channel', [
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        ]);
+        $this->assertStringContainsString('Deleted channel', $output);
+
+        // Delete the test input
+        $this->runFunctionSnippet('delete_input', [
+            self::$projectId,
+            self::$location,
+            self::$inputId
+        ]);
+    }
+
     private static function deleteOldInputs(): void
     {
         $livestreamClient = new LivestreamServiceClient();
@@ -326,13 +432,24 @@ class livestreamTest extends TestCase
             $timestamp = intval(end($tmp));
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
+                // Must delete channel events before deleting the channel
+                $response = $livestreamClient->listEvents($channel->getName());
+                $events = $response->iterateAllElements();
+                foreach ($events as $event) {
+                    try {
+                        $livestreamClient->deleteEvent($event->getName());
+                    } catch (ApiException $e) {
+                        printf('Channel event delete failed: %s.' . PHP_EOL, $e->getMessage());
+                    }
+                }
+
                 try {
                     $livestreamClient->stopChannel($channel->getName());
                 } catch (ApiException $e) {
                     // Cannot delete channels that are running, but
                     // channel may already be stopped
                     if ($e->getStatus() === 'FAILED_PRECONDITION') {
-                        printf('FAILED_PRECONDITION for %s.', $channel->getName());
+                        printf('FAILED_PRECONDITION for %s.' . PHP_EOL, $channel->getName());
                     } else {
                         throw $e;
                     }
@@ -343,7 +460,7 @@ class livestreamTest extends TestCase
                 } catch (ApiException $e) {
                     // Cannot delete inputs that are added to channels
                     if ($e->getStatus() === 'FAILED_PRECONDITION') {
-                        printf('FAILED_PRECONDITION for %s.', $channel->getName());
+                        printf('FAILED_PRECONDITION for %s.' . PHP_EOL, $channel->getName());
                         continue;
                     }
                     throw $e;
