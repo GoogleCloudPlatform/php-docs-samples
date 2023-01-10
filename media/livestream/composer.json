@@ -3,6 +3,5 @@
     "type": "project",
     "require": {
         "google/cloud-video-live-stream": "^0.2.4",
-        "grpc/grpc": "^1.38"
     }
 }
