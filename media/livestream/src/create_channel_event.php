@@ -49,13 +49,11 @@ function create_channel_event(
 
     $parent = $livestreamClient->channelName($callingProjectId, $location, $channelId);
 
-    $eventAdBreak = new Event\AdBreakTask([
-        'duration' => new Duration(['seconds' => 30])
-    ]);
-    $event = new Event([
-        'ad_break' => $eventAdBreak,
-        'execute_now' => true
-    ]);
+    $eventAdBreak = (new Event\AdBreakTask())
+        ->setDuration(new Duration(['seconds' => 30]));
+    $event = (new Event())
+        ->setAdBreak($eventAdBreak)
+        ->setExecuteNow(true);
 
     // Run the channel event creation request.
     $response = $livestreamClient->createEvent($parent, $event, $eventId);
