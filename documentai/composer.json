@@ -1,0 +1,5 @@
+{
+    "require": {
+        "google/cloud-document-ai": "^1.0.1"
+    }
+}
