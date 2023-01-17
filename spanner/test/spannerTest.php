@@ -95,6 +95,9 @@ class spannerTest extends TestCase
     /** @var InstanceConfiguration $customInstanceConfig */
     protected static $customInstanceConfig;
 
+    /** @var string $databaseRole */
+    protected static $databaseRole;
+
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
@@ -126,6 +129,7 @@ class spannerTest extends TestCase
         self::$baseConfigId = 'nam7';
         self::$customInstanceConfigId = 'custom-' . time() . rand();
         self::$customInstanceConfig = $spanner->instanceConfiguration(self::$customInstanceConfigId);
+        self::$databaseRole = 'new_parent';
     }
 
     public function testCreateInstance()
@@ -931,11 +935,39 @@ class spannerTest extends TestCase
      */
     public function testAddDropDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('add_drop_database_role');
+        $output = $this->runFunctionSnippet('add_drop_database_role',
+        [self::$instanceId,
+        self::$databaseId,
+        self::$databaseRole]);
         $this->assertStringContainsString('Waiting for create role and grant operation to complete... ' . PHP_EOL, $output);
         $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges ' . PHP_EOL, $output);
         $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete... ' . PHP_EOL, $output);
-        $this->assertStringContainsString('Revoked privileges and dropped roles new_child and new_parent ' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped role new_child ' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testAddDropDatabaseRole
+     */
+    public function testListDatabaseRoles()
+    {
+        $output = $this->runFunctionSnippet('list_database_roles',
+        [self::$projectId,
+        self::$instanceId,
+        self::$databaseId]);
+        $this->assertStringContainsString(sprintf('databaseRoles/%s', self::$databaseRole), $output);
+    }
+
+    /**
+     * @depends testAddDropDatabaseRole
+     * @depends testInsertDataWithDml
+     */
+    public function testReadDataWithDatabaseRole()
+    {
+        $output = $this->runFunctionSnippet('read_data_with_database_role',
+        [self::$instanceId,
+        self::$databaseId,
+        self::$databaseRole]);
+        $this->assertStringContainsString('SingerId: 10, Firstname: Virginia, LastName: Watson', $output);
     }
 
     /**
