@@ -41,8 +41,12 @@ $rawDocument = new RawDocument([
     "mime_type" => "application/pdf"
 ]);
 
+$projectId = "YOUR_PROJECT_ID"; # Your Google Cloud Platform project ID
+$location = "us"; # Your Processor Location
+$processor = "YOUR_PROCESSOR_ID" # Your Processor ID
+
 # Fully-qualified Processor Name
-$name = $client.processorName($project, $location, $processor)
+$name = $client.processorName($projectId, $location, $processor)
 
 $processRequest = new ProcessRequest([
     "name" => $name,
