@@ -43,10 +43,14 @@ $rawDocument = new RawDocument([
 
 $projectId = "YOUR_PROJECT_ID"; # Your Google Cloud Platform project ID
 $location = "us"; # Your Processor Location
-$processor = "YOUR_PROCESSOR_ID" # Your Processor ID
+$processor = "YOUR_PROCESSOR_ID"; # Your Processor ID
 
 # Fully-qualified Processor Name
-$name = $client.processorName($projectId, $location, $processor)
+$name = $client->processorName([
+    "project" => $projectId,
+    "location" => $location,
+    "processor" => $processor
+]);
 
 $processRequest = new ProcessRequest([
     "name" => $name,
@@ -57,6 +61,6 @@ $processRequest = new ProcessRequest([
 $response = $documentProcessorServiceClient->processDocument($processRequest);
 
 # Print Document Text
-printf($response->$document.$text)
+printf($response->$document->$text);
 
 # [END documentai_quickstart]
