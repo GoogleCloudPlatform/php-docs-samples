@@ -46,11 +46,7 @@ $location = 'us'; # Your Processor Location
 $processor = 'YOUR_PROCESSOR_ID'; # Your Processor ID
 
 # Fully-qualified Processor Name
-$name = $client->processorName([
-    'project' => $projectId,
-    'location' => $location,
-    'processor' => $processor
-]);
+$name = $client->processorName($projectId, $location, $processor);
 
 $processRequest = new ProcessRequest([
     'name' => $name,
