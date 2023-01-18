@@ -54,7 +54,7 @@ $processRequest = new ProcessRequest([
 ]);
 
 # Make Processing Request
-$response = $documentProcessorServiceClient->processDocument($processRequest);
+$response = $client->processDocument($processRequest);
 
 # Print Document Text
 printf($response->$document->$text);
