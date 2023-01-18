@@ -69,7 +69,7 @@ function enable_fine_grained_access(
     $policy->setBindings([$binding]);
     $adminClient->setIamPolicy($resource, $policy);
 
-    printf('Enabled fine-grained access in IAM.' . PHP_EOL);
+    printf('Enabled fine-grained access in IAM' . PHP_EOL);
 }
 // [END spanner_enable_fine_grained_access]
 

@@ -941,14 +941,15 @@ class spannerTest extends TestCase
      */
     public function testAddDropDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('add_drop_database_role',
-        [self::$instanceId,
-        self::$databaseId,
-        self::$databaseRole]);
-        $this->assertStringContainsString('Waiting for create role and grant operation to complete... ' . PHP_EOL, $output);
-        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges ' . PHP_EOL, $output);
-        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete... ' . PHP_EOL, $output);
-        $this->assertStringContainsString('Revoked privileges and dropped role new_child ' . PHP_EOL, $output);
+        $output = $this->runFunctionSnippet('add_drop_database_role', [
+            self::$instanceId,
+            self::$databaseId,
+            self::$databaseRole
+        ]);
+        $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
+        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
+        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped role new_child' . PHP_EOL, $output);
     }
 
     /**
@@ -956,10 +957,11 @@ class spannerTest extends TestCase
      */
     public function testListDatabaseRoles()
     {
-        $output = $this->runFunctionSnippet('list_database_roles',
-        [self::$projectId,
-        self::$instanceId,
-        self::$databaseId]);
+        $output = $this->runFunctionSnippet('list_database_roles', [
+            self::$projectId,
+            self::$instanceId,
+            self::$databaseId
+        ]);
         $this->assertStringContainsString(sprintf('databaseRoles/%s', self::$databaseRole), $output);
     }
 
@@ -969,10 +971,11 @@ class spannerTest extends TestCase
      */
     public function testReadDataWithDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('read_data_with_database_role',
-        [self::$instanceId,
-        self::$databaseId,
-        self::$databaseRole]);
+        $output = $this->runFunctionSnippet('read_data_with_database_role', [
+            self::$instanceId,
+            self::$databaseId,
+            self::$databaseRole
+        ]);
         $this->assertStringContainsString('SingerId: 10, Firstname: Virginia, LastName: Watson', $output);
     }
 
@@ -982,13 +985,14 @@ class spannerTest extends TestCase
     public function testEnableFineGrainedAccess()
     {
         self::$serviceAccountEmail = $this->createServiceAccount(str_shuffle('testSvcAcnt'));
-        $output = $this->runFunctionSnippet('enable_fine_grained_access',
-        [self::$projectId,
-        self::$instanceId,
-        self::$databaseId,
-        self::$databaseRole,
-        sprintf('serviceAccount:%s', self::$serviceAccountEmail)]);
-        $this->assertStringContainsString('Enabled fine-grained access in IAM.', $output);
+        $output = $this->runFunctionSnippet('enable_fine_grained_access', [
+            self::$projectId,
+            self::$instanceId,
+            self::$databaseId,
+            self::$databaseRole,
+            sprintf('serviceAccount:%s', self::$serviceAccountEmail)
+        ]);
+        $this->assertStringContainsString('Enabled fine-grained access in IAM', $output);
     }
 
     /**
@@ -1084,21 +1088,7 @@ class spannerTest extends TestCase
 
     private function createServiceAccount($serviceAccountId)
     {
-        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
-        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
-
-        // create middleware
-        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
-        $stack = HandlerStack::create();
-        $stack->push($middleware);
-
-        // create the HTTP client
-        $client = new Client([
-            'handler' => $stack,
-            'base_uri' => 'https://iam.googleapis.com',
-            'auth' => 'google_auth'  // authorize all requests
-        ]);
-
+        $client = self::getIamHttpClient();
         // make the request
         $response = $client->post('/v1/projects/' . self::$projectId . '/serviceAccounts', [
             'json' => [
@@ -1115,6 +1105,13 @@ class spannerTest extends TestCase
 
     public static function deleteServiceAccount($serviceAccountEmail)
     {
+        $client = self::getIamHttpClient();
+        // make the request
+        $client->delete('/v1/projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail);
+    }
+
+    private static function getIamHttpClient()
+    {
         // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
         $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
 
@@ -1129,9 +1126,7 @@ class spannerTest extends TestCase
             'base_uri' => 'https://iam.googleapis.com',
             'auth' => 'google_auth'  // authorize all requests
         ]);
-
-        // make the request
-        $client->delete('/v1/projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail);
+        return $client;
     }
 
     public static function tearDownAfterClass(): void
@@ -1147,7 +1142,7 @@ class spannerTest extends TestCase
         if (self::$customInstanceConfig->exists()) {
             self::$customInstanceConfig->delete();
         }
-        if (self::$serviceAccountEmail !== null) {
+        if (!is_null(self::$serviceAccountEmail)) {
             self::deleteServiceAccount(self::$serviceAccountEmail);
         }
     }
