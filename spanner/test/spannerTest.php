@@ -24,6 +24,9 @@ use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 
 /**
  * @retryAttempts 3
@@ -97,6 +100,9 @@ class spannerTest extends TestCase
 
     /** @var string $databaseRole */
     protected static $databaseRole;
+
+    /** @var string serviceAccountEmail */
+    protected static $serviceAccountEmail = null;
 
     public static function setUpBeforeClass(): void
     {
@@ -971,6 +977,21 @@ class spannerTest extends TestCase
     }
 
     /**
+     * depends testAddDropDatabaseRole
+     */
+    public function testEnableFineGrainedAccess()
+    {
+        self::$serviceAccountEmail = $this->createServiceAccount(str_shuffle('testSvcAcnt'));
+        $output = $this->runFunctionSnippet('enable_fine_grained_access',
+        [self::$projectId,
+        self::$instanceId,
+        self::$databaseId,
+        self::$databaseRole,
+        sprintf('serviceAccount:%s', self::$serviceAccountEmail)]);
+        $this->assertStringContainsString('Enabled fine-grained access in IAM.', $output);
+    }
+
+    /**
      * @depends testUpdateData
      */
     public function testReadWriteRetry()
@@ -1061,6 +1082,58 @@ class spannerTest extends TestCase
         );
     }
 
+    private function createServiceAccount($serviceAccountId)
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+
+        // make the request
+        $response = $client->post('/v1/projects/' . self::$projectId . '/serviceAccounts', [
+            'json' => [
+                'accountId' => $serviceAccountId,
+                'serviceAccount' => [
+                    'displayName' => 'Test Service Account',
+                    'description' => 'This account should be deleted automatically after the unit tests complete.'
+                ]
+            ]
+        ]);
+
+        return json_decode($response->getBody())->email;
+    }
+
+    public static function deleteServiceAccount($serviceAccountEmail)
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+
+        // make the request
+        $client->delete('/v1/projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail);
+    }
+
     public static function tearDownAfterClass(): void
     {
         if (self::$instance->exists()) {// Clean up database
@@ -1073,6 +1146,9 @@ class spannerTest extends TestCase
         self::$lowCostInstance->delete();
         if (self::$customInstanceConfig->exists()) {
             self::$customInstanceConfig->delete();
+        }
+        if (self::$serviceAccountEmail !== null) {
+            self::deleteServiceAccount(self::$serviceAccountEmail);
         }
     }
 }
