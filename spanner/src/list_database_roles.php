@@ -41,7 +41,7 @@ function list_database_roles(
     string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $adminClient = new DatabaseAdminClient();
     $resource = sprintf('projects/%s/instances/%s/databases/%s', $projectId, $instanceId, $databaseId);
 
