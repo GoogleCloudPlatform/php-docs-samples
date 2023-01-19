@@ -66,7 +66,7 @@ function enable_fine_grained_access(
         'condition' => new Expr([
             'title' => $title,
             'expression' => sprintf("resource.name.endsWith('/databaseRoles/%s')", $databaseRole)
-            ])
+        ])
     ]);
     $policy->setBindings([$binding]);
     $adminClient->setIamPolicy($resource, $policy);
