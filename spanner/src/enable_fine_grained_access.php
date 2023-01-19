@@ -38,10 +38,10 @@ use \Google\Type\Expr;
  * @param string $projectId The Google cloud project ID
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $iamMember The IAM member.
- * Eg: `user:{emailid}`, `serviceAccount:{emailid}`, `group:{emailid}`, `domain:{domain}`
+ * @param string $iamMember The IAM member. Eg: `user:{emailid}`, 
+ *        `serviceAccount:{emailid}`, `group:{emailid}`, `domain:{domain}`
  * @param string $databaseRole The database role bound to
- * the IAM member.
+ *        the IAM member.
  * @param string $title Condition title.
  */
 function enable_fine_grained_access(
