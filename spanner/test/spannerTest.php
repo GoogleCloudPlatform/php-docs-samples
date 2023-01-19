@@ -941,11 +941,7 @@ class spannerTest extends TestCase
      */
     public function testAddDropDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('add_drop_database_role', [
-            self::$instanceId,
-            self::$databaseId,
-            self::$databaseRole
-        ]);
+        $output = $this->runFunctionSnippet('add_drop_database_role');
         $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
         $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
         $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
@@ -971,11 +967,7 @@ class spannerTest extends TestCase
      */
     public function testReadDataWithDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('read_data_with_database_role', [
-            self::$instanceId,
-            self::$databaseId,
-            self::$databaseRole
-        ]);
+        $output = $this->runFunctionSnippet('read_data_with_database_role');
         $this->assertStringContainsString('SingerId: 10, Firstname: Virginia, LastName: Watson', $output);
     }
 
@@ -989,8 +981,9 @@ class spannerTest extends TestCase
             self::$projectId,
             self::$instanceId,
             self::$databaseId,
+            sprintf('serviceAccount:%s', self::$serviceAccountEmail),
             self::$databaseRole,
-            sprintf('serviceAccount:%s', self::$serviceAccountEmail)
+            'DatabaseRoleBindingTitle'
         ]);
         $this->assertStringContainsString('Enabled fine-grained access in IAM', $output);
     }

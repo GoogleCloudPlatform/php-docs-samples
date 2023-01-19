@@ -30,16 +30,16 @@ use Google\Cloud\Spanner\SpannerClient;
  * Read database with a database role.
  * Example:
  * ```
- * read_data_with_database_role($instanceId, $databaseId, $databaseRole);
+ * read_data_with_database_role($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $databaseRole The database role.
  */
-function read_data_with_database_role(string $instanceId, string $databaseId, string $databaseRole
-): void {
+function read_data_with_database_role(string $instanceId, string $databaseId): void
+{
     $spanner = new SpannerClient();
+    $databaseRole = 'new_parent';
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId, ['databaseRole' => $databaseRole]);
     $results = $database->execute('SELECT * FROM Singers');

@@ -30,20 +30,19 @@ use Google\Cloud\Spanner\SpannerClient;
  * Adds and drops roles to the Singers table in the example database.
  * Example:
  * ```
- * add_drop_database_role($instanceId, $databaseId, $databaseRole);
+ * add_drop_database_role($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $databaseRole The database role.
  */
-function add_drop_database_role(string $instanceId, string $databaseId, string $databaseRole): void
+function add_drop_database_role(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $roleParent = $databaseRole;
+    $roleParent = 'new_parent';
     $roleChild = 'new_child';
 
     $operation = $database->updateDdlBatch([

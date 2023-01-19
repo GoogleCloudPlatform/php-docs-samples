@@ -32,23 +32,25 @@ use \Google\Type\Expr;
  * Enable Fine Grained Access.
  * Example:
  * ```
- * enable_fine_grained_access($projectId, $instanceId, $databaseId, $databaseRole, $iamMember);
+ * enable_fine_grained_access($projectId, $instanceId, $databaseId, $iamMember, $databaseRole, $title);
  * ```
  *
  * @param string $projectId The Google cloud project ID
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $databaseRole The database role bound to
- * the IAM member.
  * @param string $iamMember The IAM member.
  * Eg: `user:{emailid}`, `serviceAccount:{emailid}`, `group:{emailid}`, `domain:{domain}`
+ * @param string $databaseRole The database role bound to
+ * the IAM member.
+ * @param string $title Condition title.
  */
 function enable_fine_grained_access(
     string $projectId,
     string $instanceId,
     string $databaseId,
+    string $iamMember,
     string $databaseRole,
-    string $iamMember
+    string $title
     ): void {
     $adminClient = new DatabaseAdminClient();
     $resource = sprintf('projects/%s/instances/%s/databases/%s', $projectId, $instanceId, $databaseId);
@@ -62,7 +64,7 @@ function enable_fine_grained_access(
         'role' => 'roles/spanner.fineGrainedAccessUser',
         'members' => [$iamMember],
         'condition' => new Expr([
-            'title' => 'DatabaseRoleBindingTitle',
+            'title' => $title,
             'expression' => sprintf("resource.name.endsWith('/databaseRoles/%s')", $databaseRole)
             ])
     ]);
