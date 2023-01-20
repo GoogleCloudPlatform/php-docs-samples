@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright 2020 Google LLC.
  *
@@ -17,6 +16,7 @@
 
 // [START cloudrun_helloworld_service]
 // [START run_helloworld_service]
+<?php
 
 $name = getenv('NAME', true) ?: 'World';
 echo sprintf('Hello %s!', $name);
