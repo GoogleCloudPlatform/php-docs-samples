@@ -16,30 +16,35 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if ($argc != 5) {
-    return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID SERVICE_ID\n", basename(__FILE__));
-}
-list($_, $projectId, $locationId, $namespaceId, $serviceId) = $argv;
+namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_delete_service]
 use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[YOUR_PROJECT_ID]';
-// $locationId = '[YOUR_GCP_REGION]';
-// $namespaceId = '[YOUR_NAMESPACE_NAME]';
-// $serviceId = '[YOUR_SERVICE_NAME]';
+/**
+ * @param string $projectId     Your Cloud project ID
+ * @param string $locationId    Your GCP region
+ * @param string $namespaceId   Your namespace name
+ * @param string $serviceId     Your service name
+ */
+function delete_service(
+    string $projectId,
+    string $locationId,
+    string $namespaceId,
+    string $serviceId
+): void {
+    // Instantiate a client.
+    $client = new RegistrationServiceClient();
 
-// Instantiate a client.
-$client = new RegistrationServiceClient();
+    // Run request.
+    $serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
+    $client->deleteService($serviceName);
 
-// Run request.
-$serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-$client->deleteService($serviceName);
-
-// Print results.
-printf('Deleted Service: %s' . PHP_EOL, $serviceName);
+    // Print results.
+    printf('Deleted Service: %s' . PHP_EOL, $serviceName);
+}
 // [END servicedirectory_delete_service]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -15,29 +15,30 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 2) {
-    return printf('Usage: php %s PROJECT_ID SUSBSCRIPTION_ID\n', basename(__FILE__));
-}
-list($_, $projectId, $subscriptionId) = $argv;
+namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_receive_notifications]
 use Google\Cloud\PubSub\PubSubClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = "{your-project-id}";
-// $subscriptionId = "{your-subscription-id}";
+/**
+ * @param string $projectId             Your Cloud Project ID
+ * @param string $subscriptionId        Your subscription ID
+ */
+function receive_notification(string $projectId, string $subscriptionId): void
+{
+    $pubsub = new PubSubClient([
+        'projectId' => $projectId,
+    ]);
+    $subscription = $pubsub->subscription($subscriptionId);
 
-$pubsub = new PubSubClient([
-    'projectId' => $projectId,
-]);
-$subscription = $pubsub->subscription($subscriptionId);
-
-foreach ($subscription->pull() as $message) {
-    printf('Message: %s' . PHP_EOL, $message->data());
-    // Acknowledge the Pub/Sub message has been received, so it will not be pulled multiple times.
-    $subscription->acknowledge($message);
+    foreach ($subscription->pull() as $message) {
+        printf('Message: %s' . PHP_EOL, $message->data());
+        // Acknowledge the Pub/Sub message has been received, so it will not be pulled multiple times.
+        $subscription->acknowledge($message);
+    }
 }
-
 // [END securitycenter_receive_notifications]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
