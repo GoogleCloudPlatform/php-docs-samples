@@ -32,7 +32,7 @@ use Google\Cloud\Datastore\Admin\V1\DatastoreAdminClient;
  * @param string $projectId The Google Cloud project ID.
  * @param string $filter [optional] A filtering string.
  */
-function index_list($projectId, $filter = "")
+function index_list($projectId, $filter = '')
 {
     $admin = new DatastoreAdminClient([
         'projectId' => $projectId,

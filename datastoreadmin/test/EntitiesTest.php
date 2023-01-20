@@ -32,10 +32,10 @@ class EntitiesTest extends TestCase
 
     public function testEntitiesLifecycle()
     {
-        $objectName = uniqid("datastoreadmin-export-");
+        $objectName = uniqid('datastoreadmin-export-');
         $uri = uniqid(sprintf(
-            "gs://%s-datastoreadmin/%s",
-            getenv("GOOGLE_STORAGE_BUCKET"),
+            'gs://%s-datastoreadmin/%s',
+            getenv('GOOGLE_STORAGE_BUCKET'),
             $objectName
         ));
 
@@ -68,7 +68,7 @@ class EntitiesTest extends TestCase
             'projectId' => self::$projectId,
         ]);
 
-        $object = $storage->bucket(getenv("GOOGLE_STORAGE_BUCKET"))->object($objectName);
+        $object = $storage->bucket(getenv('GOOGLE_STORAGE_BUCKET'))->object($objectName);
         if ($object->exists()) {
             $object->delete();
         }

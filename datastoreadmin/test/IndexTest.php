@@ -26,7 +26,7 @@ class IndexTest extends TestCase
 
     public function testIndexLifecycle()
     {
-        $kind = uniqid("php-docs-samples-index-kind-");
+        $kind = uniqid('php-docs-samples-index-kind-');
         $output = $this->runFunctionSnippet('index_create', [
             'projectId' => self::$projectId,
             'kind' => $kind,
@@ -40,7 +40,7 @@ class IndexTest extends TestCase
             $res,
             sprintf(
                 "output message did not match expected.\nexpected: `%s`.\ngot: `%s`",
-                "The create index operation succeeded. Index ID: <id>",
+                'The create index operation succeeded. Index ID: <id>',
                 $output
             )
         );
