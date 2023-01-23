@@ -14,16 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
     use TestTrait;
+
     public function testQuickstart()
     {
+        $processorId = 'aaaaaaaaa';
+        $file = sys_get_temp_dir() . '/documentai_quickstart.php';
+        $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+        $contents = str_replace(
+            ['YOUR_PROJECT_ID', 'YOUR_PROCESSOR_ID', '__DIR__'],
+            [self::$projectId, $processorId, sprintf('"%s/.."', __DIR__)],
+            $contents
+        );
+        file_put_contents($file, $contents);
+
         // Invoke quickstart.php
-        include __DIR__ . '/../quickstart.php';
-        $this->expectOutputRegex('/Bridge/');
+        ob_start();
+        $output = ob_get_clean();
+
+        // Make sure it looks correct
+        $this->expectOutputString('Document');
     }
 }

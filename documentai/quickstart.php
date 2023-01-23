@@ -53,6 +53,7 @@ $response = $client->processDocument($name, [
 ]);
 
 # Print Document Text
+printf('Document Text');
 printf($response->document->text);
 
 # [END documentai_quickstart]
