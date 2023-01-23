@@ -48,15 +48,12 @@ $processor = 'YOUR_PROCESSOR_ID'; # Your Processor ID
 # Fully-qualified Processor Name
 $name = $client->processorName($projectId, $location, $processor);
 
-$processRequest = new ProcessRequest([
-    'name' => $name,
+# Make Processing Request
+$response = $client->processDocument($name, [
     'raw_document' => $rawDocument
 ]);
 
-# Make Processing Request
-$response = $client->processDocument($processRequest);
-
 # Print Document Text
-printf($response->$document->$text);
+printf($response->document->text);
 
 # [END documentai_quickstart]
