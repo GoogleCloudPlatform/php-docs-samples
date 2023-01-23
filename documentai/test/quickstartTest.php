@@ -21,23 +21,26 @@ class quickstartTest extends TestCase
 {
     use TestTrait;
 
-    public function testQuickstart()
+    protected static $tempFile;
+
+    public function setUp(): void
     {
-        $processorId = 'aaaaaaaaa';
-        $file = sys_get_temp_dir() . '/documentai_quickstart.php';
+        $processorId = $this->requireEnv('GOOGLE_DOCUMENTAI_PROCESSOR_ID');
+        self::$tempFile = sys_get_temp_dir() . '/documentai_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         $contents = str_replace(
             ['YOUR_PROJECT_ID', 'YOUR_PROCESSOR_ID', '__DIR__'],
             [self::$projectId, $processorId, sprintf('"%s/.."', __DIR__)],
             $contents
         );
-        file_put_contents($file, $contents);
+        file_put_contents(self::$tempFile, $contents);
+    }
 
+    public function testQuickstart()
+    {
         // Invoke quickstart.php
-        ob_start();
-        $output = ob_get_clean();
+        $output = $this->runSnippet(self::$tempFile);
 
-        // Make sure it looks correct
-        $this->expectOutputRegex('Invoice');
+        $this->assertStringContainsString('Invoice', $output);
     }
 }

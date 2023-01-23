@@ -49,10 +49,10 @@ $name = $client->processorName($projectId, $location, $processor);
 
 # Make Processing Request
 $response = $client->processDocument($name, [
-    'raw_document' => $rawDocument
+    'rawDocument' => $rawDocument
 ]);
 
 # Print Document Text
-printf('Document Text: %s', $response->document->text);
+printf('Document Text: %s', $response->getDocument()->getText());
 
 # [END documentai_quickstart]
