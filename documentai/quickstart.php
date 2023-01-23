@@ -21,7 +21,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
 use Google\Cloud\DocumentAI\V1\DocumentProcessorServiceClient;
-use Google\Cloud\DocumentAI\V1\ProcessRequest;
 use Google\Cloud\DocumentAI\V1\RawDocument;
 
 # Create Client
