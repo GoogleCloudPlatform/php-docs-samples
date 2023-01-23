@@ -56,6 +56,7 @@ function enable_fine_grained_access(
     $resource = sprintf('projects/%s/instances/%s/databases/%s', $projectId, $instanceId, $databaseId);
     $policy = $adminClient->getIamPolicy($resource);
 
+    // IAM conditions need at least version 3
     if ($policy->getVersion() != 3) {
         $policy->setVersion(3);
     }
