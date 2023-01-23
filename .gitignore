@@ -11,4 +11,5 @@ credentials.*
 .php-cs-fixer.cache
 .vscode/
 .kokoro/secrets.sh
-.phpunit.result.cache
+.phpunit.result.cache]
+.DS_Store
