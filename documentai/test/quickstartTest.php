@@ -38,6 +38,6 @@ class quickstartTest extends TestCase
         $output = ob_get_clean();
 
         // Make sure it looks correct
-        $this->expectOutputString('Document');
+        $this->expectOutputString('Invoice');
     }
 }

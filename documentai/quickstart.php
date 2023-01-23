@@ -23,6 +23,10 @@ require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\DocumentAI\V1\DocumentProcessorServiceClient;
 use Google\Cloud\DocumentAI\V1\RawDocument;
 
+$projectId = 'YOUR_PROJECT_ID'; # Your Google Cloud Platform project ID
+$location = 'us'; # Your Processor Location
+$processor = 'YOUR_PROCESSOR_ID'; # Your Processor ID
+
 # Create Client
 $client = new DocumentProcessorServiceClient();
 
@@ -39,10 +43,6 @@ $rawDocument = new RawDocument([
     'content' => $contents,
     'mime_type' => 'application/pdf'
 ]);
-
-$projectId = 'YOUR_PROJECT_ID'; # Your Google Cloud Platform project ID
-$location = 'us'; # Your Processor Location
-$processor = 'YOUR_PROCESSOR_ID'; # Your Processor ID
 
 # Fully-qualified Processor Name
 $name = $client->processorName($projectId, $location, $processor);
