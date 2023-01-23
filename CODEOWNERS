@@ -7,19 +7,27 @@
 
 # The php-admins team is the default owner for anything not
 # explicitly taken by someone else.
-*                         @GoogleCloudPlatform/php-admins
+*                         @GoogleCloudPlatform/php-samples-reviewers
 
-/bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
-/cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-admins
-/datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
-/firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-admins
-/iot/                     @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-admins
-/storage/                 @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/php-admins
-/spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-admins
+# Kokoro
+.kokoro @GoogleCloudPlatform/php-admins
 
+/bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
+/cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-samples-reviewers
+/datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
+/firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
+/iot/                     @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/php-samples-reviewers
+/storage/                 @GoogleCloudPlatform/cloud-storage-dpe @GoogleCloudPlatform/php-samples-reviewers
+/spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
+
+# Serverless, Orchestration, DevOps
+/appengine/               @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
+/functions/               @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers 
+/run/                     @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
+/eventarc/                @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
 
 # Functions samples owned by the Firebase team
-/functions/firebase_analytics   @schandel @samtstern
+/functions/firebase_analytics   @schandel 
 
 
 # Brent is taking ownership of these samples as they are not supported by the ML team
