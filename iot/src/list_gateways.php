@@ -61,9 +61,11 @@ function list_gateways(
 
         if ($gatewayType == GatewayType::GATEWAY) {
             $foundGateway = true;
-            printf('Device: %s : %s' . PHP_EOL,
+            printf(
+                'Device: %s : %s' . PHP_EOL,
                 $device->getNumId(),
-                $device->getId());
+                $device->getId()
+            );
         }
     }
     if (!$foundGateway) {

@@ -24,8 +24,11 @@ function context_delete($projectId, $contextId, $sessionId)
 {
     $contextsClient = new ContextsClient();
 
-    $contextName = $contextsClient->contextName($projectId, $sessionId,
-        $contextId);
+    $contextName = $contextsClient->contextName(
+        $projectId,
+        $sessionId,
+        $contextId
+    );
     $contextsClient->deleteContext($contextName);
     printf('Context deleted: %s' . PHP_EOL, $contextName);
 

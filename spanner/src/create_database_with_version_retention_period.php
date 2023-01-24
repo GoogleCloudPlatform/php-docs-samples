@@ -37,8 +37,11 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $retentionPeriod The data retention period for the database.
  */
-function create_database_with_version_retention_period(string $instanceId, string $databaseId, string $retentionPeriod): void
-{
+function create_database_with_version_retention_period(
+    string $instanceId,
+    string $databaseId,
+    string $retentionPeriod
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
 
@@ -69,8 +72,12 @@ function create_database_with_version_retention_period(string $instanceId, strin
     $database = $instance->database($databaseId);
     $databaseInfo = $database->info();
 
-    printf('Database %s created with version retention period %s and earliest version time %s' . PHP_EOL,
-        $databaseId, $databaseInfo['versionRetentionPeriod'], $databaseInfo['earliestVersionTime']);
+    printf(
+        'Database %s created with version retention period %s and earliest version time %s' . PHP_EOL,
+        $databaseId,
+        $databaseInfo['versionRetentionPeriod'],
+        $databaseInfo['earliestVersionTime']
+    );
 }
 // [END spanner_create_database_with_version_retention_period]
 

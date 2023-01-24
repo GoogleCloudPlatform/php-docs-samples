@@ -38,8 +38,12 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $backupId The Spanner backup ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
-function restore_backup_with_encryption_key(string $instanceId, string $databaseId, string $backupId, string $kmsKeyName): void
-{
+function restore_backup_with_encryption_key(
+    string $instanceId,
+    string $databaseId,
+    string $backupId,
+    string $kmsKeyName
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
@@ -63,7 +67,10 @@ function restore_backup_with_encryption_key(string $instanceId, string $database
 
     printf(
         'Database %s restored from backup %s using encryption key %s' . PHP_EOL,
-        $sourceDatabase, $sourceBackup, $encryptionConfig['kmsKeyName']);
+        $sourceDatabase,
+        $sourceBackup,
+        $encryptionConfig['kmsKeyName']
+    );
 }
 // [END spanner_restore_backup_with_encryption_key]
 

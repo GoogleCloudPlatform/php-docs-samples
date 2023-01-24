@@ -82,7 +82,9 @@ class secretmanagerTest extends TestCase
         $parent = self::$client->projectName(self::$projectId);
         $secretId = self::randomSecretId();
 
-        return self::$client->createSecret($parent, $secretId,
+        return self::$client->createSecret(
+            $parent,
+            $secretId,
             new Secret([
                 'replication' => new Replication([
                     'automatic' => new Automatic(),

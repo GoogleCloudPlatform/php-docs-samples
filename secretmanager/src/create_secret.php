@@ -45,7 +45,9 @@ function create_secret(string $projectId, string $secretId): void
     $parent = $client->projectName($projectId);
 
     // Create the secret.
-    $secret = $client->createSecret($parent, $secretId,
+    $secret = $client->createSecret(
+        $parent,
+        $secretId,
         new Secret([
             'replication' => new Replication([
                 'automatic' => new Automatic(),

@@ -78,10 +78,12 @@ function transcribe_async_words(string $audioFile)
             foreach ($mostLikely->getWords() as $wordInfo) {
                 $startTime = $wordInfo->getStartTime();
                 $endTime = $wordInfo->getEndTime();
-                printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
+                printf(
+                    '  Word: %s (start: %s, end: %s)' . PHP_EOL,
                     $wordInfo->getWord(),
                     $startTime->serializeToJsonString(),
-                    $endTime->serializeToJsonString());
+                    $endTime->serializeToJsonString()
+                );
             }
         }
     } else {

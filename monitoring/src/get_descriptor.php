@@ -52,10 +52,12 @@ function get_descriptor($projectId, $metricId)
     printf('Unit: ' . $descriptor->getUnit() . PHP_EOL);
     printf('Labels:' . PHP_EOL);
     foreach ($descriptor->getLabels() as $labels) {
-        printf('  %s (%s) - %s' . PHP_EOL,
+        printf(
+            '  %s (%s) - %s' . PHP_EOL,
             $labels->getKey(),
             $labels->getValueType(),
-            $labels->getDescription());
+            $labels->getDescription()
+        );
     }
 }
 // [END monitoring_get_descriptor]

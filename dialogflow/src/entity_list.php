@@ -25,8 +25,10 @@ function entity_list($projectId, $entityTypeId)
     $entityTypesClient = new EntityTypesClient();
 
     // prepare
-    $parent = $entityTypesClient->entityTypeName($projectId,
-        $entityTypeId);
+    $parent = $entityTypesClient->entityTypeName(
+        $projectId,
+        $entityTypeId
+    );
     $entityType = $entityTypesClient->getEntityType($parent);
 
     // get entities

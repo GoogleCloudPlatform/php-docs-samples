@@ -42,8 +42,7 @@ function create_key_symmetric_encrypt_decrypt(
     $key = (new CryptoKey())
         ->setPurpose(CryptoKeyPurpose::ENCRYPT_DECRYPT)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
-            ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION)
-        );
+            ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION));
 
     // Call the API.
     $createdKey = $client->createCryptoKey($keyRingName, $id, $key);

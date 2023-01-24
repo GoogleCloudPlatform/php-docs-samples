@@ -153,7 +153,11 @@ function inspect_datastore(
                 print('No findings.' . PHP_EOL);
             } else {
                 foreach ($infoTypeStats as $infoTypeStat) {
-                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+                    printf(
+                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
+                        $infoTypeStat->getCount(),
+                        $infoTypeStat->getInfoType()->getName()
+                    );
                 }
             }
             break;

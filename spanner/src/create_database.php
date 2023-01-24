@@ -63,8 +63,11 @@ function create_database(string $instanceId, string $databaseId): void
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created database %s on instance %s' . PHP_EOL,
-        $databaseId, $instanceId);
+    printf(
+        'Created database %s on instance %s' . PHP_EOL,
+        $databaseId,
+        $instanceId
+    );
 }
 // [END spanner_create_database]
 

@@ -43,13 +43,11 @@ function create_key_asymmetric_decrypt(
     $key = (new CryptoKey())
         ->setPurpose(CryptoKeyPurpose::ASYMMETRIC_DECRYPT)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
-            ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_DECRYPT_OAEP_2048_SHA256)
-        )
+            ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_DECRYPT_OAEP_2048_SHA256))
 
         // Optional: customize how long key versions should be kept before destroying.
         ->setDestroyScheduledDuration((new Duration())
-            ->setSeconds(24 * 60 * 60)
-        );
+            ->setSeconds(24 * 60 * 60));
 
     // Call the API.
     $createdKey = $client->createCryptoKey($keyRingName, $id, $key);

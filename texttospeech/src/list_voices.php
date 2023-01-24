@@ -53,8 +53,10 @@ function list_voices(): void
         printf('SSML voice gender: %s' . PHP_EOL, $ssmlVoiceGender[$gender]);
 
         // display the natural hertz rate for this voice
-        printf('Natural Sample Rate Hertz: %d' . PHP_EOL,
-            $voice->getNaturalSampleRateHertz());
+        printf(
+            'Natural Sample Rate Hertz: %d' . PHP_EOL,
+            $voice->getNaturalSampleRateHertz()
+        );
     }
 
     $client->close();

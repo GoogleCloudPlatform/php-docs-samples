@@ -56,8 +56,11 @@ function query_data_with_numeric_parameter(string $instanceId, string $databaseI
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, Revenue: %s' . PHP_EOL,
-            $row['VenueId'], $row['Revenue']);
+        printf(
+            'VenueId: %s, Revenue: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['Revenue']
+        );
     }
 }
 // [END spanner_query_with_numeric_parameter]

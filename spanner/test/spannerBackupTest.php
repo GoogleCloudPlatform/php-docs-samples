@@ -89,8 +89,10 @@ class spannerBackupTest extends TestCase
         self::$encryptedRestoredDatabaseId = self::$databaseId . '-en-r';
         self::$instance = $spanner->instance(self::$instanceId);
 
-        self::$kmsKeyName =
-            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        self::$kmsKeyName = sprintf(
+            'projects/%s/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek',
+            self::$projectId
+        );
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()

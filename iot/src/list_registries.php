@@ -44,9 +44,11 @@ function list_registries(
     $response = $deviceManager->listDeviceRegistries($locationName);
 
     foreach ($response->iterateAllElements() as $registry) {
-        printf(' - Id: %s, Name: %s' . PHP_EOL,
+        printf(
+            ' - Id: %s, Name: %s' . PHP_EOL,
             $registry->getId(),
-            $registry->getName());
+            $registry->getName()
+        );
     }
 }
 # [END iot_list_registries]

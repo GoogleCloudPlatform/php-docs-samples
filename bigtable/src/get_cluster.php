@@ -58,12 +58,15 @@ function get_cluster(
     printf('Printing Details:' . PHP_EOL);
 
     // Fetch some commonly used metadata
-    printf('Name: ' . $cluster->getName() . PHP_EOL);
-    printf('Location: ' . $cluster->getLocation() . PHP_EOL);
-    printf('State: ' . State::name($cluster->getState()) . PHP_EOL);
-    printf('Default Storage Type: ' . StorageType::name($cluster->getDefaultStorageType()) . PHP_EOL);
-    printf('Nodes: ' . $cluster->getServeNodes() . PHP_EOL);
-    printf('Encryption Config: ' . ($cluster->hasEncryptionConfig() ? $cluster->getEncryptionConfig()->getKmsKeyName() : 'N/A') . PHP_EOL);
+    printf('Name: %s' . PHP_EOL, $cluster->getName());
+    printf('Location: %s' . PHP_EOL, $cluster->getLocation());
+    printf('State: %s' . PHP_EOL, State::name($cluster->getState()));
+    printf('Default Storage Type: %s' . PHP_EOL, StorageType::name($cluster->getDefaultStorageType()));
+    printf('Nodes: %s' . PHP_EOL, $cluster->getServeNodes());
+    printf(
+        'Encryption Config: %s' . PHP_EOL,
+        $cluster->hasEncryptionConfig() ? $cluster->getEncryptionConfig()->getKmsKeyName() : 'N/A'
+    );
 }
 // [END bigtable_get_cluster]
 

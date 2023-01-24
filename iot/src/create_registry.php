@@ -57,9 +57,11 @@ function create_registry(
 
     $registry = $deviceManager->createDeviceRegistry($locationName, $registry);
 
-    printf('Id: %s, Name: %s' . PHP_EOL,
+    printf(
+        'Id: %s, Name: %s' . PHP_EOL,
         $registry->getId(),
-        $registry->getName());
+        $registry->getName()
+    );
 }
 # [END iot_create_registry]
 

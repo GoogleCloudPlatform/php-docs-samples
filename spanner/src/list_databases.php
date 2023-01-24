@@ -42,8 +42,11 @@ function list_databases(string $instanceId): void
     printf('Databases for %s' . PHP_EOL, $instance->name());
     foreach ($instance->databases() as $database) {
         if (isset($database->info()['defaultLeader'])) {
-            printf("\t%s (default leader = %s)" . PHP_EOL,
-                $database->info()['name'], $database->info()['defaultLeader']);
+            printf(
+                "\t%s (default leader = %s)" . PHP_EOL,
+                $database->info()['name'],
+                $database->info()['defaultLeader']
+            );
         } else {
             printf("\t%s" . PHP_EOL, $database->info()['name']);
         }

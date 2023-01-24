@@ -43,8 +43,10 @@ function detect_web_with_geo_metadata_gcs(string $path)
     $web = $response->getWebDetection();
 
     if ($web) {
-        printf('%d web entities found:' . PHP_EOL,
-            count($web->getWebEntities()));
+        printf(
+            '%d web entities found:' . PHP_EOL,
+            count($web->getWebEntities())
+        );
         foreach ($web->getWebEntities() as $entity) {
             printf('Description: %s ' . PHP_EOL, $entity->getDescription());
             printf('Score: %f' . PHP_EOL, $entity->getScore());

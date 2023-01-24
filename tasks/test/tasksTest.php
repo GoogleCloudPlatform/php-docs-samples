@@ -69,7 +69,8 @@ class TasksTest extends TestCase
 
     private function getTaskNamePrefix()
     {
-        $taskNamePrefix = sprintf('projects/%s/locations/%s/queues/%s/tasks/',
+        $taskNamePrefix = sprintf(
+            'projects/%s/locations/%s/queues/%s/tasks/',
             self::$projectId,
             self::$location,
             self::$queue

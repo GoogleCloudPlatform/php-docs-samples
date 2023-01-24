@@ -47,9 +47,25 @@ function insert_data_with_timestamp_column(string $instanceId, string $databaseI
 
     $operation = $database->transaction(['singleUse' => true])
         ->insertBatch('Performances', [
-            ['SingerId' => 1, 'VenueId' => 4, 'EventDate' => '2017-10-05', 'Revenue' => 11000, 'LastUpdateTime' => $spanner->commitTimestamp()],
-            ['SingerId' => 1, 'VenueId' => 19, 'EventDate' => '2017-11-02', 'Revenue' => 15000, 'LastUpdateTime' => $spanner->commitTimestamp()],
-            ['SingerId' => 2, 'VenueId' => 42, 'EventDate' => '2017-12-23', 'Revenue' => 7000, 'LastUpdateTime' => $spanner->commitTimestamp()],
+            [
+                'SingerId' => 1,
+                'VenueId' => 4,
+                'EventDate' => '2017-10-05',
+                'Revenue' => 11000,
+                'LastUpdateTime' => $spanner->commitTimestamp(),
+            ], [
+                'SingerId' => 1,
+                'VenueId' => 19,
+                'EventDate' => '2017-11-02',
+                'Revenue' => 15000,
+                'LastUpdateTime' => $spanner->commitTimestamp(),
+            ], [
+                'SingerId' => 2,
+                'VenueId' => 42,
+                'EventDate' => '2017-12-23',
+                'Revenue' => 7000,
+                'LastUpdateTime' => $spanner->commitTimestamp(),
+            ],
         ])
         ->commit();
 

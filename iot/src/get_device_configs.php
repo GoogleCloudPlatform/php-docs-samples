@@ -46,8 +46,10 @@ function get_device_configs(
         print('Config:' . PHP_EOL);
         printf('    Version: %s' . PHP_EOL, $config->getVersion());
         printf('    Data: %s' . PHP_EOL, $config->getBinaryData());
-        printf('    Update Time: %s' . PHP_EOL,
-            $config->getCloudUpdateTime()->toDateTime()->format('Y-m-d H:i:s'));
+        printf(
+            '    Update Time: %s' . PHP_EOL,
+            $config->getCloudUpdateTime()->toDateTime()->format('Y-m-d H:i:s')
+        );
     }
 }
 # [END iot_get_device_configs]

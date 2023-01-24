@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Endpoints\Test;
+
 use Google\Cloud\Samples\Appengine\Endpoints\EndpointsCommand;
 use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Console\Tester\CommandTester;

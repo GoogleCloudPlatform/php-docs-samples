@@ -68,7 +68,8 @@ function update_data_with_dml_structs(string $instanceId, string $databaseId): v
                 'types' => [
                     'name' => $nameType
                 ]
-            ]);
+            ]
+        );
         $t->commit();
         printf('Updated %d row(s).' . PHP_EOL, $rowCount);
     });

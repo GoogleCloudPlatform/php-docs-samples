@@ -42,8 +42,7 @@ function create_key_labels(
     $key = (new CryptoKey())
         ->setPurpose(CryptoKeyPurpose::ENCRYPT_DECRYPT)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
-            ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION)
-        )
+            ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION))
         ->setLabels([
             'team' => 'alpha',
             'cost_center' => 'cc1234',

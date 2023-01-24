@@ -49,7 +49,12 @@ function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
     $response = $client->createTransferJob($transferJob);
     $client->runTransferJob($response->getName(), $projectId);
 
-    printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $sourceGcsBucketName, $sinkGcsBucketName, $response->getName());
+    printf(
+        'Created and ran transfer job from %s to %s with name %s ' . PHP_EOL,
+        $sourceGcsBucketName,
+        $sinkGcsBucketName,
+        $response->getName()
+    );
 }
 # [END storagetransfer_quickstart]
 

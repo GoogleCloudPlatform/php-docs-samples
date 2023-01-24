@@ -62,7 +62,8 @@ function read_timeseries_simple($projectId, $minutesAgo = 20)
         $projectName,
         $filter,
         $interval,
-        $view);
+        $view
+    );
 
     printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {

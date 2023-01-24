@@ -70,7 +70,9 @@ class videoStitcherTest extends TestCase
     private static $inputBucketName = 'cloud-samples-data';
     private static $inputVodFileName = '/media/hls-vod/manifest.m3u8';
     private static $vodUri;
-    private static $vodAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&correlator=';
+    private static $vodAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples'
+        . '&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap'
+        . '&unviewed_position_start=1&env=vp&impl=s&correlator=';
 
     private static $vodSessionId;
     private static $vodSessionName;
@@ -81,7 +83,10 @@ class videoStitcherTest extends TestCase
 
     private static $inputLiveFileName = '/media/hls-live/manifest.m3u8';
     private static $liveUri;
-    private static $liveAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=';
+    private static $liveAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/'
+        . 'single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&'
+        . 'unviewed_position_start=1&env=vp&impl=s&correlator=';
+
     private static $liveSessionId;
     private static $liveSessionName;
     private static $liveAdTagDetailId;
@@ -96,11 +101,23 @@ class videoStitcherTest extends TestCase
         self::deleteOldCdnKeys();
 
         self::$slateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$slateFileName);
-        self::$updatedSlateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$updatedSlateFileName);
+        self::$updatedSlateUri = sprintf(
+            'https://storage.googleapis.com/%s%s',
+            self::$bucket,
+            self::$updatedSlateFileName
+        );
 
-        self::$vodUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputVodFileName);
+        self::$vodUri = sprintf(
+            'https://storage.googleapis.com/%s%s',
+            self::$inputBucketName,
+            self::$inputVodFileName
+        );
 
-        self::$liveUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputLiveFileName);
+        self::$liveUri = sprintf(
+            'https://storage.googleapis.com/%s%s',
+            self::$inputBucketName,
+            self::$inputLiveFileName
+        );
     }
 
     public function testCreateSlate()
@@ -389,7 +406,11 @@ class videoStitcherTest extends TestCase
     /** @depends testGetVodSession */
     public function testListVodAdTagDetails()
     {
-        self::$vodAdTagDetailName = sprintf('/locations/%s/vodSessions/%s/vodAdTagDetails/', self::$location, self::$vodSessionId);
+        self::$vodAdTagDetailName = sprintf(
+            '/locations/%s/vodSessions/%s/vodAdTagDetails/',
+            self::$location,
+            self::$vodSessionId
+        );
         $output = $this->runFunctionSnippet('list_vod_ad_tag_details', [
             self::$projectId,
             self::$location,
@@ -398,7 +419,12 @@ class videoStitcherTest extends TestCase
         $this->assertStringContainsString(self::$vodAdTagDetailName, $output);
         self::$vodAdTagDetailId = explode('/', $output);
         self::$vodAdTagDetailId = trim(self::$vodAdTagDetailId[(count(self::$vodAdTagDetailId) - 1)]);
-        self::$vodAdTagDetailName = sprintf('/locations/%s/vodSessions/%s/vodAdTagDetails/%s', self::$location, self::$vodSessionId, self::$vodAdTagDetailId);
+        self::$vodAdTagDetailName = sprintf(
+            '/locations/%s/vodSessions/%s/vodAdTagDetails/%s',
+            self::$location,
+            self::$vodSessionId,
+            self::$vodAdTagDetailId
+        );
     }
 
     /** @depends testListVodAdTagDetails */
@@ -416,7 +442,11 @@ class videoStitcherTest extends TestCase
     /** @depends testCreateVodSession */
     public function testListVodStitchDetails()
     {
-        self::$vodStitchDetailName = sprintf('/locations/%s/vodSessions/%s/vodStitchDetails/', self::$location, self::$vodSessionId);
+        self::$vodStitchDetailName = sprintf(
+            '/locations/%s/vodSessions/%s/vodStitchDetails/',
+            self::$location,
+            self::$vodSessionId
+        );
         $output = $this->runFunctionSnippet('list_vod_stitch_details', [
             self::$projectId,
             self::$location,
@@ -425,7 +455,12 @@ class videoStitcherTest extends TestCase
         $this->assertStringContainsString(self::$vodStitchDetailName, $output);
         self::$vodStitchDetailId = explode('/', $output);
         self::$vodStitchDetailId = trim(self::$vodStitchDetailId[(count(self::$vodStitchDetailId) - 1)]);
-        self::$vodStitchDetailName = sprintf('/locations/%s/vodSessions/%s/vodStitchDetails/%s', self::$location, self::$vodSessionId, self::$vodStitchDetailId);
+        self::$vodStitchDetailName = sprintf(
+            '/locations/%s/vodSessions/%s/vodStitchDetails/%s',
+            self::$location,
+            self::$vodSessionId,
+            self::$vodStitchDetailId
+        );
     }
 
     /** @depends testListVodStitchDetails */
@@ -514,7 +549,11 @@ class videoStitcherTest extends TestCase
         $renditionsUri = sprintf('%s/%s', join('/', $tmp), $renditions);
         file_get_contents($renditionsUri);
 
-        self::$liveAdTagDetailName = sprintf('/locations/%s/liveSessions/%s/liveAdTagDetails/', self::$location, self::$liveSessionId);
+        self::$liveAdTagDetailName = sprintf(
+            '/locations/%s/liveSessions/%s/liveAdTagDetails/',
+            self::$location,
+            self::$liveSessionId
+        );
         $output = $this->runFunctionSnippet('list_live_ad_tag_details', [
             self::$projectId,
             self::$location,
@@ -523,7 +562,12 @@ class videoStitcherTest extends TestCase
         $this->assertStringContainsString(self::$liveAdTagDetailName, $output);
         self::$liveAdTagDetailId = explode('/', $output);
         self::$liveAdTagDetailId = trim(self::$liveAdTagDetailId[(count(self::$liveAdTagDetailId) - 1)]);
-        self::$liveAdTagDetailName = sprintf('/locations/%s/liveSessions/%s/liveAdTagDetails/%s', self::$location, self::$liveSessionId, self::$liveAdTagDetailId);
+        self::$liveAdTagDetailName = sprintf(
+            '/locations/%s/liveSessions/%s/liveAdTagDetails/%s',
+            self::$location,
+            self::$liveSessionId,
+            self::$liveAdTagDetailId
+        );
     }
 
     /** @depends testListLiveAdTagDetails */

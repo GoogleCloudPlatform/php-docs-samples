@@ -42,8 +42,11 @@ function set_retention_policy(string $bucketName, int $retentionPeriod): void
         'retentionPolicy' => [
             'retentionPeriod' => $retentionPeriod
         ]]);
-    printf('Bucket %s retention period set to %s seconds' . PHP_EOL, $bucketName,
-        $retentionPeriod);
+    printf(
+        'Bucket %s retention period set to %s seconds' . PHP_EOL,
+        $bucketName,
+        $retentionPeriod
+    );
 }
 # [END storage_set_retention_policy]
 

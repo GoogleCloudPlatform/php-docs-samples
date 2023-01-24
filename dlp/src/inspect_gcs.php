@@ -46,7 +46,8 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes
  * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
  * @param string $bucketId          The name of the bucket where the file resides
- * @param string $file              The path to the file within the bucket to inspect. Can contain wildcards e.g. "my-image.*"
+ * @param string $file              The path to the file within the bucket to inspect. Can contain wildcards
+ *                                  e.g. "my-image.*"
  * @param int    $maxFindings       (Optional) The maximum number of findings to report per request (0 = server maximum)
  */
 function inspect_gcs(
@@ -148,7 +149,11 @@ function inspect_gcs(
                 print('No findings.' . PHP_EOL);
             } else {
                 foreach ($infoTypeStats as $infoTypeStat) {
-                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+                    printf(
+                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
+                        $infoTypeStat->getCount(),
+                        $infoTypeStat->getInfoType()->getName()
+                    );
                 }
             }
             break;

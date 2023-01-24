@@ -38,8 +38,12 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $destination The local destination to save the object.
  *        (e.g. '/path/to/your/file')
  */
-function download_file_requester_pays(string $projectId, string $bucketName, string $objectName, string $destination): void
-{
+function download_file_requester_pays(
+    string $projectId,
+    string $bucketName,
+    string $objectName,
+    string $destination
+): void {
     $storage = new StorageClient([
         'projectId' => $projectId
     ]);
@@ -47,8 +51,12 @@ function download_file_requester_pays(string $projectId, string $bucketName, str
     $bucket = $storage->bucket($bucketName, $userProject);
     $object = $bucket->object($objectName);
     $object->downloadToFile($destination);
-    printf('Downloaded gs://%s/%s to %s using requester-pays requests.' . PHP_EOL,
-        $bucketName, $objectName, basename($destination));
+    printf(
+        'Downloaded gs://%s/%s to %s using requester-pays requests.' . PHP_EOL,
+        $bucketName,
+        $objectName,
+        basename($destination)
+    );
 }
 # [END storage_download_file_requester_pays]
 

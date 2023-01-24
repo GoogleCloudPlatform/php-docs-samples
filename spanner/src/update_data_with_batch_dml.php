@@ -65,8 +65,10 @@ function update_data_with_batch_dml(string $instanceId, string $databaseId): voi
         ]);
         $t->commit();
         $rowCounts = count($result->rowCounts());
-        printf('Executed %s SQL statements using Batch DML.' . PHP_EOL,
-            $rowCounts);
+        printf(
+            'Executed %s SQL statements using Batch DML.' . PHP_EOL,
+            $rowCounts
+        );
     });
 }
 // [END spanner_dml_batch_update]

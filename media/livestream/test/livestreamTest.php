@@ -62,7 +62,12 @@ class livestreamTest extends TestCase
     public function testCreateInput()
     {
         self::$inputId = sprintf('%s-%s-%s', self::$inputIdPrefix, uniqid(), time());
-        self::$inputName = sprintf('projects/%s/locations/%s/inputs/%s', self::$projectId, self::$location, self::$inputId);
+        self::$inputName = sprintf(
+            'projects/%s/locations/%s/inputs/%s',
+            self::$projectId,
+            self::$location,
+            self::$inputId
+        );
 
         $output = $this->runFunctionSnippet('create_input', [
             self::$projectId,
@@ -129,7 +134,12 @@ class livestreamTest extends TestCase
     {
         // Create a test input for the channel
         self::$inputId = sprintf('%s-%s-%s', self::$inputIdPrefix, uniqid(), time());
-        self::$inputName = sprintf('projects/%s/locations/%s/inputs/%s', self::$projectId, self::$location, self::$inputId);
+        self::$inputName = sprintf(
+            'projects/%s/locations/%s/inputs/%s',
+            self::$projectId,
+            self::$location,
+            self::$inputId
+        );
 
         $this->runFunctionSnippet('create_input', [
             self::$projectId,
@@ -138,7 +148,12 @@ class livestreamTest extends TestCase
         ]);
 
         self::$channelId = sprintf('%s-%s-%s', self::$channelIdPrefix, uniqid(), time());
-        self::$channelName = sprintf('projects/%s/locations/%s/channels/%s', self::$projectId, self::$location, self::$channelId);
+        self::$channelName = sprintf(
+            'projects/%s/locations/%s/channels/%s',
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        );
 
         $output = $this->runFunctionSnippet('create_channel', [
             self::$projectId,
@@ -165,7 +180,12 @@ class livestreamTest extends TestCase
     {
         // Create a test input to update the channel
         self::$backupInputId = sprintf('%s-%s-%s', self::$inputIdPrefix, uniqid(), time());
-        self::$backupInputName = sprintf('projects/%s/locations/%s/inputs/%s', self::$projectId, self::$location, self::$backupInputId);
+        self::$backupInputName = sprintf(
+            'projects/%s/locations/%s/inputs/%s',
+            self::$projectId,
+            self::$location,
+            self::$backupInputId
+        );
 
         $this->runFunctionSnippet('create_input', [
             self::$projectId,
@@ -244,7 +264,12 @@ class livestreamTest extends TestCase
     public function testCreateChannelWithBackupInput()
     {
         self::$channelId = sprintf('%s-%s-%s', self::$channelIdPrefix, uniqid(), time());
-        self::$channelName = sprintf('projects/%s/locations/%s/channels/%s', self::$projectId, self::$location, self::$channelId);
+        self::$channelName = sprintf(
+            'projects/%s/locations/%s/channels/%s',
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        );
 
         $output = $this->runFunctionSnippet('create_channel_with_backup_input', [
             self::$projectId,
@@ -287,7 +312,12 @@ class livestreamTest extends TestCase
     {
         // Create a test input for the channel
         self::$inputId = sprintf('%s-%s-%s', self::$inputIdPrefix, uniqid(), time());
-        self::$inputName = sprintf('projects/%s/locations/%s/inputs/%s', self::$projectId, self::$location, self::$inputId);
+        self::$inputName = sprintf(
+            'projects/%s/locations/%s/inputs/%s',
+            self::$projectId,
+            self::$location,
+            self::$inputId
+        );
 
         $this->runFunctionSnippet('create_input', [
             self::$projectId,
@@ -297,7 +327,12 @@ class livestreamTest extends TestCase
 
         // Create a test channel for the event
         self::$channelId = sprintf('%s-%s-%s', self::$channelIdPrefix, uniqid(), time());
-        self::$channelName = sprintf('projects/%s/locations/%s/channels/%s', self::$projectId, self::$location, self::$channelId);
+        self::$channelName = sprintf(
+            'projects/%s/locations/%s/channels/%s',
+            self::$projectId,
+            self::$location,
+            self::$channelId
+        );
 
         $this->runFunctionSnippet('create_channel', [
             self::$projectId,
@@ -314,7 +349,13 @@ class livestreamTest extends TestCase
         ]);
 
         self::$eventId = sprintf('%s-%s-%s', self::$eventIdPrefix, uniqid(), time());
-        self::$eventName = sprintf('projects/%s/locations/%s/channels/%s/events/%s', self::$projectId, self::$location, self::$channelId, self::$eventId);
+        self::$eventName = sprintf(
+            'projects/%s/locations/%s/channels/%s/events/%s',
+            self::$projectId,
+            self::$location,
+            self::$channelId,
+            self::$eventId
+        );
 
         $output = $this->runFunctionSnippet('create_channel_event', [
             self::$projectId,

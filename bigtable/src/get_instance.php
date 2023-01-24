@@ -67,7 +67,10 @@ function get_instance(
     // Labels are an object of the MapField class which implement the IteratorAggregate, Countable
     // and ArrayAccess interfaces so you can do the following:
     printf("\tNum of Labels: " . $labels->count() . PHP_EOL);
-    printf("\tLabel with a key(dev-label): " . ($labels->offsetExists('dev-label') ? $labels['dev-label'] : 'N/A') . PHP_EOL);
+    printf(
+        "\tLabel with a key(dev-label): %s\n",
+        $labels->offsetExists('dev-label') ? $labels['dev-label'] : 'N/A'
+    );
 
     // we can even loop over all the labels
     foreach ($labels as $key => $val) {

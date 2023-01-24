@@ -49,9 +49,11 @@ function analyze_shots(string $uri, int $pollingIntervalSeconds = 0)
         foreach ($results->getShotAnnotations() as $shot) {
             $start = $shot->getStartTimeOffset();
             $end = $shot->getEndTimeOffset();
-            printf('Shot: %ss to %ss' . PHP_EOL,
+            printf(
+                'Shot: %ss to %ss' . PHP_EOL,
                 $start->getSeconds() + $start->getNanos() / 1000000000.0,
-                $end->getSeconds() + $end->getNanos() / 1000000000.0);
+                $end->getSeconds() + $end->getNanos() / 1000000000.0
+            );
         }
     } else {
         print_r($operation->getError());

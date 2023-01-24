@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\BigQuery\StackOverflow\Test;
+
 use PHPUnit\Framework\TestCase;
 
 class stackoverflowTest extends TestCase

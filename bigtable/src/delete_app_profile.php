@@ -46,7 +46,8 @@ function delete_app_profile(
     printf('Deleting the App Profile: %s' . PHP_EOL, $appProfileId);
 
     try {
-        // If $ignoreWarnings is set to false, Bigtable will warn you that all future requests using the AppProfile will fail
+        // If $ignoreWarnings is set to false, Bigtable will warn you that all
+        // future requests using the AppProfile will fail
         $instanceAdminClient->deleteAppProfile($appProfileName, $ignoreWarnings);
         printf('App Profile %s deleted.' . PHP_EOL, $appProfileId);
     } catch (ApiException $e) {
