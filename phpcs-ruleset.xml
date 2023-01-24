@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset name="Google-Cloud-PHP-PSR2">
+  <rule ref="PSR2" />
+  <rule ref="PSR1">
+    <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
+  </rule>
+  <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+    <exclude-pattern>**/test/*Test.php</exclude-pattern>
+  </rule>
+ <rule ref="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis">
+    <exclude-pattern type="relative">compute/*-client/helloworld/app.php</exclude-pattern>
+ </rule>
+ <rule ref="Generic.Files.LineLength.TooLong">
+    <exclude-pattern>**/test/*</exclude-pattern>
+    <exclude-pattern>index.php</exclude-pattern>
+ </rule>
+  <file>.</file>
+  <exclude-pattern>**/vendor/*</exclude-pattern>
+  <exclude-pattern>run/laravel</exclude-pattern>
+  <exclude-pattern>appengine</exclude-pattern>
+  <arg name="extensions" value="php"/>
+</ruleset>
