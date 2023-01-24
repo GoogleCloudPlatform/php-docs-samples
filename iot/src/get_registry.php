@@ -40,9 +40,11 @@ function get_registry(
 
     $registry = $deviceManager->getDeviceRegistry($registryName);
 
-    printf('Id: %s, Name: %s' . PHP_EOL,
+    printf(
+        'Id: %s, Name: %s' . PHP_EOL,
         $registry->getId(),
-        $registry->getName());
+        $registry->getName()
+    );
 }
 # [END iot_get_registry]
 

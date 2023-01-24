@@ -34,7 +34,8 @@ use Google\ApiCore\ApiException;
  *
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
- * @param string $clusterId The ID of the cluster where the new App Profile will route it's requests(in case of single cluster routing)
+ * @param string $clusterId The ID of the cluster where the new App Profile will route it's requests
+ *                          (in case of single cluster routing)
  * @param string $appProfileId The ID of the App Profile to create
  */
 function create_app_profile(
@@ -52,7 +53,8 @@ function create_app_profile(
     ]);
 
     // create a new routing policy
-    // allow_transactional_writes refers to Single-Row-Transactions(https://cloud.google.com/bigtable/docs/app-profiles#single-row-transactions)
+    // allow_transactional_writes refers to Single-Row-Transactions
+    // (https://cloud.google.com/bigtable/docs/app-profiles#single-row-transactions)
     $routingPolicy = new SingleClusterRouting([
         'cluster_id' => $clusterId,
         'allow_transactional_writes' => false

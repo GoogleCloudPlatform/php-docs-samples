@@ -140,7 +140,9 @@ class DeployTest extends TestCase
         $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
 
         if (empty(self::$apiHttpClient)) {
-            $credentials = ApplicationDefaultCredentials::getCredentials('https://www.googleapis.com/auth/cloud-platform');
+            $credentials = ApplicationDefaultCredentials::getCredentials(
+                'https://www.googleapis.com/auth/cloud-platform'
+            );
             self::$apiHttpClient = CredentialsLoader::makeHttpClient($credentials, [
                 'base_uri' => 'https://firebaseremoteconfig.googleapis.com/v1/projects/' . $projectId . '/remoteConfig'
             ]);

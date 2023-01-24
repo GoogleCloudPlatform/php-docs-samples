@@ -50,7 +50,11 @@ function alert_create_policy($projectId)
     $policy->setConditions([new Condition([
         'display_name' => 'condition-1',
         'condition_threshold' => new MetricThreshold([
-            'filter' => 'resource.type = "gce_instance" AND metric.type = "compute.googleapis.com/instance/cpu/utilization"',
+            'filter' => sprintf(
+                'resource.type = "%s" AND metric.type = "%s"',
+                'gce_instance',
+                'compute.googleapis.com/instance/cpu/utilization'
+            ),
             'duration' => new Duration(['seconds' => '60']),
             'comparison' => ComparisonType::COMPARISON_LT,
         ])

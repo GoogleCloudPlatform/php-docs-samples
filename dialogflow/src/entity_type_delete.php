@@ -27,8 +27,10 @@ function entity_type_delete($projectId, $entityTypeId)
 {
     $entityTypesClient = new EntityTypesClient();
 
-    $parent = $entityTypesClient->entityTypeName($projectId,
-        $entityTypeId);
+    $parent = $entityTypesClient->entityTypeName(
+        $projectId,
+        $entityTypeId
+    );
     $entityTypesClient->deleteEntityType($parent);
     printf('Entity type deleted: %s' . PHP_EOL, $parent);
 

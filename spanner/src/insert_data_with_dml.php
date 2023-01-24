@@ -49,7 +49,8 @@ function insert_data_with_dml(string $instanceId, string $databaseId): void
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
             'INSERT Singers (SingerId, FirstName, LastName) '
-            . " VALUES (10, 'Virginia', 'Watson')");
+            . " VALUES (10, 'Virginia', 'Watson')"
+        );
         $t->commit();
         printf('Inserted %d row(s).' . PHP_EOL, $rowCount);
     });

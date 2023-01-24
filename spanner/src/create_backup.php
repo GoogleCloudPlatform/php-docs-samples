@@ -62,7 +62,11 @@ function create_backup(string $instanceId, string $databaseId, string $backupId,
         $info = $backup->info();
         printf(
             'Backup %s of size %d bytes was created at %s for version of database at %s' . PHP_EOL,
-            basename($info['name']), $info['sizeBytes'], $info['createTime'], $info['versionTime']);
+            basename($info['name']),
+            $info['sizeBytes'],
+            $info['createTime'],
+            $info['versionTime']
+        );
     } else {
         printf('Unexpected state: %s' . PHP_EOL, $backup->state());
     }

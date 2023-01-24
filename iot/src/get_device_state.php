@@ -45,8 +45,10 @@ function get_device_state(
     foreach ($response->getDeviceStates() as $state) {
         print('State:' . PHP_EOL);
         printf('    Data: %s' . PHP_EOL, $state->getBinaryData());
-        printf('    Update Time: %s' . PHP_EOL,
-            $state->getUpdateTime()->toDateTime()->format('Y-m-d H:i:s'));
+        printf(
+            '    Update Time: %s' . PHP_EOL,
+            $state->getUpdateTime()->toDateTime()->format('Y-m-d H:i:s')
+        );
     }
 }
 # [END iot_get_device_state]

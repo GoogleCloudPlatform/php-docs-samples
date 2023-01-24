@@ -44,7 +44,8 @@ function update_database_with_default_leader(string $instanceId, string $databas
     $database = $instance->database($databaseId);
 
     $database->updateDdl(
-        "ALTER DATABASE `$databaseId` SET OPTIONS (default_leader = '$defaultLeader')");
+        "ALTER DATABASE `$databaseId` SET OPTIONS (default_leader = '$defaultLeader')"
+    );
 
     printf('Updated the default leader to %d' . PHP_EOL, $database->info()['defaultLeader']);
 }

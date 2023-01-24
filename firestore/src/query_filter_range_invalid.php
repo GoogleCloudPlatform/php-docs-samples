@@ -26,7 +26,8 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * An example of an invalid range query. @see https://cloud.google.com/firestore/docs/query-data/queries#compound_queries
+ * An example of an invalid range query.
+ * @see https://cloud.google.com/firestore/docs/query-data/queries#compound_queries
  *
  * @param string $projectId The Google Cloud Project ID
  */

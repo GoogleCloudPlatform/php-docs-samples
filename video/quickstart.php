@@ -48,7 +48,8 @@ if ($operation->operationSucceeded()) {
         foreach ($label->getSegments() as $segment) {
             $start = $segment->getSegment()->getStartTimeOffset();
             $end = $segment->getSegment()->getEndTimeOffset();
-            printf('  Segment: %ss to %ss' . PHP_EOL,
+            printf(
+                '  Segment: %ss to %ss' . PHP_EOL,
                 $start->getSeconds() + $start->getNanos() / 1000000000.0,
                 $end->getSeconds() + $end->getNanos() / 1000000000.0
             );

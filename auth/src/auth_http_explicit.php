@@ -41,7 +41,8 @@ function auth_http_explicit($projectId, $serviceAccountPath)
     # and Google Auth library's ServiceAccountCredentials class.
     $serviceAccountCredentials = new ServiceAccountCredentials(
         'https://www.googleapis.com/auth/cloud-platform',
-        $serviceAccountPath);
+        $serviceAccountPath
+    );
     $middleware = new AuthTokenMiddleware($serviceAccountCredentials);
     $stack = HandlerStack::create();
     $stack->push($middleware);

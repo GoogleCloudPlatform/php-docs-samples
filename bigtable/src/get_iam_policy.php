@@ -41,7 +41,8 @@ function get_iam_policy(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
     try {
-        // we could instantiate the BigtableTableAdminClient and pass the tableName to get the IAM policy for the table resource as well.
+        // we could instantiate the BigtableTableAdminClient and pass the
+        // tableName to get the IAM policy for the table resource as well.
         $iamPolicy = $instanceAdminClient->getIamPolicy($instanceName);
 
         printf($iamPolicy->getVersion() . PHP_EOL);

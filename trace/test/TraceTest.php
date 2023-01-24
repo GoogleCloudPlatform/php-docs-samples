@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../trace-sample.php';
+namespace OpenCensus\Trace;
 
 use PHPUnit\Framework\TestCase;
 
@@ -8,6 +8,8 @@ class TraceTest extends TestCase
 {
     public function testTraceSample()
     {
+        require_once __DIR__ . '/../trace-sample.php';
+
         trace_callable();
         $reflection = new \ReflectionProperty('\OpenCensus\Trace\Tracer', 'instance');
         $reflection->setAccessible(true);

@@ -71,7 +71,8 @@ function read_timeseries_reduce($projectId, $minutesAgo = 20)
         $filter,
         $interval,
         $view,
-        ['aggregation' => $aggregation]);
+        ['aggregation' => $aggregation]
+    );
 
     printf('Average CPU utilization across all GCE instances:' . PHP_EOL);
     if ($timeSeries = $result->iterateAllElements()->current()) {

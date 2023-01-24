@@ -74,9 +74,11 @@ function create_gateway(
 
     $gateway = $deviceManager->createDevice($registryName, $device);
 
-    printf('Gateway: %s : %s' . PHP_EOL,
+    printf(
+        'Gateway: %s : %s' . PHP_EOL,
         $gateway->getNumId(),
-        $gateway->getId());
+        $gateway->getId()
+    );
 }
 # [END iot_create_gateway]
 

@@ -57,8 +57,12 @@ function create_client_with_query_options(string $instanceId, string $databaseId
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, LastUpdateTime: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['LastUpdateTime']);
+        printf(
+            'VenueId: %s, VenueName: %s, LastUpdateTime: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName'],
+            $row['LastUpdateTime']
+        );
     }
 }
 // [END spanner_create_client_with_query_options]

@@ -43,7 +43,9 @@ $client = new SecretManagerServiceClient();
 $parent = $client->projectName($projectId);
 
 // Create the parent secret.
-$secret = $client->createSecret($parent, $secretId,
+$secret = $client->createSecret(
+    $parent,
+    $secretId,
     new Secret([
         'replication' => new Replication([
             'automatic' => new Automatic(),

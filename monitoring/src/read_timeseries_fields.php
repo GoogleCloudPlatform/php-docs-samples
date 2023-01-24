@@ -61,7 +61,8 @@ function read_timeseries_fields($projectId, $minutesAgo = 20)
         $projectName,
         $filter,
         $interval,
-        $view);
+        $view
+    );
 
     printf('Found data points for the following instances:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {

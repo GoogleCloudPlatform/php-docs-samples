@@ -34,8 +34,12 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $parentTable The parent table to create. Defaults to 'Singers'
  * @param string $childTable The child table to create. Defaults to 'Albums'
  */
-function pg_interleaved_table(string $instanceId, string $databaseId, string $parentTable = 'Singers', string $childTable = 'Albums'): void
-{
+function pg_interleaved_table(
+    string $instanceId,
+    string $databaseId,
+    string $parentTable = 'Singers',
+    string $childTable = 'Albums'
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

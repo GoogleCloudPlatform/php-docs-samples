@@ -56,8 +56,11 @@ function create_table_with_timestamp_column(string $instanceId, string $database
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created Performances table in database %s on instance %s' . PHP_EOL,
-        $databaseId, $instanceId);
+    printf(
+        'Created Performances table in database %s on instance %s' . PHP_EOL,
+        $databaseId,
+        $instanceId
+    );
 }
 // [END spanner_create_table_with_timestamp_column]
 

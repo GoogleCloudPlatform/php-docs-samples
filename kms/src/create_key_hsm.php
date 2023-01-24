@@ -45,13 +45,11 @@ function create_key_hsm(
         ->setPurpose(CryptoKeyPurpose::ENCRYPT_DECRYPT)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
             ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION)
-            ->setProtectionLevel(ProtectionLevel::HSM)
-        )
+            ->setProtectionLevel(ProtectionLevel::HSM))
 
         // Optional: customize how long key versions should be kept before destroying.
         ->setDestroyScheduledDuration((new Duration())
-            ->setSeconds(24 * 60 * 60)
-        );
+            ->setSeconds(24 * 60 * 60));
 
     // Call the API.
     $createdKey = $client->createCryptoKey($keyRingName, $id, $key);

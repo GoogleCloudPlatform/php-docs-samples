@@ -54,8 +54,12 @@ function pg_create_database(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
     $dialect = DatabaseDialect::name($database->info()['databaseDialect']);
 
-    printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
-        $databaseId, $dialect, $instanceId);
+    printf(
+        'Created database %s with dialect %s on instance %s' . PHP_EOL,
+        $databaseId,
+        $dialect,
+        $instanceId
+    );
 
     $table1Query = 'CREATE TABLE Singers (
         SingerId   bigint NOT NULL PRIMARY KEY,

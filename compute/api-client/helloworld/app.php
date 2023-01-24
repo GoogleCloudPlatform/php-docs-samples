@@ -336,7 +336,7 @@ if ($client->getAccessToken()) {
 
       <?php if (isset($getInstanceWithMetadataMarkup)): ?>
         <div id="getInstanceWithMetadata">
-          <?php print $getInstanceWithMetadataMarkup ?>
+            <?php print $getInstanceWithMetadataMarkup ?>
         </div>
       <?php endif ?>
 
@@ -350,7 +350,7 @@ if ($client->getAccessToken()) {
 
       <?php if (isset($deleteInstanceWithMetadataMarkup)): ?>
         <div id="deleteInstanceWithMetadata">
-          <?php print $deleteInstanceWithMetadataMarkup ?>
+            <?php print $deleteInstanceWithMetadataMarkup ?>
         </div>
       <?php endif ?>
 
@@ -360,7 +360,7 @@ if ($client->getAccessToken()) {
 
       <?php if (isset($insertInstanceWithMetadataMarkup)): ?>
         <div id="insertInstanceWithMetadata">
-          <?php print $insertInstanceWithMetadataMarkup?>
+            <?php print $insertInstanceWithMetadataMarkup?>
         </div>
       <?php endif ?>
 
@@ -374,7 +374,7 @@ if ($client->getAccessToken()) {
         } else {
             print "<a class='logout' href='?logout'>Logout</a>";
         }
-      ?>
+        ?>
     </div>
   </body>
 </html>

@@ -79,7 +79,8 @@ function write_timeseries($projectId)
 
     $result = $metrics->createTimeSeries(
         $projectName,
-        [$timeSeries]);
+        [$timeSeries]
+    );
 
     printf('Done writing time series data.' . PHP_EOL);
 }

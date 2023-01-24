@@ -55,15 +55,21 @@ function get_device(
     printf('Name: %s' . PHP_EOL, $device->getName());
     foreach ($device->getCredentials() as $credential) {
         print('Certificate:' . PHP_EOL);
-        printf('    Format: %s' . PHP_EOL,
-            $formats[$credential->getPublicKey()->getFormat()]);
-        printf('    Expiration: %s' . PHP_EOL,
-            $credential->getExpirationTime()->toDateTime()->format('Y-m-d H:i:s'));
+        printf(
+            '    Format: %s' . PHP_EOL,
+            $formats[$credential->getPublicKey()->getFormat()]
+        );
+        printf(
+            '    Expiration: %s' . PHP_EOL,
+            $credential->getExpirationTime()->toDateTime()->format('Y-m-d H:i:s')
+        );
     }
     printf('Data: %s' . PHP_EOL, $device->getConfig()->getBinaryData());
     printf('Version: %s' . PHP_EOL, $device->getConfig()->getVersion());
-    printf('Update Time: %s' . PHP_EOL,
-        $device->getConfig()->getCloudUpdateTime()->toDateTime()->format('Y-m-d H:i:s'));
+    printf(
+        'Update Time: %s' . PHP_EOL,
+        $device->getConfig()->getCloudUpdateTime()->toDateTime()->format('Y-m-d H:i:s')
+    );
 }
 # [END iot_get_device]
 

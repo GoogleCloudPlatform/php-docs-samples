@@ -47,7 +47,7 @@ class EndpointsCommand extends Command
             ->addArgument(
                 'credentials',
                 InputArgument::OPTIONAL,
-                'The path to your credentials file. This can be service account credentials, client secrets, or omitted.'
+                'The path to your credentials file. This can be service account credentials, client secrets, or omitted'
             )
             ->addOption(
                 'message',

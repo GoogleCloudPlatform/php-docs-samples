@@ -60,9 +60,11 @@ function create_es_device(
 
     $device = $deviceManager->createDevice($registryName, $device);
 
-    printf('Device: %s : %s' . PHP_EOL,
+    printf(
+        'Device: %s : %s' . PHP_EOL,
         $device->getNumId(),
-        $device->getId());
+        $device->getId()
+    );
 }
 # [END iot_create_es_device]
 

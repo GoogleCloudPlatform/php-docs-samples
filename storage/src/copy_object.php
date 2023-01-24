@@ -44,8 +44,13 @@ function copy_object(string $bucketName, string $objectName, string $newBucketNa
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->copy($newBucketName, ['name' => $newObjectName]);
-    printf('Copied gs://%s/%s to gs://%s/%s' . PHP_EOL,
-        $bucketName, $objectName, $newBucketName, $newObjectName);
+    printf(
+        'Copied gs://%s/%s to gs://%s/%s' . PHP_EOL,
+        $bucketName,
+        $objectName,
+        $newBucketName,
+        $newObjectName
+    );
 }
 # [END storage_copy_file]
 

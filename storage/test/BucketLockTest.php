@@ -76,8 +76,10 @@ class BucketLockTest extends TestCase
         $this->bucket->reload();
         $effectiveTime = $this->bucket->info()['retentionPolicy']['effectiveTime'];
 
-        $this->assertFalse(array_key_exists('isLocked',
-            $this->bucket->info()['retentionPolicy']));
+        $this->assertFalse(array_key_exists(
+            'isLocked',
+            $this->bucket->info()['retentionPolicy']
+        ));
         $this->assertNotNull($effectiveTime);
         $this->assertEquals($this->bucket->info()['retentionPolicy']['retentionPeriod'], $retentionPeriod);
 

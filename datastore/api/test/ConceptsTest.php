@@ -67,7 +67,8 @@ class ConceptsTest extends TestCase
             getenv('DATASTORE_EMULATOR_HOST') === false) {
             $this->markTestSkipped(
                 'No application credentials were found, also not using the '
-                . 'datastore emulator');
+                . 'datastore emulator'
+            );
         }
         self::$datastore = new DatastoreClient(
             array('namespaceId' => generateRandomString())
@@ -384,7 +385,8 @@ class ConceptsTest extends TestCase
                 self::assertEquals(2, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key2->path());
                 $this->assertTrue($entities[1]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testRunQuery()
@@ -415,7 +417,8 @@ class ConceptsTest extends TestCase
                 self::assertEquals(2, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key2->path());
                 $this->assertTrue($entities[1]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testRunGqlQuery()
@@ -446,7 +449,8 @@ class ConceptsTest extends TestCase
                 self::assertEquals(2, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key2->path());
                 $this->assertTrue($entities[1]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testPropertyFilter()
@@ -474,7 +478,8 @@ class ConceptsTest extends TestCase
                 }
                 self::assertEquals(1, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testCompositeFilter()
@@ -504,7 +509,8 @@ class ConceptsTest extends TestCase
                 }
                 self::assertEquals(1, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testKeyFilter()
@@ -530,7 +536,8 @@ class ConceptsTest extends TestCase
                 }
                 self::assertEquals(1, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testAscendingSort()
@@ -559,7 +566,8 @@ class ConceptsTest extends TestCase
                 self::assertEquals(2, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key2->path());
                 $this->assertTrue($entities[1]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testDescendingSort()
@@ -588,7 +596,8 @@ class ConceptsTest extends TestCase
                 self::assertEquals(2, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key2->path());
                 $this->assertTrue($entities[1]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testMultiSort()
@@ -629,7 +638,8 @@ class ConceptsTest extends TestCase
                 $this->assertEquals(4, $entities[2]['priority']);
                 $this->assertTrue($entities[0]['created'] > $entities[1]['created']);
                 $this->assertTrue($entities[1]['created'] < $entities[2]['created']);
-            });
+            }
+        );
     }
 
     public function testAncestorQuery()
@@ -677,7 +687,8 @@ class ConceptsTest extends TestCase
                 }
                 self::assertEquals(1, $num);
                 $this->assertTrue($entities[0]->key()->path() == $key1->path());
-            });
+            }
+        );
     }
 
     public function testKeysOnlyQuery()
@@ -1059,7 +1070,8 @@ class ConceptsTest extends TestCase
                 $this->assertEquals($taskKey->path(), $e->key()->path());
                 $this->assertEquals(
                     'learn eventual consistency',
-                    $e['description']);
+                    $e['description']
+                );
                 $num += 1;
             }
             self::assertEquals(1, $num);

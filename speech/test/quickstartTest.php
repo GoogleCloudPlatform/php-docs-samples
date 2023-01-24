@@ -14,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+namespace Google\Cloud\Samples\Speech\Test;
+
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
 

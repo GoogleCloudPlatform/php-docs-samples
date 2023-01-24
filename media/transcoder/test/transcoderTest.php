@@ -100,8 +100,14 @@ class transcoderTest extends TestCase
         self::$outputUriForTemplate = sprintf('gs://%s/test-output-template/', $bucketName);
         self::$outputUriForAnimatedOverlay = sprintf('gs://%s/test-output-animated-overlay/', $bucketName);
         self::$outputUriForStaticOverlay = sprintf('gs://%s/test-output-static-overlay/', $bucketName);
-        self::$outputUriForPeriodicImagesSpritesheet = sprintf('gs://%s/test-output-periodic-spritesheet/', $bucketName);
-        self::$outputUriForSetNumberImagesSpritesheet = sprintf('gs://%s/test-output-set-number-spritesheet/', $bucketName);
+        self::$outputUriForPeriodicImagesSpritesheet = sprintf(
+            'gs://%s/test-output-periodic-spritesheet/',
+            $bucketName
+        );
+        self::$outputUriForSetNumberImagesSpritesheet = sprintf(
+            'gs://%s/test-output-set-number-spritesheet/',
+            $bucketName
+        );
         self::$outputUriForConcat = sprintf('gs://%s/test-output-concat/', $bucketName);
 
         self::$jobIdRegex = sprintf('~projects/%s/locations/%s/jobs/~', self::$projectNumber, self::$location);
@@ -129,7 +135,12 @@ class transcoderTest extends TestCase
     public function testJobTemplate()
     {
         $jobTemplateId = sprintf('php-test-template-%s', time());
-        $jobTemplateName = sprintf('projects/%s/locations/%s/jobTemplates/%s', self::$projectNumber, self::$location, $jobTemplateId);
+        $jobTemplateName = sprintf(
+            'projects/%s/locations/%s/jobTemplates/%s',
+            self::$projectNumber,
+            self::$location,
+            $jobTemplateId
+        );
 
         $output = $this->runFunctionSnippet('create_job_template', [
             self::$projectId,

@@ -45,9 +45,11 @@ function list_devices(
 
     // Print the result
     foreach ($devices->iterateAllElements() as $device) {
-        printf('Device: %s : %s' . PHP_EOL,
+        printf(
+            'Device: %s : %s' . PHP_EOL,
             $device->getNumId(),
-            $device->getId());
+            $device->getId()
+        );
     }
 }
 # [END iot_list_devices]

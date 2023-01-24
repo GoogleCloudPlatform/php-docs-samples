@@ -33,8 +33,10 @@ function entity_create($projectId, $entityTypeId, $entityValue, $synonyms = [])
     }
 
     $entityTypesClient = new EntityTypesClient();
-    $parent = $entityTypesClient->entityTypeName($projectId,
-        $entityTypeId);
+    $parent = $entityTypesClient->entityTypeName(
+        $projectId,
+        $entityTypeId
+    );
 
     // prepare entity
     $entity = new Entity();

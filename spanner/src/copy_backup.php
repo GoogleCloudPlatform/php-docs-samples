@@ -39,8 +39,12 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $sourceInstanceId The Spanner instance ID of the source backup.
  * @param string $sourceBackupId The Spanner backup ID of the source.
  */
-function copy_backup(string $destInstanceId, string $destBackupId, string $sourceInstanceId, string $sourceBackupId): void
-{
+function copy_backup(
+    string $destInstanceId,
+    string $destBackupId,
+    string $sourceInstanceId,
+    string $sourceBackupId
+): void {
     $spanner = new SpannerClient();
 
     $destInstance = $spanner->instance($destInstanceId);
@@ -63,7 +67,11 @@ function copy_backup(string $destInstanceId, string $destBackupId, string $sourc
         $info = $destBackup->info();
         printf(
             'Backup %s of size %d bytes was copied at %s from the source backup %s' . PHP_EOL,
-            basename($info['name']), $info['sizeBytes'], $info['createTime'], $sourceBackupId);
+            basename($info['name']),
+            $info['sizeBytes'],
+            $info['createTime'],
+            $sourceBackupId
+        );
         printf('Version time of the copied backup: %s' . PHP_EOL, $info['versionTime']);
     } else {
         printf('Unexpected state: %s' . PHP_EOL, $destBackup->state());

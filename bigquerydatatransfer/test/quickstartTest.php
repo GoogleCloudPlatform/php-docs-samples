@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\BigQueryDataTransfer\Tests;
+
 use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase

@@ -51,14 +51,20 @@ function pg_case_sensitivity(string $instanceId, string $databaseId, string $tab
                 -- references any of these columns must use double quotes.
                 "FirstName" varchar(1024) NOT NULL,
                 "LastName"  varchar(1024) NOT NULL
-            )', $tableName)
+            )',
+            $tableName
+        )
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created %s table in database %s on instance %s' . PHP_EOL,
-        $tableName, $databaseId, $instanceId);
+    printf(
+        'Created %s table in database %s on instance %s' . PHP_EOL,
+        $tableName,
+        $databaseId,
+        $instanceId
+    );
 }
 // [END spanner_postgresql_case_sensitivity]
 

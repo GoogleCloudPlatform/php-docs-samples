@@ -38,8 +38,12 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $targetObjectName The name of the object to be created.
  *        (e.g. 'composed-my-object-1-my-object-2')
  */
-function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName): void
-{
+function compose_file(
+    string $bucketName,
+    string $firstObjectName,
+    string $secondObjectName,
+    string $targetObjectName
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

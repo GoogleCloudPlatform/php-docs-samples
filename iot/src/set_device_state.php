@@ -53,8 +53,13 @@ function set_device_state(
     );
 
     // Format the device's URL
-    $deviceName = sprintf('projects/%s/locations/%s/registries/%s/devices/%s',
-        $projectId, $location, $registryId, $deviceId);
+    $deviceName = sprintf(
+        'projects/%s/locations/%s/registries/%s/devices/%s',
+        $projectId,
+        $location,
+        $registryId,
+        $deviceId
+    );
 
     $url = sprintf('https://cloudiotdevice.googleapis.com/v1/%s:setState', $deviceName);
 

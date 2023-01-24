@@ -71,7 +71,8 @@ function read_timeseries_align($projectId, $minutesAgo = 20)
         $filter,
         $interval,
         $view,
-        ['aggregation' => $aggregation]);
+        ['aggregation' => $aggregation]
+    );
 
     printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {

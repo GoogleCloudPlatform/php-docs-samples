@@ -30,7 +30,12 @@ function batch_get_assets_history(string $projectId, array $assetNames)
     $contentType = ContentType::RESOURCE;
     $readTimeWindow = new TimeWindow(['start_time' => new Timestamp(['seconds' => time()])]);
 
-    $resp = $client->batchGetAssetsHistory($formattedParent, $contentType, $readTimeWindow, ['assetNames' => $assetNames]);
+    $resp = $client->batchGetAssetsHistory(
+        $formattedParent,
+        $contentType,
+        $readTimeWindow,
+        ['assetNames' => $assetNames]
+    );
 
     # Do things with response.
     print($resp->serializeToString());

@@ -67,8 +67,12 @@ function create_database_with_default_leader(string $instanceId, string $databas
     $operation->pollUntilComplete();
 
     $database = $instance->database($databaseId);
-    printf('Created database %s on instance %s with default leader %s' . PHP_EOL,
-        $databaseId, $instanceId, $database->info()['defaultLeader']);
+    printf(
+        'Created database %s on instance %s with default leader %s' . PHP_EOL,
+        $databaseId,
+        $instanceId,
+        $database->info()['defaultLeader']
+    );
 }
 // [END spanner_create_database_with_default_leader]
 

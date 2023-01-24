@@ -69,7 +69,12 @@ function start_instance_with_encryption_key(
         ->setDisks(array($diskData));
 
     // Start the instance with encrypted disk.
-    $operation = $instancesClient->startWithEncryptionKey($instanceName, $instancesStartWithEncryptionKeyRequest, $projectId, $zone);
+    $operation = $instancesClient->startWithEncryptionKey(
+        $instanceName,
+        $instancesStartWithEncryptionKeyRequest,
+        $projectId,
+        $zone
+    );
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

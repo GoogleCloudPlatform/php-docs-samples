@@ -32,7 +32,8 @@ function list_sinks($projectId)
     foreach ($sinks as $sink) {
         /* @var $sink \Google\Cloud\Logging\Sink */
         foreach ($sink->info() as $key => $value) {
-            printf('%s:%s' . PHP_EOL,
+            printf(
+                '%s:%s' . PHP_EOL,
                 $key,
                 is_string($value) ? $value : var_export($value, true)
             );

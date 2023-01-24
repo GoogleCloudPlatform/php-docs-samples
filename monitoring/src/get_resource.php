@@ -50,10 +50,12 @@ function get_resource($projectId, $resourceType)
     printf('Description: %s' . PHP_EOL, $resource->getDescription());
     printf('Labels:' . PHP_EOL);
     foreach ($resource->getLabels() as $labels) {
-        printf('  %s (%s) - %s' . PHP_EOL,
+        printf(
+            '  %s (%s) - %s' . PHP_EOL,
             $labels->getKey(),
             $labels->getValueType(),
-            $labels->getDescription());
+            $labels->getDescription()
+        );
     }
 }
 // [END monitoring_get_resource]

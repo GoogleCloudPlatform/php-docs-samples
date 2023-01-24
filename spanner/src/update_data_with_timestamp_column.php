@@ -51,8 +51,17 @@ function update_data_with_timestamp_column(string $instanceId, string $databaseI
 
     $operation = $database->transaction(['singleUse' => true])
         ->updateBatch('Albums', [
-            ['SingerId' => 1, 'AlbumId' => 1, 'MarketingBudget' => 1000000, 'LastUpdateTime' => $spanner->commitTimestamp()],
-            ['SingerId' => 2, 'AlbumId' => 2, 'MarketingBudget' => 750000, 'LastUpdateTime' => $spanner->commitTimestamp()],
+            [
+                'SingerId' => 1,
+                'AlbumId' => 1,
+                'MarketingBudget' => 1000000,
+                'LastUpdateTime' => $spanner->commitTimestamp()
+            ], [
+                'SingerId' => 2,
+                'AlbumId' => 2,
+                'MarketingBudget' => 750000,
+                'LastUpdateTime' => $spanner->commitTimestamp()
+            ],
         ])
         ->commit();
 

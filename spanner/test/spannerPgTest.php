@@ -68,8 +68,11 @@ class spannerPgTest extends TestCase
     {
         $output = $this->runFunctionSnippet('pg_create_database');
         self::$lastUpdateDataTimestamp = time();
-        $expected = sprintf('Created database %s with dialect POSTGRESQL on instance %s',
-            self::$databaseId, self::$instanceId);
+        $expected = sprintf(
+            'Created database %s with dialect POSTGRESQL on instance %s',
+            self::$databaseId,
+            self::$instanceId
+        );
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -98,7 +101,10 @@ class spannerPgTest extends TestCase
         $output = $this->runFunctionSnippet('pg_functions');
         self::$lastUpdateDataTimestamp = time();
 
-        $this->assertStringContainsString('1284352323 seconds after epoch is 2010-09-13T04:32:03.000000Z', $output);
+        $this->assertStringContainsString(
+            '1284352323 seconds after epoch is 2010-09-13T04:32:03.000000Z',
+            $output
+        );
     }
 
     /*
@@ -111,8 +117,12 @@ class spannerPgTest extends TestCase
             self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
-        $expected = sprintf('Created %s table in database %s on instance %s',
-            $tableName, self::$databaseId, self::$instanceId);
+        $expected = sprintf(
+            'Created %s table in database %s on instance %s',
+            $tableName,
+            self::$databaseId,
+            self::$instanceId
+        );
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -181,7 +191,8 @@ class spannerPgTest extends TestCase
         $op->pollUntilComplete();
 
         $db->runTransaction(function (Transaction $t) {
-            $t->executeUpdate('INSERT INTO users (id, name, active)'
+            $t->executeUpdate(
+                'INSERT INTO users (id, name, active)'
                 . ' VALUES ($1, $2, $3), ($4, $5, $6)',
                 [
                     'parameters' => [
@@ -192,7 +203,8 @@ class spannerPgTest extends TestCase
                         'p5' => 'Bruce',
                         'p6' => false,
                     ]
-                ]);
+                ]
+            );
             $t->commit();
         });
 
@@ -266,7 +278,10 @@ class spannerPgTest extends TestCase
         ]);
         self::$lastUpdateDataTimestamp = time();
 
-        $this->assertStringContainsString(sprintf('Added column VenueDetails on table %s.', self::$jsonbTable), $output);
+        $this->assertStringContainsString(
+            sprintf('Added column VenueDetails on table %s.', self::$jsonbTable),
+            $output
+        );
     }
 
     /**

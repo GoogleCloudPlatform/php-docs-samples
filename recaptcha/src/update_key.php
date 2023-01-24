@@ -63,7 +63,7 @@ function update_key(
     $settings->setIntegrationType(IntegrationType::CHECKBOX);
 
     // Specify the possible challenge frequency and difficulty
-    // Read https://cloud.google.com/recaptcha-enterprise/docs/reference/rest/v1/projects.keys#challengesecuritypreference
+    // https://cloud.google.com/recaptcha-enterprise/docs/reference/rest/v1/projects.keys#challengesecuritypreference
     $settings->setChallengeSecurityPreference(ChallengeSecurityPreference::SECURITY);
 
     $key = new Key();

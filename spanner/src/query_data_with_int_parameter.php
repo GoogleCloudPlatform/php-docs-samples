@@ -56,8 +56,12 @@ function query_data_with_int_parameter(string $instanceId, string $databaseId): 
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, Capacity: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['Capacity']);
+        printf(
+            'VenueId: %s, VenueName: %s, Capacity: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName'],
+            $row['Capacity']
+        );
     }
 }
 // [END spanner_query_with_int_parameter]
