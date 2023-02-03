@@ -52,5 +52,5 @@ function list_all_images(string $projectId)
 }
 # [END compute_images_list]
 
-require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

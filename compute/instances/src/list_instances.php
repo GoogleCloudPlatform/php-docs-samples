@@ -47,5 +47,5 @@ function list_instances(string $projectId, string $zone)
 }
 # [END compute_instances_list]
 
-require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

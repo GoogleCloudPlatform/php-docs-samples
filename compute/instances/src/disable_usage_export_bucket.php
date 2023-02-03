@@ -51,5 +51,5 @@ function disable_usage_export_bucket(string $projectId)
 }
 # [END compute_usage_report_disable]
 
-require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

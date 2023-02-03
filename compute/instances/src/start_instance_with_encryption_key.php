@@ -82,5 +82,5 @@ function start_instance_with_encryption_key(
 }
 # [END compute_start_enc_instance]
 
-require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

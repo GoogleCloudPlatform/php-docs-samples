@@ -87,5 +87,5 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
 }
 # [END compute_firewall_create]
 
-require_once __DIR__ . '/../../../../testing/sample_helpers.php';
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
