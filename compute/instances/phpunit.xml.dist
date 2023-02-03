@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../../testing/bootstrap.php">
+<phpunit bootstrap="../../testing/bootstrap.php">
     <testsuites>
         <testsuite name="Google Compute Cloud Client Instances Tests">
             <directory>test</directory>
