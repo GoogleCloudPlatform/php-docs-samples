@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// [START cloudrun_helloworld_service]
-// [START run_helloworld_service]
 -->
+<!-- [START cloudrun_helloworld_service] -->
+<!-- [START run_helloworld_service] -->
 <?php
 
 $name = getenv('NAME', true) ?: 'World';
