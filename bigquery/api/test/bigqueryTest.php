@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 Google LLC.
  *
@@ -33,17 +34,18 @@ class FunctionsTest extends TestCase
     }
     use EventuallyConsistentTestTrait;
 
+    private static $client;
     private static $datasetId;
     private static $dataset;
 
     public static function setUpBeforeClass(): void
     {
         self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-        $client = new BigQueryClient([
+        self::$client = new BigQueryClient([
             'projectId' => self::$projectId,
         ]);
         self::$datasetId = sprintf('temp_dataset_%s', time());
-        self::$dataset = $client->createDataset(self::$datasetId);
+        self::$dataset = self::$client->createDataset(self::$datasetId);
     }
 
     public function testBigQueryClient()
@@ -99,8 +101,8 @@ class FunctionsTest extends TestCase
     {
         $tempTableId = sprintf('test_table_%s', time());
         $fields = json_encode([
-          ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
-          ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
+            ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+            ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
         ]);
         $output = $this->runFunctionSnippet('create_table', [
             self::$datasetId,
@@ -352,8 +354,8 @@ class FunctionsTest extends TestCase
     {
         $tableId = $this->createTempTable();
         $output = $this->runFunctionSnippet('add_column_load_append', [
-          self::$datasetId,
-          $tableId
+            self::$datasetId,
+            $tableId
         ]);
 
         $this->assertStringContainsString('name', $output);
@@ -365,12 +367,41 @@ class FunctionsTest extends TestCase
     {
         $tableId = $this->createTempTable();
         $output = $this->runFunctionSnippet('add_column_query_append', [
-          self::$datasetId,
-          $tableId
+            self::$datasetId,
+            $tableId
         ]);
         $this->assertStringContainsString('name', $output);
         $this->assertStringContainsString('title', $output);
         $this->assertStringContainsString('description', $output);
+    }
+
+    public function testUndeleteTable()
+    {
+        // Create a base table
+        $sourceTableId = $this->createTempTable();
+        $snapshot = self::$dataset->table(uniqid('snapshot_'));
+
+        // Create base table's snapshot
+        $copyConfig = self::$dataset->table($sourceTableId)->copy(
+            $snapshot,
+            ['configuration' => ['copy' => ['operationType' => 'SNAPSHOT']]],
+        );
+        self::$client->runJob($copyConfig);
+
+        // Delete base table
+        self::$dataset->table($sourceTableId)->delete();
+
+        // run the sample
+        $restoredTableId = uniqid('restored_');
+        $output = $this->runFunctionSnippet('undelete_table', [
+            self::$datasetId,
+            $snapshot->id(),
+            $restoredTableId,
+        ]);
+
+        $restoredTable = self::$dataset->table($restoredTableId);
+        $this->assertStringContainsString('Snapshot restored successfully', $output);
+        $this->verifyTable($restoredTable, 'Brent Shaffer', 3);
     }
 
     private function runFunctionSnippet($sampleName, $params = [])
@@ -386,8 +417,8 @@ class FunctionsTest extends TestCase
     {
         $tempTableId = sprintf('test_table_%s_%s', time(), rand());
         $fields = json_encode([
-          ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
-          ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
+            ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+            ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
         ]);
         $this->runFunctionSnippet('create_table', [
             self::$datasetId,
