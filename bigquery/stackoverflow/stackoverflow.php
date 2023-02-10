@@ -1,4 +1,6 @@
+# [START bigquery_simple_app_all]
 <?php
+# [START_EXCLUDE]
 /**
  * Copyright 2016 Google Inc.
  *
@@ -20,8 +22,8 @@
  *
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
+# [END_EXCLUDE]
 
-# [START bigquery_simple_app_all]
 require __DIR__ . '/vendor/autoload.php';
 
 # [START bigquery_simple_app_deps]
