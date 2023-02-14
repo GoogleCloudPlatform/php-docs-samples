@@ -32,6 +32,7 @@ jobs:
         composer global require phpstan/phpstan
         for dir in $(find * -type d -name src -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
         do
+          echo -e "\n RUNNING for => $dir\n"
           composer install --working-dir=$dir --ignore-platform-reqs
           echo "<?php require_once 'testing/sample_helpers.php';require_once '$dir/vendor/autoload.php';" > autoload.php
           ~/.composer/vendor/bin/phpstan analyse $dir/src --autoload-file=autoload.php
