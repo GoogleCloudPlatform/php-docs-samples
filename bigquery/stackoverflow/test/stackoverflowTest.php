@@ -21,11 +21,9 @@ class stackoverflowTest extends TestCase
 {
     public function testStackoverflow()
     {
-        global $argv;
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+        if (!getenv('GOOGLE_PROJECT_ID')) {
             $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
         }
-        $argv[1] = $projectId;
 
         // Invoke stackoverflow.php
         include __DIR__ . '/../stackoverflow.php';
