@@ -28,29 +28,36 @@ namespace Google\Cloud\Samples\BigQuery;
 use Google\Cloud\BigQuery\BigQueryClient;
 
 /**
- * Restored a table from its snapshot for with deleted base table.
+ * Restore a deleted table from its snapshot.
  *
  * @param string $projectId The project Id of your Google Cloud Project.
  * @param string $datasetId The BigQuery dataset ID.
- * @param string $snapshotId Snapshot ID of a snapshot with deleted base table
- *  to be restored.
- * @param string $restoredTableId TableId in which snapshot would be restored.
+ * @param string $tableId Table ID of the table to delete.
+ * @param string $restoredTableId Table Id for the restored table.
  */
 function undelete_table(
     string $projectId,
     string $datasetId,
-    string $snapshotId,
+    string $tableId,
     string $restoredTableId
 ): void {
-    $bigQuery = new BigQueryClient([
-        'projectId' => $projectId,
-    ]);
+    $bigQuery = new BigQueryClient(['projectId' => $projectId]);
     $dataset = $bigQuery->dataset($datasetId);
-    $snapshot = $dataset->table($snapshotId);
+
+    // Choose an appropriate snapshot point as epoch milliseconds.
+    // For this example, we choose the current time as we're about to delete the
+    // table immediately afterwards
+    $snapshotEpoch = date_create()->format('Uv');
+
+    // Delete the table.
+    $dataset->table($tableId)->delete();
+
+    // Construct the restore-from table ID using a snapshot decorator.
+    $snapshotId = "{$tableId}@{$snapshotEpoch}";
+
+    // Restore the deleted table
     $restoredTable = $dataset->table($restoredTableId);
-    $copyConfig = $snapshot->copy($restoredTable, [
-        'configuration' => ['copy' => ['operationType' => 'RESTORE']]
-    ]);
+    $copyConfig = $dataset->table($snapshotId)->copy($restoredTable);
     $job = $bigQuery->runJob($copyConfig);
 
     // check if the job is complete

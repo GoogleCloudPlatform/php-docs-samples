@@ -379,23 +379,12 @@ class FunctionsTest extends TestCase
     {
         // Create a base table
         $sourceTableId = $this->createTempTable();
-        $snapshot = self::$dataset->table(uniqid('snapshot_'));
-
-        // Create base table's snapshot
-        $copyConfig = self::$dataset->table($sourceTableId)->copy(
-            $snapshot,
-            ['configuration' => ['copy' => ['operationType' => 'SNAPSHOT']]],
-        );
-        self::$client->runJob($copyConfig);
-
-        // Delete base table
-        self::$dataset->table($sourceTableId)->delete();
 
         // run the sample
         $restoredTableId = uniqid('restored_');
         $output = $this->runFunctionSnippet('undelete_table', [
             self::$datasetId,
-            $snapshot->id(),
+            $sourceTableId,
             $restoredTableId,
         ]);
 
