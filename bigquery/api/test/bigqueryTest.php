@@ -33,6 +33,7 @@ class FunctionsTest extends TestCase
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
     use EventuallyConsistentTestTrait;
+
     private static $datasetId;
     private static $dataset;
 
