@@ -56,9 +56,7 @@ function undelete_table(
 
     // Restore the deleted table
     $restoredTable = $dataset->table($restoredTableId);
-    $copyConfig = $dataset->table($snapshotId)->copy($restoredTable, [
-        'configuration' => ['copy' => ['operationType' => 'RESTORE']]
-    ]);
+    $copyConfig = $dataset->table($snapshotId)->copy($restoredTable);
     $job = $bigQuery->runJob($copyConfig);
 
     // check if the job is complete
