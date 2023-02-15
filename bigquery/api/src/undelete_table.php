@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2023 Google LLC.
  *
@@ -57,7 +56,9 @@ function undelete_table(
 
     // Restore the deleted table
     $restoredTable = $dataset->table($restoredTableId);
-    $copyConfig = $dataset->table($snapshotId)->copy($restoredTable);
+    $copyConfig = $dataset->table($snapshotId)->copy($restoredTable, [
+        'configuration' => ['copy' => ['operationType' => 'RESTORE']]
+    ]);
     $job = $bigQuery->runJob($copyConfig);
 
     // check if the job is complete

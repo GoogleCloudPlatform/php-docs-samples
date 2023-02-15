@@ -33,19 +33,17 @@ class FunctionsTest extends TestCase
         TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
     }
     use EventuallyConsistentTestTrait;
-
-    private static $client;
     private static $datasetId;
     private static $dataset;
 
     public static function setUpBeforeClass(): void
     {
         self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
-        self::$client = new BigQueryClient([
+        $client = new BigQueryClient([
             'projectId' => self::$projectId,
         ]);
         self::$datasetId = sprintf('temp_dataset_%s', time());
-        self::$dataset = self::$client->createDataset(self::$datasetId);
+        self::$dataset = $client->createDataset(self::$datasetId);
     }
 
     public function testBigQueryClient()
