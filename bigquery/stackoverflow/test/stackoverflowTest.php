@@ -21,10 +21,6 @@ class stackoverflowTest extends TestCase
 {
     public function testStackoverflow()
     {
-        if (!getenv('GOOGLE_CLOUD_PROJECT')) {
-            $this->markTestSkipped('GOOGLE_CLOUD_PROJECT must be set.');
-        }
-
         // Invoke stackoverflow.php
         include __DIR__ . '/../stackoverflow.php';
 

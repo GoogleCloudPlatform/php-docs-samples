@@ -31,16 +31,8 @@ use Google\Cloud\BigQuery\BigQueryClient;
 
 # [END bigquery_simple_app_deps]
 
-// get the project ID as the first argument
-$projectId = getenv('GOOGLE_CLOUD_PROJECT');
-if (!$projectId) {
-    die("Usage: GOOGLE_CLOUD_PROJECT env var must be set.\n");
-}
-
 # [START bigquery_simple_app_client]
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
+$bigQuery = new BigQueryClient();
 # [END bigquery_simple_app_client]
 # [START bigquery_simple_app_query]
 $query = <<<ENDSQL
