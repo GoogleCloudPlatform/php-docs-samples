@@ -61,7 +61,6 @@ if ($snapshotMillis != null) {
     $readSession->setTableModifiers($tableModifier);
 }
 
-
 try {
     $session = $client->createReadSession(
         $project,
