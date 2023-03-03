@@ -55,7 +55,7 @@ $readSession->setReadOptions($readOptions);
 if ($snapshotMillis != null) {
     $timestamp = new Timestamp();
     $timestamp->setSeconds($snapshotMillis / 1000);
-    $timestamp->setNanos((int)($snapshotMillis % 1000) * 1000000);
+    $timestamp->setNanos((int) ($snapshotMillis % 1000) * 1000000);
     $tableModifier = new TableModifiers();
     $tableModifier->setSnapshotTime($timestamp);
     $readSession->setTableModifiers($tableModifier);
@@ -82,7 +82,7 @@ try {
     foreach ($stream->readAll() as $response) {
         $rowCount += $response->getRowCount();
     }
-    printf("Total rows: %d" . PHP_EOL, $rowCount);
+    printf('Total rows: %d' . PHP_EOL, $rowCount);
 } finally {
     $client->close();
 }
@@ -102,13 +102,12 @@ try {
  *     while (!$readIO->is_eof()) {
  *         $record = $datumReader->read(new AvroIOBinaryDecoder($readIO));
  *         printf(
- *             "name: %s, number: %s, state: %s" . PHP_EOL,
+ *             'name: %s, number: %s, state: %s' . PHP_EOL,
  *             $record['name'],
  *             $record['number'],
  *             $record['state']
  *         );
  *     }
- *
  * }
  */
 
