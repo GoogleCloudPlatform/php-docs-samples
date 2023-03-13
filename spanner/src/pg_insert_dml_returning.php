@@ -46,7 +46,7 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql insert query
 
-    $sql = "INSERT INTO Singers (Singerid, FirstName, LastName) "
+    $sql = 'INSERT INTO Singers (Singerid, FirstName, LastName) '
       . "VALUES (12, 'Melissa', 'Garcia'), "
       . "(13, 'Russell', 'Morales'), "
       . "(14, 'Jacqueline', 'Long'), "

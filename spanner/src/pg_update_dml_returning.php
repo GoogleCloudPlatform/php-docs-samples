@@ -47,10 +47,10 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning postgresql update query
     $result = $transaction->execute(
-        "UPDATE Albums "
-        . "SET MarketingBudget = MarketingBudget * 2 "
-        . "WHERE SingerId = 1 and AlbumId = 1"
-        . "RETURNING MarketingBudget"
+        'UPDATE Albums '
+        . 'SET MarketingBudget = MarketingBudget * 2 '
+        . 'WHERE SingerId = 1 and AlbumId = 1'
+        . 'RETURNING MarketingBudget'
     );
     foreach ($result->rows() as $row) {
         printf('MarketingBudget: %s' . PHP_EOL, $row['marketingbudget']);

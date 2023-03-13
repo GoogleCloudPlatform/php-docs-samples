@@ -47,10 +47,10 @@ function update_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning sql update query
     $result = $transaction->execute(
-        "UPDATE Albums "
-        . "SET MarketingBudget = MarketingBudget * 2 "
-        . "WHERE SingerId = 1 and AlbumId = 1 "
-        . "THEN RETURN MarketingBudget"
+        'UPDATE Albums '
+        . 'SET MarketingBudget = MarketingBudget * 2 '
+        . 'WHERE SingerId = 1 and AlbumId = 1 '
+        . 'THEN RETURN MarketingBudget'
     );
     foreach ($result->rows() as $row) {
         printf('MarketingBudget: %s' . PHP_EOL, $row['MarketingBudget']);

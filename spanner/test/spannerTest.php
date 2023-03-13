@@ -955,7 +955,6 @@ class spannerTest extends TestCase
             $t->commit();
         });
 
-
         $output = $this->runFunctionSnippet('delete_dml_returning');
 
         $expectedOutput = sprintf('3 Alice Trentor');

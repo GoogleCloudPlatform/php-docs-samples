@@ -48,7 +48,7 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
     // DML returning sql delete query
     $result = $transaction->execute(
         "DELETE FROM Singers WHERE FirstName = 'Alice' "
-        . "THEN RETURN SingerId, FullName",
+        . 'THEN RETURN SingerId, FullName',
     );
     foreach ($result->rows() as $row) {
         printf(
