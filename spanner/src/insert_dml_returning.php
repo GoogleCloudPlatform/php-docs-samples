@@ -39,23 +39,25 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
     $database = $instance->database($databaseId);
 
     // DML returning sql insert query
-    $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
-      . "VALUES (12, 'Melissa', 'Garcia'), "
-      . "(13, 'Russell', 'Morales'), "
-      . "(14, 'Jacqueline', 'Long'), "
-      . "(15, 'Dylan', 'Shaw') "
-      . 'THEN RETURN *';
+    $sql = "INSERT INTO Singers (SingerId, FirstName, LastName) "
+        . "VALUES (12, 'Melissa', 'Garcia'), "
+        . "(13, 'Russell', 'Morales'), "
+        . "(14, 'Jacqueline', 'Long'), "
+        . "(15, 'Dylan', 'Shaw') "
+        . 'THEN RETURN FullName';
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) inserted' . PHP_EOL,
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            '%s inserted.' . PHP_EOL,
+            $row['FullName'],
         );
     }
+    printf(
+        'Inserted row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_insert_dml_returning]

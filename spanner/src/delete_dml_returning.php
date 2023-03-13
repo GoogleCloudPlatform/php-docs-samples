@@ -42,22 +42,20 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
 
     // DML returning sql delete query
     $result = $transaction->execute(
-        'DELETE FROM Singers WHERE FirstName = @firstName '
-        . 'THEN RETURN *',
-        [
-            'parameters' => [
-              'firstName' => 'Melissa',
-            ]
-        ]
+        "DELETE FROM Singers WHERE FirstName = 'Melissa' "
+        . "THEN RETURN SingerId, FullName",
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) deleted' . PHP_EOL,
+            '%d %s.' . PHP_EOL,
             $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            $row['FullName']
         );
     }
+    printf(
+        'Deleted row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_delete_dml_returning]
