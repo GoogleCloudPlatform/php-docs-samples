@@ -41,24 +41,25 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
     $transaction = $database->transaction();
 
     // DML returning postgresql update query
+    // $result = $transaction->execute(
+    //     "UPDATE albums "
+    //     . "SET marketingbudget = marketingbudget * 2 "
+    //     . "WHERE singerid = 1 and albumid = 1"
+    //     . "RETURNING marketingbudget"
+    // );
     $result = $transaction->execute(
-        'UPDATE singers SET lastname = $1 WHERE singerid = $2 RETURNING *',
-        [
-            'parameters' => [
-              'p1' => 'Missing',
-              'p2' => 16,
-            ]
-        ]
+        "UPDATE Albums "
+        . "SET MarketingBudget = MarketingBudget * 2 "
+        . "WHERE SingerId = 1 and AlbumId = 1"
+        . "RETURNING MarketingBudget"
     );
     foreach ($result->rows() as $row) {
-        printf(
-            'Row with singerid %s updated to (%s, %s, %s)' . PHP_EOL,
-            $row['singerid'],
-            $row['singerid'],
-            $row['firstname'],
-            $row['lastname']
-        );
+        printf('MarketingBudget: %s' . PHP_EOL, $row['marketingbudget']);
     }
+    printf(
+        'Updated row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_postgresql_update_dml_returning]

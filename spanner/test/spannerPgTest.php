@@ -370,40 +370,47 @@ class spannerPgTest extends TestCase
     {
         $output = $this->runFunctionSnippet('pg_insert_dml_returning');
 
-        $expectedOutput = sprintf('Row (16, Melissa, Garcia) inserted');
+        $expectedOutput = sprintf('Melissa Garcia inserted');
         $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (17, Russell, Morales) inserted');
-        $this->assertStringContainsString('Russell', $output);
+        $expectedOutput = sprintf('Russell Morales inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (18, Jacqueline, Long) inserted');
-        $this->assertStringContainsString('Jacqueline', $output);
+        $expectedOutput = sprintf('Jacqueline Long inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (19, Dylan, Shaw) inserted');
-        $this->assertStringContainsString('Dylan', $output);
+        $expectedOutput = sprintf('Dylan Shaw inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Inserted row(s) count: 4');
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
-     * @depends testDmlReturningInsert
+     * @depends testDmlGettingStartedUpdate
      */
     public function testDmlReturningUpdate()
     {
         $output = $this->runFunctionSnippet('pg_update_dml_returning');
 
-        $expectedOutput = sprintf(
-            'Row with singerid 16 updated to (16, Melissa, Missing)'
-        );
+        $expectedOutput = sprintf('MarketingBudget: 3200000');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Updated row(s) count: 1');
         $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
-     * @depends testDmlReturningUpdate
+     * @depends testDmlReturningInsert
      */
     public function testDmlReturningDelete()
     {
         $output = $this->runFunctionSnippet('pg_delete_dml_returning');
 
-        $expectedOutput = sprintf('Row (16, Melissa, Missing) deleted');
+        $expectedOutput = sprintf('12 Melissa Garcia');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Deleted row(s) count: 1');
         $this->assertStringContainsString($expectedOutput, $output);
     }
 

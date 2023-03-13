@@ -61,7 +61,9 @@ function pg_create_database(string $instanceId, string $databaseId): void
         SingerId   bigint NOT NULL PRIMARY KEY,
         FirstName  varchar(1024),
         LastName   varchar(1024),
-        SingerInfo bytea
+        SingerInfo bytea,
+        FullName character varying(2048) GENERATED
+        ALWAYS AS (FirstName || \' \' || LastName) STORED
     )';
 
     $table2Query = 'CREATE TABLE Albums (
