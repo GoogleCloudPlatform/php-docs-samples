@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\InstanceConfiguration;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -920,9 +921,19 @@ class spannerTest extends TestCase
      */
     public function testDmlReturningUpdate()
     {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->update('Albums', [
+                'AlbumId' => 1,
+                'SingerId' => 1,
+                'MarketingBudget' => 1000
+            ]);
+            $t->commit();
+        });
+
         $output = $this->runFunctionSnippet('update_dml_returning');
 
-        $expectedOutput = sprintf('MarketingBudget: 3200000');
+        $expectedOutput = sprintf('MarketingBudget: 2000');
         $this->assertStringContainsString($expectedOutput, $output);
 
         $expectedOutput = sprintf('Updated row(s) count: 1');
@@ -934,9 +945,20 @@ class spannerTest extends TestCase
      */
     public function testDmlReturningDelete()
     {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->insert('Singers', [
+                'SingerId' => 3,
+                'FirstName' => 'Alice',
+                'LastName' => 'Trentor'
+            ]);
+            $t->commit();
+        });
+
+
         $output = $this->runFunctionSnippet('delete_dml_returning');
 
-        $expectedOutput = sprintf('12 Melissa Garcia');
+        $expectedOutput = sprintf('3 Alice Trentor');
         $this->assertStringContainsString($expectedOutput, $output);
 
         $expectedOutput = sprintf('Deleted row(s) count: 1');

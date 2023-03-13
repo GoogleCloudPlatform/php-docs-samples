@@ -40,13 +40,14 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
 
+    // Delete records from SINGERS table satisfying a particular condition and
+    // returns the SingerId and FullName column of the deleted records using
+    // ‘RETURNING SingerId, FullName’. It is also possible to return all columns
+    //  of all the deleted records by using ‘RETURNING *’.
+
     // DML returning postgresql delete query
-    // $result = $transaction->execute(
-    //     "DELETE FROM singers WHERE firstname = 'Melissa' "
-    //     . "RETURNING singerid, fullname",
-    // );
     $result = $transaction->execute(
-        "DELETE FROM Singers WHERE FirstName = 'Melissa' "
+        "DELETE FROM Singers WHERE FirstName = 'Alice' "
         . "RETURNING SingerId, FullName",
     );
     foreach ($result->rows() as $row) {

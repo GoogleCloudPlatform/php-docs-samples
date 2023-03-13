@@ -38,6 +38,11 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
+    // Insert records into SINGERS table and returns the generated column
+    // FullName of the inserted records using ‘THEN RETURN FullName’. It is also
+    // possible to return all columns of all the inserted records by using
+    // ‘THEN RETURN *’.
+
     // DML returning sql insert query
     $sql = "INSERT INTO Singers (SingerId, FirstName, LastName) "
         . "VALUES (12, 'Melissa', 'Garcia'), "

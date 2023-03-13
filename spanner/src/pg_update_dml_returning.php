@@ -40,13 +40,12 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
 
+    // Update MarketingBudget column for records satisfying a particular
+    // condition and returns the modified MarketingBudget column of the updated
+    // records using ‘RETURNING MarketingBudget’. It is also possible to return
+    // all columns of all the updated records by using ‘RETURNING *’.
+
     // DML returning postgresql update query
-    // $result = $transaction->execute(
-    //     "UPDATE albums "
-    //     . "SET marketingbudget = marketingbudget * 2 "
-    //     . "WHERE singerid = 1 and albumid = 1"
-    //     . "RETURNING marketingbudget"
-    // );
     $result = $transaction->execute(
         "UPDATE Albums "
         . "SET MarketingBudget = MarketingBudget * 2 "
