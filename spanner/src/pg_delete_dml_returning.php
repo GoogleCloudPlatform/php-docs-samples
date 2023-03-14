@@ -45,7 +45,6 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
     // ‘RETURNING SingerId, FullName’. It is also possible to return all columns
     //  of all the deleted records by using ‘RETURNING *’.
 
-    // DML returning postgresql delete query
     $result = $transaction->execute(
         "DELETE FROM Singers WHERE FirstName = 'Alice' "
         . 'RETURNING SingerId, FullName',

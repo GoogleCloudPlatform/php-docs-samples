@@ -44,8 +44,6 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
     // possible to return all columns of all the inserted records by using
     // ‘RETURNING *’.
 
-    // DML returning postgresql insert query
-
     $sql = 'INSERT INTO Singers (Singerid, FirstName, LastName) '
       . "VALUES (12, 'Melissa', 'Garcia'), "
       . "(13, 'Russell', 'Morales'), "

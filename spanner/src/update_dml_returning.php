@@ -45,7 +45,6 @@ function update_dml_returning(string $instanceId, string $databaseId): void
     // records using ‘THEN RETURN MarketingBudget’. It is also possible to return
     // all columns of all the updated records by using ‘THEN RETURN *’.
 
-    // DML returning sql update query
     $result = $transaction->execute(
         'UPDATE Albums '
         . 'SET MarketingBudget = MarketingBudget * 2 '

@@ -45,7 +45,6 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
     // 'THEN RETURN SingerId, FullName'. It is also possible to return all columns
     //  of all the deleted records by using 'THEN RETURN *'.
 
-    // DML returning sql delete query
     $result = $transaction->execute(
         "DELETE FROM Singers WHERE FirstName = 'Alice' "
         . 'THEN RETURN SingerId, FullName',

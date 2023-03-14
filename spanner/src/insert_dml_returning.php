@@ -43,7 +43,6 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
     // possible to return all columns of all the inserted records by using
     // ‘THEN RETURN *’.
 
-    // DML returning sql insert query
     $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
         . "VALUES (12, 'Melissa', 'Garcia'), "
         . "(13, 'Russell', 'Morales'), "

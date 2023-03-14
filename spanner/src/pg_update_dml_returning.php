@@ -45,7 +45,6 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
     // records using ‘RETURNING MarketingBudget’. It is also possible to return
     // all columns of all the updated records by using ‘RETURNING *’.
 
-    // DML returning postgresql update query
     $result = $transaction->execute(
         'UPDATE Albums '
         . 'SET MarketingBudget = MarketingBudget * 2 '
