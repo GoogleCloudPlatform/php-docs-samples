@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\InstanceConfiguration;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
@@ -899,40 +900,67 @@ class spannerTest extends TestCase
     {
         $output = $this->runFunctionSnippet('insert_dml_returning');
 
-        $expectedOutput = sprintf('Row (12, Melissa, Garcia) inserted');
+        $expectedOutput = sprintf('Melissa Garcia inserted');
         $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (13, Russell, Morales) inserted');
-        $this->assertStringContainsString('Russell', $output);
+        $expectedOutput = sprintf('Russell Morales inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (14, Jacqueline, Long) inserted');
-        $this->assertStringContainsString('Jacqueline', $output);
+        $expectedOutput = sprintf('Jacqueline Long inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (15, Dylan, Shaw) inserted');
-        $this->assertStringContainsString('Dylan', $output);
+        $expectedOutput = sprintf('Dylan Shaw inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Inserted row(s) count: 4');
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testUpdateData
+     */
+    public function testDmlReturningUpdate()
+    {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->update('Albums', [
+                'AlbumId' => 1,
+                'SingerId' => 1,
+                'MarketingBudget' => 1000
+            ]);
+            $t->commit();
+        });
+
+        $output = $this->runFunctionSnippet('update_dml_returning');
+
+        $expectedOutput = sprintf('MarketingBudget: 2000');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Updated row(s) count: 1');
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
      * @depends testDmlReturningInsert
      */
-    public function testDmlReturningUpdate()
-    {
-        $output = $this->runFunctionSnippet('update_dml_returning');
-
-        $expectedOutput = sprintf(
-            'Row with SingerId 12 updated to (12, Melissa, Missing)'
-        );
-        $this->assertStringContainsString($expectedOutput, $output);
-    }
-
-    /**
-     * @depends testDmlReturningUpdate
-     */
     public function testDmlReturningDelete()
     {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->insert('Singers', [
+                'SingerId' => 3,
+                'FirstName' => 'Alice',
+                'LastName' => 'Trentor'
+            ]);
+            $t->commit();
+        });
+
         $output = $this->runFunctionSnippet('delete_dml_returning');
 
-        $expectedOutput = sprintf('Row (12, Melissa, Missing) deleted');
+        $expectedOutput = sprintf('3 Alice Trentor');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Deleted row(s) count: 1');
         $this->assertStringContainsString($expectedOutput, $output);
     }
 
