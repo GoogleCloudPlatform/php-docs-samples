@@ -16,6 +16,7 @@
  */
 
 # [START signed_url]
+# [START cloudcdn_sign_url]
 /**
  * Decodes base64url (RFC4648 Section 5) string
  *
@@ -81,4 +82,5 @@ function sign_url($url, $keyName, $base64UrlKey, $expirationTime)
     // Concatenate the URL and encoded signature
     return "{$url}&Signature={$encodedSignature}";
 }
-// [END signed_url]
+# [END cloudcdn_sign_url]
+# [END signed_url]
