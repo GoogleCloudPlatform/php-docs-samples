@@ -1,6 +1,6 @@
 {
     "require": {
         "google/cloud-logging": "^1.20.0",
-        "monolog/monolog": "^2.0"
+        "monolog/monolog": "^3.0"
     }
 }
