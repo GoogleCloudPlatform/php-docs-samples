@@ -64,7 +64,7 @@ function run_report_with_multiple_dimension_filters(string $propertyId)
                 'end_date' => 'yesterday',
             ]),
         ],
-        'dimension_filter' => new FilterExpression([
+        'dimensionFilter' => new FilterExpression([
             'and_group' => new FilterExpressionList([
                 'expressions' => [
                     new FilterExpression([
