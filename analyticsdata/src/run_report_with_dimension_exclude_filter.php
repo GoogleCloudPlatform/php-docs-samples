@@ -61,7 +61,7 @@ function run_report_with_dimension_exclude_filter(string $propertyId)
                 'end_date' => 'yesterday',
             ])
         ],
-        'dimension_filter' => new FilterExpression([
+        'dimensionFilter' => new FilterExpression([
             'not_expression' => new FilterExpression([
                 'filter' => new Filter([
                     'field_name' => 'pageTitle',

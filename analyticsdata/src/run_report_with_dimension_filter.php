@@ -62,7 +62,7 @@ function run_report_with_dimension_filter(string $propertyId)
                 'end_date' => 'yesterday',
             ])
         ],
-        'dimension_filter' => new FilterExpression([
+        'dimensionFilter' => new FilterExpression([
             'filter' => new Filter([
                 'field_name' => 'eventName',
                 'string_filter' => new StringFilter([
