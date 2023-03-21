@@ -65,7 +65,7 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
             'end_date' => 'today',
             ]),
         ],
-        'metric_filter' => new FilterExpression([
+        'metricFilter' => new FilterExpression([
             'filter' => new Filter([
                 'field_name' => 'sessions',
                 'numeric_filter' => new NumericFilter([
@@ -76,7 +76,7 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
                 ]),
             ]),
         ]),
-        'dimension_filter' => new FilterExpression([
+        'dimensionFilter' => new FilterExpression([
             'and_group' => new FilterExpressionList([
                 'expressions' => [
                     new FilterExpression([

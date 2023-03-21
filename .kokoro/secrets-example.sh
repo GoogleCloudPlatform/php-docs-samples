@@ -74,6 +74,9 @@ export DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT=
 export DLP_DEID_WRAPPED_KEY=
 export DLP_DEID_KEY_NAME=projects/$GOOGLE_PROJECT_ID/locations/global/keyRings/ci/cryptoKeys/ci
 
+# DocumentAI
+export GOOGLE_DOCUMENTAI_PROCESSOR_ID=
+
 # Firestore
 export FIRESTORE_PROJECT_ID=
 

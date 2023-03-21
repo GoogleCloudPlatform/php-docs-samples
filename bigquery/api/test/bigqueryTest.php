@@ -99,8 +99,8 @@ class FunctionsTest extends TestCase
     {
         $tempTableId = sprintf('test_table_%s', time());
         $fields = json_encode([
-          ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
-          ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
+            ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+            ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
         ]);
         $output = $this->runFunctionSnippet('create_table', [
             self::$datasetId,
@@ -352,8 +352,8 @@ class FunctionsTest extends TestCase
     {
         $tableId = $this->createTempTable();
         $output = $this->runFunctionSnippet('add_column_load_append', [
-          self::$datasetId,
-          $tableId
+            self::$datasetId,
+            $tableId
         ]);
 
         $this->assertStringContainsString('name', $output);
@@ -365,12 +365,30 @@ class FunctionsTest extends TestCase
     {
         $tableId = $this->createTempTable();
         $output = $this->runFunctionSnippet('add_column_query_append', [
-          self::$datasetId,
-          $tableId
+            self::$datasetId,
+            $tableId
         ]);
         $this->assertStringContainsString('name', $output);
         $this->assertStringContainsString('title', $output);
         $this->assertStringContainsString('description', $output);
+    }
+
+    public function testUndeleteTable()
+    {
+        // Create a base table
+        $sourceTableId = $this->createTempTable();
+
+        // run the sample
+        $restoredTableId = uniqid('restored_');
+        $output = $this->runFunctionSnippet('undelete_table', [
+            self::$datasetId,
+            $sourceTableId,
+            $restoredTableId,
+        ]);
+
+        $restoredTable = self::$dataset->table($restoredTableId);
+        $this->assertStringContainsString('Snapshot restored successfully', $output);
+        $this->verifyTable($restoredTable, 'Brent Shaffer', 3);
     }
 
     private function runFunctionSnippet($sampleName, $params = [])
@@ -386,8 +404,8 @@ class FunctionsTest extends TestCase
     {
         $tempTableId = sprintf('test_table_%s_%s', time(), rand());
         $fields = json_encode([
-          ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
-          ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
+            ['name' => 'name', 'type' => 'string', 'mode' => 'nullable'],
+            ['name' => 'title', 'type' => 'string', 'mode' => 'nullable']
         ]);
         $this->runFunctionSnippet('create_table', [
             self::$datasetId,

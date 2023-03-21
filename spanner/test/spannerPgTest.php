@@ -68,8 +68,11 @@ class spannerPgTest extends TestCase
     {
         $output = $this->runFunctionSnippet('pg_create_database');
         self::$lastUpdateDataTimestamp = time();
-        $expected = sprintf('Created database %s with dialect POSTGRESQL on instance %s',
-            self::$databaseId, self::$instanceId);
+        $expected = sprintf(
+            'Created database %s with dialect POSTGRESQL on instance %s',
+            self::$databaseId,
+            self::$instanceId
+        );
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -111,8 +114,12 @@ class spannerPgTest extends TestCase
             self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
-        $expected = sprintf('Created %s table in database %s on instance %s',
-            $tableName, self::$databaseId, self::$instanceId);
+        $expected = sprintf(
+            'Created %s table in database %s on instance %s',
+            $tableName,
+            self::$databaseId,
+            self::$instanceId
+        );
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -181,8 +188,9 @@ class spannerPgTest extends TestCase
         $op->pollUntilComplete();
 
         $db->runTransaction(function (Transaction $t) {
-            $t->executeUpdate('INSERT INTO users (id, name, active)'
-                . ' VALUES ($1, $2, $3), ($4, $5, $6)',
+            $t->executeUpdate(
+                'INSERT INTO users (id, name, active)'
+                    . ' VALUES ($1, $2, $3), ($4, $5, $6)',
                 [
                     'parameters' => [
                         'p1' => 1,
@@ -192,7 +200,8 @@ class spannerPgTest extends TestCase
                         'p5' => 'Bruce',
                         'p6' => false,
                     ]
-                ]);
+                ]
+            );
             $t->commit();
         });
 
@@ -370,40 +379,71 @@ class spannerPgTest extends TestCase
     {
         $output = $this->runFunctionSnippet('pg_insert_dml_returning');
 
-        $expectedOutput = sprintf('Row (16, Melissa, Garcia) inserted');
+        $expectedOutput = sprintf('Melissa Garcia inserted');
         $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (17, Russell, Morales) inserted');
-        $this->assertStringContainsString('Russell', $output);
+        $expectedOutput = sprintf('Russell Morales inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (18, Jacqueline, Long) inserted');
-        $this->assertStringContainsString('Jacqueline', $output);
+        $expectedOutput = sprintf('Jacqueline Long inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (19, Dylan, Shaw) inserted');
-        $this->assertStringContainsString('Dylan', $output);
+        $expectedOutput = sprintf('Dylan Shaw inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Inserted row(s) count: 4');
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
-     * @depends testDmlReturningInsert
+     * @depends testDmlWithParams
      */
     public function testDmlReturningUpdate()
     {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->update('Albums', [
+                'albumid' => 1,
+                'singerid' => 1,
+                'marketingbudget' => 1000
+            ]);
+            $t->commit();
+        });
+
         $output = $this->runFunctionSnippet('pg_update_dml_returning');
 
-        $expectedOutput = sprintf(
-            'Row with singerid 16 updated to (16, Melissa, Missing)'
-        );
+        $expectedOutput = sprintf('MarketingBudget: 2000');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Updated row(s) count: 1');
         $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
-     * @depends testDmlReturningUpdate
+     * @depends testDmlWithParams
      */
     public function testDmlReturningDelete()
     {
+        $db = self::$instance->database(self::$databaseId);
+
+        // Deleting the foreign key dependent entry in the Albums table
+        // before deleting the required row(row which has firstName = Alice)
+        // in the sample.
+        $db->runTransaction(function (Transaction $t) {
+            $spanner = new SpannerClient(['projectId' => self::$projectId]);
+            $keySet = $spanner->keySet([
+                'keys' => [[1, 1]]
+            ]);
+            $t->delete('Albums', $keySet);
+            $t->commit();
+        });
+
         $output = $this->runFunctionSnippet('pg_delete_dml_returning');
 
-        $expectedOutput = sprintf('Row (16, Melissa, Missing) deleted');
+        $expectedOutput = sprintf('1 Alice Henderson');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Deleted row(s) count: 1');
         $this->assertStringContainsString($expectedOutput, $output);
     }
 

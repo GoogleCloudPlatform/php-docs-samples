@@ -52,22 +52,20 @@ function add_drop_database_role(string $instanceId, string $databaseId): void
         sprintf('GRANT ROLE %s TO ROLE %s', $roleParent, $roleChild)
     ]);
 
-    printf('Waiting for create role and grant operation to complete... %s', PHP_EOL);
+    printf('Waiting for create role and grant operation to complete...%s', PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created roles %s and %s and granted privileges %s', $roleParent, $roleChild, PHP_EOL);
+    printf('Created roles %s and %s and granted privileges%s', $roleParent, $roleChild, PHP_EOL);
 
     $operation = $database->updateDdlBatch([
         sprintf('REVOKE ROLE %s FROM ROLE %s', $roleParent, $roleChild),
-        sprintf('DROP ROLE %s', $roleChild),
-        sprintf('REVOKE SELECT ON TABLE Singers FROM ROLE %s', $roleParent),
-        sprintf('DROP ROLE %s', $roleParent)
+        sprintf('DROP ROLE %s', $roleChild)
     ]);
 
-    printf('Waiting for revoke role and drop role operation to complete... %s', PHP_EOL);
+    printf('Waiting for revoke role and drop role operation to complete...%s', PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Revoked privileges and dropped roles %s and %s %s', $roleChild, $roleParent, PHP_EOL);
+    printf('Revoked privileges and dropped role %s%s', $roleChild, PHP_EOL);
 }
 // [END spanner_add_and_drop_database_role]
 
