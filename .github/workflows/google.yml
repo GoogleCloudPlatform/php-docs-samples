@@ -18,7 +18,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GAR_LOCATION: asia-southeast1 # TODO: update region of the Artifact Registry
+  GAR_LOCATION: asia # TODO: update region of the Artifact Registry
   GKE_CLUSTER: cluster-1    # TODO: update to cluster name
   GKE_ZONE: asia-southeast1-b   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
