@@ -1,0 +1,27 @@
+{
+    "require": {
+        "php": ">= 7.4",
+        "google/cloud-functions-framework": "^1.1",
+        "google/protobuf": "^3.17",
+        "google/cloudevents": "dev-main",
+        "google/common-protos": "^3.2"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/googleapis/google-cloudevents-php"
+        }
+    ],
+    "scripts": {
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseFirestore php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Events\\": "vendor/google/cloudevents/src/Google/Events",
+            "GPBMetadata\\Google\\Events\\": "vendor/google/cloudevents/src/GPBMetadata/Google/Events"
+        }
+    }
+}
