@@ -231,6 +231,27 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateDatabase
      */
+    public function testUpdateDatabase()
+    {
+        $output = $this->runFunctionSnippet('update_database', [
+            'instanceId' => self::$instanceId,
+            'databaseId' => self::$databaseId,
+            'enableDropProtection' => true
+        ]);
+        $this->assertStringContainsString(self::$databaseId, $output);
+        $this->assertStringContainsString(true, $output);
+
+        // reset the enableDropProtection for test tearDown
+        $output = $this->runFunctionSnippet('update_database', [
+            'instanceId' => self::$instanceId,
+            'databaseId' => self::$databaseId,
+            'enableDropProtection' => false
+        ]);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
     public function testInsertData()
     {
         $output = $this->runFunctionSnippet('insert_data');
