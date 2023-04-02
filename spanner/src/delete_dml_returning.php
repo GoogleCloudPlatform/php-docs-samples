@@ -40,24 +40,26 @@ function delete_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
 
-    // DML returning sql delete query
+    // Delete records from SINGERS table satisfying a particular condition and
+    // returns the SingerId and FullName column of the deleted records using
+    // 'THEN RETURN SingerId, FullName'. It is also possible to return all columns
+    //  of all the deleted records by using 'THEN RETURN *'.
+
     $result = $transaction->execute(
-        'DELETE FROM Singers WHERE FirstName = @firstName '
-        . 'THEN RETURN *',
-        [
-            'parameters' => [
-              'firstName' => 'Melissa',
-            ]
-        ]
+        "DELETE FROM Singers WHERE FirstName = 'Alice' "
+        . 'THEN RETURN SingerId, FullName',
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) deleted' . PHP_EOL,
+            '%d %s.' . PHP_EOL,
             $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            $row['FullName']
         );
     }
+    printf(
+        'Deleted row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_delete_dml_returning]

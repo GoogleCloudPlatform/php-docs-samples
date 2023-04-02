@@ -2,6 +2,6 @@
     "name": "google/live-stream-sample",
     "type": "project",
     "require": {
-        "google/cloud-video-live-stream": "^0.2.4"
+        "google/cloud-video-live-stream": "^0.3.0"
     }
 }
