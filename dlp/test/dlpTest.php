@@ -15,6 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+namespace Google\Cloud\TestUtils;
+
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\TestUtils\TestTrait;
@@ -257,5 +260,14 @@ class dlpTest extends TestCase
             [$jobId]
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
+    }
+
+    public function testDeidentifySimpleWordList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_simple_word_list', [
+            self::$projectId,
+            'Patient was seen in RM-YELLOW then transferred to rm green.'
+        ]);
+        $this->assertStringContainsString('[CUSTOM_ROOM_ID]', $output);
     }
 }
