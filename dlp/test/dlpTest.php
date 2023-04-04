@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-namespace Google\Cloud\TestUtils;
-
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\TestUtils\TestTrait;
