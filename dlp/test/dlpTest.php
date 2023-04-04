@@ -258,4 +258,13 @@ class dlpTest extends TestCase
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
+
+    public function testInspectPhoneNumber()
+    {
+        $output = $this->runFunctionSnippet('inspect_phone_number', [
+            self::$projectId,
+            'My name is Gary and my phone number is (415) 555-0890'
+        ]);
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+    }
 }
