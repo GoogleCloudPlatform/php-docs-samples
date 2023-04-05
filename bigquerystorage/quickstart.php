@@ -51,31 +51,17 @@ $readOptions->setSelectedFields(['name', 'number', 'state']);
 $readOptions->setRowRestriction('state = "WA"');
 $readSession->setReadOptions($readOptions);
 
-try {
-    // Without any snapshot millis
-    $stream = getRowsStream($client, $project, $readSession);
-    // Do any local processing by iterating over the responses. The
-    // google-cloud-bigquery-storage client reconnects to the API after any
-    // transient network errors or timeouts.
-    deserializeRows($stream);
-
-    // With snapshot millis if present
-    if ($snapshotMillis != null) {
-        $timestamp = new Timestamp();
-        $timestamp->setSeconds($snapshotMillis / 1000);
-        $timestamp->setNanos((int) ($snapshotMillis % 1000) * 1000000);
-        $tableModifier = new TableModifiers();
-        $tableModifier->setSnapshotTime($timestamp);
-        $readSession->setTableModifiers($tableModifier);
-        $stream = getRowsStream($client, $project, $readSession);
-        deserializeRows($stream);
-    }
-} finally {
-    $client->close();
+// With snapshot millis if present
+if (!empty($snapshotMillis)) {
+    $timestamp = new Timestamp();
+    $timestamp->setSeconds($snapshotMillis / 1000);
+    $timestamp->setNanos((int) ($snapshotMillis % 1000) * 1000000);
+    $tableModifier = new TableModifiers();
+    $tableModifier->setSnapshotTime($timestamp);
+    $readSession->setTableModifiers($tableModifier);
 }
 
-function getRowsStream($client, $project, $readSession)
-{
+try {
     $session = $client->createReadSession(
         $project,
         $readSession,
@@ -87,14 +73,9 @@ function getRowsStream($client, $project, $readSession)
         ]
     );
     $stream = $client->readRows($session->getStreams()[0]->getName());
-    return $stream;
-}
-
-/**
- * Deserialize the response
- */
-function deserializeRows($stream)
-{
+    // Do any local processing by iterating over the responses. The
+    // google-cloud-bigquery-storage client reconnects to the API after any
+    // transient network errors or timeouts.
     $schema = '';
     $names = [];
     $states = [];
@@ -119,6 +100,7 @@ function deserializeRows($stream)
         count($names),
         implode(', ', $states)
     );
+} finally {
+    $client->close();
 }
-
 # [END bigquerystorage_quickstart]

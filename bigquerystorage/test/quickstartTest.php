@@ -19,36 +19,62 @@ use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
-    public function testQuickstart()
-    {
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
-        }
+  public function testQuickstartWithSnpshotMillis()
+  {
+      if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+          $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
+      }
 
-        $file = sys_get_temp_dir() . '/bigquerystorage_quickstart.php';
-        $contents = file_get_contents(__DIR__ . '/../quickstart.php');
-        // Five hundred milli seconds into the past
-        $snapshotTimeMillis = floor(microtime(true) * 1000) - 5000;
+      $file = sys_get_temp_dir() . '/bigquerystorage_quickstart.php';
+      $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+      // Five hundred milli seconds into the past
+      $snapshotTimeMillis = floor(microtime(true) * 1000) - 5000;
 
-        $contents = str_replace(
-            ['YOUR_PROJECT_ID', '__DIR__', 'YOUR_SNAPSHOT_MILLIS'],
-            [$projectId, sprintf('"%s/.."', __DIR__)],
-            $contents,
-            $snapshotTimeMillis
-        );
-        file_put_contents($file, $contents);
+      $contents = str_replace(
+          ['YOUR_PROJECT_ID', '__DIR__', 'YOUR_SNAPSHOT_MILLIS'],
+          [$projectId, sprintf('"%s/.."', __DIR__), $snapshotTimeMillis],
+          $contents
+      );
+      file_put_contents($file, $contents);
 
-        // Invoke quickstart.php and capture output
-        ob_start();
-        include $file;
-        $result = ob_get_clean();
+      // Invoke quickstart.php and capture output
+      ob_start();
+      include $file;
+      $result = ob_get_clean();
 
-        // Assertion for without snapshot millis
-        $expected = sprintf('Got 6482 unique names in states: WA');
-        $this->assertStringContainsString($expected, $result);
+      // Assertion for without snapshot millis
+      $expected = sprintf('Got 6482 unique names in states: WA');
+      $this->assertStringContainsString($expected, $result);
+  }
 
-        // Assertion for with snapshot millis
-        $expected = sprintf('Got 6482 unique names in states: WA');
-        $this->assertStringContainsString($expected, $result);
-    }
+  public function testQuickstartWithoutSnapshotMillis()
+  {
+      if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+          $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
+      }
+
+      $file = sys_get_temp_dir() . '/bigquerystorage_quickstart.php';
+      $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+      // Five hundred milli seconds into the past
+
+      $contents = str_replace(
+          ['YOUR_PROJECT_ID', '__DIR__', 'YOUR_SNAPSHOT_MILLIS'],
+          [$projectId, sprintf('"%s/.."', __DIR__), ''],
+          $contents
+      );
+      file_put_contents($file, $contents);
+
+      // Invoke quickstart.php and capture output
+      ob_start();
+      include $file;
+      $result = ob_get_clean();
+
+      // Assertion for without snapshot millis
+      $expected = sprintf('Got 6482 unique names in states: WA');
+      $this->assertStringContainsString($expected, $result);
+
+      // Assertion for with snapshot millis
+      $expected = sprintf('Got 6482 unique names in states: WA');
+      $this->assertStringContainsString($expected, $result);
+  }
 }
