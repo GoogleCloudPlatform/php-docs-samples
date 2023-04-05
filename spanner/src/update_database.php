@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Updates the drop protection for a database.
+ * Updates the metadata for a database.
  * Example:
  * ```
  * update_database($instanceId, $databaseId, $enableDropProtection);
