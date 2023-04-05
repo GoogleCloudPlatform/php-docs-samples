@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /cloud_sql/sqlserver/pdo
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /eventarc/generic
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /run/helloworld
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /run/laravel
+    schedule:
+      interval: daily
