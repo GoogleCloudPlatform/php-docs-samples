@@ -51,7 +51,6 @@ $readOptions->setSelectedFields(['name', 'number', 'state']);
 $readOptions->setRowRestriction('state = "WA"');
 $readSession->setReadOptions($readOptions);
 
-
 try {
     // Without any snapshot millis
     $stream = getRowsStream($client, $project, $readSession);
@@ -121,6 +120,5 @@ function deserializeRows($stream)
         implode(', ', $states)
     );
 }
-
 
 # [END bigquerystorage_quickstart]
