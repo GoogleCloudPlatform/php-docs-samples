@@ -29,6 +29,7 @@ use Google\Protobuf\Timestamp;
 // Instantiates the client and sets the project
 $client = new BigQueryReadClient();
 $project = $client->projectName('YOUR_PROJECT_ID');
+$snapshotMillis = 'YOUR_SNAPSHOT_MILLIS';
 
 // This example reads baby name data from the below public dataset.
 $table = $client->tableName(
@@ -41,7 +42,6 @@ $table = $client->tableName(
 //  This example leverages Apache Avro.
 $readSession = new ReadSession();
 $readSession->setTable($table)->setDataFormat(DataFormat::AVRO);
-$snapshotMillis = null;
 
 // We limit the output columns to a subset of those allowed in the table,
 // and set a simple filter to only report names from the state of
@@ -51,17 +51,32 @@ $readOptions->setSelectedFields(['name', 'number', 'state']);
 $readOptions->setRowRestriction('state = "WA"');
 $readSession->setReadOptions($readOptions);
 
-// Set a snapshot time if it's been specified.
-if ($snapshotMillis != null) {
-    $timestamp = new Timestamp();
-    $timestamp->setSeconds($snapshotMillis / 1000);
-    $timestamp->setNanos((int) ($snapshotMillis % 1000) * 1000000);
-    $tableModifier = new TableModifiers();
-    $tableModifier->setSnapshotTime($timestamp);
-    $readSession->setTableModifiers($tableModifier);
-}
 
 try {
+    // Without any snapshot millis
+    $stream = getRowsStream($client, $project, $readSession);
+    // Do any local processing by iterating over the responses. The
+    // google-cloud-bigquery-storage client reconnects to the API after any
+    // transient network errors or timeouts.
+    deserializeRows($stream);
+
+    // With snapshot millis if present
+    if ($snapshotMillis != null) {
+        $timestamp = new Timestamp();
+        $timestamp->setSeconds($snapshotMillis / 1000);
+        $timestamp->setNanos((int) ($snapshotMillis % 1000) * 1000000);
+        $tableModifier = new TableModifiers();
+        $tableModifier->setSnapshotTime($timestamp);
+        $readSession->setTableModifiers($tableModifier);
+        $stream = getRowsStream($client, $project, $readSession);
+        deserializeRows($stream);
+    }
+} finally {
+    $client->close();
+}
+
+function getRowsStream($client, $project, $readSession)
+{
     $session = $client->createReadSession(
         $project,
         $readSession,
@@ -73,41 +88,39 @@ try {
         ]
     );
     $stream = $client->readRows($session->getStreams()[0]->getName());
-
-    // Do any local processing by iterating over the responses. The
-    // google-cloud-bigquery-storage client reconnects to the API after any
-    // transient network errors or timeouts.
-    $rowCount = 0;
-    foreach ($stream->readAll() as $response) {
-        $rowCount += $response->getRowCount();
-    }
-    printf('Total rows: %d' . PHP_EOL, $rowCount);
-} finally {
-    $client->close();
+    return $stream;
 }
 
 /**
- * The response can be deserialized using `rg/avro-php` package as follows
- *
- * $schema = '';
- * foreach ($stream->readAll() as $response) {
- *     $data = $response->getAvroRows()->getSerializedBinaryRows();
- *     if ($response->hasAvroSchema()) {
- *         $schema = $response->getAvroSchema()->getSchema();
- *     }
- *     $avroSchema = AvroSchema::parse($schema);
- *     $readIO = new AvroStringIO($data);
- *     $datumReader = new AvroIODatumReader($avroSchema);
- *     while (!$readIO->is_eof()) {
- *         $record = $datumReader->read(new AvroIOBinaryDecoder($readIO));
- *         printf(
- *             'name: %s, number: %s, state: %s' . PHP_EOL,
- *             $record['name'],
- *             $record['number'],
- *             $record['state']
- *         );
- *     }
- * }
+ * Deserialize the response
  */
+function deserializeRows($stream)
+{
+    $schema = '';
+    $names = [];
+    $states = [];
+    foreach ($stream->readAll() as $response) {
+        $data = $response->getAvroRows()->getSerializedBinaryRows();
+        if ($response->hasAvroSchema()) {
+            $schema = $response->getAvroSchema()->getSchema();
+        }
+        $avroSchema = AvroSchema::parse($schema);
+        $readIO = new AvroStringIO($data);
+        $datumReader = new AvroIODatumReader($avroSchema);
+
+        while (!$readIO->is_eof()) {
+            $record = $datumReader->read(new AvroIOBinaryDecoder($readIO));
+            $names[$record['name']] = '';
+            $states[$record['state']] = '';
+        }
+    }
+    $states = array_keys($states);
+    printf(
+        'Got %d unique names in states: %s' . PHP_EOL,
+        count($names),
+        implode(', ', $states)
+    );
+}
+
 
 # [END bigquerystorage_quickstart]

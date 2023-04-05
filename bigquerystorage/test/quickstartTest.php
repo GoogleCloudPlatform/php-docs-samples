@@ -27,10 +27,14 @@ class quickstartTest extends TestCase
 
         $file = sys_get_temp_dir() . '/bigquerystorage_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+        // Five hundred milli seconds into the past
+        $snapshotTimeMillis = (time() - 5) * 1000;
+
         $contents = str_replace(
-            ['YOUR_PROJECT_ID', '__DIR__'],
+            ['YOUR_PROJECT_ID', '__DIR__', 'YOUR_SNAPSHOT_MILLIS'],
             [$projectId, sprintf('"%s/.."', __DIR__)],
-            $contents
+            $contents,
+            $snapshotTimeMillis
         );
         file_put_contents($file, $contents);
 
@@ -39,7 +43,12 @@ class quickstartTest extends TestCase
         include $file;
         $result = ob_get_clean();
 
-        // Make sure it looks correct
-        $this->assertStringContainsString('Total rows: 130809', $result);
+        // Assertion for without snapshot millis
+        $expected = sprintf('Got 6482 unique names in states: WA');
+        $this->assertStringContainsString($expected, $result);
+
+        // Assertion for with snapshot millis
+        $expected = sprintf('Got 6482 unique names in states: WA');
+        $this->assertStringContainsString($expected, $result);
     }
 }
