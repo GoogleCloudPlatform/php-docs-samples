@@ -28,7 +28,7 @@ class quickstartTest extends TestCase
         $file = sys_get_temp_dir() . '/bigquerystorage_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
         // Five hundred milli seconds into the past
-        $snapshotTimeMillis = (time() - 5) * 1000;
+        $snapshotTimeMillis = floor(microtime(true) * 1000) - 5000;
 
         $contents = str_replace(
             ['YOUR_PROJECT_ID', '__DIR__', 'YOUR_SNAPSHOT_MILLIS'],
