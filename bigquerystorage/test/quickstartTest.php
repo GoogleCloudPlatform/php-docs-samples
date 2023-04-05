@@ -69,10 +69,6 @@ class quickstartTest extends TestCase
         include $file;
         $result = ob_get_clean();
 
-        // Assertion for without snapshot millis
-        $expected = sprintf('Got 6482 unique names in states: WA');
-        $this->assertStringContainsString($expected, $result);
-
         // Assertion for with snapshot millis
         $expected = sprintf('Got 6482 unique names in states: WA');
         $this->assertStringContainsString($expected, $result);
