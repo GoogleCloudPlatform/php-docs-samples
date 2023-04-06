@@ -258,4 +258,13 @@ class dlpTest extends TestCase
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
+
+    public function testInspectHotwordRules()
+    {
+        $output = $this->runFunctionSnippet('inspect_hotword_rule', [
+            self::$projectId,
+            "Patient's MRN 444-5-22222 and just a number 333-2-33333"
+        ]);
+        $this->assertStringContainsString('Info type: C_MRN', $output);
+    }
 }
