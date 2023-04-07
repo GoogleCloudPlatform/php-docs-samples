@@ -258,4 +258,16 @@ class dlpTest extends TestCase
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
+
+    public function testInspectStringCustomOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_omit_overlap', [
+            self::$projectId,
+            'Name: Jane Doe. Name: Larry Page.'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Jane Doe', $output);
+        $this->assertStringNotContainsString('Larry Page', $output);
+    }
 }
