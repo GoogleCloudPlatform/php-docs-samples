@@ -258,4 +258,15 @@ class dlpTest extends TestCase
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
+
+    public function testInspectStringWithExclusionDict()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, example@example.com'
+        ]);
+
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringNotContainsString('Quote: example@example.com', $output);
+    }
 }
