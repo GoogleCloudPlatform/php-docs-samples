@@ -86,7 +86,8 @@ function inspect_string_without_overlap(
     $inspectionRuleSet = (new InspectionRuleSet())
         ->setInfoTypes([$domainName])
         ->setRules([
-            (new InspectionRule())->setExclusionRule($exclusionRule),
+            (new InspectionRule())
+                ->setExclusionRule($exclusionRule),
         ]);
 
     // Construct the configuration for the Inspect request, including the ruleset.
