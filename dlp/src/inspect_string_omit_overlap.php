@@ -58,15 +58,15 @@ function inspect_string_omit_overlap(
         ->setValue($textToInspect);
 
     // Specify the type of info the inspection will look for.
-    $personName = (new InfoType())->setName('PERSON_NAME');
-    $emailAddress = (new InfoType())->setName('EMAIL_ADDRESS');
+    $personName = (new InfoType())
+        ->setName('PERSON_NAME');
+    $emailAddress = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
     $infoTypes = [$personName, $emailAddress];
 
     // Exclude EMAIL_ADDRESS matches
-    $matchingType = MatchingType::MATCHING_TYPE_PARTIAL_MATCH;
-
     $exclusionRule = (new ExclusionRule())
-        ->setMatchingType($matchingType)
+        ->setMatchingType(MatchingType::MATCHING_TYPE_PARTIAL_MATCH)
         ->setExcludeInfoTypes((new ExcludeInfoTypes())
                 ->setInfoTypes([$emailAddress])
         );
@@ -77,7 +77,8 @@ function inspect_string_omit_overlap(
     $inspectionRuleSet = (new InspectionRuleSet())
         ->setInfoTypes([$personName])
         ->setRules([
-            (new InspectionRule())->setExclusionRule($exclusionRule),
+            (new InspectionRule())
+                ->setExclusionRule($exclusionRule),
         ]);
 
     // Construct the configuration for the Inspect request, including the ruleset.
@@ -96,14 +97,13 @@ function inspect_string_omit_overlap(
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
+        printf('No findings.' . PHP_EOL);
     } else {
-        print('Findings:' . PHP_EOL);
+        printf('Findings:' . PHP_EOL);
         foreach ($findings as $finding) {
-            print('  Quote: ' . $finding->getQuote() . PHP_EOL);
-            print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            $likelihoodString = Likelihood::name($finding->getLikelihood());
-            print('  Likelihood: ' . $likelihoodString . PHP_EOL);
+            printf('  Quote: %s' . PHP_EOL, $finding->getQuote());
+            printf('  Info type: %s' . PHP_EOL, $finding->getInfoType()->getName());
+            printf('  Likelihood: %s' . PHP_EOL, Likelihood::name($finding->getLikelihood()));
         }
     }
 }
