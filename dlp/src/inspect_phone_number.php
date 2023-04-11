@@ -49,7 +49,8 @@ function inspect_phone_number(
     $parent = "projects/$projectId/locations/global";
 
     // Specify what content you want the service to Inspect.
-    $item = (new ContentItem())->setValue($textToInspect);
+    $item = (new ContentItem())
+        ->setValue($textToInspect);
 
     $inspectConfig = (new InspectConfig())
         // The infoTypes of information to match
@@ -70,14 +71,13 @@ function inspect_phone_number(
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
+        printf('No findings.' . PHP_EOL);
     } else {
-        print('Findings:' . PHP_EOL);
+        printf('Findings:' . PHP_EOL);
         foreach ($findings as $finding) {
-            print('  Quote: ' . $finding->getQuote() . PHP_EOL);
-            print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            $likelihoodString = Likelihood::name($finding->getLikelihood());
-            print('  Likelihood: ' . $likelihoodString . PHP_EOL);
+            printf('  Quote: %s' . PHP_EOL, $finding->getQuote());
+            printf('  Info type: %s' . PHP_EOL, $finding->getInfoType()->getName());
+            printf('  Likelihood: %s' . PHP_EOL, Likelihood::name($finding->getLikelihood()));
         }
     }
 }
