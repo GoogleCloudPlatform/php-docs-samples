@@ -59,11 +59,11 @@ function inspect_string_with_exclusion_dict(
         ->setValue($textToInspect);
 
     // Specify the type of info the inspection will look for.
-    $infotypes = [];
-    $infonames = ['PHONE_NUMBER', 'EMAIL_ADDRESS', 'CREDIT_CARD_NUMBER'];
-    foreach ($infonames as $key => $value) {
-        array_push($infotypes, (new InfoType())->setName($value));
-    }
+    $infotypes = [
+        (new InfoType())->setName('PHONE_NUMBER'),
+        (new InfoType())->setName('EMAIL_ADDRESS'),
+        (new InfoType())->setName('CREDIT_CARD_NUMBER'),
+    ];
 
     // Exclude matches from the specified excludedMatchList.
     $excludedMatchList = (new Dictionary())
@@ -75,11 +75,13 @@ function inspect_string_with_exclusion_dict(
         ->setDictionary($excludedMatchList);
 
     // Construct a ruleset that applies the exclusion rule to the EMAIL_ADDRESSES infotype.
-    $emailAddress = (new InfoType())->setName('EMAIL_ADDRESS');
+    $emailAddress = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
     $inspectionRuleSet = (new InspectionRuleSet())
         ->setInfoTypes([$emailAddress])
         ->setRules([
-            (new InspectionRule())->setExclusionRule($exclusionRule),
+            (new InspectionRule())
+                ->setExclusionRule($exclusionRule),
         ]);
 
     // Construct the configuration for the Inspect request, including the ruleset.
@@ -98,14 +100,13 @@ function inspect_string_with_exclusion_dict(
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
+        printf('No findings.' . PHP_EOL);
     } else {
-        print('Findings:' . PHP_EOL);
+        printf('Findings:' . PHP_EOL);
         foreach ($findings as $finding) {
-            print('  Quote: ' . $finding->getQuote() . PHP_EOL);
-            print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            $likelihoodString = Likelihood::name($finding->getLikelihood());
-            print('  Likelihood: ' . $likelihoodString . PHP_EOL);
+            printf('  Quote: %s' . PHP_EOL, $finding->getQuote());
+            printf('  Info type: %s' . PHP_EOL, $finding->getInfoType()->getName());
+            printf('  Likelihood: %s' . PHP_EOL, Likelihood::name($finding->getLikelihood()));
         }
     }
 }
