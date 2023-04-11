@@ -52,11 +52,14 @@ function deidentify_redact(
     $dlp = new DlpServiceClient();
 
     // Specify the content to be de-identify.
-    $contentItem = (new ContentItem())->setValue($textToInspect);
+    $contentItem = (new ContentItem())
+        ->setValue($textToInspect);
 
     // Specify the type of info the inspection will look for.
-    $infoType = (new InfoType())->setName('EMAIL_ADDRESS');
-    $inspectConfig = (new InspectConfig())->setInfoTypes([$infoType]);
+    $infoType = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
+    $inspectConfig = (new InspectConfig())
+        ->setInfoTypes([$infoType]);
 
     // Define type of de-identification.
     $primitiveTransformation = (new PrimitiveTransformation())
@@ -83,7 +86,7 @@ function deidentify_redact(
     ]);
 
     // Print results
-    printf('Text after redaction: ' . $response->getItem()->getValue());
+    printf('Text after redaction: %s', $response->getItem()->getValue());
 }
 # [END dlp_deidentify_redact]
 
