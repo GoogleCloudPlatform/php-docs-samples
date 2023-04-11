@@ -75,7 +75,7 @@ function inspect_string_without_overlap(
     $exclusionRule = (new ExclusionRule())
         ->setMatchingType($matchingType)
         ->setExcludeInfoTypes((new ExcludeInfoTypes())
-                ->setInfoTypes([$customInfoType->getInfoType()])
+            ->setInfoTypes([$customInfoType->getInfoType()])
         );
 
     // Construct a ruleset that applies the exclusion rule to the DOMAIN_NAME infotype.
