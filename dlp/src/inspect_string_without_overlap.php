@@ -60,8 +60,10 @@ function inspect_string_without_overlap(
         ->setValue($textToInspect);
 
     // Specify the type of info the inspection will look for.
-    $domainName = (new InfoType())->setName('DOMAIN_NAME');
-    $emailAddress = (new InfoType())->setName('EMAIL_ADDRESS');
+    $domainName = (new InfoType())
+        ->setName('DOMAIN_NAME');
+    $emailAddress = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
     $infoTypes = [$domainName, $emailAddress];
 
     // Define a custom info type to exclude email addresses
