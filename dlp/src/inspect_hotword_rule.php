@@ -64,27 +64,35 @@ function inspect_hotword_rule(
     $hotwordRegexPattern = '(?i)(mrn|medical)(?-i)';
 
     // Construct the custom regex detector.
-    $cMrnDetector = (new InfoType())->setName('C_MRN');
+    $cMrnDetector = (new InfoType())
+        ->setName('C_MRN');
     $customInfoType = (new CustomInfoType())
         ->setInfoType($cMrnDetector)
         ->setLikelihood(Likelihood::POSSIBLE)
-        ->setRegex((new Regex())->setPattern($customRegexPattern));
+        ->setRegex((new Regex())
+            ->setPattern($customRegexPattern));
 
     // Specify hotword likelihood adjustment.
-    $likelihoodAdjustment = (new LikelihoodAdjustment())->setFixedLikelihood(Likelihood::VERY_LIKELY);
+    $likelihoodAdjustment = (new LikelihoodAdjustment())
+        ->setFixedLikelihood(Likelihood::VERY_LIKELY);
 
     // Specify a window around a finding to apply a detection rule.
-    $proximity = (new Proximity())->setWindowBefore(10);
+    $proximity = (new Proximity())
+        ->setWindowBefore(10);
 
     $hotwordRule = (new HotwordRule())
-        ->setHotwordRegex((new Regex())->setPattern($hotwordRegexPattern))
+        ->setHotwordRegex((new Regex())
+            ->setPattern($hotwordRegexPattern))
         ->setLikelihoodAdjustment($likelihoodAdjustment)
         ->setProximity($proximity);
 
     // Construct rule set for the inspect config.
     $inspectionRuleSet = (new InspectionRuleSet())
         ->setInfoTypes([$cMrnDetector])
-        ->setRules([(new InspectionRule())->setHotwordRule($hotwordRule)]);
+        ->setRules([
+            (new InspectionRule())
+                ->setHotwordRule($hotwordRule)
+        ]);
 
     // Construct the configuration for the Inspect request.
     $inspectConfig = (new InspectConfig())
@@ -102,14 +110,13 @@ function inspect_hotword_rule(
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
+        printf('No findings.' . PHP_EOL);
     } else {
-        print('Findings:' . PHP_EOL);
+        printf('Findings:' . PHP_EOL);
         foreach ($findings as $finding) {
-            print('  Quote: ' . $finding->getQuote() . PHP_EOL);
-            print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            $likelihoodString = Likelihood::name($finding->getLikelihood());
-            print('  Likelihood: ' . $likelihoodString . PHP_EOL);
+            printf('  Quote: %s' . PHP_EOL, $finding->getQuote());
+            printf('  Info type: %s' . PHP_EOL, $finding->getInfoType()->getName());
+            printf('  Likelihood: %s' . PHP_EOL, Likelihood::name($finding->getLikelihood()));
         }
     }
 }
