@@ -61,28 +61,30 @@ function inspect_string_custom_omit_overlap(
         ->setValue($textToInspect);
 
     // Specify the type of info the inspection will look for.
-    $vipDetector = (new InfoType())->setName('VIP_DETECTOR');
+    $vipDetector = (new InfoType())
+        ->setName('VIP_DETECTOR');
     $pattern = 'Larry Page|Sergey Brin';
     $customInfoType = (new CustomInfoType())
         ->setInfoType($vipDetector)
-        ->setRegex((new Regex())->setPattern($pattern))
+        ->setRegex((new Regex())
+            ->setPattern($pattern))
         ->setExclusionType(ExclusionType::EXCLUSION_TYPE_EXCLUDE);
 
     // Exclude matches that also match the custom infotype.
-    $matchingType = MatchingType::MATCHING_TYPE_FULL_MATCH;
-
     $exclusionRule = (new ExclusionRule())
-        ->setMatchingType($matchingType)
+        ->setMatchingType(MatchingType::MATCHING_TYPE_FULL_MATCH)
         ->setExcludeInfoTypes((new ExcludeInfoTypes())
                 ->setInfoTypes([$customInfoType->getInfoType()])
         );
 
     // Construct a ruleset that applies the exclusion rule to the PERSON_NAME infotype.
-    $personName = (new InfoType())->setName('PERSON_NAME');
+    $personName = (new InfoType())
+        ->setName('PERSON_NAME');
     $inspectionRuleSet = (new InspectionRuleSet())
         ->setInfoTypes([$personName])
         ->setRules([
-            (new InspectionRule())->setExclusionRule($exclusionRule),
+            (new InspectionRule())
+                ->setExclusionRule($exclusionRule),
         ]);
 
     // Construct the configuration for the Inspect request, including the ruleset.
@@ -102,14 +104,13 @@ function inspect_string_custom_omit_overlap(
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
+        printf('No findings.' . PHP_EOL);
     } else {
-        print('Findings:' . PHP_EOL);
+        printf('Findings:' . PHP_EOL);
         foreach ($findings as $finding) {
-            print('  Quote: ' . $finding->getQuote() . PHP_EOL);
-            print('  Info type: ' . $finding->getInfoType()->getName() . PHP_EOL);
-            $likelihoodString = Likelihood::name($finding->getLikelihood());
-            print('  Likelihood: ' . $likelihoodString . PHP_EOL);
+            printf('  Quote: %s' . PHP_EOL, $finding->getQuote());
+            printf('  Info type: %s' . PHP_EOL, $finding->getInfoType()->getName());
+            printf('  Likelihood: %s' . PHP_EOL, Likelihood::name($finding->getLikelihood()));
         }
     }
 }
