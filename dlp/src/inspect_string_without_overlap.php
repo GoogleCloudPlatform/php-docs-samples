@@ -107,16 +107,15 @@ function inspect_string_without_overlap(
     // Print the results
     $findings = $response->getResult()->getFindings();
     if (count($findings) == 0) {
-        print('No findings.' . PHP_EOL);
+        printf('No findings.' . PHP_EOL);
     } else {
-        print('Findings:' . PHP_EOL);
+        printf('Findings:' . PHP_EOL);
         foreach ($findings as $finding) {
             printf('  Quote: %s' . PHP_EOL, $finding->getQuote());
             printf('  Info type: %s' . PHP_EOL, $finding->getInfoType()->getName());
             printf(
                 '  Likelihood: %s' . PHP_EOL,
-                Likelihood::name($finding->getLikelihood()))
-            );
+                Likelihood::name($finding->getLikelihood()));
         }
     }
 }
