@@ -56,7 +56,8 @@ function deidentify_simple_word_list(
 
     $parent = "projects/$callingProjectId/locations/global";
 
-    $content = (new ContentItem())->setValue($string);
+    $content = (new ContentItem())
+        ->setValue($string);
 
     // Construct the word list to be detected
     $wordList = (new Dictionary())
@@ -64,7 +65,8 @@ function deidentify_simple_word_list(
             ->setWords(['RM-GREEN', 'RM-YELLOW', 'RM-ORANGE']));
 
     // The infoTypes of information to mask
-    $custoMRoomIdinfoType = (new InfoType())->setName('CUSTOM_ROOM_ID');
+    $custoMRoomIdinfoType = (new InfoType())
+        ->setName('CUSTOM_ROOM_ID');
     $customInfoType = (new CustomInfoType())
         ->setInfoType($custoMRoomIdinfoType)
         ->setDictionary($wordList);
@@ -97,8 +99,7 @@ function deidentify_simple_word_list(
     ]);
 
     // Print the results
-    $deidentifiedValue = $response->getItem()->getValue();
-    print('Deidentified content: ' . $deidentifiedValue);
+    printf('Deidentified content: %s', $response->getItem()->getValue());
 }
 # [END dlp_deidentify_simple_word_list]
 
