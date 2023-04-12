@@ -57,7 +57,8 @@ function deidentify_exception_list(
     $dlp = new DlpServiceClient();
 
     // Specify what content you want the service to DeIdentify.
-    $contentItem = (new ContentItem())->setValue($textToDeIdentify);
+    $contentItem = (new ContentItem())
+        ->setValue($textToDeIdentify);
 
     // Construct the custom word list to be detected.
     $wordList = (new Dictionary())
@@ -65,16 +66,18 @@ function deidentify_exception_list(
             ->setWords(['jack@example.org', 'jill@example.org']));
 
     // Specify the exclusion rule and build-in info type the inspection will look for.
-    $matchingType = MatchingType::MATCHING_TYPE_FULL_MATCH;
-
     $exclusionRule = (new ExclusionRule())
-        ->setMatchingType($matchingType)
+        ->setMatchingType(MatchingType::MATCHING_TYPE_FULL_MATCH)
         ->setDictionary($wordList);
 
-    $emailAddress = (new InfoType())->setName('EMAIL_ADDRESS');
+    $emailAddress = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
     $inspectionRuleSet = (new InspectionRuleSet())
         ->setInfoTypes([$emailAddress])
-        ->setRules([(new InspectionRule())->setExclusionRule($exclusionRule)]);
+        ->setRules([
+            (new InspectionRule())
+                ->setExclusionRule($exclusionRule)
+        ]);
 
     $inspectConfig = (new InspectConfig())
         ->setInfoTypes([$emailAddress])
@@ -92,7 +95,8 @@ function deidentify_exception_list(
     // Construct the configuration for the de-id request and list all desired transformations.
     $deidentifyConfig = (new DeidentifyConfig())
         ->setInfoTypeTransformations(
-            (new InfoTypeTransformations())->setTransformations([$transformation])
+            (new InfoTypeTransformations())
+                ->setTransformations([$transformation])
         );
 
     // Send the request and receive response from the service
@@ -105,7 +109,7 @@ function deidentify_exception_list(
     ]);
 
     // Print the results
-    print('Text after replace with infotype config: ' . $response->getItem()->getValue());
+    printf('Text after replace with infotype config: %s', $response->getItem()->getValue());
 }
 # [END dlp_deidentify_exception_list]
 
