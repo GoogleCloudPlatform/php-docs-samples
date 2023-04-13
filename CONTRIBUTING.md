@@ -59,7 +59,7 @@ composer install
 ### Environment variables
 Some tests require specific environment variables to run. PHPUnit will skip the tests
 if these environment variables are not found. Run `phpunit -v` for a message detailing
-which environment variables are missing. Then you can set those environent variables
+which environment variables are missing. Then you can set those environment variables
 to run against any sample project as follows:
 
 ```
