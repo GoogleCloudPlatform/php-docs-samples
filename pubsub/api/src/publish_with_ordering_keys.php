@@ -23,29 +23,30 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
-# [START pubsub_enable_subscription_ordering]
+# [START pubsub_publish_with_ordering_keys]
+use Google\Cloud\PubSub\MessageBuilder;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Creates a Pub/Sub subscription.
+ * Publishes a message for a Pub/Sub topic.
  *
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
- * @param string $subscriptionName  The Pub/Sub subscription name.
  */
-function enable_subscription_ordering($projectId, $topicName, $subscriptionName)
+function publish_with_ordering_keys($projectId, $topicName)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
+
     $topic = $pubsub->topic($topicName);
-    $subscription = $topic->subscription($subscriptionName);
+    foreach (range(1, 5) as $i) {
+        $topic->publish((new MessageBuilder(['orderingKey' => 'foo']))
+            ->setData('message' . $i)->build(), ['enableMessageOrdering' => true]);
+    }
 
-    $subscription->create(['enableMessageOrdering' => true]);
-
-    printf('Created subscription with ordering: %s' . PHP_EOL, $subscription->name());
-    printf('Subscription info: %s' . PHP_EOL, json_encode($subscription->info()));
+    print('Message published' . PHP_EOL);
 }
-# [END pubsub_enable_subscription_ordering]
+# [END pubsub_publish_with_ordering_keys]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
