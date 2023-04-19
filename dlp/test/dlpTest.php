@@ -267,4 +267,46 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
     }
+  
+    public function testDeIdentifyExceptionList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_exception_list', [
+            self::$projectId,
+            'jack@example.org accessed customer record of user5@example.com'
+        ]);
+        $this->assertStringContainsString('[EMAIL_ADDRESS]', $output);
+        $this->assertStringContainsString('jack@example.org', $output);
+        $this->assertStringNotContainsString('user5@example.com', $output);
+    }
+
+    public function testDeidentifySimpleWordList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_simple_word_list', [
+            self::$projectId,
+            'Patient was seen in RM-YELLOW then transferred to rm green.'
+        ]);
+        $this->assertStringContainsString('[CUSTOM_ROOM_ID]', $output);
+    }
+
+    public function testInspectStringWithoutOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_without_overlap', [
+            self::$projectId,
+            'example.com is a domain, james@example.org is an email.'
+        ]);
+
+        $this->assertStringContainsString('Info type: DOMAIN_NAME', $output);
+        $this->assertStringNotContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringWithExclusionDict()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, example@example.com'
+        ]);
+
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringNotContainsString('Quote: example@example.com', $output);
+    }
 }
