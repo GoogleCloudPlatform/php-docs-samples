@@ -259,6 +259,17 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
 
+    public function testDeIdentifyExceptionList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_exception_list', [
+            self::$projectId,
+            'jack@example.org accessed customer record of user5@example.com'
+        ]);
+        $this->assertStringContainsString('[EMAIL_ADDRESS]', $output);
+        $this->assertStringContainsString('jack@example.org', $output);
+        $this->assertStringNotContainsString('user5@example.com', $output);
+    }
+
     public function testDeidentifySimpleWordList()
     {
         $output = $this->runFunctionSnippet('deidentify_simple_word_list', [
