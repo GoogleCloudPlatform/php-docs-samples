@@ -259,6 +259,15 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
 
+    public function testDeidentifySimpleWordList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_simple_word_list', [
+            self::$projectId,
+            'Patient was seen in RM-YELLOW then transferred to rm green.'
+        ]);
+        $this->assertStringContainsString('[CUSTOM_ROOM_ID]', $output);
+    }
+
     public function testInspectStringWithoutOverlap()
     {
         $output = $this->runFunctionSnippet('inspect_string_without_overlap', [
