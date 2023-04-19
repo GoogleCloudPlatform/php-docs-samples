@@ -267,7 +267,7 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
     }
-  
+
     public function testDeIdentifyExceptionList()
     {
         $output = $this->runFunctionSnippet('deidentify_exception_list', [
