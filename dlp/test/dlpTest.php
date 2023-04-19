@@ -267,4 +267,26 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('[CUSTOM_ROOM_ID]', $output);
     }
+
+    public function testInspectStringWithoutOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_without_overlap', [
+            self::$projectId,
+            'example.com is a domain, james@example.org is an email.'
+        ]);
+
+        $this->assertStringContainsString('Info type: DOMAIN_NAME', $output);
+        $this->assertStringNotContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringWithExclusionDict()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, example@example.com'
+        ]);
+
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringNotContainsString('Quote: example@example.com', $output);
+    }
 }
