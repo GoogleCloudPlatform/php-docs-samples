@@ -259,6 +259,15 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
 
+    public function testInspectCustomRegex()
+    {
+        $output = $this->runFunctionSnippet('inspect_custom_regex', [
+            self::$projectId,
+            'Patients MRN 444-5-22222'
+        ]);
+        $this->assertStringContainsString('Info type: C_MRN', $output);
+    }
+
     public function testInspectStringOmitOverlap()
     {
         $output = $this->runFunctionSnippet('inspect_string_omit_overlap', [
