@@ -259,6 +259,54 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
 
+    public function testDeidentifyRedact()
+    {
+        $output = $this->runFunctionSnippet('deidentify_redact', [
+            self::$projectId,
+            'My name is Alicia Abernathy, and my email address is aabernathy@example.com'
+        ]);
+        $this->assertStringNotContainsString('aabernathy@example.com', $output);
+    }
+
+    public function testInspectCustomRegex()
+    {
+        $output = $this->runFunctionSnippet('inspect_custom_regex', [
+            self::$projectId,
+            'Patients MRN 444-5-22222'
+        ]);
+        $this->assertStringContainsString('Info type: C_MRN', $output);
+    }
+
+    public function testInspectStringOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_omit_overlap', [
+            self::$projectId,
+            'james@example.org is an email.'
+        ]);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringCustomOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_omit_overlap', [
+            self::$projectId,
+            'Name: Jane Doe. Name: Larry Page.'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Jane Doe', $output);
+        $this->assertStringNotContainsString('Larry Page', $output);
+    }
+
+    public function testInspectPhoneNumber()
+    {
+        $output = $this->runFunctionSnippet('inspect_phone_number', [
+            self::$projectId,
+            'My name is Gary and my phone number is (415) 555-0890'
+        ]);
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+    }
+
     public function testDeIdentifyExceptionList()
     {
         $output = $this->runFunctionSnippet('deidentify_exception_list', [
