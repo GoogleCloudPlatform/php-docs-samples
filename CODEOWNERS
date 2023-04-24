@@ -29,9 +29,10 @@
 # Functions samples owned by the Firebase team
 /functions/firebase_analytics   @schandel 
 
+# DLP samples owned by DLP team
+/dlp/                     @GoogleCloudPlatform/googleapis-dlp
 
-# Brent is taking ownership of these samples as they are not supported by the ML team
-/dlp/                     @bshaffer  
+# Brent is taking ownership of these samples as they are not supported by the ML team  
 /dialogflow/              @bshaffer
 /language/                @bshaffer
 /speech/                  @bshaffer

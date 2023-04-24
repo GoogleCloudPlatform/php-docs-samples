@@ -267,4 +267,76 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('Info type: C_MRN', $output);
     }
+
+    public function testInspectStringOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_omit_overlap', [
+            self::$projectId,
+            'james@example.org is an email.'
+        ]);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringCustomOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_omit_overlap', [
+            self::$projectId,
+            'Name: Jane Doe. Name: Larry Page.'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Jane Doe', $output);
+        $this->assertStringNotContainsString('Larry Page', $output);
+    }
+
+    public function testInspectPhoneNumber()
+    {
+        $output = $this->runFunctionSnippet('inspect_phone_number', [
+            self::$projectId,
+            'My name is Gary and my phone number is (415) 555-0890'
+        ]);
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+    }
+
+    public function testDeIdentifyExceptionList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_exception_list', [
+            self::$projectId,
+            'jack@example.org accessed customer record of user5@example.com'
+        ]);
+        $this->assertStringContainsString('[EMAIL_ADDRESS]', $output);
+        $this->assertStringContainsString('jack@example.org', $output);
+        $this->assertStringNotContainsString('user5@example.com', $output);
+    }
+
+    public function testDeidentifySimpleWordList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_simple_word_list', [
+            self::$projectId,
+            'Patient was seen in RM-YELLOW then transferred to rm green.'
+        ]);
+        $this->assertStringContainsString('[CUSTOM_ROOM_ID]', $output);
+    }
+
+    public function testInspectStringWithoutOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_without_overlap', [
+            self::$projectId,
+            'example.com is a domain, james@example.org is an email.'
+        ]);
+
+        $this->assertStringContainsString('Info type: DOMAIN_NAME', $output);
+        $this->assertStringNotContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringWithExclusionDict()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, example@example.com'
+        ]);
+
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringNotContainsString('Quote: example@example.com', $output);
+    }
 }
