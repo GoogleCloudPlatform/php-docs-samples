@@ -259,6 +259,15 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
     }
 
+    public function testDeidentifyRedact()
+    {
+        $output = $this->runFunctionSnippet('deidentify_redact', [
+            self::$projectId,
+            'My name is Alicia Abernathy, and my email address is aabernathy@example.com'
+        ]);
+        $this->assertStringNotContainsString('aabernathy@example.com', $output);
+    }
+
     public function testInspectCustomRegex()
     {
         $output = $this->runFunctionSnippet('inspect_custom_regex', [
