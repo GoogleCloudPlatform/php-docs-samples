@@ -268,6 +268,18 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
     }
 
+    public function testInspectStringCustomOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_omit_overlap', [
+            self::$projectId,
+            'Name: Jane Doe. Name: Larry Page.'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Jane Doe', $output);
+        $this->assertStringNotContainsString('Larry Page', $output);
+    }
+
     public function testInspectPhoneNumber()
     {
         $output = $this->runFunctionSnippet('inspect_phone_number', [
