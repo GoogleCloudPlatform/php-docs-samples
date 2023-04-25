@@ -357,4 +357,15 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Quote: gary@example.com', $output);
         $this->assertStringNotContainsString('Quote: example@example.com', $output);
     }
+
+    public function testInspectStringWithExclusionDictSubstring()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict_substring', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, TEST@example.com'
+        ]);
+        $this->assertStringContainsString('Quote: example.com', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringNotContainsString('TEST@example.com', $output);
+    }
 }
