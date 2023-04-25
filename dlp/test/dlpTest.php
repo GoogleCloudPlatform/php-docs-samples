@@ -357,4 +357,14 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Quote: gary@example.com', $output);
         $this->assertStringNotContainsString('Quote: example@example.com', $output);
     }
+
+    public function testInspectStringMultipleRules()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'patient: Jane Doe'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+    }
 }
