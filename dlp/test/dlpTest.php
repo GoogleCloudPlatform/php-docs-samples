@@ -358,7 +358,7 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Quote: example@example.com', $output);
     }
 
-    public function testInspectStringMultipleRules()
+    public function testInspectStringMultipleRulesPatientRule()
     {
         $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
             self::$projectId,
@@ -366,5 +366,35 @@ class dlpTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+    }
+
+    public function testInspectStringMultipleRulesDoctorRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'doctor: Jane Doe'
+        ]);
+
+        $this->assertStringContainsString('No findings.', $output);
+    }
+
+    public function testInspectStringMultipleRulesQuasimodoRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'patient: Quasimodo'
+        ]);
+
+        $this->assertStringContainsString('No findings.', $output);
+    }
+
+    public function testInspectStringMultipleRulesRedactedRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'name of patient: REDACTED'
+        ]);
+
+        $this->assertStringContainsString('No findings.', $output);
     }
 }
