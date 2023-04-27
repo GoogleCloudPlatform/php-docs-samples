@@ -41,13 +41,15 @@ use Google\Cloud\Dlp\V2\MatchingType;
  * Inspect a string with an exclusion dictionary substring
  * Omit scan matches that include the substring "TEST".
  *
- * @param string $projectId         The Google Cloud project id to use as a parent resource.
- * @param string $textToInspect     The string to inspect.
+ * @param string $projectId                 The Google Cloud project id to use as a parent resource.
+ * @param string $textToInspect             The string to inspect.
+ * @param array  $excludedSubStringArray    The sub string to excluded.
  */
 function inspect_string_with_exclusion_dict_substring(
     // TODO(developer): Replace sample parameters before running the code.
     string $projectId,
-    string $textToInspect = 'Some email addresses: gary@example.com, TEST@example.com'
+    string $textToInspect = 'Some email addresses: gary@example.com, TEST@example.com',
+    array  $excludedSubStringArray = ['Test']
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -69,7 +71,7 @@ function inspect_string_with_exclusion_dict_substring(
     // Exclude matches from the specified excludedSubstringList.
     $excludedSubstringList = (new Dictionary())
         ->setWordList((new WordList())
-            ->setWords(['TEST']));
+            ->setWords($excludedSubStringArray));
 
     $exclusionRule = (new ExclusionRule())
         ->setMatchingType(MatchingType::MATCHING_TYPE_PARTIAL_MATCH)
