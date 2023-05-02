@@ -397,4 +397,24 @@ class dlpTest extends TestCase
 
         $this->assertStringContainsString('No findings.', $output);
     }
+
+    public function testDeidentifyTableInfotypes()
+    {
+        $inputCsvFile = __DIR__ . '/data/table1.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_infotypes_output_unitest.csv';
+        $output = $this->runFunctionSnippet('deidentify_table_infotypes', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+        ]);
+        $this->assertFileNotEquals($outputCsvFile, $inputCsvFile);
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
 }
