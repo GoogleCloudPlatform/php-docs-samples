@@ -397,4 +397,25 @@ class dlpTest extends TestCase
 
         $this->assertStringContainsString('No findings.', $output);
     }
+
+    public function testDeidentifyTableConditionMasking()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_condition_masking_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_condition_masking', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+        $this->assertFileNotEquals($outputCsvFile, $inputCsvFile);
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('**', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
 }
