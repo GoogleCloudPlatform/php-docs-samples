@@ -397,4 +397,15 @@ class dlpTest extends TestCase
 
         $this->assertStringContainsString('No findings.', $output);
     }
+
+    public function testDeidentifyReplace()
+    {
+        $string = 'My name is Alicia Abernathy, and my email address is aabernathy@example.com.';
+        $output = $this->runFunctionSnippet('deidentify_replace', [
+            self::$projectId,
+            $string
+        ]);
+        $this->assertStringContainsString('[email-address]', $output);
+        $this->assertNotEquals($output, $string);
+    }
 }
