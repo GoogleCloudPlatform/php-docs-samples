@@ -31,13 +31,14 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId
  * @param string $subscriptionId
  */
-function subscribe_avro_records($projectId, $subscriptionId)
+function subscribe_avro_records($projectId, $subscriptionId, $definitionFile)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
 
     $subscription = $pubsub->subscription($subscriptionId);
+    $definition = file_get_contents($definitionFile);
     $messages = $subscription->pull();
 
     foreach ($messages as $message) {
@@ -45,10 +46,11 @@ function subscribe_avro_records($projectId, $subscriptionId)
         $encoding = $message->attribute('googclient_schemaencoding');
         switch ($encoding) {
             case 'BINARY':
-                $ioReader = new \AvroStringIO(base64_decode($message->data()));
-                $dataReader = new \AvroDataIOReader($ioReader, new \AvroIODatumReader());
-
-                $decodedMessageData = json_encode($dataReader->data());
+                $io = new \AvroStringIO($message->data());
+                $schema = \AvroSchema::parse($definition);
+                $reader = new \AvroIODatumReader($schema);
+                $decoder = new \AvroIOBinaryDecoder($io);
+                $decodedMessageData = json_encode($reader->read($decoder));
                 break;
             case 'JSON':
                 $decodedMessageData = $message->data();
