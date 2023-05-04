@@ -413,6 +413,17 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('No findings.', $output);
     }
 
+    public function testInspectStringWithExclusionRegex()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_regex', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, bob@example.org'
+        ]);
+
+        $this->assertStringContainsString('Quote: bob@example.org', $output);
+        $this->assertStringNotContainsString('gray@example.com', $output);
+    }
+
     public function testInspectStringCustomExcludingSubstring()
     {
         $output = $this->runFunctionSnippet('inspect_string_custom_excluding_substring', [
