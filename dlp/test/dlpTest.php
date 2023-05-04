@@ -414,6 +414,7 @@ class dlpTest extends TestCase
 
         $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
         $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('Charles Dickens', $csvLines_ouput[1]);
 
         unlink($outputCsvFile);
     }
