@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/analytics-data": "^0.9.0"
+        "google/analytics-data": "^0.9.0",
+        "google/cloud": "dev-main"
     }
 }
