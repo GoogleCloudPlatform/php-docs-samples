@@ -169,6 +169,19 @@ class PubSubTest extends TestCase
         $this->assertRegExp('/Message published/', $output);
     }
 
+    public function testTopicMessageWithRetrySettings()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publish_with_retry_settings', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->assertRegExp('/Message published with retry settings/', $output);
+    }
+
     public function testListSubscriptions()
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
