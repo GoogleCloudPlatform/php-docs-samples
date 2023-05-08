@@ -437,4 +437,23 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Jimmy', $output);
         $this->assertStringNotContainsString('Example', $output);
     }
+
+    public function testInspectBigqueryWithSampling()
+    {
+        $topicId = 'dlp-crest-pubsub-topic';
+        $subscriptionId = 'dlp_crest_subcription_test';
+        $datasetId = 'dlp_crest_test_dataset';
+        $tableId = 'employee_test_details';
+
+        $output = $this->runFunctionSnippet('inspect_bigquery_with_sampling', [
+            self::$projectId,
+            $topicId,
+            $subscriptionId,
+            $datasetId,
+            $tableId
+        ]);
+
+        $this->assertStringContainsString('Job projects/' . self::$projectId . '/locations/global/dlpJobs/', $output);
+        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+    }
 }
