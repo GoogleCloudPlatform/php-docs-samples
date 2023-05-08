@@ -437,4 +437,27 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Jimmy', $output);
         $this->assertStringNotContainsString('Example', $output);
     }
+
+    public function testDeidentifyTableRowSuppress()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_row_suppress_output_unitest.csv';
+        $output = $this->runFunctionSnippet('deidentify_table_row_suppress', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertEquals(3, count($csvLines_ouput));
+        unlink($outputCsvFile);
+    }
 }
