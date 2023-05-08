@@ -358,6 +358,21 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Quote: example@example.com', $output);
     }
 
+    public function testInspectStringWithExclusionDictSubstring()
+    {
+        $excludedSubStringArray = ['Test'];
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict_substring', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, TEST@example.com',
+            $excludedSubStringArray
+        ]);
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('Quote: example.com', $output);
+        $this->assertStringContainsString('Info type: DOMAIN_NAME', $output);
+        $this->assertStringNotContainsString('TEST@example.com', $output);
+    }
+
     public function testInspectStringMultipleRulesPatientRule()
     {
         $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
@@ -406,5 +421,41 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('Info type: PERSON_NAME', $output);
         $this->assertStringContainsString('Likelihood: VERY_LIKELY', $output);
+    }
+
+    public function testInspectStringWithExclusionRegex()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_regex', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, bob@example.org'
+        ]);
+
+        $this->assertStringContainsString('Quote: bob@example.org', $output);
+        $this->assertStringNotContainsString('gray@example.com', $output);
+    }
+
+    public function testInspectStringCustomExcludingSubstring()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_excluding_substring', [
+            self::$projectId,
+            'Name: Doe, John. Name: Example, Jimmy'
+        ]);
+
+        $this->assertStringContainsString('Info type: CUSTOM_NAME_DETECTOR', $output);
+        $this->assertStringContainsString('Doe', $output);
+        $this->assertStringContainsString('John', $output);
+        $this->assertStringNotContainsString('Jimmy', $output);
+        $this->assertStringNotContainsString('Example', $output);
+    }
+
+    public function testDeidentifyReplace()
+    {
+        $string = 'My name is Alicia Abernathy, and my email address is aabernathy@example.com.';
+        $output = $this->runFunctionSnippet('deidentify_replace', [
+            self::$projectId,
+            $string
+        ]);
+        $this->assertStringContainsString('[email-address]', $output);
+        $this->assertNotEquals($output, $string);
     }
 }

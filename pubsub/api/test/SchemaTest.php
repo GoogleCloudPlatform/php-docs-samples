@@ -210,6 +210,7 @@ class SchemaTest extends TestCase
         $subscribeOutput = $this->runFunctionSnippet('subscribe_avro_records', [
             self::$projectId,
             $subscriptionId,
+            self::AVRO_DEFINITION,
         ]);
 
         $this->assertStringContainsString(
