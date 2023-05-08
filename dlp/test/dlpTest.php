@@ -437,4 +437,32 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Jimmy', $output);
         $this->assertStringNotContainsString('Example', $output);
     }
+
+    public function testDeidentifyTableConditionInfotypes()
+    {
+        $inputCsvFile = __DIR__ . '/data/table1.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_condition_infotypes_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_condition_infotypes', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($inputCsvFile),
+            sha1_file($outputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('Charles Dickens', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('[PERSON_NAME]', $csvLines_ouput[2]);
+        $this->assertStringContainsString('Jane Austen', $csvLines_ouput[2]);
+
+        unlink($outputCsvFile);
+    }
 }
