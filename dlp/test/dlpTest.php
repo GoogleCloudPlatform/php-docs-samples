@@ -437,4 +437,31 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Jimmy', $output);
         $this->assertStringNotContainsString('Example', $output);
     }
+
+    public function testDeidentifyTableBucketing()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_bucketing_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_bucketing', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('90:100', $csvLines_ouput[1]);
+        $this->assertStringContainsString('20:30', $csvLines_ouput[2]);
+        $this->assertStringContainsString('70:80', $csvLines_ouput[3]);
+
+        unlink($outputCsvFile);
+    }
 }
