@@ -447,7 +447,11 @@ class dlpTest extends TestCase
             $inputCsvFile,
             $outputCsvFile,
         ]);
-        $this->assertFileNotEquals($outputCsvFile, $inputCsvFile);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
 
         $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
         $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
