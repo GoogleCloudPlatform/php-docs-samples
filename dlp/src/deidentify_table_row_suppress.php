@@ -84,11 +84,11 @@ function deidentify_table_row_suppress(
         ->setHeaders($tableHeaders)
         ->setRows($tableRows);
 
-    // Specify the content to be inspected.
+    // Specify what content you want the service to de-identify.
     $content = (new ContentItem())
         ->setTable($tableToDeIdentify);
 
-    // Specify when the above fields should be de-identified.
+    // Specify when the content should be de-identified.
     $condition = (new Condition())
         ->setField((new FieldId())
             ->setName('AGE'))
@@ -106,9 +106,11 @@ function deidentify_table_row_suppress(
                 )
         );
 
+    // Use record suppression as the only transformation
     $recordtransformations = (new RecordTransformations())
         ->setRecordSuppressions([$recordSuppressions]);
 
+    // Create the deidentification configuration object
     $deidentifyConfig = (new DeidentifyConfig())
         ->setRecordTransformations($recordtransformations);
 

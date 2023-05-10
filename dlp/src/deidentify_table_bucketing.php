@@ -96,7 +96,7 @@ function deidentify_table_bucketing(
     $primitiveTransformation = (new PrimitiveTransformation())
         ->setFixedSizeBucketingConfig($fixedSizeBucketingConfig);
 
-    // Specify field to be encrypted.
+    // Specify the field to to apply bucketing transform on
     $fieldId = (new FieldId())
         ->setName('HAPPINESS_SCORE');
 
