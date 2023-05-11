@@ -41,7 +41,7 @@ use Google\Protobuf\Duration;
  * @param string $projectId The ID of your Google Cloud Platform project.
  * @param string $location The location of the job.
  * @param string $inputUri Uri of the video in the Cloud Storage bucket.
- * @param string $overlayImageUri Uri of the JPEG image for the overlay in the Cloud Storage bucket. Must be a JPEG.
+ * @param string $overlayImageUri Uri of the image for the overlay in the Cloud Storage bucket.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
 function create_job_with_static_overlay($projectId, $location, $inputUri, $overlayImageUri, $outputUri)
