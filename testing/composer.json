@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": "^7.4|^8.0"
+        "php": "^8.0"
     },
     "require-dev": {
         "bshaffer/phpunit-retry-annotations": "^0.3.0",
