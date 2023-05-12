@@ -50,7 +50,7 @@ class IntegrationTest extends TestCase
         $dbUser = $this->requireEnv('MYSQL_USER');
         $connectionName = $this->requireEnv('CLOUDSQL_CONNECTION_NAME_MYSQL');
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
-        $instanceUnixSocket = "${socketDir}/${connectionName}";
+        $instanceUnixSocket = "{$socketDir}/{$connectionName}";
 
         putenv("DB_PASS=$dbPass");
         putenv("DB_NAME=$dbName");
