@@ -448,4 +448,131 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('[email-address]', $output);
         $this->assertNotEquals($output, $string);
     }
+
+    public function testDeidentifyTableInfotypes()
+    {
+        $inputCsvFile = __DIR__ . '/data/table1.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_infotypes_output_unitest.csv';
+        $output = $this->runFunctionSnippet('deidentify_table_infotypes', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('Charles Dickens', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableConditionMasking()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_condition_masking_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_condition_masking', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('**', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableConditionInfotypes()
+    {
+        $inputCsvFile = __DIR__ . '/data/table1.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_condition_infotypes_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_condition_infotypes', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($inputCsvFile),
+            sha1_file($outputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('Charles Dickens', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('[PERSON_NAME]', $csvLines_ouput[2]);
+        $this->assertStringContainsString('Jane Austen', $csvLines_ouput[2]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableBucketing()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_bucketing_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_bucketing', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('90:100', $csvLines_ouput[1]);
+        $this->assertStringContainsString('20:30', $csvLines_ouput[2]);
+        $this->assertStringContainsString('70:80', $csvLines_ouput[3]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableRowSuppress()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_row_suppress_output_unitest.csv';
+        $output = $this->runFunctionSnippet('deidentify_table_row_suppress', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertEquals(3, count($csvLines_ouput));
+        unlink($outputCsvFile);
+    }
 }
