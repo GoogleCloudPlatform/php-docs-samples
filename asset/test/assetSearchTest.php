@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Asset;
 
 use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
 

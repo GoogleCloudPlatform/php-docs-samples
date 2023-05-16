@@ -59,5 +59,8 @@ fi
 # Install global test dependencies
 composer install -d testing/
 
+# Configure the current directory as a safe directory
+git config --global --add safe.directory $(pwd)
+
 # Run tests
 bash testing/run_test_suite.sh
