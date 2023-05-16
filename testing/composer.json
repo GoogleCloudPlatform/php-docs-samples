@@ -7,7 +7,7 @@
         "google/auth": "^1.12",
         "google/cloud-tools": "dev-main",
         "guzzlehttp/guzzle": "^7.0",
-        "phpunit/phpunit": "^7|^8,<8.5.27",
+        "phpunit/phpunit": "^8.5",
         "friendsofphp/php-cs-fixer": "^3,<3.9",
         "composer/semver": "^3.2"
     }
