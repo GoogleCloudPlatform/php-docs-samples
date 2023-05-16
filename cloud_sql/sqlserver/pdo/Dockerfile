@@ -1,4 +1,4 @@
-FROM gcr.io/google_appengine/php74
+FROM gcr.io/google_appengine/php72
 
 COPY --from=composer:latest-bin /composer /usr/local/bin/composer
 
@@ -16,6 +16,6 @@ RUN apt-get update && \
         unzip
 
 RUN pecl install pdo_sqlsrv
-RUN echo "extension=pdo_sqlsrv.so" > /opt/php74/lib/ext.enabled/ext-pdo_sqlsrv.ini
+RUN echo "extension=pdo_sqlsrv.so" > /opt/php72/lib/ext.enabled/ext-pdo_sqlsrv.ini
 # RUN phpenmod pdo_sqlsrv
 RUN composer update

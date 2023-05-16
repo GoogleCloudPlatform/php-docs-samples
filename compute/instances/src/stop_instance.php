@@ -51,7 +51,7 @@ function stop_instance(
         printf('Instance %s stopped successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to stop instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to stop instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 
