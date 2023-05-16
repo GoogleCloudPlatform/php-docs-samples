@@ -42,7 +42,7 @@ class SchemaTest extends TestCase
     /**
      * @dataProvider definitions
      */
-    public function testCreateGetListAndDelete($type, $definitionFile)
+    public function testCreateGetListReviseAndDelete($type, $definitionFile)
     {
         $schemaId = uniqid('samples-test-' . $type . '-');
         $schemaName = SchemaServiceClient::schemaName(self::$projectId, $schemaId);
@@ -74,6 +74,24 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf('Schema name: %s', $schemaName),
+            $listOutput
+        );
+
+        $listOutput = $this->runFunctionSnippet(
+            sprintf('commit_%s_schema', $type),
+            [
+                self::$projectId,
+                $schemaId,
+                $definitionFile,
+            ]
+        );
+
+        $this->assertStringContainsString(
+            sprintf(
+                "Committed a schema using an %s schema: %s",
+                ucfirst($type),
+                $schemaName
+            ),
             $listOutput
         );
 
