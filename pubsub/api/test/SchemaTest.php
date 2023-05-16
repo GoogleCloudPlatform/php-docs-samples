@@ -88,7 +88,7 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                "Committed a schema using an %s schema: %s",
+                'Committed a schema using an %s schema: %s',
                 ucfirst($type),
                 $schemaName
             ),
