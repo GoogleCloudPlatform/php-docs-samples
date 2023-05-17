@@ -23,6 +23,8 @@
 namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_commit_proto_schema]
+
+use Google\ApiCore\ApiException;
 use Google\Cloud\PubSub\V1\Schema;
 use Google\Cloud\PubSub\V1\Schema\Type;
 use Google\Cloud\PubSub\V1\SchemaServiceClient;
@@ -47,7 +49,7 @@ function commit_proto_schema(string $projectId, string $schemaId, string $protoF
             ->setDefinition($definition);
         $response = $client->commitSchema($schemaName, $schema);
         printf("Committed a schema using an Proto schema: %s\n", $response->getName());
-    } catch (\Exception $e) {
+    } catch (ApiException $e) {
         printf("%s does not exist.\n", $schemaName);
     }
 }

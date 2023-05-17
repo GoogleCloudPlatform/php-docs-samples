@@ -42,7 +42,7 @@ class SchemaTest extends TestCase
     /**
      * @dataProvider definitions
      */
-    public function testCreateGetListReviseAndDelete($type, $definitionFile)
+    public function testCreateGetListAndDelete($type, $definitionFile)
     {
         $schemaId = uniqid('samples-test-' . $type . '-');
         $schemaName = SchemaServiceClient::schemaName(self::$projectId, $schemaId);
@@ -77,24 +77,6 @@ class SchemaTest extends TestCase
             $listOutput
         );
 
-        $listOutput = $this->runFunctionSnippet(
-            sprintf('commit_%s_schema', $type),
-            [
-                self::$projectId,
-                $schemaId,
-                $definitionFile,
-            ]
-        );
-
-        $this->assertStringContainsString(
-            sprintf(
-                'Committed a schema using an %s schema: %s',
-                ucfirst($type),
-                $schemaName
-            ),
-            $listOutput
-        );
-
         $deleteOutput = $this->runFunctionSnippet('delete_schema', [
             self::$projectId,
             $schemaId,
@@ -104,6 +86,56 @@ class SchemaTest extends TestCase
             sprintf('Schema %s deleted.', $schemaName),
             $deleteOutput
         );
+    }
+
+    /**
+     * @dataProvider definitions
+     */
+    public function testSchemaRevision($type, $definitionFile)
+    {
+        $schemaId = uniqid('samples-test-' . $type . '-');
+        $schemaName = SchemaServiceClient::schemaName(self::$projectId, $schemaId);
+
+        $this->runFunctionSnippet(sprintf('create_%s_schema', $type), [
+            self::$projectId,
+            $schemaId,
+            $definitionFile,
+        ]);
+
+        $listOutput = $this->runFunctionSnippet(sprintf('commit_%s_schema', $type), [
+            self::$projectId,
+            $schemaId,
+            $definitionFile,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Committed a schema using an %s schema: %s@', ucfirst($type), $schemaName
+            ),
+            $listOutput
+        );
+
+        $schemaRevisionId = trim(explode('@', $listOutput)[1]);
+
+        $listOutput = $this->runFunctionSnippet('get_schema_revision', [
+            self::$projectId,
+            $schemaId,
+            $schemaRevisionId,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Got a schema revision: %s@%s',
+                $schemaName,
+                $schemaRevisionId
+            ),
+            $listOutput
+        );
+
+        $this->runFunctionSnippet('delete_schema', [
+            self::$projectId,
+            $schemaId,
+        ]);
     }
 
     /**

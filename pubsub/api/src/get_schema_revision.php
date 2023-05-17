@@ -22,36 +22,32 @@
  */
 namespace Google\Cloud\Samples\PubSub;
 
-# [START pubsub_commit_avro_schema]
-
 use Google\ApiCore\ApiException;
-use Google\Cloud\PubSub\V1\Schema;
-use Google\Cloud\PubSub\V1\Schema\Type;
 use Google\Cloud\PubSub\V1\SchemaServiceClient;
 
+# [START pubsub_get_schema_revision]
+
 /**
- * Commit a new AVRO schema revision to an existing schema.
+ * Gets a schema revision.
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
- * @param string $schemaId The ID of the schema to commit.
- * @param string $avscFile The path to the Avro schema file.
+ * @param string $schemaId The ID of the schema.
+ * @param string $schemaRevisionId name of the schema.
  */
-function commit_avro_schema(string $projectId, string $schemaId, string $avscFile): void
+function get_schema_revision(string $projectId, string $schemaId, string $schemaRevisionId)
 {
-    $client = new SchemaServiceClient();
-    $schemaName = $client->schemaName($projectId, $schemaId);
+    $schemaServiceClient = new SchemaServiceClient();
+    $schemaName = $schemaServiceClient->schemaName(
+        $projectId, $schemaId . '@' . $schemaRevisionId
+    );
+
     try {
-        $schema = new Schema();
-        $definition = file_get_contents($avscFile);
-        $schema->setName($schemaName)
-            ->setType(Type::AVRO)
-            ->setDefinition($definition);
-        $response = $client->commitSchema($schemaName, $schema);
-        printf("Committed a schema using an Avro schema: %s\n", $response->getName());
-    } catch (ApiException $e) {
-        printf("%s does not exist.\n", $schemaName);
+        $response = $schemaServiceClient->getSchema($schemaName);
+        printf('Got a schema revision: %s' . PHP_EOL, $response->getName());
+    } catch (ApiException $ex) {
+        printf('%s not found' . PHP_EOL, $schemaId . '@' . $schemaRevisionId);
     }
 }
-# [END pubsub_commit_avro_schema]
+# [END pubsub_get_schema_revision]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
