@@ -14,7 +14,7 @@ require __DIR__ . '/vendor/autoload.php';
 # [END gae_erroreporting_register_handler]
 
 # Uncomment this line if you'd like to include `prepend.php` manually instead of
-# using composer autolaoding or `php.ini`:
+# using composer autoloading or `php.ini`:
 #
 #    require_once 'vendor/google/cloud-error-reporting/src/prepend.php';
 #
