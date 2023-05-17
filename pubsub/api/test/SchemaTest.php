@@ -132,6 +132,13 @@ class SchemaTest extends TestCase
             $listOutput
         );
 
+        $listOutput = $this->runFunctionSnippet('list_schema_revisions', [
+            self::$projectId,
+            $schemaId
+        ]);
+
+        $this->assertStringContainsString('Listed schema revisions', $listOutput);
+
         $this->runFunctionSnippet('delete_schema', [
             self::$projectId,
             $schemaId,

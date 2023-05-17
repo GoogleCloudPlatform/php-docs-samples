@@ -22,32 +22,16 @@
  */
 namespace Google\Cloud\Samples\PubSub;
 
-use Google\ApiCore\ApiException;
-use Google\Cloud\PubSub\V1\SchemaServiceClient;
-
-# [START pubsub_get_schema_revision]
+# [START pubsub_commit_avro_schema]
 
 /**
- * Gets a schema revision.
+ *
  *
  * @param string $projectId The ID of your Google Cloud Platform project.
- * @param string $schemaId The ID of the schema.
- * @param string $schemaRevisionId name of the schema.
  */
-function get_schema_revision(string $projectId, string $schemaId, string $schemaRevisionId)
+function _(string $projectId): void
 {
-    $schemaServiceClient = new SchemaServiceClient();
-    $schemaName = $schemaServiceClient->schemaName(
-        $projectId, $schemaId . '@' . $schemaRevisionId
-    );
-
-    try {
-        $response = $schemaServiceClient->getSchema($schemaName);
-        printf('Got a schema revision: %s' . PHP_EOL, $response->getName());
-    } catch (ApiException $ex) {
-        printf('%s not found' . PHP_EOL, $schemaName);
-    }
 }
-# [END pubsub_get_schema_revision]
+# [END pubsub_commit_avro_schema]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
