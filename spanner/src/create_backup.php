@@ -37,9 +37,10 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
- * @param string $versionTime The version of the database to backup.
+ * @param string $versionTime The version of the database to backup. Read more
+ * at https://cloud.google.com/spanner/docs/reference/rest/v1/projects.instances.backups#Backup.FIELDS.version_time
  */
-function create_backup(string $instanceId, string $databaseId, string $backupId, string $versionTime): void
+function create_backup(string $instanceId, string $databaseId, string $backupId, string $versionTime = '-1hour'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

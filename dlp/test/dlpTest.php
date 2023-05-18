@@ -153,7 +153,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_fpe', [
             self::$projectId,
@@ -248,7 +248,7 @@ class dlpTest extends TestCase
             $filter,
         ]);
 
-        $this->assertRegExp($jobIdRegex, $output);
+        $this->assertMatchesRegularExpression($jobIdRegex, $output);
         preg_match($jobIdRegex, $output, $jobIds);
         $jobId = $jobIds[0];
 
@@ -257,5 +257,322 @@ class dlpTest extends TestCase
             [$jobId]
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobId, $output);
+    }
+
+    public function testInspectHotwordRules()
+    {
+        $output = $this->runFunctionSnippet('inspect_hotword_rule', [
+            self::$projectId,
+            "Patient's MRN 444-5-22222 and just a number 333-2-33333"
+        ]);
+        $this->assertStringContainsString('Info type: C_MRN', $output);
+    }
+
+    public function testDeidentifyRedact()
+    {
+        $output = $this->runFunctionSnippet('deidentify_redact', [
+            self::$projectId,
+            'My name is Alicia Abernathy, and my email address is aabernathy@example.com'
+        ]);
+        $this->assertStringNotContainsString('aabernathy@example.com', $output);
+    }
+
+    public function testInspectCustomRegex()
+    {
+        $output = $this->runFunctionSnippet('inspect_custom_regex', [
+            self::$projectId,
+            'Patients MRN 444-5-22222'
+        ]);
+        $this->assertStringContainsString('Info type: C_MRN', $output);
+    }
+
+    public function testInspectStringOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_omit_overlap', [
+            self::$projectId,
+            'james@example.org is an email.'
+        ]);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringCustomOmitOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_omit_overlap', [
+            self::$projectId,
+            'Name: Jane Doe. Name: Larry Page.'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Jane Doe', $output);
+        $this->assertStringNotContainsString('Larry Page', $output);
+    }
+
+    public function testInspectPhoneNumber()
+    {
+        $output = $this->runFunctionSnippet('inspect_phone_number', [
+            self::$projectId,
+            'My name is Gary and my phone number is (415) 555-0890'
+        ]);
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+    }
+
+    public function testDeIdentifyExceptionList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_exception_list', [
+            self::$projectId,
+            'jack@example.org accessed customer record of user5@example.com'
+        ]);
+        $this->assertStringContainsString('[EMAIL_ADDRESS]', $output);
+        $this->assertStringContainsString('jack@example.org', $output);
+        $this->assertStringNotContainsString('user5@example.com', $output);
+    }
+
+    public function testDeidentifySimpleWordList()
+    {
+        $output = $this->runFunctionSnippet('deidentify_simple_word_list', [
+            self::$projectId,
+            'Patient was seen in RM-YELLOW then transferred to rm green.'
+        ]);
+        $this->assertStringContainsString('[CUSTOM_ROOM_ID]', $output);
+    }
+
+    public function testInspectStringWithoutOverlap()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_without_overlap', [
+            self::$projectId,
+            'example.com is a domain, james@example.org is an email.'
+        ]);
+
+        $this->assertStringContainsString('Info type: DOMAIN_NAME', $output);
+        $this->assertStringNotContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectStringWithExclusionDict()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, example@example.com'
+        ]);
+
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringNotContainsString('Quote: example@example.com', $output);
+    }
+
+    public function testInspectStringWithExclusionDictSubstring()
+    {
+        $excludedSubStringArray = ['Test'];
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_dict_substring', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, TEST@example.com',
+            $excludedSubStringArray
+        ]);
+        $this->assertStringContainsString('Quote: gary@example.com', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('Quote: example.com', $output);
+        $this->assertStringContainsString('Info type: DOMAIN_NAME', $output);
+        $this->assertStringNotContainsString('TEST@example.com', $output);
+    }
+
+    public function testInspectStringMultipleRulesPatientRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'patient: Jane Doe'
+        ]);
+
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+    }
+
+    public function testInspectStringMultipleRulesDoctorRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'doctor: Jane Doe'
+        ]);
+
+        $this->assertStringContainsString('No findings.', $output);
+    }
+
+    public function testInspectStringMultipleRulesQuasimodoRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'patient: Quasimodo'
+        ]);
+
+        $this->assertStringContainsString('No findings.', $output);
+    }
+
+    public function testInspectStringMultipleRulesRedactedRule()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_multiple_rules', [
+            self::$projectId,
+            'name of patient: REDACTED'
+        ]);
+
+        $this->assertStringContainsString('No findings.', $output);
+    }
+
+    public function testInspectStringWithExclusionRegex()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_with_exclusion_regex', [
+            self::$projectId,
+            'Some email addresses: gary@example.com, bob@example.org'
+        ]);
+
+        $this->assertStringContainsString('Quote: bob@example.org', $output);
+        $this->assertStringNotContainsString('gray@example.com', $output);
+    }
+
+    public function testInspectStringCustomExcludingSubstring()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_excluding_substring', [
+            self::$projectId,
+            'Name: Doe, John. Name: Example, Jimmy'
+        ]);
+
+        $this->assertStringContainsString('Info type: CUSTOM_NAME_DETECTOR', $output);
+        $this->assertStringContainsString('Doe', $output);
+        $this->assertStringContainsString('John', $output);
+        $this->assertStringNotContainsString('Jimmy', $output);
+        $this->assertStringNotContainsString('Example', $output);
+    }
+
+    public function testDeidentifyReplace()
+    {
+        $string = 'My name is Alicia Abernathy, and my email address is aabernathy@example.com.';
+        $output = $this->runFunctionSnippet('deidentify_replace', [
+            self::$projectId,
+            $string
+        ]);
+        $this->assertStringContainsString('[email-address]', $output);
+        $this->assertNotEquals($output, $string);
+    }
+
+    public function testDeidentifyTableInfotypes()
+    {
+        $inputCsvFile = __DIR__ . '/data/table1.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_infotypes_output_unitest.csv';
+        $output = $this->runFunctionSnippet('deidentify_table_infotypes', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('Charles Dickens', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableConditionMasking()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_condition_masking_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_condition_masking', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('**', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableConditionInfotypes()
+    {
+        $inputCsvFile = __DIR__ . '/data/table1.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_condition_infotypes_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_condition_infotypes', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($inputCsvFile),
+            sha1_file($outputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('[PERSON_NAME]', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('Charles Dickens', $csvLines_ouput[1]);
+        $this->assertStringNotContainsString('[PERSON_NAME]', $csvLines_ouput[2]);
+        $this->assertStringContainsString('Jane Austen', $csvLines_ouput[2]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableBucketing()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_bucketing_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_bucketing', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('90:100', $csvLines_ouput[1]);
+        $this->assertStringContainsString('20:30', $csvLines_ouput[2]);
+        $this->assertStringContainsString('70:80', $csvLines_ouput[3]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableRowSuppress()
+    {
+        $inputCsvFile = __DIR__ . '/data/table2.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_row_suppress_output_unitest.csv';
+        $output = $this->runFunctionSnippet('deidentify_table_row_suppress', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertEquals(3, count($csvLines_ouput));
+        unlink($outputCsvFile);
     }
 }

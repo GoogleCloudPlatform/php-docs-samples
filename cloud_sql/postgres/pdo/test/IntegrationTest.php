@@ -25,9 +25,6 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @runTestsInSeparateProcesses
- */
 class IntegrationTest extends TestCase
 {
     use TestTrait;

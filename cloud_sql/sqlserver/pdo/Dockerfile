@@ -1,6 +1,6 @@
 FROM gcr.io/google_appengine/php72
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:latest-bin /composer /usr/local/bin/composer
 
 COPY . .
 
