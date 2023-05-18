@@ -46,7 +46,7 @@ function disable_usage_export_bucket(string $projectId)
         printf('Compute Engine usage export bucket for project `%s` was disabled.', $projectId);
     } else {
         $error = $operation->getError();
-        printf('Failed to disable usage report bucket for project `%s`: %s' . PHP_EOL, $projectId, $error->getMessage());
+        printf('Failed to disable usage report bucket for project `%s`: %s' . PHP_EOL, $projectId, $error?->getMessage());
     }
 }
 # [END compute_usage_report_disable]

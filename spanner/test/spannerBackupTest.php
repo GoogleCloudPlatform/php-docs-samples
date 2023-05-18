@@ -180,7 +180,7 @@ class spannerBackupTest extends TestCase
         ]);
 
         $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
-        $this->assertRegExp(sprintf($regex, $newBackupId, self::$backupId), $output);
+        $this->assertMatchesRegularExpression(sprintf($regex, $newBackupId, self::$backupId), $output);
     }
 
     /**

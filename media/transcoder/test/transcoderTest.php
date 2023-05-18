@@ -167,7 +167,7 @@ class transcoderTest extends TestCase
             self::$inputVideoUri,
             self::$outputUriForAdHoc
         ]);
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $createOutput);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $createOutput);
 
         $jobId = explode('/', $createOutput);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -209,7 +209,7 @@ class transcoderTest extends TestCase
             self::$preset
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -241,7 +241,7 @@ class transcoderTest extends TestCase
             $jobTemplateId
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -272,7 +272,7 @@ class transcoderTest extends TestCase
             self::$outputUriForAnimatedOverlay
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -297,7 +297,7 @@ class transcoderTest extends TestCase
             self::$outputUriForStaticOverlay
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -321,7 +321,7 @@ class transcoderTest extends TestCase
             self::$outputUriForPeriodicImagesSpritesheet
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -345,7 +345,7 @@ class transcoderTest extends TestCase
             self::$outputUriForSetNumberImagesSpritesheet
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
@@ -374,7 +374,7 @@ class transcoderTest extends TestCase
             self::$outputUriForConcat
         ]);
 
-        $this->assertRegExp(sprintf('%s', self::$jobIdRegex), $output);
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
 
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
