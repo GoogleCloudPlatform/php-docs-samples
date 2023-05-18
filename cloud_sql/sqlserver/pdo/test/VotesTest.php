@@ -23,10 +23,13 @@ use PDOException;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
 class VotesTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $conn;
 
     public function setUp(): void

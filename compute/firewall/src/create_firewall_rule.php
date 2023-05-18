@@ -82,7 +82,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
         printf('Created rule %s.' . PHP_EOL, $firewallRuleName);
     } else {
         $error = $operation->getError();
-        printf('Firewall rule creation failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Firewall rule creation failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_firewall_create]

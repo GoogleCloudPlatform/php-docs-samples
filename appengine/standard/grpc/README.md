@@ -1,4 +1,4 @@
-# gRPC for App Engine (php72)
+# gRPC for App Engine
 
 This app demonstrates how to run gRPC client libraries on App Engine.
 
