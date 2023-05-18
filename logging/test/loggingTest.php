@@ -91,7 +91,7 @@ class loggingTest extends TestCase
         $logging = new LoggingClient(['projectId' => self::$projectId]);
         $sink = $logging->sink(self::$sinkName);
         $sink->reload();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             sprintf(
                 '|projects/%s/logs/%s|',
                 self::$projectId,
@@ -119,7 +119,7 @@ class loggingTest extends TestCase
         $logging = new LoggingClient(['projectId' => self::$projectId]);
         $sink = $logging->sink(self::$sinkName);
         $sink->reload();
-        $this->assertRegExp('/severity >= INFO/', $sink->info()['filter']);
+        $this->assertMatchesRegularExpression('/severity >= INFO/', $sink->info()['filter']);
     }
 
     /**

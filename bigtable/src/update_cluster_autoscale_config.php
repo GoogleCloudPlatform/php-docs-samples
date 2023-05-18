@@ -83,7 +83,7 @@ function update_cluster_autoscale_config(
             printf('Cluster %s updated with autoscale config.' . PHP_EOL, $clusterId);
         } else {
             $error = $operationResponse->getError();
-            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->getMessage());
+            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error?->getMessage());
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

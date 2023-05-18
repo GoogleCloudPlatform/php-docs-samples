@@ -66,7 +66,7 @@ function disable_cluster_autoscale_config(
             printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
         } else {
             $error = $operationResponse->getError();
-            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error->getMessage());
+            printf('Cluster %s failed to update: %s.' . PHP_EOL, $clusterId, $error?->getMessage());
         }
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

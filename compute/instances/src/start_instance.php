@@ -51,7 +51,7 @@ function start_instance(
         printf('Instance %s started successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to start instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to start instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_start_instance]
