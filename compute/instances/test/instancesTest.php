@@ -20,9 +20,15 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
+/**
+ * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
+ */
 class instancesTest extends TestCase
 {
+    use RetryTrait;
     use TestTrait;
 
     private static $instanceName;

@@ -51,7 +51,7 @@ function suspend_instance(
         printf('Instance %s suspended successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to suspend instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to suspend instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 

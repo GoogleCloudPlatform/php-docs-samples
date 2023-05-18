@@ -153,7 +153,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertRegExp('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(9\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_fpe', [
             self::$projectId,
@@ -248,7 +248,7 @@ class dlpTest extends TestCase
             $filter,
         ]);
 
-        $this->assertRegExp($jobIdRegex, $output);
+        $this->assertMatchesRegularExpression($jobIdRegex, $output);
         preg_match($jobIdRegex, $output, $jobIds);
         $jobId = $jobIds[0];
 

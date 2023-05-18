@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: php74
+runtime: php82
 
 # Remember - storing secrets in plaintext is potentially unsafe. Consider using
 # something like https://cloud.google.com/secret-manager/ to help keep secrets secret.

@@ -77,7 +77,7 @@ function start_instance_with_encryption_key(
         printf('Instance %s started successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Starting instance failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Starting instance failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_start_enc_instance]
