@@ -102,7 +102,7 @@ function create_instance_with_encryption_key(
         printf('Created instance %s' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Instance creation failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Instance creation failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_instances_create_encrypted]

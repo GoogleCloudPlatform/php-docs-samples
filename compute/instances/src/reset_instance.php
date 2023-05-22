@@ -51,7 +51,7 @@ function reset_instance(
         printf('Instance %s reset successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to reset instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to reset instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 
