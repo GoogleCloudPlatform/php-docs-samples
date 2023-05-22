@@ -575,4 +575,66 @@ class dlpTest extends TestCase
         $this->assertEquals(3, count($csvLines_ouput));
         unlink($outputCsvFile);
     }
+
+    public function testInspectImageAllInfoTypes()
+    {
+        $output = $this->runFunctionSnippet('inspect_image_all_infotypes', [
+            self::$projectId,
+            __DIR__ . '/data/test.png'
+        ]);
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+    }
+
+    public function testInspectImageListedInfotypes()
+    {
+        $output = $this->runFunctionSnippet('inspect_image_listed_infotypes', [
+            self::$projectId,
+            __DIR__ . '/data/test.png'
+        ]);
+
+        $this->assertStringContainsString('Info type: EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+    }
+
+    public function testInspectAugmentInfotypes()
+    {
+        $output = $this->runFunctionSnippet('inspect_augment_infotypes', [
+            self::$projectId,
+            'Smith and Quasimodo'
+        ]);
+        $this->assertStringContainsString('Quote: Quasimodo', $output);
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+    }
+
+    public function testInspectAugmentInfotypesIgnore()
+    {
+        $output = $this->runFunctionSnippet('inspect_augment_infotypes', [
+            self::$projectId,
+            'My mobile number is 9545141023'
+        ]);
+        $this->assertStringContainsString('No findings.', $output);
+    }
+
+    public function testInspectColumnValuesWCustomHotwords()
+    {
+        $output = $this->runFunctionSnippet('inspect_column_values_w_custom_hotwords', [
+            self::$projectId,
+        ]);
+        $this->assertStringContainsString('Info type: US_SOCIAL_SECURITY_NUMBER', $output);
+        $this->assertStringContainsString('Likelihood: VERY_LIKELY', $output);
+        $this->assertStringContainsString('Quote: 222-22-2222', $output);
+    }
+
+    public function testInspectTable()
+    {
+        $output = $this->runFunctionSnippet('inspect_table', [
+            self::$projectId
+        ]);
+
+        $this->assertStringContainsString('Info type: PHONE_NUMBER', $output);
+        $this->assertStringContainsString('Quote: (206) 555-0123', $output);
+        $this->assertStringNotContainsString('Info type: PERSON_NAME', $output);
+    }
 }
