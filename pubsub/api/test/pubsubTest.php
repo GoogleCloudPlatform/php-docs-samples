@@ -424,4 +424,23 @@ class PubSubTest extends TestCase
             $this->assertMatchesRegularExpression('/Acknowledged message:/', $output);
         });
     }
+
+    public function testPublishAndSubscribeWithOrderingKeys()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publish_with_ordering_keys', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertRegExp('/Message published/', $output);
+
+        $output = $this->runFunctionSnippet('enable_subscription_ordering', [
+            self::$projectId,
+            $topic,
+            'subscriberWithOrdering' . rand(),
+        ]);
+        $this->assertRegExp('/Created subscription with ordering/', $output);
+        $this->assertRegExp('/\"enableMessageOrdering\":true/', $output);
+    }
 }
