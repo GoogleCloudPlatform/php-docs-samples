@@ -600,9 +600,12 @@ class dlpTest extends TestCase
 
     public function testInspectAugmentInfotypes()
     {
+        $textToInspect = "The patient's name is Quasimodo";
+        $matchWordList = ['quasimodo'];
         $output = $this->runFunctionSnippet('inspect_augment_infotypes', [
             self::$projectId,
-            'Smith and Quasimodo'
+            $textToInspect,
+            $matchWordList
         ]);
         $this->assertStringContainsString('Quote: Quasimodo', $output);
         $this->assertStringContainsString('Info type: PERSON_NAME', $output);
@@ -610,9 +613,12 @@ class dlpTest extends TestCase
 
     public function testInspectAugmentInfotypesIgnore()
     {
+        $textToInspect = 'My mobile number is 9545141023';
+        $matchWordList = ['quasimodo'];
         $output = $this->runFunctionSnippet('inspect_augment_infotypes', [
             self::$projectId,
-            'My mobile number is 9545141023'
+            $textToInspect,
+            $matchWordList
         ]);
         $this->assertStringContainsString('No findings.', $output);
     }
@@ -625,6 +631,7 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Info type: US_SOCIAL_SECURITY_NUMBER', $output);
         $this->assertStringContainsString('Likelihood: VERY_LIKELY', $output);
         $this->assertStringContainsString('Quote: 222-22-2222', $output);
+        $this->assertStringNotContainsString('111-11-1111', $output);
     }
 
     public function testInspectTable()

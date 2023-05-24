@@ -46,11 +46,13 @@ use Google\Cloud\Dlp\V2\Likelihood;
  *
  * @param string $projectId         The Google Cloud project id to use as a parent resource.
  * @param string $textToInspect     The string to inspect.
+ * @param array  $matchWordList     Specify the set of words to match.
  */
 function inspect_augment_infotypes(
     // TODO(developer): Replace sample parameters before running the code.
     string $projectId,
-    string $textToInspect = 'Smith and Quasimodo are good cricketer'
+    string $textToInspect = 'Smith and Quasimodo are good cricketer',
+    array  $matchWordList = ['quasimodo']
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -68,7 +70,7 @@ function inspect_augment_infotypes(
     // Construct the word list to be detected.
     $wordList = (new Dictionary())
         ->setWordList((new WordList())
-            ->setWords(['quasimodo']));
+            ->setWords($matchWordList));
 
     // Construct the custom infotype detector.
     $customInfoType = (new CustomInfoType())
