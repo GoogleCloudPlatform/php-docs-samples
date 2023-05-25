@@ -71,9 +71,7 @@ function inspect_table(string $projectId): void
     $phoneNumber = (new InfoType())
         ->setName('PHONE_NUMBER');
     $inspectConfig = (new InspectConfig())
-        ->setInfoTypes([
-            $phoneNumber
-        ])
+        ->setInfoTypes([$phoneNumber])
         ->setIncludeQuote(true);
 
     // Run request.
