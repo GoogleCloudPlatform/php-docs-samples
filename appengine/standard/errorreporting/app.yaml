@@ -1,4 +1,4 @@
-runtime: php74
+runtime: php82
 
 # Defaults to "serve index.php" and "serve public/index.php". Can be used to
 # serve a custom PHP front controller (e.g. "serve backend/index.php") or to

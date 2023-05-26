@@ -107,8 +107,8 @@ class dlpLongRunningTest extends TestCase
             $columnName,
         ]);
 
-        $this->assertRegExp('/Value range: \[\d+, \d+\]/', $output);
-        $this->assertRegExp('/Value at \d+ quantile: \d+/', $output);
+        $this->assertMatchesRegularExpression('/Value range: \[\d+, \d+\]/', $output);
+        $this->assertMatchesRegularExpression('/Value at \d+ quantile: \d+/', $output);
     }
 
     public function testCategoricalStats()
@@ -125,9 +125,9 @@ class dlpLongRunningTest extends TestCase
             $columnName,
         ]);
 
-        $this->assertRegExp('/Most common value occurs \d+ time\(s\)/', $output);
-        $this->assertRegExp('/Least common value occurs \d+ time\(s\)/', $output);
-        $this->assertRegExp('/\d+ unique value\(s\) total/', $output);
+        $this->assertMatchesRegularExpression('/Most common value occurs \d+ time\(s\)/', $output);
+        $this->assertMatchesRegularExpression('/Least common value occurs \d+ time\(s\)/', $output);
+        $this->assertMatchesRegularExpression('/\d+ unique value\(s\) total/', $output);
     }
 
     public function testKAnonymity()
@@ -144,7 +144,7 @@ class dlpLongRunningTest extends TestCase
             $quasiIds,
         ]);
         $this->assertStringContainsString('{"stringValue":"Female"}', $output);
-        $this->assertRegExp('/Class size: \d/', $output);
+        $this->assertMatchesRegularExpression('/Class size: \d/', $output);
     }
 
     public function testLDiversity()
@@ -163,7 +163,7 @@ class dlpLongRunningTest extends TestCase
             $quasiIds,
         ]);
         $this->assertStringContainsString('{"stringValue":"Female"}', $output);
-        $this->assertRegExp('/Class size: \d/', $output);
+        $this->assertMatchesRegularExpression('/Class size: \d/', $output);
         $this->assertStringContainsString('{"stringValue":"James"}', $output);
     }
 
@@ -184,8 +184,8 @@ class dlpLongRunningTest extends TestCase
             $quasiIds,
             $infoTypes,
         ]);
-        $this->assertRegExp('/Anonymity range: \[\d, \d\]/', $output);
-        $this->assertRegExp('/Size: \d/', $output);
+        $this->assertMatchesRegularExpression('/Anonymity range: \[\d, \d\]/', $output);
+        $this->assertMatchesRegularExpression('/Size: \d/', $output);
         $this->assertStringContainsString('{"stringValue":"Female"}', $output);
     }
 }

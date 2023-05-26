@@ -52,7 +52,7 @@ function patch_firewall_priority(string $projectId, string $firewallRuleName, in
         printf('Patched %s priority to %d.' . PHP_EOL, $firewallRuleName, $priority);
     } else {
         $error = $operation->getError();
-        printf('Patching failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Patching failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_firewall_patch]

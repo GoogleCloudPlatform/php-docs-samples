@@ -76,7 +76,7 @@ function set_usage_export_bucket(
         );
     } else {
         $error = $operation->getError();
-        printf('Setting usage export bucket failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Setting usage export bucket failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_usage_report_set]
