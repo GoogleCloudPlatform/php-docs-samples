@@ -91,6 +91,63 @@ class SchemaTest extends TestCase
     /**
      * @dataProvider definitions
      */
+    public function testSchemaRevision($type, $definitionFile)
+    {
+        $schemaId = uniqid('samples-test-' . $type . '-');
+        $schemaName = SchemaServiceClient::schemaName(self::$projectId, $schemaId);
+
+        $this->runFunctionSnippet(sprintf('create_%s_schema', $type), [
+            self::$projectId,
+            $schemaId,
+            $definitionFile,
+        ]);
+
+        $listOutput = $this->runFunctionSnippet(sprintf('commit_%s_schema', $type), [
+            self::$projectId,
+            $schemaId,
+            $definitionFile,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Committed a schema using an %s schema: %s@', ucfirst($type), $schemaName
+            ),
+            $listOutput
+        );
+
+        $schemaRevisionId = trim(explode('@', $listOutput)[1]);
+
+        $listOutput = $this->runFunctionSnippet('get_schema_revision', [
+            self::$projectId,
+            $schemaId,
+            $schemaRevisionId,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Got a schema revision: %s@%s',
+                $schemaName,
+                $schemaRevisionId
+            ),
+            $listOutput
+        );
+
+        $listOutput = $this->runFunctionSnippet('list_schema_revisions', [
+            self::$projectId,
+            $schemaId
+        ]);
+
+        $this->assertStringContainsString('Listed schema revisions', $listOutput);
+
+        $this->runFunctionSnippet('delete_schema', [
+            self::$projectId,
+            $schemaId,
+        ]);
+    }
+
+    /**
+     * @dataProvider definitions
+     */
     public function testCreateTopicWithSchemaBinaryEncoding($type, $definitionFile)
     {
         $pubsub = new PubSubClient([
