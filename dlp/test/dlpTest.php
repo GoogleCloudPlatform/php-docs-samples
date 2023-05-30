@@ -644,4 +644,72 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Quote: (206) 555-0123', $output);
         $this->assertStringNotContainsString('Info type: PERSON_NAME', $output);
     }
+
+    public function testRedactImageListedInfotypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_listed_infotypes-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_listed_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageAllText()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_all_text-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_all_text', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageAllInfoTypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_all_infotypes-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_all_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageColoredInfotypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/sensitive-data-image-redacted-color-coding-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_colored_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
 }
