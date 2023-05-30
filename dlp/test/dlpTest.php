@@ -413,6 +413,16 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('No findings.', $output);
     }
 
+    public function testInspectStringCustomHotword()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_hotword', [
+            self::$projectId,
+            'patient name: John Doe'
+        ]);
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Likelihood: VERY_LIKELY', $output);
+    }
+
     public function testInspectStringWithExclusionRegex()
     {
         $output = $this->runFunctionSnippet('inspect_string_with_exclusion_regex', [
