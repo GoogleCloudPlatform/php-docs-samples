@@ -667,7 +667,7 @@ class dlpTest extends TestCase
             $unwrappedKey,
             $surrogateTypeName,
         ]);
-        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_free_text_with_fpe_using_surrogate', [
             self::$projectId,
@@ -720,7 +720,7 @@ class dlpTest extends TestCase
 
     public function testDeidReidDeterministic()
     {
-        $inputString = 'My Phone number is 731997681';
+        $inputString = 'My PHONE NUMBER IS 731997681';
         $infoTypeName = 'PHONE_NUMBER';
         $surrogateTypeName = 'PHONE_TOKEN';
         $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
@@ -734,7 +734,7 @@ class dlpTest extends TestCase
             $keyName,
             $wrappedKey,
         ]);
-        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=\)+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=\)+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
             self::$projectId,
@@ -760,7 +760,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertRegExp('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_text_fpe', [
             self::$projectId,
