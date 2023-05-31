@@ -42,12 +42,11 @@ use Google\Cloud\Dlp\V2\StorageConfig\TimespanConfig;
  * Creates an inspection job with the Cloud Data Loss Prevention API.
  *
  * @param string $callingProjectId  The project ID to run the API call under.
- * @param string $gcsPath           GCS file to be inspected.
+ * @param string $gcsPath           GCS file to be inspected. Example : gs://GOOGLE_STORAGE_BUCKET_NAME/dlp_sample.csv
  */
 function create_job(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $gcsPath = 'gs://GOOGLE_STORAGE_BUCKET_NAME/dlp_sample.csv'
+    string $gcsPath
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

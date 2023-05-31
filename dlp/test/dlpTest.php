@@ -413,6 +413,16 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('No findings.', $output);
     }
 
+    public function testInspectStringCustomHotword()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_hotword', [
+            self::$projectId,
+            'patient name: John Doe'
+        ]);
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Likelihood: VERY_LIKELY', $output);
+    }
+
     public function testInspectStringWithExclusionRegex()
     {
         $output = $this->runFunctionSnippet('inspect_string_with_exclusion_regex', [
@@ -681,5 +691,73 @@ class dlpTest extends TestCase
             [$jobName]
         );
         $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
+    }
+
+    public function testRedactImageListedInfotypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_listed_infotypes-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_listed_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageAllText()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_all_text-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_all_text', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageAllInfoTypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_all_infotypes-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_all_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageColoredInfotypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/sensitive-data-image-redacted-color-coding-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_colored_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
     }
 }
