@@ -55,16 +55,12 @@ use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
  * */
 
 function reidentify_table_fpe(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $inputCsvFile = './test/data/fpe_output.csv',
-    string $outputCsvFile = './test/data/reidentify_fpe_ouput.csv',
-    string $encryptedFieldNames = 'EmployeeID',
-    string $kmsKeyName = 'projects/YOUR_PROJECT/'
-        . 'locations/YOUR_KEYRING_REGION/'
-        . 'keyRings/YOUR_KEYRING_NAME/'
-        . 'cryptoKeys/YOUR_KEY_NAME',
-    string $wrappedAesKey = 'YOUR_ENCRYPTED_AES_256_KEY'
+    string $inputCsvFile,
+    string $outputCsvFile,
+    string $encryptedFieldNames,
+    string $kmsKeyName,
+    string $wrappedAesKey
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

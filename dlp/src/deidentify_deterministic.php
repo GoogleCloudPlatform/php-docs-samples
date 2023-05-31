@@ -56,16 +56,12 @@ use Google\Cloud\Dlp\V2\CryptoKey;
  * */
 
 function deidentify_deterministic(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $inputString = 'My Phone number is 123456789',
-    string $infoTypeName = 'PHONE_NUMBER',
-    string $surrogateTypeName = 'PHONE_TOKEN',
-    string $kmsKeyName = 'projects/YOUR_PROJECT/'
-        . 'locations/YOUR_KEYRING_REGION/'
-        . 'keyRings/YOUR_KEYRING_NAME/'
-        . 'cryptoKeys/YOUR_KEY_NAME',
-    string $wrappedAesKey = 'YOUR_ENCRYPTED_AES_256_KEY'
+    string $inputString,
+    string $infoTypeName,
+    string $surrogateTypeName,
+    string $kmsKeyName,
+    string $wrappedAesKey
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

@@ -50,15 +50,11 @@ use Google\Cloud\Dlp\V2\CustomInfoType\SurrogateType;
  * @param string $surrogateTypeName Surrogate custom info type to enable reidentification.
  */
 function reidentify_deterministic(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
     string $string,
-    string $surrogateTypeName = 'PHONE_TOKEN',
-    string $keyName = 'projects/YOUR_PROJECT/'
-        . 'locations/YOUR_KEYRING_REGION/'
-        . 'keyRings/YOUR_KEYRING_NAME/'
-        . 'cryptoKeys/YOUR_KEY_NAME',
-    string $wrappedKey = 'YOUR_ENCRYPTED_AES_256_KEY'
+    string $surrogateTypeName,
+    string $keyName,
+    string $wrappedKey
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
