@@ -667,7 +667,7 @@ class dlpTest extends TestCase
             $unwrappedKey,
             $surrogateTypeName,
         ]);
-        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
+        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_free_text_with_fpe_using_surrogate', [
             self::$projectId,
@@ -734,7 +734,7 @@ class dlpTest extends TestCase
             $keyName,
             $wrappedKey,
         ]);
-        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=\)+/', $deidOutput);
+        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=\)+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
             self::$projectId,
@@ -760,7 +760,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
+        $this->assertRegExp('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_text_fpe', [
             self::$projectId,
