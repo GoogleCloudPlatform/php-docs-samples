@@ -1,14 +1,15 @@
 {
     "require": {
-        "php": "^7.2|^7.3|^7.4|^8.0"
+        "php": "^8.0"
     },
     "require-dev": {
         "bshaffer/phpunit-retry-annotations": "^0.3.0",
         "google/auth": "^1.12",
         "google/cloud-tools": "dev-main",
         "guzzlehttp/guzzle": "^7.0",
-        "phpunit/phpunit": "^7|^8,<8.5.27",
+        "phpunit/phpunit": "^9.0",
         "friendsofphp/php-cs-fixer": "^3,<3.9",
-        "composer/semver": "^3.2"
+        "composer/semver": "^3.2",
+        "phpspec/prophecy-phpunit": "^2.0"
     }
 }

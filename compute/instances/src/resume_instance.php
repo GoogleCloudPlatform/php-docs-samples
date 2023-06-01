@@ -51,7 +51,7 @@ function resume_instance(
         printf('Instance %s resumed successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to resume instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to resume instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_resume_instance]

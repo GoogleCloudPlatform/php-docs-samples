@@ -59,7 +59,7 @@ class storageTest extends TestCase
             self::$tempBucket->name(),
         ]);
 
-        $this->assertRegExp('/: OWNER/', $output);
+        $this->assertMatchesRegularExpression('/: OWNER/', $output);
     }
 
     public function testPrintDefaultBucketAcl()
