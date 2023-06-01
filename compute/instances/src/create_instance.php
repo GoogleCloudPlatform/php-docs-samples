@@ -91,7 +91,7 @@ function create_instance(
         printf('Created instance %s' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Instance creation failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Instance creation failed: %s' . PHP_EOL, $error?->getMessage());
     }
     # [END compute_instances_operation_check]
 }
