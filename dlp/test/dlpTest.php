@@ -734,7 +734,7 @@ class dlpTest extends TestCase
             $keyName,
             $wrappedKey,
         ]);
-        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=\)+/', $deidOutput);
+        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=|\)+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
             self::$projectId,
