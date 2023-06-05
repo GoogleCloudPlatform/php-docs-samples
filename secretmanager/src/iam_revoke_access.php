@@ -27,7 +27,9 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_iam_revoke_access]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -43,7 +45,7 @@ function iam_revoke_access(string $projectId, string $secretId, string $member):
     $name = $client->secretName($projectId, $secretId);
 
     // Get the current IAM policy.
-    $policy = $client->getIamPolicy($name);
+    $policy = $client->getIamPolicy((new GetIamPolicyRequest)->setResource($name));
 
     // Remove the member from the list of bindings.
     foreach ($policy->getBindings() as $binding) {
@@ -59,8 +61,13 @@ function iam_revoke_access(string $projectId, string $secretId, string $member):
         }
     }
 
+    // Build the request.
+    $request = (new SetIamPolicyRequest)
+        ->setResource($name)
+        ->setPolicy($policy);
+
     // Save the updated policy to the server.
-    $client->setIamPolicy($name, $policy);
+    $client->setIamPolicy($request);
 
     // Print out a success message.
     printf('Updated IAM policy for %s', $secretId);
