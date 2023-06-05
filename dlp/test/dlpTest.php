@@ -655,6 +655,44 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Info type: PERSON_NAME', $output);
     }
 
+    public function testGetJob()
+    {
+
+        // Set filter to only go back a day, so that we do not pull every job.
+        $filter = sprintf(
+            'state=DONE AND end_time>"%sT00:00:00+00:00"',
+            date('Y-m-d', strtotime('-1 day'))
+        );
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $getJobName = $this->runFunctionSnippet('list_jobs', [
+            self::$projectId,
+            $filter,
+        ]);
+        preg_match($jobIdRegex, $getJobName, $jobIds);
+        $jobName = $jobIds[0];
+
+        $output = $this->runFunctionSnippet('get_job', [
+            $jobName
+        ]);
+        $this->assertStringContainsString('Job ' . $jobName . ' status:', $output);
+    }
+
+    public function testCreateJob()
+    {
+        $gcsPath = $this->requireEnv('GCS_PATH');
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $jobName = $this->runFunctionSnippet('create_job', [
+            self::$projectId,
+            $gcsPath
+        ]);
+        $this->assertRegExp($jobIdRegex, $jobName);
+        $output = $this->runFunctionSnippet(
+            'delete_job',
+            [$jobName]
+        );
+        $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
+    }
+
     public function testRedactImageListedInfotypes()
     {
         $imagePath = __DIR__ . '/data/test.png';
