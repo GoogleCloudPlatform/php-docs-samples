@@ -667,7 +667,7 @@ class dlpTest extends TestCase
             $unwrappedKey,
             $surrogateTypeName,
         ]);
-        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_free_text_with_fpe_using_surrogate', [
             self::$projectId,
@@ -728,13 +728,13 @@ class dlpTest extends TestCase
 
         $deidOutput = $this->runFunctionSnippet('deidentify_deterministic', [
             self::$projectId,
-            $inputString,
-            $infoTypeName,
-            $surrogateTypeName,
             $keyName,
             $wrappedKey,
+            $inputString,
+            $infoTypeName,
+            $surrogateTypeName
         ]);
-        $this->assertRegExp('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=|\)+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=|\)+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
             self::$projectId,
@@ -760,7 +760,7 @@ class dlpTest extends TestCase
             $wrappedKey,
             $surrogateType,
         ]);
-        $this->assertRegExp('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
 
         $reidOutput = $this->runFunctionSnippet('reidentify_text_fpe', [
             self::$projectId,
@@ -770,6 +770,44 @@ class dlpTest extends TestCase
             $surrogateType,
         ]);
         $this->assertEquals($string, $reidOutput);
+    }
+
+    public function testGetJob()
+    {
+
+        // Set filter to only go back a day, so that we do not pull every job.
+        $filter = sprintf(
+            'state=DONE AND end_time>"%sT00:00:00+00:00"',
+            date('Y-m-d', strtotime('-1 day'))
+        );
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $getJobName = $this->runFunctionSnippet('list_jobs', [
+            self::$projectId,
+            $filter,
+        ]);
+        preg_match($jobIdRegex, $getJobName, $jobIds);
+        $jobName = $jobIds[0];
+
+        $output = $this->runFunctionSnippet('get_job', [
+            $jobName
+        ]);
+        $this->assertStringContainsString('Job ' . $jobName . ' status:', $output);
+    }
+
+    public function testCreateJob()
+    {
+        $gcsPath = $this->requireEnv('GCS_PATH');
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $jobName = $this->runFunctionSnippet('create_job', [
+            self::$projectId,
+            $gcsPath
+        ]);
+        $this->assertRegExp($jobIdRegex, $jobName);
+        $output = $this->runFunctionSnippet(
+            'delete_job',
+            [$jobName]
+        );
+        $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
     }
 
     public function testRedactImageListedInfotypes()

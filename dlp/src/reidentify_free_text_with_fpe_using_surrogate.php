@@ -80,7 +80,7 @@ function reidentify_free_text_with_fpe_using_surrogate(
     // For more information, see https://cloud.google.com/dlp/docs/reference/rest/V2/organizations.deidentifyTemplates#ffxcommonnativealphabet
     $commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
 
-    // Specify how to un-encrypt the previously de-identified information.
+    // Specify how to decrypt the previously de-identified information.
     $cryptoReplaceFfxFpeConfig = (new CryptoReplaceFfxFpeConfig())
         ->setCryptoKey($cryptoKey)
         ->setCommonAlphabet($commonAlphabet)
