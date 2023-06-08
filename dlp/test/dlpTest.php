@@ -17,9 +17,16 @@
  */
 namespace Google\Cloud\Samples\Dlp;
 
+use Google\Cloud\Dlp\V2\DlpJob;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeStats;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
 
 /**
  * Unit Tests for dlp commands.
@@ -759,5 +766,68 @@ class dlpTest extends TestCase
             sha1_file($imagePath)
         );
         unlink($outputPath);
+    }
+
+    public function testDeidentifyCloudStorage()
+    {
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $inputgcsPath = 'gs://' . $bucketName;
+        $outgcsPath = 'gs://' . $bucketName;
+        $deidentifyTemplateName = $this->requireEnv('DLP_DEIDENTIFY_TEMPLATE');
+        $structuredDeidentifyTemplateName = $this->requireEnv('DLP_STRUCTURED_DEIDENTIFY_TEMPLATE');
+        $imageRedactTemplateName = $this->requireEnv('DLP_IMAGE_REDACT_DEIDENTIFY_TEMPLATE');
+        $datasetId = $this->requireEnv('DLP_DATASET_ID');
+        $tableId = $this->requireEnv('DLP_TABLE_ID');
+
+        $dlpServiceClientMock = $this->getMockBuilder(DlpServiceClient::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->onlyMethods(['createDlpJob', 'getDlpJob'])
+            ->getMock();
+
+        $createDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
+            ->setState(JobState::PENDING);
+
+        $getDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
+            ->setState(JobState::DONE)
+            ->setInspectDetails((new InspectDataSourceDetails())
+                ->setResult((new Result())
+                    ->setInfoTypeStats([
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
+                            ->setCount(6),
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('EMAIL_ADDRESS'))
+                            ->setCount(9)
+
+                    ])));
+
+        $dlpServiceClientMock->expects($this->once())
+            ->method('createDlpJob')
+            ->willReturn($createDlpJobResponse);
+
+        $dlpServiceClientMock->expects($this->once())
+            ->method('getDlpJob')
+            ->willReturn($getDlpJobResponse);
+
+        $output = $this->runFunctionSnippet('deidentify_cloud_storage', [
+            self::$projectId,
+            $inputgcsPath,
+            $outgcsPath,
+            $deidentifyTemplateName,
+            $structuredDeidentifyTemplateName,
+            $imageRedactTemplateName,
+            $datasetId,
+            $tableId,
+            $dlpServiceClientMock
+        ]);
+
+        $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
+        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+        $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
     }
 }
