@@ -28,7 +28,8 @@ namespace Google\Cloud\Samples\SecretManager;
 // [START secretmanager_update_secret_with_alias]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\UpdateSecretRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -51,7 +52,10 @@ function update_secret_with_alias(string $projectId, string $secretId): void
     $updateMask = (new FieldMask())
       ->setPaths(['version_aliases']);
 
-    $response = $client->updateSecret($secret, $updateMask);
+    // Build the request.
+    $request = UpdateSecretRequest::build($secret, $updateMask);
+
+    $response = $client->updateSecret($request);
 
     // Print the upated secret.
     printf('Updated secret: %s', $response->getName());
