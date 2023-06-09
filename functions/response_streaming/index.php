@@ -6,11 +6,15 @@ use Google\Cloud\Core\ExponentialBackoff;
 
 function streamBigQuery(ServerRequestInterface $request)
 {
-    $projectId = 'YOUR_PROJECT_ID';
+    // Provide the Cloud Project ID by setting env var.
+    $projectId = getenv('GOOGLE_PROJECT_ID');
+    $datasetId = 'my_new_dataset_' . time();
+    // Example large payload from BigQuery's public dataset.
     $query = 'SELECT abstract FROM `bigquery-public-data.breathe.bioasq` LIMIT 1000';
 
     $bigQuery = new BigQueryClient([
         'projectId' => $projectId,
+        'datasetId' => $datasetId,
     ]);
     $jobConfig = $bigQuery->query($query);
     $job = $bigQuery->startQuery($jobConfig);
@@ -24,6 +28,7 @@ function streamBigQuery(ServerRequestInterface $request)
     });
     $queryResults = $job->queryResults();
 
+    // Stream out large payload by iterating rows and flushing output.
     $i = 0;
     foreach ($queryResults as $row) {
         foreach ($row as $column => $value) {
@@ -31,4 +36,5 @@ function streamBigQuery(ServerRequestInterface $request)
             flush();
         }
     }
+    printf('Successfully streamed rows');
 }
