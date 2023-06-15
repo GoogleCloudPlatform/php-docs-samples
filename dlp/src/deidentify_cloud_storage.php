@@ -87,14 +87,21 @@ function deidentify_cloud_storage(
     $storageConfig = (new StorageConfig())
         ->setCloudStorageOptions(($cloudStorageOptions));
 
-    // Create the Inspect configuration object.
+    // Specify the type of info the inspection will look for.
     $inspectConfig = (new InspectConfig())
         ->setInfoTypes([
             (new InfoType())->setName('PERSON_NAME'),
             (new InfoType())->setName('EMAIL_ADDRESS')
         ]);
 
-    // Configure the Deidentify
+    // Specify the big query table to store the transformation details.
+    $transformationDetailsStorageConfig = (new TransformationDetailsStorageConfig())
+        ->setTable((new BigQueryTable())
+            ->setProjectId($callingProjectId)
+            ->setDatasetId($datasetId)
+            ->setTableId($tableId));
+
+    // Specify the de-identify template used for the transformation.
     $transformationConfig = (new TransformationConfig())
         ->setDeidentifyTemplate(
             DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $deidentifyTemplateName)
@@ -106,19 +113,12 @@ function deidentify_cloud_storage(
             DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $imageRedactTemplateName)
         );
 
-    $transformationDetailsStorageConfig = (new TransformationDetailsStorageConfig())
-        ->setTable((new BigQueryTable())
-            ->setProjectId($callingProjectId)
-            ->setDatasetId($datasetId)
-            ->setTableId($tableId));
-
     $deidentify = (new Deidentify())
         ->setCloudStorageOutput($outgcsPath)
         ->setTransformationConfig($transformationConfig)
         ->setTransformationDetailsStorageConfig($transformationDetailsStorageConfig)
         ->setFileTypesToTransform([FileType::TEXT_FILE, FileType::IMAGE, FileType::CSV]);
 
-    // Specify the action that is triggered when the job completes.
     $action = (new Action())
         ->setDeidentify($deidentify);
 
