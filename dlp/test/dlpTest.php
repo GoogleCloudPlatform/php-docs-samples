@@ -662,6 +662,123 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Info type: PERSON_NAME', $output);
     }
 
+    public function testDeidReidFPEUsingSurrogate()
+    {
+        $unwrappedKey = 'YWJjZGVmZ2hpamtsbW5vcA==';
+        $string = 'My PHONE NUMBER IS 7319976811';
+        $surrogateTypeName = 'PHONE_TOKEN';
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_free_text_with_fpe_using_surrogate', [
+            self::$projectId,
+            $string,
+            $unwrappedKey,
+            $surrogateTypeName,
+        ]);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_free_text_with_fpe_using_surrogate', [
+            self::$projectId,
+            $deidOutput,
+            $unwrappedKey,
+            $surrogateTypeName,
+        ]);
+        $this->assertEquals($string, $reidOutput);
+    }
+
+    public function testDeIdentifyTableFpe()
+    {
+        $inputCsvFile = __DIR__ . '/data/fpe_input.csv';
+        $outputCsvFile = __DIR__ . '/data/fpe_output_unittest.csv';
+        $outputCsvFile2 = __DIR__ . '/data/reidentify_fpe_ouput_unittest.csv';
+        $encryptedFieldNames = 'EmployeeID';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+
+        $output = $this->runFunctionSnippet('deidentify_table_fpe', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $encryptedFieldNames,
+            $keyName,
+            $wrappedKey,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $output = $this->runFunctionSnippet('reidentify_table_fpe', [
+            self::$projectId,
+            $outputCsvFile,
+            $outputCsvFile2,
+            $encryptedFieldNames,
+            $keyName,
+            $wrappedKey,
+        ]);
+
+        $this->assertEquals(
+            sha1_file($inputCsvFile),
+            sha1_file($outputCsvFile2)
+        );
+        unlink($outputCsvFile);
+        unlink($outputCsvFile2);
+    }
+
+    public function testDeidReidDeterministic()
+    {
+        $inputString = 'My PHONE NUMBER IS 731997681';
+        $infoTypeName = 'PHONE_NUMBER';
+        $surrogateTypeName = 'PHONE_TOKEN';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_deterministic', [
+            self::$projectId,
+            $keyName,
+            $wrappedKey,
+            $inputString,
+            $infoTypeName,
+            $surrogateTypeName
+        ]);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=|\)+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
+            self::$projectId,
+            $deidOutput,
+            $surrogateTypeName,
+            $keyName,
+            $wrappedKey,
+        ]);
+        $this->assertEquals($inputString, $reidOutput);
+    }
+
+    public function testDeidReidTextFPE()
+    {
+        $string = 'My SSN is 372819127';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+        $surrogateType = 'SSN_TOKEN';
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_fpe', [
+            self::$projectId,
+            $string,
+            $keyName,
+            $wrappedKey,
+            $surrogateType,
+        ]);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_text_fpe', [
+            self::$projectId,
+            $deidOutput,
+            $keyName,
+            $wrappedKey,
+            $surrogateType,
+        ]);
+        $this->assertEquals($string, $reidOutput);
+    }
+
     public function testGetJob()
     {
 
