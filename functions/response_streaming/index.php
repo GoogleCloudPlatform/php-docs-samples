@@ -18,13 +18,11 @@
 // [START functions_response_streaming]
 use Psr\Http\Message\ServerRequestInterface;
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 function streamBigQuery(ServerRequestInterface $request)
 {
     // Provide the Cloud Project ID by setting env var.
     $projectId = getenv('GOOGLE_PROJECT_ID');
-    
     // Example large payload from BigQuery's public dataset.
     $bigQuery = new BigQueryClient(['projectId' => $projectId]);
     $queryJobConfig = $bigQuery->query(
