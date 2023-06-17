@@ -41,9 +41,11 @@ function update_database(string $instanceId, string $databaseId): void
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-
+    printf(
+        'Updating database %s',
+        $database->name(),
+    );
     $database->updateDatabase(['enableDropProtection' => true]);
-
     printf(
         'Updated the drop protection for %s to %s' . PHP_EOL,
         $database->name(),
