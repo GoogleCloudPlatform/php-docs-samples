@@ -39,7 +39,7 @@ This simple command-line application demonstrates how to invoke
     ```
 ## The client library
 
-This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+This sample uses the [Cloud Vision Client Library for PHP][google-cloud-php-vision].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and [report issues][google-cloud-php-issues].
 
@@ -59,7 +59,7 @@ If you have not set a timezone you may get an error from php. This can be resolv
   1. Editing the php.ini file (or creating one if it doesn't exist)
   1. Adding the timezone to the php.ini file e.g., adding the following line: `date.timezone = "America/Los_Angeles"`
 
-[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-vision]: https://cloud.google.com/php/docs/reference/cloud-vision/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 

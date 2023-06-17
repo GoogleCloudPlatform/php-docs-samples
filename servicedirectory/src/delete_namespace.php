@@ -16,29 +16,33 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if ($argc != 4) {
-    return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID\n", basename(__FILE__));
-}
-list($_, $projectId, $locationId, $namespaceId) = $argv;
+namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_delete_namespace]
 use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[YOUR_PROJECT_ID]';
-// $locationId = '[YOUR_GCP_REGION]';
-// $namespaceId = '[YOUR_NAMESPACE_NAME]';
+/**
+ * @param string $projectId     Your Cloud project ID
+ * @param string $locationId    Your GCP region
+ * @param string $namespaceId   Your namespace name
+ */
+function delete_namespace(
+    string $projectId,
+    string $locationId,
+    string $namespaceId
+): void {
+    // Instantiate a client.
+    $client = new RegistrationServiceClient();
 
-// Instantiate a client.
-$client = new RegistrationServiceClient();
+    // Run request.
+    $namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
+    $client->deleteNamespace($namespaceName);
 
-// Run request.
-$namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
-$client->deleteNamespace($namespaceName);
-
-// Print results.
-printf('Deleted Namespace: %s' . PHP_EOL, $namespaceName);
+    // Print results.
+    printf('Deleted Namespace: %s' . PHP_EOL, $namespaceName);
+}
 // [END servicedirectory_delete_namespace]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

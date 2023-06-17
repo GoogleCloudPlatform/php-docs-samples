@@ -1,5 +1,8 @@
 <?php
 
+# This will register the error handler via autoload.files in composer.json.
+require __DIR__ . '/vendor/autoload.php';
+
 # [START gae_erroreporting_register_handler]
 # After running "composer require google/cloud-error-reporting", register the
 # error handler by including `prepend.php` in your application. This is most
@@ -11,7 +14,7 @@
 # [END gae_erroreporting_register_handler]
 
 # Uncomment this line if you'd like to include `prepend.php` manually instead of
-# using `php.ini`:
+# using composer autoloading or `php.ini`:
 #
 #    require_once 'vendor/google/cloud-error-reporting/src/prepend.php';
 #

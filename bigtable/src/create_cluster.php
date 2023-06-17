@@ -92,7 +92,7 @@ function create_cluster(
                 printf('Cluster created: %s', $clusterId);
             } else {
                 $error = $operationResponse->getError();
-                printf('Cluster not created: %s', $error->getMessage());
+                printf('Cluster not created: %s', $error?->getMessage());
             }
         } else {
             throw $e;

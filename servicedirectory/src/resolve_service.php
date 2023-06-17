@@ -16,37 +16,42 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if ($argc != 5) {
-    return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID SERVICE_ID\n", basename(__FILE__));
-}
-list($_, $projectId, $locationId, $namespaceId, $serviceId) = $argv;
+namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_resolve_service]
 use Google\Cloud\ServiceDirectory\V1beta1\LookupServiceClient;
 use Google\Cloud\ServiceDirectory\V1beta1\Service;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[YOUR_PROJECT_ID]';
-// $locationId = '[YOUR_GCP_REGION]';
-// $namespaceId = '[YOUR_NAMESPACE_NAME]';
-// $serviceId = '[YOUR_SERVICE_NAME]';
+/**
+ * @param string $projectId     Your Cloud project ID
+ * @param string $locationId    Your GCP region
+ * @param string $namespaceId   Your namespace name
+ * @param string $serviceId     Your service name
+ */
+function resolve_service(
+    string $projectId,
+    string $locationId,
+    string $namespaceId,
+    string $serviceId
+): void {
+    // Instantiate a client.
+    $client = new LookupServiceClient();
 
-// Instantiate a client.
-$client = new LookupServiceClient();
+    // Run request.
+    $serviceName = LookupServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
+    $service = $client->resolveService($serviceName)->getService();
 
-// Run request.
-$serviceName = LookupServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-$service = $client->resolveService($serviceName)->getService();
-
-// Print results.
-printf('Resolved Service: %s' . PHP_EOL, $service->getName());
-print('Endpoints:' . PHP_EOL);
-foreach ($service->getEndpoints() as $endpoint) {
-    printf('  Name: %s' . PHP_EOL, $endpoint->getName());
-    printf('    IP: %s' . PHP_EOL, $endpoint->getAddress());
-    printf('    Port: %d' . PHP_EOL, $endpoint->getPort());
+    // Print results.
+    printf('Resolved Service: %s' . PHP_EOL, $service->getName());
+    print('Endpoints:' . PHP_EOL);
+    foreach ($service->getEndpoints() as $endpoint) {
+        printf('  Name: %s' . PHP_EOL, $endpoint->getName());
+        printf('    IP: %s' . PHP_EOL, $endpoint->getAddress());
+        printf('    Port: %d' . PHP_EOL, $endpoint->getPort());
+    }
 }
 // [END servicedirectory_resolve_service]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

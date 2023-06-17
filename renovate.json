@@ -11,7 +11,8 @@
       "branchPrefix": "renovate/functions-"
     }],
   "ignorePaths": [
-      "appengine/flexible/"
+      "appengine/flexible/",
+      "run/laravel/"
   ],
   "branchPrefix": "renovate/{{parentDir}}-",
   "prConcurrentLimit": 10,

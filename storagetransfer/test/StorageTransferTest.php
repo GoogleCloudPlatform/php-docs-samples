@@ -62,7 +62,7 @@ class StorageTransferTest extends TestCase
             self::$projectId, self::$sinkBucket->name(), self::$sourceBucket->name()
         ]);
 
-        $this->assertRegExp('/transferJobs\/.*/', $output);
+        $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
 
         preg_match('/transferJobs\/\d+/', $output, $match);
         $jobName = $match[0];
