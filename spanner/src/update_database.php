@@ -27,25 +27,25 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Updates the metadata for a database.
+ * Updates the drop protection setting for a database.
  * Example:
  * ```
- * update_database($instanceId, $databaseId, $enableDropProtection);
+ * update_database($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param bool $enableDropProtection The leader instance configuration used by default.
  */
-function update_database(string $instanceId, string $databaseId, bool $enableDropProtection = true): void
+function update_database(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->updateDatabase(['enableDropProtection' => $enableDropProtection]);
+    $database->updateDatabase(['enableDropProtection' => true]);
 
-    printf('Updated the drop protection for %s to %s' . PHP_EOL,
+    printf(
+        'Updated the drop protection for %s to %s' . PHP_EOL,
         $database->name(),
         $database->info()['enableDropProtection']
     );
