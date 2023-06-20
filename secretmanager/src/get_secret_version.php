@@ -27,8 +27,9 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_get_secret_version]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\SecretVersion\State;
+use Google\Cloud\SecretManager\V1\GetSecretVersionRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -43,8 +44,11 @@ function get_secret_version(string $projectId, string $secretId, string $version
     // Build the resource name of the secret version.
     $name = $client->secretVersionName($projectId, $secretId, $versionId);
 
+    // Build the request.
+    $request = GetSecretVersionRequest::build($name);
+
     // Access the secret version.
-    $response = $client->getSecretVersion($name);
+    $response = $client->getSecretVersion($request);
 
     // Get the state string from the enum.
     $state = State::name($response->getState());
