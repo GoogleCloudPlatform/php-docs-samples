@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.62.0"
+        "google/cloud": "dev-main as v1.100"
     }
 }
