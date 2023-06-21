@@ -45,7 +45,9 @@ function update_database(string $instanceId, string $databaseId): void
         'Updating database %s',
         $database->name(),
     );
-    $database->updateDatabase(['enableDropProtection' => true]);
+    $op = $database->updateDatabase(['enableDropProtection' => true]);
+    $op->pollUntilComplete();
+    $database->reload();
     printf(
         'Updated the drop protection for %s to %s' . PHP_EOL,
         $database->name(),
