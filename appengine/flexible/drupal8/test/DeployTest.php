@@ -57,7 +57,7 @@ class DeployTest extends TestCase
         ];
         foreach ($envVars as $envVar) {
             if (false === getenv($envVar)) {
-                self::markTestSkipped("Please set the ${envVar} environment variable");
+                self::markTestSkipped("Please set the {$envVar} environment variable");
             }
         }
     }
@@ -66,7 +66,8 @@ class DeployTest extends TestCase
     {
         $console = __DIR__ . '/../vendor/bin/drush';
 
-        $dbUrl = sprintf('mysql://%s:%s@%s/%s',
+        $dbUrl = sprintf(
+            'mysql://%s:%s@%s/%s',
             getenv('DRUPAL8_DATABASE_USER'),
             getenv('DRUPAL8_DATABASE_PASS'),
             getenv('DRUPAL8_DATABASE_HOST'),
@@ -75,19 +76,23 @@ class DeployTest extends TestCase
 
         // download
         self::setWorkingDirectory(dirname($targetDir));
-        $downloadCmd = sprintf('%s dl drupal --drupal-project-rename=%s',
+        $downloadCmd = sprintf(
+            '%s dl drupal --drupal-project-rename=%s',
             $console,
-            basename($targetDir));
+            basename($targetDir)
+        );
         self::execute($downloadCmd);
 
         // install
         self::setWorkingDirectory($targetDir);
-        $installCmd = sprintf('%s site-install standard ' .
+        $installCmd = sprintf(
+            '%s site-install standard ' .
             '--db-url=%s --account-name=%s --account-pass=%s -y',
             $console,
             $dbUrl,
             getenv('DRUPAL8_ADMIN_USERNAME'),
-            getenv('DRUPAL8_ADMIN_PASSWORD'));
+            getenv('DRUPAL8_ADMIN_PASSWORD')
+        );
         $process = self::createProcess($installCmd);
         $process->setTimeout(null);
         self::executeProcess($process);
