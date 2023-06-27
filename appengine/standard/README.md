@@ -26,4 +26,3 @@
 * [Laravel](laravel-framework)
 * [Slim Framework](slim-framework)
 * [Symfony](symfony-framework)
-* [WordPress](wordpress)
