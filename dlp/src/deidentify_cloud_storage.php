@@ -47,21 +47,23 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
  *
  * @param string $callingProjectId                  The project ID to run the API call under.
  * @param string inputgcsPath                       The Cloud Storage directory that you want to de-identify.
- * @param string $outgcsPath                        The Cloud Storage directory where you want to store
- * the de-identified files.
- * @param string $deidentifyTemplateName            The full resource name of the default de-identify
- * template — for unstructured and structured files — if you created one. This value must be in the format
- * projects/projectName/(locations/locationId)/deidentifyTemplates/templateName.
- * @param string $structuredDeidentifyTemplateName  The full resource name of the de-identify template for
- * structured files if you created one. This value must be in the format
- * projects/projectName/(locations/locationId)/deidentifyTemplates/templateName.
- * @param string $imageRedactTemplateName           The full resource name of the image redaction template
- * for images if you created one. This value must be in the format
- * projects/projectName/(locations/locationId)/deidentifyTemplates/templateName.
+ * @param string $outgcsPath                        The Cloud Storage directory where you want to store the 
+ *                                                  de-identified files.
+ * @param string $deidentifyTemplateName            The full resource name of the default de-identify template — for 
+ *                                                  unstructured and structured files — if you created one. This value 
+ *                                                  must be in the format
+ *                                                  `projects/projectName/(locations/locationId)/deidentifyTemplates/templateName`.
+ * @param string $structuredDeidentifyTemplateName  The full resource name of the de-identify template for structured 
+ *                                                  files if you created one. This value must be in the format
+ *                                                  `projects/projectName/(locations/locationId)/deidentifyTemplates/templateName`.
+ * @param string $imageRedactTemplateName           The full resource name of the image redaction template for images if
+ *                                                  you created one. This value must be in the format
+ *                                                  `projects/projectName/(locations/locationId)/deidentifyTemplates/templateName`.
  * @param string $datasetId                         The ID of the BigQuery dataset where you want to store
- * the transformation details. If you don't provide a table ID, the system automatically creates one.
- * @param string $tableId                           The ID of the BigQuery table where you want to store
- * the transformation details.
+ *                                                  the transformation details. If you don't provide a table ID, the
+ *                                                  system automatically creates one.
+ * @param string $tableId                           The ID of the BigQuery table where you want to store the
+ *                                                  transformation details.
  */
 function deidentify_cloud_storage(
     // TODO(developer): Replace sample parameters before running the code.
