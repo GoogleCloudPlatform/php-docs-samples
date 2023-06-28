@@ -172,7 +172,7 @@ do
     set +e
     if [ -f "composer.json" ]; then
         # install composer dependencies
-        composer -q install
+        composer install
     fi
     if [ $? != 0 ]; then
         # Generate the lock file (required for check-platform-reqs)
