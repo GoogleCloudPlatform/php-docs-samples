@@ -98,12 +98,16 @@ function deidentify_time_extract(
         ->setTimePartConfig($timePartConfig);
 
     // Specify which fields the TimePart should apply too.
-    $fieldId = (new FieldId())
-        ->setName('Original_Values');
+    $fieldIds = [
+        (new FieldId())
+            ->setName('Birth_Date'),
+        (new FieldId())
+            ->setName('Register_Date')
+    ];
 
     $fieldTransformation = (new FieldTransformation())
         ->setPrimitiveTransformation($primitiveTransformation)
-        ->setFields([$fieldId]);
+        ->setFields($fieldIds);
 
     $recordTransformations = (new RecordTransformations())
         ->setFieldTransformations([$fieldTransformation]);
@@ -123,7 +127,7 @@ function deidentify_time_extract(
 
     // Print the results.
     $csvRef = fopen($outputCsvFile, 'w');
-    fputcsv($csvRef, ['Transformed_Values']);
+    fputcsv($csvRef, $csvHeaders);
     foreach ($response->getItem()->getTable()->getRows() as $tableRow) {
         $values = array_map(function ($tableValue) {
             return $tableValue->getStringValue();

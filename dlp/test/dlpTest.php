@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\TestUtils\TestTrait;
@@ -897,8 +898,8 @@ class dlpTest extends TestCase
         $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
         $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
 
-        $this->assertStringContainsString('Transformed_Values', $csvLines_ouput[0]);
-        $this->assertStringContainsString($csvLines_ouput[1], $csvLines_input[1]);
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString(',1970', $csvLines_ouput[1]);
 
         unlink($outputCsvFile);
     }
