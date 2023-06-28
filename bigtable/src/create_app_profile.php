@@ -43,6 +43,7 @@ function create_app_profile(
     string $clusterId,
     string $appProfileId
 ): void {
+    $instanceAdminClient = 'Hello';
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
