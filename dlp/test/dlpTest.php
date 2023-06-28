@@ -15,12 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\Dlp\V2\DlpJob;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use PHPUnitRetry\RetryTrait;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -35,6 +38,7 @@ class dlpTest extends TestCase
 {
     use TestTrait;
     use RetryTrait;
+    use ProphecyTrait;
 
     public function testInspectImageFile()
     {
@@ -896,13 +900,7 @@ class dlpTest extends TestCase
         $datasetId = $this->requireEnv('DLP_DATASET_ID');
         $tableId = $this->requireEnv('DLP_TABLE_ID');
 
-        $dlpServiceClientMock = $this->getMockBuilder(DlpServiceClient::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->onlyMethods(['createDlpJob', 'getDlpJob'])
-            ->getMock();
+        $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
 
         $createDlpJobResponse = (new DlpJob())
             ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
@@ -920,18 +918,36 @@ class dlpTest extends TestCase
                         (new InfoTypeStats())
                             ->setInfoType((new InfoType())->setName('EMAIL_ADDRESS'))
                             ->setCount(9)
-
                     ])));
 
-        $dlpServiceClientMock->expects($this->once())
-            ->method('createDlpJob')
+        $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
+            ->shouldBeCalled()
             ->willReturn($createDlpJobResponse);
 
-        $dlpServiceClientMock->expects($this->once())
-            ->method('getDlpJob')
+        $dlpServiceClientMock->getDlpJob(Argument::any())
+            ->shouldBeCalled()
             ->willReturn($getDlpJobResponse);
 
-        $output = $this->runFunctionSnippet('deidentify_cloud_storage', [
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/deidentify_cloud_storage.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'deidentify_cloud_storage' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock->reveal();
+
+        $output = $this->runFunctionSnippet($tmpFileName, [
             self::$projectId,
             $inputgcsPath,
             $outgcsPath,
@@ -939,9 +955,11 @@ class dlpTest extends TestCase
             $structuredDeidentifyTemplateName,
             $imageRedactTemplateName,
             $datasetId,
-            $tableId,
-            $dlpServiceClientMock
+            $tableId
         ]);
+
+        // delete a temp file.
+        unlink($tmpFilePath);
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);

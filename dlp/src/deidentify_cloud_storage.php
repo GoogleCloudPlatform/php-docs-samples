@@ -74,11 +74,10 @@ function deidentify_cloud_storage(
     string $structuredDeidentifyTemplateName = 'YOUR_STRUCTURED_DEIDENTIFY_TEMPLATE_NAME',
     string $imageRedactTemplateName = 'YOUR_IMAGE_REDACT_DEIDENTIFY_TEMPLATE_NAME',
     string $datasetId = 'YOUR_DATASET_ID',
-    string $tableId = 'YOUR_TABLE_ID',
-    DlpServiceClient $serviceClient = null
+    string $tableId = 'YOUR_TABLE_ID'
 ): void {
     // Instantiate a client.
-    $dlp = $serviceClient ?? new DlpServiceClient();
+    $dlp = new DlpServiceClient();
 
     $parent = "projects/$callingProjectId/locations/global";
 
