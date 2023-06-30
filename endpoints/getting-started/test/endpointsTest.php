@@ -16,9 +16,7 @@
  */
 namespace Google\Cloud\Samples\Endpoints;
 
-use Google\Cloud\Samples\Appengine\Endpoints\EndpointsCommand;
 use Google\Cloud\TestUtils\TestTrait;
-use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
 class endpointsTest extends TestCase

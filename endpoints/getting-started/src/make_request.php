@@ -39,12 +39,12 @@ function make_request(
     $headers = [];
     $body = null;
 
-    if ($credentials = $input->getArgument('credentials')) {
+    if ($credentials) {
         if (!file_exists($credentials)) {
-            throw new InvalidArgumentException('file does not exist');
+            throw new \InvalidArgumentException('file does not exist');
         }
         if (!$config = json_decode(file_get_contents($credentials), true)) {
-            throw new LogicException('invalid json for auth config');
+            throw new \LogicException('invalid json for auth config');
         }
 
         $oauth = new OAuth2([
@@ -80,9 +80,7 @@ function make_request(
             `open '$authUrl'`;
 
             // prompt for the auth code
-            $q = new Question('Please enter the authorization code:');
-            $helper = new QuestionHelper();
-            $authCode = $helper->ask($input, $output, $q);
+            $authCode = readline('Enter the authCode: ');
             $oauth->setCode($authCode);
 
             $token = $oauth->fetchAuthToken();
@@ -111,6 +109,5 @@ function make_request(
     print((string) $response->getBody());
 }
 
-# [END bigquery_delete_dataset]
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
