@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -26,11 +26,12 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 // Import the Secret Manager client library.
+use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\UserManaged;
 use Google\Cloud\SecretManager\V1\Replication\UserManaged\Replica;
 use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -58,11 +59,14 @@ function create_secret_with_user_managed_replication(string $projectId, string $
         ]),
     ]);
 
+    // Build the request.
+    $request = CreateSecretRequest::build($parent, $secretId, $secret);
+
     // Create the secret.
-    $secret = $client->createSecret($parent, $secretId, $secret);
+    $newSecret = $client->createSecret($request);
 
     // Print the new secret name.
-    printf('Created secret: %s', $secret->getName());
+    printf('Created secret: %s', $newSecret->getName());
 }
 
 // The following 2 lines are only needed to execute the samples on the CLI

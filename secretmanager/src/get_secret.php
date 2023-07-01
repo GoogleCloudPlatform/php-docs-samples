@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_get_secret]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\GetSecretRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -41,8 +42,11 @@ function get_secret(string $projectId, string $secretId): void
     // Build the resource name of the secret.
     $name = $client->secretName($projectId, $secretId);
 
+    // Build the request.
+    $request = GetSecretRequest::build($name);
+
     // Get the secret.
-    $secret = $client->getSecret($name);
+    $secret = $client->getSecret($request);
 
     // Get the replication policy.
     $replication = strtoupper($secret->getReplication()->getReplication());

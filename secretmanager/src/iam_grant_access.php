@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -27,10 +27,12 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_iam_grant_access]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 
 // Import the Secret Manager IAM library.
 use Google\Cloud\Iam\V1\Binding;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -46,7 +48,7 @@ function iam_grant_access(string $projectId, string $secretId, string $member): 
     $name = $client->secretName($projectId, $secretId);
 
     // Get the current IAM policy.
-    $policy = $client->getIamPolicy($name);
+    $policy = $client->getIamPolicy((new GetIamPolicyRequest)->setResource($name));
 
     // Update the bindings to include the new member.
     $bindings = $policy->getBindings();
@@ -56,8 +58,13 @@ function iam_grant_access(string $projectId, string $secretId, string $member): 
     ]);
     $policy->setBindings($bindings);
 
+    // Build the request.
+    $request = (new SetIamPolicyRequest)
+        ->setResource($name)
+        ->setPolicy($policy);
+
     // Save the updated policy to the server.
-    $client->setIamPolicy($name, $policy);
+    $client->setIamPolicy($request);
 
     // Print out a success message.
     printf('Updated IAM policy for %s', $secretId);

@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_list_secret_versions]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\ListSecretVersionsRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -41,8 +42,11 @@ function list_secret_versions(string $projectId, string $secretId): void
     // Build the resource name of the parent secret.
     $parent = $client->secretName($projectId, $secretId);
 
+    // Build the request.
+    $request = ListSecretVersionsRequest::build($parent);
+
     // List all secret versions.
-    foreach ($client->listSecretVersions($parent) as $version) {
+    foreach ($client->listSecretVersions($request) as $version) {
         printf('Found secret version %s', $version->getName());
     }
 }

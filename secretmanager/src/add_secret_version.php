@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_add_secret_version]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 
 /**
@@ -39,13 +40,17 @@ function add_secret_version(string $projectId, string $secretId): void
     // Create the Secret Manager client.
     $client = new SecretManagerServiceClient();
 
-    // Build the resource name of the parent secret.
+    // Build the resource name of the parent secret and the payload.
     $parent = $client->secretName($projectId, $secretId);
+    $secretPayload = new SecretPayload([
+        'data' => 'my super secret data',
+    ]);
+
+    // Build the request.
+    $request = AddSecretVersionRequest::build($parent, $secretPayload);
 
     // Access the secret version.
-    $response = $client->addSecretVersion($parent, new SecretPayload([
-        'data' => 'my super secret data',
-    ]));
+    $response = $client->addSecretVersion($request);
 
     // Print the new secret version name.
     printf('Added secret version: %s', $response->getName());

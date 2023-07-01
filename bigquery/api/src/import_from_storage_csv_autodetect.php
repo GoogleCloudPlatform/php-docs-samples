@@ -18,14 +18,13 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
 namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_load_table_gcs_csv_autodetect]
 use Google\Cloud\BigQuery\BigQueryClient;
-use Google\Cloud\Core\ExponentialBackoff;
 
 /**
  * Imports data to the given table from csv file present in GCS by auto
@@ -51,15 +50,12 @@ function import_from_storage_csv_autodetect(
     $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv';
     $loadConfig = $table->loadFromStorage($gcsUri)->autodetect(true)->skipLeadingRows(1);
     $job = $table->runJob($loadConfig);
-    // poll the job until it is complete
-    $backoff = new ExponentialBackoff(10);
-    $backoff->execute(function () use ($job) {
-        print('Waiting for job to complete' . PHP_EOL);
-        $job->reload();
-        if (!$job->isComplete()) {
-            throw new \Exception('Job has not yet completed', 500);
-        }
-    });
+
+    // check if the job is complete
+    $job->reload();
+    if (!$job->isComplete()) {
+        throw new \Exception('Job has not yet completed', 500);
+    }
     // check if the job has errors
     if (isset($job->info()['status']['errorResult'])) {
         $error = $job->info()['status']['errorResult']['message'];

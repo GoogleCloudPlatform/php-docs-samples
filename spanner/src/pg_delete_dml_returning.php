@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -40,24 +40,26 @@ function pg_delete_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
 
-    // DML returning postgresql delete query
+    // Delete records from SINGERS table satisfying a particular condition and
+    // returns the SingerId and FullName column of the deleted records using
+    // ‘RETURNING SingerId, FullName’. It is also possible to return all columns
+    //  of all the deleted records by using ‘RETURNING *’.
+
     $result = $transaction->execute(
-        'DELETE FROM singers WHERE firstname = $1 '
-        . 'RETURNING *',
-        [
-            'parameters' => [
-              'p1' => 'Melissa',
-            ]
-        ]
+        "DELETE FROM Singers WHERE FirstName = 'Alice' "
+        . 'RETURNING SingerId, FullName',
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) deleted' . PHP_EOL,
+            '%d %s.' . PHP_EOL,
             $row['singerid'],
-            $row['firstname'],
-            $row['lastname']
+            $row['fullname']
         );
     }
+    printf(
+        'Deleted row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_postgresql_delete_dml_returning]

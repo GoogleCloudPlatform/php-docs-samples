@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_access_secret_version]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\AccessSecretVersionRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -42,8 +43,11 @@ function access_secret_version(string $projectId, string $secretId, string $vers
     // Build the resource name of the secret version.
     $name = $client->secretVersionName($projectId, $secretId, $versionId);
 
+    // Build the request.
+    $request = AccessSecretVersionRequest::build($name);
+
     // Access the secret version.
-    $response = $client->accessSecretVersion($name);
+    $response = $client->accessSecretVersion($request);
 
     // Print the secret payload.
     //

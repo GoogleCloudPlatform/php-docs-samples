@@ -18,7 +18,7 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_destroy_secret_version]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\DestroySecretVersionRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -42,8 +43,11 @@ function destroy_secret_version(string $projectId, string $secretId, string $ver
     // Build the resource name of the secret version.
     $name = $client->secretVersionName($projectId, $secretId, $versionId);
 
+    // Build the request.
+    $request = DestroySecretVersionRequest::build($name);
+
     // Destroy the secret version.
-    $response = $client->destroySecretVersion($name);
+    $response = $client->destroySecretVersion($request);
 
     // Print a success message.
     printf('Destroyed secret version: %s', $response->getName());

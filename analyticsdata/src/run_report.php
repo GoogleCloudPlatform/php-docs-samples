@@ -32,12 +32,13 @@ use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
+/**
+ * @param string $propertyId Your GA-4 Property ID
+ */
 function run_report(string $propertyId)
 {
-    // [START analyticsdata_initialize]
+    // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
-
-    // [END analyticsdata_initialize]
 
     // Make an API call.
     $response = $client->runReport([
@@ -63,7 +64,10 @@ function run_report(string $propertyId)
     printRunReportResponse($response);
 }
 
-// Print results of a runReport call.
+/**
+ * Print results of a runReport call.
+ * @param RunReportResponse $response
+ */
 function printRunReportResponse(RunReportResponse $response)
 {
     // [START analyticsdata_print_run_report_response_header]

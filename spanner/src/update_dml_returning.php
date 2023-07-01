@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -40,26 +40,24 @@ function update_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
 
-    // DML returning sql update query
+    // Update MarketingBudget column for records satisfying a particular
+    // condition and returns the modified MarketingBudget column of the updated
+    // records using ‘THEN RETURN MarketingBudget’. It is also possible to return
+    // all columns of all the updated records by using ‘THEN RETURN *’.
+
     $result = $transaction->execute(
-        'UPDATE Singers SET LastName = @lastName '
-        . 'WHERE SingerId = @singerId THEN RETURN *',
-        [
-            'parameters' => [
-              'lastName' => 'Missing',
-              'singerId' => 12,
-            ]
-        ]
+        'UPDATE Albums '
+        . 'SET MarketingBudget = MarketingBudget * 2 '
+        . 'WHERE SingerId = 1 and AlbumId = 1 '
+        . 'THEN RETURN MarketingBudget'
     );
     foreach ($result->rows() as $row) {
-        printf(
-            'Row with SingerId %s updated to (%s, %s, %s)' . PHP_EOL,
-            $row['SingerId'],
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
-        );
+        printf('MarketingBudget: %s' . PHP_EOL, $row['MarketingBudget']);
     }
+    printf(
+        'Updated row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_update_dml_returning]

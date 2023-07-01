@@ -59,7 +59,7 @@ composer install
 ### Environment variables
 Some tests require specific environment variables to run. PHPUnit will skip the tests
 if these environment variables are not found. Run `phpunit -v` for a message detailing
-which environment variables are missing. Then you can set those environent variables
+which environment variables are missing. Then you can set those environment variables
 to run against any sample project as follows:
 
 ```
@@ -105,14 +105,14 @@ Install that by running
 composer global require friendsofphp/php-cs-fixer
 ```
 
-Then to fix your directory or file run 
+Then to fix your directory or file run
 
 ```
 php-cs-fixer fix . --config .php-cs-fixer.dist.php
 php-cs-fixer fix path/to/file --config .php-cs-fixer.dist.php
 ```
 
-The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp) are an example of snippets following the latest style guidelines.
+The [DLP snippets](https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/dlp) are an example of snippets following the latest style guidelines.
 
 [psr2]: http://www.php-fig.org/psr/psr-2/
 [psr4]: http://www.php-fig.org/psr/psr-4/

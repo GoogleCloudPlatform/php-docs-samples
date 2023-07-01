@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -42,7 +42,12 @@ function batch_query_data(string $instanceId, string $databaseId): void
     $batch = $spanner->batch($instanceId, $databaseId);
     $snapshot = $batch->snapshot();
     $queryString = 'SELECT SingerId, FirstName, LastName FROM Singers';
-    $partitions = $snapshot->partitionQuery($queryString);
+    $partitions = $snapshot->partitionQuery($queryString, [
+        // This is an optional parameter which can be used for partition
+        // read and query to execute the request via spanner independent
+        // compute resources.
+        'dataBoostEnabled' => true
+    ]);
     $totalPartitions = count($partitions);
     $totalRecords = 0;
     foreach ($partitions as $partition) {

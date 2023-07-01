@@ -16,43 +16,49 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if ($argc < 6 || $argc > 8) {
-    return printf("Usage: php %s PROJECT_ID LOCATION_ID NAMESPACE_ID SERVICE_ID ENDPOINT_ID [IP] [PORT]\n", basename(__FILE__));
-}
-list($_, $projectId, $locationId, $namespaceId, $serviceId, $endpointId) = $argv;
-$ip = isset($argv[6]) ? $argv[6] : '';
-$port = isset($argv[7]) ? (int) $argv[7] : 0;
+namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_create_endpoint]
 use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
 use Google\Cloud\ServiceDirectory\V1beta1\Endpoint;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[YOUR_PROJECT_ID]';
-// $locationId = '[YOUR_GCP_REGION]';
-// $namespaceId = '[YOUR_NAMESPACE_NAME]';
-// $serviceId = '[YOUR_SERVICE_NAME]';
-// $endpointId = '[YOUR_ENDPOINT_NAME]';
-// $ip = '[IP_ADDRESS]';  // (Optional) Defaults to ''
-// $port = [PORT];  // (Optional) Defaults to 0
+/**
+ * @param string $projectId     Your Cloud project ID
+ * @param string $locationId    Your GCP region
+ * @param string $namespaceId   Your namespace name
+ * @param string $serviceId     Your service name
+ * @param string $endpointId    Your endpoint name
+ * @param string $ip            (Optional) Defaults to ''
+ * @param int    $port          (Optional) Defaults to 0
+ */
+function create_endpoint(
+    string $projectId,
+    string $locationId,
+    string $namespaceId,
+    string $serviceId,
+    string $endpointId,
+    string $ip = '',
+    int $port = 0
+): void {
+    // Instantiate a client.
+    $client = new RegistrationServiceClient();
 
-// Instantiate a client.
-$client = new RegistrationServiceClient();
+    // Construct Endpoint object.
+    $endpointObject = (new Endpoint())
+        ->setAddress($ip)
+        ->setPort($port);
 
-// Construct Endpoint object.
-$endpointObject = (new Endpoint())
-    ->setAddress($ip)
-    ->setPort($port);
+    // Run request.
+    $serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
+    $endpoint = $client->createEndpoint($serviceName, $endpointId, $endpointObject);
 
-// Run request.
-$serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-$endpoint = $client->createEndpoint($serviceName, $endpointId, $endpointObject);
-
-// Print results.
-printf('Created Endpoint: %s' . PHP_EOL, $endpoint->getName());
-printf('  IP: %s' . PHP_EOL, $endpoint->getAddress());
-printf('  Port: %d' . PHP_EOL, $endpoint->getPort());
+    // Print results.
+    printf('Created Endpoint: %s' . PHP_EOL, $endpoint->getName());
+    printf('  IP: %s' . PHP_EOL, $endpoint->getAddress());
+    printf('  Port: %d' . PHP_EOL, $endpoint->getPort());
+}
 // [END servicedirectory_create_endpoint]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
