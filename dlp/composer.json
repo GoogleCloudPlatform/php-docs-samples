@@ -4,15 +4,5 @@
     "require": {
         "google/cloud-dlp": "^1.0.0",
         "google/cloud-pubsub": "^1.11.1"
-    },
-    "require-dev": {
-        "bshaffer/phpunit-retry-annotations": "^0.3.0",
-        "google/auth": "^1.12",
-        "google/cloud-tools": "dev-main",
-        "guzzlehttp/guzzle": "^7.0",
-        "phpunit/phpunit": "^9.0",
-        "friendsofphp/php-cs-fixer": "^3,<3.9",
-        "composer/semver": "^3.2",
-        "phpspec/prophecy-phpunit": "^2.0"
     }
 }
