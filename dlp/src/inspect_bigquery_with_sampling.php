@@ -25,6 +25,7 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_bigquery_with_sampling]
+
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\BigQueryOptions;
 use Google\Cloud\Dlp\V2\InfoType;
@@ -40,33 +41,29 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Inspect BigQuery for sensitive data with sampling
+ * Inspect BigQuery for sensitive data with sampling.
  * The following examples demonstrate using the Cloud Data Loss Prevention API to scan a 1000-row subset of a BigQuery table. The scan starts from a random row.
  *
- * @param string $callingProjectId  The project ID to run the API call under
- * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes
- * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
- * @param string $datasetId         Specify the Dataset ID
- * @param string $tableId           Specify the Table name
+ * @param string $callingProjectId  The project ID to run the API call under.
+ * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes.
+ * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job.
  */
 function inspect_bigquery_with_sampling(
     // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $topicId = 'dlp-crest-pubsub-topic',
-    string $subscriptionId = 'dlp_crest_subcription_test',
-    string $datasetId = 'dlp_crest_test_dataset',
-    string $tableId = 'employee_test_details'
+    string $topicId = 'dlp-pubsub-topic',
+    string $subscriptionId = 'dlp_subcription'
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
-    // Construct items to be inspected
+    // Specify the BigQuery table to be inspected.
     $bigqueryTable = (new BigQueryTable())
-        ->setProjectId($callingProjectId)
-        ->setDatasetId($datasetId)
-        ->setTableId($tableId);
+        ->setProjectId('bigquery-public-data')
+        ->setDatasetId('usa_names')
+        ->setTableId('usa_1910_current');
 
     $bigQueryOptions = (new BigQueryOptions())
         ->setTableReference($bigqueryTable)
@@ -81,8 +78,9 @@ function inspect_bigquery_with_sampling(
         ->setBigQueryOptions($bigQueryOptions);
 
     // Specify the type of info the inspection will look for.
+    // See https://cloud.google.com/dlp/docs/infotypes-reference for complete list of info types
     $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
+        ->setName('FIRST_NAME');
     $infoTypes = [$personNameInfoType];
 
     // Specify how the content should be inspected.
@@ -90,14 +88,14 @@ function inspect_bigquery_with_sampling(
         ->setInfoTypes($infoTypes)
         ->setIncludeQuote(true);
 
-    // Construct the action to run when job completes
+    // Specify the action that is triggered when the job completes.
     $pubSubAction = (new PublishToPubSub())
         ->setTopic($topic->name());
 
     $action = (new Action())
         ->setPubSub($pubSubAction);
 
-    // Construct inspect job config to run
+    // Configure the long running job we want the service to perform.
     $inspectJob = (new InspectJobConfig())
         ->setInspectConfig($inspectConfig)
         ->setStorageConfig($storageConfig)

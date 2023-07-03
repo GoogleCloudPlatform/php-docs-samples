@@ -37,14 +37,14 @@ class CloudSqlTest extends TestCase
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
         $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
         $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-        $socket = "${socketDir}/${connection}";
+        $socket = "{$socketDir}/{$connection}";
 
         if (!file_exists($socket)) {
             $this->markTestSkipped(
-                "You must run 'cloud_sql_proxy -instances=${connection} -dir=${socketDir}'"
+                "You must run 'cloud_sql_proxy -instances={$connection} -dir={$socketDir}'"
             );
         }
-        $dsn = "mysql:unix_socket=${socket};dbname=${dbName}";
+        $dsn = "mysql:unix_socket={$socket};dbname={$dbName}";
 
         $pdo = new Pdo($dsn, $dbUser, $dbPass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

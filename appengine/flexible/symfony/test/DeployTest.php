@@ -61,7 +61,7 @@ class DeployTest extends TestCase
         ];
         foreach ($envVars as $envVar) {
             if (false === getenv($envVar)) {
-                self::fail("Please set the ${envVar} environment variable");
+                self::fail("Please set the {$envVar} environment variable");
             }
         }
     }
@@ -161,6 +161,7 @@ class DeployTest extends TestCase
                     }
                 }
                 $this->assertTrue($found, 'The log entry was not found');
-            });
+            }
+        );
     }
 }

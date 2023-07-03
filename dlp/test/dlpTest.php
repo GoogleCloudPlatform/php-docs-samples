@@ -15,11 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Google\Cloud\Samples\Dlp;
 
+use Google\Cloud\Dlp\V2\DlpJob;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use PHPUnitRetry\RetryTrait;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeStats;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
+use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\PubSub\Topic;
+use Google\Cloud\PubSub\Subscription;
+use Google\Cloud\PubSub\Message;
 
 /**
  * Unit Tests for dlp commands.
@@ -28,6 +42,7 @@ class dlpTest extends TestCase
 {
     use TestTrait;
     use RetryTrait;
+    use ProphecyTrait;
 
     public function testInspectImageFile()
     {
@@ -413,6 +428,16 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('No findings.', $output);
     }
 
+    public function testInspectStringCustomHotword()
+    {
+        $output = $this->runFunctionSnippet('inspect_string_custom_hotword', [
+            self::$projectId,
+            'patient name: John Doe'
+        ]);
+        $this->assertStringContainsString('Info type: PERSON_NAME', $output);
+        $this->assertStringContainsString('Likelihood: VERY_LIKELY', $output);
+    }
+
     public function testInspectStringWithExclusionRegex()
     {
         $output = $this->runFunctionSnippet('inspect_string_with_exclusion_regex', [
@@ -645,22 +670,329 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Info type: PERSON_NAME', $output);
     }
 
-    public function testInspectBigqueryWithSampling()
+    public function testDeidReidFPEUsingSurrogate()
     {
-        $topicId = 'dlp-crest-pubsub-topic';
-        $subscriptionId = 'dlp_crest_subcription_test';
-        $datasetId = 'dlp_crest_test_dataset';
-        $tableId = 'employee_test_details';
+        $unwrappedKey = 'YWJjZGVmZ2hpamtsbW5vcA==';
+        $string = 'My PHONE NUMBER IS 7319976811';
+        $surrogateTypeName = 'PHONE_TOKEN';
 
-        $output = $this->runFunctionSnippet('inspect_bigquery_with_sampling', [
+        $deidOutput = $this->runFunctionSnippet('deidentify_free_text_with_fpe_using_surrogate', [
             self::$projectId,
-            $topicId,
-            $subscriptionId,
-            $datasetId,
-            $tableId
+            $string,
+            $unwrappedKey,
+            $surrogateTypeName,
+        ]);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_free_text_with_fpe_using_surrogate', [
+            self::$projectId,
+            $deidOutput,
+            $unwrappedKey,
+            $surrogateTypeName,
+        ]);
+        $this->assertEquals($string, $reidOutput);
+    }
+
+    public function testDeIdentifyTableFpe()
+    {
+        $inputCsvFile = __DIR__ . '/data/fpe_input.csv';
+        $outputCsvFile = __DIR__ . '/data/fpe_output_unittest.csv';
+        $outputCsvFile2 = __DIR__ . '/data/reidentify_fpe_ouput_unittest.csv';
+        $encryptedFieldNames = 'EmployeeID';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+
+        $output = $this->runFunctionSnippet('deidentify_table_fpe', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $encryptedFieldNames,
+            $keyName,
+            $wrappedKey,
         ]);
 
-        $this->assertStringContainsString('Job projects/' . self::$projectId . '/locations/global/dlpJobs/', $output);
-        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $output = $this->runFunctionSnippet('reidentify_table_fpe', [
+            self::$projectId,
+            $outputCsvFile,
+            $outputCsvFile2,
+            $encryptedFieldNames,
+            $keyName,
+            $wrappedKey,
+        ]);
+
+        $this->assertEquals(
+            sha1_file($inputCsvFile),
+            sha1_file($outputCsvFile2)
+        );
+        unlink($outputCsvFile);
+        unlink($outputCsvFile2);
+    }
+
+    public function testDeidReidDeterministic()
+    {
+        $inputString = 'My PHONE NUMBER IS 731997681';
+        $infoTypeName = 'PHONE_NUMBER';
+        $surrogateTypeName = 'PHONE_TOKEN';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_deterministic', [
+            self::$projectId,
+            $keyName,
+            $wrappedKey,
+            $inputString,
+            $infoTypeName,
+            $surrogateTypeName
+        ]);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=|\)+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
+            self::$projectId,
+            $deidOutput,
+            $surrogateTypeName,
+            $keyName,
+            $wrappedKey,
+        ]);
+        $this->assertEquals($inputString, $reidOutput);
+    }
+
+    public function testDeidReidTextFPE()
+    {
+        $string = 'My SSN is 372819127';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+        $surrogateType = 'SSN_TOKEN';
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_fpe', [
+            self::$projectId,
+            $string,
+            $keyName,
+            $wrappedKey,
+            $surrogateType,
+        ]);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_text_fpe', [
+            self::$projectId,
+            $deidOutput,
+            $keyName,
+            $wrappedKey,
+            $surrogateType,
+        ]);
+        $this->assertEquals($string, $reidOutput);
+    }
+
+    public function testGetJob()
+    {
+
+        // Set filter to only go back a day, so that we do not pull every job.
+        $filter = sprintf(
+            'state=DONE AND end_time>"%sT00:00:00+00:00"',
+            date('Y-m-d', strtotime('-1 day'))
+        );
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $getJobName = $this->runFunctionSnippet('list_jobs', [
+            self::$projectId,
+            $filter,
+        ]);
+        preg_match($jobIdRegex, $getJobName, $jobIds);
+        $jobName = $jobIds[0];
+
+        $output = $this->runFunctionSnippet('get_job', [
+            $jobName
+        ]);
+        $this->assertStringContainsString('Job ' . $jobName . ' status:', $output);
+    }
+
+    public function testCreateJob()
+    {
+        $gcsPath = $this->requireEnv('GCS_PATH');
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $jobName = $this->runFunctionSnippet('create_job', [
+            self::$projectId,
+            $gcsPath
+        ]);
+        $this->assertRegExp($jobIdRegex, $jobName);
+        $output = $this->runFunctionSnippet(
+            'delete_job',
+            [$jobName]
+        );
+        $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
+    }
+
+    public function testRedactImageListedInfotypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_listed_infotypes-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_listed_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageAllText()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_all_text-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_all_text', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageAllInfoTypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/redact_image_all_infotypes-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_all_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testRedactImageColoredInfotypes()
+    {
+        $imagePath = __DIR__ . '/data/test.png';
+        $outputPath = __DIR__ . '/data/sensitive-data-image-redacted-color-coding-unittest.png';
+
+        $output = $this->runFunctionSnippet('redact_image_colored_infotypes', [
+            self::$projectId,
+            $imagePath,
+            $outputPath,
+        ]);
+        $this->assertNotEquals(
+            sha1_file($outputPath),
+            sha1_file($imagePath)
+        );
+        unlink($outputPath);
+    }
+
+    public function testInspectBigQueryWithSampling()
+    {
+        // Mock the necessary objects and methods
+        $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
+
+        $createDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
+            ->setState(JobState::PENDING);
+
+        $getDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
+            ->setState(JobState::DONE)
+            ->setInspectDetails((new InspectDataSourceDetails())
+                ->setResult((new Result())
+                    ->setInfoTypeStats([
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('FIRST_NAME'))
+                            ->setCount(2)
+                    ])));
+
+        $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createDlpJobResponse);
+
+        $dlpServiceClientMock->getDlpJob(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($getDlpJobResponse);
+
+        $pubsubObj = new PubSubClient();
+        $topic = $pubsubObj->createTopic('dlp-pubsub-topic-test');
+        $topicId = $topic->name();
+        $subscriptionId = 'dlp-subcription-test';
+        $subscription = $topic->subscription($subscriptionId);
+        $subscription->create();
+
+        $pubSubClientMock = $this->prophesize(PubSubClient::class);
+        $topicMock = $this->prophesize(Topic::class);
+        $subscriptionMock = $this->prophesize(Subscription::class);
+        $messageMock = $this->prophesize(Message::class);
+
+        // Set up the mock expectations for the Pub/Sub functions
+        $pubSubClientMock->topic($topicId)
+            ->shouldBeCalled()
+            ->willReturn($topicMock->reveal());
+
+        $topicMock->name()
+            ->shouldBeCalled()
+            ->willReturn('projects/' . self::$projectId . '/topics/' . $topicId);
+
+        $topicMock->subscription($subscriptionId)
+            ->shouldBeCalled()
+            ->willReturn($subscriptionMock->reveal());
+
+        $subscriptionMock->pull()
+            ->shouldBeCalled()
+            ->willReturn([$messageMock->reveal()]);
+
+        $messageMock->attributes()
+            ->shouldBeCalledTimes(2)
+            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/job-name-123']);
+
+        $subscriptionMock->acknowledge(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($messageMock->reveal());
+
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/inspect_bigquery_with_sampling.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            '$pubsub = new PubSubClient();' => 'global $pubsub;',
+            'inspect_bigquery_with_sampling' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent
+        );
+        global $dlp;
+        global $pubsub;
+
+        $dlp = $dlpServiceClientMock->reveal();
+        $pubsub = $pubSubClientMock->reveal();
+
+        // Call the method under test
+        $output = $this->runFunctionSnippet($tmpFileName, [
+            self::$projectId,
+            $topicId,
+            $subscriptionId
+        ]);
+        // delete topic , subscription , and temp file
+        $topic->delete();
+        $subscription->delete();
+        unlink($tmpFilePath);
+
+        // Assert the expected behavior or outcome
+        $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
+        $this->assertStringContainsString('infoType FIRST_NAME', $output);
     }
 }
