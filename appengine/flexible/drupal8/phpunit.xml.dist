@@ -14,19 +14,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../../testing/bootstrap.php">
-    <testsuites>
-        <testsuite name="Drupal deployment test">
-            <directory>test</directory>
-            <exclude>test/DeployTest.php</exclude>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./web</directory>
-            <exclude>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="../../../testing/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./web</directory>
+    </include>
+    <exclude>
+      <directory>./vendor</directory>
+    </exclude>
+  </coverage>
+  <testsuites>
+    <testsuite name="Drupal deployment test">
+      <directory>test</directory>
+      <exclude>test/DeployTest.php</exclude>
+    </testsuite>
+  </testsuites>
 </phpunit>

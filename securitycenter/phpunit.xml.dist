@@ -14,29 +14,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit backupGlobals="false"
-    backupStaticAttributes="false"
-    bootstrap="../testing/bootstrap.php"
-    colors="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    timeoutForSmallTests="10"
-    timeoutForMediumTests="30"
-    timeoutForLargeTests="120">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" bootstrap="../testing/bootstrap.php" colors="true" processIsolation="false" stopOnFailure="false" timeoutForSmallTests="10" timeoutForMediumTests="30" timeoutForLargeTests="120" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage includeUncoveredFiles="true">
+    <include>
+      <directory>./src</directory>
+    </include>
+    <exclude>
+      <directory>./vendor</directory>
+    </exclude>
+    <report>
+      <clover outputFile="./build/logs/clover.xml"/>
+    </report>
+  </coverage>
   <testsuites>
     <testsuite name="PHP SecurityCenter tests">
       <directory>test</directory>
     </testsuite>
   </testsuites>
-  <logging>
-    <log type="coverage-clover" target="./build/logs/clover.xml"/>
-  </logging>
-  <filter>
-    <whitelist addUncoveredFilesFromWhitelist="true">
-      <directory>./src</directory>
-      <exclude>
-        <directory>./vendor</directory>
-      </exclude>
-    </whitelist>
-  </filter>
+  <logging/>
 </phpunit>

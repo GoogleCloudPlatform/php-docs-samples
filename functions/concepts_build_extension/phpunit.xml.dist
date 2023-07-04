@@ -14,21 +14,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false">
-    <testsuites>
-        <testsuite name="Cloud Functions Build Step Test Suite">
-            <directory>test</directory>
-        </testsuite>
-    </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">.</directory>
-            <exclude>
-              <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">.</directory>
+    </include>
+    <exclude>
+      <directory>./vendor</directory>
+    </exclude>
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="Cloud Functions Build Step Test Suite">
+      <directory>test</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
 </phpunit>

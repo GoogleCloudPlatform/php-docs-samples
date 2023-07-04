@@ -11,13 +11,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../testing/vendor/autoload.php" convertWarningsToExceptions="false">
-    <testsuites>
-        <testsuite name="Cloud Run Hello World tests">
-            <directory>test</directory>
-        </testsuite>
-    </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="../../testing/vendor/autoload.php" convertWarningsToExceptions="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="Cloud Run Hello World tests">
+      <directory>test</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
 </phpunit>
