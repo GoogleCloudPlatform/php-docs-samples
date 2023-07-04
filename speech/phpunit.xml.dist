@@ -26,8 +26,8 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./src</directory>
-            <file>quickstart.php</file>
             <exclude>
+                <file>quickstart.php</file>
               <directory>./vendor</directory>
             </exclude>
         </whitelist>

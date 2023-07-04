@@ -22,8 +22,8 @@
     </testsuites>
     <filter>
         <whitelist>
-            <file>index.php</file>
             <exclude>
+                <file>index.php</file>
                 <directory>./vendor</directory>
             </exclude>
         </whitelist>

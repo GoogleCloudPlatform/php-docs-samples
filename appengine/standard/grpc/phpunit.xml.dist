@@ -25,10 +25,10 @@
     </logging>
     <filter>
         <whitelist>
-            <file>index.php</file>
-            <file>monitoring.php</file>
-            <file>spanner.php</file>
             <exclude>
+              <file>index.php</file>
+              <file>monitoring.php</file>
+              <file>spanner.php</file>
               <directory>./vendor</directory>
             </exclude>
         </whitelist>

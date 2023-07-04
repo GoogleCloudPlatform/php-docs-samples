@@ -22,8 +22,8 @@
     </logging>
     <filter>
         <whitelist>
-            <file>quickstart.php</file>
             <exclude>
+                <file>quickstart.php</file>
               <directory>./vendor</directory>
             </exclude>
         </whitelist>

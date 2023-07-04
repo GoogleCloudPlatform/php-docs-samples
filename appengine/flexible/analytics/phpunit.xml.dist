@@ -29,8 +29,8 @@
     </logging>
     <filter>
         <whitelist>
-            <file>app.php</file>
             <exclude>
+                <file>app.php</file>
                 <directory>./vendor</directory>
             </exclude>
         </whitelist>

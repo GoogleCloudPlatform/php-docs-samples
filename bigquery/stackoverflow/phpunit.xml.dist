@@ -25,9 +25,9 @@
     </logging>
     <filter>
         <whitelist>
-            <file>shakespeare.php</file>
-            <directory suffix=".php">./src</directory>
             <exclude>
+              <directory suffix=".php">./src</directory>
+              <file>shakespeare.php</file>
               <directory>./vendor</directory>
             </exclude>
         </whitelist>
