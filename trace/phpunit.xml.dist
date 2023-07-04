@@ -14,24 +14,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../testing/bootstrap.php">
-    <testsuites>
-        <testsuite name="PHP Stackdriver Trace test">
-            <directory>test</directory>
-        </testsuite>
-    </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
-    <filter>
-        <whitelist>
-            <exclude>
-              <file>trace-sample.php</file>
-              <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-    <php>
-        <env name="USE_NULL_EXPORTER" value="true"/>
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="../testing/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include/>
+    <exclude>
+      <file>trace-sample.php</file>
+      <directory>./vendor</directory>
+    </exclude>
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="PHP Stackdriver Trace test">
+      <directory>test</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
+  <php>
+    <env name="USE_NULL_EXPORTER" value="true"/>
+  </php>
 </phpunit>

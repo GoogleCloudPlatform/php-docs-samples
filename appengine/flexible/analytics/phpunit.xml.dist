@@ -14,25 +14,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../../testing/bootstrap.php" colors="true">
-    <php>
-        <env name="GA_TRACKING_ID" value="UA-78971600-1"/>
-    </php>
-    <testsuites>
-        <testsuite name="App Engine Flex Memcache tests">
-            <directory>test</directory>
-            <exclude>test/DeployTest.php</exclude>
-        </testsuite>
-    </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
-    <filter>
-        <whitelist>
-            <exclude>
-                <file>app.php</file>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="../../../testing/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include/>
+    <exclude>
+      <file>app.php</file>
+      <directory>./vendor</directory>
+    </exclude>
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <php>
+    <env name="GA_TRACKING_ID" value="UA-78971600-1"/>
+  </php>
+  <testsuites>
+    <testsuite name="App Engine Flex Memcache tests">
+      <directory>test</directory>
+      <exclude>test/DeployTest.php</exclude>
+    </testsuite>
+  </testsuites>
+  <logging/>
 </phpunit>
