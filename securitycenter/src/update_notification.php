@@ -40,6 +40,7 @@ function update_notification(
     // Ensure this ServiceAccount has the 'pubsub.topics.setIamPolicy' permission on the topic.
     // https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.topics/setIamPolicy
     $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
+    // You can also use 'projectId' or 'folderId' instead of the 'organizationId'.
     $notificationConfigName = $securityCenterClient::notificationConfigName($organizationId, $notificationConfigId);
 
     $streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
