@@ -28,6 +28,7 @@ function get_notification(string $organizationId, string $notificationConfigId):
 {
     $securityCenterClient = new SecurityCenterClient();
     $notificationConfigName = $securityCenterClient::notificationConfigName(
+        // You can also use 'projectId' or 'folderId' instead of the 'organizationId'.
         $organizationId,
         $notificationConfigId
     );

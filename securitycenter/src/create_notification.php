@@ -35,7 +35,11 @@ function create_notification(
     string $topicName
 ): void {
     $securityCenterClient = new SecurityCenterClient();
-    $organizationName = $securityCenterClient::organizationName($organizationId);
+    // 'parent' must be in one of the following formats:
+    //		"organizations/{orgId}"
+    //		"projects/{projectId}"
+    //		"folders/{folderId}"
+    $parent = $securityCenterClient::organizationName($organizationId);
     $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 
     $streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
@@ -45,7 +49,7 @@ function create_notification(
         ->setStreamingConfig($streamingConfig);
 
     $response = $securityCenterClient->createNotificationConfig(
-        $organizationName,
+        $parent,
         $notificationConfigId,
         $notificationConfig
     );
