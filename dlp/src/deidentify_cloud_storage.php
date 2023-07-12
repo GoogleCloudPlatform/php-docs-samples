@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2023 Google Inc.
  *
@@ -46,7 +45,7 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
  * Create an inspection job that has a de-identification action.
  *
  * @param string $callingProjectId                  The project ID to run the API call under.
- * @param string inputgcsPath                       The Cloud Storage directory that you want to de-identify.
+ * @param string $inputgcsPath                       The Cloud Storage directory that you want to de-identify.
  * @param string $outgcsPath                        The Cloud Storage directory where you want to store the
  *                                                  de-identified files.
  * @param string $deidentifyTemplateName            The full resource name of the default de-identify template — for
