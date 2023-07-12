@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2023 Google Inc.
  *
@@ -41,10 +40,10 @@ use Google\Cloud\Dlp\V2\Value;
 
 /**
  * De-identify data using primitive bucketing.
- * https://cloud.google.com/dlp/docs/concepts-bucketing#bucketing_scenario_1 .
+ * https://cloud.google.com/dlp/docs/concepts-bucketing#bucketing_scenario_1
  *
  * @param string $callingProjectId      The Google Cloud project id to use as a parent resource.
- * @param string $inputCsvFile          The input file(csv) path  to deidentify.
+ * @param string $inputCsvFile          The input file(csv) path to deidentify.
  * @param string $outputCsvFile         The oupt file path to save deidentify content.
  *
  */
