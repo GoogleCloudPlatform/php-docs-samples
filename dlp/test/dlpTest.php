@@ -889,6 +889,123 @@ class dlpTest extends TestCase
         unlink($outputPath);
     }
 
+    public function testDeidentifyTimeExtract()
+    {
+        $inputCsvFile = __DIR__ . '/data/table3.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_time_extract_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_time_extract', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString(',1970', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyDictionaryReplacement()
+    {
+        $string = 'My name is Charlie and email address is charlie@example.com.';
+        $output = $this->runFunctionSnippet('deidentify_dictionary_replacement', [
+            self::$projectId,
+            $string
+        ]);
+        $this->assertStringNotContainsString('charlie@example.com', $output);
+        $this->assertNotEquals($output, $string);
+    }
+
+    public function testDeidentifyTablePrimitiveBucketing()
+    {
+        $inputCsvFile = __DIR__ . '/data/table4.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_primitive_bucketing_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_primitive_bucketing', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('High', $csvLines_ouput[1]);
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableWithCryptoHash()
+    {
+        $inputCsvFile = __DIR__ . '/data/table5.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_with_crypto_hash_output_unittest.csv';
+        // Generate randome string.
+        $transientCryptoKeyName = sha1(rand());
+
+        $output = $this->runFunctionSnippet('deidentify_table_with_crypto_hash', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $transientCryptoKeyName
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringNotContainsString('user1@example.org', $csvLines_ouput[1]);
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableWithMultipleCryptoHash()
+    {
+        $inputCsvFile = __DIR__ . '/data/table6.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_with_multiple_crypto_hash_output_unittest.csv';
+        // Generate randome string.
+        $transientCryptoKeyName1 = sha1(rand());
+        $transientCryptoKeyName2 = sha1(rand());
+
+        $output = $this->runFunctionSnippet('deidentify_table_with_multiple_crypto_hash', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $transientCryptoKeyName1,
+            $transientCryptoKeyName2
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringNotContainsString('user1@example.org', $csvLines_ouput[1]);
+        $this->assertStringContainsString('abbyabernathy1', $csvLines_ouput[2]);
+        unlink($outputCsvFile);
+    }
+
     public function testDeidentifyCloudStorage()
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
