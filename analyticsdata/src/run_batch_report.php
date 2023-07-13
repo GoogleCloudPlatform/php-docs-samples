@@ -28,7 +28,8 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_batch_report]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\BatchRunReportsRequest;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
@@ -46,9 +47,9 @@ function run_batch_report(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->batchRunReports([
-        'property' => 'properties/' . $propertyId,
-        'requests' => [
+    $request = (new BatchRunReportsRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setRequests([
             new RunReportRequest([
                 'dimensions' => [
                     new Dimension(['name' => 'country']),
@@ -71,8 +72,8 @@ function run_batch_report(string $propertyId)
                     ]),
                 ],
             ]),
-        ],
-    ]);
+        ],);
+    $response = $client->batchRunReports($request);
 
     print 'Batch report results' . PHP_EOL;
     foreach ($response->getReports() as $report) {

@@ -28,19 +28,20 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_dimension_and_metric_filters]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
+use Google\Analytics\Data\V1beta\Filter;
+use Google\Analytics\Data\V1beta\Filter\NumericFilter;
+use Google\Analytics\Data\V1beta\Filter\NumericFilter\Operation;
+use Google\Analytics\Data\V1beta\Filter\StringFilter;
+use Google\Analytics\Data\V1beta\Filter\StringFilter\MatchType;
+use Google\Analytics\Data\V1beta\FilterExpression;
+use Google\Analytics\Data\V1beta\FilterExpressionList;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
 use Google\Analytics\Data\V1beta\NumericValue;
-use Google\Analytics\Data\V1beta\FilterExpression;
-use Google\Analytics\Data\V1beta\FilterExpressionList;
-use Google\Analytics\Data\V1beta\Filter;
-use Google\Analytics\Data\V1beta\Filter\StringFilter;
-use Google\Analytics\Data\V1beta\Filter\StringFilter\MatchType;
-use Google\Analytics\Data\V1beta\Filter\NumericFilter;
-use Google\Analytics\Data\V1beta\Filter\NumericFilter\Operation;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -56,16 +57,16 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'city'])],
-        'metrics' => [new Metric(['name' => 'activeUsers'])],
-        'dateRanges' => [new DateRange([
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([new Dimension(['name' => 'city'])])
+        ->setMetrics([new Metric(['name' => 'activeUsers'])])
+        ->setDateRanges([new DateRange([
             'start_date' => '2020-03-31',
             'end_date' => 'today',
             ]),
-        ],
-        'metricFilter' => new FilterExpression([
+        ])
+        ->setMetricFilter(new FilterExpression([
             'filter' => new Filter([
                 'field_name' => 'sessions',
                 'numeric_filter' => new NumericFilter([
@@ -75,8 +76,8 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
                     ]),
                 ]),
             ]),
-        ]),
-        'dimensionFilter' => new FilterExpression([
+        ]))
+        ->setDimensionFilter(new FilterExpression([
             'and_group' => new FilterExpressionList([
                 'expressions' => [
                     new FilterExpression([
@@ -99,8 +100,8 @@ function run_report_with_dimension_and_metric_filters(string $propertyId)
                    ]),
                 ],
             ]),
-        ]),
-    ]);
+        ]),);
+    $response = $client->runReport($request);
 
     printRunReportResponseWithDimensionAndMetricFilters($response);
 }
