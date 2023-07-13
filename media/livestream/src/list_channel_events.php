@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_list_channel_events]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\ListEventsRequest;
 
 /**
  * Lists the channel events for a given channel.
@@ -42,8 +43,10 @@ function list_channel_events(
     // Instantiate a client.
     $livestreamClient = new LivestreamServiceClient();
     $parent = $livestreamClient->channelName($callingProjectId, $location, $channelId);
+    $request = (new ListEventsRequest())
+        ->setParent($parent);
 
-    $response = $livestreamClient->listEvents($parent);
+    $response = $livestreamClient->listEvents($request);
     // Print the channel list.
     $events = $response->iterateAllElements();
     print('Channel events:' . PHP_EOL);
