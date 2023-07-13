@@ -26,12 +26,13 @@ namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_with_static_overlay]
 use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\CreateJobRequest;
 use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
 use Google\Cloud\Video\Transcoder\V1\Job;
 use Google\Cloud\Video\Transcoder\V1\JobConfig;
 use Google\Cloud\Video\Transcoder\V1\MuxStream;
 use Google\Cloud\Video\Transcoder\V1\Overlay;
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 use Google\Cloud\Video\Transcoder\V1\VideoStream;
 use Google\Protobuf\Duration;
 
@@ -117,8 +118,11 @@ function create_job_with_static_overlay($projectId, $location, $inputUri, $overl
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
         ->setConfig($jobConfig);
+    $request = (new CreateJobRequest())
+        ->setParent($formattedParent)
+        ->setJob($job);
 
-    $response = $transcoderServiceClient->createJob($formattedParent, $job);
+    $response = $transcoderServiceClient->createJob($request);
 
     // Print job name.
     printf('Job: %s' . PHP_EOL, $response->getName());

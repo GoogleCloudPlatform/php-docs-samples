@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_from_template]
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\CreateJobRequest;
 use Google\Cloud\Video\Transcoder\V1\Job;
 
 /**
@@ -47,8 +48,11 @@ function create_job_from_template($projectId, $location, $inputUri, $outputUri, 
     $job->setInputUri($inputUri);
     $job->setOutputUri($outputUri);
     $job->setTemplateId($templateId);
+    $request = (new CreateJobRequest())
+        ->setParent($formattedParent)
+        ->setJob($job);
 
-    $response = $transcoderServiceClient->createJob($formattedParent, $job);
+    $response = $transcoderServiceClient->createJob($request);
 
     // Print job name.
     printf('Job: %s' . PHP_EOL, $response->getName());
