@@ -70,7 +70,7 @@ function run_report_with_ordering(string $propertyId)
                 ]),
                 'desc' => true,
             ]),
-        ],);
+        ]);
     $response = $client->runReport($request);
 
     printRunReportResponseWithOrdering($response);

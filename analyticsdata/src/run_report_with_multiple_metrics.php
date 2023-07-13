@@ -59,7 +59,7 @@ function run_report_with_multiple_metrics(string $propertyId)
                 'start_date' => '7daysAgo',
                 'end_date' => 'today',
             ])
-        ],);
+        ]);
     $response = $client->runReport($request);
 
     printRunReportResponseWithMultipleMetrics($response);

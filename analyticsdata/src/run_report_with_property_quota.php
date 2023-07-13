@@ -55,7 +55,7 @@ function run_report_with_property_quota(string $propertyId)
                 'start_date' => '7daysAgo',
                 'end_date' => 'today',
             ]),
-        ],);
+        ]);
     $response = $client->runReport($request);
 
     printRunReportResponseWithPropertyQuota($response);

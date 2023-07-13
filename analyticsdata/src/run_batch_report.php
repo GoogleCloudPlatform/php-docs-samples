@@ -72,7 +72,7 @@ function run_batch_report(string $propertyId)
                     ]),
                 ],
             ]),
-        ],);
+        ]);
     $response = $client->batchRunReports($request);
 
     print 'Batch report results' . PHP_EOL;

@@ -59,7 +59,7 @@ function run_report_with_date_ranges(string $propertyId)
             ]),
         ])
         ->setDimensions([new Dimension(['name' => 'platform'])])
-        ->setMetrics([new Metric(['name' => 'activeUsers'])],);
+        ->setMetrics([new Metric(['name' => 'activeUsers'])]);
     $response = $client->runReport($request);
 
     printRunReportResponseWithDateRanges($response);

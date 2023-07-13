@@ -61,7 +61,7 @@ function run_report_with_named_date_ranges(string $propertyId)
             ]),
         ])
         ->setDimensions([new Dimension(['name' => 'country'])])
-        ->setMetrics([new Metric(['name' => 'sessions'])],);
+        ->setMetrics([new Metric(['name' => 'sessions'])]);
     $response = $client->runReport($request);
 
     printRunReportResponseWithNamedDateRanges($response);

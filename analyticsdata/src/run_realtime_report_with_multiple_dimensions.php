@@ -51,7 +51,7 @@ function run_realtime_report_with_multiple_dimensions(string $propertyId)
             new Dimension(['name' => 'country']),
             new Dimension(['name' => 'city']),
         ])
-        ->setMetrics([new Metric(['name' => 'activeUsers'])],);
+        ->setMetrics([new Metric(['name' => 'activeUsers'])]);
     $response = $client->runRealtimeReport($request);
 
     printRunRealtimeReportWithMultipleDimensionsResponse($response);

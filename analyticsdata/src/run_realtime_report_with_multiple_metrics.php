@@ -51,7 +51,7 @@ function run_realtime_report_with_multiple_metrics(string $propertyId)
         ->setMetrics([
             new Metric(['name' => 'screenPageViews']),
             new Metric(['name' => 'conversions']),
-        ],);
+        ]);
     $response = $client->runRealtimeReport($request);
 
     printRunRealtimeReportWithMultipleMetricsResponse($response);

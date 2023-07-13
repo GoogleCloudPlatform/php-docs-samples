@@ -48,7 +48,7 @@ function run_realtime_report(string $propertyId)
     $request = (new RunRealtimeReportRequest())
         ->setProperty('properties/' . $propertyId)
         ->setDimensions([new Dimension(['name' => 'country'])])
-        ->setMetrics([new Metric(['name' => 'activeUsers'])],);
+        ->setMetrics([new Metric(['name' => 'activeUsers'])]);
     $response = $client->runRealtimeReport($request);
 
     printRunRealtimeReportResponse($response);

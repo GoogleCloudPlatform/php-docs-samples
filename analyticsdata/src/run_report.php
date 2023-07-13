@@ -59,7 +59,7 @@ function run_report(string $propertyId)
             new Metric([
                 'name' => 'activeUsers',
             ]),
-        ],);
+        ]);
     $response = $client->runReport($request);
 
     printRunReportResponse($response);

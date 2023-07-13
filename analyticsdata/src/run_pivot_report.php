@@ -83,7 +83,7 @@ function run_pivot_report(string $propertyId)
         ->setDimensions([
             new Dimension(['name' => 'country']),
             new Dimension(['name' => 'browser']),
-        ],);
+        ]);
     $response = $client->runPivotReport($request);
 
     printPivotReportResponse($response);
