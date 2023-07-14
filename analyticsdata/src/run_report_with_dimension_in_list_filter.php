@@ -74,7 +74,7 @@ function run_report_with_dimension_in_list_filter(string $propertyId)
                     ],
                 ]),
             ]),
-        ]),);
+        ]));
     $response = $client->runReport($request);
 
     printRunReportResponseWithDimensionInListFilter($response);

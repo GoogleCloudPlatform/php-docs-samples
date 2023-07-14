@@ -80,7 +80,7 @@ function run_report_with_cohorts(string $propertyId)
                 'end_offset' => '4',
                 'granularity' => '2',
             ]),
-        ]),);
+        ]));
     $response = $client->runReport($request);
 
     printRunReportResponseWithCohorts($response);

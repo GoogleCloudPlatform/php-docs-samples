@@ -66,7 +66,7 @@ function run_report_with_pagination(string $propertyId)
             new Metric(['name' => 'totalRevenue']),
         ])
         ->setLimit(100000)
-        ->setOffset(0,);
+        ->setOffset(0);
     $response = $client->runReport($request);
 
     printRunReportResponseWithPagination($response);

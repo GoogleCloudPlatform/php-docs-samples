@@ -86,7 +86,7 @@ function run_report_with_multiple_dimension_filters(string $propertyId)
                     ]),
                 ],
             ]),
-        ]),);
+        ]));
     $response = $client->runReport($request);
 
     printRunReportResponseWithMultipleDimensionFilters($response);

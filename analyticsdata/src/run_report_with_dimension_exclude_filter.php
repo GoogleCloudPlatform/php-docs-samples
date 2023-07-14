@@ -71,7 +71,7 @@ function run_report_with_dimension_exclude_filter(string $propertyId)
                     ]),
                 ]),
             ]),
-        ]),);
+        ]));
     $response = $client->runReport($request);
 
     printRunReportResponseWithDimensionExcludeFilter($response);

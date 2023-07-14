@@ -70,7 +70,7 @@ function run_report_with_dimension_filter(string $propertyId)
                     'value' => 'first_open'
                 ]),
             ]),
-        ]),);
+        ]));
     $response = $client->runReport($request);
 
     printRunReportResponseWithDimensionFilter($response);
