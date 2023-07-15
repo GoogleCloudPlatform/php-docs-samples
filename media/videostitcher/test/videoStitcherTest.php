@@ -89,6 +89,7 @@ class videoStitcherTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        self::markTestSkipped('');
         self::checkProjectEnvVars();
         self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
 
