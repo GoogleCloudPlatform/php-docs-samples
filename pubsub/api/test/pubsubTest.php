@@ -309,6 +309,32 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
+    public function testCreateAndDeleteStorageSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $projectId = $this->requireEnv('GOOGLE_PROJECT_ID');
+        $bucket = $projectId . '.' . $this->requireEnv('GOOGLE_PUBSUB_STORAGE_BUCKET');
+
+        $output = $this->runFunctionSnippet('create_storage_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $bucket,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+
     public function testCreateAndDetachSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
