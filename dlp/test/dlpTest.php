@@ -1105,7 +1105,13 @@ class dlpTest extends TestCase
                 ->setResult((new Result())
                     ->setInfoTypeStats([
                         (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
+                            ->setInfoType((new InfoType())->setName('PHONE_NUMBER'))
+                            ->setCount(3),
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('EMAIL_ADDRESS'))
+                            ->setCount(3),
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('CREDIT_CARD_NUMBER'))
                             ->setCount(3)
                     ])));
 
@@ -1191,7 +1197,9 @@ class dlpTest extends TestCase
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
-        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+        $this->assertStringContainsString('infoType PHONE_NUMBER', $output);
+        $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
+        $this->assertStringContainsString('infoType CREDIT_CARD_NUMBER', $output);
     }
 
     public function testInspectGcsSendToScc()

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2023 Google Inc.
  *
@@ -74,9 +75,13 @@ function inspect_gcs_with_sampling(
         ->setCloudStorageOptions($cloudStorageOptions);
 
     // Specify the type of info the inspection will look for.
-    $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
-    $infoTypes = [$personNameInfoType];
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $emailAddressInfoType = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
+    $cardNumberInfoType = (new InfoType())
+        ->setName('CREDIT_CARD_NUMBER');
+    $infoTypes = [$phoneNumberInfoType, $emailAddressInfoType, $cardNumberInfoType];
 
     // Specify how the content should be inspected.
     $inspectConfig = (new InspectConfig())
