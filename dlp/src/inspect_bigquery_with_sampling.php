@@ -79,7 +79,7 @@ function inspect_bigquery_with_sampling(
     // Specify the type of info the inspection will look for.
     // See https://cloud.google.com/dlp/docs/infotypes-reference for complete list of info types
     $personNameInfoType = (new InfoType())
-        ->setName('FIRST_NAME');
+        ->setName('PERSON_NAME');
     $infoTypes = [$personNameInfoType];
 
     // Specify how the content should be inspected.
