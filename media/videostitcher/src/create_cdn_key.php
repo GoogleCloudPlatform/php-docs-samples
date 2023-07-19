@@ -75,10 +75,16 @@ function create_cdn_key(
     $cloudCdn->setPrivateKey($privateKey);
 
     // Run CDN key creation request
-    $response = $stitcherClient->createCdnKey($parent, $cdnKey, $cdnKeyId);
-
-    // Print results
-    printf('CDN key: %s' . PHP_EOL, $response->getName());
+    $operationResponse = $stitcherClient->createCdnKey($parent, $cdnKey, $cdnKeyId);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('CDN key: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_create_cdn_key]
 
