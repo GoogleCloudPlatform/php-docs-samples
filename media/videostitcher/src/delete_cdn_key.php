@@ -43,10 +43,15 @@ function delete_cdn_key(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->cdnKeyName($callingProjectId, $location, $cdnKeyId);
-    $stitcherClient->deleteCdnKey($formattedName);
-
-    // Print status
-    printf('Deleted CDN key %s' . PHP_EOL, $cdnKeyId);
+    $operationResponse = $stitcherClient->deleteCdnKey($formattedName);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        // Print status
+        printf('Deleted CDN key %s' . PHP_EOL, $cdnKeyId);
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_delete_cdn_key]
 

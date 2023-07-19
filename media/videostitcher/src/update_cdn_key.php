@@ -84,10 +84,16 @@ function update_cdn_key(
     $cloudCdn->setPrivateKey($privateKey);
 
     // Run CDN key creation request
-    $response = $stitcherClient->updateCdnKey($cdnKey, $updateMask);
-
-    // Print results
-    printf('Updated CDN key: %s' . PHP_EOL, $response->getName());
+    $operationResponse = $stitcherClient->updateCdnKey($cdnKey, $updateMask);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('Updated CDN key: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_update_cdn_key]
 
