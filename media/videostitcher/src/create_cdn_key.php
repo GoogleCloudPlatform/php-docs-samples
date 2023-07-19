@@ -25,8 +25,9 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_cdn_key]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
 use Google\Cloud\Video\Stitcher\V1\CdnKey;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateCdnKeyRequest;
 use Google\Cloud\Video\Stitcher\V1\GoogleCdnKey;
 use Google\Cloud\Video\Stitcher\V1\MediaCdnKey;
 
@@ -75,7 +76,11 @@ function create_cdn_key(
     $cloudCdn->setPrivateKey($privateKey);
 
     // Run CDN key creation request
-    $operationResponse = $stitcherClient->createCdnKey($parent, $cdnKey, $cdnKeyId);
+    $request = (new CreateCdnKeyRequest())
+        ->setParent($parent)
+        ->setCdnKey($cdnKey)
+        ->setCdnKeyId($cdnKeyId);
+    $operationResponse = $stitcherClient->createCdnKey($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();

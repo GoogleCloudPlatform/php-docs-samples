@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_delete_live_config]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\DeleteLiveConfigRequest;
 
 /**
  * Deletes a live config.
@@ -43,7 +44,9 @@ function delete_live_config(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->liveConfigName($callingProjectId, $location, $liveConfigId);
-    $operationResponse = $stitcherClient->deleteLiveConfig($formattedName);
+    $request = (new DeleteLiveConfigRequest())
+        ->setName($formattedName);
+    $operationResponse = $stitcherClient->deleteLiveConfig($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         // Print status

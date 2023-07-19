@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_list_live_configs]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\ListLiveConfigsRequest;
 
 /**
  * Lists all live configs for a location.
@@ -41,7 +42,9 @@ function list_live_configs(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
-    $response = $stitcherClient->listLiveConfigs($parent);
+    $request = (new ListLiveConfigsRequest())
+        ->setParent($parent);
+    $response = $stitcherClient->listLiveConfigs($request);
 
     // Print the live config list.
     $liveConfigs = $response->iterateAllElements();

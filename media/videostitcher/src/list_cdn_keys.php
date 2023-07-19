@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_list_cdn_keys]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\ListCdnKeysRequest;
 
 /**
  * Lists all CDN keys for a location.
@@ -41,7 +42,9 @@ function list_cdn_keys(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
-    $response = $stitcherClient->listCdnKeys($parent);
+    $request = (new ListCdnKeysRequest())
+        ->setParent($parent);
+    $response = $stitcherClient->listCdnKeys($request);
 
     // Print the CDN key list.
     $cdn_keys = $response->iterateAllElements();

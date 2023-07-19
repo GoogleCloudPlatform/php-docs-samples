@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_live_config]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetLiveConfigRequest;
 
 /**
  * Gets a live config.
@@ -43,7 +44,9 @@ function get_live_config(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->liveConfigName($callingProjectId, $location, $liveConfigId);
-    $liveConfig = $stitcherClient->getLiveConfig($formattedName);
+    $request = (new GetLiveConfigRequest())
+        ->setName($formattedName);
+    $liveConfig = $stitcherClient->getLiveConfig($request);
 
     // Print results
     printf('Live config: %s' . PHP_EOL, $liveConfig->getName());
