@@ -26,13 +26,14 @@ namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_with_concatenated_inputs]
 use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\CreateJobRequest;
 use Google\Cloud\Video\Transcoder\V1\EditAtom;
 use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
 use Google\Cloud\Video\Transcoder\V1\Input;
 use Google\Cloud\Video\Transcoder\V1\Job;
 use Google\Cloud\Video\Transcoder\V1\JobConfig;
 use Google\Cloud\Video\Transcoder\V1\MuxStream;
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 use Google\Cloud\Video\Transcoder\V1\VideoStream;
 use Google\Protobuf\Duration;
 
@@ -113,8 +114,11 @@ function create_job_with_concatenated_inputs($projectId, $location, $input1Uri, 
     $job = (new Job())
         ->setOutputUri($outputUri)
         ->setConfig($jobConfig);
+    $request = (new CreateJobRequest())
+        ->setParent($formattedParent)
+        ->setJob($job);
 
-    $response = $transcoderServiceClient->createJob($formattedParent, $job);
+    $response = $transcoderServiceClient->createJob($request);
 
     // Print job name.
     printf('Job: %s' . PHP_EOL, $response->getName());

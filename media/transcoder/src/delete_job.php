@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_delete_job]
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\DeleteJobRequest;
 
 /**
  * Deletes a Transcoder job.
@@ -40,7 +41,9 @@ function delete_job($projectId, $location, $jobId)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedName = $transcoderServiceClient->jobName($projectId, $location, $jobId);
-    $transcoderServiceClient->deleteJob($formattedName);
+    $request = (new DeleteJobRequest())
+        ->setName($formattedName);
+    $transcoderServiceClient->deleteJob($request);
 
     print('Deleted job' . PHP_EOL);
 }
