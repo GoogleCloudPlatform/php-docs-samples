@@ -28,14 +28,15 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_dimension_in_list_filter]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
-use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\FilterExpression;
 use Google\Analytics\Data\V1beta\Filter;
 use Google\Analytics\Data\V1beta\Filter\InListFilter;
+use Google\Analytics\Data\V1beta\FilterExpression;
+use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -53,16 +54,16 @@ function run_report_with_dimension_in_list_filter(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'eventName'])],
-        'metrics' => [new Metric(['name' => 'sessions'])],
-        'dateRanges' => [new DateRange([
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([new Dimension(['name' => 'eventName'])])
+        ->setMetrics([new Metric(['name' => 'sessions'])])
+        ->setDateRanges([new DateRange([
                 'start_date' => '7daysAgo',
                 'end_date' => 'yesterday',
             ])
-        ],
-        'dimensionFilter' => new FilterExpression([
+        ])
+        ->setDimensionFilter(new FilterExpression([
             'filter' => new Filter([
                 'field_name' => 'eventName',
                 'in_list_filter' => new InListFilter([
@@ -73,8 +74,8 @@ function run_report_with_dimension_in_list_filter(string $propertyId)
                     ],
                 ]),
             ]),
-        ]),
-    ]);
+        ]));
+    $response = $client->runReport($request);
 
     printRunReportResponseWithDimensionInListFilter($response);
 }

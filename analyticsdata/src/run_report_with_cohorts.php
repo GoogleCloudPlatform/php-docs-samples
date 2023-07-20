@@ -28,14 +28,15 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_cohorts]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Cohort;
+use Google\Analytics\Data\V1beta\CohortSpec;
+use Google\Analytics\Data\V1beta\CohortsRange;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
-use Google\Analytics\Data\V1beta\CohortSpec;
-use Google\Analytics\Data\V1beta\CohortsRange;
-use Google\Analytics\Data\V1beta\Cohort;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -50,20 +51,20 @@ function run_report_with_cohorts(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([
             new Dimension(['name' => 'cohort']),
             new Dimension(['name' => 'cohortNthWeek']),
-        ],
-        'metrics' => [
+        ])
+        ->setMetrics([
             new Metric(['name' => 'cohortActiveUsers']),
             new Metric([
                 'name' => 'cohortRetentionRate',
                 'expression' => 'cohortActiveUsers/cohortTotalUsers'
             ])
-        ],
-        'cohortSpec' => new CohortSpec([
+        ])
+        ->setCohortSpec(new CohortSpec([
             'cohorts' => [
                 new Cohort([
                     'dimension' => 'firstSessionDate',
@@ -79,8 +80,8 @@ function run_report_with_cohorts(string $propertyId)
                 'end_offset' => '4',
                 'granularity' => '2',
             ]),
-        ]),
-    ]);
+        ]));
+    $response = $client->runReport($request);
 
     printRunReportResponseWithCohorts($response);
 }
