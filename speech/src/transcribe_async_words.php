@@ -24,10 +24,10 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_async_word_time_offsets_gcs]
-use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V1\SpeechClient;
 
 /**
  * @param string $audioFile path to an audio file

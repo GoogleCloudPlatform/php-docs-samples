@@ -24,10 +24,10 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_async_gcs]
-use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V1\SpeechClient;
 
 /**
  * @param string $uri The Cloud Storage object to transcribe (gs://your-bucket-name/your-object-name)

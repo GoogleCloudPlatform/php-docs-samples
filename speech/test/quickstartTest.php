@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
