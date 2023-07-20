@@ -25,8 +25,9 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_live_config]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
 use Google\Cloud\Video\Stitcher\V1\AdTracking;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateLiveConfigRequest;
 use Google\Cloud\Video\Stitcher\V1\LiveConfig;
 
 /**
@@ -66,7 +67,11 @@ function create_live_config(
         ->setDefaultSlate($defaultSlate);
 
     // Run live config creation request
-    $operationResponse = $stitcherClient->createLiveConfig($parent, $liveConfigId, $liveConfig);
+    $request = (new CreateLiveConfigRequest())
+        ->setParent($parent)
+        ->setLiveConfigId($liveConfigId)
+        ->setLiveConfig($liveConfig);
+    $operationResponse = $stitcherClient->createLiveConfig($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();

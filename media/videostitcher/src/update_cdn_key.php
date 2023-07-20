@@ -25,10 +25,11 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_update_cdn_key]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
 use Google\Cloud\Video\Stitcher\V1\CdnKey;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
 use Google\Cloud\Video\Stitcher\V1\GoogleCdnKey;
 use Google\Cloud\Video\Stitcher\V1\MediaCdnKey;
+use Google\Cloud\Video\Stitcher\V1\UpdateCdnKeyRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -84,7 +85,10 @@ function update_cdn_key(
     $cloudCdn->setPrivateKey($privateKey);
 
     // Run CDN key creation request
-    $operationResponse = $stitcherClient->updateCdnKey($cdnKey, $updateMask);
+    $request = (new UpdateCdnKeyRequest())
+        ->setCdnKey($cdnKey)
+        ->setUpdateMask($updateMask);
+    $operationResponse = $stitcherClient->updateCdnKey($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();
