@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2022 Google LLC.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,44 +24,36 @@
 
 namespace Google\Cloud\Samples\Media\Stitcher;
 
-// [START videostitcher_create_slate]
+// [START videostitcher_delete_live_config]
 use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
-use Google\Cloud\Video\Stitcher\V1\Slate;
 
 /**
- * Creates a slate. A slate is displayed when ads are not available.
+ * Deletes a live config.
  *
  * @param string $callingProjectId     The project ID to run the API call under
- * @param string $location             The location of the slate
- * @param string $slateId              The name of the slate to be created
- * @param string $slateUri             The public URI for an MP4 video with at least one audio track
+ * @param string $location             The location of the live config
+ * @param string $liveConfigId         The ID of the live config
  */
-function create_slate(
+function delete_live_config(
     string $callingProjectId,
     string $location,
-    string $slateId,
-    string $slateUri
+    string $liveConfigId
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
 
-    $parent = $stitcherClient->locationName($callingProjectId, $location);
-    $slate = new Slate();
-    $slate->setUri($slateUri);
-
-    // Run slate creation request
-    $operationResponse = $stitcherClient->createSlate($parent, $slateId, $slate);
+    $formattedName = $stitcherClient->liveConfigName($callingProjectId, $location, $liveConfigId);
+    $operationResponse = $stitcherClient->deleteLiveConfig($formattedName);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
-        $result = $operationResponse->getResult();
-        // Print results
-        printf('Slate: %s' . PHP_EOL, $result->getName());
+        // Print status
+        printf('Deleted live config %s' . PHP_EOL, $liveConfigId);
     } else {
         $error = $operationResponse->getError();
         // handleError($error)
     }
 }
-// [END videostitcher_create_slate]
+// [END videostitcher_delete_live_config]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

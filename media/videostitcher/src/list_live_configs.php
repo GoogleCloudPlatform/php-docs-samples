@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2022 Google LLC.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,44 +24,33 @@
 
 namespace Google\Cloud\Samples\Media\Stitcher;
 
-// [START videostitcher_create_slate]
+// [START videostitcher_list_live_configs]
 use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
-use Google\Cloud\Video\Stitcher\V1\Slate;
 
 /**
- * Creates a slate. A slate is displayed when ads are not available.
+ * Lists all live configs for a location.
  *
  * @param string $callingProjectId     The project ID to run the API call under
- * @param string $location             The location of the slate
- * @param string $slateId              The name of the slate to be created
- * @param string $slateUri             The public URI for an MP4 video with at least one audio track
+ * @param string $location             The location of the live configs
  */
-function create_slate(
+function list_live_configs(
     string $callingProjectId,
-    string $location,
-    string $slateId,
-    string $slateUri
+    string $location
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
-    $slate = new Slate();
-    $slate->setUri($slateUri);
+    $response = $stitcherClient->listLiveConfigs($parent);
 
-    // Run slate creation request
-    $operationResponse = $stitcherClient->createSlate($parent, $slateId, $slate);
-    $operationResponse->pollUntilComplete();
-    if ($operationResponse->operationSucceeded()) {
-        $result = $operationResponse->getResult();
-        // Print results
-        printf('Slate: %s' . PHP_EOL, $result->getName());
-    } else {
-        $error = $operationResponse->getError();
-        // handleError($error)
+    // Print the live config list.
+    $liveConfigs = $response->iterateAllElements();
+    print('Live configs:' . PHP_EOL);
+    foreach ($liveConfigs as $liveConfig) {
+        printf('%s' . PHP_EOL, $liveConfig->getName());
     }
 }
-// [END videostitcher_create_slate]
+// [END videostitcher_list_live_configs]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

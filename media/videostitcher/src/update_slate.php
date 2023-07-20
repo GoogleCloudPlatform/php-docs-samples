@@ -55,10 +55,16 @@ function update_slate(
     ]);
 
     // Run slate update request
-    $response = $stitcherClient->updateSlate($slate, $updateMask);
-
-    // Print results
-    printf('Updated slate: %s' . PHP_EOL, $response->getName());
+    $operationResponse = $stitcherClient->updateSlate($slate, $updateMask);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('Updated slate: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_update_slate]
 
