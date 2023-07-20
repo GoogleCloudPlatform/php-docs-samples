@@ -20,7 +20,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # imports the Google Cloud client library
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
 
 # instantiates a client
 $imageAnnotator = new ImageAnnotatorClient();
