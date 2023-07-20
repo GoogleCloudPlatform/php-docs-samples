@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_get_channel]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\GetChannelRequest;
 
 /**
  * Gets a channel.
@@ -44,7 +45,9 @@ function get_channel(
     $formattedName = $livestreamClient->channelName($callingProjectId, $location, $channelId);
 
     // Get the channel.
-    $response = $livestreamClient->getChannel($formattedName);
+    $request = (new GetChannelRequest())
+        ->setName($formattedName);
+    $response = $livestreamClient->getChannel($request);
     // Print results
     printf('Channel: %s' . PHP_EOL, $response->getName());
 }

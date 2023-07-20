@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_list_channels]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\ListChannelsRequest;
 
 /**
  * Lists the channels for a given location.
@@ -40,8 +41,10 @@ function list_channels(
     // Instantiate a client.
     $livestreamClient = new LivestreamServiceClient();
     $parent = $livestreamClient->locationName($callingProjectId, $location);
+    $request = (new ListChannelsRequest())
+        ->setParent($parent);
 
-    $response = $livestreamClient->listChannels($parent);
+    $response = $livestreamClient->listChannels($request);
     // Print the channel list.
     $channels = $response->iterateAllElements();
     print('Channels:' . PHP_EOL);
