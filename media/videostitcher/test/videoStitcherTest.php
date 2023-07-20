@@ -67,6 +67,9 @@ class videoStitcherTest extends TestCase
     private static $akamaiTokenKey = 'VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==';
     private static $updatedAkamaiTokenKey = 'VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg==';
 
+    private static $liveConfigId;
+    private static $liveConfigName;
+
     private static $inputBucketName = 'cloud-samples-data';
     private static $inputVodFileName = '/media/hls-vod/manifest.m3u8';
     private static $vodUri;
@@ -94,6 +97,7 @@ class videoStitcherTest extends TestCase
 
         self::deleteOldSlates();
         self::deleteOldCdnKeys();
+        self::deleteOldLiveConfigs();
 
         self::$slateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$slateFileName);
         self::$updatedSlateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$updatedSlateFileName);
@@ -357,6 +361,65 @@ class videoStitcherTest extends TestCase
         $this->assertStringContainsString('Deleted CDN key', $output);
     }
 
+    public function testCreateLiveConfig()
+    {
+        # Create a temporary slate for the live session (required)
+        $tempSlateId = sprintf('php-test-slate-%s-%s', uniqid(), time());
+        $this->runFunctionSnippet('create_slate', [
+            self::$projectId,
+            self::$location,
+            $tempSlateId,
+            self::$slateUri
+        ]);
+
+        self::$liveConfigId = sprintf('php-test-live-config-%s-%s', uniqid(), time());
+        # API returns project number rather than project ID so
+        # don't include that in $liveConfigName since we don't have it
+        self::$liveConfigName = sprintf('/locations/%s/liveConfigs/%s', self::$location, self::$liveConfigId);
+
+        $output = $this->runFunctionSnippet('create_live_config', [
+            self::$projectId,
+            self::$location,
+            self::$liveConfigId,
+            self::$liveUri,
+            self::$liveAgTagUri,
+            $tempSlateId
+        ]);
+        $this->assertStringContainsString(self::$liveConfigName, $output);
+    }
+
+    /** @depends testCreateLiveConfig */
+    public function testListLiveConfigs()
+    {
+        $output = $this->runFunctionSnippet('list_live_configs', [
+            self::$projectId,
+            self::$location
+        ]);
+        $this->assertStringContainsString(self::$liveConfigName, $output);
+    }
+
+    /** @depends testListLiveConfigs */
+    public function testGetLiveConfig()
+    {
+        $output = $this->runFunctionSnippet('get_live_config', [
+            self::$projectId,
+            self::$location,
+            self::$liveConfigId
+        ]);
+        $this->assertStringContainsString(self::$liveConfigName, $output);
+    }
+
+    /** @depends testGetLiveConfig */
+    public function testDeleteLiveConfig()
+    {
+        $output = $this->runFunctionSnippet('delete_live_config', [
+            self::$projectId,
+            self::$location,
+            self::$liveConfigId
+        ]);
+        $this->assertStringContainsString('Deleted live config', $output);
+    }
+
     public function testCreateVodSession()
     {
         # API returns project number rather than project ID so
@@ -451,6 +514,17 @@ class videoStitcherTest extends TestCase
             self::$slateUri
         ]);
 
+        # Create a temporary live config for the live session (required)
+        $tempLiveConfigId = sprintf('php-test-live-config-%s-%s', uniqid(), time());
+        $this->runFunctionSnippet('create_live_config', [
+            self::$projectId,
+            self::$location,
+            $tempLiveConfigId,
+            self::$liveUri,
+            self::$liveAgTagUri,
+            $tempSlateId
+        ]);
+
         # API returns project number rather than project ID so
         # don't include that in $liveSessionName since we don't have it
         self::$liveSessionName = sprintf('/locations/%s/liveSessions/', self::$location);
@@ -458,14 +532,19 @@ class videoStitcherTest extends TestCase
         $output = $this->runFunctionSnippet('create_live_session', [
             self::$projectId,
             self::$location,
-            self::$liveUri,
-            self::$liveAgTagUri,
-            $tempSlateId
+            $tempLiveConfigId
         ]);
         $this->assertStringContainsString(self::$liveSessionName, $output);
         self::$liveSessionId = explode('/', $output);
         self::$liveSessionId = trim(self::$liveSessionId[(count(self::$liveSessionId) - 1)]);
         self::$liveSessionName = sprintf('/locations/%s/liveSessions/%s', self::$location, self::$liveSessionId);
+
+        # Delete the temporary live config
+        $this->runFunctionSnippet('delete_live_config', [
+            self::$projectId,
+            self::$location,
+            $tempLiveConfigId
+        ]);
 
         # Delete the temporary slate
         $this->runFunctionSnippet('delete_slate', [
@@ -578,6 +657,28 @@ class videoStitcherTest extends TestCase
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
                 $stitcherClient->deleteCdnKey($key->getName());
+            }
+        }
+    }
+
+    private static function deleteOldLiveConfigs(): void
+    {
+        $stitcherClient = new VideoStitcherServiceClient();
+        $parent = $stitcherClient->locationName(self::$projectId, self::$location);
+        $response = $stitcherClient->listLiveConfigs($parent);
+        $liveConfigs = $response->iterateAllElements();
+
+        $currentTime = time();
+        $oneHourInSecs = 60 * 60 * 1;
+
+        foreach ($liveConfigs as $liveConfig) {
+            $tmp = explode('/', $liveConfig->getName());
+            $id = end($tmp);
+            $tmp = explode('-', $id);
+            $timestamp = intval(end($tmp));
+
+            if ($currentTime - $timestamp >= $oneHourInSecs) {
+                $stitcherClient->deleteLiveConfig($liveConfig->getName());
             }
         }
     }

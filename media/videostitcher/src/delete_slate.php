@@ -43,10 +43,15 @@ function delete_slate(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->slateName($callingProjectId, $location, $slateId);
-    $stitcherClient->deleteSlate($formattedName);
-
-    // Print status
-    printf('Deleted slate %s' . PHP_EOL, $slateId);
+    $operationResponse = $stitcherClient->deleteSlate($formattedName);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        // Print status
+        printf('Deleted slate %s' . PHP_EOL, $slateId);
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_delete_slate]
 
