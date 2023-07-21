@@ -46,12 +46,18 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $callingProjectId  The project ID to run the API call under.
  * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes.
  * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job.
+ * @param string $projectId         The name of the Project ID.
+ * @param string $datasetdId        The name of the BigQuery Dataset.
+ * @param string $tableId           The name of the BigQuery Table to be inspected.
  */
 function inspect_bigquery_with_sampling(
     // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $topicId = 'dlp-pubsub-topic',
-    string $subscriptionId = 'dlp_subcription'
+    string $topicId,
+    string $subscriptionId,
+    string $projectId,
+    string $datasetdId,
+    string $tableId
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -60,9 +66,9 @@ function inspect_bigquery_with_sampling(
 
     // Specify the BigQuery table to be inspected.
     $bigqueryTable = (new BigQueryTable())
-        ->setProjectId('bigquery-public-data')
-        ->setDatasetId('usa_names')
-        ->setTableId('usa_1910_current');
+        ->setProjectId($projectId)
+        ->setDatasetId($datasetdId)
+        ->setTableId($tableId);
 
     $bigQueryOptions = (new BigQueryOptions())
         ->setTableReference($bigqueryTable)

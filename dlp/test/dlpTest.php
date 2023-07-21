@@ -1178,7 +1178,11 @@ class dlpTest extends TestCase
         $output = $this->runFunctionSnippet($tmpFileName, [
             self::$projectId,
             $topicId,
-            $subscriptionId
+            $subscriptionId,
+            // Note: Here, we have used BigQuery public data
+            'bigquery-public-data',
+            'usa_names',
+            'usa_1910_current'
         ]);
         // delete topic , subscription , and temp file
         $topic->delete();
