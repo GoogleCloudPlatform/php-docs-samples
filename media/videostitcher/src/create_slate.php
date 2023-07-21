@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_slate]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateSlateRequest;
 use Google\Cloud\Video\Stitcher\V1\Slate;
 
 /**
@@ -50,7 +51,11 @@ function create_slate(
     $slate->setUri($slateUri);
 
     // Run slate creation request
-    $operationResponse = $stitcherClient->createSlate($parent, $slateId, $slate);
+    $request = (new CreateSlateRequest())
+        ->setParent($parent)
+        ->setSlateId($slateId)
+        ->setSlate($slate);
+    $operationResponse = $stitcherClient->createSlate($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();

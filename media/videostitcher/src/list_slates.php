@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_list_slates]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\ListSlatesRequest;
 
 /**
  * Lists all slates for a location.
@@ -41,7 +42,9 @@ function list_slates(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
-    $response = $stitcherClient->listSlates($parent);
+    $request = (new ListSlatesRequest())
+        ->setParent($parent);
+    $response = $stitcherClient->listSlates($request);
 
     // Print the slate list.
     $slates = $response->iterateAllElements();

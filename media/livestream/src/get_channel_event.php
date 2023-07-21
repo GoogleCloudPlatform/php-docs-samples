@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_get_channel_event]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\GetEventRequest;
 
 /**
  * Gets a channel event.
@@ -46,7 +47,9 @@ function get_channel_event(
     $formattedName = $livestreamClient->eventName($callingProjectId, $location, $channelId, $eventId);
 
     // Get the channel event.
-    $response = $livestreamClient->getEvent($formattedName);
+    $request = (new GetEventRequest())
+        ->setName($formattedName);
+    $response = $livestreamClient->getEvent($request);
     printf('Channel event: %s' . PHP_EOL, $response->getName());
 }
 // [END livestream_get_channel_event]

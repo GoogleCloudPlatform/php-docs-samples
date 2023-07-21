@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_delete_channel_event]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\DeleteEventRequest;
 
 /**
  * Deletes a channel event.
@@ -46,7 +47,9 @@ function delete_channel_event(
     $formattedName = $livestreamClient->eventName($callingProjectId, $location, $channelId, $eventId);
 
     // Run the channel event deletion request.
-    $livestreamClient->deleteEvent($formattedName);
+    $request = (new DeleteEventRequest())
+        ->setName($formattedName);
+    $livestreamClient->deleteEvent($request);
     printf('Deleted channel event %s' . PHP_EOL, $eventId);
 }
 // [END livestream_delete_channel_event]

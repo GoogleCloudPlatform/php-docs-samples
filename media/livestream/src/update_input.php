@@ -25,9 +25,10 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_update_input]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
 use Google\Cloud\Video\LiveStream\V1\Input;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
 use Google\Cloud\Video\LiveStream\V1\PreprocessingConfig;
+use Google\Cloud\Video\LiveStream\V1\UpdateInputRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -60,7 +61,10 @@ function update_input(
     ]);
 
     // Run the input update request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->updateInput($input, ['updateMask' => $updateMask]);
+    $request = (new UpdateInputRequest())
+        ->setInput($input)
+        ->setUpdateMask($updateMask);
+    $operationResponse = $livestreamClient->updateInput($request);
 
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {

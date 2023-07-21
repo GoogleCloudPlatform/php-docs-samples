@@ -28,14 +28,15 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_pivot_report]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\Pivot;
 use Google\Analytics\Data\V1beta\OrderBy;
 use Google\Analytics\Data\V1beta\OrderBy\DimensionOrderBy;
 use Google\Analytics\Data\V1beta\OrderBy\MetricOrderBy;
+use Google\Analytics\Data\V1beta\Pivot;
+use Google\Analytics\Data\V1beta\RunPivotReportRequest;
 use Google\Analytics\Data\V1beta\RunPivotReportResponse;
 
 /**
@@ -49,14 +50,14 @@ function run_pivot_report(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runPivotReport([
-        'property' => 'properties/' . $propertyId,
-        'dateRanges' => [new DateRange([
+    $request = (new RunPivotReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDateRanges([new DateRange([
             'start_date' => '2021-01-01',
             'end_date' => '2021-01-30',
             ]),
-        ],
-        'pivots' => [
+        ])
+        ->setPivots([
             new Pivot([
                 'field_names' => ['country'],
                 'limit' => 250,
@@ -77,13 +78,13 @@ function run_pivot_report(string $propertyId)
                     'desc' => true,
                 ])],
             ]),
-        ],
-        'metrics' => [new Metric(['name' => 'sessions'])],
-        'dimensions' => [
+        ])
+        ->setMetrics([new Metric(['name' => 'sessions'])])
+        ->setDimensions([
             new Dimension(['name' => 'country']),
             new Dimension(['name' => 'browser']),
-        ],
-    ]);
+        ]);
+    $response = $client->runPivotReport($request);
 
     printPivotReportResponse($response);
 }

@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_list_job_templates]
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\ListJobTemplatesRequest;
 
 /**
  * Lists all Transcoder job templates in a location.
@@ -39,7 +40,9 @@ function list_job_templates($projectId, $location)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedParent = $transcoderServiceClient->locationName($projectId, $location);
-    $response = $transcoderServiceClient->listJobTemplates($formattedParent);
+    $request = (new ListJobTemplatesRequest())
+        ->setParent($formattedParent);
+    $response = $transcoderServiceClient->listJobTemplates($request);
 
     // Print job template list.
     $jobTemplates = $response->iterateAllElements();

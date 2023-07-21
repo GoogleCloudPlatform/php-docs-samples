@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Analytics\Data;
  * $analyticsDataClient = require 'src/client_from_json_credentials.php';
  * ```
  */
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 
 // [START analyticsdata_json_credentials_initialize]
 /**
