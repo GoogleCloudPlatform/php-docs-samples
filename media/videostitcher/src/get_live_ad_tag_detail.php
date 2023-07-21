@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_live_ad_tag_detail]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetLiveAdTagDetailRequest;
 
 /**
  * Gets the specified ad tag detail for the live session.
@@ -45,7 +46,9 @@ function get_live_ad_tag_detail(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->liveAdTagDetailName($callingProjectId, $location, $sessionId, $adTagDetailId);
-    $adTagDetail = $stitcherClient->getLiveAdTagDetail($formattedName);
+    $request = (new GetLiveAdTagDetailRequest())
+        ->setName($formattedName);
+    $adTagDetail = $stitcherClient->getLiveAdTagDetail($request);
 
     // Print results
     printf('Live ad tag detail: %s' . PHP_EOL, $adTagDetail->getName());

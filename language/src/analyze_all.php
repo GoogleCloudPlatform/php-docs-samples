@@ -24,10 +24,11 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START analyze_all]
+use Google\Cloud\Language\V1\AnnotateTextRequest;
 use Google\Cloud\Language\V1\AnnotateTextRequest\Features;
+use Google\Cloud\Language\V1\Client\LanguageServiceClient;
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
-use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\Entity\Type as EntityType;
 use Google\Cloud\Language\V1\EntityMention\Type as MentionType;
 use Google\Cloud\Language\V1\PartOfSpeech\Tag;
@@ -52,7 +53,10 @@ function analyze_all(string $text): void
         ->setExtractDocumentSentiment(true);
 
     // Collect annotations
-    $response = $languageServiceClient->annotateText($document, $features);
+    $request = (new AnnotateTextRequest())
+        ->setDocument($document)
+        ->setFeatures($features);
+    $response = $languageServiceClient->annotateText($request);
     // Process Entities
     $entities = $response->getEntities();
     foreach ($entities as $entity) {

@@ -28,10 +28,11 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_realtime_report_with_multiple_metrics]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunRealtimeReportRequest;
 use Google\Analytics\Data\V1beta\RunRealtimeReportResponse;
 
 /**
@@ -44,14 +45,14 @@ function run_realtime_report_with_multiple_metrics(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runRealtimeReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'unifiedScreenName'])],
-        'metrics' => [
+    $request = (new RunRealtimeReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([new Dimension(['name' => 'unifiedScreenName'])])
+        ->setMetrics([
             new Metric(['name' => 'screenPageViews']),
             new Metric(['name' => 'conversions']),
-        ],
-    ]);
+        ]);
+    $response = $client->runRealtimeReport($request);
 
     printRunRealtimeReportWithMultipleMetricsResponse($response);
 }

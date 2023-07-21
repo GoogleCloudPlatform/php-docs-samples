@@ -28,11 +28,12 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_pagination]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -46,27 +47,27 @@ function run_report_with_pagination(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dateRanges' => [
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDateRanges([
             new DateRange([
                 'start_date' => '350daysAgo',
                 'end_date' => 'yesterday',
             ])
-        ],
-        'dimensions' => [
+        ])
+        ->setDimensions([
             new Dimension(['name' => 'firstUserSource']),
             new Dimension(['name' => 'firstUserMedium']),
             new Dimension(['name' => 'firstUserCampaignName']),
-        ],
-        'metrics' => [
+        ])
+        ->setMetrics([
             new Metric(['name' => 'sessions']),
             new Metric(['name' => 'conversions']),
             new Metric(['name' => 'totalRevenue']),
-        ],
-        'limit' => 100000,
-        'offset' => 0,
-    ]);
+        ])
+        ->setLimit(100000)
+        ->setOffset(0);
+    $response = $client->runReport($request);
 
     printRunReportResponseWithPagination($response);
 }

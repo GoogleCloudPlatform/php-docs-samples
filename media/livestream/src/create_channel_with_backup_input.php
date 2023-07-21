@@ -25,11 +25,12 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_create_channel_with_backup_input]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
 use Google\Cloud\Video\LiveStream\V1\AudioStream;
 use Google\Cloud\Video\LiveStream\V1\Channel;
 use Google\Cloud\Video\LiveStream\V1\ElementaryStream;
 use Google\Cloud\Video\LiveStream\V1\InputAttachment;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\CreateChannelRequest;
 use Google\Cloud\Video\LiveStream\V1\Manifest;
 use Google\Cloud\Video\LiveStream\V1\MuxStream;
 use Google\Cloud\Video\LiveStream\V1\SegmentSettings;
@@ -128,7 +129,11 @@ function create_channel_with_backup_input(
         ]);
 
     // Run the channel creation request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->createChannel($parent, $channel, $channelId);
+    $request = (new CreateChannelRequest())
+        ->setParent($parent)
+        ->setChannel($channel)
+        ->setChannelId($channelId);
+    $operationResponse = $livestreamClient->createChannel($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();
