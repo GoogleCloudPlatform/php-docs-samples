@@ -101,7 +101,7 @@ function inspect_datastore_send_to_scc(
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
-        sleep(30);
+        sleep(10);
         $job = $dlp->getDlpJob($job->getName());
         if ($job->getState() == JobState::DONE) {
             break;

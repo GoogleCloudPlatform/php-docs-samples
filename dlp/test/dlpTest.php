@@ -1407,7 +1407,11 @@ class dlpTest extends TestCase
         $dlp = $dlpServiceClientMock->reveal();
 
         $output = $this->runFunctionSnippet($tmpFileName, [
-            self::$projectId
+            self::$projectId,
+            // Note: Here, we have used BigQuery public data
+            'bigquery-public-data',
+            'usa_names',
+            'usa_1910_current'
         ]);
 
         // delete a temp file.

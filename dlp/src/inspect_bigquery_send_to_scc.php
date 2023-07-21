@@ -42,19 +42,25 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
  * Using Cloud Data Loss Prevention to scan specific Google Cloud resources and send data to Security Command Center.
  *
  * @param string $callingProjectId  The project ID to run the API call under.
+ * @param string $projectId         The name of the Project ID.
+ * @param string $datasetdId        The name of the BigQuery Dataset.
+ * @param string $tableId           The name of the BigQuery Table to be inspected.
  */
 function inspect_bigquery_send_to_scc(
     // TODO(developer): Replace sample parameters before running the code.
-    string $callingProjectId
+    string $callingProjectId,
+    string $projectId,
+    string $datasetdId,
+    string $tableId
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
     // Construct the items to be inspected.
     $bigqueryTable = (new BigQueryTable())
-        ->setProjectId('bigquery-public-data')
-        ->setDatasetId('usa_names')
-        ->setTableId('usa_1910_current');
+        ->setProjectId($projectId)
+        ->setDatasetId($datasetdId)
+        ->setTableId($tableId);
     $bigQueryOptions = (new BigQueryOptions())
         ->setTableReference($bigqueryTable);
 
@@ -96,7 +102,7 @@ function inspect_bigquery_send_to_scc(
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
-        sleep(30);
+        sleep(10);
         $job = $dlp->getDlpJob($job->getName());
         if ($job->getState() == JobState::DONE) {
             break;
