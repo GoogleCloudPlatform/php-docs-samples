@@ -25,8 +25,9 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_create_input]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
 use Google\Cloud\Video\LiveStream\V1\Input;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\CreateInputRequest;
 
 /**
  * Creates an input. You send an input video stream to this endpoint.
@@ -48,7 +49,11 @@ function create_input(
         ->setType(Input\Type::RTMP_PUSH);
 
     // Run the input creation request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->createInput($parent, $input, $inputId);
+    $request = (new CreateInputRequest())
+        ->setParent($parent)
+        ->setInput($input)
+        ->setInputId($inputId);
+    $operationResponse = $livestreamClient->createInput($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         $result = $operationResponse->getResult();

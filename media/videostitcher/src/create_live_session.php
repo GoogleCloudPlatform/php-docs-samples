@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_live_session]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateLiveSessionRequest;
 use Google\Cloud\Video\Stitcher\V1\LiveSession;
 
 /**
@@ -51,7 +52,10 @@ function create_live_session(
     $liveSession->setLiveConfig($liveConfig);
 
     // Run live session creation request
-    $response = $stitcherClient->createLiveSession($parent, $liveSession);
+    $request = (new CreateLiveSessionRequest())
+        ->setParent($parent)
+        ->setLiveSession($liveSession);
+    $response = $stitcherClient->createLiveSession($request);
 
     // Print results
     printf('Live session: %s' . PHP_EOL, $response->getName());

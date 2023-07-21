@@ -28,10 +28,11 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_realtime_report]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunRealtimeReportRequest;
 use Google\Analytics\Data\V1beta\RunRealtimeReportResponse;
 
 /**
@@ -44,11 +45,11 @@ function run_realtime_report(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runRealtimeReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'country'])],
-        'metrics' => [new Metric(['name' => 'activeUsers'])],
-    ]);
+    $request = (new RunRealtimeReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([new Dimension(['name' => 'country'])])
+        ->setMetrics([new Metric(['name' => 'activeUsers'])]);
+    $response = $client->runRealtimeReport($request);
 
     printRunRealtimeReportResponse($response);
 }

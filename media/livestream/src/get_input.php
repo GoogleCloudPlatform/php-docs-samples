@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_get_input]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\GetInputRequest;
 
 /**
  * Gets an input.
@@ -44,7 +45,9 @@ function get_input(
     $formattedName = $livestreamClient->inputName($callingProjectId, $location, $inputId);
 
     // Get the input.
-    $response = $livestreamClient->getInput($formattedName);
+    $request = (new GetInputRequest())
+        ->setName($formattedName);
+    $response = $livestreamClient->getInput($request);
     // Print results
     printf('Input: %s' . PHP_EOL, $response->getName());
 }
