@@ -47,6 +47,7 @@ class transcoderTest extends TestCase
     private static $inputConcatVideo2Uri;
     private static $inputOverlayUri;
     private static $outputUriForPreset;
+    private static $outputUriForPresetBatchMode;
     private static $outputUriForAdHoc;
     private static $outputUriForTemplate;
     private static $outputUriForAnimatedOverlay;
@@ -96,6 +97,7 @@ class transcoderTest extends TestCase
         self::$inputConcatVideo2Uri = sprintf('gs://%s/%s', $bucketName, self::$testConcatVideo2FileName);
         self::$inputOverlayUri = sprintf('gs://%s/%s', $bucketName, self::$testOverlayImageFileName);
         self::$outputUriForPreset = sprintf('gs://%s/test-output-preset/', $bucketName);
+        self::$outputUriForPresetBatchMode = sprintf('gs://%s/test-output-preset-batch-mode/', $bucketName);
         self::$outputUriForAdHoc = sprintf('gs://%s/test-output-adhoc/', $bucketName);
         self::$outputUriForTemplate = sprintf('gs://%s/test-output-template/', $bucketName);
         self::$outputUriForAnimatedOverlay = sprintf('gs://%s/test-output-animated-overlay/', $bucketName);
@@ -222,6 +224,31 @@ class transcoderTest extends TestCase
             self::$location,
             $jobId
         ]);
+    }
+
+    public function testJobFromPresetBatchMode()
+    {
+        $output = $this->runFunctionSnippet('create_job_from_preset_batch_mode', [
+            self::$projectId,
+            self::$location,
+            self::$inputVideoUri,
+            self::$outputUriForPresetBatchMode,
+            self::$preset
+        ]);
+
+        $this->assertMatchesRegularExpression(sprintf('%s', self::$jobIdRegex), $output);
+
+        $jobId = explode('/', $output);
+        $jobId = trim($jobId[(count($jobId) - 1)]);
+
+        sleep(30);
+        $this->assertJobStateSucceeded($jobId);
+
+        $this->runFunctionSnippet('delete_job', [
+            self::$projectId,
+            self::$location,
+            $jobId
+            ]);
     }
 
     public function testJobFromTemplate()
